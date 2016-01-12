@@ -1,6 +1,6 @@
 from math import pi,sqrt
-from common import wcsm
-import ckm
+from flavio.physics.bdecays.common import wcsm
+from flavio.physics import ckm
 
 r"""Functions for the branching ratios and effective lifetimes of the leptonic
 decays $B_q \to \ell^+\ell^-$, where $q=d$ or $s$ and $\ell=e$, $\mu$. or

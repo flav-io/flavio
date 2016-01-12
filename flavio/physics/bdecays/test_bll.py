@@ -1,5 +1,5 @@
 import unittest
-from bll import *
+from .bll import *
 import numpy as np
 
 s = 1.519267515435317e+24
@@ -44,4 +44,4 @@ class TestBll(unittest.TestCase):
         # ratio of Bs->mumu and Bs->ee BRs should be roughly given by ratio of squared masses
         self.assertAlmostEqual(
             br_timeint(par, wc, 'Bs', 'e')/br_timeint(par, wc, 'Bs', 'mu')/par[('mass','e')]**2*par[('mass','mu')]**2,
-            1., places=4)
+            1., places=2)
