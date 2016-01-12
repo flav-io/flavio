@@ -1,6 +1,24 @@
 from math import sqrt
 import numpy as np
 
+class FormFactorParametrization(object):
+
+    parametrizations = {}
+
+    """docstring for """
+    def __init__(self, name, transition, processes, parameters, function):
+        self.name = name
+        self.transition = transition
+        self.processes = processes
+        self.parameters = parameters
+        self.function = function
+        FormFactorParametrization.parametrizations[name] = self
+
+    def get_ff(self, process, q2, par):
+        return self.function(process, q2, par)
+
+
+
 def z(mB, mM, q2, t0=None):
     r"""Form factor expansion parameter $z$.
 
