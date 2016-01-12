@@ -18,9 +18,9 @@ mres_bsz['b->d'] = [5.279, 5.324, 5.716];
 mres_bsz['b->s'] = [5.367, 5.415, 5.830];
 
 process_dict = {}
-process_dict['B->K*'] =    {'B': 'Bd', 'V': 'K*',   'q': 'b->s'}
-process_dict['B->rho'] =   {'B': 'Bd', 'V': 'rho',  'q': 'b->d'}
-process_dict['B->omega'] = {'B': 'Bd', 'V': 'omega', 'q': 'b->d'}
+process_dict['B->K*'] =    {'B': 'B0', 'V': 'K*',   'q': 'b->s'}
+process_dict['B->rho'] =   {'B': 'B0', 'V': 'rho',  'q': 'b->d'}
+process_dict['B->omega'] = {'B': 'B0', 'V': 'omega', 'q': 'b->d'}
 process_dict['Bs->phi'] =  {'B': 'Bs', 'V': 'K*',   'q': 'b->s'}
 process_dict['Bs->K*'] =   {'B': 'Bs', 'V': 'K*',   'q': 'b->d'}
 

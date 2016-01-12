@@ -14,7 +14,7 @@ mres_lattice = {}
 mres_lattice['b->s'] = [5.711, 5.4154];
 
 process_dict = {}
-process_dict['B->K'] =    {'B': 'Bd', 'P': 'K0', 'q': 'b->s'}
+process_dict['B->K'] =    {'B': 'B0', 'P': 'K0', 'q': 'b->s'}
 
 
 def param_fplusT(mB, mP, a_i, q2):

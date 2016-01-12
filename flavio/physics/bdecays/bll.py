@@ -28,7 +28,7 @@ def amplitudes(par, wc, B, lep):
     Parameters
     ----------
     - par: parameter dictionary
-    - B: should be 'Bs' or 'Bd'
+    - B: should be 'Bs' or 'B0'
     - lep: should be 'e', 'mu', or 'tau'
 
     Returns
@@ -59,7 +59,7 @@ def br_inst(par, wc, B, lep):
     Parameters
     ----------
     - par: parameter dictionary
-    - B: should be 'Bs' or 'Bd'
+    - B: should be 'Bs' or 'B0'
     - lep: should be 'e', 'mu', or 'tau'
     """
     # paramaeters
@@ -72,8 +72,8 @@ def br_inst(par, wc, B, lep):
     # appropriate CKM elements
     if B == 'Bs':
         xi_t = ckm.xi('t','bs')(par)
-    elif B == 'Bd':
-        xi_t = ckm.xi('t','bd')(par)
+    elif B == 'B0':
+        xi_t = ckm.xi('t','B0')(par)
     N = xi_t * 4*GF/sqrt(2) * alphaem/(4*pi)
     beta = sqrt(1-4*ml**2/mB**2)
     prefactor = abs(N)**2 / 32. / pi * mB**3 * tauB * beta * fB**2

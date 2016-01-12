@@ -4,7 +4,7 @@ from flavio.physics.bdecays.formfactors.b_v import btov, bsz_parameters
 import numpy as np
 
 par = {
-    ('mass','Bd'): 5.27961,
+    ('mass','B0'): 5.27961,
     ('mass','Bs'): 5.36679,
     ('mass','K*'): 0.89166,
     ('mass','rho'): 0.077526,
