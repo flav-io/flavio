@@ -1,5 +1,5 @@
 import unittest
-from math import sqrt,radians,asin
+from math import sqrt,radians,asin,degrees
 import cmath
 from flavio.physics.ckm import *
 import numpy as np
@@ -60,3 +60,13 @@ class TestCKM(unittest.TestCase):
             xi('t','cu')
         with self.assertRaises(KeyError):
           xi('x','bs')
+
+    def test_ckm_angles(self):
+        c_gamma = get_ckmangle_gamma(self.par_t)
+        # angle gamma should be equal to input
+        self.assertAlmostEqual(c_gamma/gamma, 1., places=3)
+        c_beta = get_ckmangle_beta(self.par_t)
+        c_alpha = get_ckmangle_alpha(self.par_t)
+        # some of angles should be 180°
+        self.assertEqual(
+            degrees(c_alpha) + degrees(c_beta) + degrees(c_gamma), 180.)

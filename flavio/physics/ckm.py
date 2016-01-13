@@ -1,5 +1,5 @@
 from math import cos,sin
-from cmath import exp,sqrt
+from cmath import exp,sqrt,phase
 import numpy as np
 
 """Functions needed for the CKM matrix as well as for frequently used
@@ -116,6 +116,25 @@ def get_ckm(par):
         return ckm_standard(par['t12'], par['t13'], par['t23'], par['delta'])
     else:
         raise InputError("Input parameters for CKM matrix not found.")
+
+def get_ckmangle_beta(par):
+    r"""Returns the CKM angle $\beta$."""
+    V = get_ckm(par)
+    # see eq. (12.16) of http://pdg.lbl.gov/2015/reviews/rpp2014-rev-ckm-matrix.pdf
+    return phase(-V[1,0]*V[1,2].conj()/V[2,0]/V[2,2].conj())
+
+def get_ckmangle_alpha(par):
+    r"""Returns the CKM angle $\alpha$."""
+    V = get_ckm(par)
+    # see eq. (12.16) of http://pdg.lbl.gov/2015/reviews/rpp2014-rev-ckm-matrix.pdf
+    return phase(-V[2,0]*V[2,2].conj()/V[0,0]/V[0,2].conj())
+
+def get_ckmangle_gamma(par):
+    r"""Returns the CKM angle $\gamma$."""
+    V = get_ckm(par)
+    # see eq. (12.16) of http://pdg.lbl.gov/2015/reviews/rpp2014-rev-ckm-matrix.pdf
+    return phase(-V[0,0]*V[0,2].conj()/V[1,0]/V[1,2].conj())
+
 
 # Some useful shorthands for CKM combinations appearing in FCNC amplitudes
 def xi_kl_ij(par, k, l, i, j):
