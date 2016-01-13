@@ -1,6 +1,6 @@
 import unittest
 from math import sqrt,radians,asin
-from flavio.physics.bdecays.formfactors.b_v import btov, bsz_parameters
+from flavio.physics.bdecays.formfactors.b_v import btov, bsz_parameters, lattice_parameters
 import numpy as np
 
 par = {
@@ -15,6 +15,9 @@ par = {
 class TestBtoV(unittest.TestCase):
     def test_bsz3(self):
         allpar = bsz_parameters.ffpar_lcsr
+        self.assertEqual(
+            [t[-1] for t in allpar.keys()].sort(),
+            btov.bsz3.parameters.sort())
         allpar.update(par)
         # compare to numbers in table 4 of arXiv:1503.05534v1
         # B->K* all FFs
@@ -35,3 +38,36 @@ class TestBtoV(unittest.TestCase):
         self.assertAlmostEqual(ffbsz3['A1'], 0.315, places=3)
         ffbsz3 = btov.bsz3.get_ff('Bs->K*', 0., allpar)
         self.assertAlmostEqual(ffbsz3['A1'], 0.246, places=3)
+
+    def test_lattice(self):
+        allpar = lattice_parameters.ffpar_lattice
+        self.assertEqual(
+            [t[-1] for t in allpar.keys()].sort(),
+            btov.lattice2.parameters.sort())
+        allpar.update(par)
+        # compare to numbers in table 11 of arXiv:1501.00367v2
+        fflatt = btov.lattice2.get_ff('B->K*', 12., allpar)
+        self.assertAlmostEqual(fflatt['V'], 0.84, places=2)
+        self.assertAlmostEqual(fflatt['A0'], 0.861, places=3)
+        self.assertAlmostEqual(fflatt['A1'], 0.440, places=3)
+        self.assertAlmostEqual(fflatt['A12'], 0.339, places=3)
+        self.assertAlmostEqual(fflatt['T1'], 0.711, places=3)
+        self.assertAlmostEqual(fflatt['T2'], 0.433, places=3)
+        self.assertAlmostEqual(fflatt['T23'], 0.809, places=3)
+        # FIXME this still doesn't work well due to the resonance mass problem
+        fflatt = btov.lattice2.get_ff('Bs->phi', 12., allpar)
+        self.assertAlmostEqual(fflatt['V'], 0.767, places=2)
+        self.assertAlmostEqual(fflatt['A0'], 0.907, places=2)
+        self.assertAlmostEqual(fflatt['A1'], 0.439, places=2)
+        self.assertAlmostEqual(fflatt['A12'], 0.321, places=2)
+        self.assertAlmostEqual(fflatt['T1'], 0.680, places=2)
+        self.assertAlmostEqual(fflatt['T2'], 0.439, places=2)
+        self.assertAlmostEqual(fflatt['T23'], 0.810, places=2)
+        fflatt = btov.lattice2.get_ff('Bs->K*', 12., allpar)
+        self.assertAlmostEqual(fflatt['V'], 0.584, places=3)
+        self.assertAlmostEqual(fflatt['A0'], 0.884, places=3)
+        self.assertAlmostEqual(fflatt['A1'], 0.370, places=3)
+        self.assertAlmostEqual(fflatt['A12'], 0.321, places=3)
+        self.assertAlmostEqual(fflatt['T1'], 0.605, places=3)
+        self.assertAlmostEqual(fflatt['T2'], 0.383, places=3)
+        self.assertAlmostEqual(fflatt['T23'], 0.743, places=3)

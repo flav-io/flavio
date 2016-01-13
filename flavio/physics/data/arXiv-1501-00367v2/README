@@ -1,0 +1,23 @@
+The fit results included in these files are described in detail in the
+corresponding submission, arXiv:1501.00367v2.
+
+Filenames are in the following format: {ffset}_{decay}_{data}.d
+
+ffset =   
+	av : fits to V, A_0, A_1, and A_{12}
+	 t : fits to T_1, T_2, and T_{23}
+
+decay = 
+        sl : active strange, spectator light (B to K*)
+        ss : active strange, spectator strange (Bs to phi)
+        ls : active light, spectator strange (Bs to K*)
+
+data =
+        results : each line contains a fit parameter and its central value
+	covariance : for each pair of fit parameters, the covariance matrix
+        	     element is given
+	corrmat : correlation matrix elements constructed from the covariance 
+		  matrix
+
+Feel free to contact us, e.g. M.Wingate@damtp.cam.ac.uk in the first instance,
+with any queries.

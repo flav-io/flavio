@@ -20,3 +20,9 @@ bsz3 = FormFactorParametrization(name='bsz3',
                                  processes=bsz_processes,
                                  parameters=bsz_parnames,
                                  function=lambda process, q2, par: bsz.ff(process, q2, par, n=3))
+
+lattice2 = FormFactorParametrization(name='lattice',
+                                 transition='b_v',
+                                 processes=lattice_processes,
+                                 parameters=lattice_parnames,
+                                 function=lambda process, q2, par: lattice.ff(process, q2, par, n=2))
