@@ -21,7 +21,7 @@ process_dict = {}
 process_dict['B->K*'] =    {'B': 'B0', 'V': 'K*0',   'q': 'b->s'}
 process_dict['B->rho'] =   {'B': 'B0', 'V': 'rho0',  'q': 'b->d'}
 process_dict['B->omega'] = {'B': 'B0', 'V': 'omega', 'q': 'b->d'}
-process_dict['Bs->phi'] =  {'B': 'Bs', 'V': 'K*0',   'q': 'b->s'}
+process_dict['Bs->phi'] =  {'B': 'Bs', 'V': 'phi',   'q': 'b->s'}
 process_dict['Bs->K*'] =   {'B': 'Bs', 'V': 'K*0',   'q': 'b->d'}
 
 def ff(process, q2, par, n=2):
