@@ -30,3 +30,9 @@ meson_ff = {
 ('B+','K+'): 'B->K',
 ('B0','K*0'): 'B->K*',
 }
+
+
+
+def YC9(q2):
+    #FIXME
+    return 0.
