@@ -6,8 +6,8 @@ import numpy as np
 par = {
     ('mass','B0'): 5.27961,
     ('mass','Bs'): 5.36679,
-    ('mass','K*'): 0.89166,
-    ('mass','rho'): 0.077526,
+    ('mass','K*0'): 0.89166,
+    ('mass','rho0'): 0.077526,
     ('mass','omega'): 0.78265,
     ('mass','phi'): 1.019461,
 }

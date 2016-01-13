@@ -18,11 +18,11 @@ mres_bsz['b->d'] = [5.279, 5.324, 5.716];
 mres_bsz['b->s'] = [5.367, 5.415, 5.830];
 
 process_dict = {}
-process_dict['B->K*'] =    {'B': 'B0', 'V': 'K*',   'q': 'b->s'}
-process_dict['B->rho'] =   {'B': 'B0', 'V': 'rho',  'q': 'b->d'}
+process_dict['B->K*'] =    {'B': 'B0', 'V': 'K*0',   'q': 'b->s'}
+process_dict['B->rho'] =   {'B': 'B0', 'V': 'rho0',  'q': 'b->d'}
 process_dict['B->omega'] = {'B': 'B0', 'V': 'omega', 'q': 'b->d'}
-process_dict['Bs->phi'] =  {'B': 'Bs', 'V': 'K*',   'q': 'b->s'}
-process_dict['Bs->K*'] =   {'B': 'Bs', 'V': 'K*',   'q': 'b->d'}
+process_dict['Bs->phi'] =  {'B': 'Bs', 'V': 'K*0',   'q': 'b->s'}
+process_dict['Bs->K*'] =   {'B': 'Bs', 'V': 'K*0',   'q': 'b->d'}
 
 def ff(process, q2, par, n=2):
     r"""Central value of $B\to V$ form factors in the lattice convention
