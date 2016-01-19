@@ -1,6 +1,7 @@
 from math import pi,sqrt
 from flavio.physics.bdecays.common import wcsm
 from flavio.physics import ckm
+from flavio.physics.running import running
 
 r"""Functions for the branching ratios and effective lifetimes of the leptonic
 decays $B_q \to \ell^+\ell^-$, where $q=d$ or $s$ and $\ell=e$, $\mu$. or
@@ -64,7 +65,7 @@ def br_inst(par, wc, B, lep):
     """
     # paramaeters
     GF = par['Gmu']
-    alphaem = par['alphaem']
+    alphaem = running.get_alpha(par, 4.8)['alpha_e']
     ml = par[('mass',lep)]
     mB = par[('mass',B)]
     tauB = par[('lifetime',B)]
@@ -73,7 +74,7 @@ def br_inst(par, wc, B, lep):
     if B == 'Bs':
         xi_t = ckm.xi('t','bs')(par)
     elif B == 'B0':
-        xi_t = ckm.xi('t','B0')(par)
+        xi_t = ckm.xi('t','bd')(par)
     N = xi_t * 4*GF/sqrt(2) * alphaem/(4*pi)
     beta = sqrt(1-4*ml**2/mB**2)
     prefactor = abs(N)**2 / 32. / pi * mB**3 * tauB * beta * fB**2
