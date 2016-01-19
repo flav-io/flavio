@@ -2,12 +2,15 @@ from math import sqrt,pi
 from flavio.physics.bdecays.common import lambda_K, meson_quark, meson_ff
 from flavio.physics import ckm
 from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
+from flavio.config import config
+from flavio.physics.running import running
 
 r"""Functions for exclusive $B\to V\ell\nu$ decays."""
 
 def helicity_amps(q2, par, B, V, lep):
     GF = par['Gmu']
-    aem = par['alphaem']
+    scale = config['bdecays']['scale_bvll']
+    alphaem = running.get_alpha(par, scale)['alpha_e']
     ml = par[('mass',lep)]
     mB = par[('mass',B)]
     mV = par[('mass',V)]

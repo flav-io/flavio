@@ -4,18 +4,21 @@ import numpy as np
 from flavio.physics.bdecays.common import meson_quark, meson_ff, wcsm
 from flavio.physics import ckm
 from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
+from flavio.config import config
+from flavio.physics.running import running
 
 """Functions for exclusive $B\to V\gamma$ decays."""
 
 def prefactor(par, B, V):
     mB = par[('mass',B)]
     mV = par[('mass',V)]
-    aem = par['alphaem']
-    mb = par[('mass','b','MSbar')]
+    scale = config['bdecays']['scale_bvgamma']
+    alphaem = running.get_alpha(par, scale)['alpha_e']
+    mb = running.get_mb(par, scale)
     GF = par['Gmu']
     di_dj = meson_quark[(B,V)]
     xi_t = ckm.xi('t',di_dj)(par)
-    return ( sqrt((GF**2 * aem * mB**3 * mb**2)/(32 * pi**4)
+    return ( sqrt((GF**2 * alphaem * mB**3 * mb**2)/(32 * pi**4)
                   * (1-mV**2/mB**2)**3) * xi_t )
 
 def amps(wc, par, B, V):

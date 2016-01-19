@@ -3,13 +3,16 @@ import numpy as np
 from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff, wcsm, YC9
 from flavio.physics import ckm
 from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
+from flavio.config import config
+from flavio.physics.running import running
 
 """Functions for exclusive $B\to V\ell^+\ell^-$ decays."""
 
 
 def prefactor(q2, par, B, V, lep):
     GF = par['Gmu']
-    aem = par['alphaem']
+    scale = config['bdecays']['scale_bvll']
+    alphaem = running.get_alpha(par, scale)['alpha_e']
     ml = par[('mass',lep)]
     mB = par[('mass',B)]
     mV = par[('mass',V)]
@@ -19,13 +22,14 @@ def prefactor(q2, par, B, V, lep):
     xi_t = ckm.xi('t',di_dj)(par)
     if q2 <= 4*ml**2:
         return 0
-    return ( sqrt((GF**2 * aem**2)/(3 * 2**10 * pi**5 * mB**3)
+    return ( sqrt((GF**2 * alphaem**2)/(3 * 2**10 * pi**5 * mB**3)
             * q2 * 2 * X *beta_l(ml, q2)) * xi_t )
 
 def transversity_amps(q2, wc, par, B, V, lep):
     ml = par[('mass',lep)]
     mB = par[('mass',B)]
-    mb = par[('mass','b','MSbar')]
+    scale = config['bdecays']['scale_bvll']
+    mb = running.get_mb(par, scale)
     mV = par[('mass',V)]
     X = sqrt(lambda_K(mB**2,q2,mV**2))/2.
     N = prefactor(q2, par, B, V, lep)

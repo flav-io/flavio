@@ -1,6 +1,8 @@
 from math import log,pi,sqrt
 from flavio.physics.mesonmixing.wilsoncoefficient import cvll_d
 from flavio.physics.mesonmixing.common import meson_quark, bag_msbar2rgi
+from flavio.config import config
+from flavio.physics.running import running
 
 
 def matrixelements(par, meson):
@@ -28,7 +30,8 @@ def M12_d_SM(par, meson):
     switched in the above definition, leading to a complex conjugation.)
     """
     me = matrixelements(par, meson)
-    alpha_s = par['alpha_s']
+    scale = config['mesonmixing']['scale_mix_'+meson]
+    alpha_s = running.get_alpha(par, scale)['alpha_s']
     me_rgi = me['CVLL'] * bag_msbar2rgi(alpha_s, meson)
     C_tt, C_cc, C_ct = cvll_d(par, meson)
     eta_tt = par[('eta_tt', meson)]

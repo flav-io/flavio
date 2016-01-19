@@ -3,13 +3,16 @@ import numpy as np
 from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff, wcsm
 from flavio.physics import ckm
 from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
+from flavio.config import config
+from flavio.physics.running import running
 """Functions for exclusive $B\to P\ell^+\ell^-$ decays."""
 
 
 
 def prefactor(q2, par, B, P, lep):
     GF = par['Gmu']
-    aem = par['alphaem']
+    scale = config['bdecays']['scale_bpll']
+    alphaem = running.get_alpha(par, scale)['alpha_e']
     ml = par[('mass',lep)]
     mB = par[('mass',B)]
     mP = par[('mass',P)]
@@ -21,13 +24,14 @@ def prefactor(q2, par, B, P, lep):
         return 0
     di_dj = meson_quark[(B,P)]
     xi_t = ckm.xi('t',di_dj)(par)
-    return ( sqrt((GF**2 * aem**2)/(2**9 * pi**5 * mB**3)
+    return ( sqrt((GF**2 * alphaem**2)/(2**9 * pi**5 * mB**3)
             *sqrt(la) * beta_l(ml, q2)) * xi_t )
 
 def amps(q2, wc, par, B, P, lep):
     ml = par[('mass',lep)]
     mB = par[('mass',B)]
-    mb = par[('mass','b','MSbar')]
+    scale = config['bdecays']['scale_bpll']
+    mb = running.get_mb(par, scale)
     mP = par[('mass',P)]
     c7pl = wcsm['C7eff'] + wc['C7'] + wc['C7p']
     c9pl = wcsm['C9'] + wc['C9'] + wc['C9p']
