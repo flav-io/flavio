@@ -7,6 +7,11 @@ par['alpha_s'] = 0.1185
 par['alpha_e'] = 1/127.
 par[('mass','Z')] = 91.1876
 par[('mass','b')] = 4.18
+par[('mass','d')] = 4.8e-3
+par[('mass','s')] = 0.095
+par[('mass','t')] = 173.21
+par[('mass','c')] = 1.275
+par[('mass','u')] = 2.3e-3
 
 par_pdg = {}
 par_pdg['alpha_s'] = 0.1193
@@ -28,3 +33,12 @@ class TestRunning(unittest.TestCase):
         # http://pdg.lbl.gov/2015/reviews/rpp2014-rev-standard-model.pdf
         alpha_tau = get_alpha(par_pdg, 1.777)
         self.assertAlmostEqual(1/alpha_tau['alpha_e']/133.465,1.,places=2)
+
+    def test_runningmasses(self):
+        mb_mZ = get_mb(par, 91.1876)
+        mu_mb = get_mu(par, 4.18)
+        md_mb = get_md(par, 4.18)
+        ms_mb = get_ms(par, 4.18)
+        mc_mb = get_mc(par, 4.18)
+        #TODO add RunDec comparison
+        print(mb_mZ, mu_mb, md_mb, ms_mb, mc_mb, )

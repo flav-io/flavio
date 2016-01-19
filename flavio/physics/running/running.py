@@ -1,4 +1,5 @@
 from flavio.physics.running import betafunctions
+from flavio.physics.running import masses
 from scipy.integrate import odeint
 
 
@@ -21,7 +22,7 @@ def get_alpha(par, scale):
     scale_initial = par[('mass','Z')]
     if scale == scale_initial:
         # no need to run!
-        return alpha_initial
+        return dict(zip(('alpha_s','alpha_e'),alpha_initial))
     derivative = lambda x, mu: betafunctions.beta_qcd_qed(x, mu, 5)
     if scale < par[('mass','b')]:
         # if scale is below mb, run only down to mb first!
@@ -39,17 +40,46 @@ def get_alpha(par, scale):
           scale_out=scale)
     return dict(zip(('alpha_s','alpha_e'),solution))
 
-def get_mq(par, flavour, scale):
-    mass_initial = par[('mass',flavour)]
-    scale_initial = mass_initial if quark_mass_scale[flavour] == 'mass' else quark_mass_scale[flavour]
-    alphas_initial = get_alpha(par, scale)
-    initial = [alphas_initial, mass_initial]
+
+
+def get_mq(alphas_in, m_in, scale_in, scale_out, nf):
+    x_in = [alphas_in, m_in]
     def derivative(x, mu):
-        d_alphas = betafunctions.beta_qcd_qed(x[0], mu, 5)
-        d_m = 0.
+        d_alphas = betafunctions.beta_qcd_qed([x[0],0], mu, nf)[0] # only alpha_s
+        d_m = masses.gamma_qcd(x[1], x[0], mu, nf)
         return [ d_alphas, d_m ]
-    solution = rg_evolve(initial_condition=initial,
+    solution = rg_evolve(initial_condition=x_in,
           derivative=derivative,
-          scale_in=scale_initial,
-          scale_out=scale)
-    return solution
+          scale_in=scale_in,
+          scale_out=scale_out)
+    return solution[1]
+
+def get_mb(par, scale):
+    m = par[('mass','b')]
+    alphas = get_alpha(par, m)['alpha_s']
+    # FIXME implement correct decoupling and flavour-dependence
+    return get_mq(alphas, m, m, scale, 5)
+
+def get_mc(par, scale):
+    m = par[('mass','c')]
+    alphas = get_alpha(par, m)['alpha_s']
+    # FIXME implement correct decoupling and flavour-dependence
+    return get_mq(alphas, m, m, scale, 4)
+
+def get_mu(par, scale):
+    m = par[('mass','u')]
+    alphas = get_alpha(par, 2.)['alpha_s']
+    # FIXME implement correct decoupling and flavour-dependence
+    return get_mq(alphas, m, 2., scale, 4)
+
+def get_md(par, scale):
+    m = par[('mass','d')]
+    alphas = get_alpha(par, 2.)['alpha_s']
+    # FIXME implement correct decoupling and flavour-dependence
+    return get_mq(alphas, m, 2., scale, 4)
+
+def get_ms(par, scale):
+    m = par[('mass','u')]
+    alphas = get_alpha(par, 2.)['alpha_s']
+    # FIXME implement correct decoupling and flavour-dependence
+    return get_mq(alphas, m, 2., scale, 4)
