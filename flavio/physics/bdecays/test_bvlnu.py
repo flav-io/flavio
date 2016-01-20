@@ -20,6 +20,8 @@ par = {
     'alpha_s': 0.1185,
     ('mass','Z'): 91.1876,
     ('mass','b'): 4.17,
+    ('mass','t'): 173.21,
+    ('mass','c'): 1.275,
     'Gmu': 1.1663787e-5,
     'Vus': 0.22,
     'Vub': 3.7e-3,
@@ -30,7 +32,7 @@ par = {
 par.update(bsz_parameters.ffpar_lcsr)
 
 class TestBVll(unittest.TestCase):
-    def test_bksll(self):
+    def test_brhoee(self):
         # just some trivial tests to see if calling the functions raises an error
         q2 = 3.5
         helicity_amps(q2, par, 'B0', 'rho+', 'e')
