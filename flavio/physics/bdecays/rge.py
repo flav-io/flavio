@@ -1,7 +1,7 @@
 import numpy as np
 from math import pi
 from flavio.physics.running import running
-from flavio.physics.running.functions import zeta
+from flavio.physics.functions import zeta
 
 """Anomalous dimension matrices for $\Delta F=1$ operators."""
 

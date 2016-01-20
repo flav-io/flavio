@@ -1,6 +1,6 @@
 from math import log,pi
 import numpy as np
-from flavio.physics.running.functions import zeta
+from flavio.physics.functions import zeta
 
 """Functions for running of quark masses."""
 
