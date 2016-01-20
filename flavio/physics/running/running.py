@@ -3,83 +3,94 @@ from flavio.physics.running import masses
 from scipy.integrate import odeint
 
 
-# scale at which the MSbar quark masses in the parameter dictionary are
-# assumed to be renormalized.
-quark_mass_scale = {
-'u': 2., 'd': 2., 's': 2., # light quarks at 2 GeV
-'c': 'mass', 'b': 'mass', # b and c at the scale = their mass
-}
-
 def rg_evolve(initial_condition, derivative, scale_in, scale_out):
     sol = odeint(derivative, initial_condition, [scale_in, scale_out])
     return sol[1]
+
+def rg_evolve_sm(initial_condition, par, derivative_nf, scale_in, scale_out):
+    if scale_in == scale_out:
+        # no need to run!
+        return initial_condition
+    if scale_out < 0.1:
+        raise ValueError('RG evolution below the strange threshold not implemented.')
+    # quark mass thresholds
+    thresholds = {
+        3: 0.1,
+        4: par[('mass','c')],
+        5: par[('mass','b')],
+        6: par[('mass','t')],
+        }
+    if scale_in > scale_out: # running DOWN
+        # set initial values and scales
+        initial_nf = initial_condition
+        scale_in_nf = scale_in
+        for nf in (6,5,4,3):
+            if scale_in <= thresholds[nf]:
+                continue
+             # run either to next threshold or to final scale, whichever is closer
+            scale_stop = max(thresholds[nf], scale_out)
+            sol = rg_evolve(initial_nf, derivative_nf(nf), scale_in_nf, scale_stop)
+            if scale_stop == scale_out:
+                return sol
+            initial_nf = sol
+            scale_in_nf = thresholds[nf]
+    if scale_in < scale_out: # running UP
+        # set initial values and scales
+        initial_nf = initial_condition
+        scale_in_nf = scale_in
+        for nf in (3,4,5,6):
+            if nf < 6 and scale_in >= thresholds[nf+1]:
+                continue
+             # run either to next threshold or to final scale, whichever is closer
+            scale_stop = min(thresholds[nf+1], scale_out)
+            sol = rg_evolve(initial_nf, derivative_nf(nf), scale_in_nf, scale_stop)
+            if scale_stop == scale_out:
+                return sol
+            initial_nf = sol
+            scale_in_nf = thresholds[nf]
+    return sol
+
 
 def get_alpha(par, scale):
     r"""Get the running $\overline{\mathrm{MSbar}}$ $\alpha_s$ and $\alpha_e$
     at the specified scale.
     """
-    alpha_initial = [par[('alpha_s')], par[('alpha_e')]]
-    scale_initial = par[('mass','Z')]
-    if scale == scale_initial:
-        # no need to run!
-        return dict(zip(('alpha_s','alpha_e'),alpha_initial))
-    derivative = lambda x, mu: betafunctions.beta_qcd_qed(x, mu, 5)
-    if scale < par[('mass','b')]:
-        # if scale is below mb, run only down to mb first!
-        solution_mb = rg_evolve(initial_condition=alpha_initial,
-              derivative=derivative,
-              scale_in=scale_initial,
-              scale_out=par[('mass','b')])
-        # now set the new initial scale and values at mb and use the 4-flavour RGE
-        scale_initial = par[('mass','b')]
-        alpha_initial = solution_mb
-        derivative = lambda x, mu: betafunctions.beta_qcd_qed(x, mu, 4)
-    solution = rg_evolve(initial_condition=alpha_initial,
-          derivative=derivative,
-          scale_in=scale_initial,
-          scale_out=scale)
-    return dict(zip(('alpha_s','alpha_e'),solution))
+    alpha_in = [par[('alpha_s')], par[('alpha_e')]]
+    scale_in = par[('mass','Z')]
+    def derivative_nf(nf):
+        return lambda x, mu: betafunctions.beta_qcd_qed(x, mu, nf)
+    alpha_out = rg_evolve_sm(alpha_in, par, derivative_nf, scale_in, scale)
+    return dict(zip(('alpha_s','alpha_e'),alpha_out))
 
-
-
-def get_mq(alphas_in, m_in, scale_in, scale_out, nf):
+def get_mq(par, m_in, scale_in, scale_out):
+    alphas_in = get_alpha(par, scale_in)['alpha_s']
     x_in = [alphas_in, m_in]
-    def derivative(x, mu):
+    def derivative(x, mu, nf):
         d_alphas = betafunctions.beta_qcd_qed([x[0],0], mu, nf)[0] # only alpha_s
         d_m = masses.gamma_qcd(x[1], x[0], mu, nf)
         return [ d_alphas, d_m ]
-    solution = rg_evolve(initial_condition=x_in,
-          derivative=derivative,
-          scale_in=scale_in,
-          scale_out=scale_out)
-    return solution[1]
+    def derivative_nf(nf):
+        return lambda x, mu: derivative(x, mu, nf)
+    sol = rg_evolve_sm(x_in, par, derivative_nf, scale_in, scale_out)
+    return sol[1]
+
 
 def get_mb(par, scale):
     m = par[('mass','b')]
-    alphas = get_alpha(par, m)['alpha_s']
-    # FIXME implement correct decoupling and flavour-dependence
-    return get_mq(alphas, m, m, scale, 5)
+    return get_mq(par=par, m_in=m, scale_in=m, scale_out=scale)
 
 def get_mc(par, scale):
     m = par[('mass','c')]
-    alphas = get_alpha(par, m)['alpha_s']
-    # FIXME implement correct decoupling and flavour-dependence
-    return get_mq(alphas, m, m, scale, 4)
+    return get_mq(par=par, m_in=m, scale_in=m, scale_out=scale)
 
 def get_mu(par, scale):
     m = par[('mass','u')]
-    alphas = get_alpha(par, 2.)['alpha_s']
-    # FIXME implement correct decoupling and flavour-dependence
-    return get_mq(alphas, m, 2., scale, 4)
+    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale)
 
 def get_md(par, scale):
     m = par[('mass','d')]
-    alphas = get_alpha(par, 2.)['alpha_s']
-    # FIXME implement correct decoupling and flavour-dependence
-    return get_mq(alphas, m, 2., scale, 4)
+    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale)
 
 def get_ms(par, scale):
-    m = par[('mass','u')]
-    alphas = get_alpha(par, 2.)['alpha_s']
-    # FIXME implement correct decoupling and flavour-dependence
-    return get_mq(alphas, m, 2., scale, 4)
+    m = par[('mass','s')]
+    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale)

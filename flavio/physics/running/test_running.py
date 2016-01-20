@@ -13,7 +13,7 @@ par[('mass','t')] = 173.21
 par[('mass','c')] = 1.275
 par[('mass','u')] = 2.3e-3
 
-par_pdg = {}
+par_pdg = par.copy()
 par_pdg['alpha_s'] = 0.1193
 par_pdg['alpha_e'] = 1/127.94
 par_pdg[('mass','Z')] = 91.1876
