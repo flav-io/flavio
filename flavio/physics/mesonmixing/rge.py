@@ -71,5 +71,5 @@ def gamma_df2(c, alpha_s, mu, nf):
     return np.dot(gamma.T, c)/mu
 
 def run_wc_df2(par, c_in, scale_in, scale_out):
-    adm = gamma_df2_array
+    adm = lambda nf, alpha_s, alpha_e: gamma_df2_array(nf, alpha_s)
     return running.get_wilson(par, c_in, adm, scale_in, scale_out)

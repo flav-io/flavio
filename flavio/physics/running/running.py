@@ -19,6 +19,7 @@ def rg_evolve_sm(initial_condition, par, derivative_nf, scale_in, scale_out):
         4: par[('mass','c')],
         5: par[('mass','b')],
         6: par[('mass','t')],
+        7: np.inf,
         }
     if scale_in > scale_out: # running DOWN
         # set initial values and scales
@@ -34,7 +35,7 @@ def rg_evolve_sm(initial_condition, par, derivative_nf, scale_in, scale_out):
                 return sol
             initial_nf = sol
             scale_in_nf = thresholds[nf]
-    if scale_in < scale_out: # running UP
+    elif scale_in < scale_out: # running UP
         # set initial values and scales
         initial_nf = initial_condition
         scale_in_nf = scale_in
@@ -100,18 +101,19 @@ def get_wilson(par, c_in, adm, scale_in, scale_out):
     r"""RG evolution of a vector of Wilson coefficients.
 
     In terms of the anomalous dimension matrix $\gamma$, the RGE reads
-    $$\mu\frac{d}{d\mu} \vec C = \gamma^T(n_f, \alpha_s) \vec C$$
+    $$\mu\frac{d}{d\mu} \vec C = \gamma^T(n_f, \alpha_s, \alpha_e) \vec C$$
     """
-    alphas_in = get_alpha(par, scale_in)['alpha_s']
-    # x is (alpha_s, c_1, ..., c_N)
-    x_in = np.insert(c_in, 0, alphas_in)
+    alpha_in = get_alpha(par, scale_in)
+    # x is (c_1, ..., c_N, alpha_s, alpha_e)
+    x_in = np.append(c_in, [alpha_in['alpha_s'], alpha_in['alpha_e']])
     def derivative(x, mu, nf):
-        alpha_s = x[0]
-        c = x[1:]
-        d_alphas = betafunctions.beta_qcd_qed([alpha_s,0], mu, nf)[0] # only alpha_s
-        d_c = np.dot(adm(nf, alpha_s).T, c)/mu
-        return np.insert(d_c, 0, d_alphas)
+        alpha_s = x[-2]
+        alpha_e = x[-1]
+        c = x[:-2]
+        d_alpha = betafunctions.beta_qcd_qed([alpha_s, alpha_e], mu, nf)
+        d_c = np.dot(adm(nf, alpha_s, alpha_e).T, c)/mu
+        return np.append(d_c, d_alpha)
     def derivative_nf(nf):
         return lambda x, mu: derivative(x, mu, nf)
     sol = rg_evolve_sm(x_in, par, derivative_nf, scale_in, scale_out)
-    return sol[1:]
+    return sol[:-2]

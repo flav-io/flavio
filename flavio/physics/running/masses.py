@@ -1,10 +1,6 @@
 from math import log,pi
 import numpy as np
-import scipy
-
-def zeta(x):
-    """Riemann Zeta function"""
-    return scipy.special.zeta(x, 1)
+from flavio.physics.running.functions import zeta
 
 """Functions for running of quark masses."""
 
