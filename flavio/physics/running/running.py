@@ -1,7 +1,7 @@
 from flavio.physics.running import betafunctions
 from flavio.physics.running import masses
 from scipy.integrate import odeint
-
+import numpy as np
 
 def rg_evolve(initial_condition, derivative, scale_in, scale_out):
     sol = odeint(derivative, initial_condition, [scale_in, scale_out])
@@ -94,3 +94,24 @@ def get_md(par, scale):
 def get_ms(par, scale):
     m = par[('mass','s')]
     return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale)
+
+
+def get_wilson(par, c_in, adm, scale_in, scale_out):
+    r"""RG evolution of a vector of Wilson coefficients.
+
+    In terms of the anomalous dimension matrix $\gamma$, the RGE reads
+    $$\mu\frac{d}{d\mu} \vec C = \gamma^T(n_f, \alpha_s) \vec C$$
+    """
+    alphas_in = get_alpha(par, scale_in)['alpha_s']
+    # x is (alpha_s, c_1, ..., c_N)
+    x_in = np.insert(c_in, 0, alphas_in)
+    def derivative(x, mu, nf):
+        alpha_s = x[0]
+        c = x[1:]
+        d_alphas = betafunctions.beta_qcd_qed([alpha_s,0], mu, nf)[0] # only alpha_s
+        d_c = np.dot(adm(nf, alpha_s).T, c)/mu
+        return np.insert(d_c, 0, d_alphas)
+    def derivative_nf(nf):
+        return lambda x, mu: derivative(x, mu, nf)
+    sol = rg_evolve_sm(x_in, par, derivative_nf, scale_in, scale_out)
+    return sol[1:]
