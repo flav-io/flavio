@@ -96,6 +96,21 @@ def get_ms(par, scale):
     m = par[('mass','s')]
     return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale)
 
+def get_mc_pole(par, nl=2):
+    mcmc = par[('mass','c')]
+    alpha_s = get_alpha(par, mcmc)['alpha_s']
+    return masses.mMS2mOS(MS=mcmc, Nf=4, asmu=alpha_s, Mu=mcmc, nl=nl)
+
+def get_mb_pole(par, nl=2):
+    mbmb = par[('mass','b')]
+    alpha_s = get_alpha(par, mbmb)['alpha_s']
+    return masses.mMS2mOS(MS=mbmb, Nf=5, asmu=alpha_s, Mu=mbmb, nl=nl)
+
+def get_mt(par, scale):
+    mt_pole = par[('mass','t')]
+    alpha_s = get_alpha(par, scale)['alpha_s']
+    return masses.mOS2mMS(mOS=mt_pole, Nf=6, asmu=alpha_s, Mu=scale, nl=3)
+
 
 def get_wilson(par, c_in, adm, scale_in, scale_out):
     r"""RG evolution of a vector of Wilson coefficients.

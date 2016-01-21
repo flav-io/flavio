@@ -35,10 +35,10 @@ class TestRunning(unittest.TestCase):
         self.assertAlmostEqual(1/alpha_tau['alpha_e']/133.465,1.,places=2)
 
     def test_runningmasses(self):
-        mb_mZ = get_mb(par, 91.1876)
-        mu_mb = get_mu(par, 4.18)
-        md_mb = get_md(par, 4.18)
-        ms_mb = get_ms(par, 4.18)
-        mc_mb = get_mc(par, 4.18)
-        #TODO add RunDec comparison
-        # print(mb_mZ, mu_mb, md_mb, ms_mb, mc_mb, )
+        # compare to RunDec
+        np.testing.assert_almost_equal(get_mb(par, 120.)/2.79211, 1,decimal=2)
+        np.testing.assert_almost_equal(get_mt(par, 120.)/167.225, 1,decimal=2)
+        np.testing.assert_almost_equal(get_mb_pole(par, nl=2)/4.78248, 1,decimal=2)
+        np.testing.assert_almost_equal(get_mc_pole(par, nl=2)/1.68375, 1,decimal=2)
+        np.testing.assert_almost_equal(get_mb_pole(par, nl=3)/4.92987, 1,decimal=2)
+        np.testing.assert_almost_equal(get_mc_pole(par, nl=3)/1.96099, 1,decimal=2)
