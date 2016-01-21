@@ -81,7 +81,7 @@ def F_89(Ls, sh):
     - 560/27. * pi**2) * sh**3 + 16/9. * Ls * (1 + sh + sh**2 + sh**3))
 
 def F_87(Lmu, Ls, sh):
-    """Function $F_8^{(9)}$ giving the contribution of $O_7$ to the matrix element
+    """Function $F_8^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_8$, as given in eq. (40) of hep-ph/0312063.
 
     `sh` is $\hat s=q^2/m_b^2$,
@@ -94,8 +94,8 @@ def F_87(Lmu, Ls, sh):
 
 def delta_C7(par, wc, q2, scale, qiqj):
     alpha_s = running.get_alpha(par, scale)['alpha_s']
-    mb = running.get_mb(par, scale)
-    mc = running.get_mc(par, scale)
+    mb = running.get_mb_pole(par)
+    mc = running.get_mc_pole(par)
     xi_t = ckm.xi('t', qiqj)
     xi_u = ckm.xi('u', qiqj)
     muh = scale/mb
@@ -103,6 +103,19 @@ def delta_C7(par, wc, q2, scale, qiqj):
     z = mc**2/mb**2
     Lmu = log(scale/mb)
     Ls = log(sh)
-    Cbar2 = wc['C2'] - wc['C1']/6.
-    delta_t = wc['C8eff'] * F_87(Lmu, Ls, sh) + Cbar2 * F_27(muh, z, sh)
-    return -alphas/(4*pi) * delta_t
+    delta_t = wc['C8eff'] * F_87(Lmu, Ls, sh) + wc['C1'] * F_17(muh, z, sh) + wc['C2'] * F_27(muh, z, sh)
+    return -alpha_s/(4*pi) * delta_t
+
+def delta_C9(par, wc, q2, scale, qiqj):
+    alpha_s = running.get_alpha(par, scale)['alpha_s']
+    mb = running.get_mb_pole(par)
+    mc = running.get_mc_pole(par)
+    xi_t = ckm.xi('t', qiqj)
+    xi_u = ckm.xi('u', qiqj)
+    muh = scale/mb
+    sh = q2/mb**2
+    z = mc**2/mb**2
+    Lmu = log(scale/mb)
+    Ls = log(sh)
+    delta_t = wc['C8eff'] * F_89(Ls, sh) + wc['C1'] * F_19(muh, z, sh) + wc['C2'] * F_29(muh, z, sh)
+    return -alpha_s/(4*pi) * delta_t

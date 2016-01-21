@@ -32,19 +32,6 @@ par = {
 
 par.update(bsz_parameters.ffpar_lcsr)
 
-# wc = {
-#     'C7eff': 0,
-#     'C7effp': 0,
-#     'C9': 0,
-#     'C9p': 0,
-#     'C10': 0,
-#     'C10p': 0,
-#     'CP': 0,
-#     'CPp': 0,
-#     'CS': 0,
-#     'CSp': 0,
-# }
-
 class TestBVll(unittest.TestCase):
     def test_bksll(self):
         # just some trivial tests to see if calling the functions raises an error
@@ -55,7 +42,6 @@ class TestBVll(unittest.TestCase):
         a = transversity_amps(q2, wc, par, 'B0', 'K*0', 'mu')
         J = angulardist(a, q2, par, 'mu')
         # A7 should vanish as CP conjugation is ignored here (J=Jbar)
-        print(J)
         self.assertEqual(A_experiment(J, J, 7),   0.)
         # rough numerical comparison of CP-averaged observables to 1503.05534v1
         # FIXME this should work much better with NLO corrections ...
