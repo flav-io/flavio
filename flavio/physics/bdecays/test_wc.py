@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
 from . import rge
+from . import common
 
 
 s = 1.519267515435317e+24
@@ -49,3 +50,10 @@ class TestBWilson(unittest.TestCase):
         0.76415058,  0.90545245,  0.03290275,  0.89359186,  0.46273251])
         c_out = rge.run_wc_df1(par, c_in, 173.2, 4.2)
         print(c_out/c_in)
+
+    def test_functions(self):
+        x =  [1.3, 0.13, 0.18]
+        self.assertEqual(common.F_17(*x), -0.795182 -0.0449909j)
+        self.assertEqual(common.F_19(*x),-16.3032 +0.281462j)
+        self.assertEqual(common.F_27(*x), 4.77109 +0.269943j)
+        self.assertEqual(common.F_29(*x), 6.75552 -1.6887j)
