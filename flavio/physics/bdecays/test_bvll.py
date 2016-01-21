@@ -2,7 +2,8 @@ import unittest
 import numpy as np
 from .bvll import *
 from flavio.physics.bdecays.formfactors.b_v import bsz_parameters
-
+from flavio.physics.eft import WilsonCoefficients
+from flavio.physics.bdecays.common import wctot_dict
 
 s = 1.519267515435317e+24
 
@@ -31,27 +32,30 @@ par = {
 
 par.update(bsz_parameters.ffpar_lcsr)
 
-wc = {
-    'C7': 0,
-    'C7p': 0,
-    'C9': 0,
-    'C9p': 0,
-    'C10': 0,
-    'C10p': 0,
-    'CP': 0,
-    'CPp': 0,
-    'CS': 0,
-    'CSp': 0,
-}
+# wc = {
+#     'C7eff': 0,
+#     'C7effp': 0,
+#     'C9': 0,
+#     'C9p': 0,
+#     'C10': 0,
+#     'C10p': 0,
+#     'CP': 0,
+#     'CPp': 0,
+#     'CS': 0,
+#     'CSp': 0,
+# }
 
 class TestBVll(unittest.TestCase):
     def test_bksll(self):
         # just some trivial tests to see if calling the functions raises an error
         q2 = 3.5
         prefactor(q2, par, 'B0', 'K*0', 'mu')
+        wc_obj = WilsonCoefficients()
+        wc = wctot_dict(wc_obj, 'df1_bs', 4.2, par)
         a = transversity_amps(q2, wc, par, 'B0', 'K*0', 'mu')
         J = angulardist(a, q2, par, 'mu')
         # A7 should vanish as CP conjugation is ignored here (J=Jbar)
+        print(J)
         self.assertEqual(A_experiment(J, J, 7),   0.)
         # rough numerical comparison of CP-averaged observables to 1503.05534v1
         # FIXME this should work much better with NLO corrections ...
@@ -61,5 +65,5 @@ class TestBVll(unittest.TestCase):
         self.assertAlmostEqual(FL(J, J),                0.820, places=1)
         self.assertAlmostEqual(Pp_experiment(J, J, 4), -0.413, places=0)
         self.assertAlmostEqual(Pp_experiment(J, J, 5), -0.579, places=0)
-        BR = bvll_dbrdq2(q2, wc, par, 'B0', 'K*0', 'mu') * 1e7
-        self.assertAlmostEqual(BR, 0.467, places=0)
+        BR = bvll_dbrdq2(q2, wc_obj, par, 'B0', 'K*0', 'mu') * 1e7
+        self.assertAlmostEqual(BR, 0.467, places=1)

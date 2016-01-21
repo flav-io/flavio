@@ -1,6 +1,6 @@
 from math import sqrt,pi
 import numpy as np
-from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff, wcsm, YC9
+from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff, YC9, wctot_dict
 from flavio.physics import ckm
 from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
 from flavio.config import config
@@ -34,13 +34,12 @@ def transversity_amps(q2, wc, par, B, V, lep):
     X = sqrt(lambda_K(mB**2,q2,mV**2))/2.
     N = prefactor(q2, par, B, V, lep)
     ta = {}
-    c7pl = wcsm['C7eff'] + wc['C7'] + wc['C7p']
-    c7mi = wcsm['C7eff'] + wc['C7'] - wc['C7p']
-    c9sm = wcsm['C9'] + YC9(q2)
-    c9pl = c9sm + wc['C9'] + wc['C9p']
-    c9mi = c9sm + wc['C9'] - wc['C9p']
-    c10pl = wcsm['C10'] + wc['C10'] + wc['C10p']
-    c10mi = wcsm['C10'] + wc['C10'] - wc['C10p']
+    c7pl = wc['C7eff'] + wc['C7effp']
+    c7mi = wc['C7eff'] - wc['C7effp']
+    c9pl = YC9(q2) + wc['C9'] + wc['C9p']
+    c9mi = YC9(q2) + wc['C9'] - wc['C9p']
+    c10pl = wc['C10'] + wc['C10p']
+    c10mi = wc['C10'] - wc['C10p']
     csmi = wc['CS'] - wc['CSp']
     cpmi = wc['CP'] - wc['CPp']
     ff = FF.parametrizations['bsz3'].get_ff(meson_ff[(B,V)], q2, par)
@@ -180,21 +179,16 @@ def FLhat(J, J_bar):
     """
     return -S_theory(J, J_bar, '1c')
 
-
-def get_JJbar(q2, wc, par, B, V, lep):
-    a = transversity_amps(q2, wc, par, B, V, lep)
-    J = angulardist(a, q2, par, lep)
-    J_bar = angulardist_bar(a, q2, par, lep)
-    return (J, Jbar)
-
-def bvll_obs(function, q2, wc, par, B, V, lep):
+def bvll_obs(function, q2, wc_obj, par, B, V, lep):
+    scale = config['bdecays']['scale_bvll']
+    wc = wctot_dict(wc_obj, 'df1_' + meson_quark[(B,V)], scale, par)
     a = transversity_amps(q2, wc, par, B, V, lep)
     J = angulardist(a, q2, par, lep)
     J_bar = angulardist_bar(a, q2, par, lep)
     return function(J, J_bar)
 
-def bvll_dbrdq2(q2, wc, par, B, V, lep):
+def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):
     tauB = par[('lifetime',B)]
     fct = lambda J, J_bar: ( dGdq2(J) + dGdq2(J_bar) )/2.
-    dGave = bvll_obs(fct, q2, wc, par, B, V, lep)
+    dGave = bvll_obs(fct, q2, wc_obj, par, B, V, lep)
     return tauB * dGave

@@ -1,6 +1,6 @@
 from math import sqrt,pi
 import numpy as np
-from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff, wcsm
+from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
 from flavio.physics import ckm
 from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
 from flavio.config import config
@@ -33,9 +33,9 @@ def amps(q2, wc, par, B, P, lep):
     scale = config['bdecays']['scale_bpll']
     mb = running.get_mb(par, scale)
     mP = par[('mass',P)]
-    c7pl = wcsm['C7eff'] + wc['C7'] + wc['C7p']
-    c9pl = wcsm['C9'] + wc['C9'] + wc['C9p']
-    c10pl = wcsm['C10'] + wc['C10'] + wc['C10p']
+    c7pl = wc['C7eff'] + wc['C7effp']
+    c9pl = wc['C9'] + wc['C9p']
+    c10pl = wc['C10'] + wc['C10p']
     cspl = wc['CS'] + wc['CSp']
     cppl = wc['CP'] + wc['CPp']
     N = prefactor(q2, par, B, P, lep)

@@ -1,7 +1,7 @@
 from math import sqrt,pi
 from cmath import exp
 import numpy as np
-from flavio.physics.bdecays.common import meson_quark, meson_ff, wcsm
+from flavio.physics.bdecays.common import meson_quark, meson_ff
 from flavio.physics import ckm
 from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
 from flavio.config import config
@@ -24,8 +24,8 @@ def prefactor(par, B, V):
 def amps(wc, par, B, V):
     N = prefactor(par, B, V)
     ff = FF.parametrizations['bsz3'].get_ff(meson_ff[(B,V)], 0, par)
-    c7 = wcsm['C7eff'] + wc['C7']
-    c7p = wc['C7p']
+    c7 = wc['C7eff']
+    c7p = wc['C7effp']
     a = {}
     a['L'] = N * c7  * ff['T1']
     a['R'] = N * c7p * ff['T1']

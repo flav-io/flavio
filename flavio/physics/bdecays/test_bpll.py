@@ -1,7 +1,8 @@
 import unittest
 import numpy as np
 from .bpll import *
-
+from flavio.physics.eft import WilsonCoefficients
+from flavio.physics.bdecays.common import wctot_dict
 
 s = 1.519267515435317e+24
 
@@ -37,18 +38,8 @@ par = {
     ('formfactor','B->K','a2_fT'): -1.114,
 }
 
-wc = {
-    'C7': 0,
-    'C7p': 0,
-    'C9': 0,
-    'C9p': 0,
-    'C10': 0,
-    'C10p': 0,
-    'CP': 0,
-    'CPp': 0,
-    'CS': 0,
-    'CSp': 0,
-}
+wc_obj = WilsonCoefficients()
+wc = wctot_dict(wc_obj, 'df1_bs', 4.2, par)
 
 class TestBPll(unittest.TestCase):
     def test_bkll(self):

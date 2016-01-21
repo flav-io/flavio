@@ -3,6 +3,8 @@ from .bll import *
 import numpy as np
 from .. import ckm
 from math import radians
+from flavio.physics.eft import WilsonCoefficients
+from flavio.physics.bdecays.common import wctot_dict
 
 s = 1.519267515435317e+24
 
@@ -30,14 +32,8 @@ par = {
     ('DeltaGamma/Gamma','Bs'): 0.1226,
 }
 
-wc = {
-    'C10': 0,
-    'C10p': 0,
-    'CP': 0,
-    'CPp': 0,
-    'CS': 0,
-    'CSp': 0,
-}
+wc_obj = WilsonCoefficients()
+wc = wctot_dict(wc_obj, 'df1_bs', 4.2, par)
 
 
 class TestBll(unittest.TestCase):

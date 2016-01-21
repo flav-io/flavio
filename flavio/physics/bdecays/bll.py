@@ -1,5 +1,4 @@
 from math import pi,sqrt
-from flavio.physics.bdecays.common import wcsm
 from flavio.physics import ckm
 from flavio.physics.running import running
 
@@ -42,7 +41,7 @@ def amplitudes(par, wc, B, lep):
     ml = par[('mass',lep)]
     mB = par[('mass',B)]
     # Wilson coefficients
-    C10m = wc['C10'] + wcsm['C10'] - wc['C10p']
+    C10m = wc['C10'] - wc['C10p']
     CPm = wc['CP'] - wc['CPp']
     CSm = wc['CS'] - wc['CSp']
     P = 2*ml/mB * C10m +  mB * CPm

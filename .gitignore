@@ -1,3 +1,5 @@
+nosetests.json
+
 # editor tmp files
 *~
 *.kate-swp
