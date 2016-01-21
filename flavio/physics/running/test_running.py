@@ -41,4 +41,4 @@ class TestRunning(unittest.TestCase):
         ms_mb = get_ms(par, 4.18)
         mc_mb = get_mc(par, 4.18)
         #TODO add RunDec comparison
-        print(mb_mZ, mu_mb, md_mb, ms_mb, mc_mb, )
+        # print(mb_mZ, mu_mb, md_mb, ms_mb, mc_mb, )
