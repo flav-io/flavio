@@ -6,41 +6,6 @@ import scipy.interpolate
 from flavio.physics.running import running
 from flavio.physics import ckm
 
-"""Common functions needed for B decays."""
-
-def lambda_K(a,b,c):
-    r"""Källén function $\lambda$.
-
-    $\lambda(a,b,c) = a^2 + b^2 + c^2 - 2 (ab + bc + ac)$
-    """
-    return a**2 + b**2 + c**2 - 2*(a*b + b*c + a*c)
-
-def beta_l(ml, q2):
-    if q2 == 0:
-        return 0.
-    return sqrt(1. - (4*ml**2)/q2)
-
-meson_quark = {
-('B+','K+'): 'bs',
-('B0','K*0'): 'bs',
-('B+','K*+'): 'bs',
-}
-
-meson_ff = {
-('B+','K+'): 'B->K',
-('B0','K+'): 'B->K',
-('B+','K0'): 'B->K',
-('B0','K0'): 'B->K',
-('B0','K*0'): 'B->K*',
-('B+','K*+'): 'B->K*',
-('B0','K*+'): 'B->K*',
-('B+','K*0'): 'B->K*',
-('B0','rho0'): 'B->rho',
-('B+','rho+'): 'B->rho',
-('B0','rho+'): 'B->rho',
-('B+','rho0'): 'B->rho',
-}
-
 
 
 def YC9(q2):
@@ -95,29 +60,3 @@ def F_29(muh, z, sh):
     `sh` is $\hat s=q^2/m_b^2$.
     """
     return _F_29([muh, z, sh])[0]
-
-def F_89(Ls, sh):
-    return (104/9. - 32/27. * pi**2 + (1184/27. - 40/9. * pi**2) * sh
-    + (14212/135. - 32/3 * pi**2) * sh**2 + (193444/945.
-    - 560/27. * pi**2) * sh**3 + 16/9. * Ls * (1 + sh + sh**2 + sh**3))
-
-def F_87(Lmu, Ls, sh):
-    return (-32/9. * Lmu + 8/27. * pi**2 - 44/9. - 8/9. * 1j * pi
-    + (4/3. * pi**2 - 40/3.) * sh + (32/9. * pi**2 - 316/9.) * sh**2
-    + (200/27. * pi**2 - 658/9.) * sh**3 - 8/9. * Ls * (sh + sh**2 + sh**3))
-
-
-def delta_C7(par, wc, q2, scale, qiqj):
-    alpha_s = running.get_alpha(par, scale)['alpha_s']
-    mb = running.get_mb(par, scale)
-    mc = running.get_mc(par, scale)
-    xi_t = ckm.xi('t', qiqj)
-    xi_u = ckm.xi('u', qiqj)
-    muh = scale/mb
-    sh = q2/mb**2
-    z = mc**2/mb**2
-    Lmu = log(scale/mb)
-    Ls = log(sh)
-    Cbar2 = wc['C2'] - wc['C1']/6.
-    delta_t = -( wc['C8eff'] * F_87(Lmu, Ls, sh) + Cbar2 * F_27(muh, z, sh))
-    return alphas/(4*pi) * delta_t

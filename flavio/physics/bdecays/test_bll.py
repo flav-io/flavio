@@ -4,7 +4,7 @@ import numpy as np
 from .. import ckm
 from math import radians
 from flavio.physics.eft import WilsonCoefficients
-from flavio.physics.bdecays.common import wctot_dict
+from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 
 s = 1.519267515435317e+24
 

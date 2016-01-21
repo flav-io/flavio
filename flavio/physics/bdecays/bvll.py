@@ -1,6 +1,8 @@
 from math import sqrt,pi
 import numpy as np
-from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff, YC9, wctot_dict
+from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
+from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
+from flavio.physics.bdecays.matrixelements import YC9
 from flavio.physics import ckm
 from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
 from flavio.config import config

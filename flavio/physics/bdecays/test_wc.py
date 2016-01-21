@@ -2,6 +2,7 @@ import unittest
 import numpy as np
 from . import rge
 from . import common
+from . import wilsoncoefficients
 from .. import eft
 from ..running import running
 
@@ -46,7 +47,7 @@ class TestBWilson(unittest.TestCase):
         wc_low_correct = np.concatenate([wc_low_correct, np.zeros(19)])
         wc_obj = eft.WilsonCoefficients()
         wc_obj.set_initial('df1_bs', 4.2, np.zeros(34))
-        wc_low = common.wctot_dict(wc_obj, 'df1_bs', 4.2, par)
+        wc_low = wilsoncoefficients.wctot_dict(wc_obj, 'df1_bs', 4.2, par)
         wc_low_array = np.asarray([wc_low[key] for key in wc_obj.coefficients['df1_bs']])
         np.testing.assert_almost_equal(wc_low_array, wc_low_correct, decimal=8)
 
