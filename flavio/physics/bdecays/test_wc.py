@@ -50,11 +50,3 @@ class TestBWilson(unittest.TestCase):
         wc_low = wilsoncoefficients.wctot_dict(wc_obj, 'df1_bs', 4.2, par)
         wc_low_array = np.asarray([wc_low[key] for key in wc_obj.coefficients['df1_bs']])
         np.testing.assert_almost_equal(wc_low_array, wc_low_correct, decimal=8)
-
-
-    def test_functions(self):
-        x =  [1.3, 0.13, 0.18]
-        self.assertEqual(common.F_17(*x), -0.795182 -0.0449909j)
-        self.assertEqual(common.F_19(*x),-16.3032 +0.281462j)
-        self.assertEqual(common.F_27(*x), 4.77109 +0.269943j)
-        self.assertEqual(common.F_29(*x), 6.75552 -1.6887j)
