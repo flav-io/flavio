@@ -27,15 +27,14 @@ def prefactor(q2, par, B, V, lep):
     return ( sqrt((GF**2 * alphaem**2)/(3 * 2**10 * pi**5 * mB**3)
             * q2 * 2 * X *beta_l(ml, q2)) * xi_t )
 
+
 def transversity_amps(q2, wc, par, B, V, lep):
-    ml = par[('mass',lep)]
     mB = par[('mass',B)]
     scale = config['bdecays']['scale_bvll']
     mb = running.get_mb(par, scale)
     mV = par[('mass',V)]
     X = sqrt(lambda_K(mB**2,q2,mV**2))/2.
     N = prefactor(q2, par, B, V, lep)
-    ta = {}
     c7pl = wc['C7eff'] + wc['C7effp']
     c7mi = wc['C7eff'] - wc['C7effp']
     Yq2 = matrixelements.Y(q2, wc, par, scale)
@@ -46,6 +45,7 @@ def transversity_amps(q2, wc, par, B, V, lep):
     csmi = wc['CS'] - wc['CSp']
     cpmi = wc['CP'] - wc['CPp']
     ff = FF.parametrizations['bsz3'].get_ff(meson_ff[(B,V)], q2, par)
+    ta = {}
     ta['perp_L'] = N * sqrt(2)*2*X * ((c9pl - c10pl) * (ff['V']/(mB + mV)) + 2*mb/q2 * c7pl * ff['T1'])
     ta['perp_R'] = N * sqrt(2)*2*X * ((c9pl + c10pl) * (ff['V']/(mB + mV)) + 2*mb/q2 * c7pl * ff['T1'])
     ta['para_L'] = -N * sqrt(2) * (mB**2 - mV**2) * ((c9mi - c10mi) * (ff['A1']/(mB - mV)) + 2*mb/q2 * c7mi * ff['T2'])

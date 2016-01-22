@@ -1,4 +1,5 @@
 import scipy
+import mpmath
 
 def zeta(x):
     """Riemann Zeta function"""
@@ -13,3 +14,6 @@ def li2(x):
     if isinstance(x,float) and x <= 1:
         return scipy.special.spence(1-x)
     return mpmath.fp.polylog(2,x)
+
+def ei(x):
+    return scipy.special.expi(x)
