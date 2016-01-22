@@ -2,7 +2,7 @@ from math import sqrt,pi
 import numpy as np
 from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
-from flavio.physics.bdecays.matrixelements import YC9
+from flavio.physics.bdecays import matrixelements
 from flavio.physics import ckm
 from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
 from flavio.config import config
@@ -38,8 +38,9 @@ def transversity_amps(q2, wc, par, B, V, lep):
     ta = {}
     c7pl = wc['C7eff'] + wc['C7effp']
     c7mi = wc['C7eff'] - wc['C7effp']
-    c9pl = YC9(q2) + wc['C9'] + wc['C9p']
-    c9mi = YC9(q2) + wc['C9'] - wc['C9p']
+    Yq2 = matrixelements.Y(q2, wc, par, scale)
+    c9pl = Yq2 + wc['C9'] + wc['C9p']
+    c9mi = Yq2 + wc['C9'] - wc['C9p']
     c10pl = wc['C10'] + wc['C10p']
     c10mi = wc['C10'] - wc['C10p']
     csmi = wc['CS'] - wc['CSp']

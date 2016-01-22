@@ -52,3 +52,6 @@ class TestBMatrixElements(unittest.TestCase):
         self.assertEqual(matrixelements.F_29(*x), 6.75552 -1.6887j)
         # it should be that F17+F27/6=0
         self.assertAlmostEqual(matrixelements.F_17(*x),-matrixelements.F_27(*x)/6,places=5)
+        # check the limiting cases of the quark loop function
+        self.assertAlmostEqual(matrixelements.h(3.5, 1e-8, 4.2), matrixelements.h(3.5, 0., 4.2), places=6)
+        self.assertAlmostEqual(matrixelements.h(1e-8, 1.2, 4.2), matrixelements.h(0., 1.2, 4.2), places=6)

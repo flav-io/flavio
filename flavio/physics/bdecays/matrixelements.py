@@ -1,4 +1,4 @@
-from math import sqrt,pi,log
+from math import sqrt,pi,log,atan
 import pkgutil
 import numpy as np
 from io import StringIO
@@ -6,11 +6,39 @@ import scipy.interpolate
 from flavio.physics.running import running
 from flavio.physics import ckm
 
+# functions for C9eff
 
+def h(s, mq, mu):
+  """Fermion loop function as defined e.g. in eq. (11) of hep-ph/0106067v2."""
+  if mq == 0.:
+      return 8/27. + (4j*pi)/9. + (8 * log(mu))/9. - (4 * log(s))/9.
+  if s == 0.:
+      return -4/9. * (1 + log(mq**2/mu**2))
+  z = 4 * mq**2/s
+  if z > 1:
+      A = atan(1/sqrt(z-1))
+  else:
+      A = log((1+sqrt(1-z))/sqrt(z)) - 1j*pi/2.
+  return (-4/9. * log(mq**2/mu**2) + 8/27. + 4/9. * z
+          -4/9. * (2 + z) * sqrt(abs(z - 1)) * A)
 
-def YC9(q2):
-    #FIXME
-    return 0.
+def Y(q2, wc, par, scale):
+    """Function $Y$ that contains the contributions of the matrix
+    elements of four-quark operators to the effective Wilson coefficient
+    $C_9^{\mathrm{eff}}=C_9 + Y(q^2)$.
+
+    See e.g. eq. (10) of 0811.1214v5."""
+    mb = running.get_mb_pole(par)
+    mc = running.get_mc_pole(par)
+    F_c = 4/3.*wc['C1'] +       wc['C2'] +      6*wc['C3'] +    60*wc['C5']
+    F_b =    7*wc['C3'] +  4/3.*wc['C4'] +     76*wc['C5'] + 64/3.*wc['C6']
+    F_u =      wc['C3'] +  4/3.*wc['C4'] +     16*wc['C5'] + 64/3.*wc['C6']
+    F_4 = 4/3.*wc['C3'] + 64/9.*wc['C5'] + 64/27.*wc['C6']
+    return ( h(s=q2, mq=mc, mu=scale) * F_c
+    - 1/2. * h(s=q2, mq=mb, mu=scale) * F_b
+    - 1/2. * h(s=q2, mq=0., mu=scale) * F_u
+    + F_4 )
+
 
 # NNLO matrix elements of C_1 and C_2 needed for semi-leptonic B decays
 
@@ -32,7 +60,7 @@ def F_17(muh, z, sh):
     """Function $F_1^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_1$, as defined in arXiv:0810.4077.
 
-    `muh` is $\hat\mu=\mu/m_b$,
+    `muh` is $\hatmu=mu/m_b$,
     `z` is $z=m_c^2/m_b^2$,
     `sh` is $\hat s=q^2/m_b^2$.
     """
@@ -42,7 +70,7 @@ def F_19(muh, z, sh):
     """Function $F_1^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_1$, as defined in arXiv:0810.4077.
 
-    `muh` is $\hat\mu=\mu/m_b$,
+    `muh` is $\hatmu=mu/m_b$,
     `z` is $z=m_c^2/m_b^2$,
     `sh` is $\hat s=q^2/m_b^2$.
     """
@@ -52,7 +80,7 @@ def F_27(muh, z, sh):
     """Function $F_2^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_2$, as defined in arXiv:0810.4077.
 
-    `muh` is $\hat\mu=\mu/m_b$,
+    `muh` is $\hatmu=mu/m_b$,
     `z` is $z=m_c^2/m_b^2$,
     `sh` is $\hat s=q^2/m_b^2$.
     """
@@ -62,7 +90,7 @@ def F_29(muh, z, sh):
     """Function $F_2^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_2$, as defined in arXiv:0810.4077.
 
-    `muh` is $\hat\mu=\mu/m_b$,
+    `muh` is $\hatmu=mu/m_b$,
     `z` is $z=m_c^2/m_b^2$,
     `sh` is $\hat s=q^2/m_b^2$.
     """
