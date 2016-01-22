@@ -2,6 +2,7 @@ from flavio.physics.running import betafunctions
 from flavio.physics.running import masses
 from scipy.integrate import odeint
 import numpy as np
+from functools import lru_cache
 
 def rg_evolve(initial_condition, derivative, scale_in, scale_out):
     sol = odeint(derivative, initial_condition, [scale_in, scale_out])
@@ -13,12 +14,19 @@ def rg_evolve_sm(initial_condition, par, derivative_nf, scale_in, scale_out):
         return initial_condition
     if scale_out < 0.1:
         raise ValueError('RG evolution below the strange threshold not implemented.')
+    mc = par[('mass','c')]
+    mb = par[('mass','b')]
+    mt = par[('mass','t')]
+    return _rg_evolve_sm(tuple(initial_condition), mc, mb, mt, derivative_nf, scale_in, scale_out)
+
+@lru_cache(maxsize=32)
+def _rg_evolve_sm(initial_condition, mc, mb, mt, derivative_nf, scale_in, scale_out):
     # quark mass thresholds
     thresholds = {
         3: 0.1,
-        4: par[('mass','c')],
-        5: par[('mass','b')],
-        6: par[('mass','t')],
+        4: mc,
+        5: mb,
+        6: mt,
         7: np.inf,
         }
     if scale_in > scale_out: # running DOWN
@@ -51,17 +59,27 @@ def rg_evolve_sm(initial_condition, par, derivative_nf, scale_in, scale_out):
             scale_in_nf = thresholds[nf]
     return sol
 
-
 def get_alpha(par, scale):
     r"""Get the running $\overline{\mathrm{MSbar}}$ $\alpha_s$ and $\alpha_e$
     at the specified scale.
     """
     alpha_in = [par[('alpha_s')], par[('alpha_e')]]
     scale_in = par[('mass','Z')]
-    def derivative_nf(nf):
-        return lambda x, mu: betafunctions.beta_qcd_qed(x, mu, nf)
-    alpha_out = rg_evolve_sm(alpha_in, par, derivative_nf, scale_in, scale)
+    alpha_out = rg_evolve_sm(alpha_in, par, betafunctions.betafunctions_qcd_qed_nf, scale_in, scale)
     return dict(zip(('alpha_s','alpha_e'),alpha_out))
+#
+# @lru_cache(maxsize=32)
+# def _get_alpha(as_MZ, ae_MZ, MZ, scale):
+#     r"""Get the running $\overline{\mathrm{MSbar}}$ $\alpha_s$ and $\alpha_e$
+#     at the specified scale.
+#     """
+#     alpha_in = [as_MZ, ae_MZ]
+#     scale_in = MZ
+#     def derivative_nf(nf):
+#         return lambda x, mu: betafunctions.beta_qcd_qed(x, mu, nf)
+#     alpha_out = rg_evolve_sm(alpha_in, par, derivative_nf, scale_in, scale)
+#     return dict(zip(('alpha_s','alpha_e'),alpha_out))
+
 
 def get_mq(par, m_in, scale_in, scale_out):
     alphas_in = get_alpha(par, scale_in)['alpha_s']
@@ -99,11 +117,21 @@ def get_ms(par, scale):
 def get_mc_pole(par, nl=2): # for mc, default to 2-loop conversion only due to renormalon ambiguity!
     mcmc = par[('mass','c')]
     alpha_s = get_alpha(par, mcmc)['alpha_s']
+    return _get_mc_pole(mcmc=mcmc, alpha_s=alpha_s, nl=nl)
+
+# cached version
+@lru_cache(maxsize=32)
+def _get_mc_pole(mcmc, alpha_s, nl):
     return masses.mMS2mOS(MS=mcmc, Nf=4, asmu=alpha_s, Mu=mcmc, nl=nl)
 
 def get_mb_pole(par, nl=2): # for mb, default to 2-loop conversion only due to renormalon ambiguity!
     mbmb = par[('mass','b')]
     alpha_s = get_alpha(par, mbmb)['alpha_s']
+    return _get_mb_pole(mbmb=mbmb, alpha_s=alpha_s, nl=nl)
+
+# cached version
+@lru_cache(maxsize=32)
+def _get_mb_pole(mbmb, alpha_s, nl):
     return masses.mMS2mOS(MS=mbmb, Nf=5, asmu=alpha_s, Mu=mbmb, nl=nl)
 
 def get_mt(par, scale):

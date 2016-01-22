@@ -45,3 +45,6 @@ def beta_qcd_qed(alpha, mu, nf):
     bs =  beta_qcd(alpha[0], alpha[1], mu, nf)
     be =  beta_qed(alpha[1], alpha[0], mu, nf)
     return np.array([bs, be])
+
+def betafunctions_qcd_qed_nf(nf):
+    return lambda x, mu: beta_qcd_qed(x, mu, nf)
