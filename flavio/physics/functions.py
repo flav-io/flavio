@@ -11,8 +11,8 @@ def li2(x):
     $Li_2(x)=Polylog(2,x)$
     """
     # for real x<=1: use the special scipy function which is 20x faster
-    if isinstance(x,float) and x <= 1:
-        return scipy.special.spence(1-x)
+    if x.imag==0. and x.real <= 1:
+        return scipy.special.spence(1-x.real)
     return mpmath.fp.polylog(2,x)
 
 def ei(x):
