@@ -90,6 +90,7 @@ def bvll_obs(function, q2, wc_obj, par, B, V, lep):
 
 def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):
     tauB = par[('lifetime',B)]
-    fct = lambda J, J_bar: ( dGdq2(J) + dGdq2(J_bar) )/2.
+    def fct(J, J_bar):
+        return ( dGdq2(J) + dGdq2(J_bar) )/2.
     dGave = bvll_obs(fct, q2, wc_obj, par, B, V, lep)
     return tauB * dGave

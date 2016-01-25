@@ -31,6 +31,13 @@ par = {
     'Vub': 3.7e-3,
     'Vcb': 4.1e-2,
     'gamma': 1.22,
+    ('f','B0'): 0.1905,
+    ('f_perp','K*0'): 0.185,
+    ('f_para','K*0'): 0.225,
+    ('a1_perp','K*0'): 0.2,
+    ('a1_para','K*0'): 0.2,
+    ('a2_perp','K*0'): 0.05,
+    ('a2_para','K*0'): 0.05,
 }
 
 par.update(bsz_parameters.ffpar_lcsr)
@@ -42,17 +49,17 @@ class TestBVll(unittest.TestCase):
         prefactor(q2, par, 'B0', 'K*0', 'mu')
         wc_obj = WilsonCoefficients()
         wc = wctot_dict(wc_obj, 'df1_bs', 4.2, par)
-        a = transversity_amps(q2, wc, par, 'B0', 'K*0', 'mu')
+        a = transversity_amps_ff(q2, wc, par, 'B0', 'K*0', 'mu')
         J = angulardist(a, q2, par, 'mu')
         # A7 should vanish as CP conjugation is ignored here (J=Jbar)
         self.assertEqual(A_experiment(J, J, 7),   0.)
         # rough numerical comparison of CP-averaged observables to 1503.05534v1
         # FIXME this should work much better with NLO corrections ...
-        self.assertAlmostEqual(S_experiment(J, J, 4),  -0.151, places=0)
-        self.assertAlmostEqual(S_experiment(J, J, 5),  -0.212, places=0)
-        self.assertAlmostEqual(AFB_experiment(J, J),    0.002, places=0)
+        self.assertAlmostEqual(S_experiment(J, J, 4),  -0.151, places=1)
+        self.assertAlmostEqual(S_experiment(J, J, 5),  -0.212, places=1)
+        self.assertAlmostEqual(AFB_experiment(J, J),    0.002, places=1)
         self.assertAlmostEqual(FL(J, J),                0.820, places=1)
-        self.assertAlmostEqual(Pp_experiment(J, J, 4), -0.413, places=0)
-        self.assertAlmostEqual(Pp_experiment(J, J, 5), -0.579, places=0)
+        self.assertAlmostEqual(Pp_experiment(J, J, 4), -0.413, places=1)
+        self.assertAlmostEqual(Pp_experiment(J, J, 5), -0.579, places=1)
         BR = bvll_dbrdq2(q2, wc_obj, par, 'B0', 'K*0', 'mu') * 1e7
-        self.assertAlmostEqual(BR, 0.467, places=1)
+        self.assertAlmostEqual(BR, 0.467, places=2)

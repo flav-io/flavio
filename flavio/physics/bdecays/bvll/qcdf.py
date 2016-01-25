@@ -21,19 +21,20 @@ def complex_quad(func, a, b, **kwargs):
 # B->V, LO weak annihaltion
 
 # auxiliary function to get the input needed all the time
-def get_input(par, B, V):
+def get_input(par, B, V, scale):
     mB = par[('mass',B)]
     mb = running.get_mb_pole(par)
     mc = running.get_mc_pole(par)
+    alpha_s = running.get_alpha(par, scale)['alpha_s']
     q = meson_spectator[(B,V)] # spectator quark flavour
     eq = quark_charge[q] # charge of the spectator quark
     ed = -1/3.
     eu = 2/3.
-    return mB, mb, mc, q, eq, ed, eu
+    return mB, mb, mc, alpha_s, q, eq, ed, eu
 
 # see eqs. (18), (19), (50), (79) of hep-ph/0106067v2
-def T_para_minus_WA(q2, par, wc, B, V):
-    mB, mb, mc, q, eq, ed, eu = get_input(par, B, V)
+def T_para_minus_WA(q2, par, wc, B, V, scale):
+    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
     if q == 'u':
         # for an up-type spectator quark, additional contribution from current-current operators
         xi_t = ckm.xi('t', meson_quark[(B,V)])
@@ -49,47 +50,47 @@ def T_para_minus_WA(q2, par, wc, B, V):
 # (23)-(26) of of hep-ph/0106067v2
 
 # chromomagnetic dipole contribution
-def T_perp_plus_O8(q2, par, wc, B, V, u):
-    mB, mb, mc, q, eq, ed, eu = get_input(par, B, V)
+def T_perp_plus_O8(q2, par, wc, B, V, u, scale):
+    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
     ubar = 1 - u
-    return - 4*ed*wc['C8eff']/(u + ubar*q2/mB**2)
+    return - (alpha_s/(3*pi)) * 4*ed*wc['C8eff']/(u + ubar*q2/mB**2)
 
-def T_para_minus_O8(q2, par, wc, B, V, u):
-    mB, mb, mc, q, eq, ed, eu = get_input(par, B, V)
+def T_para_minus_O8(q2, par, wc, B, V, u, scale):
+    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
     ubar = 1 - u
-    return eq * 8 * wc['C8eff']/(ubar + u*q2/mB**2)
+    return (alpha_s/(3*pi)) * eq * 8 * wc['C8eff']/(ubar + u*q2/mB**2)
 
 
 # 4-quark operator contribution
-def T_perp_plus_QSS(q2, par, wc, B, V, u):
-    mB, mb, mc, q, eq, ed, eu = get_input(par, B, V)
+def T_perp_plus_QSS(q2, par, wc, B, V, u, scale):
+    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
     ubar = 1 - u
     def t(mq):
         return t_perp(q2=q2, u=u, mq=mq, par=par, B=B, V=V)
-    return mB/(2*mb)*(
+    return (alpha_s/(3*pi)) * mB/(2*mb)*(
           eu * t(mc) * (-wc['C1']/6. + wc['C2'] + 6*wc['C6'])
         + ed * t(mb) * (wc['C3'] - wc['C4']/6. + 16*wc['C5'] + (10.*wc['C6'])/3.
                         + mb/mB*(-wc['C3'] + wc['C4']/6 - 4 * wc['C5'] + (2 * wc['C6'])/3))
         + ed * t(0) * (-wc['C3'] + wc['C4']/6. - 16*wc['C5'] + 8*wc['C6']/3.)
         )
 
-def T_para_plus_QSS(q2, par, wc, B, V, u):
-    mB, mb, mc, q, eq, ed, eu = get_input(par, B, V)
+def T_para_plus_QSS(q2, par, wc, B, V, u, scale):
+    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
     ubar = 1 - u
     def t(mq):
         return t_para(q2=q2, u=u, mq=mq, par=par, B=B, V=V)
-    return mB/mb*(
+    return (alpha_s/(3*pi)) * mB/mb*(
           eu * t(mc) * (-wc['C1']/6. + wc['C2'] + 6*wc['C6'])
         + ed * t(mb) * (wc['C3'] - wc['C4']/6. + 16*wc['C5'] + 10*wc['C6']/3.)
         + ed * t(0) * (-wc['C3'] + wc['C4']/6. - 16*wc['C5'] + 8*wc['C6']/3.)
         )
 
 def T_para_minus_QSS(q2, par, wc, B, V, u, scale):
-    mB, mb, mc, q, eq, ed, eu = get_input(par, B, V)
+    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
     ubar = 1 - u
     def h(mq):
         return matrixelements.h(ubar*mB**2 + u*q2, mq, scale)
-    return eq * 6 * mB/mb*(
+    return (alpha_s/(3*pi)) * eq * 6 * mB/mb*(
           h(mc) * (-wc['C1']/6. + wc['C2'] + wc['C4'] + 10*wc['C6'])
         + h(mb) * (wc['C3'] + 5*wc['C4']/6. + 16*wc['C5'] + 22*wc['C6']/3.)
         + h(0) * (wc['C3'] + 17*wc['C4']/6. + 16*wc['C5'] + 82*wc['C6']/3.)
@@ -106,8 +107,8 @@ def t_perp(q2, u, mq, par, B, V):
     mV = par[('mass',V)]
     EV = En_V(mB, mV, q2)
     ubar = 1 - u
-    return ((2*mB)/(ubar * EV) * i1_bfs(q2, u, mq)
-            + q2/(ubar**2 * EV**2) * B0diffBFS(q2, u, mq, mB)).real
+    return ((2*mB)/(ubar * EV) * i1_bfs(q2, u, mq, mB)
+            + q2/(ubar**2 * EV**2) * B0diffBFS(q2, u, mq, mB))
 
 # (28) of of hep-ph/0106067v2
 def t_para(q2, u, mq, par, B, V):
@@ -116,7 +117,7 @@ def t_para(q2, u, mq, par, B, V):
     EV = En_V(mB, mV, q2)
     ubar = 1 - u
     return ((2*mB)/(ubar * EV) * i1_bfs(q2, u, mq, mB)
-            + (ubar*mB + u*q2)/(ubar**2 * EV**2) * B0diffBFS(q2, u, mq, mB)).real
+            + (ubar*mB + u*q2)/(ubar**2 * EV**2) * B0diffBFS(q2, u, mq, mB))
 
 def B0diffBFS(q2, u, mq, mB):
     ubar = 1 - u
@@ -130,7 +131,10 @@ def B0(s, mq):
         return -2.
     if 4*mq**2/s == 1.:
         return 0.
-    return -2*sqrt(4*mq**2/s - 1) * atan(1/sqrt(4*mq**2/s - 1))
+    # to select the right branch of the complex arctangent, need to
+    # interpret m^2 as m^2-i\epsilon
+    iepsilon = 1e-8j
+    return -2*sqrt(4*mq**2/s - 1) * atan(1/sqrt(4*(mq**2-iepsilon)/s - 1))
 
 # (30), (31) of of hep-ph/0106067v2
 def i1_bfs(q2, u, mq, mB):
@@ -191,23 +195,23 @@ def T_para(q2, par, wc, B, V, scale):
         return phiV(u, a1_para, a2_para)
     def T_minus(u):
         return N / lB_minus(q2=q2, par=par, B=B) * phiV_para(u) * (
-                T_para_minus_WA(q2=q2, par=par, wc=wc, B=B, V=V)
-              + T_para_minus_O8(q2=q2, par=par, wc=wc, B=B, V=V, u=u)
+                T_para_minus_WA(q2=q2, par=par, wc=wc, B=B, V=V, scale=scale)
+              + T_para_minus_O8(q2=q2, par=par, wc=wc, B=B, V=V, u=u, scale=scale)
               + T_para_minus_QSS(q2=q2, par=par, wc=wc, B=B, V=V, u=u, scale=scale))
     def T_plus(u):
         return N / lB_plus(par=par, B=B) * phiV_para(u) * (
-                T_para_plus_QSS(q2=q2, par=par, wc=wc, B=B, V=V, u=u))
-    umax = (mB**2 - 4*mc**2)/(-q2 + mB**2)
-    if umax > 1:
-        points = [1.]
+                T_para_plus_QSS(q2=q2, par=par, wc=wc, B=B, V=V, u=u, scale=scale))
+    u_sing = (mB**2 - 4*mc**2)/(-q2 + mB**2)
+    if u_sing < 1:
+        points = [u_sing]
     else:
         points = None
-    T_tot = complex_quad( lambda u: T_plus(u) + T_minus(u), 0, umax, points=points, epsrel=0.01 )
+    T_tot = complex_quad( lambda u: T_plus(u) + T_minus(u), 0, 1, points=points, epsrel=0.01, epsabs=0 )[0]
     return T_tot
 
 
 
-def T_perp(q2, par, wc, B, V):
+def T_perp(q2, par, wc, B, V, scale):
     mB = par[('mass',B)]
     mV = par[('mass',V)]
     mc = running.get_mc_pole(par)
@@ -223,11 +227,12 @@ def T_perp(q2, par, wc, B, V):
         return 0
     def T_plus(u):
         return N / lB_plus(par=par, B=B) * phiV_perp(u) * (
-                T_perp_plus_O8(q2=q2, par=par, wc=wc, B=B, V=V, u=u))
-    umax = (mB**2 - 4*mc**2)/(-q2 + mB**2)
-    if umax > 1:
-        points = [1.]
+                T_perp_plus_O8(q2=q2, par=par, wc=wc, B=B, V=V, u=u, scale=scale)
+              + T_perp_plus_QSS(q2, par, wc, B, V, u, scale))
+    u_sing = (mB**2 - 4*mc**2)/(-q2 + mB**2)
+    if u_sing < 1:
+        points = [u_sing]
     else:
         points = None
-    T_tot = complex_quad( lambda u: T_plus(u) + T_minus(u), 0, umax, points=points, epsrel=0.01 )
-    return T_plus(0.5)
+    T_tot = complex_quad( lambda u: T_plus(u) + T_minus(u), 0, 1, points=points, epsrel=0.01, epsabs=0 )[0]
+    return T_tot
