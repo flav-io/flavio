@@ -1,6 +1,9 @@
 import unittest
 import numpy as np
-from .bvll import *
+from .amplitudes import *
+from .angulardist import *
+from .observables import *
+from .qcdf import *
 from flavio.physics.bdecays.formfactors.b_v import bsz_parameters
 from flavio.physics.eft import WilsonCoefficients
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
