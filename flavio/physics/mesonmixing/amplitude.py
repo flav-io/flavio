@@ -15,9 +15,13 @@ def matrixelements(par, meson):
     r = (mM/(mq1+mq2))**2
     me = {}
     me['CVLL'] =  mM*fM**2*(1/3.)*BM(1)
+    me['CSLR'] =  mM*fM**2*(1/4.)*BM(4)*r
     me['CVRR'] = me['CVLL']
     me['CVLR'] = -mM*fM**2*(1/6.)*BM(5)*r
-    me['CSLR'] =  mM*fM**2*(1/4.)*BM(4)*r
+    me['CSLL'] = -mM*fM**2*(5/24.)*BM(2)*r
+    me['CSRR'] = me['CSLL']
+    me['CTLL'] = -mM*fM**2*(1/2.)*r*(5*BM(2)/3.-2*BM(3)/3.)
+    me['CTRR'] = me['CTLL']
     return me
 
 def M12_d_SM(par, meson):

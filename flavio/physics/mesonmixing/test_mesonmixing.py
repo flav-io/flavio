@@ -1,8 +1,9 @@
 import unittest
 import numpy as np
-from . import amplitude, rge
+from . import amplitude, rge, observables
 from math import sin
-from cmath import phase
+from flavio.physics.eft import WilsonCoefficients
+from flavio.physics.mesonmixing.common import wcnp_dict
 
 s = 1.519267515435317e+24
 
@@ -19,10 +20,14 @@ par = {
     ('lifetime','B0'): 152.e-14*s,
     ('f','B0'): 0.1905,
     ('bag','B0',1): 1.27/1.517,
+    ('bag','B0',2): 0.72,
+    ('bag','B0',3): 0.88,
     ('bag','B0',4): 0.95,
     ('bag','B0',5): 1.47,
     ('f','Bs'): 0.2277,
     ('bag','Bs',1): 1.33/1.517,
+    ('bag','Bs',2): 0.73,
+    ('bag','Bs',3): 0.89,
     ('bag','Bs',4): 0.93,
     ('bag','Bs',5): 1.57,
     'Gmu': 1.1663787e-5,
@@ -38,11 +43,14 @@ par = {
     ('eta_tt', 'K0'): 0.57,
     ('eta_cc', 'K0'): 1.38,
     ('eta_ct', 'K0'): 0.47,
+    'kappa_epsilon': 0.94,
+    ('DeltaM','K0'): 52.93e-4/(1e-12*s),
 }
 
-wc = {
-    'CVLL': 0,
-}
+wc_obj = WilsonCoefficients()
+wc_B0 = wcnp_dict(wc_obj, 'df2_bd', 4.2, par)
+wc_Bs = wcnp_dict(wc_obj, 'df2_bs', 4.2, par)
+wc_K = wcnp_dict(wc_obj, 'df2_sd', 2, par)
 
 # this is the DeltaF=2 evolution matrix from mt to 2 GeV as obtained
 # from the formulae in hep-ph/0102316
@@ -61,8 +69,14 @@ U_2GeV = np.fromstring("""7.879285920724351522e-01 0 0 0 0 0 0 0 0 0
 class TestMesonMixing(unittest.TestCase):
     def test_bmixing(self):
         # just some trivial tests to see if calling the functions raises an error
-        m12d = amplitude.M12_d(par, wc, 'B0')
-        m12s = amplitude.M12_d(par, wc, 'Bs')
+        m12d = amplitude.M12_d(par, wc_B0, 'B0')
+        m12s = amplitude.M12_d(par, wc_Bs, 'Bs')
+        # check whether order of magnitudes of SM predictions are righ
+        self.assertAlmostEqual(observables.DeltaM(wc_obj, par, 'B0')*1e-12*s, 0.53, places=1)
+        self.assertAlmostEqual(observables.DeltaM(wc_obj, par, 'Bs')*1e-12*s, 18, places=-1)
+        self.assertAlmostEqual(sin(observables.phi(wc_obj, par, 'B0')), 0.73, places=2)
+        self.assertAlmostEqual(observables.phi(wc_obj, par, 'Bs'), -0.038, places=3)
+
 
     def test_running(self):
         c_in = np.array([ 0.20910694,  0.77740198,  0.54696337,  0.46407456,  0.42482153,

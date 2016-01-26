@@ -18,3 +18,12 @@ def bag_msbar2rgi(alpha_s, meson):
         J = 307/162.
         g = 2/9.
     return alpha_s**(-g) * (1 + alpha_s/(4*pi) * J)
+
+def wcnp_dict(wc_obj, sector, scale, par):
+    r"""Get a dictionary with the NP contributions to the
+    $\Delta F=2$ Wilson coefficients at a given scale, given a
+    WilsonCoefficients instance."""
+    wc_np = wc_obj.get_wc(sector, scale, par)
+    wc_labels = wc_obj.coefficients[sector]
+    wc_dict =  dict(zip(wc_labels, wc_np))
+    return wc_dict
