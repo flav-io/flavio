@@ -67,18 +67,6 @@ def get_alpha(par, scale):
     scale_in = par[('mass','Z')]
     alpha_out = rg_evolve_sm(alpha_in, par, betafunctions.betafunctions_qcd_qed_nf, scale_in, scale)
     return dict(zip(('alpha_s','alpha_e'),alpha_out))
-#
-# @lru_cache(maxsize=32)
-# def _get_alpha(as_MZ, ae_MZ, MZ, scale):
-#     r"""Get the running $\overline{\mathrm{MSbar}}$ $\alpha_s$ and $\alpha_e$
-#     at the specified scale.
-#     """
-#     alpha_in = [as_MZ, ae_MZ]
-#     scale_in = MZ
-#     def derivative_nf(nf):
-#         return lambda x, mu: betafunctions.beta_qcd_qed(x, mu, nf)
-#     alpha_out = rg_evolve_sm(alpha_in, par, derivative_nf, scale_in, scale)
-#     return dict(zip(('alpha_s','alpha_e'),alpha_out))
 
 
 def get_mq(par, m_in, scale_in, scale_out):
@@ -139,16 +127,7 @@ def get_mt(par, scale):
     alpha_s = get_alpha(par, scale)['alpha_s']
     return masses.mOS2mMS(mOS=mt_pole, Nf=6, asmu=alpha_s, Mu=scale, nl=3)
 
-
-def get_wilson(par, c_in, adm, scale_in, scale_out):
-    r"""RG evolution of a vector of Wilson coefficients.
-
-    In terms of the anomalous dimension matrix $\gamma$, the RGE reads
-    $$\mu\frac{d}{d\mu} \vec C = \gamma^T(n_f, \alpha_s, \alpha_e) \vec C$$
-    """
-    alpha_in = get_alpha(par, scale_in)
-    # x is (c_1, ..., c_N, alpha_s, alpha_e)
-    x_in = np.append(c_in, [alpha_in['alpha_s'], alpha_in['alpha_e']])
+def make_wilson_rge_derivative(adm):
     def derivative(x, mu, nf):
         alpha_s = x[-2]
         alpha_e = x[-1]
@@ -158,5 +137,16 @@ def get_wilson(par, c_in, adm, scale_in, scale_out):
         return np.append(d_c, d_alpha)
     def derivative_nf(nf):
         return lambda x, mu: derivative(x, mu, nf)
+    return derivative_nf
+
+def get_wilson(par, c_in, derivative_nf, scale_in, scale_out):
+    r"""RG evolution of a vector of Wilson coefficients.
+
+    In terms of the anomalous dimension matrix $\gamma$, the RGE reads
+    $$\mu\frac{d}{d\mu} \vec C = \gamma^T(n_f, \alpha_s, \alpha_e) \vec C$$
+    """
+    alpha_in = get_alpha(par, scale_in)
+    # x is (c_1, ..., c_N, alpha_s, alpha_e)
+    x_in = np.append(c_in, [alpha_in['alpha_s'], alpha_in['alpha_e']])
     sol = rg_evolve_sm(x_in, par, derivative_nf, scale_in, scale_out)
     return sol[:-2]

@@ -3,6 +3,7 @@ from flavio.physics.running import running
 from flavio.physics.bdecays import rge as rge_db1
 from flavio.physics.mesonmixing import rge as rge_df2
 
+
 class WilsonCoefficients(object):
     """
     """
@@ -28,15 +29,18 @@ class WilsonCoefficients(object):
 
     coefficients = {}
     adm = {}
+    rge_derivative = {}
     for s in [ 'df2_sd', 'df2_cu', 'df2_bs', 'df2_bd', ]:
         coefficients[s] = coefficients_df2
         adm[s] = adm_df2
+        rge_derivative[s] = running.make_wilson_rge_derivative(adm[s])
 
     for s in [ 'df1_sd', 'df1_cu', 'df1_bs', 'df1_bd', ]:
         coefficients[s] = coefficients_df1
 
     for s in [ 'df1_bs', 'df1_bd', ]:
         adm[s] = adm_db1
+        rge_derivative[s] = running.make_wilson_rge_derivative(adm[s])
 
     def set_initial(self, sector, scale, values):
         if sector not in self.sectors:
@@ -49,5 +53,5 @@ class WilsonCoefficients(object):
         if sector not in self.initial.keys():
             return np.zeros(len(self.coefficients[sector]))
         scale_in, values_in = self.initial[sector]
-        values_out = running.get_wilson(par, values_in, self.adm[sector], scale_in, scale)
+        values_out = running.get_wilson(par, values_in, self.rge_derivative[sector], scale_in, scale)
         return values_out

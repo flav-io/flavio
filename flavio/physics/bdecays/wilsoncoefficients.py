@@ -27,7 +27,7 @@ def wctot_dict(wc_obj, sector, scale, par):
     $\Delta F=1$ Wilson coefficients at a given scale, given a
     WilsonCoefficients instance."""
     wc_np = wc_obj.get_wc(sector, scale, par)
-    wc_sm = running.get_wilson(par, _wcsm_120, wc_obj.adm[sector], 120., scale)
+    wc_sm = running.get_wilson(par, _wcsm_120, wc_obj.rge_derivative[sector], 120., scale)
     wc_labels = wc_obj.coefficients[sector]
     wc_dict =  dict(zip(wc_labels, wc_np + wc_sm))
     return wc_dict

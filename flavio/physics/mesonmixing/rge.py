@@ -72,4 +72,4 @@ def gamma_df2(c, alpha_s, mu, nf):
 
 def run_wc_df2(par, c_in, scale_in, scale_out):
     adm = lambda nf, alpha_s, alpha_e: gamma_df2_array(nf, alpha_s)
-    return running.get_wilson(par, c_in, adm, scale_in, scale_out)
+    return running.get_wilson(par, c_in, running.make_wilson_rge_derivative(adm), scale_in, scale_out)

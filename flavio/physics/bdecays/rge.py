@@ -446,4 +446,4 @@ def gamma_all(f, als, ale, n_s=3, n_e=2):
 
 def run_wc_df1(par, c_in, scale_in, scale_out):
     adm = gamma_all
-    return running.get_wilson(par, c_in, adm, scale_in, scale_out)
+    return running.get_wilson(par, c_in, running.make_wilson_rge_derivative(adm), scale_in, scale_out)
