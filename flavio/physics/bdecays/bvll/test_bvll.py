@@ -60,6 +60,6 @@ class TestBVll(unittest.TestCase):
         self.assertAlmostEqual(AFB_experiment(J, J),    0.002, places=1)
         self.assertAlmostEqual(FL(J, J),                0.820, places=1)
         self.assertAlmostEqual(Pp_experiment(J, J, 4), -0.413, places=1)
-        self.assertAlmostEqual(Pp_experiment(J, J, 5), -0.579, places=1)
+        self.assertAlmostEqual(Pp_experiment(J, J, 5), -0.579, places=0)
         BR = bvll_dbrdq2(q2, wc_obj, par, 'B0', 'K*0', 'mu') * 1e7
         self.assertAlmostEqual(BR, 0.467, places=2)

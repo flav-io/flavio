@@ -9,11 +9,15 @@ from flavio.config import config
 from flavio.physics.running import running
 from .amplitudes import *
 from .angulardist import *
+from scipy.integrate import quad
 
 """Functions for exclusive $B\to V\ell^+\ell^-$ decays."""
 
 def dGdq2(J):
     return 3/4. * (2 * J['1s'] + J['1c']) - 1/4. * (2 * J['2s'] + J['2c'])
+
+def dGdq2_ave(J, J_bar):
+    return ( dGdq2(J) + dGdq2(J_bar) )/2.
 
 def S_theory(J, J_bar, i):
     r"""CP-averaged angular observable $S_i$ in the theory convention."""
@@ -90,7 +94,9 @@ def bvll_obs(function, q2, wc_obj, par, B, V, lep):
 
 def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):
     tauB = par[('lifetime',B)]
-    def fct(J, J_bar):
-        return ( dGdq2(J) + dGdq2(J_bar) )/2.
-    dGave = bvll_obs(fct, q2, wc_obj, par, B, V, lep)
-    return tauB * dGave
+    return tauB * bvll_obs(dGdq2_ave, q2, wc_obj, par, B, V, lep)
+
+def bvll_obs_int(function, q2_min, q2_max, wc_obj, par, B, V, lep):
+    def obs(q2):
+        return bvll_obs(function, q2, wc_obj, par, B, V, lep)
+    return quad(obs, q2_min, q2_max, epsrel=0.01, epsabs=0)[0]
