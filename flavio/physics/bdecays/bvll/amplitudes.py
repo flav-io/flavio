@@ -45,7 +45,9 @@ def transversity_amps_ff(q2, wc, par, B, V, lep):
     # functions for the "effective" Wilson coefficients including the matrix
     # elements of 4-quark operators
     #   a) LO Q1-6
-    Yq2 = matrixelements.Y(q2, wc, par, scale)
+    xi_u = ckm.xi('u',meson_quark[(B,V)])(par)
+    xi_t = ckm.xi('t',meson_quark[(B,V)])(par)
+    Yq2 = matrixelements.Y(q2, wc, par, scale) + (xi_u/xi_t)*matrixelements.Yu(q2, wc, par, scale)
     #   b) NNLO Q1,2
     delta_C7 = matrixelements.delta_C7(par=par, wc=wc, q2=q2, scale=scale, qiqj=meson_quark[(B,V)])
     delta_C9 = matrixelements.delta_C9(par=par, wc=wc, q2=q2, scale=scale, qiqj=meson_quark[(B,V)])

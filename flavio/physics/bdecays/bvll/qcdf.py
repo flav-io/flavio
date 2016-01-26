@@ -4,9 +4,10 @@ import mpmath
 import numpy as np
 from scipy.special import eval_gegenbauer
 from scipy.integrate import quad
+from flavio.physics import ckm
 from flavio.physics.functions import li2, ei
 from flavio.physics.running import running
-from flavio.physics.bdecays.common import meson_spectator, quark_charge
+from flavio.physics.bdecays.common import meson_spectator, quark_charge, meson_quark
 from flavio.physics.bdecays import matrixelements
 
 def complex_quad(func, a, b, **kwargs):
@@ -30,11 +31,14 @@ def get_input(par, B, V, scale):
     eq = quark_charge[q] # charge of the spectator quark
     ed = -1/3.
     eu = 2/3.
-    return mB, mb, mc, alpha_s, q, eq, ed, eu
+    xi_t = ckm.xi('t', meson_quark[(B,V)])(par)
+    xi_u = ckm.xi('u', meson_quark[(B,V)])(par)
+    eps_u = xi_u/xi_t
+    return mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u
 
 # see eqs. (18), (19), (50), (79) of hep-ph/0106067v2
 def T_para_minus_WA(q2, par, wc, B, V, scale):
-    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
+    mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u = get_input(par, B, V, scale)
     if q == 'u':
         # for an up-type spectator quark, additional contribution from current-current operators
         xi_t = ckm.xi('t', meson_quark[(B,V)])
@@ -51,51 +55,63 @@ def T_para_minus_WA(q2, par, wc, B, V, scale):
 
 # chromomagnetic dipole contribution
 def T_perp_plus_O8(q2, par, wc, B, V, u, scale):
-    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
+    mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u = get_input(par, B, V, scale)
     ubar = 1 - u
     return - (alpha_s/(3*pi)) * 4*ed*wc['C8eff']/(u + ubar*q2/mB**2)
 
 def T_para_minus_O8(q2, par, wc, B, V, u, scale):
-    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
+    mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u = get_input(par, B, V, scale)
     ubar = 1 - u
     return (alpha_s/(3*pi)) * eq * 8 * wc['C8eff']/(ubar + u*q2/mB**2)
 
 
 # 4-quark operator contribution
 def T_perp_plus_QSS(q2, par, wc, B, V, u, scale):
-    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
+    mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u = get_input(par, B, V, scale)
     ubar = 1 - u
-    def t(mq):
-        return t_perp(q2=q2, u=u, mq=mq, par=par, B=B, V=V)
-    return (alpha_s/(3*pi)) * mB/(2*mb)*(
-          eu * t(mc) * (-wc['C1']/6. + wc['C2'] + 6*wc['C6'])
-        + ed * t(mb) * (wc['C3'] - wc['C4']/6. + 16*wc['C5'] + (10.*wc['C6'])/3.
+    t_mc = t_perp(q2=q2, u=u, mq=mc, par=par, B=B, V=V)
+    t_mb = t_perp(q2=q2, u=u, mq=mb, par=par, B=B, V=V)
+    t_0  = t_perp(q2=q2, u=u, mq=0,  par=par, B=B, V=V)
+    T_t = (alpha_s/(3*pi)) * mB/(2*mb)*(
+          eu * t_mc * (-wc['C1']/6. + wc['C2'] + 6*wc['C6'])
+        + ed * t_mb * (wc['C3'] - wc['C4']/6. + 16*wc['C5'] + (10.*wc['C6'])/3.
                         + mb/mB*(-wc['C3'] + wc['C4']/6 - 4 * wc['C5'] + (2 * wc['C6'])/3))
-        + ed * t(0) * (-wc['C3'] + wc['C4']/6. - 16*wc['C5'] + 8*wc['C6']/3.)
+        + ed * t_0  * (-wc['C3'] + wc['C4']/6. - 16*wc['C5'] + 8*wc['C6']/3.)
         )
+    T_u = ( (alpha_s/(3*pi)) * eu * mB/(2*mb) * ( t_mc - t_0 )
+                                * ( wc['C2'] - wc['C1']/6.) )
+    return T_t + eps_u * T_u
 
 def T_para_plus_QSS(q2, par, wc, B, V, u, scale):
-    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
+    mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u = get_input(par, B, V, scale)
     ubar = 1 - u
-    def t(mq):
-        return t_para(q2=q2, u=u, mq=mq, par=par, B=B, V=V)
-    return (alpha_s/(3*pi)) * mB/mb*(
-          eu * t(mc) * (-wc['C1']/6. + wc['C2'] + 6*wc['C6'])
-        + ed * t(mb) * (wc['C3'] - wc['C4']/6. + 16*wc['C5'] + 10*wc['C6']/3.)
-        + ed * t(0) * (-wc['C3'] + wc['C4']/6. - 16*wc['C5'] + 8*wc['C6']/3.)
+    t_mc = t_para(q2=q2, u=u, mq=mc, par=par, B=B, V=V)
+    t_mb = t_para(q2=q2, u=u, mq=mb, par=par, B=B, V=V)
+    t_0  = t_para(q2=q2, u=u, mq=0,  par=par, B=B, V=V)
+    T_t = (alpha_s/(3*pi)) * mB/mb*(
+          eu * t_mc * (-wc['C1']/6. + wc['C2'] + 6*wc['C6'])
+        + ed * t_mb * (wc['C3'] - wc['C4']/6. + 16*wc['C5'] + 10*wc['C6']/3.)
+        + ed * t_0 * (-wc['C3'] + wc['C4']/6. - 16*wc['C5'] + 8*wc['C6']/3.)
         )
+    T_u = ( (alpha_s/(3*pi)) * eu * mB/mb * ( t_mc - t_0 )
+                                * ( wc['C2'] - wc['C1']/6.) )
+    return T_t + eps_u * T_u
 
 def T_para_minus_QSS(q2, par, wc, B, V, u, scale):
-    mB, mb, mc, alpha_s, q, eq, ed, eu = get_input(par, B, V, scale)
+    mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u = get_input(par, B, V, scale)
     ubar = 1 - u
-    def h(mq):
-        return matrixelements.h(ubar*mB**2 + u*q2, mq, scale)
-    return (alpha_s/(3*pi)) * eq * 6 * mB/mb*(
-          h(mc) * (-wc['C1']/6. + wc['C2'] + wc['C4'] + 10*wc['C6'])
-        + h(mb) * (wc['C3'] + 5*wc['C4']/6. + 16*wc['C5'] + 22*wc['C6']/3.)
-        + h(0) * (wc['C3'] + 17*wc['C4']/6. + 16*wc['C5'] + 82*wc['C6']/3.)
+    h_mc = matrixelements.h(ubar*mB**2 + u*q2, mc, scale)
+    h_mb = matrixelements.h(ubar*mB**2 + u*q2, mb, scale)
+    h_0  = matrixelements.h(ubar*mB**2 + u*q2, 0, scale)
+    T_t =  (alpha_s/(3*pi)) * eq * 6 * mB/mb*(
+          h_mc * (-wc['C1']/6. + wc['C2'] + wc['C4'] + 10*wc['C6'])
+        + h_mb * (wc['C3'] + 5*wc['C4']/6. + 16*wc['C5'] + 22*wc['C6']/3.)
+        + h_0 * (wc['C3'] + 17*wc['C4']/6. + 16*wc['C5'] + 82*wc['C6']/3.)
         - 8/27. * (-15*wc['C4']/2. + 12*wc['C5'] - 32*wc['C6'])
         )
+    T_u = ( (alpha_s/(3*pi)) * eq * 6*mB/mb * ( h_mc - h_0 )
+                                * ( wc['C2'] - wc['C1']/6.) )
+    return T_t + eps_u * T_u
 
 def En_V(mB, mV, q2):
     """Energy of the vector meson"""

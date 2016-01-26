@@ -55,3 +55,8 @@ class TestBMatrixElements(unittest.TestCase):
         # check the limiting cases of the quark loop function
         self.assertAlmostEqual(matrixelements.h(3.5, 1e-8, 4.2), matrixelements.h(3.5, 0., 4.2), places=6)
         self.assertAlmostEqual(matrixelements.h(1e-8, 1.2, 4.2), matrixelements.h(0., 1.2, 4.2), places=6)
+        # comparing roughly to the plots in hep-ph/0403185v2 (but with opposite sign!)
+        x = [2.5, 4.75, 4.75]
+        np.testing.assert_almost_equal(-matrixelements.Fu_17(*x), 1.045 + 0.62j, decimal=1)
+        np.testing.assert_almost_equal(-matrixelements.Fu_19(*x), -0.57 + 8.3j, decimal=1)
+        np.testing.assert_almost_equal(-matrixelements.Fu_29(*x), -13.9 + -32.5j, decimal=0)

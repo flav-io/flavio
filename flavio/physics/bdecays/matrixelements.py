@@ -1,10 +1,12 @@
-from math import sqrt,pi,log,atan
+from math import pi
+from cmath import sqrt, log, atan
 import pkgutil
 import numpy as np
 from io import StringIO
 import scipy.interpolate
 from flavio.physics.running import running
 from flavio.physics import ckm
+from flavio.physics.functions import li2, zeta
 
 # functions for C9eff
 
@@ -38,6 +40,13 @@ def Y(q2, wc, par, scale):
     - 1/2. * h(s=q2, mq=mb, mu=scale) * F_b
     - 1/2. * h(s=q2, mq=0., mu=scale) * F_u
     + F_4 )
+
+# eq. (43) of hep-ph/0412400v1
+def Yu(q2, wc, par, scale):
+    mc = running.get_mc_pole(par)
+    return ( (4/3.*wc['C1'] + wc['C2'])
+            * ( h(s=q2, mq=mc, mu=scale) - h(s=q2, mq=0, mu=scale) ))
+
 
 
 # NNLO matrix elements of C_1 and C_2 needed for semi-leptonic B decays
@@ -118,6 +127,73 @@ def F_87(Lmu, Ls, sh):
     return (-32/9. * Lmu + 8/27. * pi**2 - 44/9. - 8/9. * 1j * pi
     + (4/3. * pi**2 - 40/3.) * sh + (32/9. * pi**2 - 316/9.) * sh**2
     + (200/27. * pi**2 - 658/9.) * sh**3 - 8/9. * Ls * (sh + sh**2 + sh**3))
+
+
+# Functions for the two-loop virtual corrections to the matrix elements of
+# O1,2 in b->dl+l- (also needed for doubly Cabibbo-suppressed contributions
+# to b>sl+l-). Taken from hep-ph/0403185v2 (Seidel)
+
+def acot(x):
+    return pi/2.-atan(x)
+
+def SeidelA(q2, mb, mu):
+    """Function $A(s\equiv q^2)$ defined in eq. (29) of hep-ph/0403185v2.
+    """
+    sh = q2/mb**2
+    z = (4 * mb**2)/q2
+    return (-(104)/(243) * log((mb**2)/(mu**2)) + (4 * sh)/(27 * (1 - sh)) *
+    (li2(sh) + log(sh) * log( 1 - sh)) + (1)/(729 * (1 - sh)**2) * (6 * sh *
+    (29 - 47 * sh) * log(sh) + 785 - 1600 * sh + 833 * sh**2 + 6 * pi * 1j * (20 -
+    49 * sh + 47 * sh**2)) - (2)/(243 * (1 - sh)**3) * (2 * sqrt( z - 1) * (-4 +
+    9 * sh - 15 * sh**2 + 4 * sh**3) * acot(sqrt(z - 1)) + 9 * sh**3 *
+    log(sh)**2 + 18 * pi * 1j * sh * (1 - 2 * sh) * log(sh)) + (2 * sh)/(243 *
+    (1 - sh)**4) * (36 * acot( sqrt(z - 1))**2 + pi**2 * (-4 + 9 * sh - 9 *
+    sh**2 + 3 * sh**3)))
+
+def SeidelB(q2, mb, mu):
+    """Function $A(s\equiv q^2)$ defined in eq. (30) of hep-ph/0403185v2.
+    """
+    sh = q2/mb**2
+    z = (4 * mb**2)/q2
+    x1 = 1/2 + 1j/2 * sqrt(z - 1)
+    x2 = 1/2 - 1j/2 * sqrt(z - 1)
+    x3 = 1/2 + 1j/(2 * sqrt(z - 1))
+    x4 = 1/2 - 1j/(2 * sqrt(z - 1))
+    return ((8)/(243 * sh) * ((4 - 34 * sh - 17 * pi * 1j * sh) *
+    log((mb**2)/(mu**2)) + 8 * sh * log((mb**2)/(mu**2))**2 + 17 * sh * log(sh) *
+    log((mb**2)/(mu**2))) + ((2 + sh) * sqrt( z - 1))/(729 * sh) * (-48 *
+    log((mb**2)/(mu**2)) * acot( sqrt(z - 1)) - 18 * pi * log(z - 1) + 3 * 1j *
+    log(z - 1)**2 - 24 * 1j * li2(-x2/x1) - 5 * pi**2 * 1j + 6 * 1j * (-9 *
+    log(x1)**2 + log(x2)**2 - 2 * log(x4)**2 + 6 * log(x1) * log(x2) - 4 * log(x1) *
+    log(x3) + 8 * log(x1) * log(x4)) - 12 * pi * (2 * log(x1) + log(x3) + log(x4))) -
+    (2)/(243 * sh * (1 - sh)) * (4 * sh * (-8 + 17 * sh) * (li2(sh) + log(sh) *
+    log(1 - sh)) + 3 * (2 + sh) * (3 - sh) * log(x2/x1)**2 + 12 * pi * (-6 - sh +
+    sh**2) * acot( sqrt(z - 1))) + (2)/(2187 * sh * (1 - sh)**2) * (-18 * sh * (120 -
+    211 * sh + 73 * sh**2) * log(sh) - 288 - 8 * sh + 934 * sh**2 - 692 * sh**3 + 18 *
+    pi * 1j * sh * (82 - 173 * sh + 73 * sh**2)) - (4)/(243 * sh * (1 - sh)**3) *
+    (-2 * sqrt( z - 1) * (4 - 3 * sh - 18 * sh**2 + 16 * sh**3 - 5 * sh**4) * acot(
+    sqrt(z - 1)) - 9 * sh**3 * log(sh)**2 + 2 * pi * 1j * sh * (8 - 33 * sh + 51 *
+    sh**2 - 17 * sh**3) * log( sh)) + (2)/(729 * sh * (1 - sh)**4) * (72 * (3 - 8 *
+    sh + 2 * sh**2) * acot( sqrt(z - 1))**2 - pi**2 * (54 - 53 * sh - 286 * sh**2 +
+    612 * sh**3 - 446 * sh**4 + 113 * sh**5)) )
+
+def SeidelC(q2, mb, mu):
+    """Function $A(s\equiv q^2)$ defined in eq. (31) of hep-ph/0403185v2.
+    """
+    return (-(16)/(81) * log((q2)/(mu**2)) + (428)/(243)
+            - (64)/(27) * zeta(3) + (16)/(81) * pi * 1j)
+
+def Fu_17(q2, mb, mu):
+    return -SeidelA(q2, mb, mu)
+
+def Fu_27(q2, mb, mu):
+    return -(-6 * SeidelA(q2, mb, mu))
+
+def Fu_19(q2, mb, mu):
+    return -(SeidelB(q2, mb, mu) + 4 * SeidelC(q2, mb, mu))
+
+def Fu_29(q2, mb, mu):
+    return -(-6 * SeidelB(q2, mb, mu) + 3 * SeidelC(q2, mb, mu))
 
 
 def delta_C7(par, wc, q2, scale, qiqj):
