@@ -32,12 +32,12 @@ par = {
     'Vcb': 4.1e-2,
     'gamma': 1.22,
     ('f','B0'): 0.1905,
-    ('f_perp','K*0'): 0.185,
-    ('f_para','K*0'): 0.225,
-    ('a1_perp','K*0'): 0.2,
-    ('a1_para','K*0'): 0.2,
-    ('a2_perp','K*0'): 0.05,
-    ('a2_para','K*0'): 0.05,
+    ('f_perp','K*0'): 0.161,
+    ('f_para','K*0'): 0.211,
+    ('a1_perp','K*0'): 0.03,
+    ('a1_para','K*0'): 0.02,
+    ('a2_perp','K*0'): 0.08,
+    ('a2_para','K*0'): 0.08,
 }
 
 par.update(bsz_parameters.ffpar_lcsr)
@@ -62,4 +62,4 @@ class TestBVll(unittest.TestCase):
         self.assertAlmostEqual(Pp_experiment(J, J, 4), -0.413, places=1)
         self.assertAlmostEqual(Pp_experiment(J, J, 5), -0.579, places=0)
         BR = bvll_dbrdq2(q2, wc_obj, par, 'B0', 'K*0', 'mu') * 1e7
-        self.assertAlmostEqual(BR, 0.467, places=2)
+        self.assertAlmostEqual(BR, 0.467, places=1)

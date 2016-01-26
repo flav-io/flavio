@@ -19,35 +19,51 @@ def dGdq2(J):
 def dGdq2_ave(J, J_bar):
     return ( dGdq2(J) + dGdq2(J_bar) )/2.
 
+# denominator of S_i and A_i observables
+def SA_den(J, J_bar):
+    return 2*dGdq2_ave(J, J_bar)
+
 def S_theory(J, J_bar, i):
     r"""CP-averaged angular observable $S_i$ in the theory convention."""
-    dG     = dGdq2(J)
-    dG_bar = dGdq2(J_bar)
-    return (J[i] + J_bar[i])/(dG + dG_bar)
+    return S_theory_num(J, J_bar, i)/SA_den(J, J_bar)
+
+# numerator
+def S_theory_num(J, J_bar, i):
+    return (J[i] + J_bar[i])
 
 def A_theory(J, J_bar, i):
     r"""Angular CP asymmetry $A_i$ in the theory convention."""
-    dG     = dGdq2(J)
-    dG_bar = dGdq2(J_bar)
-    return (J[i] - J_bar[i])/(dG + dG_bar)
+    return A_theory_num(J, J_bar, i)/SA_den(J, J_bar)
+
+# numerator
+def A_theory_num(J, J_bar, i):
+    return (J[i] - J_bar[i])
 
 def S_experiment(J, J_bar, i):
     r"""CP-averaged angular observable $S_i$ in the LHCb convention.
 
     See eq. (C.8) of arXiv:1506.03970v2.
     """
+    return S_experiment_num(J, J_bar, i)/SA_den(J, J_bar)
+
+# numerator
+def S_experiment_num(J, J_bar, i):
     if i in [4, '6s', '6c', 7, 9]:
-        return -S_theory(J, J_bar, i)
-    return S_theory(J, J_bar, i)
+        return -S_theory_num(J, J_bar, i)
+    return S_theory_num(J, J_bar, i)
 
 def A_experiment(J, J_bar, i):
     r"""Angular CP asymmetry $A_i$ in the LHCb convention.
 
     See eq. (C.8) of arXiv:1506.03970v2.
     """
+    return A_experiment_num(J, J_bar, i)/SA_den(J, J_bar)
+
+# numerator
+def A_experiment_num(J, J_bar, i):
     if i in [4, '6s', '6c', 7, 9]:
-        return -A_theory(J, J_bar, i)
-    return A_theory(J, J_bar, i)
+        return -A_theory_num(J, J_bar, i)
+    return A_theory_num(J, J_bar, i)
 
 def Pp_experiment(J, J_bar, i):
     r"""Observable $P'_i$ in the LHCb convention.
@@ -65,16 +81,25 @@ def AFB_experiment(J, J_bar):
 
     See eq. (C.9) of arXiv:1506.03970v2.
     """
-    return 3/4.*S_experiment(J, J_bar, '6s')
+    return AFB_experiment_num(J, J_bar)/SA_den(J, J_bar)
+
+def AFB_experiment_num(J, J_bar):
+    return 3/4.*S_experiment_num(J, J_bar, '6s')
 
 def AFB_theory(J, J_bar):
     """Forward-backward asymmetry in the original theory convention.
     """
-    return 3/4.*S_theory(J, J_bar, '6s')
+    return AFB_theory_num(J, J_bar)/SA_den(J, J_bar)
+
+def AFB_theory_num(J, J_bar):
+    return 3/4.*S_theory_num(J, J_bar, '6s')
 
 def FL(J, J_bar):
     r"""Longitudinal polarization fraction $F_L$"""
-    return -S_theory(J, J_bar, '2c')
+    return FL_num(J, J_bar)/SA_den(J, J_bar)
+
+def FL_num(J, J_bar):
+    return -S_theory_num(J, J_bar, '2c')
 
 def FLhat(J, J_bar):
     r"""Modified longitudinal polarization fraction for vanishing lepton masses,
@@ -82,14 +107,18 @@ def FLhat(J, J_bar):
 
     See eq. (32) of arXiv:1510.04239.
     """
-    return -S_theory(J, J_bar, '1c')
+    return FLhat_num(J, J_bar)/SA_den(J, J_bar)
+
+def FLhat_num(J, J_bar):
+    return -S_theory_num(J, J_bar, '1c')
 
 def bvll_obs(function, q2, wc_obj, par, B, V, lep):
     scale = config['bdecays']['scale_bvll']
     wc = wctot_dict(wc_obj, 'df1_' + meson_quark[(B,V)], scale, par)
     a = transversity_amps(q2, wc, par, B, V, lep)
+    a_bar = transversity_amps_bar(q2, wc, par, B, V, lep)
     J = angulardist(a, q2, par, lep)
-    J_bar = angulardist_bar(a, q2, par, lep)
+    J_bar = angulardist_bar(a_bar, q2, par, lep)
     return function(J, J_bar)
 
 def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):

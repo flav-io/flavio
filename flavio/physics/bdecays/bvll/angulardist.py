@@ -55,9 +55,4 @@ def angulardist(transversity_amps, q2, par, lep):
 
 def angulardist_bar(transversity_amps_bar, q2, par, lep):
     J = angulardist(transversity_amps_bar, q2, par, lep)
-    J[5] = -J[5]
-    J['6s'] = -J['6s']
-    J['6c'] = -J['6c']
-    J[8] = -J[8]
-    J[9] = -J[9]
     return J
