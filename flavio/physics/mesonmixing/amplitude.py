@@ -69,6 +69,11 @@ def G12_d_SM(par, meson):
     di_dj = meson_quark[meson]
     xi_t = ckm.xi('t',di_dj)(par)
     xi_u = ckm.xi('u',di_dj)(par)
-    g_t = par[('Gamma12', meson, 't')]
-    g_u = par[('Gamma12', meson, 'u')]
-    return g_t * xi_t**2 + g_u * xi_u*xi_t
+    c = par[('Gamma12', meson, 'c')]
+    a = par[('Gamma12', meson, 'a')]
+    M12 = M12_d_SM(par, meson)
+    return M12*( c + a * xi_u/xi_t )*1e-4
+
+def G12_d(par, wc, meson):
+    #TODO at the moment NP contributions to Gamma_12 are ignored!
+    return G12_d_SM(par, meson)

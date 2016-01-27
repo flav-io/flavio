@@ -45,6 +45,10 @@ par = {
     ('eta_ct', 'K0'): 0.47,
     'kappa_epsilon': 0.94,
     ('DeltaM','K0'): 52.93e-4/(1e-12*s),
+    ('Gamma12','Bs','c'): -48.0,
+    ('Gamma12','Bs','a'): 12.3,
+    ('Gamma12','B0','c'): -49.5,
+    ('Gamma12','B0','a'): 11.7,
 }
 
 wc_obj = WilsonCoefficients()
@@ -71,11 +75,14 @@ class TestMesonMixing(unittest.TestCase):
         # just some trivial tests to see if calling the functions raises an error
         m12d = amplitude.M12_d(par, wc_B0, 'B0')
         m12s = amplitude.M12_d(par, wc_Bs, 'Bs')
-        # check whether order of magnitudes of SM predictions are righ
-        self.assertAlmostEqual(observables.DeltaM(wc_obj, par, 'B0')*1e-12*s, 0.53, places=1)
-        self.assertAlmostEqual(observables.DeltaM(wc_obj, par, 'Bs')*1e-12*s, 18, places=-1)
-        # self.assertAlmostEqual(sin(observables.phi(wc_obj, par, 'B0')), 0.73, places=2)
-        # self.assertAlmostEqual(observables.phi(wc_obj, par, 'Bs'), -0.038, places=3)
+        # check whether order of magnitudes of SM predictions are right
+        ps = 1e-12*s
+        self.assertAlmostEqual(observables.DeltaM(wc_obj, par, 'B0')*ps, 0.53, places=1)
+        self.assertAlmostEqual(observables.DeltaM(wc_obj, par, 'Bs')*ps, 18, places=-1)
+        self.assertAlmostEqual(observables.DeltaGamma(wc_obj, par, 'B0')/0.00261*ps, 1, places=0)
+        self.assertAlmostEqual(observables.DeltaGamma(wc_obj, par, 'Bs')/0.088*ps, 1, places=1)
+        self.assertAlmostEqual(observables.a_fs(wc_obj, par, 'B0')/-4.7e-4, 1, places=0)
+        self.assertAlmostEqual(observables.a_fs(wc_obj, par, 'Bs')/2.22e-5, 1, places=1)
         self.assertAlmostEqual(observables.S_BJpsiK(wc_obj, par), 0.73, places=2)
         self.assertAlmostEqual(observables.S_Bspsiphi(wc_obj, par), asin(-0.038), places=3)
 

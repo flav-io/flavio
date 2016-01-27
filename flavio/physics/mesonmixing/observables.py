@@ -6,18 +6,32 @@ from math import sqrt, sin
 from cmath import phase
 from flavio.physics.common import conjugate_par
 
-def get_M12(wc_obj, par, meson):
+def get_M12_G12(wc_obj, par, meson):
     scale = config['mesonmixing']['scale_mix_' + meson]
     wc = common.wcnp_dict(wc_obj, 'df2_' + common.meson_quark[meson], scale, par)
     M12 = amplitude.M12_d(par, wc, meson)
-    return M12
+    G12 = amplitude.G12_d(par, wc, meson)
+    return M12, G12
 
 def DeltaM(wc_obj, par, meson):
-    M12 = get_M12(wc_obj, par, meson)
-    return common.DeltaM(M12, 0.)
+    M12, G12 = get_M12_G12(wc_obj, par, meson)
+    return common.DeltaM(M12, G12)
+
+def a_fs(wc_obj, par, meson):
+    M12, G12 = get_M12_G12(wc_obj, par, meson)
+    return common.a_fs(M12, G12)
+
+def q_over_p(wc_obj, par, meson):
+    M12, G12 = get_M12_G12(wc_obj, par, meson)
+    return common.q_over_p(M12, G12)
+
+def DeltaGamma(wc_obj, par, meson):
+    M12, G12 = get_M12_G12(wc_obj, par, meson)
+    return common.DeltaGamma(M12, G12)
+
 
 def epsK(wc_obj, par):
-    M12 = get_M12(wc_obj, par, 'K0')
+    M12, G12 = get_M12_G12(wc_obj, par, 'K0')
     keps =  par['kappa_epsilon']
     DMK =  par[('DeltaM','K0')]
     return keps * M12.imag / DMK / sqrt(2)
@@ -31,8 +45,8 @@ def amplitude_Bspsiphi(par):
     return xi_c
 
 def S(wc_obj, par, meson, amplitude):
-    M12 = get_M12(wc_obj, par, meson)
-    qp = common.q_over_p(M12, 0.)
+    M12, G12 = get_M12_G12(wc_obj, par, meson)
+    qp = common.q_over_p(M12, G12)
     A = amplitude(par)
     A_bar = amplitude(conjugate_par(par))
     xi = qp * A / A_bar
