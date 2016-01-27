@@ -1,4 +1,6 @@
-from math import pi
+from math import pi, sqrt, cos, sin
+from cmath import phase
+import cmath
 
 meson_quark = { 'B0': 'bd', 'Bs': 'bs', 'K0': 'sd', 'D0': 'cu' }
 
@@ -27,3 +29,36 @@ def wcnp_dict(wc_obj, sector, scale, par):
     wc_labels = wc_obj.coefficients[sector]
     wc_dict =  dict(zip(wc_labels, wc_np))
     return wc_dict
+
+def DeltaM(M12, G12):
+    r"""Meson mixing mass difference $\Delta M$ as a function of $M_{12}$ and
+    $\Gamma_{12}$."""
+    aM12 = abs(M12)
+    aG12 = abs(G12)
+    phi12 = phase(-M12/G12)
+    return sqrt(4*aM12**2 + aG12**2 + sqrt(16*aM12**4 + 16*aM12**2*aG12**2
+                    + aG12**4 + 8*aM12**2*aG12**2*cos(2*phi12)))/sqrt(2)
+
+def DeltaGamma(M12, G12):
+    r"""Meson mixing decay width difference $\Delta\Gamma$ as a function of
+    $M_{12}$ and $\Gamma_{12}$."""
+    aM12 = abs(M12)
+    aG12 = abs(G12)
+    phi12 = phase(-M12/G12)
+    return sqrt(2)*sqrt(-4*aM12**2 - aG12**2 +
+                sqrt(16*aM12**4 + 8*aM12**2*aG12**2 +
+                    aG12**4 + 16*aM12**2*aG12**2*cos(phi12)**2))
+
+def q_over_p(M12, G12):
+    r"""Ratio $q/p$ as a function of $M_{12}$ and $\Gamma_{12}$."""
+    DM = DeltaM(M12, G12)
+    DG = DeltaGamma(M12, G12)
+    return -cmath.sqrt((2*M12.conjugate()-1j*G12.conjugate())/(2*M12-1j*G12))
+
+def a_fs(M12, G12):
+    r"""Flavour-specific CP asymmetry in meson mixing as a function of
+    $M_{12}$ and $\Gamma_{12}$."""
+    aM12 = abs(M12)
+    aG12 = abs(G12)
+    phi12 = phase(-M12/G12)
+    return aG12 / aM12 * sin(phi12)

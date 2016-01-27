@@ -3,7 +3,7 @@ from flavio.physics.mesonmixing.wilsoncoefficient import cvll_d
 from flavio.physics.mesonmixing.common import meson_quark, bag_msbar2rgi
 from flavio.config import config
 from flavio.physics.running import running
-
+from flavio.physics import ckm
 
 def matrixelements(par, meson):
     """Returns the matrix elements"""
@@ -64,3 +64,11 @@ def M12_d(par, wc, meson):
     contribution_sm = M12_d_SM(par, meson)
     # new physics + SM
     return sum(contributions_np) + contribution_sm
+
+def G12_d_SM(par, meson):
+    di_dj = meson_quark[meson]
+    xi_t = ckm.xi('t',di_dj)(par)
+    xi_u = ckm.xi('u',di_dj)(par)
+    g_t = par[('Gamma12', meson, 't')]
+    g_u = par[('Gamma12', meson, 'u')]
+    return g_t * xi_t**2 + g_u * xi_u*xi_t

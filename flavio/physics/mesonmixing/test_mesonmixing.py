@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from . import amplitude, rge, observables
-from math import sin
+from math import sin, asin
 from flavio.physics.eft import WilsonCoefficients
 from flavio.physics.mesonmixing.common import wcnp_dict
 
@@ -74,8 +74,10 @@ class TestMesonMixing(unittest.TestCase):
         # check whether order of magnitudes of SM predictions are righ
         self.assertAlmostEqual(observables.DeltaM(wc_obj, par, 'B0')*1e-12*s, 0.53, places=1)
         self.assertAlmostEqual(observables.DeltaM(wc_obj, par, 'Bs')*1e-12*s, 18, places=-1)
-        self.assertAlmostEqual(sin(observables.phi(wc_obj, par, 'B0')), 0.73, places=2)
-        self.assertAlmostEqual(observables.phi(wc_obj, par, 'Bs'), -0.038, places=3)
+        # self.assertAlmostEqual(sin(observables.phi(wc_obj, par, 'B0')), 0.73, places=2)
+        # self.assertAlmostEqual(observables.phi(wc_obj, par, 'Bs'), -0.038, places=3)
+        self.assertAlmostEqual(observables.S_BJpsiK(wc_obj, par), 0.73, places=2)
+        self.assertAlmostEqual(observables.S_Bspsiphi(wc_obj, par), asin(-0.038), places=3)
 
 
     def test_running(self):
