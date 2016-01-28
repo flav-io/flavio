@@ -47,9 +47,5 @@ class TestBPll(unittest.TestCase):
         prefactor(1., par, 'B+', 'K+', 'mu')
         a = amps(1., wc, par, 'B+', 'K+', 'mu')
         ac = angulardist(a, 1., par, 'B+', 'K+', 'mu')
-        dGdq2(ac)
-        AFB(ac)
-        FH(ac)
         # rough numerical test for branching ratio at high q^2 comparing to 1510.02349
-        # FIXME must become better
-        self.assertAlmostEqual(bpll_dbrdq2(16., wc, par, 'B+', 'K+', 'mu')*1e8/(4.615/2.), 1, places=0)
+        self.assertAlmostEqual(bpll_dbrdq2(16., wc_obj, par, 'B+', 'K+', 'mu')*1e8/(4.615/2.), 1, places=1)
