@@ -41,7 +41,7 @@ class TestBMatrixElements(unittest.TestCase):
         matrixelements.F_87(0.1, 0.2, 0.3)
         matrixelements.F_89(0.4, 0.5)
         wc_obj = WilsonCoefficients()
-        wc = wctot_dict(wc_obj, 'df1_bs', 4.2, par)
+        wc = wctot_dict(wc_obj, 'bsmumu', 4.2, par)
         matrixelements.delta_C7(par, wc, q2=3.5, scale=4.2, qiqj='bs')
         matrixelements.delta_C9(par, wc, q2=3.5, scale=4.2, qiqj='bs')
         # comparing to the values from the data file

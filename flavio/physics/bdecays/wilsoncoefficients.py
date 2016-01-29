@@ -5,6 +5,7 @@ from io import StringIO
 import scipy.interpolate
 from flavio.physics.running import running
 from flavio.physics import ckm
+from flavio.physics.common import add_dict
 
 
 # SM Wilson coefficients at 120 GeV in the basis
@@ -26,8 +27,8 @@ def wctot_dict(wc_obj, sector, scale, par):
     r"""Get a dictionary with the total (SM + new physics) values  of the
     $\Delta F=1$ Wilson coefficients at a given scale, given a
     WilsonCoefficients instance."""
-    wc_np = wc_obj.get_wc(sector, scale, par)
+    wc_np_dict = wc_obj.get_wc(sector, scale, par)
     wc_sm = running.get_wilson(par, _wcsm_120, wc_obj.rge_derivative[sector], 120., scale)
     wc_labels = wc_obj.coefficients[sector]
-    wc_dict =  dict(zip(wc_labels, wc_np + wc_sm))
-    return wc_dict
+    wc_sm_dict =  dict(zip(wc_labels, wc_sm))
+    return add_dict((wc_np_dict, wc_sm_dict))

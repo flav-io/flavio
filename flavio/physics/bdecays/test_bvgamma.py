@@ -61,7 +61,7 @@ par = {
 par.update(bsz_parameters.ffpar_lcsr)
 
 wc_obj = WilsonCoefficients()
-wc = wctot_dict(wc_obj, 'df1_bs', 4.2, par)
+wc = wctot_dict(wc_obj, 'bsee', 4.2, par)
 
 class TestBVgamma(unittest.TestCase):
     def test_bksgamma(self):

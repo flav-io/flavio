@@ -41,7 +41,7 @@ par = {
 par.update(bsz_parameters.ffpar_lcsr)
 
 wc_obj = WilsonCoefficients()
-wc = wctot_dict(wc_obj, 'df1_bs', 4.2, par)
+wc = wctot_dict(wc_obj, 'bsmumu', 4.2, par)
 
 # 10^12 x transversity amplitudes at q2=3.5 excluding QCDF according to my old code
 amps_ff = [-0.256803+0.00982814j,0.273641 -0.000545939j,0.343695 -0.0109845j,-0.266964+0.000958423j,1.25153 -0.0150762j,-0.0343971+0.0100732j,1.28074 -0.0250478j,0. +0.j]

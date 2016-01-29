@@ -41,15 +41,17 @@ def amps(q2, wc, par, B, P, lep):
     #   a) LO Q1-6
     xi_u = ckm.xi('u',meson_quark[(B,P)])(par)
     xi_t = ckm.xi('t',meson_quark[(B,P)])(par)
-    Yq2 = matrixelements.Y(q2, wc, par, scale) + (xi_u/xi_t)*matrixelements.Yu(q2, wc, par, scale)
+    qiqj = meson_quark[(B,P)]
+    Yq2 = matrixelements.Y(q2, wc, par, scale, qiqj) + (xi_u/xi_t)*matrixelements.Yu(q2, wc, par, scale, qiqj)
     #   b) NNLO Q1,2
-    delta_C7 = matrixelements.delta_C7(par=par, wc=wc, q2=q2, scale=scale, qiqj=meson_quark[(B,P)])
-    delta_C9 = matrixelements.delta_C9(par=par, wc=wc, q2=q2, scale=scale, qiqj=meson_quark[(B,P)])
-    c7pl = wc['C7eff'] + wc['C7effp'] + delta_C7
-    c9pl = wc['C9'] + wc['C9p']       + delta_C9 + Yq2
-    c10pl = wc['C10'] + wc['C10p']
-    cspl = wc['CS'] + wc['CSp']
-    cppl = wc['CP'] + wc['CPp']
+    delta_C7 = matrixelements.delta_C7(par=par, wc=wc, q2=q2, scale=scale, qiqj=qiqj)
+    delta_C9 = matrixelements.delta_C9(par=par, wc=wc, q2=q2, scale=scale, qiqj=qiqj)
+    ll = lep + lep
+    c7pl = wc['C7eff_'+qiqj] + wc['C7effp_'+qiqj] + delta_C7
+    c9pl = wc['C9_'+qiqj+ll] + wc['C9p_'+qiqj+ll] + delta_C9 + Yq2
+    c10pl = wc['C10_'+qiqj+ll] + wc['C10p_'+qiqj+ll]
+    cspl = wc['CS_'+qiqj+ll] + wc['CSp_'+qiqj+ll]
+    cppl = wc['CP_'+qiqj+ll] + wc['CPp_'+qiqj+ll]
     N = prefactor(q2, par, B, P, lep)
     # form factors
     ff = FF.parametrizations['btop_lattice'].get_ff(meson_ff[(B,P)], q2, par)
@@ -90,7 +92,7 @@ def angulardist(amps, q2, par, B, P, lep):
 
 def bpll_obs(function, q2, wc_obj, par, B, P, lep):
     scale = config['bdecays']['scale_bpll']
-    wc = wctot_dict(wc_obj, 'df1_' + meson_quark[(B,P)], scale, par)
+    wc = wctot_dict(wc_obj, meson_quark[(B,P)]+lep+lep, scale, par)
     a = amps(q2, wc, par, B, P, lep)
     a_bar = amps_bar(q2, wc, par, B, P, lep)
     J     = angulardist(a,     q2, par, B, P, lep)

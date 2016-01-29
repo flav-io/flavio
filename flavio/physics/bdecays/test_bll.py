@@ -33,7 +33,9 @@ par = {
 }
 
 wc_obj = WilsonCoefficients()
-wc = wctot_dict(wc_obj, 'df1_bs', 4.2, par)
+wc = wctot_dict(wc_obj, 'bsmumu', 4.2, par)
+wc_e = wctot_dict(wc_obj, 'bsee', 4.2, par)
+wc_tau = wctot_dict(wc_obj, 'bstautau', 4.2, par)
 
 
 class TestBll(unittest.TestCase):
@@ -49,10 +51,10 @@ class TestBll(unittest.TestCase):
         self.assertAlmostEqual(br_timeint(par, wc, 'Bs', 'mu')/br_inst(par, wc, 'Bs', 'mu'), 1.07, places=2)
         # ratio of Bs->mumu and Bs->ee BRs should be roughly given by ratio of squared masses
         self.assertAlmostEqual(
-            br_timeint(par, wc, 'Bs', 'e')/br_timeint(par, wc, 'Bs', 'mu')/par[('mass','e')]**2*par[('mass','mu')]**2,
+            br_timeint(par, wc_e, 'Bs', 'e')/br_timeint(par, wc, 'Bs', 'mu')/par[('mass','e')]**2*par[('mass','mu')]**2,
             1., places=2)
-        # comparison to 1311.0903
+            # comparison to 1311.0903
         self.assertAlmostEqual(abs(ckm.xi('t','bs')(par))/par['Vcb'], 0.980, places=3)
         self.assertAlmostEqual(br_timeint(par, wc, 'Bs', 'mu')/3.65e-9, 1, places=1)
-        self.assertAlmostEqual(br_timeint(par, wc, 'Bs', 'e')/8.54e-14, 1, places=1)
-        self.assertAlmostEqual(br_timeint(par, wc, 'Bs', 'tau')/7.73e-7, 1, places=1)
+        self.assertAlmostEqual(br_timeint(par, wc_e, 'Bs', 'e')/8.54e-14, 1, places=1)
+        self.assertAlmostEqual(br_timeint(par, wc_tau, 'Bs', 'tau')/7.73e-7, 1, places=1)

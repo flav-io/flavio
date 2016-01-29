@@ -8,7 +8,7 @@ from flavio.physics.common import conjugate_par
 
 def get_M12_G12(wc_obj, par, meson):
     scale = config['mesonmixing']['scale_mix_' + meson]
-    wc = common.wcnp_dict(wc_obj, 'df2_' + common.meson_quark[meson], scale, par)
+    wc = wc_obj.get_wc(2*common.meson_quark[meson], scale, par)
     M12 = amplitude.M12_d(par, wc, meson)
     G12 = amplitude.G12_d(par, wc, meson)
     return M12, G12

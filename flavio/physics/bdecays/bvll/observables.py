@@ -114,7 +114,8 @@ def FLhat_num(J, J_bar):
 
 def bvll_obs(function, q2, wc_obj, par, B, V, lep):
     scale = config['bdecays']['scale_bvll']
-    wc = wctot_dict(wc_obj, 'df1_' + meson_quark[(B,V)], scale, par)
+    label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
+    wc = wctot_dict(wc_obj, label, scale, par)
     a = transversity_amps(q2, wc, par, B, V, lep)
     a_bar = transversity_amps_bar(q2, wc, par, B, V, lep)
     J = angulardist(a, q2, par, lep)

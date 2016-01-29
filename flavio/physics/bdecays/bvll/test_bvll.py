@@ -48,7 +48,7 @@ class TestBVll(unittest.TestCase):
         q2 = 3.5
         prefactor(q2, par, 'B0', 'K*0', 'mu')
         wc_obj = WilsonCoefficients()
-        wc = wctot_dict(wc_obj, 'df1_bs', 4.2, par)
+        wc = wctot_dict(wc_obj, 'bsmumu', 4.2, par)
         a = transversity_amps_ff(q2, wc, par, 'B0', 'K*0', 'mu')
         J = angulardist(a, q2, par, 'mu')
         # A7 should vanish as CP conjugation is ignored here (J=Jbar)

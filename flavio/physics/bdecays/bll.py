@@ -1,6 +1,7 @@
 from math import pi,sqrt
 from flavio.physics import ckm
 from flavio.physics.running import running
+from flavio.physics.bdecays.common import meson_quark
 
 r"""Functions for the branching ratios and effective lifetimes of the leptonic
 decays $B_q \to \ell^+\ell^-$, where $q=d$ or $s$ and $\ell=e$, $\mu$. or
@@ -41,9 +42,10 @@ def amplitudes(par, wc, B, lep):
     ml = par[('mass',lep)]
     mB = par[('mass',B)]
     # Wilson coefficients
-    C10m = wc['C10'] - wc['C10p']
-    CPm = wc['CP'] - wc['CPp']
-    CSm = wc['CS'] - wc['CSp']
+    qqll = meson_quark[B] + lep + lep
+    C10m = wc['C10_'+qqll] - wc['C10p_'+qqll]
+    CPm = wc['CP_'+qqll] - wc['CPp_'+qqll]
+    CSm = wc['CS_'+qqll] - wc['CSp_'+qqll]
     P = 2*ml/mB * C10m +  mB * CPm
     S = mB * CSm
     return P, S

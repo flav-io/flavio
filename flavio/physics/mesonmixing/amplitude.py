@@ -10,8 +10,9 @@ def matrixelements(par, meson):
     mM = par[('mass',meson)]
     fM = par[('f',meson)]
     BM = lambda i: par[('bag',meson, i)]
-    mq1 = par[('mass', meson_quark[meson][0])]
-    mq2 = par[('mass', meson_quark[meson][1])]
+    di_dj = meson_quark[meson]
+    mq1 = par[('mass', di_dj[0])]
+    mq2 = par[('mass', di_dj[1])]
     r = (mM/(mq1+mq2))**2
     me = {}
     me['CVLL'] =  mM*fM**2*(1/3.)*BM(1)
@@ -59,7 +60,7 @@ def M12_d(par, wc, meson):
     me = matrixelements(par, meson)
     # new physics contributions to the mixing amplitude
     # the minus sign below stems from the fact that H_eff = -C_i O_i
-    contributions_np = [ -wc_value * me[wc_name] for wc_name, wc_value in wc.items() ]
+    contributions_np = [ -wc_value * me[wc_name.split('_')[0]] for wc_name, wc_value in wc.items() ]
     # SM contribution
     contribution_sm = M12_d_SM(par, meson)
     # new physics + SM

@@ -41,19 +41,17 @@ par = {
 par.update(bsz_parameters.ffpar_lcsr)
 
 wc_obj = WilsonCoefficients()
-wc_ini = np.zeros(34, dtype=complex)
-# non-zero NP contributions to (pseudo)scalar operators
-wc_ini[-4] = 1.31
-wc_ini[-3] = -3.25
-wc_ini[-2] = 1.86j + 3.
-wc_ini[-1] = -1.38j
-# also C7', C9', C10'
-wc_ini[21] = -3.25
-wc_ini[23] = 1.86j + 3.
-wc_ini[24] = -1.38j
-wc_obj.set_initial('df1_bs', 4.8, wc_ini)
-wc = wctot_dict(wc_obj, 'df1_bs', 4.8, par)
-
+wc_ini = {
+'CS_bsmumu': 1.31,
+'CP_bsmumu': -3.25,
+'CSp_bsmumu': 1.86j + 3.,
+'CPp_bsmumu': -1.38j,
+'C7effp_bs': -3.25,
+'C9p_bsmumu': 1.86j + 3.,
+'C10p_bsmumu': -1.38j,
+}
+wc_obj.set_initial(wc_ini, 4.8)
+wc = wctot_dict(wc_obj, 'bsmumu', 4.8, par)
 
 class TestBVll(unittest.TestCase):
     def test_bksll(self):

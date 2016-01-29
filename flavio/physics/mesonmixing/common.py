@@ -21,15 +21,6 @@ def bag_msbar2rgi(alpha_s, meson):
         g = 2/9.
     return alpha_s**(-g) * (1 + alpha_s/(4*pi) * J)
 
-def wcnp_dict(wc_obj, sector, scale, par):
-    r"""Get a dictionary with the NP contributions to the
-    $\Delta F=2$ Wilson coefficients at a given scale, given a
-    WilsonCoefficients instance."""
-    wc_np = wc_obj.get_wc(sector, scale, par)
-    wc_labels = wc_obj.coefficients[sector]
-    wc_dict =  dict(zip(wc_labels, wc_np))
-    return wc_dict
-
 def DeltaM(M12, G12):
     r"""Meson mixing mass difference $\Delta M$ as a function of $M_{12}$ and
     $\Gamma_{12}$."""

@@ -3,7 +3,6 @@ import numpy as np
 from . import amplitude, rge, observables
 from math import sin, asin
 from flavio.physics.eft import WilsonCoefficients
-from flavio.physics.mesonmixing.common import wcnp_dict
 
 s = 1.519267515435317e+24
 
@@ -52,9 +51,9 @@ par = {
 }
 
 wc_obj = WilsonCoefficients()
-wc_B0 = wcnp_dict(wc_obj, 'df2_bd', 4.2, par)
-wc_Bs = wcnp_dict(wc_obj, 'df2_bs', 4.2, par)
-wc_K = wcnp_dict(wc_obj, 'df2_sd', 2, par)
+wc_B0 = wc_obj.get_wc('bdbd', 4.2, par)
+wc_Bs = wc_obj.get_wc('bsbs', 4.2, par)
+wc_K = wc_obj.get_wc('sdsd', 2, par)
 
 # this is the DeltaF=2 evolution matrix from mt to 2 GeV as obtained
 # from the formulae in hep-ph/0102316
@@ -88,6 +87,14 @@ class TestMesonMixing(unittest.TestCase):
 
 
     def test_running(self):
+        c_in = {'CSLL_bsbs': 0.77740198,
+             'CSLR_bsbs': 0.87053086,
+             'CSRR_bsbs': 0.42482153,
+             'CTLL_bsbs': 0.54696337,
+             'CTRR_bsbs': 0.95717777,
+             'CVLL_bsbs': 0.20910694,
+             'CVLR_bsbs': 0.62733321,
+             'CVRR_bsbs': 0.46407456}
         c_in = np.array([ 0.20910694,  0.77740198,  0.54696337,  0.46407456,  0.42482153,
         0.95717777,  0.62733321,  0.87053086])
         c_out = rge.run_wc_df2(par, c_in, 173.3, 2)

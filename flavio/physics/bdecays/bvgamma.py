@@ -25,9 +25,10 @@ def prefactor(par, B, V):
 
 def amps(wc, par, B, V):
     N = prefactor(par, B, V)
+    qiqj = meson_quark[(B,V)]
     ff = FF.parametrizations['bsz3'].get_ff(meson_ff[(B,V)], 0, par)
-    c7 = wc['C7eff']
-    c7p = wc['C7effp']
+    c7 = wc['C7eff_'+qiqj] # e.g. C7eff_bs
+    c7p = wc['C7effp_'+qiqj]
     a = {}
     a['L'] = N * c7  * ff['T1']
     a['R'] = N * c7p * ff['T1']
@@ -41,7 +42,8 @@ def amps_bar(wc, par, B, V):
 
 def get_a_abar(wc_obj, par, B, V):
     scale = config['bdecays']['scale_bvll']
-    wc = wctot_dict(wc_obj, 'df1_' + meson_quark[(B,V)], scale, par)
+    # these are the b->qee Wilson coefficients - they contain the b->qgamma ones as a subset
+    wc = wctot_dict(wc_obj, meson_quark[(B,V)] + 'ee', scale, par)
     a = amps(wc, par, B, V)
     a_bar = amps_bar(wc, par, B, V)
     return a, a_bar

@@ -47,19 +47,21 @@ def transversity_amps_ff(q2, wc, par, B, V, lep):
     #   a) LO Q1-6
     xi_u = ckm.xi('u',meson_quark[(B,V)])(par)
     xi_t = ckm.xi('t',meson_quark[(B,V)])(par)
-    Yq2 = matrixelements.Y(q2, wc, par, scale) + (xi_u/xi_t)*matrixelements.Yu(q2, wc, par, scale)
+    qiqj = meson_quark[(B,V)]
+    Yq2 = matrixelements.Y(q2, wc, par, scale, qiqj) + (xi_u/xi_t)*matrixelements.Yu(q2, wc, par, scale, qiqj)
     #   b) NNLO Q1,2
-    delta_C7 = matrixelements.delta_C7(par=par, wc=wc, q2=q2, scale=scale, qiqj=meson_quark[(B,V)])
-    delta_C9 = matrixelements.delta_C9(par=par, wc=wc, q2=q2, scale=scale, qiqj=meson_quark[(B,V)])
+    delta_C7 = matrixelements.delta_C7(par=par, wc=wc, q2=q2, scale=scale, qiqj=qiqj)
+    delta_C9 = matrixelements.delta_C9(par=par, wc=wc, q2=q2, scale=scale, qiqj=qiqj)
+    ll = lep + lep
     # convenient combinations of Wilson coefficients
-    c7pl = wc['C7eff'] + wc['C7effp'] + delta_C7
-    c7mi = wc['C7eff'] - wc['C7effp'] + delta_C7
-    c9pl = wc['C9'] + wc['C9p']       + delta_C9 + Yq2
-    c9mi = wc['C9'] - wc['C9p']       + delta_C9 + Yq2
-    c10pl = wc['C10'] + wc['C10p']
-    c10mi = wc['C10'] - wc['C10p']
-    csmi = wc['CS'] - wc['CSp']
-    cpmi = wc['CP'] - wc['CPp']
+    c7pl = wc['C7eff_'+qiqj] + wc['C7effp_'+qiqj] + delta_C7
+    c7mi = wc['C7eff_'+qiqj] - wc['C7effp_'+qiqj] + delta_C7
+    c9pl = wc['C9_'+qiqj+ll] + wc['C9p_'+qiqj+ll] + delta_C9 + Yq2
+    c9mi = wc['C9_'+qiqj+ll] - wc['C9p_'+qiqj+ll] + delta_C9 + Yq2
+    c10pl = wc['C10_'+qiqj+ll] + wc['C10p_'+qiqj+ll]
+    c10mi = wc['C10_'+qiqj+ll] - wc['C10p_'+qiqj+ll]
+    csmi = wc['CS_'+qiqj+ll] - wc['CSp_'+qiqj+ll]
+    cpmi = wc['CP_'+qiqj+ll] - wc['CPp_'+qiqj+ll]
     # form factors
     ff = FF.parametrizations['bsz3'].get_ff(meson_ff[(B,V)], q2, par)
     # transverity amplitudes

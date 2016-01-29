@@ -16,15 +16,8 @@ par = {
 
 class TestEFT(unittest.TestCase):
     def test_eft(self):
-        # for now just test if calling the functions raises an exception
         wc =  WilsonCoefficients()
-        n_df2 = len(wc.coefficients['df2_bd'])
-        n_db1 = len(wc.coefficients['df1_bs'])
-        c_df2 = np.zeros(n_df2)
-        c_df2[0] = 1.0
-        c_db1 = np.zeros(n_db1)
-        c_db1[6] = 0.3
-        wc.set_initial('df2_bd', 160., c_df2)
-        wc.set_initial('df1_bs', 160., c_db1)
-        wc.get_wc('df2_bd', 4.2, par)
-        wc.get_wc('df1_bs', 4.2, par)
+        wc.set_initial({'CVLL_bsbs': 0.1j, 'C9_bsmumu':-1.5, 'CV_bctaunu': 0.2}, 160.)
+        wc.get_wc('bsbs', 4.8, par)
+        wc.get_wc('bsmumu', 4.8, par)
+        wc.get_wc('bctaunu', 4.8, par)

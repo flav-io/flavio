@@ -24,7 +24,7 @@ def h(s, mq, mu):
   return (-4/9. * log(mq**2/mu**2) + 8/27. + 4/9. * z
           -4/9. * (2 + z) * sqrt(abs(z - 1)) * A)
 
-def Y(q2, wc, par, scale):
+def Y(q2, wc, par, scale, qiqj):
     """Function $Y$ that contains the contributions of the matrix
     elements of four-quark operators to the effective Wilson coefficient
     $C_9^{\mathrm{eff}}=C_9 + Y(q^2)$.
@@ -32,19 +32,19 @@ def Y(q2, wc, par, scale):
     See e.g. eq. (10) of 0811.1214v5."""
     mb = running.get_mb_pole(par)
     mc = running.get_mc_pole(par)
-    F_c = 4/3.*wc['C1'] +       wc['C2'] +      6*wc['C3'] +    60*wc['C5']
-    F_b =    7*wc['C3'] +  4/3.*wc['C4'] +     76*wc['C5'] + 64/3.*wc['C6']
-    F_u =      wc['C3'] +  4/3.*wc['C4'] +     16*wc['C5'] + 64/3.*wc['C6']
-    F_4 = 4/3.*wc['C3'] + 64/9.*wc['C5'] + 64/27.*wc['C6']
+    F_c = 4/3.*wc['C1_'+qiqj] +       wc['C2_'+qiqj] +      6*wc['C3_'+qiqj] +    60*wc['C5_'+qiqj]
+    F_b =    7*wc['C3_'+qiqj] +  4/3.*wc['C4_'+qiqj] +     76*wc['C5_'+qiqj] + 64/3.*wc['C6_'+qiqj]
+    F_u =      wc['C3_'+qiqj] +  4/3.*wc['C4_'+qiqj] +     16*wc['C5_'+qiqj] + 64/3.*wc['C6_'+qiqj]
+    F_4 = 4/3.*wc['C3_'+qiqj] + 64/9.*wc['C5_'+qiqj] + 64/27.*wc['C6_'+qiqj]
     return ( h(s=q2, mq=mc, mu=scale) * F_c
     - 1/2. * h(s=q2, mq=mb, mu=scale) * F_b
     - 1/2. * h(s=q2, mq=0., mu=scale) * F_u
     + F_4 )
 
 # eq. (43) of hep-ph/0412400v1
-def Yu(q2, wc, par, scale):
+def Yu(q2, wc, par, scale, qiqj):
     mc = running.get_mc_pole(par)
-    return ( (4/3.*wc['C1'] + wc['C2'])
+    return ( (4/3.*wc['C1_'+qiqj] + wc['C2_'+qiqj])
             * ( h(s=q2, mq=mc, mu=scale) - h(s=q2, mq=0, mu=scale) ))
 
 
@@ -207,7 +207,7 @@ def delta_C7(par, wc, q2, scale, qiqj):
     z = mc**2/mb**2
     Lmu = log(scale/mb)
     Ls = log(sh)
-    delta_t = wc['C8eff'] * F_87(Lmu, Ls, sh) + wc['C1'] * F_17(muh, z, sh) + wc['C2'] * F_27(muh, z, sh)
+    delta_t = wc['C8eff_'+qiqj] * F_87(Lmu, Ls, sh) + wc['C1_'+qiqj] * F_17(muh, z, sh) + wc['C2_'+qiqj] * F_27(muh, z, sh)
     return -alpha_s/(4*pi) * delta_t
 
 def delta_C9(par, wc, q2, scale, qiqj):
@@ -221,5 +221,5 @@ def delta_C9(par, wc, q2, scale, qiqj):
     z = mc**2/mb**2
     Lmu = log(scale/mb)
     Ls = log(sh)
-    delta_t = wc['C8eff'] * F_89(Ls, sh) + wc['C1'] * F_19(muh, z, sh) + wc['C2'] * F_29(muh, z, sh)
+    delta_t = wc['C8eff_'+qiqj] * F_89(Ls, sh) + wc['C1_'+qiqj] * F_19(muh, z, sh) + wc['C2_'+qiqj] * F_29(muh, z, sh)
     return -alpha_s/(4*pi) * delta_t

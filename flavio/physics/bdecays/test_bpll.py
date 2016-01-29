@@ -39,7 +39,7 @@ par = {
 }
 
 wc_obj = WilsonCoefficients()
-wc = wctot_dict(wc_obj, 'df1_bs', 4.2, par)
+wc = wctot_dict(wc_obj, 'bsmumu', 4.2, par)
 
 class TestBPll(unittest.TestCase):
     def test_bkll(self):
