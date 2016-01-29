@@ -43,9 +43,5 @@ wc = wctot_dict(wc_obj, 'bsmumu', 4.2, par)
 
 class TestBPll(unittest.TestCase):
     def test_bkll(self):
-        # just some trivial tests to see if calling the functions raises an error
-        prefactor(1., par, 'B+', 'K+', 'mu')
-        a = amps(1., wc, par, 'B+', 'K+', 'mu')
-        ac = angulardist(a, 1., par, 'B+', 'K+', 'mu')
         # rough numerical test for branching ratio at high q^2 comparing to 1510.02349
         self.assertAlmostEqual(bpll_dbrdq2(16., wc_obj, par, 'B+', 'K+', 'mu')*1e8/(4.615/2.), 1, places=1)

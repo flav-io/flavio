@@ -35,11 +35,10 @@ def wctot_dict(wc_obj, sector, scale, par):
     wc_sm_dict =  dict(zip(wc_labels, wc_sm))
     return add_dict((wc_np_dict, wc_sm_dict))
 
-def get_wceff(q2, wc_obj, par, B, M, lep, scale):
+def get_wceff(q2, wc, par, B, M, lep, scale):
     """Get a dictionary with the effective $\Delta F=1$ Wilson coefficients
     in the convention appropriate for the generalized angular distributions.
     """
-    wc = wctot_dict(wc_obj, meson_quark[(B,M)]+lep+lep, scale, par)
     xi_u = ckm.xi('u',meson_quark[(B,M)])(par)
     xi_t = ckm.xi('t',meson_quark[(B,M)])(par)
     qiqj=meson_quark[(B,M)]

@@ -24,7 +24,8 @@ def get_ff(q2, par, B, V):
 
 def get_angularcoeff(q2, wc_obj, par, B, V, lep):
     scale = config['bdecays']['scale_bvll']
-    wc = get_wceff(q2, wc_obj, par, B, V, lep, scale)
+    wc_tot = wctot_dict(wc_obj, meson_quark[(B,V)]+lep+lep, scale, par)
+    wc = get_wceff(q2, wc_tot, par, B, V, lep, scale)
     ml = par[('mass',lep)]
     mB = par[('mass',B)]
     mV = par[('mass',V)]
