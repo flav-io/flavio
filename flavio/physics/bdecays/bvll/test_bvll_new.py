@@ -1,7 +1,6 @@
 import unittest
 import numpy as np
-from .angular_new import *
-from . import angulardist, amplitudes
+from . import angulardist, amplitudes, angular_new
 from flavio.physics.bdecays.formfactors.b_v import bsz_parameters
 from flavio.physics.eft import WilsonCoefficients
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
@@ -57,8 +56,17 @@ class TestBVll(unittest.TestCase):
     def test_bksll(self):
         q2 = 1.5
         a = amplitudes.transversity_amps_ff(q2, wc, par, 'B0', 'K*0', 'mu')
+        # compare helicity amplitudes
+        p = angular_new.prefactor(q2, par, 'B0', 'K*0', 'mu')/amplitudes.prefactor(q2, par, 'B0', 'K*0', 'mu')
+        a_new = {k: p*v for k, v in a.items()}
+        h = angular_new.get_ha(q2, wc_obj, par, 'B0', 'K*0', 'mu')
+        h2 = angular_new.transversity_to_helicity(a_new)
+        for k in h2.keys():
+            if h[k] != 0:
+                self.assertAlmostEqual(h2[k]/h[k], 1, places=12)
+        # compare angular coefficients
         J = angulardist.angulardist(a, q2, par, 'mu')
-        J_new = get_angularcoeff(q2, wc_obj, par, 'B0', 'K*0', 'mu')
+        J_new = angular_new.get_angularcoeff(q2, wc_obj, par, 'B0', 'K*0', 'mu')
         for k in J:
             if J_new[k] != 0:
                 self.assertAlmostEqual(J[k]/(J_new[k]), 1, places=12)

@@ -22,6 +22,30 @@ def prefactor(q2, par, B, V, lep):
 def get_ff(q2, par, B, V):
     return FF.parametrizations['bsz3'].get_ff(meson_ff[(B,V)], q2, par)
 
+def transversity_to_helicity(ta):
+    H={}
+    H['0' ,'V'] = -1j * (ta['0_R'] + ta['0_L'])/4.
+    H['0' ,'A'] = -1j * (ta['0_R'] - ta['0_L'])/4.
+    H['pl' ,'V'] = 1j * ((ta['para_R'] + ta['para_L']) + (ta['perp_R'] + ta['perp_L']))/sqrt(2)/4.
+    H['pl' ,'A'] = 1j * ((ta['para_R'] - ta['para_L']) + (ta['perp_R'] - ta['perp_L']))/sqrt(2)/4.
+    H['mi' ,'V'] = 1j * ((ta['para_R'] + ta['para_L']) - (ta['perp_R'] + ta['perp_L']))/sqrt(2)/4.
+    H['mi' ,'A'] = 1j * ((ta['para_R'] - ta['para_L']) - (ta['perp_R'] - ta['perp_L']))/sqrt(2)/4.
+    return H
+
+def get_ha(q2, wc_obj, par, B, V, lep):
+    scale = config['bdecays']['scale_bvll']
+    wc_tot = wctot_dict(wc_obj, meson_quark[(B,V)]+lep+lep, scale, par)
+    wc = get_wceff(q2, wc_tot, par, B, V, lep, scale)
+    ml = par[('mass',lep)]
+    mB = par[('mass',B)]
+    mV = par[('mass',V)]
+    mb = running.get_mb(par, scale)
+    N = prefactor(q2, par, B, V, lep)
+    ff = get_ff(q2, par, B, V)
+    h = angular.helicity_amps_v(q2, mB, mV, mb, 0, ml, ml, ff, wc, N)
+    return h
+
+
 def get_angularcoeff(q2, wc_obj, par, B, V, lep):
     scale = config['bdecays']['scale_bvll']
     wc_tot = wctot_dict(wc_obj, meson_quark[(B,V)]+lep+lep, scale, par)
