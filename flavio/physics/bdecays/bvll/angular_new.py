@@ -65,6 +65,6 @@ def get_angularcoeff(q2, wc_obj, par, B, V, lep):
     mb = running.get_mb(par, scale)
     N = prefactor_new(q2, par, B, V, lep)
     ff = get_ff(q2, par, B, V)
-    h = angular.helicity_amps(q2, mB, mV, mb, 0, ml, ml, ff, wc, N)
-    J = angular.angularcoeffs_general(h, q2, mB, mV, mb, 0, ml, ml)
+    h = angular.helicity_amps_v(q2, mB, mV, mb, 0, ml, ml, ff, wc, N)
+    J = angular.angularcoeffs_general_v(h, q2, mB, mV, mb, 0, ml, ml)
     return J

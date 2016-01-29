@@ -67,8 +67,8 @@ def get_angularcoeff(q2, wc_obj, par, B, V, lep):
         mlight = running.get_mc(par, scale) # this is needed for scalar contributions
     N = prefactor(q2, par, B, V, lep)
     ff = get_ff(q2, par, B, V)
-    h = angular.helicity_amps(q2, mB, mV, mb, mlight, ml, 0, ff, wc, N)
-    J = angular.angularcoeffs_general(h, q2, mB, mV, mb, mlight, ml, 0)
+    h = angular.helicity_amps_v(q2, mB, mV, mb, mlight, ml, 0, ff, wc, N)
+    J = angular.angularcoeffs_general_v(h, q2, mB, mV, mb, mlight, ml, 0)
     return J
 
 def dGdq2(J):
