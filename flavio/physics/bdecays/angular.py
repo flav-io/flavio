@@ -32,6 +32,7 @@ def _Co(z):
     return z.conjugate()
 
 def angularcoeffs_general_Gbasis_v(H, q2, mB, mV, mqh, mql, ml1, ml2):
+        laB = lambda_K(mB**2, mV**2, q2)
         laGa = lambda_K(q2, ml1**2, ml2**2)
         E1 = sqrt(ml1**2+laGa/(4 * q2))
         E2 = sqrt(ml2**2+laGa/(4 * q2))
@@ -81,7 +82,8 @@ def angularcoeffs_general_Gbasis_v(H, q2, mB, mV, mqh, mql, ml1, ml2):
         G[2,2,1] = (4/3 * laGa/q2 * (H['pl','V'] * _Co(H['0','V'])+H['0','V'] * _Co(H['mi','V'])+H['pl','A'] * _Co(H['0','A'])+H['0','A'] * _Co(H['mi','A'])
         -2 * (H['pl','T'] * _Co(H['0','T'])+H['0','T'] * _Co(H['mi','T'])+2 * (H['pl','Tt'] * _Co(H['0','Tt'])+H['0','Tt'] * _Co(H['mi','Tt'])))))
         G[2,2,2] = -8/3 * laGa/q2 * (H['pl','V'] * _Co(H['mi','V'])+H['pl','A'] * _Co(H['mi','A'])-2 * (H['pl','T'] * _Co(H['mi','T'])+2 * H['pl','Tt'] * _Co(H['mi','Tt'])))
-        return G
+        prefactor = sqrt(laB)*sqrt(laGa)/(2**9 * pi**3 * mB**3 * q2)
+        return {k: prefactor*v for k, v in G.items()}
 
 def angularcoeffs_general_v(*args, **kwargs):
     G = angularcoeffs_general_Gbasis_v(*args, **kwargs)
@@ -117,6 +119,7 @@ def helicity_amps_p(q2, mB, mP, mqh, mql, ml1, ml2, ff, wc, prefactor):
     return {k: prefactor*v for k, v in h.items()}
 
 def angularcoeffs_general_Gbasis_p(h, q2, mB, mP, mqh, mql, ml1, ml2):
+        laB = lambda_K(mB**2, mP**2, q2)
         laGa = lambda_K(q2, ml1**2, ml2**2)
         E1 = sqrt(ml1**2+laGa/(4 * q2))
         E2 = sqrt(ml2**2+laGa/(4 * q2))
@@ -136,7 +139,8 @@ def angularcoeffs_general_Gbasis_p(h, q2, mB, mP, mqh, mql, ml1, ml2):
             - _Im( 2 * h['Tt'] * _Co(h['S']) + sqrt(2) * h['T'] * _Co(h['P'])) )
         G[2] = -4*laGa/(3*q2) * (
             abs(h['V'])**2 + abs(h['A'])**2 - 2*abs(h['T'])**2 - 4*abs(h['Tt'])**2 )
-        return G
+        prefactor = sqrt(laB)*sqrt(laGa)/(2**9 * pi**3 * mB**3 * q2)
+        return {k: prefactor*v for k, v in G.items()}
 
 def angularcoeffs_general_p(*args, **kwargs):
     G = angularcoeffs_general_Gbasis_p(*args, **kwargs)

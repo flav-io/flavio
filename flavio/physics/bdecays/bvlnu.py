@@ -49,9 +49,7 @@ def prefactor(q2, par, B, V, lep):
         Vij = ckm.get_ckm(par)[1,2] # V_{cb} for b->c transitions
     if q2 <= 4*ml**2:
         return 0
-    return ( sqrt(
-    sqrt(laB)*sqrt(laGa)/(2**9 * pi**3 * mB**3 * q2)
-    ) * 4*GF/sqrt(2)*Vij)
+    return 4*GF/sqrt(2)*Vij
 
 def get_angularcoeff(q2, wc_obj, par, B, V, lep):
     scale = config['bdecays']['scale_bvlnu']

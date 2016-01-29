@@ -6,7 +6,9 @@ import scipy.interpolate
 from flavio.physics.running import running
 from flavio.physics import ckm
 from flavio.physics.common import add_dict
-
+from flavio.config import config
+from flavio.physics.bdecays.common import meson_quark
+from flavio.physics.bdecays import matrixelements
 
 # SM Wilson coefficients at 120 GeV in the basis
 # [ C_1, C_2, C_3, C_4, C_5, C_6,
@@ -32,3 +34,32 @@ def wctot_dict(wc_obj, sector, scale, par):
     wc_labels = wc_obj.coefficients[sector]
     wc_sm_dict =  dict(zip(wc_labels, wc_sm))
     return add_dict((wc_np_dict, wc_sm_dict))
+
+def get_wceff(q2, wc_obj, par, B, M, lep, scale):
+    """Get a dictionary with the effective $\Delta F=1$ Wilson coefficients
+    in the convention appropriate for the generalized angular distributions.
+    """
+    wc = wctot_dict(wc_obj, meson_quark[(B,M)]+lep+lep, scale, par)
+    xi_u = ckm.xi('u',meson_quark[(B,M)])(par)
+    xi_t = ckm.xi('t',meson_quark[(B,M)])(par)
+    qiqj=meson_quark[(B,M)]
+    Yq2 = matrixelements.Y(q2, wc, par, scale, qiqj) + (xi_u/xi_t)*matrixelements.Yu(q2, wc, par, scale, qiqj)
+        #   b) NNLO Q1,2
+    delta_C7 = matrixelements.delta_C7(par=par, wc=wc, q2=q2, scale=scale, qiqj=qiqj)
+    delta_C9 = matrixelements.delta_C9(par=par, wc=wc, q2=q2, scale=scale, qiqj=qiqj)
+    mb = running.get_mb(par, scale)
+    ll = lep + lep
+    c = {}
+    c['7']  = wc['C7eff_'+qiqj]      + delta_C7
+    c['7p'] = wc['C7effp_'+qiqj]
+    c['v']  = wc['C9_'+qiqj+ll]      + delta_C9 + Yq2
+    c['vp'] = wc['C9p_'+qiqj+ll]
+    c['a']  = wc['C10_'+qiqj+ll]
+    c['ap'] = wc['C10p_'+qiqj+ll]
+    c['s']  = mb * wc['CS_'+qiqj+ll]
+    c['sp'] = mb * wc['CSp_'+qiqj+ll]
+    c['p']  = mb * wc['CP_'+qiqj+ll]
+    c['pp'] = mb * wc['CPp_'+qiqj+ll]
+    c['t']  = 0
+    c['tp'] = 0
+    return c
