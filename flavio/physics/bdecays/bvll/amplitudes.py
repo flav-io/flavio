@@ -74,8 +74,8 @@ def transversity_amps_ff(q2, wc, par, B, V, lep):
                 + 2 * mb * c7mi * 8*mB*mV**2/(mB+mV) * ff['T23'])
     ta['0_R'] = -N * (1/(2 * mV * sqrt(q2))) * ((c9mi + c10mi) * 16*mB*mV**2 * ff['A12']
                 + 2 * mb * c7mi * 8*mB*mV**2/(mB+mV) * ff['T23'])
-    ta['t'] = N * 1/sqrt(q2) * 2 * X * (2*c10mi + q2/(2*ml)*cpmi) * ff['A0']
-    ta['S'] = -N * 2*X * csmi * ff['A0']
+    ta['t'] = N * 1/sqrt(q2) * 2 * X * (2*c10mi + q2/ml*cpmi) * ff['A0']
+    ta['S'] = -2*N * 2*X * csmi * ff['A0']
     return ta
 
 def transversity_amps_qcdf(q2, wc, par, B, V, lep):

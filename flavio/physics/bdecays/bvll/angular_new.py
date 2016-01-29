@@ -27,10 +27,10 @@ def get_wceff(q2, wc_obj, par, B, V, lep):
     c['vp'] = wc['C9p_'+qiqj+ll]
     c['a']  = wc['C10_'+qiqj+ll]
     c['ap'] = wc['C10p_'+qiqj+ll]
-    c['s']  = 1/2 * mb * wc['CS_'+qiqj+ll]
-    c['sp'] = 1/2 * mb * wc['CSp_'+qiqj+ll]
-    c['p']  = 1/2 * mb * wc['CP_'+qiqj+ll]
-    c['pp'] = 1/2 * mb * wc['CPp_'+qiqj+ll]
+    c['s']  = mb * wc['CS_'+qiqj+ll]
+    c['sp'] = mb * wc['CSp_'+qiqj+ll]
+    c['p']  = mb * wc['CP_'+qiqj+ll]
+    c['pp'] = mb * wc['CPp_'+qiqj+ll]
     c['t']  = 0
     c['tp'] = 0
     return c
