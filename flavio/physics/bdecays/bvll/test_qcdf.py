@@ -43,11 +43,6 @@ par.update(bsz_parameters.ffpar_lcsr)
 wc_obj = WilsonCoefficients()
 wc = wctot_dict(wc_obj, 'bsmumu', 4.2, par)
 
-# 10^12 x transversity amplitudes at q2=3.5 excluding QCDF according to my old code
-amps_ff = [-0.256803+0.00982814j,0.273641 -0.000545939j,0.343695 -0.0109845j,-0.266964+0.000958423j,1.25153 -0.0150762j,-0.0343971+0.0100732j,1.28074 -0.0250478j,0. +0.j]
-# 10^12 x QCDF transversity amplitudes  at q2=3.5 according to my old code
-amps_qcdf = [0.697242 + 1.52714j, 0.697242 + 1.52714j, -0.697242 - 1.52714j, -0.697242 - 1.52714j, -0.219969 + 1.12565j, -0.219969 + 1.12565j, 0, 0]
-
 class TestQCDF(unittest.TestCase):
     def test_qcdf(self):
         q2=3.5
@@ -81,17 +76,3 @@ class TestQCDF(unittest.TestCase):
         q2 = 1.
         np.testing.assert_almost_equal(T_perp(q2, par, wc, B, V, scale)/(-0.001556-0.00835j), 1,  decimal=0)
         np.testing.assert_almost_equal(T_para(q2, par, wc, B, V, scale)/(0.002688-0.009655j), 1,  decimal=0)
-
-    def test_amps(self):
-        q2=3.5
-        B='B0'
-        V='K*0'
-        lep = 'mu'
-        ta_qcdf = transversity_amps_qcdf(q2, wc, par, B, V, lep)
-        ta_ff = transversity_amps_ff(q2, wc, par, B, V, lep)
-        ta_labels = ['perp_L', 'perp_R', 'para_L', 'para_R', '0_L', '0_R', 't', 'S']
-        ta_qcdf_list = [1e12*ta_qcdf[k] for k in ta_labels]
-        ta_ff_list   = [1e10*ta_ff[k] for k in ta_labels]
-        # FIXME this should work better!
-        np.testing.assert_almost_equal(np.asarray(ta_ff_list)[:-1]/np.asarray(amps_ff)[:-1], np.ones(7), decimal=-1)
-        np.testing.assert_almost_equal(np.asarray(ta_qcdf_list)[:-2]/np.asarray(amps_qcdf)[:-2], np.ones(6), decimal=0)

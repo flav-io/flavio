@@ -8,7 +8,6 @@ from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
 from flavio.config import config
 from flavio.physics.running import running
 from .amplitudes import *
-from .angulardist import *
 from scipy.integrate import quad
 
 """Functions for exclusive $B\to V\ell^+\ell^-$ decays."""
@@ -112,14 +111,21 @@ def FLhat(J, J_bar):
 def FLhat_num(J, J_bar):
     return -S_theory_num(J, J_bar, '1c')
 
+
 def bvll_obs(function, q2, wc_obj, par, B, V, lep):
     scale = config['bdecays']['scale_bvll']
     label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
     wc = wctot_dict(wc_obj, label, scale, par)
-    a = transversity_amps(q2, wc, par, B, V, lep)
-    a_bar = transversity_amps_bar(q2, wc, par, B, V, lep)
-    J = angulardist(a, q2, par, lep)
-    J_bar = angulardist_bar(a_bar, q2, par, lep)
+    ml = par[('mass',lep)]
+    mB = par[('mass',B)]
+    mV = par[('mass',V)]
+    mb = running.get_mb(par, scale)
+    N = prefactor(q2, par, B, V, lep)
+    ff = get_ff(q2, par, B, V)
+    h = helicity_amps(q2, wc, par, B, V, lep)
+    h_bar = helicity_amps_bar(q2, wc, par, B, V, lep)
+    J = angular.angularcoeffs_general_v(h, q2, mB, mV, mb, 0, ml, ml)
+    J_bar = angular.angularcoeffs_general_v(h_bar, q2, mB, mV, mb, 0, ml, ml)
     return function(J, J_bar)
 
 def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):

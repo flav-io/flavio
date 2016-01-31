@@ -1,12 +1,13 @@
 import unittest
 import numpy as np
 from .amplitudes import *
-from .angulardist import *
 from .observables import *
 from .qcdf import *
 from flavio.physics.bdecays.formfactors.b_v import bsz_parameters
 from flavio.physics.eft import WilsonCoefficients
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
+from flavio.config import config
+from flavio.physics.running import running
 
 s = 1.519267515435317e+24
 
@@ -42,15 +43,20 @@ par = {
 
 par.update(bsz_parameters.ffpar_lcsr)
 
+wc_obj = WilsonCoefficients()
+wc = wctot_dict(wc_obj, 'bsmumu', 4.2, par)
+
 class TestBVll(unittest.TestCase):
     def test_bksll(self):
         # just some trivial tests to see if calling the functions raises an error
         q2 = 3.5
-        prefactor(q2, par, 'B0', 'K*0', 'mu')
-        wc_obj = WilsonCoefficients()
-        wc = wctot_dict(wc_obj, 'bsmumu', 4.2, par)
-        a = transversity_amps_ff(q2, wc, par, 'B0', 'K*0', 'mu')
-        J = angulardist(a, q2, par, 'mu')
+        h = helicity_amps(q2, wc, par, 'B0', 'K*0', 'mu')
+        scale = config['bdecays']['scale_bvll']
+        ml = par[('mass','mu')]
+        mB = par[('mass','B0')]
+        mV = par[('mass','K*0')]
+        mb = running.get_mb(par, scale)
+        J = angular.angularcoeffs_general_v(h, q2, mB, mV, mb, 0, ml, ml)
         # A7 should vanish as CP conjugation is ignored here (J=Jbar)
         self.assertEqual(A_experiment(J, J, 7),   0.)
         # rough numerical comparison of CP-averaged observables to 1503.05534v1
