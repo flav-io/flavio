@@ -14,6 +14,9 @@ config['bdecays']['scale_bvll'] = 4.8
 # renormalization scale for B->Vlnu
 config['bdecays']['scale_bvlnu'] = 4.8
 
+# renormalization scale for B->Plnu
+config['bdecays']['scale_bplnu'] = 4.8
+
 # renormalization scale for B->Vgamma
 config['bdecays']['scale_bvgamma'] = 4.8
 

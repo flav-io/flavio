@@ -62,3 +62,27 @@ def get_wceff(q2, wc, par, B, M, lep, scale):
     c['t']  = 0
     c['tp'] = 0
     return c
+
+
+def get_wceff_fccc(q2, wc_obj, par, B, P, lep):
+    """Get a dictionary with the effective $b\to(c,u)$ Wilson coefficients
+    in the convention appropriate for the generalized angular distributions.
+    """
+    scale = config['bdecays']['scale_bplnu']
+    bqlnu = meson_quark[(B,P)] + lep + 'nu'
+    wc = wc_obj.get_wc(bqlnu, scale, par)
+    mb = running.get_mb(par, scale)
+    c = {}
+    c['7']  = 0
+    c['7p'] = 0
+    c['v']  = (1 + wc['CV_'+bqlnu])/2.
+    c['vp'] = (1 + wc['CVp_'+bqlnu])/2.
+    c['a']  = -wc['CV_'+bqlnu]/2.
+    c['ap'] = -wc['CVp_'+bqlnu]/2.
+    c['s']  = 1/2 * mb * wc['CS_'+bqlnu]/2.
+    c['sp'] = 1/2 * mb * wc['CSp_'+bqlnu]/2.
+    c['p']  = -1/2 * mb * wc['CS_'+bqlnu]/2.
+    c['pp'] = -1/2 * mb * wc['CSp_'+bqlnu]/2.
+    c['t']  = wc['CT_'+bqlnu]
+    c['tp'] = 0
+    return c

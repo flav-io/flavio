@@ -9,12 +9,15 @@ def pole(ff, mres, q2):
         return 1
     return 1/(1-q2/m**2)
 
-# resonance masses used in 1509.06235
 mres_lattice = {}
+# resonance masses used in 1509.06235
 mres_lattice['b->s'] = [5.711, 5.4154];
+# resonance masses used in 1505.03925
+mres_lattice['b->c'] = [6.420, 6.330];
 
 process_dict = {}
 process_dict['B->K'] =    {'B': 'B0', 'P': 'K0', 'q': 'b->s'}
+process_dict['B->D'] =    {'B': 'B+', 'P': 'D0', 'q': 'b->c'}
 
 
 def param_fplusT(mB, mP, a_i, q2):
@@ -54,7 +57,7 @@ def ff(process, q2, par):
     ff = {}
     a={}
     for i in ['f+', 'fT', 'f0']:
-        a[i] = [ par[('formfactor', 'B->K', 'a' + str(j) + '_' + i)] for j in range(2) ]
+        a[i] = [ par[('formfactor', process, 'a' + str(j) + '_' + i)] for j in range(2) ]
     ff['f+'] = pole('f+', mres, q2) * param_fplusT(mB, mP, a['f+'], q2)
     ff['fT'] = pole('fT', mres, q2) * param_fplusT(mB, mP, a['fT'], q2)
     ff['f0'] = pole('f0', mres, q2) * param_f0(mB, mP, a['f0'], q2)
