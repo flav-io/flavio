@@ -2,10 +2,30 @@ import numpy as np
 
 ########## Parameter Class ##########
 class Parameter:
+
+   # all instances of Parameter will be saved to this dict in the form
+   # {name: <instance>}
+   _instances  = {}
+
+   @classmethod
+   def get_instance(cls, name):
+      return cls._instances[name]
+
+   @classmethod
+   def get_central_all(cls):
+      return {k: i.get_central() for k, i in cls._instances.items()}
+
+   @classmethod
+   def get_random_all(cls):
+      return {k: i.get_random() for k, i in cls._instances.items()}
+
    'Common base class for all parameters'
    def __init__(self, name):
+      if name in Parameter._instances.keys():
+          raise ValueError("The parameter " + name + " already exists")
+      Parameter._instances[name] = self
       self.name = name
-      self.constraints_list = []
+      self._constraints_list = []
 
    def set_description(self, description):
       self.description = description
@@ -14,26 +34,26 @@ class Parameter:
       return self.description
 
    def add_constraint(self, constraint):
-      if not self.constraints_list:
-         self.constraints_list.append(constraint)
+      if not self._constraints_list:
+         self._constraints_list.append(constraint)
       else:
-         if self.constraints_list[0].central_value == constraint.central_value:
-            self.constraints_list.append(constraint)
+         if self._constraints_list[0].central_value == constraint.central_value:
+            self._constraints_list.append(constraint)
          else:
             print('The central values of all constraints on one parameter should be equal!')
 
    def remove_constraints(self):
-      self.constraints_list = []
+      self._constraints_list = []
 
    def get_central(self):
-      if not self.constraints_list:
+      if not self._constraints_list:
            print('No constraints applied to parameter')
       else:
-         return self.constraints_list[0].central_value
+         return self._constraints_list[0].central_value
 
    def get_random(self, size=None):
       c = self.get_central()
-      r = [u.get_random(size) - c for u in self.constraints_list]
+      r = [u.get_random(size) - c for u in self._constraints_list]
       return np.sum(r, axis=0) + c
 
 
