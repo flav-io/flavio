@@ -98,3 +98,28 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
 
    def get_random(self, size=None):
       return np.random.multivariate_normal(self.central_value, self.covariance, size)
+
+
+
+########## Observable Class ##########
+class Observable:
+   'has a name and prediction, takes a list of argument'
+
+   _instances  = {}
+
+   @classmethod
+   def get_instance(cls, name):
+      return cls._instances[name]
+
+   def __init__(self, name, arguments=None):
+      if name in Observable._instances.keys():
+          raise ValueError("The observable " + name + " already exists")
+      Observable._instances[name] = self
+      self.name = name
+      self.arguments = arguments
+
+   def set_description(self, description):
+      self.description = description
+
+   def get_description(self):
+      return self.description

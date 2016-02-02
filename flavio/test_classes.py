@@ -24,3 +24,9 @@ class TestClasses(unittest.TestCase):
         p_c.add_constraint( NormalDistibution(1.2, 0.1) )
         self.assertEqual( Parameter.get_central_all(), {'m_b': 4.2, 'm_c': 1.2} )
         Parameter.get_random_all()
+
+    def test_observable_class(self):
+        o = Observable( 'test_obs' )
+        self.assertEqual( o, Observable.get_instance('test_obs') )
+        o.set_description('some test observables')
+        self.assertEqual( o.get_description(), 'some test observables' )
