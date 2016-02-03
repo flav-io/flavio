@@ -13,7 +13,7 @@ from flavio.physics.bdecays.wilsoncoefficients import get_wceff, wctot_dict
 def prefactor(q2, par, B, P, lep):
     GF = par['Gmu']
     ml = par[('mass',lep)]
-    scale = config['bdecays']['scale_bpll']
+    scale = config['renormalization scale']['bpll']
     alphaem = running.get_alpha(par, scale)['alpha_e']
     di_dj = meson_quark[(B,P)]
     xi_t = ckm.xi('t',di_dj)(par)
@@ -28,7 +28,7 @@ def get_angularcoeff(q2, wc, par, B, P, lep):
     ml = par[('mass',lep)]
     mB = par[('mass',B)]
     mP = par[('mass',P)]
-    scale = config['bdecays']['scale_bpll']
+    scale = config['renormalization scale']['bpll']
     mb = running.get_mb(par, scale)
     N = prefactor(q2, par, B, P, lep)
     ff = get_ff(q2, par, B, P)
@@ -37,7 +37,7 @@ def get_angularcoeff(q2, wc, par, B, P, lep):
     return J
 
 def bpll_obs(function, q2, wc_obj, par, B, P, lep):
-    scale = config['bdecays']['scale_bpll']
+    scale = config['renormalization scale']['bpll']
     wc = wctot_dict(wc_obj, meson_quark[(B,P)]+lep+lep, scale, par)
     wc_c = conjugate_wc(wc)
     par_c = conjugate_par(par)

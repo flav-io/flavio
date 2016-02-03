@@ -14,7 +14,7 @@ from flavio.physics.common import conjugate_par, conjugate_wc
 def prefactor(par, B, V):
     mB = par[('mass',B)]
     mV = par[('mass',V)]
-    scale = config['bdecays']['scale_bvgamma']
+    scale = config['renormalization scale']['bvgamma']
     alphaem = running.get_alpha(par, scale)['alpha_e']
     mb = running.get_mb(par, scale)
     GF = par['Gmu']
@@ -41,7 +41,7 @@ def amps_bar(wc, par, B, V):
     return {'L': a['R'], 'R': a['L']}
 
 def get_a_abar(wc_obj, par, B, V):
-    scale = config['bdecays']['scale_bvll']
+    scale = config['renormalization scale']['bvll']
     # these are the b->qee Wilson coefficients - they contain the b->qgamma ones as a subset
     wc = wctot_dict(wc_obj, meson_quark[(B,V)] + 'ee', scale, par)
     a = amps(wc, par, B, V)

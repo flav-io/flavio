@@ -1,0 +1,12 @@
+
+ # set the renormalization scale for different processes.
+renormalization scale:
+    bll: 4.8      # B->l+ l-
+    bpll: 4.8     # B->P l+ l-
+    bvll: 4.8     # B->V l+ l-
+    bvlnu: 4.8    # B->V l nu
+    bplnu: 4.8    # B->P l nu
+    bvgamma: 4.8  # B->V gamma
+    Bs mixing: 4.2  # Bs-Bsbar mixing
+    B0 mixing: 4.2  # B0-B0bar mixing
+    K0 mixing: 2.   # K0-K0bar mixing

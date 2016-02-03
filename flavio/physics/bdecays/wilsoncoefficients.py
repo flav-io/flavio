@@ -68,7 +68,7 @@ def get_wceff_fccc(q2, wc_obj, par, B, P, lep):
     """Get a dictionary with the effective $b\to(c,u)$ Wilson coefficients
     in the convention appropriate for the generalized angular distributions.
     """
-    scale = config['bdecays']['scale_bplnu']
+    scale = config['renormalization scale']['bplnu']
     bqlnu = meson_quark[(B,P)] + lep + 'nu'
     wc = wc_obj.get_wc(bqlnu, scale, par)
     mb = running.get_mb(par, scale)

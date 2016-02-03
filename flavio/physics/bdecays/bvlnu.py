@@ -12,7 +12,7 @@ r"""Functions for exclusive $B\to V\ell\nu$ decays."""
 
 
 def get_wceff(q2, wc_obj, par, B, V, lep):
-    scale = config['bdecays']['scale_bvll']
+    scale = config['renormalization scale']['bvll']
     bqlnu = meson_quark[(B,V)] + lep + 'nu'
     wc = wc_obj.get_wc(bqlnu, scale, par)
     mb = running.get_mb(par, scale)
@@ -36,7 +36,7 @@ def get_ff(q2, par, B, V):
 
 def prefactor(q2, par, B, V, lep):
     GF = par['Gmu']
-    scale = config['bdecays']['scale_bvll']
+    scale = config['renormalization scale']['bvll']
     ml = par[('mass',lep)]
     mB = par[('mass',B)]
     mV = par[('mass',V)]
@@ -53,7 +53,7 @@ def prefactor(q2, par, B, V, lep):
     return 4*GF/sqrt(2)*Vij
 
 def get_angularcoeff(q2, wc_obj, par, B, V, lep):
-    scale = config['bdecays']['scale_bvlnu']
+    scale = config['renormalization scale']['bvlnu']
     wc = get_wceff_fccc(q2, wc_obj, par, B, V, lep)
     ml = par[('mass',lep)]
     mB = par[('mass',B)]

@@ -35,7 +35,7 @@ def M12_d_SM(par, meson):
     switched in the above definition, leading to a complex conjugation.)
     """
     me = matrixelements(par, meson)
-    scale = config['mesonmixing']['scale_mix_'+meson]
+    scale = config['renormalization scale'][meson + ' mixing']
     alpha_s = running.get_alpha(par, scale)['alpha_s']
     me_rgi = me['CVLL'] * bag_msbar2rgi(alpha_s, meson)
     C_tt, C_cc, C_ct = cvll_d(par, meson)

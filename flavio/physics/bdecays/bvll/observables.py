@@ -113,7 +113,7 @@ def FLhat_num(J, J_bar):
 
 
 def bvll_obs(function, q2, wc_obj, par, B, V, lep):
-    scale = config['bdecays']['scale_bvll']
+    scale = config['renormalization scale']['bvll']
     label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
     wc = wctot_dict(wc_obj, label, scale, par)
     ml = par[('mass',lep)]

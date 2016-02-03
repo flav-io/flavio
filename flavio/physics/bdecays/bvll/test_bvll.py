@@ -51,7 +51,7 @@ class TestBVll(unittest.TestCase):
         # just some trivial tests to see if calling the functions raises an error
         q2 = 3.5
         h = helicity_amps(q2, wc, par, 'B0', 'K*0', 'mu')
-        scale = config['bdecays']['scale_bvll']
+        scale = config['renormalization scale']['bvll']
         ml = par[('mass','mu')]
         mB = par[('mass','B0')]
         mV = par[('mass','K*0')]

@@ -7,7 +7,7 @@ from cmath import phase
 from flavio.physics.common import conjugate_par
 
 def get_M12_G12(wc_obj, par, meson):
-    scale = config['mesonmixing']['scale_mix_' + meson]
+    scale = config['renormalization scale'][meson + ' mixing']
     wc = wc_obj.get_wc(2*common.meson_quark[meson], scale, par)
     M12 = amplitude.M12_d(par, wc, meson)
     G12 = amplitude.G12_d(par, wc, meson)

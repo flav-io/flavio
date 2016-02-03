@@ -14,7 +14,7 @@ r"""Functions for exclusive $B\to P\ell\nu$ decays."""
 def prefactor(q2, par, B, P, lep):
     GF = par['Gmu']
     ml = par[('mass',lep)]
-    scale = config['bdecays']['scale_bpll']
+    scale = config['renormalization scale']['bpll']
     alphaem = running.get_alpha(par, scale)['alpha_e']
     di_dj = meson_quark[(B,P)]
     qi_qj = meson_quark[(B, P)]
@@ -34,7 +34,7 @@ def get_angularcoeff(q2, wc_obj, par, B, P, lep):
     mB = par[('mass',B)]
     mP = par[('mass',P)]
     wc = get_wceff_fccc(q2, wc_obj, par, B, P, lep)
-    scale = config['bdecays']['scale_bpll']
+    scale = config['renormalization scale']['bpll']
     mb = running.get_mb(par, scale)
     N = prefactor(q2, par, B, P, lep)
     ff = get_ff(q2, par, B, P)
