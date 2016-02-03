@@ -13,13 +13,14 @@ class Parameter:
 
    @classmethod
    def get_central_all(cls):
+      """Return the central values of all parameters."""
       return {k: i.get_central() for k, i in cls._instances.items()}
 
    @classmethod
    def get_random_all(cls):
+      """Return random values for all parameters."""
       return {k: i.get_random() for k, i in cls._instances.items()}
 
-   'Common base class for all parameters'
    def __init__(self, name):
       if name in Parameter._instances.keys():
           raise ValueError("The parameter " + name + " already exists")
@@ -47,7 +48,7 @@ class Parameter:
 
    def get_central(self):
       if not self._constraints_list:
-           print('No constraints applied to parameter')
+           raise ValueError('No constraints applied to parameter')
       else:
          return self._constraints_list[0].central_value
 
@@ -60,7 +61,7 @@ class Parameter:
 
 ########## ProbabilityDistribution Class ##########
 class ProbabilityDistribution:
-   'Common base class for all ProbabilityDistribution'
+   """Common base class for all probability distributions"""
 
    def __init__(self, central_value):
       self.central_value = central_value
@@ -103,7 +104,6 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
 
 ########## Observable Class ##########
 class Observable:
-   'has a name and prediction, takes a list of argument'
 
    _instances  = {}
 
@@ -117,9 +117,32 @@ class Observable:
       Observable._instances[name] = self
       self.name = name
       self.arguments = arguments
+      self.prediction = None
 
    def set_description(self, description):
       self.description = description
 
    def get_description(self):
       return self.description
+
+   def set_prediction(self, prediction):
+      self.prediction = prediction
+
+   def prediction_central(self, wc_obj, *args, **kwargs):
+      return self.prediction.get_central(wc_obj, *args, **kwargs)
+
+
+########## Prediction Class ##########
+class Prediction:
+
+   def __init__(self, observable, function):
+      if observable not in Observable._instances.keys():
+          raise ValueError("The observable " + name + " does not exist")
+      self.observable = observable
+      self.function = function
+      self.observable_obj = Observable._instances[observable]
+      self.observable_obj.set_prediction(self)
+
+   def get_central(self, wc_obj, *args, **kwargs):
+      par_dict = Parameter.get_central_all()
+      return self.function(par_dict, wc_obj, *args, **kwargs)
