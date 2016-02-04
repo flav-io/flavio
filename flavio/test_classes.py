@@ -34,7 +34,7 @@ class TestClasses(unittest.TestCase):
     def test_prediction_class(self):
         o = Observable( 'test_obs' )
         p = Parameter( 'test_parameter' )
-        def f(par_dict, wc_obj):
+        def f(wc_obj, par_dict):
             return par_dict['test_parameter']*2
         pr  = Prediction( 'test_obs', f )
         wc_obj = None
