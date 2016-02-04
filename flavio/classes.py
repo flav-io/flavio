@@ -1,6 +1,5 @@
 import numpy as np
 import re
-from flavio.physics.eft import WilsonCoefficients
 
 def _is_number(s):
     try:
@@ -162,7 +161,7 @@ class Observable:
    def set_prediction(self, prediction):
       self.prediction = prediction
 
-   def prediction_central(self, wc_obj=None, *args, **kwargs):
+   def prediction_central(self, wc_obj, *args, **kwargs):
       return self.prediction.get_central(wc_obj, *args, **kwargs)
 
 
@@ -177,9 +176,7 @@ class Prediction:
       self.observable_obj = Observable._instances[observable]
       self.observable_obj.set_prediction(self)
 
-   def get_central(self, wc_obj=None, *args, **kwargs):
-      if wc_obj is None:
-          wc_obj = WilsonCoefficients()
+   def get_central(self, wc_obj, *args, **kwargs):
       par_dict = Parameter.get_central_all()
       return self.function(wc_obj, par_dict, *args, **kwargs)
 
