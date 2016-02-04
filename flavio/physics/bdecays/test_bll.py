@@ -5,6 +5,7 @@ from .. import ckm
 from math import radians
 from flavio.physics.eft import WilsonCoefficients
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
+from flavio.classes import Parameter, Observable
 
 s = 1.519267515435317e+24
 
@@ -29,13 +30,13 @@ par = {
     'Vcb': 4.24e-2,
     'Vub': 3.82e-3,
     'gamma': radians(73.),
-    ('DeltaGamma/Gamma','Bs'): 0.1226,
+    'DeltaGamma/Gamma_Bs': 0.1226,
 }
 
 wc_obj = WilsonCoefficients()
-wc = wctot_dict(wc_obj, 'bsmumu', 4.2, par)
-wc_e = wctot_dict(wc_obj, 'bsee', 4.2, par)
-wc_tau = wctot_dict(wc_obj, 'bstautau', 4.2, par)
+wc = wctot_dict(wc_obj, 'bsmumu', 4.8, par)
+wc_e = wctot_dict(wc_obj, 'bsee', 4.8, par)
+wc_tau = wctot_dict(wc_obj, 'bstautau', 4.8, par)
 
 
 class TestBll(unittest.TestCase):
@@ -53,8 +54,14 @@ class TestBll(unittest.TestCase):
         self.assertAlmostEqual(
             br_timeint(par, wc_e, 'Bs', 'e')/br_timeint(par, wc, 'Bs', 'mu')/par['m_e']**2*par['m_mu']**2,
             1., places=2)
-            # comparison to 1311.0903
+        # comparison to 1311.0903
         self.assertAlmostEqual(abs(ckm.xi('t','bs')(par))/par['Vcb'], 0.980, places=3)
         self.assertAlmostEqual(br_timeint(par, wc, 'Bs', 'mu')/3.65e-9, 1, places=1)
         self.assertAlmostEqual(br_timeint(par, wc_e, 'Bs', 'e')/8.54e-14, 1, places=1)
         self.assertAlmostEqual(br_timeint(par, wc_tau, 'Bs', 'tau')/7.73e-7, 1, places=1)
+
+    def test_bsll_classes(self):
+        par_default = Parameter.get_central_all()
+        self.assertAlmostEqual(br_timeint(par_default, wc_tau, 'Bs', 'tau')/Observable.get_instance('BR(Bs->tautau)').prediction_central(wc_obj), 1, places=4)
+        self.assertAlmostEqual(br_timeint(par_default, wc_e, 'Bs', 'e')/Observable.get_instance('BR(Bs->ee)').prediction_central(wc_obj), 1, places=4)
+        self.assertAlmostEqual(br_timeint(par_default, wc, 'Bs', 'mu')/Observable.get_instance('BR(Bs->mumu)').prediction_central(wc_obj), 1, places=4)

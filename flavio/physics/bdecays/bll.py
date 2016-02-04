@@ -2,6 +2,9 @@ from math import pi,sqrt
 from flavio.physics import ckm
 from flavio.physics.running import running
 from flavio.physics.bdecays.common import meson_quark
+from flavio.classes import Observable, Prediction
+from flavio.config import config
+from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 
 r"""Functions for the branching ratios and effective lifetimes of the leptonic
 decays $B_q \to \ell^+\ell^-$, where $q=d$ or $s$ and $\ell=e$, $\mu$. or
@@ -85,7 +88,32 @@ def br_inst(par, wc, B, lep):
 def br_timeint(par, wc, B, lep):
     r"""Time-integrated branching ratio of $B_q\to\ell^+\ell^-$."""
     br0 = br_inst(par, wc, B, lep)
-    y = par[('DeltaGamma/Gamma',B)]/2.
+    y = par['DeltaGamma/Gamma_'+B]/2.
     ADG = ADeltaGamma(par, wc, B, lep)
     corr = br_lifetime_corr(y, ADG)
     return br0 / corr
+
+def bqll_obs(function, wc_obj, par, B, lep):
+    scale = config['renormalization scale']['bll']
+    wc = wctot_dict(wc_obj, meson_quark[B]+lep+lep, scale, par)
+    return function(par, wc, B, lep)
+
+def bqll_obs_function(function, B, lep):
+    return lambda wc_obj, par: bqll_obs(function, wc_obj, par, B, lep)
+
+
+# Observable and Prediction instances
+
+_tex = {'e': 'e', 'mu': '\mu', 'tau': '\tau'}
+for l in ['e', 'mu', 'tau']:
+    # For the B^0 decay, we take the time-integrated branching ratio
+    _obs_name = "BR(Bs->"+l+l+")"
+    _obs = Observable(_obs_name)
+    _obs.set_description(r"Time-integrated branching ratio of $B_s\to "+_tex[l]+"^+"+_tex[l]+"^-$.")
+    Prediction(_obs_name, bqll_obs_function(br_timeint, 'Bs', l))
+
+    # For the B^0 decay, we take the prompt branching ratio since DeltaGamma is negligible
+    _obs_name = "BR(Bd->"+l+l+")"
+    _obs = Observable(_obs_name)
+    _obs.set_description(r"Branching ratio of $B^0\to "+_tex[l]+"^+"+_tex[l]+"^-$.")
+    Prediction(_obs_name, bqll_obs_function(br_inst, 'B0', l))
