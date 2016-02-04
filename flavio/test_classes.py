@@ -4,8 +4,8 @@ from .classes import *
 
 class TestClasses(unittest.TestCase):
     def test_parameter_class(self):
-        p = Parameter( 'm_b' )
-        self.assertEqual( p, Parameter.get_instance('m_b') )
+        p = Parameter( 'test_m_b' )
+        self.assertEqual( p, Parameter.get_instance('test_m_b') )
         p.set_description('b quark mass')
         self.assertEqual( p.get_description(), 'b quark mass' )
         d = NormalDistribution(4.2, 0.2)
@@ -21,7 +21,7 @@ class TestClasses(unittest.TestCase):
         self.assertEqual( p.get_random(3).shape, (3,))
         self.assertEqual( p.get_random((4,5)).shape, (4,5))
         # removing dummy instances
-        del Parameter._instances['m_b']
+        del Parameter._instances['test_m_b']
 
     def test_observable_class(self):
         o = Observable( 'test_obs' )

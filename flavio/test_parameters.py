@@ -2,12 +2,35 @@ import unittest
 import numpy as np
 from .parameters import *
 from .classes import *
+from .parameters import _read_pdg_masswidth
+
+s = 1.519267515435317e+24
+ps = 1e-12*s
+
+
+class TestPDG(unittest.TestCase):
+    particles = _read_pdg_masswidth('data/pdg/mass_width_2015.mcd')
+    def test_pdg(self):
+        # check some masses
+        self.assertEqual(self.particles['K*(892)+']['mass'][0], 0.89166)
+        self.assertEqual(self.particles['K*(892)0']['mass'][0], 0.89581)
+        self.assertEqual(self.particles['t']['mass'][0], 173.21)
+        # compare B_s lifetime and errors in picoseconds to inverse width
+        GammaBs = self.particles['B(s)']['width']
+        self.assertAlmostEqual(1/GammaBs[0]/ps, 1.510, places=3)
+        self.assertAlmostEqual(1/ps*GammaBs[1]/GammaBs[0]**2, +0.005, places=3)
+        self.assertAlmostEqual(1/ps*GammaBs[2]/GammaBs[0]**2, -0.005, places=3)
 
 class TestParameters(unittest.TestCase):
     def test_parameters(self):
         par_dict = Parameter.get_central_all()
+        # parameters from the YAML file
         self.assertEqual(par_dict['alpha_s'],  0.1185)
         self.assertEqual(par_dict['Gamma12_Bs_c'],  -48.0)
+        # parameters from the PDG file
+        self.assertEqual(par_dict['m_W'], 80.385)
+        self.assertEqual(par_dict['tau_phi'], 1/4.266e-3)
+        # just check if the random values are numbers
         for par_random in Parameter.get_random_all().values():
             self.assertIsInstance(par_random, float)
 
