@@ -1,4 +1,12 @@
 import numpy as np
+import re
+
+def _is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
 
 ########## Parameter Class ##########
 class Parameter:
@@ -41,14 +49,14 @@ class Parameter:
          if self._constraints_list[0].central_value == constraint.central_value:
             self._constraints_list.append(constraint)
          else:
-            print('The central values of all constraints on one parameter should be equal!')
+            raise ValueError("The central values of all constraints on one parameter should be equal!")
 
    def remove_constraints(self):
       self._constraints_list = []
 
    def get_central(self):
       if not self._constraints_list:
-           raise ValueError('No constraints applied to parameter')
+           raise ValueError('No constraints applied to parameter ' + self.name)
       else:
          return self._constraints_list[0].central_value
 
@@ -56,6 +64,12 @@ class Parameter:
       c = self.get_central()
       r = [u.get_random(size) - c for u in self._constraints_list]
       return np.sum(r, axis=0) + c
+
+   def set_constraint(self, constraint_string):
+      pds = constraints_from_string(constraint_string)
+      self.remove_constraints()
+      for pd in pds:
+          self.add_constraint(pd)
 
 
 
@@ -71,7 +85,7 @@ class ProbabilityDistribution:
 
 
 
-class DeltaDistibution(ProbabilityDistribution):
+class DeltaDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value):
       super().__init__(central_value)
@@ -82,7 +96,7 @@ class DeltaDistibution(ProbabilityDistribution):
       else:
           return self.central_value * np.ones(size)
 
-class NormalDistibution(ProbabilityDistribution):
+class NormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, standard_deviation):
       super().__init__(central_value)
@@ -90,6 +104,25 @@ class NormalDistibution(ProbabilityDistribution):
 
    def get_random(self, size=None):
       return np.random.normal(self.central_value, self.standard_deviation, size)
+
+class AsymmetricNormalDistribution(ProbabilityDistribution):
+
+   def __init__(self, central_value, right_deviation, left_deviation):
+      super().__init__(central_value)
+      if right_deviation < 0 or left_deviation < 0:
+          raise ValueError("Left and right standard deviations must be positive numbers")
+      self.right_deviation = right_deviation
+      self.left_deviation = left_deviation
+
+   def get_random(self, size=None):
+        r = np.random.uniform()
+        a = abs(self.left_deviation/(self.right_deviation+self.left_deviation))
+        if  r > a:
+            x = abs(np.random.normal(0,self.right_deviation))
+            return self.central_value + x
+        else:
+            x = abs(np.random.normal(0,self.left_deviation))
+            return self.central_value - x
 
 class MultivariateNormalDistribution(ProbabilityDistribution):
 
@@ -146,3 +179,64 @@ class Prediction:
    def get_central(self, wc_obj, *args, **kwargs):
       par_dict = Parameter.get_central_all()
       return self.function(par_dict, wc_obj, *args, **kwargs)
+
+
+
+# Auxiliary functions
+
+
+def constraints_from_string(constraint_string):
+    """Convert a string like '1.67(3)(5)' or '1.67+-0.03+-0.05' to a list
+    of ProbabilityDistribution instances."""
+    try:
+        float(constraint_string)
+        # if the string represents just a number, return a DeltaDistribution
+        return [DeltaDistribution(float(constraint_string))]
+    except ValueError:
+        pass
+    # for strings of the form '1.67(3)(5) 1e-3'
+    pattern_brackets = re.compile(r"^\(?\s*(-?\d+\.?\d*)\s*((?:\(\s*\d+\.?\d*\s*\)\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
+    # for strings of the form '(1.67 +- 0.3 +- 0.5) * 1e-3'
+    pattern_plusminus = re.compile(r"^\(?\s*(-?\d+\.?\d*)\s*((?:[+-±\\pm]+\s*\d+\.?\d*\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
+    m = pattern_brackets.match(constraint_string)
+    if m is None:
+        m = pattern_plusminus.match(constraint_string)
+    if m is None:
+        raise ValueError("Constraint " + constraint_string + " not understood")
+    # extracting the central value and overall power of 10
+    if m.group(3) is None:
+        overall_factor = 1
+    else:
+        overall_factor = 10**float(m.group(3))
+    central_value = m.group(1)
+    # number_decimal gives the number of digits after the decimal point
+    if len(central_value.split('.')) == 1:
+        number_decimal = 0
+    else:
+        number_decimal = len(central_value.split('.')[1])
+    central_value = float(central_value) * overall_factor
+    # now, splitting the errors
+    error_string = m.group(2)
+    pattern_brackets_err = re.compile(r"\(\s*(\d+\.?\d*)\s*\)\s*")
+    pattern_symmetric_err = re.compile(r"(?:±|\\pm|\+\-)(\s*\d+\.?\d*)")
+    pattern_asymmetric_err = re.compile(r"\+\s*(\d+\.?\d*)\s*\-\s*(\d+\.?\d*)")
+    pd = []
+    if pattern_brackets_err.match(error_string):
+        for err in re.findall(pattern_brackets_err, error_string):
+            if not err.isdigit():
+                # if isdigit() is false, it means that it is a number
+                # with a decimal point (e.g. '1.5'), so no rescaling is necessary
+                standard_deviation = float(err)*overall_factor
+            else:
+                # if the error is just digits, need to rescale it by the
+                # appropriate power of 10
+                standard_deviation = float(err)*10**(-number_decimal)*overall_factor
+            pd.append(NormalDistribution(central_value, standard_deviation))
+    elif pattern_symmetric_err.match(error_string) or pattern_asymmetric_err.match(error_string):
+        for err in re.findall(pattern_symmetric_err, error_string):
+            pd.append(NormalDistribution(central_value, float(err)*overall_factor))
+        for err in re.findall(pattern_asymmetric_err, error_string):
+            right_err = float(err[0])*overall_factor
+            left_err = float(err[1])*overall_factor
+            pd.append(AsymmetricNormalDistribution(central_value, right_err, left_err))
+    return pd

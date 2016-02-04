@@ -8,7 +8,7 @@ class TestClasses(unittest.TestCase):
         self.assertEqual( p, Parameter.get_instance('m_b') )
         p.set_description('b quark mass')
         self.assertEqual( p.get_description(), 'b quark mass' )
-        d = NormalDistibution(4.2, 0.2)
+        d = NormalDistribution(4.2, 0.2)
         p.add_constraint( d )
         # checking central values
         self.assertEqual( p.get_central(), 4.2)
@@ -20,13 +20,8 @@ class TestClasses(unittest.TestCase):
         self.assertEqual( type(p.get_random()), np.float64)
         self.assertEqual( p.get_random(3).shape, (3,))
         self.assertEqual( p.get_random((4,5)).shape, (4,5))
-        p_c = Parameter( 'm_c' )
-        p_c.add_constraint( NormalDistibution(1.2, 0.1) )
-        self.assertEqual( Parameter.get_central_all(), {'m_b': 4.2, 'm_c': 1.2} )
-        Parameter.get_random_all()
         # removing dummy instances
         del Parameter._instances['m_b']
-        del Parameter._instances['m_c']
 
     def test_observable_class(self):
         o = Observable( 'test_obs' )
@@ -43,7 +38,7 @@ class TestClasses(unittest.TestCase):
             return par_dict['test_parameter']*2
         pr  = Prediction( 'test_obs', f )
         wc_obj = None
-        p.add_constraint( NormalDistibution(1.2, 0.1) )
+        p.add_constraint( NormalDistribution(1.2, 0.1) )
         self.assertEqual( pr.get_central(wc_obj), 2.4)
         self.assertEqual( o.prediction_central(wc_obj), 2.4)
         # removing dummy instances
