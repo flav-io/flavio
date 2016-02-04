@@ -5,6 +5,8 @@ from flavio.config import config
 from math import sqrt, sin
 from cmath import phase
 from flavio.physics.common import conjugate_par
+from flavio.classes import Observable, Prediction
+
 
 def get_M12_G12(wc_obj, par, meson):
     scale = config['renormalization scale'][meson + ' mixing']
@@ -57,3 +59,42 @@ def S_BJpsiK(wc_obj, par):
 
 def S_Bspsiphi(wc_obj, par):
     return S(wc_obj, par, 'Bs', amplitude_Bspsiphi)
+
+
+# Observable and Prediction instances
+
+o = Observable('DeltaM_s')
+o.set_description(r"Mass difference in the $B_s$-$\bar B_s$ system")
+Prediction('DeltaM_s', lambda wc_obj, par: DeltaM(wc_obj, par, 'Bs'))
+
+o = Observable('DeltaM_d')
+o.set_description(r"Mass difference in the $B^0$-$\bar B^0$ system")
+Prediction('DeltaM_d', lambda wc_obj, par: DeltaM(wc_obj, par, 'B0'))
+
+o = Observable('a_fs_s')
+o.set_description(r"CP asymmetry in flavour-specific $B_s$ decays")
+Prediction('a_fs_s', lambda wc_obj, par: a_fs(wc_obj, par, 'Bs'))
+
+o = Observable('a_fs_d')
+o.set_description(r"CP asymmetry in flavour-specific $B^0$ decays")
+Prediction('a_fs_d', lambda wc_obj, par: a_fs(wc_obj, par, 'B0'))
+
+o = Observable('DeltaGamma_s')
+o.set_description(r"Decay width difference in the $B_s$-$\bar B_s$ system")
+Prediction('DeltaGamma_s', lambda wc_obj, par: DeltaGamma(wc_obj, par, 'Bs'))
+
+o = Observable('DeltaGamma_d')
+o.set_description(r"Decay width difference in the $B^0$-$\bar B^0$ system")
+Prediction('DeltaGamma_d', lambda wc_obj, par: DeltaGamma(wc_obj, par, 'B0'))
+
+o = Observable('eps_K')
+o.set_description(r"Direct CP violation parameter in the $K^0$-$\bar K^0$ system")
+Prediction('eps_K', epsK)
+
+o = Observable('S_psiK')
+o.set_description(r"Mixing induced CP asymmetry in $B^0\to J/\psi K_S$")
+Prediction('S_psiK', S_BJpsiK)
+
+o = Observable('S_psiphi')
+o.set_description(r"Mixing induced CP asymmetry in $B_s\to J/\psi \phi$")
+Prediction('S_psiphi', S_Bspsiphi)

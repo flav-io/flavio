@@ -3,6 +3,7 @@ import numpy as np
 from . import amplitude, rge, observables
 from math import sin, asin
 from flavio.physics.eft import WilsonCoefficients
+from flavio import Observable
 
 s = 1.519267515435317e+24
 
@@ -85,6 +86,16 @@ class TestMesonMixing(unittest.TestCase):
         self.assertAlmostEqual(observables.S_BJpsiK(wc_obj, par), 0.73, places=2)
         self.assertAlmostEqual(observables.S_Bspsiphi(wc_obj, par), asin(-0.038), places=3)
 
+    def test_bmixing_classes(self):
+        ps = 1e-12*s
+        self.assertAlmostEqual(Observable.get_instance('DeltaM_d').prediction_central()*ps, 0.53, places=0)
+        self.assertAlmostEqual(Observable.get_instance('DeltaM_s').prediction_central()*ps, 18, places=-1)
+        self.assertAlmostEqual(Observable.get_instance('DeltaGamma_d').prediction_central()/0.00261*ps, 1, places=-1)
+        self.assertAlmostEqual(Observable.get_instance('DeltaGamma_s').prediction_central()/0.088*ps, 1, places=-1)
+        self.assertAlmostEqual(Observable.get_instance('a_fs_d').prediction_central()/-4.7e-4, 1, places=-1)
+        self.assertAlmostEqual(Observable.get_instance('a_fs_s').prediction_central()/2.22e-5, 1, places=-1)
+        self.assertAlmostEqual(Observable.get_instance('S_psiK').prediction_central(), 0.73, places=-1)
+        self.assertAlmostEqual(Observable.get_instance('S_psiphi').prediction_central(), asin(-0.038), places=-1)
 
     def test_running(self):
         c_in = {'CSLL_bsbs': 0.77740198,
