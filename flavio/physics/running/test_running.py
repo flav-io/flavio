@@ -5,19 +5,19 @@ import numpy as np
 par = {}
 par['alpha_s'] = 0.1185
 par['alpha_e'] = 1/127.
-par[('mass','Z')] = 91.1876
-par[('mass','b')] = 4.18
-par[('mass','d')] = 4.8e-3
-par[('mass','s')] = 0.095
-par[('mass','t')] = 173.21
-par[('mass','c')] = 1.275
-par[('mass','u')] = 2.3e-3
+par['m_Z'] = 91.1876
+par['m_b'] = 4.18
+par['m_d'] = 4.8e-3
+par['m_s'] = 0.095
+par['m_t'] = 173.21
+par['m_c'] = 1.275
+par['m_u'] = 2.3e-3
 
 par_pdg = par.copy()
 par_pdg['alpha_s'] = 0.1193
 par_pdg['alpha_e'] = 1/127.94
-par_pdg[('mass','Z')] = 91.1876
-par_pdg[('mass','b')] = 4.18
+par_pdg['m_Z'] = 91.1876
+par_pdg['m_b'] = 4.18
 
 # to compare to RunDec
 par_noqed = par.copy()

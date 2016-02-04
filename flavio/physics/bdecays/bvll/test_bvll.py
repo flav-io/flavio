@@ -12,27 +12,27 @@ from flavio.physics.running import running
 s = 1.519267515435317e+24
 
 par = {
-    ('mass','e'): 0.510998928e-3,
-    ('mass','mu'): 105.6583715e-3,
-    ('mass','tau'): 1.77686,
-    ('mass','B+'): 5.27929,
-    ('mass','B0'): 5.27961,
-    ('mass','Bs'): 5.36679,
-    ('mass','K*0'): 0.89166,
-    ('lifetime','B+'): 1638.e-15*s,
-    ('lifetime','B0'): 152.e-14*s,
+    'm_e': 0.510998928e-3,
+    'm_mu': 105.6583715e-3,
+    'm_tau': 1.77686,
+    'm_B+': 5.27929,
+    'm_B0': 5.27961,
+    'm_Bs': 5.36679,
+    'm_K*0': 0.89166,
+    'tau_B+': 1638.e-15*s,
+    'tau_B0': 152.e-14*s,
     'alpha_e': 1/127.940,
     'alpha_s': 0.1185,
-    ('mass','Z'): 91.1876,
-    ('mass','b'): 4.17,
-    ('mass','t'): 173.21,
-    ('mass','c'): 1.275,
+    'm_Z': 91.1876,
+    'm_b': 4.17,
+    'm_t': 173.21,
+    'm_c': 1.275,
     'Gmu': 1.1663787e-5,
     'Vus': 0.22,
     'Vub': 3.7e-3,
     'Vcb': 4.1e-2,
     'gamma': 1.22,
-    ('f','B0'): 0.1905,
+    'f_B0': 0.1905,
     ('f_perp','K*0'): 0.161,
     ('f_para','K*0'): 0.211,
     ('a1_perp','K*0'): 0.03,
@@ -52,9 +52,9 @@ class TestBVll(unittest.TestCase):
         q2 = 3.5
         h = helicity_amps(q2, wc, par, 'B0', 'K*0', 'mu')
         scale = config['renormalization scale']['bvll']
-        ml = par[('mass','mu')]
-        mB = par[('mass','B0')]
-        mV = par[('mass','K*0')]
+        ml = par['m_mu']
+        mB = par['m_B0']
+        mV = par['m_K*0']
         mb = running.get_mb(par, scale)
         J = angular.angularcoeffs_general_v(h, q2, mB, mV, mb, 0, ml, ml)
         # A7 should vanish as CP conjugation is ignored here (J=Jbar)

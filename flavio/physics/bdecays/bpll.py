@@ -12,7 +12,7 @@ from flavio.physics.bdecays.wilsoncoefficients import get_wceff, wctot_dict
 
 def prefactor(q2, par, B, P, lep):
     GF = par['Gmu']
-    ml = par[('mass',lep)]
+    ml = par['m_'+lep]
     scale = config['renormalization scale']['bpll']
     alphaem = running.get_alpha(par, scale)['alpha_e']
     di_dj = meson_quark[(B,P)]
@@ -25,9 +25,9 @@ def get_ff(q2, par, B, P):
     return FF.parametrizations['btop_lattice'].get_ff(meson_ff[(B,P)], q2, par)
 
 def get_angularcoeff(q2, wc, par, B, P, lep):
-    ml = par[('mass',lep)]
-    mB = par[('mass',B)]
-    mP = par[('mass',P)]
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    mP = par['m_'+P]
     scale = config['renormalization scale']['bpll']
     mb = running.get_mb(par, scale)
     N = prefactor(q2, par, B, P, lep)
@@ -66,5 +66,5 @@ def FH_cpaverage_num(J, J_bar):
     return (FH_num(J) + FH_num(J_bar))/2.
 
 def bpll_dbrdq2(q2, wc_obj, par, B, P, lep):
-    tauB = par[('lifetime',B)]
+    tauB = par['tau_'+B]
     return tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, lep)

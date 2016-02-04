@@ -39,8 +39,8 @@ def amplitudes(par, wc, B, lep):
     - $S = m_{B_q} (C_S-C_S')$
     """
     # masses
-    ml = par[('mass',lep)]
-    mB = par[('mass',B)]
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
     # Wilson coefficients
     qqll = meson_quark[B] + lep + lep
     C10m = wc['C10_'+qqll] - wc['C10p_'+qqll]
@@ -67,10 +67,10 @@ def br_inst(par, wc, B, lep):
     # paramaeters
     GF = par['Gmu']
     alphaem = running.get_alpha(par, 4.8)['alpha_e']
-    ml = par[('mass',lep)]
-    mB = par[('mass',B)]
-    tauB = par[('lifetime',B)]
-    fB = par[('f',B)]
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    tauB = par['tau_'+B]
+    fB = par['f_'+B]
     # appropriate CKM elements
     if B == 'Bs':
         xi_t = ckm.xi('t','bs')(par)

@@ -23,7 +23,7 @@ def complex_quad(func, a, b, **kwargs):
 
 # auxiliary function to get the input needed all the time
 def get_input(par, B, V, scale):
-    mB = par[('mass',B)]
+    mB = par['m_'+B]
     mb = running.get_mb_pole(par)
     mc = running.get_mc_pole(par)
     alpha_s = running.get_alpha(par, scale)['alpha_s']
@@ -120,8 +120,8 @@ def En_V(mB, mV, q2):
 
 # (27) of of hep-ph/0106067v2
 def t_perp(q2, u, mq, par, B, V):
-    mB = par[('mass',B)]
-    mV = par[('mass',V)]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
     EV = En_V(mB, mV, q2)
     ubar = 1 - u
     return ((2*mB)/(ubar * EV) * i1_bfs(q2, u, mq, mB)
@@ -129,8 +129,8 @@ def t_perp(q2, u, mq, par, B, V):
 
 # (28) of of hep-ph/0106067v2
 def t_para(q2, u, mq, par, B, V):
-    mB = par[('mass',B)]
-    mV = par[('mass',V)]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
     EV = En_V(mB, mV, q2)
     ubar = 1 - u
     return ((2*mB)/(ubar * EV) * i1_bfs(q2, u, mq, mB)
@@ -184,13 +184,13 @@ def phiV(u, a1, a2):
 # moments of the B meson light-cone distribution amplitude as in
 # eq. (54) and surroundings of hep-ph/0106067v2
 def lB_minus(q2, par, B):
-    mB = par[('mass',B)]
+    mB = par['m_'+B]
     mb = running.get_mb_pole(par)
     LambdaBar = mB - mb
     w0 = 2*LambdaBar/3
     return 1/(exp(-q2/mB/w0)/w0 * (-ei(q2/mB/w0) + 1j*pi))
 def lB_plus(par, B):
-    mB = par[('mass',B)]
+    mB = par['m_'+B]
     mb = running.get_mb_pole(par)
     LambdaBar = mB - mb
     return 2*LambdaBar/3
@@ -199,10 +199,10 @@ def lB_plus(par, B):
 # (15) of hep-ph/0106067v2
 
 def T_para(q2, par, wc, B, V, scale):
-    mB = par[('mass',B)]
-    mV = par[('mass',V)]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
     mc = running.get_mc_pole(par)
-    fB = par[('f',B)]
+    fB = par['f_'+B]
     fVpara = par[('f_para',V)]
     EV = En_V(mB, mV, q2)
     N = pi**2 / 3. * fB * fVpara / mB * (mV/EV)
@@ -229,11 +229,11 @@ def T_para(q2, par, wc, B, V, scale):
 
 
 def T_perp(q2, par, wc, B, V, scale):
-    mB = par[('mass',B)]
-    mV = par[('mass',V)]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
     mc = running.get_mc_pole(par)
     EV = En_V(mB, mV, q2)
-    fB = par[('f',B)]
+    fB = par['f_'+B]
     fVperp = par[('f_perp',V)]
     N = pi**2 / 3. * fB * fVperp / mB
     a1_perp = par[('a1_perp',V)]

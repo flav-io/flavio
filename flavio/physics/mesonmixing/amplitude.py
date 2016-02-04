@@ -7,12 +7,12 @@ from flavio.physics import ckm
 
 def matrixelements(par, meson):
     """Returns the matrix elements"""
-    mM = par[('mass',meson)]
-    fM = par[('f',meson)]
-    BM = lambda i: par[('bag',meson, i)]
+    mM = par['m_'+meson]
+    fM = par['f_'+meson]
+    BM = lambda i: par['bag_' + meson + '_' + str(i)]
     di_dj = meson_quark[meson]
-    mq1 = par[('mass', di_dj[0])]
-    mq2 = par[('mass', di_dj[1])]
+    mq1 = par['m_'+di_dj[0]]
+    mq2 = par['m_'+di_dj[1]]
     r = (mM/(mq1+mq2))**2
     me = {}
     me['CVLL'] =  mM*fM**2*(1/3.)*BM(1)
@@ -39,12 +39,12 @@ def M12_d_SM(par, meson):
     alpha_s = running.get_alpha(par, scale)['alpha_s']
     me_rgi = me['CVLL'] * bag_msbar2rgi(alpha_s, meson)
     C_tt, C_cc, C_ct = cvll_d(par, meson)
-    eta_tt = par[('eta_tt', meson)]
+    eta_tt = par['eta_tt_'+meson]
     M12  = - (eta_tt*C_tt) * me_rgi
     # charm contribution only needed for K mixing! Negligible for B and Bs.
     if meson == 'K0':
-        eta_cc = par[('eta_cc', meson)]
-        eta_ct = par[('eta_ct', meson)]
+        eta_cc = par['eta_cc_'+meson]
+        eta_ct = par['eta_ct_'+meson]
         M12 = M12 - (eta_cc*C_cc + 2*eta_ct*C_ct) * me_rgi
     return M12
 
@@ -70,8 +70,8 @@ def G12_d_SM(par, meson):
     di_dj = meson_quark[meson]
     xi_t = ckm.xi('t',di_dj)(par)
     xi_u = ckm.xi('u',di_dj)(par)
-    c = par[('Gamma12', meson, 'c')]
-    a = par[('Gamma12', meson, 'a')]
+    c = par['Gamma12_'+meson+'_c']
+    a = par['Gamma12_'+meson+'_a']
     M12 = M12_d_SM(par, meson)
     return M12*( c + a * xi_u/xi_t )*1e-4
 

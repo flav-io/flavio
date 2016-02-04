@@ -81,17 +81,17 @@ bag_D0_5: 0.97(7)(1)  # 1505.06639 table 2
 
 # DeltaF=2 QCD correction factors
 
-eta_tt, B0: 0.55
-eta_tt, Bs: 0.55
-eta_tt, K0: 0.5765(65)  # Buras:1990fn
-eta_cc, K0: 1.87(76)    # 1108.2036
-eta_ct, K0: 0.496(47)   # 1007.0684
+eta_tt_B0: 0.55
+eta_tt_Bs: 0.55
+eta_tt_K0: 0.5765(65)  # Buras:1990fn
+eta_cc_K0: 1.87(76)    # 1108.2036
+eta_ct_K0: 0.496(47)   # 1007.0684
 
 
 # Parameters needed for epsilon_K
 
 kappa_epsilon: 0.923(6)       # 1111.1699
-# DeltaM_K0: 52.93e-4/1e-12*s
+DeltaM_K0: 3.483(6)e-15 # PDG; this is (0.5293±0.0009)*1e10/s
 
 
 # Coefficients parametrizing SM contributions to Gamma_12

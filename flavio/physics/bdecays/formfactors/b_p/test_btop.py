@@ -4,9 +4,9 @@ from flavio.physics.bdecays.formfactors.b_p import btop
 import numpy as np
 
 par = {
-    ('mass','B0'): 5.27961,
-    ('mass','Bs'): 5.36679,
-    ('mass','K0'): 0.497611,
+    'm_B0': 5.27961,
+    'm_Bs': 5.36679,
+    'm_K0': 0.497611,
 # table XII of 1509.06235v1
     ('formfactor','B->K','a0_f+'): 0.466,
     ('formfactor','B->K','a1_f+'): -0.885,

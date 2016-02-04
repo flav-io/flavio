@@ -51,8 +51,8 @@ def ff(process, q2, par, n=2):
     """
     pd = process_dict[process]
     mres = mres_bsz[pd['q']]
-    mB = par[('mass',pd['B'])]
-    mV = par[('mass',pd['V'])]
+    mB = par['m_'+pd['B']]
+    mV = par['m_'+pd['V']]
     ff = {}
     for i in ["A0","A1","A12","V","T1","T2","T23"]:
         a = [ par[('formfactor', process, 'a' + str(j) + '_' + i)] for j in range(n) ]

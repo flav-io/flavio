@@ -12,7 +12,7 @@ from flavio.physics.bdecays.bvll import qcdf
 
 def prefactor(q2, par, B, V, lep):
     GF = par['Gmu']
-    ml = par[('mass',lep)]
+    ml = par['m_'+lep]
     scale = config['renormalization scale']['bvll']
     alphaem = running.get_alpha(par, scale)['alpha_e']
     di_dj = meson_quark[(B,V)]
@@ -37,8 +37,8 @@ def transversity_to_helicity(ta):
 
 def transversity_amps_qcdf(q2, wc, par, B, V, lep):
     """QCD factorization corrections to B->Vll transversity amplitudes."""
-    mB = par[('mass',B)]
-    mV = par[('mass',V)]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
     scale = config['renormalization scale']['bvll']
     # using the b quark pole mass here!
     mb = running.get_mb_pole(par)
@@ -57,9 +57,9 @@ def transversity_amps_qcdf(q2, wc, par, B, V, lep):
     return ta
 
 def helicity_amps_qcdf(q2, wc, par, B, V, lep):
-    ml = par[('mass',lep)]
-    mB = par[('mass',B)]
-    mV = par[('mass',V)]
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
     X = sqrt(lambda_K(mB**2,q2,mV**2))/2.
     ta = transversity_amps_qcdf(q2, wc, par, B, V, lep)
     h = transversity_to_helicity(ta)
@@ -68,9 +68,9 @@ def helicity_amps_qcdf(q2, wc, par, B, V, lep):
 def helicity_amps_ff(q2, wc, par, B, V, lep):
     scale = config['renormalization scale']['bvll']
     wc_eff = get_wceff(q2, wc, par, B, V, lep, scale)
-    ml = par[('mass',lep)]
-    mB = par[('mass',B)]
-    mV = par[('mass',V)]
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
     mb = running.get_mb(par, scale)
     N = prefactor(q2, par, B, V, lep)
     ff = get_ff(q2, par, B, V)

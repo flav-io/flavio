@@ -37,10 +37,10 @@ def get_ff(q2, par, B, V):
 def prefactor(q2, par, B, V, lep):
     GF = par['Gmu']
     scale = config['renormalization scale']['bvll']
-    ml = par[('mass',lep)]
-    mB = par[('mass',B)]
-    mV = par[('mass',V)]
-    tauB = par[('lifetime',B)]
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
+    tauB = par['tau_'+B]
     laB  = lambda_K(mB**2, mV**2, q2)
     laGa = lambda_K(q2, ml**2, 0.)
     qi_qj = meson_quark[(B, V)]
@@ -55,9 +55,9 @@ def prefactor(q2, par, B, V, lep):
 def get_angularcoeff(q2, wc_obj, par, B, V, lep):
     scale = config['renormalization scale']['bvlnu']
     wc = get_wceff_fccc(q2, wc_obj, par, B, V, lep)
-    ml = par[('mass',lep)]
-    mB = par[('mass',B)]
-    mV = par[('mass',V)]
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
     mb = running.get_mb(par, scale)
     qi_qj = meson_quark[(B, V)]
     if qi_qj == 'bu':
@@ -74,6 +74,6 @@ def dGdq2(J):
     return 3/4. * (2 * J['1s'] + J['1c']) - 1/4. * (2 * J['2s'] + J['2c'])
 
 def dBRdq2(q2, wc_obj, par, B, V, lep):
-    tauB = par[('lifetime',B)]
+    tauB = par['tau_'+B]
     J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
     return tauB * dGdq2(J)

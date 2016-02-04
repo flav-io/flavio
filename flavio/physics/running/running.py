@@ -14,9 +14,9 @@ def rg_evolve_sm(initial_condition, par, derivative_nf, scale_in, scale_out):
         return initial_condition
     if scale_out < 0.1:
         raise ValueError('RG evolution below the strange threshold not implemented.')
-    mc = par[('mass','c')]
-    mb = par[('mass','b')]
-    mt = par[('mass','t')]
+    mc = par['m_c']
+    mb = par['m_b']
+    mt = par['m_t']
     return _rg_evolve_sm(tuple(initial_condition), mc, mb, mt, derivative_nf, scale_in, scale_out)
 
 @lru_cache(maxsize=32)
@@ -64,7 +64,7 @@ def get_alpha(par, scale):
     at the specified scale.
     """
     alpha_in = [par[('alpha_s')], par[('alpha_e')]]
-    scale_in = par[('mass','Z')]
+    scale_in = par['m_Z']
     alpha_out = rg_evolve_sm(alpha_in, par, betafunctions.betafunctions_qcd_qed_nf, scale_in, scale)
     return dict(zip(('alpha_s','alpha_e'),alpha_out))
 
@@ -83,27 +83,27 @@ def get_mq(par, m_in, scale_in, scale_out):
 
 
 def get_mb(par, scale):
-    m = par[('mass','b')]
+    m = par['m_b']
     return get_mq(par=par, m_in=m, scale_in=m, scale_out=scale)
 
 def get_mc(par, scale):
-    m = par[('mass','c')]
+    m = par['m_c']
     return get_mq(par=par, m_in=m, scale_in=m, scale_out=scale)
 
 def get_mu(par, scale):
-    m = par[('mass','u')]
+    m = par['m_u']
     return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale)
 
 def get_md(par, scale):
-    m = par[('mass','d')]
+    m = par['m_d']
     return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale)
 
 def get_ms(par, scale):
-    m = par[('mass','s')]
+    m = par['m_s']
     return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale)
 
 def get_mc_pole(par, nl=2): # for mc, default to 2-loop conversion only due to renormalon ambiguity!
-    mcmc = par[('mass','c')]
+    mcmc = par['m_c']
     alpha_s = get_alpha(par, mcmc)['alpha_s']
     return _get_mc_pole(mcmc=mcmc, alpha_s=alpha_s, nl=nl)
 
@@ -113,7 +113,7 @@ def _get_mc_pole(mcmc, alpha_s, nl):
     return masses.mMS2mOS(MS=mcmc, Nf=4, asmu=alpha_s, Mu=mcmc, nl=nl)
 
 def get_mb_pole(par, nl=2): # for mb, default to 2-loop conversion only due to renormalon ambiguity!
-    mbmb = par[('mass','b')]
+    mbmb = par['m_b']
     alpha_s = get_alpha(par, mbmb)['alpha_s']
     return _get_mb_pole(mbmb=mbmb, alpha_s=alpha_s, nl=nl)
 
@@ -123,7 +123,7 @@ def _get_mb_pole(mbmb, alpha_s, nl):
     return masses.mMS2mOS(MS=mbmb, Nf=5, asmu=alpha_s, Mu=mbmb, nl=nl)
 
 def get_mt(par, scale):
-    mt_pole = par[('mass','t')]
+    mt_pole = par['m_t']
     alpha_s = get_alpha(par, scale)['alpha_s']
     return masses.mOS2mMS(mOS=mt_pole, Nf=6, asmu=alpha_s, Mu=scale, nl=3)
 

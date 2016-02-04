@@ -10,21 +10,21 @@ s = 1.519267515435317e+24
 
 # parameters taken from PDG and table I of 1311.0903
 par = {
-    ('mass','e'): 0.510998928e-3,
-    ('mass','mu'): 105.6583715e-3,
-    ('mass','tau'): 1.77686,
-    ('mass','Bs'): 5.36677,
-    ('mass','b'): 4.17,
-    ('mass','t'): 173.21,
-    ('mass','c'): 1.275,
-    ('lifetime','Bs'): 1.516e-12*s,
-    ('lifetime','B0'): 1.519e-12*s,
+    'm_e': 0.510998928e-3,
+    'm_mu': 105.6583715e-3,
+    'm_tau': 1.77686,
+    'm_Bs': 5.36677,
+    'm_b': 4.17,
+    'm_t': 173.21,
+    'm_c': 1.275,
+    'tau_Bs': 1.516e-12*s,
+    'tau_B0': 1.519e-12*s,
     'Gmu': 1.166379e-5,
     'alpha_e': 1/127.944,
     'alpha_s': 0.1184,
-    ('mass','Z'): 91.1876,
-    ('f','Bs'): 0.2277,
-    ('f','B0'): 0.1905,
+    'm_Z': 91.1876,
+    'f_Bs': 0.2277,
+    'f_B0': 0.1905,
     'Vus': 0.2254,
     'Vcb': 4.24e-2,
     'Vub': 3.82e-3,
@@ -51,7 +51,7 @@ class TestBll(unittest.TestCase):
         self.assertAlmostEqual(br_timeint(par, wc, 'Bs', 'mu')/br_inst(par, wc, 'Bs', 'mu'), 1.07, places=2)
         # ratio of Bs->mumu and Bs->ee BRs should be roughly given by ratio of squared masses
         self.assertAlmostEqual(
-            br_timeint(par, wc_e, 'Bs', 'e')/br_timeint(par, wc, 'Bs', 'mu')/par[('mass','e')]**2*par[('mass','mu')]**2,
+            br_timeint(par, wc_e, 'Bs', 'e')/br_timeint(par, wc, 'Bs', 'mu')/par['m_e']**2*par['m_mu']**2,
             1., places=2)
             # comparison to 1311.0903
         self.assertAlmostEqual(abs(ckm.xi('t','bs')(par))/par['Vcb'], 0.980, places=3)

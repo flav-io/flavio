@@ -116,9 +116,9 @@ def bvll_obs(function, q2, wc_obj, par, B, V, lep):
     scale = config['renormalization scale']['bvll']
     label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
     wc = wctot_dict(wc_obj, label, scale, par)
-    ml = par[('mass',lep)]
-    mB = par[('mass',B)]
-    mV = par[('mass',V)]
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
     mb = running.get_mb(par, scale)
     N = prefactor(q2, par, B, V, lep)
     ff = get_ff(q2, par, B, V)
@@ -129,7 +129,7 @@ def bvll_obs(function, q2, wc_obj, par, B, V, lep):
     return function(J, J_bar)
 
 def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):
-    tauB = par[('lifetime',B)]
+    tauB = par['tau_'+B]
     return tauB * bvll_obs(dGdq2_ave, q2, wc_obj, par, B, V, lep)
 
 def bvll_obs_int(function, q2_min, q2_max, wc_obj, par, B, V, lep):

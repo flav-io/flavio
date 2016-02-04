@@ -4,12 +4,12 @@ from flavio.physics.bdecays.formfactors.b_v import btov, bsz_parameters, lattice
 import numpy as np
 
 par = {
-    ('mass','B0'): 5.27961,
-    ('mass','Bs'): 5.36679,
-    ('mass','K*0'): 0.89166,
-    ('mass','rho0'): 0.077526,
-    ('mass','omega'): 0.78265,
-    ('mass','phi'): 1.019461,
+    'm_B0': 5.27961,
+    'm_Bs': 5.36679,
+    'm_K*0': 0.89166,
+    'm_rho0': 0.077526,
+    'm_omega': 0.78265,
+    'm_phi': 1.019461,
 }
 
 class TestBtoV(unittest.TestCase):

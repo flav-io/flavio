@@ -52,8 +52,8 @@ def ff(process, q2, par):
     """
     pd = process_dict[process]
     mres = mres_lattice[pd['q']]
-    mB = par[('mass',pd['B'])]
-    mP = par[('mass',pd['P'])]
+    mB = par['m_'+pd['B']]
+    mP = par['m_'+pd['P']]
     ff = {}
     a={}
     for i in ['f+', 'fT', 'f0']:

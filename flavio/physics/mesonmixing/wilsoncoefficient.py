@@ -27,7 +27,7 @@ def S0_box(x, y, xu=0):
 
 def df2_prefactor(par):
     GF = par['Gmu']
-    mW = par[('mass','W')]
+    mW = par['m_W']
     return -GF**2/(4.*pi**2) * mW**2
 
 
@@ -52,10 +52,10 @@ def cvll_d(par, meson):
     charm-, and charm-top-contribution to the Wilson coefficient. This
     separation is necessary as they run differently.
     """
-    mt = par[('mass','t')]
-    mc = par[('mass','c')]
-    mu = par[('mass','u')]
-    mW = par[('mass','W')]
+    mt = par['m_t']
+    mc = par['m_c']
+    mu = par['m_u']
+    mW = par['m_W']
     xt = mt**2/mW**2
     xc = mc**2/mW**2
     xu = mu**2/mW**2

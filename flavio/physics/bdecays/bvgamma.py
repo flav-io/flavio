@@ -12,8 +12,8 @@ from flavio.physics.common import conjugate_par, conjugate_wc
 """Functions for exclusive $B\to V\gamma$ decays."""
 
 def prefactor(par, B, V):
-    mB = par[('mass',B)]
-    mV = par[('mass',V)]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
     scale = config['renormalization scale']['bvgamma']
     alphaem = running.get_alpha(par, scale)['alpha_e']
     mb = running.get_mb(par, scale)
@@ -55,7 +55,7 @@ def Gamma_CPaverage(a, a_bar):
     return ( Gamma(a) + Gamma(a_bar) )/2.
 
 def BR(wc_obj, par, B, V):
-    tauB = par[('lifetime',B)]
+    tauB = par['tau_'+B]
     a, a_bar = get_a_abar(wc_obj, par, B, V)
     return tauB * Gamma_CPaverage(a, a_bar)
 
