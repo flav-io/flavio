@@ -5,10 +5,10 @@ from .classes import *
 
 class TestParameters(unittest.TestCase):
     def test_parameters(self):
-        par_dict = Parameter.get_central_all()
+        par_dict = default_parameters.get_central_all()
         self.assertEqual(par_dict['alpha_s'],  0.1185)
         self.assertEqual(par_dict['Gamma12_Bs_c'],  -48.0)
-        for par_random in Parameter.get_random_all().values():
+        for par_random in default_parameters.get_random_all().values():
             self.assertIsInstance(par_random, float)
 
     def test_constraints_from_string(self):
