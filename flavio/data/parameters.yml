@@ -25,7 +25,7 @@ f_D: 0.2092(33)  # FLAG 2013 Nf=2+1
 f_Ds: 0.2486(27)  # FLAG 2013 Nf=2+1
 f_rho: 0.212(4)  # 1501.06569 table 1
 f_omega: 0.185(5)  # 1501.06569 table 1
-f_K*: 0.203(6)  # 1501.06569 table 1
+f_K*0: 0.203(6)  # 1501.06569 table 1
 f_phi: 0.231(5)  # 1501.06569 table 1
 
 # Parmaters needed for meson light-cone distribution amplitudes

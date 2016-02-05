@@ -24,7 +24,7 @@ process_dict['B->omega'] = {'B': 'B0', 'V': 'omega', 'q': 'b->d'}
 process_dict['Bs->phi'] =  {'B': 'Bs', 'V': 'phi',   'q': 'b->s'}
 process_dict['Bs->K*'] =   {'B': 'Bs', 'V': 'K*0',   'q': 'b->d'}
 
-def ff(process, q2, par, n=2):
+def ff(process, q2, par, implementation, n=2):
     r"""Central value of $B\to V$ form factors in the lattice convention
     and BSZ parametrization.
 
@@ -55,6 +55,6 @@ def ff(process, q2, par, n=2):
     mV = par['m_'+pd['V']]
     ff = {}
     for i in ["A0","A1","A12","V","T1","T2","T23"]:
-        a = [ par[('formfactor', process, 'a' + str(j) + '_' + i)] for j in range(n) ]
+        a = [ par[implementation + ' a' + str(j) + '_' + i] for j in range(n) ]
         ff[i] = pole(i, mres, q2)*np.dot(a, zs(mB, mV, q2, t0=None)[:n])
     return ff

@@ -3,11 +3,11 @@ from cmath import exp
 import numpy as np
 from flavio.physics.bdecays.common import meson_quark, meson_ff
 from flavio.physics import ckm, mesonmixing
-from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
 from flavio.config import config
 from flavio.physics.running import running
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 from flavio.physics.common import conjugate_par, conjugate_wc
+from flavio.classes import AuxiliaryQuantity
 
 """Functions for exclusive $B\to V\gamma$ decays."""
 
@@ -26,7 +26,8 @@ def prefactor(par, B, V):
 def amps(wc, par, B, V):
     N = prefactor(par, B, V)
     qiqj = meson_quark[(B,V)]
-    ff = FF.parametrizations['bsz3'].get_ff(meson_ff[(B,V)], 0, par)
+    ff_name = meson_ff[(B,V)] + ' form factor'
+    ff = AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=0.)
     c7 = wc['C7eff_'+qiqj] # e.g. C7eff_bs
     c7p = wc['C7effp_'+qiqj]
     a = {}

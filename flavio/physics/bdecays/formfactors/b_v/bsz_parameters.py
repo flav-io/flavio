@@ -1,6 +1,7 @@
 import numpy as np
 import json
 import pkgutil
+from flavio.classes import Parameter, MultivariateNormalDistribution
 
 FFs = ["A0","A1","A12","V","T1","T2","T23"]
 ai = ["a0","a1","a2"]
@@ -15,22 +16,29 @@ def get_ffpar(filename):
     corr = np.array([[data['correlation'][ff1 + ff2][a1 + a2] for ff1, a1 in ff_a] for ff2, a2 in ff_a])
     return [central, unc, corr]
 
-def ffpar_dict(filename, process):
-    par = {}
-    central = get_ffpar(filename)[0]
-    for i, name in enumerate(a_ff_string):
-        par[('formfactor', process, name)] = central[i]
-    return par
+def load_parameters(filename, process, constraints):
+    implementation_name = process + ' BSZ3'
+    parameter_names = [implementation_name + ' ' + coeff_name for coeff_name in a_ff_string]
+    for parameter_name in parameter_names:
+        try: # check if parameter object already exists
+            p = Parameter.get_instance(parameter_name)
+        except: # otherwise, create a new one
+            p = Parameter(parameter_name)
+        else: # if parameter exists, remove existing constraints
+            constraints.remove_constraints(parameter_name)
+    [central, unc, corr] = get_ffpar(filename)
+    constraints.add_constraint(parameter_names,
+            MultivariateNormalDistribution(central_value=central, covariance=np.outer(unc, unc)*corr) )
 
 
-ffpar_lcsr = {}
-ffpar_lcsr.update(ffpar_dict('data/arXiv-1503-05534v1/BKstar_LCSR.json', 'B->K*'))
-ffpar_lcsr.update(ffpar_dict('data/arXiv-1503-05534v1/Bomega_LCSR.json', 'B->omega'))
-ffpar_lcsr.update(ffpar_dict('data/arXiv-1503-05534v1/Brho_LCSR.json', 'B->rho'))
-ffpar_lcsr.update(ffpar_dict('data/arXiv-1503-05534v1/BsKstar_LCSR.json', 'Bs->K*'))
-ffpar_lcsr.update(ffpar_dict('data/arXiv-1503-05534v1/Bsphi_LCSR.json', 'Bs->phi'))
+def bsz_load_v1_lcsr(constraints):
+    load_parameters('data/arXiv-1503-05534v1/BKstar_LCSR.json', 'B->K*', constraints)
+    load_parameters('data/arXiv-1503-05534v1/Bomega_LCSR.json', 'B->omega', constraints)
+    load_parameters('data/arXiv-1503-05534v1/Brho_LCSR.json', 'B->rho', constraints)
+    load_parameters('data/arXiv-1503-05534v1/Bsphi_LCSR.json', 'Bs->phi', constraints)
+    load_parameters('data/arXiv-1503-05534v1/BsKstar_LCSR.json', 'Bs->K*', constraints)
 
-ffpar_combined = {}
-ffpar_combined.update(ffpar_dict('data/arXiv-1503-05534v1/BKstar_LCSR-Lattice.json', 'B->K*'))
-ffpar_combined.update(ffpar_dict('data/arXiv-1503-05534v1/BsKstar_LCSR-Lattice.json', 'Bs->K*'))
-ffpar_combined.update(ffpar_dict('data/arXiv-1503-05534v1/Bsphi_LCSR-Lattice.json', 'Bs->phi'))
+def bsz_load_v1_combined(constraints):
+    load_parameters('data/arXiv-1503-05534v1/BKstar_LCSR-Lattice.json', 'B->K*', constraints)
+    load_parameters('data/arXiv-1503-05534v1/Bsphi_LCSR-Lattice.json', 'Bs->phi', constraints)
+    load_parameters('data/arXiv-1503-05534v1/BsKstar_LCSR-Lattice.json', 'Bs->K*', constraints)

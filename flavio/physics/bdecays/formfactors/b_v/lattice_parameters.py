@@ -1,5 +1,7 @@
 import pkgutil
 import csv
+import numpy as np
+from flavio.classes import Parameter, MultivariateNormalDistribution
 
 def csv_to_dict(filename):
     f = pkgutil.get_data('flavio.physics', filename)
@@ -18,27 +20,45 @@ def csv_to_dict(filename):
             res[(line[0],line[1])] = float(line[2])
     return res
 
-def ffpar_dict(process, file_res, file_cov):
-    res = {('formfactor',process,k):v for k, v in csv_to_dict(file_res).items()}
-    cov = {('formfactor',process,k):v for k, v in csv_to_dict(file_cov).items()}
-    return res, cov
 
-ffpar_lattice = {}
-ffpar_lattice.update(ffpar_dict('B->K*',
-                     'data/arXiv-1501-00367v2/av_sl_results.d',
-                     'data/arXiv-1501-00367v2/av_sl_covariance.d')[0])
-ffpar_lattice.update(ffpar_dict('B->K*',
-                     'data/arXiv-1501-00367v2/t_sl_results.d',
-                     'data/arXiv-1501-00367v2/t_sl_covariance.d')[0])
-ffpar_lattice.update(ffpar_dict('Bs->phi',
-                     'data/arXiv-1501-00367v2/av_ss_results.d',
-                     'data/arXiv-1501-00367v2/av_ss_covariance.d')[0])
-ffpar_lattice.update(ffpar_dict('Bs->phi',
-                     'data/arXiv-1501-00367v2/t_ss_results.d',
-                     'data/arXiv-1501-00367v2/t_ss_covariance.d')[0])
-ffpar_lattice.update(ffpar_dict('Bs->K*',
-                     'data/arXiv-1501-00367v2/av_ls_results.d',
-                     'data/arXiv-1501-00367v2/av_ls_covariance.d')[0])
-ffpar_lattice.update(ffpar_dict('Bs->K*',
-                     'data/arXiv-1501-00367v2/t_ls_results.d',
-                     'data/arXiv-1501-00367v2/t_ls_covariance.d')[0])
+def load_parameters(file_res, file_cov, process, constraints):
+    implementation_name = process + ' lattice'
+    res_dict = csv_to_dict(file_res)
+    cov_dict = csv_to_dict(file_cov)
+    keys_sorted = sorted(res_dict.keys())
+    res = [res_dict[k] for k in keys_sorted]
+    # M -> M + M^T - diag(M) since the dictionary contains only the entries above the diagonal
+    cov = ( np.array([[ cov_dict.get((k,m),0) for m in keys_sorted] for k in keys_sorted])
+          + np.array([[ cov_dict.get((m,k),0) for m in keys_sorted] for k in keys_sorted])
+          - np.diag([ cov_dict[(k,k)] for k in keys_sorted]) )
+    parameter_names = [implementation_name + ' ' + coeff_name for coeff_name in keys_sorted]
+    for parameter_name in parameter_names:
+        try: # check if parameter object already exists
+            p = Parameter.get_instance(parameter_name)
+        except: # otherwise, create a new one
+            p = Parameter(parameter_name)
+        else: # if parameter exists, remove existing constraints
+            constraints.remove_constraints(parameter_name)
+    constraints.add_constraint(parameter_names,
+            MultivariateNormalDistribution(central_value=res, covariance=cov ))
+
+
+def lattice_load(constraints):
+    load_parameters('data/arXiv-1501-00367v2/av_sl_results.d',
+                    'data/arXiv-1501-00367v2/av_sl_covariance.d',
+                    'B->K*', constraints)
+    load_parameters('data/arXiv-1501-00367v2/av_ls_results.d',
+                    'data/arXiv-1501-00367v2/av_ls_covariance.d',
+                    'Bs->K*', constraints)
+    load_parameters('data/arXiv-1501-00367v2/av_ss_results.d',
+                    'data/arXiv-1501-00367v2/av_ss_covariance.d',
+                    'Bs->phi', constraints)
+    load_parameters('data/arXiv-1501-00367v2/t_sl_results.d',
+                    'data/arXiv-1501-00367v2/t_sl_covariance.d',
+                    'B->K*', constraints)
+    load_parameters('data/arXiv-1501-00367v2/t_ls_results.d',
+                    'data/arXiv-1501-00367v2/t_ls_covariance.d',
+                    'Bs->K*', constraints)
+    load_parameters('data/arXiv-1501-00367v2/t_ss_results.d',
+                    'data/arXiv-1501-00367v2/t_ss_covariance.d',
+                    'Bs->phi', constraints)

@@ -203,11 +203,11 @@ def T_para(q2, par, wc, B, V, scale):
     mV = par['m_'+V]
     mc = running.get_mc_pole(par)
     fB = par['f_'+B]
-    fVpara = par[('f_para',V)]
+    fVpara = par['f_' + V]
     EV = En_V(mB, mV, q2)
     N = pi**2 / 3. * fB * fVpara / mB * (mV/EV)
-    a1_para = par[('a1_para',V)]
-    a2_para = par[('a2_para',V)]
+    a1_para = par['a1_para_'+V]
+    a2_para = par['a2_para_'+V]
     def phiV_para(u):
         return phiV(u, a1_para, a2_para)
     def T_minus(u):
@@ -234,10 +234,10 @@ def T_perp(q2, par, wc, B, V, scale):
     mc = running.get_mc_pole(par)
     EV = En_V(mB, mV, q2)
     fB = par['f_'+B]
-    fVperp = par[('f_perp',V)]
+    fVperp = par['f_perp_'+V]
     N = pi**2 / 3. * fB * fVperp / mB
-    a1_perp = par[('a1_perp',V)]
-    a2_perp = par[('a2_perp',V)]
+    a1_perp = par['a1_perp_'+V]
+    a2_perp = par['a2_perp_'+V]
     def phiV_perp(u):
         return phiV(u, a1_perp, a2_perp)
     def T_minus(u):

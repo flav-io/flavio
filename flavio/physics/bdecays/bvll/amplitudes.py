@@ -2,13 +2,13 @@ from flavio.physics.bdecays.common import lambda_K, beta_l
 from math import sqrt, pi
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict, get_wceff
 from flavio.physics.running import running
-from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
 from flavio.config import config
 from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
 from flavio.physics.bdecays import matrixelements, angular
 from flavio.physics import ckm
 from flavio.physics.bdecays.bvll import qcdf
+from flavio.classes import AuxiliaryQuantity
 
 def prefactor(q2, par, B, V, lep):
     GF = par['Gmu']
@@ -22,7 +22,8 @@ def prefactor(q2, par, B, V, lep):
     return 4*GF/sqrt(2)*xi_t*alphaem/(4*pi)
 
 def get_ff(q2, par, B, V):
-    return FF.parametrizations['bsz3'].get_ff(meson_ff[(B,V)], q2, par)
+    ff_name = meson_ff[(B,V)] + ' form factor'
+    return AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
 
 def transversity_to_helicity(ta):
     H={}

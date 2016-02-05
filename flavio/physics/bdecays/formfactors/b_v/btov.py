@@ -1,28 +1,27 @@
 from flavio.physics.bdecays.formfactors.b_v import bsz, lattice
-from flavio.physics.bdecays.formfactors.common import FormFactorParametrization
+from flavio.classes import AuxiliaryQuantity, Implementation
 
-FFs = ["A0","A1","A12","V","T1","T2","T23"]
+processes = ['B->K*','B->rho','B->omega','Bs->phi','Bs->K*']
 
-bsz_parnames = [ a + '_' + ff for ff in FFs for a in ["a0","a1","a2"]]
-bsz_processes = ['B->K*','B->rho','B->omega','Bs->phi','Bs->K*']
+def ff_function(function, process, **kwargs):
+    return lambda wc_obj, par_dict, q2: function(process, q2, par_dict, **kwargs)
 
-lattice_parnames = [ ff.lower() + '_' + a for ff in FFs for a in ["a0","a1","a2"]]
-lattice_processes = ['B->K*','Bs->phi','Bs->K*']
+for p in processes:
+    quantity = p + ' form factor'
+    a = AuxiliaryQuantity(name=quantity, arguments=['q2'])
+    a.set_description('Hadronic form factor for the ' + p + ' transition')
 
-bsz2 = FormFactorParametrization(name='bsz2',
-                                 transition='b_v',
-                                 processes=bsz_processes,
-                                 parameters=bsz_parnames,
-                                 function=lambda process, q2, par: bsz.ff(process, q2, par, n=2))
+    iname = p + ' BSZ2'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ff_function(bsz.ff, p, implementation=iname, n=2))
+    i.set_description("2-parameter BSZ parametrization (see arXiv:1503.05534)")
 
-bsz3 = FormFactorParametrization(name='bsz3',
-                                 transition='b_v',
-                                 processes=bsz_processes,
-                                 parameters=bsz_parnames,
-                                 function=lambda process, q2, par: bsz.ff(process, q2, par, n=3))
+    iname = p + ' BSZ3'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ff_function(bsz.ff, p, implementation=iname, n=3))
+    i.set_description("3-parameter BSZ parametrization (see arXiv:1503.05534)")
 
-lattice2 = FormFactorParametrization(name='lattice',
-                                 transition='b_v',
-                                 processes=lattice_processes,
-                                 parameters=lattice_parnames,
-                                 function=lambda process, q2, par: lattice.ff(process, q2, par, n=2))
+    iname = p + ' lattice'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ff_function(lattice.ff, p, implementation=iname, n=2))
+    i.set_description("2-parameter lattice parametrization")

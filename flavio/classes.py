@@ -214,6 +214,10 @@ class AuxiliaryQuantity(NamedInstanceClass):
       implementation = self.get_implementation()
       return implementation.get_central(wc_obj, *args, **kwargs)
 
+   def prediction(self, par_dict, wc_obj, *args, **kwargs):
+      implementation = self.get_implementation()
+      return implementation.get(par_dict, wc_obj, *args, **kwargs)
+
 
 
 ########## Prediction Class ##########
@@ -262,6 +266,9 @@ class Implementation(NamedInstanceClass):
 
    def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
       par_dict = constraints_obj.get_central_all()
+      return self.function(wc_obj, par_dict, *args, **kwargs)
+
+   def get(self, par_dict, wc_obj, *args, **kwargs):
       return self.function(wc_obj, par_dict, *args, **kwargs)
 
 

@@ -2,7 +2,7 @@ from math import sqrt,pi
 from flavio.physics.bdecays.common import lambda_K, meson_quark, meson_ff
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 from flavio.physics import ckm
-from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
+from flavio.classes import AuxiliaryQuantity
 from flavio.config import config
 from flavio.physics.running import running
 from flavio.physics.bdecays import angular
@@ -32,7 +32,8 @@ def get_wceff(q2, wc_obj, par, B, V, lep):
     return c
 
 def get_ff(q2, par, B, V):
-    return FF.parametrizations['bsz3'].get_ff(meson_ff[(B,V)], q2, par)
+    ff_name = meson_ff[(B,V)] + ' form factor'
+    return AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
 
 def prefactor(q2, par, B, V, lep):
     GF = par['Gmu']
