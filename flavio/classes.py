@@ -76,6 +76,14 @@ class Constraints(object):
                   Parameter.get_instance(parameter)
               except:
                   raise ValueError("The parameter " + parameter + " does not exist")
+              # check if there is a constraint and what its central value is
+              try: # look at the central value of an existing constraint
+                  central_value = self.get_central(parameter)
+              except: # if the parameter is not constrained yet, no need to check the central value
+                  pass
+              else: # if the central value of the new constraint is different from an existing constraint, raise an error
+                  if np.ravel([constraint.central_value])[num] != central_value:
+                      raise ValueError("The central values of all constraints on one parameter must be equal")
               self._parameters.setdefault(parameter,[]).append((num, constraint))
           self._constraints.append(constraint)
 

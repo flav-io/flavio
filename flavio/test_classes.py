@@ -20,6 +20,10 @@ class TestClasses(unittest.TestCase):
         c.add_constraint( ['test_mb'], d )
         # checking central values
         self.assertEqual( c.get_central('test_mb'), 4.2)
+        with self.assertRaises(ValueError):
+            # adding a constraint with a different central value should raise an error
+            d2 = NormalDistribution(4.8, 0.2)
+            c.add_constraint( ['test_mb'], d2 )
         # checking types and shapes of random values
         self.assertEqual( type(d.get_random()), float)
         self.assertEqual( d.get_random(3).shape, (3,))
