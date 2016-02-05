@@ -1,5 +1,6 @@
 import numpy as np
 import re
+from .config import config
 
 def _is_number(s):
     try:
@@ -11,15 +12,32 @@ def _is_number(s):
 
 class NamedInstanceClass(object):
    """Base class for classes that have named instances that can be accessed
-   by their name."""
+   by their name.
+
+   Parameters
+   ----------
+    - name: string
+
+   Methods
+   -------
+    - del_instance(name)
+        Delete an instance
+    - get_instance(name)
+        Delete an instance
+    - set_description(description)
+        Set the description
+    - get_description(description)
+        Get the description
+   """
 
    def __init__(self, name):
       if not hasattr(self.__class__, '_instances'):
           self.__class__._instances = {}
       if name in self.__class__._instances.keys():
-          raise ValueError("The instance " + name + " already exists")
+          raise ValueError("The instance " + name + " of " + str(self.__class__) + " already exists")
       self.__class__._instances[name] = self
       self.name = name
+      self.description = 'No description available.'
 
    @classmethod
    def get_instance(cls, name):
@@ -28,6 +46,13 @@ class NamedInstanceClass(object):
    @classmethod
    def del_instance(cls, name):
       del cls._instances[name]
+
+   def set_description(self, description):
+      self.description = description
+
+   def get_description(self):
+      return self.description
+
 
 
 ########## Parameter Class ##########
@@ -46,12 +71,6 @@ class Parameter(NamedInstanceClass):
    def __init__(self, name):
       super().__init__(name)
       self._constraints_list = []
-
-   def set_description(self, description):
-      self.description = description
-
-   def get_description(self):
-      return self.description
 
    def add_constraint(self, constraint):
       if not self._constraints_list:
@@ -148,17 +167,13 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
 
 ########## Observable Class ##########
 class Observable(NamedInstanceClass):
+   """An Observable is something that can be measured experimentally and
+   predicted theoretically."""
 
    def __init__(self, name, arguments=None):
       super().__init__(name)
       self.arguments = arguments
       self.prediction = None
-
-   def set_description(self, description):
-      self.description = description
-
-   def get_description(self):
-      return self.description
 
    def set_prediction(self, prediction):
       self.prediction = prediction
@@ -167,16 +182,72 @@ class Observable(NamedInstanceClass):
       return self.prediction.get_central(wc_obj, *args, **kwargs)
 
 
+########## AuxiliaryQuantity Class ##########
+class AuxiliaryQuantity(NamedInstanceClass):
+   """An auxiliary quantity is something that can be computed theoretically but
+   not measured directly, e.g. some sub-contribution to an amplitude or a form
+   factor."""
+
+   def __init__(self, name, arguments=None):
+      super().__init__(name)
+      self.arguments = arguments
+
+   def get_implementation(self):
+      try:
+          implementation_name = config['implementation'][self.name]
+      except KeyError:
+          raise KeyError("No implementation specified for auxiliary quantity " + self.name)
+      return Implementation.get_instance(implementation_name)
+
+   def prediction_central(self, wc_obj, *args, **kwargs):
+      implementation = self.get_implementation()
+      return implementation.get_central(wc_obj, *args, **kwargs)
+
+
+
 ########## Prediction Class ##########
 class Prediction(object):
+   """A prediction is the theoretical prediction for an observable."""
 
    def __init__(self, observable, function):
-      if observable not in Observable._instances.keys():
+      try:
+          Observable.get_instance(observable)
+      except KeyError:
           raise ValueError("The observable " + observable + " does not exist")
       self.observable = observable
       self.function = function
-      self.observable_obj = Observable._instances[observable]
+      self.observable_obj = Observable.get_instance(observable)
       self.observable_obj.set_prediction(self)
+
+   def get_central(self, wc_obj, *args, **kwargs):
+      par_dict = Parameter.get_central_all()
+      return self.function(wc_obj, par_dict, *args, **kwargs)
+
+
+########## Implementation Class ##########
+class Implementation(NamedInstanceClass):
+   """An implementation is the theoretical prediction for an auxiliary
+   quantity."""
+
+   @classmethod
+   def show_all(cls):
+      all_dict = {}
+      for name in cls._instances:
+          inst = cls.get_instance(name)
+          quant = inst.quantity
+          descr = inst.get_description()
+          all_dict[quant] = {name: descr}
+      return all_dict
+
+   def __init__(self, name, quantity, function):
+      super().__init__(name)
+      try:
+          AuxiliaryQuantity.get_instance(quantity)
+      except KeyError:
+          raise ValueError("The quantity " + quantity + " does not exist")
+      self.quantity = quantity
+      self.function = function
+      self.quantity_obj = AuxiliaryQuantity.get_instance(quantity)
 
    def get_central(self, wc_obj, *args, **kwargs):
       par_dict = Parameter.get_central_all()

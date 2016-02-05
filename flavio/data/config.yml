@@ -10,3 +10,7 @@ renormalization scale:
     Bs mixing: 4.2  # Bs-Bsbar mixing
     B0 mixing: 4.2  # B0-B0bar mixing
     K0 mixing: 2.   # K0-K0bar mixing
+
+# set the default implementation for auxiliary quantities
+implementation:
+  test_aux: test_imp
