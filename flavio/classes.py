@@ -8,16 +8,30 @@ def _is_number(s):
     except ValueError:
         return False
 
-########## Parameter Class ##########
-class Parameter:
 
-   # all instances of Parameter will be saved to this dict in the form
-   # {name: <instance>}
-   _instances  = {}
+class NamedInstanceClass(object):
+   """Base class for classes that have named instances that can be accessed
+   by their name."""
+
+   def __init__(self, name):
+      if not hasattr(self.__class__, '_instances'):
+          self.__class__._instances = {}
+      if name in self.__class__._instances.keys():
+          raise ValueError("The instance " + name + " already exists")
+      self.__class__._instances[name] = self
+      self.name = name
 
    @classmethod
    def get_instance(cls, name):
       return cls._instances[name]
+
+   @classmethod
+   def del_instance(cls, name):
+      del cls._instances[name]
+
+
+########## Parameter Class ##########
+class Parameter(NamedInstanceClass):
 
    @classmethod
    def get_central_all(cls):
@@ -30,10 +44,7 @@ class Parameter:
       return {k: i.get_random() for k, i in cls._instances.items()}
 
    def __init__(self, name):
-      if name in Parameter._instances.keys():
-          raise ValueError("The parameter " + name + " already exists")
-      Parameter._instances[name] = self
-      self.name = name
+      super().__init__(name)
       self._constraints_list = []
 
    def set_description(self, description):
@@ -74,7 +85,7 @@ class Parameter:
 
 
 ########## ProbabilityDistribution Class ##########
-class ProbabilityDistribution:
+class ProbabilityDistribution(object):
    """Common base class for all probability distributions"""
 
    def __init__(self, central_value):
@@ -136,19 +147,10 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
 
 
 ########## Observable Class ##########
-class Observable:
-
-   _instances  = {}
-
-   @classmethod
-   def get_instance(cls, name):
-      return cls._instances[name]
+class Observable(NamedInstanceClass):
 
    def __init__(self, name, arguments=None):
-      if name in Observable._instances.keys():
-          raise ValueError("The observable " + name + " already exists")
-      Observable._instances[name] = self
-      self.name = name
+      super().__init__(name)
       self.arguments = arguments
       self.prediction = None
 
@@ -166,7 +168,7 @@ class Observable:
 
 
 ########## Prediction Class ##########
-class Prediction:
+class Prediction(object):
 
    def __init__(self, observable, function):
       if observable not in Observable._instances.keys():
