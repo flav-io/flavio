@@ -30,13 +30,12 @@ def param_f0(mB, mP, a_i, q2):
     k = np.arange(len(a_i))
     return ( a_i * Z**k ).sum()
 
-def ff(process, q2, par):
+def ff(process, q2, par, implementation):
     r"""Central value of $B\to P$ form factors in the standard convention
-    and lattice parametrization.
+    and BCL parametrization (arXiv:0807.2722).
 
     The standard convention defines the form factors $f_+$, $f_0$, and $f_T$.
 
-    The lattice parametrization ...
 
     Parameters
     ----------
@@ -57,7 +56,7 @@ def ff(process, q2, par):
     ff = {}
     a={}
     for i in ['f+', 'fT', 'f0']:
-        a[i] = [ par[('formfactor', process, 'a' + str(j) + '_' + i)] for j in range(2) ]
+        a[i] = [ par[implementation + ' a' + str(j) + '_' + i] for j in range(2) ]
     ff['f+'] = pole('f+', mres, q2) * param_fplusT(mB, mP, a['f+'], q2)
     ff['fT'] = pole('fT', mres, q2) * param_fplusT(mB, mP, a['fT'], q2)
     ff['f0'] = pole('f0', mres, q2) * param_f0(mB, mP, a['f0'], q2)

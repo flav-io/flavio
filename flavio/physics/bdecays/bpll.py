@@ -1,7 +1,7 @@
 from math import sqrt,pi
 from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
 from flavio.physics import ckm
-from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
+from flavio.classes import AuxiliaryQuantity
 from flavio.config import config
 from flavio.physics.running import running
 from flavio.physics.common import conjugate_par, conjugate_wc
@@ -22,7 +22,8 @@ def prefactor(q2, par, B, P, lep):
     return 4*GF/sqrt(2)*xi_t*alphaem/(4*pi)
 
 def get_ff(q2, par, B, P):
-    return FF.parametrizations['btop_lattice'].get_ff(meson_ff[(B,P)], q2, par)
+    ff_name = meson_ff[(B,P)] + ' form factor'
+    return AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
 
 def get_angularcoeff(q2, wc, par, B, P, lep):
     ml = par['m_'+lep]

@@ -12,7 +12,7 @@ import copy
 
 s = 1.519267515435317e+24
 
-c = copy.copy(default_parameters)
+c = copy.deepcopy(default_parameters)
 # parameters taken from PDG and table I of 1311.0903
 c.set_constraint('alpha_s', '0.1184(7)')
 c.set_constraint('f_Bs', '0.2277(45)')

@@ -31,7 +31,7 @@ class TestParameters(unittest.TestCase):
         self.assertEqual(par_dict['m_W'], 80.385)
         self.assertEqual(par_dict['tau_phi'], 1/4.266e-3)
         # just check if the random values are numbers
-        for par_random in Parameter.get_random_all().values():
+        for par_random in default_parameters.get_random_all().values():
             self.assertIsInstance(par_random, float)
 
     def test_constraints_from_string(self):

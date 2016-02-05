@@ -3,43 +3,30 @@ import numpy as np
 from .bplnu import *
 from flavio.physics.bdecays.formfactors.b_v import bsz_parameters
 from flavio.physics.eft import WilsonCoefficients
+import copy
+from flavio.parameters import default_parameters
+from flavio.classes import Parameter
 
-
-s = 1.519267515435317e+24
-
-par = {
-    'm_e': 0.510998928e-3,
-    'm_mu': 105.6583715e-3,
-    'm_tau': 1.77686,
-    'm_B+': 5.27929,
-    'm_B0': 5.27961,
-    'm_D0': 1.86484,
-    'm_rho+': 0.077526,
-    'm_rho0': 0.077526,
-    'tau_B+': 1638.e-15*s,
-    'tau_B0': 152.e-14*s,
-    'alpha_e': 1/127.940,
-    'alpha_s': 0.1185,
-    'm_Z': 91.1876,
-    'm_b': 4.17,
-    'm_t': 173.21,
-    'm_c': 1.275,
-    'Gmu': 1.1663787e-5,
-    'Vus': 0.22,
-    'Vub': 3.7e-3,
-    'Vcb': 4.1e-2,
-    'gamma': 1.22,
-# table XII of 1505.03925v1
-    ('formfactor','B->D','a0_f0'): 0.647,
-    ('formfactor','B->D','a1_f0'): 0.27,
-    ('formfactor','B->D','a2_f0'): -0.09,
-    ('formfactor','B->D','a0_f+'): 0.836,
-    ('formfactor','B->D','a1_f+'): -2.66,
-    ('formfactor','B->D','a2_f+'): -0.07,
-    ('formfactor','B->D','a0_fT'): 0,
-    ('formfactor','B->D','a1_fT'): 0,
-    ('formfactor','B->D','a2_fT'): 0,
-}
+c = copy.copy(default_parameters)
+Parameter('B->D BCL a0_f+')
+Parameter('B->D BCL a0_f0')
+Parameter('B->D BCL a0_fT')
+Parameter('B->D BCL a1_f+')
+Parameter('B->D BCL a1_f0')
+Parameter('B->D BCL a1_fT')
+Parameter('B->D BCL a2_f+')
+Parameter('B->D BCL a2_f0')
+Parameter('B->D BCL a2_fT')
+c.set_constraint('B->D BCL a0_f+', 0.836)
+c.set_constraint('B->D BCL a1_f+', -2.66)
+c.set_constraint('B->D BCL a2_f+', -0.07)
+c.set_constraint('B->D BCL a0_f0', 0.647)
+c.set_constraint('B->D BCL a1_f0', 0.27)
+c.set_constraint('B->D BCL a2_f0', -0.09)
+c.set_constraint('B->D BCL a0_fT', 0)
+c.set_constraint('B->D BCL a1_fT', 0)
+c.set_constraint('B->D BCL a2_fT', 0)
+par = c.get_central_all()
 
 wc_obj = WilsonCoefficients()
 
