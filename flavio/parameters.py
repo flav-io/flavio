@@ -8,7 +8,7 @@ def _read_yaml_object(obj, constraints):
     parameters = yaml.load(obj)
     for parameter_name, value in parameters.items():
         p = Parameter(parameter_name)
-    constraints.set_constraint(parameter_name, value)
+        constraints.set_constraint(parameter_name, value)
 
 def read_file(filename, constraints):
     """Read parameter values from a YAML file."""

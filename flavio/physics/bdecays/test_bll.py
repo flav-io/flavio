@@ -7,31 +7,23 @@ from flavio.physics.eft import WilsonCoefficients
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 from flavio.classes import Parameter, Observable
 
+from flavio.parameters import default_parameters
+import copy
+
 s = 1.519267515435317e+24
 
+c = copy.copy(default_parameters)
 # parameters taken from PDG and table I of 1311.0903
-par = {
-    'm_e': 0.510998928e-3,
-    'm_mu': 105.6583715e-3,
-    'm_tau': 1.77686,
-    'm_Bs': 5.36677,
-    'm_b': 4.17,
-    'm_t': 173.21,
-    'm_c': 1.275,
-    'tau_Bs': 1.516e-12*s,
-    'tau_B0': 1.519e-12*s,
-    'Gmu': 1.166379e-5,
-    'alpha_e': 1/127.944,
-    'alpha_s': 0.1184,
-    'm_Z': 91.1876,
-    'f_Bs': 0.2277,
-    'f_B0': 0.1905,
-    'Vus': 0.2254,
-    'Vcb': 4.24e-2,
-    'Vub': 3.82e-3,
-    'gamma': radians(73.),
-    'DeltaGamma/Gamma_Bs': 0.1226,
-}
+c.set_constraint('alpha_s', '0.1184(7)')
+c.set_constraint('f_Bs', '0.2277(45)')
+c.set_constraint('f_B0', '0.1905(42)')
+c.set_constraint('Vcb', 4.24e-2)
+c.set_constraint('Vub', 3.82e-3)
+c.set_constraint('gamma', radians(73.))
+c.set_constraint('DeltaGamma/Gamma_Bs', 0.1226)
+
+par = c.get_central_all()
+
 
 wc_obj = WilsonCoefficients()
 wc = wctot_dict(wc_obj, 'bsmumu', 4.8, par)
@@ -61,7 +53,7 @@ class TestBll(unittest.TestCase):
         self.assertAlmostEqual(br_timeint(par, wc_tau, 'Bs', 'tau')/7.73e-7, 1, places=1)
 
     def test_bsll_classes(self):
-        par_default = Parameter.get_central_all()
-        self.assertAlmostEqual(br_timeint(par_default, wc_tau, 'Bs', 'tau')/Observable.get_instance('BR(Bs->tautau)').prediction_central(wc_obj), 1, places=4)
-        self.assertAlmostEqual(br_timeint(par_default, wc_e, 'Bs', 'e')/Observable.get_instance('BR(Bs->ee)').prediction_central(wc_obj), 1, places=4)
-        self.assertAlmostEqual(br_timeint(par_default, wc, 'Bs', 'mu')/Observable.get_instance('BR(Bs->mumu)').prediction_central(wc_obj), 1, places=4)
+        par_default = default_parameters.get_central_all()
+        self.assertAlmostEqual(br_timeint(par_default, wc_tau, 'Bs', 'tau')/Observable.get_instance('BR(Bs->tautau)').prediction_central(default_parameters, wc_obj), 1, places=4)
+        self.assertAlmostEqual(br_timeint(par_default, wc_e, 'Bs', 'e')/Observable.get_instance('BR(Bs->ee)').prediction_central(default_parameters, wc_obj), 1, places=4)
+        self.assertAlmostEqual(br_timeint(par_default, wc, 'Bs', 'mu')/Observable.get_instance('BR(Bs->mumu)').prediction_central(default_parameters, wc_obj), 1, places=4)
