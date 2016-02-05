@@ -3,21 +3,17 @@ import pkgutil
 from flavio.classes import *
 import csv
 
-default_parameters = Constraints()
 
-f = pkgutil.get_data('flavio', 'data/parameters.yml')
-parameters = yaml.load(f)
-
-def _read_yaml_object(obj):
+def _read_yaml_object(obj, constraints):
     parameters = yaml.load(obj)
     for parameter_name, value in parameters.items():
         p = Parameter(parameter_name)
-    default_parameters.set_constraint(parameter_name, value)
+    constraints.set_constraint(parameter_name, value)
 
-def read_file(filename):
+def read_file(filename, constraints):
     """Read parameter values from a YAML file."""
     with open(filename, 'r') as f:
-        _read_yaml_object(f)
+        _read_yaml_object(f, constraints)
 
 # particles from the PDG data file whose mass we're interested in)
 pdg_include = ['B(s)', 'B(s)*', 'B*+', 'B*0', 'B+', 'B0', 'D(s)', 'D(s)*', 'D+', 'D0',
@@ -42,6 +38,7 @@ pdg_translate = {
 'rho(770)+': 'rho+',
 'f(0)(980)': 'f0',
 "eta'(958)": "eta'",
+'Omega': 'omega',
 'Higgs' : 'h', # this is necessary for the 2013 data file
 'H' : 'h',
 }
@@ -103,7 +100,7 @@ def _read_pdg_masswidth(filename):
     return result
 
 
-def read_pdg(year):
+def read_pdg(year, constraints):
     """Read particle masses and widths from the PDG data file of a given year."""
     particles = _read_pdg_masswidth('data/pdg/mass_width_' + str(year) + '.mcd')
     for particle in pdg_include:
@@ -111,16 +108,16 @@ def read_pdg(year):
         try:
             # if parameter already exists, remove existing constraints on it
             m = Parameter.get_instance(parameter_name)
-            m.remove_constraints()
+            constraints.remove_constraints(parameter_name)
         except KeyError:
             # otherwise, create it
             m = Parameter(parameter_name)
         m_central, m_right, m_left = particles[particle]['mass']
         m_left = abs(m_left) # make left error positive
         if m_right == m_left:
-            m.add_constraint(NormalDistribution(m_central, m_right))
+            constraints.add_constraint([parameter_name], NormalDistribution(m_central, m_right))
         else:
-            m.add_constraint(AsymmetricNormalDistribution(m_central, right_deviation=m_right, left_deviation=m_left))
+            constraints.add_constraint([parameter_name], AsymmetricNormalDistribution(m_central, right_deviation=m_right, left_deviation=m_left))
         if particles[particle]['width'][0] == 0: # 0 is for particles where the width is unknown (e.g. B*)
             continue
         G_central, G_right, G_left = particles[particle]['width']
@@ -129,7 +126,7 @@ def read_pdg(year):
         try:
             # if parameter already exists, remove existing constraints on it
             tau = Parameter.get_instance(parameter_name)
-            tau.remove_constraints()
+            constraints.remove_constraints(parameter_name)
         except KeyError:
             # otherwise, create it
             tau = Parameter(parameter_name)
@@ -137,14 +134,17 @@ def read_pdg(year):
         tau_left = G_left/G_central**2
         tau_right = G_right/G_central**2
         if tau_left == tau_right:
-            tau.add_constraint(NormalDistribution(tau_central, tau_right))
+            constraints.add_constraint([parameter_name], NormalDistribution(tau_central, tau_right))
         else:
-            tau.add_constraint(AsymmetricNormalDistribution(tau_central, right_deviation=tau_right, left_deviation=tau_left))
+            constraints.add_constraint([parameter_name], AsymmetricNormalDistribution(tau_central, right_deviation=tau_right, left_deviation=tau_left))
 
 # Read default parameters
 
+## Create the object
+default_parameters = Constraints()
+
 ## Read the parameters from the default YAML data file
-_read_yaml_object(pkgutil.get_data('flavio', 'data/parameters.yml'))
+_read_yaml_object(pkgutil.get_data('flavio', 'data/parameters.yml'), default_parameters)
 
 ## Read the parameters from the default PDG data file
-read_pdg(2015)
+read_pdg(2015, default_parameters)
