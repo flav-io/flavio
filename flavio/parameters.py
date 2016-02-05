@@ -3,13 +3,16 @@ import pkgutil
 from flavio.classes import *
 import csv
 
+default_parameters = Constraints()
 
+f = pkgutil.get_data('flavio', 'data/parameters.yml')
+parameters = yaml.load(f)
 
 def _read_yaml_object(obj):
     parameters = yaml.load(obj)
     for parameter_name, value in parameters.items():
         p = Parameter(parameter_name)
-        p.set_constraint(value)
+    default_parameters.set_constraint(parameter_name, value)
 
 def read_file(filename):
     """Read parameter values from a YAML file."""

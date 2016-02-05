@@ -58,48 +58,59 @@ class NamedInstanceClass(object):
 ########## Parameter Class ##########
 class Parameter(NamedInstanceClass):
 
-   @classmethod
-   def get_central_all(cls):
-      """Return the central values of all parameters."""
-      return {k: i.get_central() for k, i in cls._instances.items()}
-
-   @classmethod
-   def get_random_all(cls):
-      """Return random values for all parameters."""
-      return {k: i.get_random() for k, i in cls._instances.items()}
-
    def __init__(self, name):
       super().__init__(name)
-      self._constraints_list = []
 
-   def add_constraint(self, constraint):
-      if not self._constraints_list:
-         self._constraints_list.append(constraint)
-      else:
-         if self._constraints_list[0].central_value == constraint.central_value:
-            self._constraints_list.append(constraint)
-         else:
-            raise ValueError("The central values of all constraints on one parameter should be equal!")
 
-   def remove_constraints(self):
-      self._constraints_list = []
+########## Constraints Class ##########
+class Constraints(object):
 
-   def get_central(self):
-      if not self._constraints_list:
-           raise ValueError('No constraints applied to parameter ' + self.name)
-      else:
-         return self._constraints_list[0].central_value
+      def __init__(self):
+          self._constraints = []
+          self._parameters = {}
 
-   def get_random(self, size=None):
-      c = self.get_central()
-      r = [u.get_random(size) - c for u in self._constraints_list]
-      return np.sum(r, axis=0) + c
+      def add_constraint(self, parameters, constraint):
+          for num, parameter in enumerate(parameters):
+              # append to the list of constraints for parameter or create a new list
+              try:
+                  Parameter.get_instance(parameter)
+              except:
+                  raise ValueError("The parameter " + parameter + " does not exist")
+              self._parameters.setdefault(parameter,[]).append((num, constraint))
+          self._constraints.append(constraint)
 
-   def set_constraint(self, constraint_string):
-      pds = constraints_from_string(constraint_string)
-      self.remove_constraints()
-      for pd in pds:
-          self.add_constraint(pd)
+      def set_constraint(self, parameter, constraint_string):
+          pds = constraints_from_string(constraint_string)
+          self.remove_constraints(parameter)
+          for pd in pds:
+              self.add_constraint([parameter], pd)
+
+      def remove_constraints(self, parameter):
+          self._parameters[parameter] = []
+
+      def get_central(self, parameter):
+          if parameter not in self._parameters.keys():
+              raise ValueError('No constraints applied to parameter ' + self.parameter)
+          else:
+              num, constraint = self._parameters[parameter][0]
+              # return the num-th entry of the central value vector
+              return np.ravel([constraint.central_value])[num]
+
+      def get_central_all(self):
+          return {parameter: self.get_central(parameter) for parameter in self._parameters.keys()}
+
+      def get_random_all(self):
+          random_constraints = [constraint.get_random() for constraint in self._constraints]
+          random_dict = {}
+          for parameter, constraints in self._parameters.items():
+              central_value =  self.get_central(parameter)
+              random_dict[parameter] = central_value
+              for num, constraint in constraints:
+                  idx = self._constraints.index(constraint)
+                  random_dict[parameter] += np.ravel([random_constraints[idx]])[num] - central_value
+          return random_dict
+
+
 
 
 
@@ -219,8 +230,8 @@ class Prediction(object):
       self.observable_obj = Observable.get_instance(observable)
       self.observable_obj.set_prediction(self)
 
-   def get_central(self, wc_obj, *args, **kwargs):
-      par_dict = Parameter.get_central_all()
+   def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
+      par_dict = constraints_obj.get_central_all()
       return self.function(wc_obj, par_dict, *args, **kwargs)
 
 
@@ -249,8 +260,8 @@ class Implementation(NamedInstanceClass):
       self.function = function
       self.quantity_obj = AuxiliaryQuantity.get_instance(quantity)
 
-   def get_central(self, wc_obj, *args, **kwargs):
-      par_dict = Parameter.get_central_all()
+   def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
+      par_dict = constraints_obj.get_central_all()
       return self.function(wc_obj, par_dict, *args, **kwargs)
 
 
