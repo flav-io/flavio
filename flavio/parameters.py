@@ -2,7 +2,7 @@ import yaml
 import pkgutil
 from flavio.classes import *
 import csv
-
+import flavio
 
 def _read_yaml_object(obj, constraints):
     parameters = yaml.load(obj)
@@ -18,7 +18,7 @@ def read_file(filename, constraints):
 # particles from the PDG data file whose mass we're interested in)
 pdg_include = ['B(s)', 'B(s)*', 'B*+', 'B*0', 'B+', 'B0', 'D(s)', 'D(s)*', 'D+', 'D0',
                 'H', 'J/psi(1S)', 'K(L)', 'K(S)', 'K*(892)+', 'K*(892)0', 'K+', 'K0',
-                'Lambda', 'Lambda(b)', 'Omega',
+                'Lambda', 'Lambda(b)', 'Omega', 'D*(2007)', 'D*(2010)',
                  'W', 'Z',  'b',  'c', 'd', 'e', 'eta', 'f(0)(980)',
                  'mu',  'phi(1020)', 'pi+', 'pi0', 'psi(2S)', 'rho(770)+', 'rho(770)0',
                  's', 't', 'tau', 'u']
@@ -28,6 +28,8 @@ pdg_translate = {
 'D(s)': 'Ds',
 'B(s)*': 'Bs*',
 'D(s)*': 'Ds*',
+'D*(2007)' : 'D*0',
+'D*(2010)' : 'D*+',
 'J/psi(1S)': 'J/psi',
 'K(L)': 'KL',
 'K(S)': 'KS',
@@ -138,13 +140,24 @@ def read_pdg(year, constraints):
         else:
             constraints.add_constraint([parameter_name], AsymmetricNormalDistribution(tau_central, right_deviation=tau_right, left_deviation=tau_left))
 
-# Read default parameters
 
-## Create the object
+
+############### Read default parameters ###################
+
+# Create the object
 default_parameters = Constraints()
 
-## Read the parameters from the default YAML data file
+# Read the parameters from the default YAML data file
 _read_yaml_object(pkgutil.get_data('flavio', 'data/parameters.yml'), default_parameters)
 
-## Read the parameters from the default PDG data file
+# Read the parameters from the default PDG data file
 read_pdg(2015, default_parameters)
+
+# Read default parameters for B->V form factors
+## first load LCSR-only form factors
+flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load_v1_lcsr(default_parameters)
+## then load combined LCSR-lattice fits. Overwrites LCSR ones for B->K*, Bs->K*, Bs->phi, but not B->rho, B->omega
+flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load_v1_combined(default_parameters)
+
+# Read default parameters for B->P form factors
+flavio.physics.bdecays.formfactors.b_p.bcl_parameters.load_parameters('data/arxiv-1509-06235v1/b_k.yml', default_parameters)
