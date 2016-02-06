@@ -104,7 +104,7 @@ def bqll_obs_function(function, B, lep):
 
 # Observable and Prediction instances
 
-_tex = {'e': 'e', 'mu': '\mu', 'tau': '\tau'}
+_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 for l in ['e', 'mu', 'tau']:
     # For the B^0 decay, we take the time-integrated branching ratio
     _obs_name = "BR(Bs->"+l+l+")"

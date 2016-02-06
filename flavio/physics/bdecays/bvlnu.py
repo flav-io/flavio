@@ -7,6 +7,8 @@ from flavio.config import config
 from flavio.physics.running import running
 from flavio.physics.bdecays import angular
 from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc
+from flavio.classes import Observable, Prediction
+from scipy.integrate import quad
 
 r"""Functions for exclusive $B\to V\ell\nu$ decays."""
 
@@ -78,3 +80,59 @@ def dBRdq2(q2, wc_obj, par, B, V, lep):
     tauB = par['tau_'+B]
     J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
     return tauB * dGdq2(J)
+
+def dBRdq2_function(B, V, lep):
+    return lambda wc_obj, par, q2: dBRdq2(q2, wc_obj, par, B, V, lep)
+
+def BR_binned(q2min, q2max, wc_obj, par, B, V, lep):
+    def integrand(q2):
+        return dBRdq2(q2, wc_obj, par, B, V, lep)
+    return quad(integrand, q2min, q2max, epsabs=0., epsrel=0.01)[0]
+
+def BR_binned_function(B, V, lep):
+    return lambda wc_obj, par, q2min, q2max: BR_binned(q2min, q2max, wc_obj, par, B, V, lep)
+
+def BR_tot(wc_obj, par, B, V, lep):
+    mB = par['m_'+B]
+    mV = par['m_'+V]
+    ml = par['m_'+lep]
+    q2max = (mB-mV)**2
+    q2min = ml**2
+    return BR_binned(q2min, q2max, wc_obj, par, B, V, lep)
+
+def BR_tot_function(B, V, lep):
+    return lambda wc_obj, par: BR_tot(wc_obj, par, B, V, lep)
+
+
+# Observable and Prediction instances
+
+_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
+_func = {'dBR/dq2': dBRdq2_function, 'BR': BR_tot_function, '<BR>': BR_binned_function}
+_desc = {'dBR/dq2': 'Differential', 'BR': 'Total', '<BR>': 'Binned'}
+
+for l in ['e', 'mu', 'tau']:
+    for br in ['dBR/dq2', 'BR', '<BR>']:
+        _obs_name = br + "(B+->D*"+l+"nu)"
+        _obs = Observable(_obs_name)
+        _obs.set_description(_desc[br] + r" branching ratio of $B^+\to D^{*0}"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
+        Prediction(_obs_name, _func[br]('B+', 'D*0', l))
+
+        _obs_name = br + "(B0->D*"+l+"nu)"
+        _obs = Observable(_obs_name)
+        _obs.set_description(_desc[br] + r" branching ratio of $B^0\to D^{*-}"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
+        Prediction(_obs_name, _func[br]('B0', 'D*+', l))
+
+        _obs_name = br + "(Bs->K*"+l+"nu)"
+        _obs = Observable(_obs_name)
+        _obs.set_description(_desc[br] + r" branching ratio of $B_s\to K^{*-}"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
+        Prediction(_obs_name, _func[br]('Bs', 'K*+', l))
+
+        _obs_name = br + "(B+->rho"+l+"nu)"
+        _obs = Observable(_obs_name)
+        _obs.set_description(_desc[br] + r" branching ratio of $B^+\to \rho^0"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
+        Prediction(_obs_name, _func[br]('B+', 'rho0', l))
+
+        _obs_name = br + "(B0->rho"+l+"nu)"
+        _obs = Observable(_obs_name)
+        _obs.set_description(_desc[br] + r" branching ratio of $B^0\to \rho^-"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
+        Prediction(_obs_name, _func[br]('B0', 'rho+', l))
