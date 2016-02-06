@@ -1,6 +1,7 @@
 import numpy as np
 import re
 from .config import config
+from collections import OrderedDict
 
 def _is_number(s):
     try:
@@ -32,7 +33,7 @@ class NamedInstanceClass(object):
 
    def __init__(self, name):
       if not hasattr(self.__class__, '_instances'):
-          self.__class__._instances = {}
+          self.__class__._instances = OrderedDict()
       if name in self.__class__._instances.keys():
           raise ValueError("The instance " + name + " of " + str(self.__class__) + " already exists")
       self.__class__._instances[name] = self
@@ -197,8 +198,8 @@ class Observable(NamedInstanceClass):
    def set_prediction(self, prediction):
       self.prediction = prediction
 
-   def prediction_central(self, wc_obj, *args, **kwargs):
-      return self.prediction.get_central(wc_obj, *args, **kwargs)
+   def prediction_central(self, constraints_obj, wc_obj, *args, **kwargs):
+      return self.prediction.get_central(constraints_obj, wc_obj, *args, **kwargs)
 
 
 ########## AuxiliaryQuantity Class ##########
