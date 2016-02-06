@@ -26,5 +26,6 @@ implementation:
   Bs->phi form factor: Bs->phi BSZ3
 
   # B->P form factors
-  B->K form factor: B->K BCL
-  B->D form factor: B->D BCL
+  B->K form factor: B->K BCL3
+  B->D form factor: B->D BCL3
+  B->pi form factor: B->pi BCL4
