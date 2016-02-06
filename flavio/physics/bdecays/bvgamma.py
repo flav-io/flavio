@@ -7,7 +7,7 @@ from flavio.config import config
 from flavio.physics.running import running
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 from flavio.physics.common import conjugate_par, conjugate_wc
-from flavio.classes import AuxiliaryQuantity
+from flavio.classes import AuxiliaryQuantity, Observable, Prediction
 
 """Functions for exclusive $B\to V\gamma$ decays."""
 
@@ -64,7 +64,6 @@ def ACP(wc_obj, par, B, V):
     a, a_bar = get_a_abar(wc_obj, par, B, V)
     return ( Gamma(a) - Gamma(a_bar) )/( Gamma(a) + Gamma(a_bar) )
 
-
 def S(wc_obj, par, B, V):
     a, a_bar = get_a_abar(wc_obj, par, B, V)
     q_over_p = mesonmixing.observables.q_over_p(wc_obj, par, B)
@@ -72,3 +71,26 @@ def S(wc_obj, par, B, V):
     num = q_over_p * (a['L'].conj()*a_bar['L']+a['R'].conj()*a_bar['R'])
     den = Gamma_CPaverage(a, a_bar)
     return num.imag / den
+
+
+def BVgamma_function(function, B, V):
+    return lambda wc_obj, par: function(wc_obj, par, B, V)
+
+
+# Observable and Prediction instances
+
+_func = {'BR': BR, 'ACP': ACP, 'S': S}
+_tex = {'BR': 'BR', 'ACP': r'A_{CP}', 'S': 'S'}
+_desc = {'BR': 'Branching ratio', 'ACP': 'Direct CP asymmetry', 'S': 'Mixing-induced CP asymmetry'}
+
+for key in _func.keys():
+    if key != 'S': # S=0 for charged B decays (no mixing)!
+        _obs_name = key + "(B+->K*gamma)"
+        _obs = Observable(_obs_name)
+        _obs.set_description(_desc[key] + r" of $B^+\to K^{*+}\gamma$")
+        Prediction(_obs_name, BVgamma_function(_func[key], 'B+', 'K*+'))
+
+    _obs_name = key + "(B0->K*gamma)"
+    _obs = Observable(_obs_name)
+    _obs.set_description(_desc[key] + r" of $B^0\to K^{*0}\gamma$")
+    Prediction(_obs_name, BVgamma_function(_func[key], 'B0', 'K*0'))
