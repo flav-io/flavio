@@ -4,7 +4,6 @@ from .bvlnu import *
 from flavio.physics.bdecays.formfactors.b_v import bsz_parameters
 from flavio.physics.eft import WilsonCoefficients
 from flavio.parameters import default_parameters
-import copy
 import flavio
 
 constraints = default_parameters
