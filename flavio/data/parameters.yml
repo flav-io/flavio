@@ -103,4 +103,5 @@ Gamma12_B0_c: -49.5(8.5)
 Gamma12_B0_a: 11.7(1.3)
 
 # experimental decay width differences
+DeltaGamma/Gamma_B0: 0.001(10) # HFAG Summer 2015
 DeltaGamma/Gamma_Bs: 0.124(9) # HFAG Summer 2015
