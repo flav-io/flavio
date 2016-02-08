@@ -281,6 +281,25 @@ class Implementation(NamedInstanceClass):
       return self.function(wc_obj, par_dict, *args, **kwargs)
 
 
+########## Measurement Class ##########
+class Measurement(NamedInstanceClass):
+      """A (experimental) measurement associates one (or several) probability
+      distributions to an observable."""
+
+      def __init__(self, name):
+          super().__init__(name)
+          self._observables = {}
+          self.reference = ''
+          self.experiment = ''
+
+      def add_constraint(self, observables, constraint):
+          for num, observable in enumerate(observables):
+              # append to the list of constraints for observable or create a new list
+              try:
+                  Observable.get_instance(observable)
+              except:
+                  raise ValueError("The observable " + observable + " does not exist")
+              self._observables.setdefault(observable,[]).append((num, constraint))
 
 # Auxiliary functions
 

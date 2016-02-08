@@ -42,6 +42,16 @@ class TestClasses(unittest.TestCase):
         # removing dummy instances
         Observable.del_instance('test_obs')
 
+    def test_measurement_class(self):
+        o = Observable( 'test_obs' )
+        d = NormalDistribution(4.2, 0.2)
+        m = Measurement( 'measurement of test_obs' )
+        m.add_constraint(['test_obs'], d)
+        print(m._observables)
+        # removing dummy instances
+        Observable.del_instance('test_obs')
+        Measurement.del_instance('measurement of test_obs')
+
     def test_prediction_class(self):
         o = Observable( 'test_obs' )
         p = Parameter( 'test_parameter' )
