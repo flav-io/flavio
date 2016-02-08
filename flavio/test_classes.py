@@ -47,7 +47,6 @@ class TestClasses(unittest.TestCase):
         d = NormalDistribution(4.2, 0.2)
         m = Measurement( 'measurement of test_obs' )
         m.add_constraint(['test_obs'], d)
-        print(m._observables)
         # removing dummy instances
         Observable.del_instance('test_obs')
         Measurement.del_instance('measurement of test_obs')

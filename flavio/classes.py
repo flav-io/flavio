@@ -284,35 +284,65 @@ class Implementation(NamedInstanceClass):
 ########## Measurement Class ##########
 class Measurement(NamedInstanceClass):
       """A (experimental) measurement associates one (or several) probability
-      distributions to an observable."""
+      distributions to one (or several) observables. If it contains several
+      observables, these can (but do not have to) be correlated.
+
+      To instantiate the class, call Measurement(name) with a string uniquely
+      describing the measurement (e.g. 'CMS Bs->mumu 2012').
+
+      To add a constraint (= central vaue(s) and uncertainty(s)), use
+
+      `add_constraint(observables, constraint)`
+
+      where `constraint` is an instance of a descendant of
+      ProbabilityDistribution and `observables` is a list of either
+       - a string observable name in the case of observables without arguments
+       - or a tuple `(name, x_1, ..., x_n)`, where the `x_i` are float values for the
+         arguments, of an observable with `n` arguments.
+      """
 
       def __init__(self, name):
           super().__init__(name)
           self._observables = {}
-          self.reference = ''
+          self._constraints = []
+          self.inspire = ''
           self.experiment = ''
+          self.url = ''
 
       def add_constraint(self, observables, constraint):
           for num, observable in enumerate(observables):
+              if isinstance(observable, tuple):
+                  obs_name = observable[0]
+              else:
+                  obs_name = observable
               # append to the list of constraints for observable or create a new list
               try:
-                  Observable.get_instance(observable)
+                  # recall that 'observable' is a tuple of the form (name, arg1, arg2, ...)
+                  Observable.get_instance(obs_name)
               except:
-                  raise ValueError("The observable " + observable + " does not exist")
+                  raise ValueError("The observable " + obs_name + " does not exist")
               self._observables.setdefault(observable,[]).append((num, constraint))
+          self._constraints.append(constraint)
 
 # Auxiliary functions
 
 
-def constraints_from_string(constraint_string):
-    """Convert a string like '1.67(3)(5)' or '1.67+-0.03+-0.05' to a list
-    of ProbabilityDistribution instances."""
+def errors_from_string(constraint_string):
+    """Convert a string like '1.67(3)(5)' or '1.67+-0.03+-0.05' to a dictionary
+    of central values errors."""
     try:
         float(constraint_string)
         # if the string represents just a number, return a DeltaDistribution
-        return [DeltaDistribution(float(constraint_string))]
+        return {'central_value': float(constraint_string)}
     except ValueError:
-        pass
+        # first of all, replace dashes (that can come from copy-and-pasting latex) by minuses
+        constraint_string = constraint_string.replace('−','-')
+        # try again if the number is a float now
+        try:
+            float(constraint_string)
+            return {'central_value': float(constraint_string)}
+        except:
+            pass
     # for strings of the form '1.67(3)(5) 1e-3'
     pattern_brackets = re.compile(r"^\(?\s*(-?\d+\.?\d*)\s*((?:\(\s*\d+\.?\d*\s*\)\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
     # for strings of the form '(1.67 +- 0.3 +- 0.5) * 1e-3'
@@ -339,7 +369,10 @@ def constraints_from_string(constraint_string):
     pattern_brackets_err = re.compile(r"\(\s*(\d+\.?\d*)\s*\)\s*")
     pattern_symmetric_err = re.compile(r"(?:±|\\pm|\+\-)(\s*\d+\.?\d*)")
     pattern_asymmetric_err = re.compile(r"\+\s*(\d+\.?\d*)\s*\-\s*(\d+\.?\d*)")
-    pd = []
+    errors = {}
+    errors['central_value'] = central_value
+    errors['symmetric_errors'] = []
+    errors['asymmetric_errors'] = []
     if pattern_brackets_err.match(error_string):
         for err in re.findall(pattern_brackets_err, error_string):
             if not err.isdigit():
@@ -350,12 +383,26 @@ def constraints_from_string(constraint_string):
                 # if the error is just digits, need to rescale it by the
                 # appropriate power of 10
                 standard_deviation = float(err)*10**(-number_decimal)*overall_factor
-            pd.append(NormalDistribution(central_value, standard_deviation))
+            errors['symmetric_errors'].append(standard_deviation)
     elif pattern_symmetric_err.match(error_string) or pattern_asymmetric_err.match(error_string):
         for err in re.findall(pattern_symmetric_err, error_string):
-            pd.append(NormalDistribution(central_value, float(err)*overall_factor))
+            errors['symmetric_errors'].append( float(err)*overall_factor )
         for err in re.findall(pattern_asymmetric_err, error_string):
             right_err = float(err[0])*overall_factor
             left_err = float(err[1])*overall_factor
-            pd.append(AsymmetricNormalDistribution(central_value, right_err, left_err))
+            errors['asymmetric_errors'].append((right_err, left_err))
+    return errors
+
+
+def constraints_from_string(constraint_string):
+    """Convert a string like '1.67(3)(5)' or '1.67+-0.03+-0.05' to a list
+    of ProbabilityDistribution instances."""
+    errors = errors_from_string(constraint_string)
+    if 'symmetric_errors' not in errors and 'asymmetric_errors' not in errors:
+        return [DeltaDistribution(errors['central_value'])]
+    pd = []
+    for err in errors['symmetric_errors']:
+        pd.append(NormalDistribution(errors['central_value'], err))
+    for err_right, err_left in errors['asymmetric_errors']:
+        pd.append(AsymmetricNormalDistribution(errors['central_value'], err_right, err_left))
     return pd
