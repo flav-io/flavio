@@ -9,6 +9,7 @@ from flavio.config import config
 from flavio.physics.running import running
 from .amplitudes import *
 from scipy.integrate import quad
+from flavio.classes import Observable, Prediction
 
 """Functions for exclusive $B\to V\ell^+\ell^-$ decays."""
 
@@ -136,3 +137,29 @@ def bvll_obs_int(function, q2_min, q2_max, wc_obj, par, B, V, lep):
     def obs(q2):
         return bvll_obs(function, q2, wc_obj, par, B, V, lep)
     return quad(obs, q2_min, q2_max, epsrel=0.01, epsabs=0)[0]
+
+
+def bvll_obs_int_ratio_func(func_num, func_den, B, V, lep):
+    return lambda wc_obj, par, q2_min, q2_max: bvll_obs_int(func_num, q2_min, q2_max, wc_obj, par, B, V, lep)/bvll_obs_int(func_den, q2_min, q2_max, wc_obj, par, B, V, lep)
+
+
+# Observable and Prediction instances
+
+_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
+_observables = {
+'AFB': {'func_num': AFB_experiment_num, 'tex': r'A_\text{FB}', 'desc': 'forward-backward asymmetry'},
+'FL': {'func_num': FL_num, 'tex': r'F_L', 'desc': 'longitudinal polarization fraction'},
+'S3': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 3), 'tex': r'S_3', 'desc': 'CP-averaged angular observable'},
+'S4': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 4), 'tex': r'S_4', 'desc': 'CP-averaged angular observable'},
+'S5': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 5), 'tex': r'S_5', 'desc': 'CP-averaged angular observable'},
+'S7': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 7), 'tex': r'S_7', 'desc': 'CP-averaged angular observable'},
+'S8': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 8), 'tex': r'S_8', 'desc': 'CP-averaged angular observable'},
+'S9': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 9), 'tex': r'S_9', 'desc': 'CP-averaged angular observable'},
+}
+
+for l in ['e', 'mu', 'tau']:
+        for obs in sorted(_observables.keys()):
+            _obs_name = "<" + obs + ">(B0->K*"+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+            _obs.set_description(_observables[obs]['desc'] + r" in $B^0\to K^{*0}"+_tex[l]+r"^+"+_tex[l]+"^-$")
+            Prediction(_obs_name, bvll_obs_int_ratio_func(_observables[obs]['func_num'], SA_den, 'B0', 'K*0', l))
