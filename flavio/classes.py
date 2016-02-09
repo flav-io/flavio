@@ -2,6 +2,7 @@ import numpy as np
 import re
 from .config import config
 from collections import OrderedDict
+import copy
 
 def _is_number(s):
     try:
@@ -118,6 +119,9 @@ class Constraints(object):
                   idx = self._constraints.index(constraint)
                   random_dict[parameter] += np.ravel([random_constraints[idx]])[num] - central_value
           return random_dict
+
+      def copy(self):
+          return copy.copy(self)
 
 
 
