@@ -17,7 +17,7 @@ class TestClasses(unittest.TestCase):
     def test_constraints_class(self):
         p = Parameter( 'test_mb' )
         self.assertEqual( p, Parameter.get_instance('test_mb') )
-        c = Constraints()
+        c = ParameterConstraints()
         d = NormalDistribution(4.2, 0.2)
         c.add_constraint( ['test_mb'], d )
         # checking central values
@@ -61,7 +61,7 @@ class TestClasses(unittest.TestCase):
             return par_dict['test_parameter']*2
         pr  = Prediction( 'test_obs', f )
         wc_obj = None
-        c = Constraints()
+        c = ParameterConstraints()
         c.add_constraint( ['test_parameter'], NormalDistribution(1.2, 0.1) )
         self.assertEqual( pr.get_central(c, wc_obj), 2.4)
         self.assertEqual( o.prediction_central(c, wc_obj), 2.4)
@@ -77,7 +77,7 @@ class TestClasses(unittest.TestCase):
         imp  = Implementation( 'test_imp', 'test_aux', f )
         config['implementation']['test_aux'] = 'test_imp'
         wc_obj = None
-        c = Constraints()
+        c = ParameterConstraints()
         c.add_constraint( ['test_parameter'], NormalDistribution(1.2, 0.1) )
         self.assertEqual( imp.get_central(c, wc_obj), 2.4)
         self.assertEqual( a.prediction_central(c, wc_obj), 2.4)

@@ -71,15 +71,10 @@ class Constraints(object):
 
       def __init__(self):
           self._constraints = OrderedDict()
-          self._parameters = {}
+          self._parameters = OrderedDict()
 
       def add_constraint(self, parameters, constraint):
           for num, parameter in enumerate(parameters):
-              # append to the list of constraints for parameter or create a new list
-              try:
-                  Parameter.get_instance(parameter)
-              except:
-                  raise ValueError("The parameter " + parameter + " does not exist")
               # check if there is a constraint and what its central value is
               try: # look at the central value of an existing constraint
                   central_value = self.get_central(parameter)
@@ -87,7 +82,7 @@ class Constraints(object):
                   pass
               else: # if the central value of the new constraint is different from an existing constraint, raise an error
                   if np.ravel([constraint.central_value])[num] != central_value:
-                      raise ValueError("The central values of all constraints on one parameter must be equal")
+                      raise ValueError("The central values of all constraints on one parameter/observable must be equal")
               self._parameters.setdefault(parameter,[]).append((num, constraint))
           self._constraints[constraint] = parameters
 
@@ -102,7 +97,7 @@ class Constraints(object):
 
       def get_central(self, parameter):
           if parameter not in self._parameters.keys():
-              raise ValueError('No constraints applied to parameter ' + self.parameter)
+              raise ValueError('No constraints applied to parameter/observable ' + self.parameter)
           else:
               num, constraint = self._parameters[parameter][0]
               # return the num-th entry of the central value vector
@@ -135,6 +130,11 @@ class Constraints(object):
           return copy.copy(self)
 
 
+########## ParameterConstraints Class ##########
+class ParameterConstraints(Constraints):
+
+      def __init__(self):
+          super().__init__()
 
 
 
@@ -332,7 +332,7 @@ class Implementation(NamedInstanceClass):
 
 
 ########## Measurement Class ##########
-class Measurement(NamedInstanceClass):
+class Measurement(Constraints, NamedInstanceClass):
       """A (experimental) measurement associates one (or several) probability
       distributions to one (or several) observables. If it contains several
       observables, these can (but do not have to) be correlated.
@@ -352,27 +352,12 @@ class Measurement(NamedInstanceClass):
       """
 
       def __init__(self, name):
-          super().__init__(name)
-          self._observables = {}
-          self._constraints = []
+          NamedInstanceClass.__init__(self, name)
+          Constraints.__init__(self)
           self.inspire = ''
           self.experiment = ''
           self.url = ''
 
-      def add_constraint(self, observables, constraint):
-          for num, observable in enumerate(observables):
-              if isinstance(observable, tuple):
-                  obs_name = observable[0]
-              else:
-                  obs_name = observable
-              # append to the list of constraints for observable or create a new list
-              try:
-                  # recall that 'observable' is a tuple of the form (name, arg1, arg2, ...)
-                  Observable.get_instance(obs_name)
-              except:
-                  raise ValueError("The observable " + obs_name + " does not exist")
-              self._observables.setdefault(observable,[]).append((num, constraint))
-          self._constraints.append(constraint)
 
 # Auxiliary functions
 

@@ -145,7 +145,7 @@ def read_pdg(year, constraints):
 ############### Read default parameters ###################
 
 # Create the object
-default_parameters = Constraints()
+default_parameters = ParameterConstraints()
 
 # Read the parameters from the default YAML data file
 _read_yaml_object(pkgutil.get_data('flavio', 'data/parameters.yml'), default_parameters)
