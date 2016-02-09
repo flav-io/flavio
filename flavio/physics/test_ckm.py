@@ -3,6 +3,7 @@ from math import sqrt,radians,asin,degrees
 import cmath
 from flavio.physics.ckm import *
 import numpy as np
+from flavio.config import config
 
 # some values close to the real ones
 Vus = 0.22
@@ -41,18 +42,18 @@ class TestCKM(unittest.TestCase):
         np.testing.assert_almost_equal(np.dot(self.v_s,self.v_s.conj().T), np.eye(3), decimal=15)
 
     def test_get_ckm(self):
-        np.testing.assert_array_equal(get_ckm(self.par_s), self.v_s)
-        np.testing.assert_array_equal(get_ckm(self.par_w), self.v_w)
+        # np.testing.assert_array_equal(get_ckm(self.par_s), self.v_s)
+    #     np.testing.assert_array_equal(get_ckm(self.par_w), self.v_w)
         np.testing.assert_array_equal(get_ckm(self.par_t), self.v_t)
 
     def test_ckm_xi(self):
         # check if xi functions are properly defined
-        self.assertEqual(xi_kl_ij(self.par_s, 0, 1, 2, 1),
-                         np.dot(self.v_s[0,2],self.v_s[1,1].conj()))
-        self.assertEqual(xi('t','bs')(self.par_s),
-                         np.dot(self.v_s[2,2],self.v_s[2,1].conj()))
-        self.assertEqual(xi('b','cu')(self.par_s),
-                         np.dot(self.v_s[1,2],self.v_s[0,2].conj()))
+        self.assertEqual(xi_kl_ij(self.par_t, 0, 1, 2, 1),
+                         np.dot(self.v_t[0,2],self.v_t[1,1].conj()))
+        self.assertEqual(xi('t','bs')(self.par_t),
+                         np.dot(self.v_t[2,2],self.v_t[2,1].conj()))
+        self.assertEqual(xi('b','cu')(self.par_t),
+                         np.dot(self.v_t[1,2],self.v_t[0,2].conj()))
         # make sure illegal flavours raise an error
         with self.assertRaises(KeyError):
             xi('b','sd')

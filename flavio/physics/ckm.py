@@ -2,6 +2,7 @@ from math import cos,sin
 from cmath import exp,sqrt,phase
 import numpy as np
 from functools import lru_cache
+from flavio.classes import AuxiliaryQuantity, Implementation
 
 """Functions needed for the CKM matrix as well as for frequently used
 combinations of CKM elements."""
@@ -111,15 +112,26 @@ def ckm_tree(Vus, Vub, Vcb, gamma):
         -((Vub*exp(1j*gamma)*sqrt(1 - Vcb**2/(1 - Vub**2))*Vus)/sqrt(1 - Vub**2)) - (Vcb*sqrt(1 - Vus**2/(1 - Vub**2)))/sqrt(1 - Vub**2),
         sqrt(1 - Vub**2)*sqrt(1 - Vcb**2/(1 - Vub**2))]])
 
-def get_ckm(par):
-    if 'laC' and 'A' and 'rhobar' and 'etabar' in par.keys():
-        return ckm_wolfenstein(par['laC'], par['A'], par['rhobar'], par['etabar'])
-    elif 'Vus' and 'Vub' and 'Vcb' and 'gamma' in par.keys():
-        return ckm_tree(par['Vus'], par['Vub'], par['Vcb'], par['gamma'])
-    elif 't12' and 't13' and 't23' and 'delta' in par.keys():
-        return ckm_standard(par['t12'], par['t13'], par['t23'], par['delta'])
-    else:
-        raise InputError("Input parameters for CKM matrix not found.")
+# Auxiliary Quantity instance
+a = AuxiliaryQuantity(name='CKM matrix')
+a.set_description('Cabibbo-Kobayashi-Maskawa matrix in the standard phase convention')
+
+# Implementation instances
+
+def _func_standard(wc_obj, par):
+    return ckm_standard(par['t12'], par['t13'], par['t23'], par['delta'])
+def _func_tree(wc_obj, par):
+    return ckm_tree(par['Vus'], par['Vub'], par['Vcb'], par['gamma'])
+def _func_wolfenstein(wc_obj, par):
+    return ckm_wolfenstein(par['laC'], par['A'], par['rhobar'], par['etabar'])
+
+i = Implementation(name='Standard', quantity='CKM matrix', function=_func_standard)
+i = Implementation(name='Tree', quantity='CKM matrix', function=_func_tree)
+i = Implementation(name='Wolfenstein', quantity='CKM matrix', function=_func_wolfenstein)
+
+def get_ckm(par_dict):
+    return AuxiliaryQuantity.get_instance('CKM matrix').prediction(par_dict=par_dict, wc_obj=None)
+
 
 def get_ckmangle_beta(par):
     r"""Returns the CKM angle $\beta$."""
