@@ -57,7 +57,7 @@ class TestClasses(unittest.TestCase):
         # ... and back
         np.testing.assert_array_equal(fit.dict_to_array(d), np.array([1.,2.,3.,4.,5.,6.,7.]))
         self.assertEqual(fit.get_random.shape, (7,))
-        fit.log_likelihood(np.array([4.5,1.0,0.08,4.,5.,6.,7.]))
+        fit.log_prior_parameters(np.array([4.5,1.0,0.08,4.,5.,6.,7.]))
         # removing dummy instances
         BayesianFit.del_instance('bayesian_test_fit_1')
         Observable.del_instance('test_obs')

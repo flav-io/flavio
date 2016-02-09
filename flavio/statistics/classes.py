@@ -113,7 +113,7 @@ class BayesianFit(Fit):
         # TODO: random Wilson coefficients (priors?)
         return arr
 
-    def log_likelihood(self, x):
+    def log_prior_parameters(self, x):
         d = self.array_to_dict(x)
         par_dict = self.parameters_central.copy()
         par_dict.update(d['fit_parameters'])
