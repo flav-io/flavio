@@ -4,6 +4,7 @@ from .config import config
 from collections import OrderedDict
 import copy
 import scipy.stats
+import math
 
 def _is_number(s):
     try:
@@ -69,7 +70,7 @@ class Parameter(NamedInstanceClass):
 class Constraints(object):
 
       def __init__(self):
-          self._constraints = []
+          self._constraints = OrderedDict()
           self._parameters = {}
 
       def add_constraint(self, parameters, constraint):
@@ -88,7 +89,7 @@ class Constraints(object):
                   if np.ravel([constraint.central_value])[num] != central_value:
                       raise ValueError("The central values of all constraints on one parameter must be equal")
               self._parameters.setdefault(parameter,[]).append((num, constraint))
-          self._constraints.append(constraint)
+          self._constraints[constraint] = parameters
 
       def set_constraint(self, parameter, constraint_string):
           pds = constraints_from_string(constraint_string)
@@ -111,15 +112,24 @@ class Constraints(object):
           return {parameter: self.get_central(parameter) for parameter in self._parameters.keys()}
 
       def get_random_all(self):
-          random_constraints = [constraint.get_random() for constraint in self._constraints]
+          random_constraints = [constraint.get_random() for constraint in self._constraints.keys()]
           random_dict = {}
           for parameter, constraints in self._parameters.items():
               central_value =  self.get_central(parameter)
               random_dict[parameter] = central_value
               for num, constraint in constraints:
-                  idx = self._constraints.index(constraint)
+                  idx = list(self._constraints.keys()).index(constraint)
                   random_dict[parameter] += np.ravel([random_constraints[idx]])[num] - central_value
           return random_dict
+
+      def get_logprobability_all(self, par_dict):
+          prob_dict = {}
+          for constraint, parameters in self._constraints.items():
+              x = [par_dict[p] for p in parameters]
+              if len(x) == 1:
+                  x = x[0]
+              prob_dict[constraint] = constraint.logpdf(x)
+          return prob_dict
 
       def copy(self):
           return copy.copy(self)
@@ -138,6 +148,15 @@ class ProbabilityDistribution(object):
    def get_central(self):
       return self.central_value
 
+    # here we define the __hash__ and __eq__ methods to be able to use
+    # instances as dictionary keys.
+
+   def __hash__(self):
+      return id(self)
+
+   def __eq__(self, other):
+      return id(self) == id(other)
+
 
 
 class DeltaDistribution(ProbabilityDistribution):
@@ -151,11 +170,11 @@ class DeltaDistribution(ProbabilityDistribution):
       else:
           return self.central_value * np.ones(size)
 
-   def pdf(self, x):
+   def logpdf(self, x):
        if x == self.central_value:
-           return 1.
-       else:
            return 0.
+       else:
+           return -np.inf
 
 class NormalDistribution(ProbabilityDistribution):
 
@@ -166,8 +185,8 @@ class NormalDistribution(ProbabilityDistribution):
    def get_random(self, size=None):
       return np.random.normal(self.central_value, self.standard_deviation, size)
 
-   def pdf(self, x):
-       return scipy.stats.norm.pdf(x, self.central_value, self.standard_deviation)
+   def logpdf(self, x):
+       return scipy.stats.norm.logpdf(x, self.central_value, self.standard_deviation)
 
 class AsymmetricNormalDistribution(ProbabilityDistribution):
 
@@ -188,30 +207,31 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
             x = abs(np.random.normal(0,self.left_deviation))
             return self.central_value - x
 
-   def pdf(self, x):
+   def logpdf(self, x):
        # values of the PDF at the central value
        p_right = scipy.stats.norm.pdf(self.central_value, self.central_value, self.right_deviation)
        p_left = scipy.stats.norm.pdf(self.central_value, self.central_value, self.left_deviation)
        if x < self.central_value:
            # left-hand side: scale factor
            r = 2*p_right/(p_left+p_right)
-           return r * scipy.stats.norm.pdf(x, self.central_value, self.left_deviation)
+           return math.log(r) + scipy.stats.norm.logpdf(x, self.central_value, self.left_deviation)
        else:
            # left-hand side: scale factor
            r = 2*p_left/(p_left+p_right)
-           return r * scipy.stats.norm.pdf(x, self.central_value, self.right_deviation)
+           return math.log(r) + scipy.stats.norm.logpdf(x, self.central_value, self.right_deviation)
 
 class MultivariateNormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, covariance):
       super().__init__(central_value)
+      assert np.all(np.linalg.eigvals(covariance) > 0), "The covariance matrix is not positive definite!" + str(covariance)
       self.covariance = covariance
 
    def get_random(self, size=None):
       return np.random.multivariate_normal(self.central_value, self.covariance, size)
 
-   def pdf(self, x):
-       return scipy.stats.multivariate_normal.pdf(x, self.central_value, self.covariance)
+   def logpdf(self, x):
+       return scipy.stats.multivariate_normal.logpdf(x, self.central_value, self.covariance, allow_singular=True)
 
 
 

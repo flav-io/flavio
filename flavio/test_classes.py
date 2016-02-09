@@ -3,6 +3,7 @@ import numpy as np
 from .classes import *
 from .config import config
 import scipy.integrate
+import math
 
 class TestClasses(unittest.TestCase):
     def test_parameter_class(self):
@@ -31,6 +32,7 @@ class TestClasses(unittest.TestCase):
         self.assertEqual( d.get_random((4,5)).shape, (4,5))
         pc = Parameter( 'test_mc' )
         c.add_constraint( ['test_mc', 'test_mb'], MultivariateNormalDistribution([1.2,4.2],[[0.01,0],[0,0.04]]) )
+        c.get_logprobability_all(c.get_central_all())
         # removing dummy instances
         Parameter.del_instance('test_mb')
         Parameter.del_instance('test_mc')
@@ -89,13 +91,13 @@ class TestClasses(unittest.TestCase):
     def test_pdf(self):
         # for the normal dist's, just check that no error is raised
         pd = NormalDistribution(1., 0.2)
-        pd.pdf(0.5)
+        pd.logpdf(0.5)
         pd = MultivariateNormalDistribution([1.,2.], [[0.04,0],[0,0.09]])
-        pd.pdf([1.05,2.08])
+        pd.logpdf([1.05,2.08])
         # for the asymmetric dist, more scrutiny needed
         pd = AsymmetricNormalDistribution(1., 0.2, 0.5)
         eps = 1.e-8
         # check that the PDF is continuos
-        self.assertAlmostEqual( pd.pdf(1. - eps), pd.pdf(1. + eps), places=8)
+        self.assertAlmostEqual( pd.logpdf(1. - eps), pd.logpdf(1. + eps), places=8)
         # check that the PDF is properly normalized
-        self.assertEqual( scipy.integrate.quad(pd.pdf, -np.inf, +np.inf)[0], 1)
+        self.assertEqual( scipy.integrate.quad(lambda x: math.exp(pd.logpdf(x)), -np.inf, +np.inf)[0], 1)
