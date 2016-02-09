@@ -71,7 +71,7 @@ def BR_binned_function(B, P, lep):
 
 def BR_tot(wc_obj, par, B, P, lep):
     mB = par['m_'+B]
-    mV = par['m_'+P]
+    mP = par['m_'+P]
     ml = par['m_'+lep]
     q2max = (mB-mP)**2
     q2min = ml**2
