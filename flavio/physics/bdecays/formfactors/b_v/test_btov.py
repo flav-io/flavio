@@ -2,18 +2,10 @@ import unittest
 from math import sqrt,radians,asin
 from flavio.physics.bdecays.formfactors.b_v import btov, bsz_parameters, lattice_parameters
 import numpy as np
-from flavio.classes import Constraints, Implementation
+from flavio.classes import Implementation
 from flavio.parameters import default_parameters
 import copy
 
-par = {
-    'm_B0': 5.27961,
-    'm_Bs': 5.36679,
-    'm_K*0': 0.89166,
-    'm_rho0': 0.077526,
-    'm_omega': 0.78265,
-    'm_phi': 1.019461,
-}
 
 class TestBtoV(unittest.TestCase):
     def test_bsz3(self):
