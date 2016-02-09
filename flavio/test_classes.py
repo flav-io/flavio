@@ -2,6 +2,7 @@ import unittest
 import numpy as np
 from .classes import *
 from .config import config
+import scipy.integrate
 
 class TestClasses(unittest.TestCase):
     def test_parameter_class(self):
@@ -84,3 +85,17 @@ class TestClasses(unittest.TestCase):
         Parameter.del_instance('test_parameter')
         Implementation.del_instance('test_imp')
         del config['implementation']['test_aux']
+
+    def test_pdf(self):
+        # for the normal dist's, just check that no error is raised
+        pd = NormalDistribution(1., 0.2)
+        pd.pdf(0.5)
+        pd = MultivariateNormalDistribution([1.,2.], [[0.04,0],[0,0.09]])
+        pd.pdf([1.05,2.08])
+        # for the asymmetric dist, more scrutiny needed
+        pd = AsymmetricNormalDistribution(1., 0.2, 0.5)
+        eps = 1.e-8
+        # check that the PDF is continuos
+        self.assertAlmostEqual( pd.pdf(1. - eps), pd.pdf(1. + eps), places=8)
+        # check that the PDF is properly normalized
+        self.assertEqual( scipy.integrate.quad(pd.pdf, -np.inf, +np.inf)[0], 1)

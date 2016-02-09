@@ -3,6 +3,7 @@ import re
 from .config import config
 from collections import OrderedDict
 import copy
+import scipy.stats
 
 def _is_number(s):
     try:
@@ -150,6 +151,12 @@ class DeltaDistribution(ProbabilityDistribution):
       else:
           return self.central_value * np.ones(size)
 
+   def pdf(self, x):
+       if x == self.central_value:
+           return 1.
+       else:
+           return 0.
+
 class NormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, standard_deviation):
@@ -158,6 +165,9 @@ class NormalDistribution(ProbabilityDistribution):
 
    def get_random(self, size=None):
       return np.random.normal(self.central_value, self.standard_deviation, size)
+
+   def pdf(self, x):
+       return scipy.stats.norm.pdf(x, self.central_value, self.standard_deviation)
 
 class AsymmetricNormalDistribution(ProbabilityDistribution):
 
@@ -178,6 +188,19 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
             x = abs(np.random.normal(0,self.left_deviation))
             return self.central_value - x
 
+   def pdf(self, x):
+       # values of the PDF at the central value
+       p_right = scipy.stats.norm.pdf(self.central_value, self.central_value, self.right_deviation)
+       p_left = scipy.stats.norm.pdf(self.central_value, self.central_value, self.left_deviation)
+       if x < self.central_value:
+           # left-hand side: scale factor
+           r = 2*p_right/(p_left+p_right)
+           return r * scipy.stats.norm.pdf(x, self.central_value, self.left_deviation)
+       else:
+           # left-hand side: scale factor
+           r = 2*p_left/(p_left+p_right)
+           return r * scipy.stats.norm.pdf(x, self.central_value, self.right_deviation)
+
 class MultivariateNormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, covariance):
@@ -186,6 +209,9 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
 
    def get_random(self, size=None):
       return np.random.multivariate_normal(self.central_value, self.covariance, size)
+
+   def pdf(self, x):
+       return scipy.stats.multivariate_normal.pdf(x, self.central_value, self.covariance)
 
 
 
