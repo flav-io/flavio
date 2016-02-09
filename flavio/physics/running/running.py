@@ -69,16 +69,18 @@ def get_alpha(par, scale):
     return dict(zip(('alpha_s','alpha_e'),alpha_out))
 
 
+def _derivative_mq(x, mu, nf):
+    d_alphas = betafunctions.beta_qcd_qed([x[0],0], mu, nf)[0] # only alpha_s
+    d_m = masses.gamma_qcd(x[1], x[0], mu, nf)
+    return [ d_alphas, d_m ]
+def _derivative_mq_nf(nf):
+    return lambda x, mu: _derivative_mq(x, mu, nf)
+
+
 def get_mq(par, m_in, scale_in, scale_out):
     alphas_in = get_alpha(par, scale_in)['alpha_s']
     x_in = [alphas_in, m_in]
-    def derivative(x, mu, nf):
-        d_alphas = betafunctions.beta_qcd_qed([x[0],0], mu, nf)[0] # only alpha_s
-        d_m = masses.gamma_qcd(x[1], x[0], mu, nf)
-        return [ d_alphas, d_m ]
-    def derivative_nf(nf):
-        return lambda x, mu: derivative(x, mu, nf)
-    sol = rg_evolve_sm(x_in, par, derivative_nf, scale_in, scale_out)
+    sol = rg_evolve_sm(x_in, par, _derivative_mq_nf, scale_in, scale_out)
     return sol[1]
 
 
