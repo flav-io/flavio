@@ -14,7 +14,9 @@ def load_parameters(filename, constraints):
         else: # if parameter exists, remove existing constraints
             constraints.remove_constraints(parameter_name)
     covariance = np.outer(ff_dict['uncertainties'], ff_dict['uncertainties'])*ff_dict['correlation']
-    # M -> M + M^T - diag(M) since the data file contains only the entries above the diagonal
-    covariance = covariance + covariance.T - np.diag(np.diag(covariance))
+    if not np.allclose(covariance, covariance.T):
+        # if the covariance is not symmetric, it is assumed that only the values above the diagonal are present.
+        # then: M -> M + M^T - diag(M)
+        covariance = covariance + covariance.T - np.diag(np.diag(covariance))
     constraints.add_constraint(ff_dict['parameters'],
             MultivariateNormalDistribution(central_value=ff_dict['central_values'], covariance=covariance) )

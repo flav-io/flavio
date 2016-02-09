@@ -53,7 +53,6 @@ def _load(obj):
             else: # otherwise, 'values' is a dict just containing name: constraint_string
                 for obs, value in m_data['values'].items():
                     observables.append(obs)
-                    print(value)
                     error_dict = errors_from_string(value)
                     central_values.append(error_dict['central_value'])
                     squared_error = 0.
@@ -89,8 +88,10 @@ def _fix_correlation_matrix(corr, n_dim):
             corr_out[i,i:] = line
         else:
             raise ValueError("Correlation matrix not understood")
-    # C = C + C^T - diag(C_ii) to fill the lower triangle
-    corr_out = corr_out + corr_out.T - np.diag(np.diag(corr_out))
+    if not np.allclose(corr_out, corr_out.T):
+        # if the covariance is not symmetric, it is assumed that only the values above the diagonal are present.
+        # then: M -> M + M^T - diag(M)
+        corr_out = corr_out + corr_out.T - np.diag(np.diag(corr_out))
     return corr_out
 
 
