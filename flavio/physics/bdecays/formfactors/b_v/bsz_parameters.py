@@ -14,11 +14,22 @@ def get_ffpar(filename):
     central = np.array([data['central'][ff][a] for ff, a in ff_a])
     unc = np.array([data['uncertainty'][ff][a] for ff, a in ff_a])
     corr = np.array([[data['correlation'][ff1 + ff2][a1 + a2] for ff1, a1 in ff_a] for ff2, a2 in ff_a])
+    # delete the parameters a0_A0 and a0_T2, which are instead fixed
+    # using the exact kinematical relations, cf. eq. (16) of arXiv:1503.05534
+    pos_a0_A0 = ff_a.index(('A0', 'a0'))
+    pos_a0_T2 = ff_a.index(('T2', 'a0'))
+    central = np.delete(central, [pos_a0_A0, pos_a0_T2])
+    unc = np.delete(unc, [pos_a0_A0, pos_a0_T2])
+    corr = np.delete(corr, [pos_a0_A0, pos_a0_T2], axis=0)
+    corr = np.delete(corr, [pos_a0_A0, pos_a0_T2], axis=1)
     return [central, unc, corr]
 
 def load_parameters(filename, process, constraints):
     implementation_name = process + ' BSZ3'
     parameter_names = [implementation_name + ' ' + coeff_name for coeff_name in a_ff_string]
+    # a0_A0 and a0_T2 are not treated as independent parameters!
+    parameter_names.remove(implementation_name + ' a0_A0')
+    parameter_names.remove(implementation_name + ' a0_T2')
     for parameter_name in parameter_names:
         try: # check if parameter object already exists
             p = Parameter.get_instance(parameter_name)

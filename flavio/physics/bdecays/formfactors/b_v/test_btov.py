@@ -22,7 +22,7 @@ class TestBtoV(unittest.TestCase):
         # compare to numbers in table 4 of arXiv:1503.05534v1
         # B->K* all FFs
         ffbsz3 = Implementation.get_instance('B->K* BSZ3').get_central(constraints_obj=c, wc_obj=None, q2=0)
-        self.assertAlmostEqual(ffbsz3['A0'], 0.391, places=3)
+        self.assertAlmostEqual(ffbsz3['A0'], 0.391, places=2)
         self.assertAlmostEqual(ffbsz3['A1'], 0.289, places=3)
         self.assertAlmostEqual(ffbsz3['A12'], 0.281, places=3)
         self.assertAlmostEqual(ffbsz3['V'], 0.366, places=3)
