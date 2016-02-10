@@ -12,7 +12,11 @@ def get_M12_G12(wc_obj, par, meson):
     scale = config['renormalization scale'][meson + ' mixing']
     wc = wc_obj.get_wc(2*common.meson_quark[meson], scale, par)
     M12 = amplitude.M12_d(par, wc, meson)
-    G12 = amplitude.G12_d(par, wc, meson)
+    # TODO temporary fix: we don't have a prediction for Gamma12 in the kaon sector
+    if meson == 'K0':
+        G12 = 0.
+    else:
+        G12 = amplitude.G12_d(par, wc, meson)
     return M12, G12
 
 def DeltaM(wc_obj, par, meson):
