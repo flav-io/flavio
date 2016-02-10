@@ -18,8 +18,10 @@ HFAG osc summer 2015:
   inspire: Amhis:2012bh
   url: http://www.slac.stanford.edu/xorg/hfag/osc/summer_2015/
   values:
-    DeltaM_d: 0.5055 ± 0.0020 # NB convert to inv ps!
-    DeltaM_s: 17.757 ± 0.021 # NB convert to inv ps!
+    # to convert numbers from inverse picoseconds to GeV, divide by
+    # ps = 1.519267515435317e+12 [1/GeV]
+    DeltaM_d: 3.327(13)e-13 # this is 0.5055 ± 0.0020 ps^-1
+    DeltaM_s: 1.1688(14)e-11 # this is  17.757 ± 0.02  ps^-1
     a_fs_d: -0.0015 ± 0.0017
     a_fs_s: -0.0075 ± 0.0041
 
