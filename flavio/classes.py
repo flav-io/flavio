@@ -73,6 +73,10 @@ class Constraints(object):
           self._constraints = OrderedDict()
           self._parameters = OrderedDict()
 
+      @property
+      def all_parameters(self):
+          return list(self._parameters.keys())
+
       def add_constraint(self, parameters, constraint):
           for num, parameter in enumerate(parameters):
               # check if there is a constraint and what its central value is
@@ -251,6 +255,9 @@ class Observable(NamedInstanceClass):
    def prediction_central(self, constraints_obj, wc_obj, *args, **kwargs):
       return self.prediction.get_central(constraints_obj, wc_obj, *args, **kwargs)
 
+   def prediction_par(self, par_dict, wc_obj, *args, **kwargs):
+      return self.prediction.get_par(par_dict, wc_obj, *args, **kwargs)
+
 
 ########## AuxiliaryQuantity Class ##########
 class AuxiliaryQuantity(NamedInstanceClass):
@@ -295,6 +302,9 @@ class Prediction(object):
 
    def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
       par_dict = constraints_obj.get_central_all()
+      return self.function(wc_obj, par_dict, *args, **kwargs)
+
+   def get_par(self, par_dict, wc_obj, *args, **kwargs):
       return self.function(wc_obj, par_dict, *args, **kwargs)
 
 
