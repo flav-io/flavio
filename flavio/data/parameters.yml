@@ -17,8 +17,10 @@ gamma: 1.27(12)
 
 # Meson decay constants
 
-f_K: 0.1556(4)    # FLAG-3 preliminary Nf=2+1+1
-f_pi: 0.1302(14)  # FLAG 2013 Nf=2+1
+f_K+: 0.1556(4)    # FLAG-3 preliminary Nf=2+1+1
+f_K0: 0.1556(4)    # FLAG-3 preliminary Nf=2+1+1
+f_pi+: 0.1302(14)  # FLAG 2013 Nf=2+1
+f_pi0: 0.1302(14)  # FLAG 2013 Nf=2+1
 f_Bs: 0.2277(45)  # FLAG 2013 Nf=2+1
 f_B0: 0.1905(42)  # FLAG 2013 Nf=2+1
 f_D: 0.2092(33)  # FLAG 2013 Nf=2+1
