@@ -1,6 +1,6 @@
 import flavio
 import numpy as np
-
+import copy
 
 class Fit(flavio.classes.NamedInstanceClass):
     """Base class for fits"""
@@ -44,6 +44,8 @@ class Fit(flavio.classes.NamedInstanceClass):
         self.fit_parameters = fit_parameters
         self.nuisance_parameters = nuisance_parameters
         self.fit_coefficients = fit_coefficients
+        self.measurements = measurements
+        self.exclude_observables = exclude_observables
         self.input_scale = input_scale
 
     @property
@@ -113,10 +115,49 @@ class BayesianFit(Fit):
         # TODO: random Wilson coefficients (priors?)
         return arr
 
-    def log_prior_parameters(self, x):
+    def get_par_dict(self, x):
         d = self.array_to_dict(x)
         par_dict = self.parameters_central.copy()
         par_dict.update(d['fit_parameters'])
         par_dict.update(d['nuisance_parameters'])
+        return par_dict
+
+    def get_wc_obj(self, x):
+        wc_obj = copy.copy(self.wc_obj)
+        d = self.array_to_dict(x)
+        wc_obj.set_initial(d['fit_coefficients'], self.input_scale)
+        return wc_obj
+
+    def log_prior_parameters(self, x):
+        par_dict = self.get_par_dict(x)
         prob_dict = self.constraints.get_logprobability_all(par_dict)
         return sum([p for obj, p in prob_dict.items()])
+
+    def get_predictions(self, x):
+        par_dict = self.get_par_dict(x)
+        wc_obj = self.get_wc_obj(x)
+        all_observables = []
+        for measurement in self.measurements:
+            all_observables  += flavio.classes.Measurement.get_instance(measurement).all_parameters
+        all_predictions = {}
+        for observable in set(all_observables):
+            if isinstance(observable, tuple):
+                obs_name = observable[0]
+                _inst = flavio.classes.Observable.get_instance(obs_name)
+                all_predictions[observable] = _inst.prediction_par(par_dict, wc_obj, **observable[1:])
+            else:
+                _inst = flavio.classes.Observable.get_instance(observable)
+                all_predictions[observable] = _inst.prediction_par(par_dict, wc_obj)
+        return all_predictions
+
+    def log_likelihood(self, x):
+        predictions = self.get_predictions(x)
+        for observable in predictions.keys():
+            if observable in self.exclude_observables:
+                #TODO
+                pass
+        ll = 0.
+        for measurement in self.measurements:
+            prob_dict = flavio.Measurement.get_instance(measurement).get_logprobability_all(predictions)
+            ll += sum(prob_dict.values())
+        return ll
