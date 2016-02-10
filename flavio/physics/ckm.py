@@ -39,6 +39,15 @@ def ckm_standard(t12, t13, t23, delta):
         -(c23*exp(1j*delta)*s12*s13) - c12*s23,
         c13*c23]])
 
+def tree_to_wolfenstein(Vus, Vub, Vcb, gamma):
+    laC = Vus/sqrt(1-Vub**2)
+    A = Vcb/sqrt(1-Vub**2)/laC**2
+    rho = Vub*cos(gamma)/A/laC**3
+    eta = Vub*sin(gamma)/A/laC**3
+    rhobar = rho*(1 - laC**2/2.)
+    etabar = eta*(1 - laC**2/2.)
+    return laC, A, rhobar, etabar
+
 @lru_cache(maxsize=2)
 def ckm_wolfenstein(laC, A, rhobar, etabar):
     r"""CKM matrix in the Wolfenstein parametrization and standard phase
