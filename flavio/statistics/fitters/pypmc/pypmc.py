@@ -21,7 +21,7 @@ class pypmcScan(object):
         _initial_sigma = np.absolute(self.start - fit.get_random)
         self._initial_proposal = pypmc.density.gauss.LocalGauss(_initial_sigma * np.eye(self.dimension))
 
-        self.mc = pypmc.sampler.markov_chain.AdaptiveMarkovChain(target=self.fit.log_likelihood,
+        self.mc = pypmc.sampler.markov_chain.AdaptiveMarkovChain(target=self.fit.log_target,
                                                                  proposal=self._initial_proposal,
                                                                  start=self.start,
                                                                  save_target_values=True,
@@ -32,11 +32,22 @@ class pypmcScan(object):
         self.mc.run( burnin )
         self.mc.clear()
         while done < steps:
-            todo = min(steps-done, 500)
+            todo = min(steps-done, adapt)
             accepted = self.mc.run( todo )
             done += todo
             self.mc.adapt()
 
     @property
+    def find_burnin(self):
+        target = self.mc.target_values[:] # this contains all log likelihood values of the chain
+        target_end = target[-len(target)//10:] # take the last 10% of the chain
+        target_end_mn = np.mean(target_end) # mean of the last 10%
+        target_end_std = np.std(target_end) # std. deviation of the last 10%
+        # find the index of the first entry where the log likelihood is greater
+        # than the mean of the last 10% - 3 standard deviations
+        first_good = np.argmax(target > target_end_mn - 3*target_end_std)
+        return first_good
+
+    @property
     def result(self):
-        return self.mc.history[:]
+        return self.mc.history[:][self.find_burnin:]
