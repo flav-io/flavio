@@ -1,7 +1,10 @@
 import numpy as np
-import pypmc
 import flavio
 
+try:
+    import pypmc
+except:
+    pass
 
 class pypmcScan(object):
     """
