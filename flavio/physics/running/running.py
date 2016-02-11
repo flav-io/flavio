@@ -3,30 +3,28 @@ from flavio.physics.running import masses
 from scipy.integrate import odeint
 import numpy as np
 from functools import lru_cache
+from flavio.config import config
 
 def rg_evolve(initial_condition, derivative, scale_in, scale_out):
     sol = odeint(derivative, initial_condition, [scale_in, scale_out])
     return sol[1]
 
-def rg_evolve_sm(initial_condition, par, derivative_nf, scale_in, scale_out):
+def rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out):
     if scale_in == scale_out:
         # no need to run!
         return initial_condition
     if scale_out < 0.1:
         raise ValueError('RG evolution below the strange threshold not implemented.')
-    mc = par['m_c']
-    mb = par['m_b']
-    mt = par['m_t']
-    return _rg_evolve_sm(tuple(initial_condition), mc, mb, mt, derivative_nf, scale_in, scale_out)
+    return _rg_evolve_sm(tuple(initial_condition), derivative_nf, scale_in, scale_out)
 
 @lru_cache(maxsize=32)
-def _rg_evolve_sm(initial_condition, mc, mb, mt, derivative_nf, scale_in, scale_out):
+def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out):
     # quark mass thresholds
     thresholds = {
         3: 0.1,
-        4: mc,
-        5: mb,
-        6: mt,
+        4: config['RGE thresholds']['mc'],
+        5: config['RGE thresholds']['mb'],
+        6: config['RGE thresholds']['mt'],
         7: np.inf,
         }
     if scale_in > scale_out: # running DOWN
@@ -65,7 +63,7 @@ def get_alpha(par, scale):
     """
     alpha_in = [par[('alpha_s')], par[('alpha_e')]]
     scale_in = par['m_Z']
-    alpha_out = rg_evolve_sm(alpha_in, par, betafunctions.betafunctions_qcd_qed_nf, scale_in, scale)
+    alpha_out = rg_evolve_sm(alpha_in, betafunctions.betafunctions_qcd_qed_nf, scale_in, scale)
     return dict(zip(('alpha_s','alpha_e'),alpha_out))
 
 
@@ -80,7 +78,7 @@ def _derivative_mq_nf(nf):
 def get_mq(par, m_in, scale_in, scale_out):
     alphas_in = get_alpha(par, scale_in)['alpha_s']
     x_in = [alphas_in, m_in]
-    sol = rg_evolve_sm(x_in, par, _derivative_mq_nf, scale_in, scale_out)
+    sol = rg_evolve_sm(x_in, _derivative_mq_nf, scale_in, scale_out)
     return sol[1]
 
 
@@ -155,6 +153,6 @@ def get_wilson(par, c_in, derivative_nf, scale_in, scale_out):
     # x is (c_1, ..., c_N, alpha_s, alpha_e)
     c_in_real = np.asarray(c_in, dtype=complex).view(np.float)
     x_in = np.append(c_in_real, [alpha_in['alpha_s'], alpha_in['alpha_e']])
-    sol = rg_evolve_sm(x_in, par, derivative_nf, scale_in, scale_out)
+    sol = rg_evolve_sm(x_in, derivative_nf, scale_in, scale_out)
     c_out = sol[:-2]
     return c_out.view(np.complex)

@@ -1,5 +1,5 @@
 
- # set the renormalization scale for different processes.
+# set the renormalization scale for different processes.
 renormalization scale:
 
     # B decays
@@ -14,6 +14,13 @@ renormalization scale:
     Bs mixing: 4.2  # Bs-Bsbar mixing
     B0 mixing: 4.2  # B0-B0bar mixing
     K0 mixing: 2.   # K0-K0bar mixing
+
+# these are the thresholds where quark flavours are decoupled in the RG
+# evolution to low energies.
+RGE thresholds:
+  mt: 173.21
+  mb: 4.18
+  mc: 1.275
 
 # set the default implementation for auxiliary quantities
 implementation:
