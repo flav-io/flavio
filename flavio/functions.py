@@ -2,6 +2,10 @@ import flavio
 import numpy as np
 from collections import OrderedDict
 
+def np_prediction(obs_name, wc_obj, *args, **kwargs):
+    obs = flavio.classes.Observable.get_instance(obs_name)
+    return obs.prediction_central(flavio.default_parameters, wc_obj)
+
 def sm_prediction(obs_name, *args, **kwargs):
     obs = flavio.classes.Observable.get_instance(obs_name)
     wc_sm = flavio.WilsonCoefficients()
@@ -37,6 +41,9 @@ def sm_error_budget(obs_name, *args, N=50, **kwargs):
         if pred_tmp != pred_central:
             dependent_par.append(k)
 
+    # Step 2: for each of the dependent parameters, determine the error
+    # analogous to the sm_uncertainty function. Normalize to the central
+    # prediction (so relative errors are returned)
     individual_errors = {}
     def make_par_random(key, par_random):
         par_tmp = par_central.copy()
