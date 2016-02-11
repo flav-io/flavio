@@ -1,52 +1,154 @@
 
 # Coupling constants
 
-Gmu: 1.1663787(6)e-5  # PDG 2014
-alpha_e: 0.00781616(86) # = 1/127.940(14)
-alpha_s: 0.1185(6)    # PDG 2014
-s2w: 0.23126(5)       # PDG 2014
+Gmu:
+  tex: $G_F$
+  description: Fermi constant
+  value: 1.1663787(6)e-5  # PDG 2014
+alpha_e:
+  tex: $\alpha_e$
+  description: electromagnetic fine structure constant
+  value: 0.00781616(86) # = 1/127.940(14)
+alpha_s:
+  tex: $\alpha_s$
+  description: strong coupling constant
+  value: 0.1185(6)    # PDG 2014
+s2w:
+  tex: $\sin^2 \hat\theta_w(M_Z)$
+  description: sine squared of the weak mixing angle in the $\overline{\text{MS}}$ scheme at the scale $M_Z$
+  value: 0.23126(5)       # PDG 2014
 
 
 # CKM parameters
 
-Vus: 0.2249(8)
-Vub: 3.72(16)e-3
-Vcb: 4.221(78)e-2
-gamma: 1.27(12)
+Vus:
+  tex: $V_{us}$
+  description: CKM element $V_{us}$
+  value: 0.2249(8)
+Vub:
+  tex: $\vert V_{ub}\vert$
+  description: Absolute value of the CKM element $V_{ub}$
+  value: 3.72(16)e-3
+Vcb:
+  tex: $V_{cb}$
+  description: CKM element $V_{cb}$
+  value: 4.221(78)e-2
+gamma:
+  tex: $\gamma$
+  description: CKM angle $\gamma$ in radians
+  value: 1.27(12)
 
 
 # Meson decay constants
 
-f_K+: 0.1556(4)    # FLAG-3 preliminary Nf=2+1+1
-f_K0: 0.1556(4)    # FLAG-3 preliminary Nf=2+1+1
-f_pi+: 0.1302(14)  # FLAG 2013 Nf=2+1
-f_pi0: 0.1302(14)  # FLAG 2013 Nf=2+1
-f_Bs: 0.2277(45)  # FLAG 2013 Nf=2+1
-f_B0: 0.1905(42)  # FLAG 2013 Nf=2+1
-f_D: 0.2092(33)  # FLAG 2013 Nf=2+1
-f_Ds: 0.2486(27)  # FLAG 2013 Nf=2+1
-f_rho: 0.212(4)  # 1501.06569 table 1
-f_omega: 0.185(5)  # 1501.06569 table 1
-f_K*0: 0.203(6)  # 1501.06569 table 1
-f_phi: 0.231(5)  # 1501.06569 table 1
+f_K+:
+  tex: $f_{K^\pm}$
+  description: Charged kaon decay constant
+  value: 0.1556(4)    # FLAG-3 preliminary Nf=2+1+1
+f_K0:
+  tex: $f_{K^0}$
+  description: Neutral kaon decay constant
+  value: 0.1556(4)    # FLAG-3 preliminary Nf=2+1+1
+f_pi+:
+  tex: $f_{pi^\pm}$
+  description: Charged pion decay constant
+  value: 0.1302(14)  # FLAG 2013 Nf=2+1
+f_pi0:
+  tex: $f_{\pi^0}$
+  description: Neutral pion decay constant
+  value: 0.1302(14)  # FLAG 2013 Nf=2+1
+f_Bs:
+  tex: $f_{B_s}$
+  description: $B_s$ decay constant
+  value: 0.2277(45)  # FLAG 2013 Nf=2+1
+f_B0:
+  tex: $f_{B^0}$
+  description: $B^0$ decay constant
+  value: 0.1905(42)  # FLAG 2013 Nf=2+1
+f_D0:
+  tex: $f_{D^0}$
+  description: $D^0$ decay constant
+  value: 0.2092(33)  # FLAG 2013 Nf=2+1
+f_Ds:
+  tex: $f_{D_s}$
+  description: $D_s$ decay constant
+  value: 0.2486(27)  # FLAG 2013 Nf=2+1
+f_rho0:
+  tex: $f_{\rho^0}$
+  description: $\rho^0$ decay constant
+  value: 0.212(4)  # 1501.06569 table 1
+f_omega:
+  tex: $f_{\omega}$
+  description: $\omega$ decay constant
+  value: 0.185(5)  # 1501.06569 table 1
+f_K*0:
+  tex: $f_{K^{*0}}$
+  description: $K^{*0}$ decay constant
+  value: 0.203(6)  # 1501.06569 table 1
+f_phi:
+  tex: $f_{\phi}$
+  description: $\phi$ decay constant
+  value: 0.231(5)  # 1501.06569 table 1
 
 # Parmaters needed for meson light-cone distribution amplitudes
 
 # all taken from 1212.2242 table 5
-f_perp_K*0: 0.163(8)
-f_perp_rho0: 0.160(11)
-f_perp_omega: 0.139(18)
-f_perp_phi: 0.191(6)
-a2_para_K*0: 0.16(9)
-a2_perp_K*0: 0.10(8)
-a1_para_K*0: 0.06(4)
-a1_perp_K*0: 0.04(3)
-a2_para_rho0: 0.17(7)
-a2_perp_rho0: 0.14(6)
-a2_para_omega: 0.15(12)
-a2_perp_omega: 0.14(12)
-a2_para_phi: 0.23(8)
-a2_perp_phi: 0.14(7)
+f_perp_K*0:
+  tex:
+  description:
+  value: 0.163(8)
+f_perp_rho0:
+  tex:
+  description:
+  value: 0.160(11)
+f_perp_omega:
+  tex:
+  description:
+  value: 0.139(18)
+f_perp_phi:
+  tex:
+  description:
+  value: 0.191(6)
+a2_para_K*0:
+  tex:
+  description:
+  value: 0.16(9)
+a2_perp_K*0:
+  tex:
+  description:
+  value: 0.10(8)
+a1_para_K*0:
+  tex:
+  description:
+  value: 0.06(4)
+a1_perp_K*0:
+  tex:
+  description:
+  value: 0.04(3)
+a2_para_rho0:
+  tex:
+  description:
+  value: 0.17(7)
+a2_perp_rho0:
+  tex:
+  description:
+  value: 0.14(6)
+a2_para_omega:
+  tex:
+  description:
+  value: 0.15(12)
+a2_perp_omega:
+  tex:
+  description:
+  value: 0.14(12)
+a2_para_phi:
+  tex:
+  description:
+  value: 0.23(8)
+a2_perp_phi:
+  tex:
+  description:
+  value: 0.14(7)
 
 
 # Meson bag parameters
@@ -56,54 +158,153 @@ a2_perp_phi: 0.14(7)
 # the "hatted" ones need to be divided by 1.517
 # (for B_q) and 1.369 (for K) to obtain the MSbar ones
 # (see also flavio.physics.mesonmixing.common.bag_msbar2rgi())
-bag_B0_1: 0.837(66)  # =1.27(10) for Bhat. FLAG 2013 Nf=2+1
-bag_Bs_1: 0.876(40)  # =1.33(6) for Bhat. FLAG 2013 Nf=2+1
-bag_K0_1: 0.5571(71) # =0.7627(97) for Bhat. FLAG-3 preliminary Nf=2+1
-bag_D0_1: 0.744(27)  # 1505.06639 table 2
+bag_B0_1:
+  tex:
+  description:
+  value: 0.837(66)  # =1.27(10) for Bhat. FLAG 2013 Nf=2+1
+bag_Bs_1:
+  tex:
+  description:
+  value: 0.876(40)  # =1.33(6) for Bhat. FLAG 2013 Nf=2+1
+bag_K0_1:
+  tex:
+  description:
+  value: 0.5571(71) # =0.7627(97) for Bhat. FLAG-3 preliminary Nf=2+1
+bag_D0_1:
+  tex:
+  description:
+  value: 0.744(27)  # 1505.06639 table 2
 
 # BSM operators
-bag_B0_2: 0.72(3)   # 1308.1851 table 2
-bag_B0_3: 0.88(13)  # 1308.1851 table 2
-bag_B0_4: 0.95(5)   # 1308.1851 table 2
-bag_B0_5: 1.47(12)  # 1308.1851 table 2
-bag_Bs_2: 0.73(3)   # 1308.1851 table 2
-bag_Bs_3: 0.89(12)  # 1308.1851 table 2
-bag_Bs_4: 0.93(4)   # 1308.1851 table 2
-bag_Bs_5: 1.57(11)  # 1308.1851 table 2
+bag_B0_2:
+  tex:
+  description:
+  value: 0.72(3)   # 1308.1851 table 2
+bag_B0_3:
+  tex:
+  description:
+  value: 0.88(13)  # 1308.1851 table 2
+bag_B0_4:
+  tex:
+  description:
+  value: 0.95(5)   # 1308.1851 table 2
+bag_B0_5:
+  tex:
+  description:
+  value: 1.47(12)  # 1308.1851 table 2
+bag_Bs_2:
+  tex:
+  description:
+  value: 0.73(3)   # 1308.1851 table 2
+bag_Bs_3:
+  tex:
+  description:
+  value: 0.89(12)  # 1308.1851 table 2
+bag_Bs_4:
+  tex:
+  description:
+  value: 0.93(4)   # 1308.1851 table 2
+bag_Bs_5:
+  tex:
+  description:
+  value: 1.57(11)  # 1308.1851 table 2
 # FIXME convert from 3->2 GeV!
-bag_K0_2: 0.46(3)(1)   # 1505.06639 table 1
-bag_K0_3: 0.79(5)(1)  # 1505.06639 table 1
-bag_K0_4: 0.78(4)(3)   # 1505.06639 table 1
-bag_K0_5: 0.49(4)(1)  # 1505.06639 table 1
-bag_D0_2: 0.65(3)(2)   # 1505.06639 table 2
-bag_D0_3: 0.96(8)(2)  # 1505.06639 table 2
-bag_D0_4: 0.91(5)(4)   # 1505.06639 table 2
-bag_D0_5: 0.97(7)(1)  # 1505.06639 table 2
+bag_K0_2:
+  tex:
+  description:
+  value: 0.46(3)(1)   # 1505.06639 table 1
+bag_K0_3:
+  tex:
+  description:
+  value: 0.79(5)(1)  # 1505.06639 table 1
+bag_K0_4:
+  tex:
+  description:
+  value: 0.78(4)(3)   # 1505.06639 table 1
+bag_K0_5:
+  tex:
+  description:
+  value: 0.49(4)(1)  # 1505.06639 table 1
+bag_D0_2:
+  tex:
+  description:
+  value: 0.65(3)(2)   # 1505.06639 table 2
+bag_D0_3:
+  tex:
+  description:
+  value: 0.96(8)(2)  # 1505.06639 table 2
+bag_D0_4:
+  tex:
+  description:
+  value: 0.91(5)(4)   # 1505.06639 table 2
+bag_D0_5:
+  tex:
+  description:
+  value: 0.97(7)(1)  # 1505.06639 table 2
 
 
 # DeltaF=2 QCD correction factors
 
-eta_tt_B0: 0.55
-eta_tt_Bs: 0.55
-eta_tt_K0: 0.5765(65)  # Buras:1990fn
-eta_cc_K0: 1.87(76)    # 1108.2036
-eta_ct_K0: 0.496(47)   # 1007.0684
+eta_tt_B0:
+  tex:
+  description:
+  value: 0.55
+eta_tt_Bs:
+  tex:
+  description:
+  value: 0.55
+eta_tt_K0:
+  tex:
+  description:
+  value: 0.5765(65)  # Buras:1990fn
+eta_cc_K0:
+  tex:
+  description:
+  value: 1.87(76)    # 1108.2036
+eta_ct_K0:
+  tex:
+  description:
+  value: 0.496(47)   # 1007.0684
 
 
 # Parameters needed for epsilon_K
 
-kappa_epsilon: 0.923(6)       # 1111.1699
-DeltaM_K0: 3.483(6)e-15 # PDG; this is (0.5293±0.0009)*1e10/s
+kappa_epsilon:
+  tex:
+  description:
+  value: 0.923(6)       # 1111.1699
+DeltaM_K0:
+  tex:
+  description:
+  value: 3.483(6)e-15 # PDG; this is (0.5293±0.0009)*1e10/s
 
 
 # Coefficients parametrizing SM contributions to Gamma_12
 
 # taken from 1511.09466 eq. (81)-(82)
-Gamma12_Bs_c: -48.0(8.3)
-Gamma12_Bs_a: 12.3(1.4)
-Gamma12_B0_c: -49.5(8.5)
-Gamma12_B0_a: 11.7(1.3)
+Gamma12_Bs_c:
+  tex:
+  description:
+  value: -48.0(8.3)
+Gamma12_Bs_a:
+  tex:
+  description:
+  value: 12.3(1.4)
+Gamma12_B0_c:
+  tex:
+  description:
+  value: -49.5(8.5)
+Gamma12_B0_a:
+  tex:
+  description:
+  value: 11.7(1.3)
 
 # experimental decay width differences
-DeltaGamma/Gamma_B0: 0.001(10) # HFAG Summer 2015
-DeltaGamma/Gamma_Bs: 0.124(9) # HFAG Summer 2015
+DeltaGamma/Gamma_B0:
+  tex: $\Delta \Gamma_d/\Gamma_d$
+  description: Relative decay width difference in the $B_s$ system
+  value: 0.001(10) # HFAG Summer 2015
+DeltaGamma/Gamma_Bs:
+  tex: $\Delta \Gamma_s/\Gamma_s$
+  description: Relative decay width difference in the $B_s$ system
+  value: 0.124(9) # HFAG Summer 2015

@@ -62,6 +62,7 @@ class Parameter(NamedInstanceClass):
 
    def __init__(self, name):
       super().__init__(name)
+      self.tex = ''
 
 
 ########## Constraints Class ##########

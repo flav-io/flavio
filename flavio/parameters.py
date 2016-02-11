@@ -6,9 +6,13 @@ import flavio
 
 def _read_yaml_object(obj, constraints):
     parameters = yaml.load(obj)
-    for parameter_name, value in parameters.items():
+    for parameter_name, info in parameters.items():
         p = Parameter(parameter_name)
-        constraints.set_constraint(parameter_name, value)
+        if 'description' in info and info['description'] is not None:
+            p.description = info['description']
+        if 'tex' in info and info['tex'] is not None:
+            p.tex = info['tex']
+        constraints.set_constraint(parameter_name, info['value'])
 
 def read_file(filename, constraints):
     """Read parameter values from a YAML file."""
