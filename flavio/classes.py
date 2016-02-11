@@ -37,8 +37,6 @@ class NamedInstanceClass(object):
    def __init__(self, name):
       if not hasattr(self.__class__, '_instances'):
           self.__class__._instances = OrderedDict()
-      if name in self.__class__._instances.keys():
-          raise ValueError("The instance " + name + " of " + str(self.__class__) + " already exists")
       self.__class__._instances[name] = self
       self.name = name
       self.description = 'No description available.'
