@@ -120,10 +120,15 @@ class Constraints(object):
                   random_dict[parameter] += np.ravel([random_constraints[idx]])[num] - central_value
           return random_dict
 
-      def get_logprobability_all(self, par_dict):
+      def get_logprobability_all(self, par_dict, exclude_parameters=[]):
           prob_dict = {}
           for constraint, parameters in self._constraints.items():
-              x = [par_dict[p] for p in parameters]
+              def constraint_central_value(constraint, parameters, parameter):
+                  if len(parameters) == 1:
+                      return constraint.central_value
+                  else:
+                      return constraint.central_value[parameters.index(parameter)]
+              x = [par_dict[p] if p not in exclude_parameters else constraint_central_value(constraint, parameters, p) for p in parameters]
               if len(x) == 1:
                   x = x[0]
               prob_dict[constraint] = constraint.logpdf(x)

@@ -130,7 +130,8 @@ class BayesianFit(Fit):
 
     def log_prior_parameters(self, x):
         par_dict = self.get_par_dict(x)
-        prob_dict = self.constraints.get_logprobability_all(par_dict)
+        exclude_parameters = list(set(par_dict.keys())-set(self.fit_parameters)-set(self.nuisance_parameters))
+        prob_dict = self.constraints.get_logprobability_all(par_dict, exclude_parameters=exclude_parameters)
         return sum([p for obj, p in prob_dict.items()])
 
     def get_predictions(self, x):
@@ -138,9 +139,9 @@ class BayesianFit(Fit):
         wc_obj = self.get_wc_obj(x)
         all_observables = []
         for measurement in self.measurements:
-            all_observables  += flavio.classes.Measurement.get_instance(measurement).all_parameters
+            all_observables += flavio.classes.Measurement.get_instance(measurement).all_parameters
         all_predictions = {}
-        for observable in set(all_observables):
+        for observable in set(all_observables) - set(self.exclude_observables):
             if isinstance(observable, tuple):
                 obs_name = observable[0]
                 _inst = flavio.classes.Observable.get_instance(obs_name)
@@ -152,12 +153,11 @@ class BayesianFit(Fit):
 
     def log_likelihood(self, x):
         predictions = self.get_predictions(x)
-        for observable in predictions.keys():
-            if observable in self.exclude_observables:
-                #TODO
-                pass
         ll = 0.
         for measurement in self.measurements:
-            prob_dict = flavio.Measurement.get_instance(measurement).get_logprobability_all(predictions)
+            prob_dict = flavio.Measurement.get_instance(measurement).get_logprobability_all(predictions, exclude_parameters=self.exclude_observables)
             ll += sum(prob_dict.values())
         return ll
+
+    def log_target(self, x):
+        return self.log_likelihood(x) + self.log_prior_parameters(x)
