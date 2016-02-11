@@ -159,20 +159,20 @@ a2_perp_phi:
 # (for B_q) and 1.369 (for K) to obtain the MSbar ones
 # (see also flavio.physics.mesonmixing.common.bag_msbar2rgi())
 bag_B0_1:
-  tex:
-  description:
+  tex: $B_1^{(d)}$
+  description: $B^0$ bag parameter in the $\overline{\text{MS}}$ scheme at $m_b$
   value: 0.837(66)  # =1.27(10) for Bhat. FLAG 2013 Nf=2+1
 bag_Bs_1:
-  tex:
-  description:
+  tex: $B_1^{(s)}$
+  description: $B_s$ bag parameter in the $\overline{\text{MS}}$ scheme at $m_b$
   value: 0.876(40)  # =1.33(6) for Bhat. FLAG 2013 Nf=2+1
 bag_K0_1:
-  tex:
-  description:
+  tex: $B_1^{(K)}$
+  description: $K^0$ bag parameter in the $\overline{\text{MS}}$ scheme at 2 GeV
   value: 0.5571(71) # =0.7627(97) for Bhat. FLAG-3 preliminary Nf=2+1
 bag_D0_1:
-  tex:
-  description:
+  tex: $B_1^{(D)}$
+  description: $D^0$ bag parameter in the $\overline{\text{MS}}$ scheme at 3 GeV
   value: 0.744(27)  # 1505.06639 table 2
 
 # BSM operators
@@ -246,23 +246,23 @@ bag_D0_5:
 # DeltaF=2 QCD correction factors
 
 eta_tt_B0:
-  tex:
+  tex: $\eta_B$
   description:
   value: 0.55
 eta_tt_Bs:
-  tex:
+  tex: $\eta_B$
   description:
   value: 0.55
 eta_tt_K0:
-  tex:
+  tex: $\eta_{tt}$
   description:
   value: 0.5765(65)  # Buras:1990fn
 eta_cc_K0:
-  tex:
+  tex: $\eta_{cc}$
   description:
   value: 1.87(76)    # 1108.2036
 eta_ct_K0:
-  tex:
+  tex: $\eta_{ct}$
   description:
   value: 0.496(47)   # 1007.0684
 
@@ -270,11 +270,11 @@ eta_ct_K0:
 # Parameters needed for epsilon_K
 
 kappa_epsilon:
-  tex:
+  tex: $\kappa_\epsilon$
   description:
   value: 0.923(6)       # 1111.1699
 DeltaM_K0:
-  tex:
+  tex: $\Delta M_K$
   description:
   value: 3.483(6)e-15 # PDG; this is (0.5293±0.0009)*1e10/s
 

@@ -3,6 +3,7 @@ import pkgutil
 from flavio.classes import *
 import csv
 import flavio
+import re
 
 def _read_yaml_object(obj, constraints):
     parameters = yaml.load(obj)
@@ -105,12 +106,30 @@ def _read_pdg_masswidth(filename):
     result.update( { k: list(v.values())[0] for k, v in particles_by_name.items() if len(v) == 1} )
     return result
 
+def _pdg_particle_string_to_tex(string):
+    regex = re.compile(r"^([A-Za-z]+)([\*+-0]*)(?:\((\d*[A-Za-z]+)\))*(?:\((\d+)\))*([\*+-0]*)$")
+    m = regex.match(string)
+    if m is None:
+        if string=='J/psi(1S)':
+            return r'J/\psi'
+        return string
+    sup = m.group(2) + m.group(5)
+    sub = m.group(3)
+    out = m.group(1)
+    if len(out) > 1:
+        out = "\\" + out
+    if sup is not None and sup != '':
+        out += r'^{' + sup + r'}'
+    if sub is not None and sub != '':
+        out += r'_{' + sub + r'}'
+    return out
 
 def read_pdg(year, constraints):
     """Read particle masses and widths from the PDG data file of a given year."""
     particles = _read_pdg_masswidth('data/pdg/mass_width_' + str(year) + '.mcd')
     for particle in pdg_include:
         parameter_name = 'm_' + pdg_translate.get(particle, particle) # translate if necessary
+        tex_name = _pdg_particle_string_to_tex(particle)
         try:
             # if parameter already exists, remove existing constraints on it
             m = Parameter.get_instance(parameter_name)
@@ -118,6 +137,8 @@ def read_pdg(year, constraints):
         except KeyError:
             # otherwise, create it
             m = Parameter(parameter_name)
+        m.tex = r'$m_{' + tex_name + '}$'
+        m.description = r'$' + tex_name + r'$ mass'
         m_central, m_right, m_left = particles[particle]['mass']
         m_left = abs(m_left) # make left error positive
         if m_right == m_left:
@@ -136,6 +157,8 @@ def read_pdg(year, constraints):
         except KeyError:
             # otherwise, create it
             tau = Parameter(parameter_name)
+        tau.tex = r'$\tau_{' + tex_name + '}$'
+        tau.description = r'$' + tex_name + r'$ lifetime'
         tau_central = 1/G_central # life time = 1/width
         tau_left = G_left/G_central**2
         tau_right = G_right/G_central**2
