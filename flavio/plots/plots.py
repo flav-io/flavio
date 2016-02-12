@@ -31,7 +31,7 @@ def error_budget_pie(err_dict, other_cutoff=0.03):
 def find_confidence_interval(x, pdf, confidence_level):
     return pdf[pdf > x].sum() - confidence_level
 
-def density_contour_kernel(x, y, xmin, xmax, ymin, ymax, covariance_factor=None):
+def density_contour(x, y, xmin, xmax, ymin, ymax, covariance_factor=None):
     xx, yy = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
     positions = np.vstack([xx.ravel(), yy.ravel()])
     values = np.vstack([x, y])
@@ -46,7 +46,6 @@ def density_contour_kernel(x, y, xmin, xmax, ymin, ymax, covariance_factor=None)
     one_sigma = brentq(find_confidence_interval, 0., 1., args=(f.T, 0.68))
     two_sigma = brentq(find_confidence_interval, 0., 1., args=(f.T, 0.95))
     levels = [two_sigma, one_sigma, np.max(f)]
-    print(levels)
 
     ax = plt.gca()
     ax.contourf(xx, yy, f, levels=levels, colors=flavio.plots.colors.reds[3:])
