@@ -143,6 +143,10 @@ def bvll_obs_int_ratio_func(func_num, func_den, B, V, lep):
     return lambda wc_obj, par, q2_min, q2_max: bvll_obs_int(func_num, q2_min, q2_max, wc_obj, par, B, V, lep)/bvll_obs_int(func_den, q2_min, q2_max, wc_obj, par, B, V, lep)
 
 
+def bvll_obs_ratio_func(func_num, func_den, B, V, lep):
+    return lambda wc_obj, par, q2: bvll_obs(func_num, q2, wc_obj, par, B, V, lep)/bvll_obs_int(func_den, q2, wc_obj, par, B, V, lep)
+
+
 # Observable and Prediction instances
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
@@ -156,10 +160,22 @@ _observables = {
 'S8': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 8), 'tex': r'S_8', 'desc': 'CP-averaged angular observable'},
 'S9': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 9), 'tex': r'S_9', 'desc': 'CP-averaged angular observable'},
 }
+_hadr = {
+'B0->K*': {'tex': r"B^0\to K^{*0}", 'B': 'B0', 'V': 'K*0', },
+'B+->K*': {'tex': r"B^+\to K^{*+}", 'B': 'B+', 'V': 'K*+', },
+}
 
 for l in ['e', 'mu', 'tau']:
+    for M in _hadr.keys():
         for obs in sorted(_observables.keys()):
-            _obs_name = "<" + obs + ">(B0->K*"+l+l+")"
+            _obs_name = "<" + obs + ">("+M+l+l+")"
             _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-            _obs.set_description(_observables[obs]['desc'] + r" in $B^0\to K^{*0}"+_tex[l]+r"^+"+_tex[l]+"^-$")
-            Prediction(_obs_name, bvll_obs_int_ratio_func(_observables[obs]['func_num'], SA_den, 'B0', 'K*0', l))
+            _obs.set_description('Binned ' + _observables[obs]['desc'] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            Prediction(_obs_name, bvll_obs_int_ratio_func(_observables[obs]['func_num'], SA_den, _hadr[M]['B'], _hadr[M]['V'], l))
+
+            _obs_name = obs + "("+M+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2'])
+            _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            Prediction(_obs_name, bvll_obs_ratio_func(_observables[obs]['func_num'], SA_den, _hadr[M]['B'], _hadr[M]['V'], l))
