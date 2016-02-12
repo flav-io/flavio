@@ -63,6 +63,27 @@ def get_wceff(q2, wc, par, B, M, lep, scale):
     c['tp'] = 0
     return c
 
+def get_wceff_lfv(q2, wc, par, B, M, l1, l2, scale):
+    """Get a dictionary with the effective $\Delta F=1$ Wilson coefficients
+    with lepton flavour violation
+    in the convention appropriate for the generalized angular distributions.
+    """
+    mb = running.get_mb(par, scale)
+    qiqj=meson_quark[(B,M)]
+    c = {}
+    c['7']  = 0
+    c['7p'] = 0
+    c['v']  = wc['C9_'+qiqj+l1+l2]
+    c['vp'] = wc['C9p_'+qiqj+l1+l2]
+    c['a']  = wc['C10_'+qiqj+l1+l2]
+    c['ap'] = wc['C10p_'+qiqj+l1+l2]
+    c['s']  = mb * wc['CS_'+qiqj+l1+l2]
+    c['sp'] = mb * wc['CSp_'+qiqj+l1+l2]
+    c['p']  = mb * wc['CP_'+qiqj+l1+l2]
+    c['pp'] = mb * wc['CPp_'+qiqj+l1+l2]
+    c['t']  = 0
+    c['tp'] = 0
+    return c
 
 def get_wceff_fccc(q2, wc_obj, par, B, P, lep):
     """Get a dictionary with the effective $b\to(c,u)$ Wilson coefficients

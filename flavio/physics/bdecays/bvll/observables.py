@@ -121,7 +121,6 @@ def bvll_obs(function, q2, wc_obj, par, B, V, lep):
     mB = par['m_'+B]
     mV = par['m_'+V]
     mb = running.get_mb(par, scale)
-    N = prefactor(q2, par, B, V, lep)
     ff = get_ff(q2, par, B, V)
     h = helicity_amps(q2, wc, par, B, V, lep)
     h_bar = helicity_amps_bar(q2, wc, par, B, V, lep)
