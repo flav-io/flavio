@@ -125,22 +125,26 @@ for l in ['e', 'mu', 'tau']:
         _obs = Observable(_obs_name)
         _obs.set_description(_desc[br] + r" branching ratio of $B^0\to D^{*-}"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
         _obs.tex = r'$' + _tex_br[br] + r"(B^0\to D^{*-}"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
+        _obs.arguments = _args[br]
         Prediction(_obs_name, _func[br]('B0', 'D*+', l))
 
         _obs_name = br + "(Bs->K*"+l+"nu)"
         _obs = Observable(_obs_name)
         _obs.set_description(_desc[br] + r" branching ratio of $B_s\to K^{*-}"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
         _obs.tex = r'$' + _tex_br[br] + r"(B_s\to K^{*-}"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
+        _obs.arguments = _args[br]
         Prediction(_obs_name, _func[br]('Bs', 'K*+', l))
 
         _obs_name = br + "(B+->rho"+l+"nu)"
         _obs = Observable(_obs_name)
         _obs.set_description(_desc[br] + r" branching ratio of $B^+\to \rho^0"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
         _obs.tex = r'$' + _tex_br[br] + r"(B^+\to \rho^0"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
+        _obs.arguments = _args[br]
         Prediction(_obs_name, _func[br]('B+', 'rho0', l))
 
         _obs_name = br + "(B0->rho"+l+"nu)"
         _obs = Observable(_obs_name)
         _obs.set_description(_desc[br] + r" branching ratio of $B^0\to \rho^-"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
         _obs.tex = r'$' + _tex_br[br] + r"(B^0\to \rho^-" +_tex[l]+r"^+\nu_"+_tex[l]+")$"
+        _obs.arguments = _args[br]
         Prediction(_obs_name, _func[br]('B0', 'rho+', l))
