@@ -27,11 +27,9 @@ class NamedInstanceClass(object):
     - del_instance(name)
         Delete an instance
     - get_instance(name)
-        Delete an instance
+        Get an instance
     - set_description(description)
         Set the description
-    - get_description(description)
-        Get the description
    """
 
    def __init__(self, name):
@@ -39,7 +37,7 @@ class NamedInstanceClass(object):
           self.__class__._instances = OrderedDict()
       self.__class__._instances[name] = self
       self.name = name
-      self.description = 'No description available.'
+      self.description = ''
 
    @classmethod
    def get_instance(cls, name):
@@ -52,13 +50,24 @@ class NamedInstanceClass(object):
    def set_description(self, description):
       self.description = description
 
-   def get_description(self):
-      return self.description
-
 
 
 ########## Parameter Class ##########
 class Parameter(NamedInstanceClass):
+   """This class holds parameters (e.g. masses and lifetimes). It requires a
+   name string and also allows to set a LaTeX name and description as
+   attributes. Note that numerical values for the Parameters are not attributes
+   of the Parameter class.
+
+   Parameters
+   ----------
+    - name: string
+
+   Attributes
+   ----------
+    - tex: string
+    - description: string
+   """
 
    def __init__(self, name):
       super().__init__(name)
@@ -67,16 +76,40 @@ class Parameter(NamedInstanceClass):
 
 ########## Constraints Class ##########
 class Constraints(object):
+      """Constraints are collections of probability distributions associated
+      to objects like parameters or measurement. This is the base class of
+      ParameterConstraints (that holds the numerical values and uncertainties
+      of all the parameters) and Measurements (that holds the numerical values
+      and uncertainties of all the experimental measurements.)
+
+      Since this class is not meant for direct use, see these child classes for
+      documentation.
+      """
 
       def __init__(self):
+          # Here we have two ordered dictionaries. _constraints has the form
+          # { <constraint1>: [parameter1, parameter2, ...], <constraint2>: ...}
+          # where the <constraint>s are instances of ProbabilityDistribution
+          # and the parameters string names, while _parameters has the form
+          # { parameter1: [<constraint1>, <constraint2>], ... }
+          # In summary, having these to dicts allow a bijective mapping between
+          # constraints (that might apply to multiple parameters) and parameters
+          # (that might be subject to several constraints).
           self._constraints = OrderedDict()
           self._parameters = OrderedDict()
 
       @property
       def all_parameters(self):
+          """Returns a list of all parameters/observables constrained."""
           return list(self._parameters.keys())
 
       def add_constraint(self, parameters, constraint):
+          """Add a constraint to the parameter/observable.
+
+          `constraint` must be an instance of a child of ProbabilityDistribution.
+
+          Note that if there already exists a constraint, the central values
+          of the old and new constraint must coincide."""
           for num, parameter in enumerate(parameters):
               # check if there is a constraint and what its central value is
               try: # look at the central value of an existing constraint
@@ -86,60 +119,104 @@ class Constraints(object):
               else: # if the central value of the new constraint is different from an existing constraint, raise an error
                   if np.ravel([constraint.central_value])[num] != central_value:
                       raise ValueError("The central values of all constraints on one parameter/observable must be equal")
+          # populate the dictionaries defined in __init__
               self._parameters.setdefault(parameter,[]).append((num, constraint))
           self._constraints[constraint] = parameters
 
       def set_constraint(self, parameter, constraint_string):
+          """Set the constraints on a parameter/observable by specifying a string
+          that can be e.g. of the form 1.55(3)(1) or 4.0±0.1. Existing
+          constraints will be removed."""
           pds = constraints_from_string(constraint_string)
           self.remove_constraints(parameter)
           for pd in pds:
               self.add_constraint([parameter], pd)
 
       def remove_constraints(self, parameter):
+          """Remove all constraints on a parameter."""
           self._parameters[parameter] = []
 
       def get_central(self, parameter):
+          """Get the central value of a parameter"""
           if parameter not in self._parameters.keys():
               raise ValueError('No constraints applied to parameter/observable ' + self.parameter)
           else:
+              # since the central values of all constraints must be equal,
+              # it suffices to look at the first one
               num, constraint = self._parameters[parameter][0]
               # return the num-th entry of the central value vector
               return np.ravel([constraint.central_value])[num]
 
       def get_central_all(self):
+          """Get central values of all constrained parameters."""
           return {parameter: self.get_central(parameter) for parameter in self._parameters.keys()}
 
       def get_random_all(self):
+          """Get random values for all constrained parameters where they are
+          distributed according to the probability distributions applied."""
+          # first, generate random values for every single one of the constraints
           random_constraints = [constraint.get_random() for constraint in self._constraints.keys()]
           random_dict = {}
+          # now, iterate over the parameters
           for parameter, constraints in self._parameters.items():
+              # here, the idea is the following. Assume there is a parameter
+              # p with central value c and N probability distributions that have
+              # random values r_1, ..., r_N (obtained above). The final random
+              # value for p is then given by p_r = c + \sum_i^N (r_i - c).
               central_value =  self.get_central(parameter)
-              random_dict[parameter] = central_value
+              random_dict[parameter] = central_value  # step 1: p_r = c
               for num, constraint in constraints:
                   idx = list(self._constraints.keys()).index(constraint)
+                  # step 1+i: p_r += r_i - c
                   random_dict[parameter] += np.ravel([random_constraints[idx]])[num] - central_value
           return random_dict
 
       def get_logprobability_all(self, par_dict, exclude_parameters=[]):
+          """Return a dictionary with the logarithm of the probability for each
+          constraint/probability distribution.
+
+          Inputs
+          ------
+          - par_dict
+            A dictionary of the form {parameter: value, ...} where parameter
+            is a string and value a float.
+          - exclude_parameters (optional)
+            An iterable of strings (default: empty) that specifies parameters
+            that should be ignored. In practice, this is done by setting these
+            parameters equal to their central values. This way, they contribute
+            a constant shift to the log probability, but their values in
+            par_dict play no role.
+          """
           prob_dict = {}
           for constraint, parameters in self._constraints.items():
               def constraint_central_value(constraint, parameters, parameter):
+                  # this function is required to get the central value for the
+                  # excluded_parameters, consistently for univariate and multivariate
+                  # distributions.
                   if len(parameters) == 1:
+                      # for univariate, it's trivial
                       return constraint.central_value
                   else:
+                      # for multivariate, need to find the position of the parameter
+                      # in the vector and return the appropriate entry
                       return constraint.central_value[parameters.index(parameter)]
+              # construct the vector of values from the par_dict, replaced by central values in the case of excluded_parameters
               x = [par_dict[p] if p not in exclude_parameters else constraint_central_value(constraint, parameters, p) for p in parameters]
               if len(x) == 1:
+                  # 1D constraints should have a scalar, not a length-1 array
                   x = x[0]
               prob_dict[constraint] = constraint.logpdf(x)
           return prob_dict
 
       def copy(self):
+          # this is to have a .copy() method like for a dictionary
           return copy.copy(self)
 
 
 ########## ParameterConstraints Class ##########
 class ParameterConstraints(Constraints):
+      """
+      """
 
       def __init__(self):
           super().__init__()
@@ -323,7 +400,7 @@ class Implementation(NamedInstanceClass):
       for name in cls._instances:
           inst = cls.get_instance(name)
           quant = inst.quantity
-          descr = inst.get_description()
+          descr = inst.description
           all_dict[quant] = {name: descr}
       return all_dict
 
