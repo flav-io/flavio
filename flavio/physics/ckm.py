@@ -39,6 +39,7 @@ def ckm_standard(t12, t13, t23, delta):
         -(c23*exp(1j*delta)*s12*s13) - c12*s23,
         c13*c23]])
 
+@np.vectorize
 def tree_to_wolfenstein(Vus, Vub, Vcb, gamma):
     laC = Vus/sqrt(1-Vub**2)
     A = Vcb/sqrt(1-Vub**2)/laC**2
