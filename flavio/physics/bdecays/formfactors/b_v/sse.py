@@ -23,12 +23,12 @@ process_dict['Bs->K*'] =   {'B': 'Bs', 'V': 'K*0',   'q': 'b->d'}
 
 def ff(process, q2, par, implementation, n=2):
     r"""Central value of $B\to V$ form factors in the lattice convention
-    and lattice parametrization.
+    and simplified series expansion (SSE) parametrization.
 
     The lattice convention defines the form factors
     $A_0$, $A_1$, $A_{12}$, $V$, $T_1$, $T_2$, $T_{23}$.
 
-    The lattice parametrization defines
+    The SSE defines
     $$F_i(q^2) = P_i(q^2) \sum_k \al_k^i \,z(q^2)^k$$
     where $P_i(q^2)=(1-q^2/m_{R,i}^2)^{-1}$ is a simple pole.
 

@@ -1,4 +1,4 @@
-from flavio.physics.bdecays.formfactors.b_v import bsz, lattice
+from flavio.physics.bdecays.formfactors.b_v import bsz, sse
 from flavio.classes import AuxiliaryQuantity, Implementation
 
 processes = ['B->K*','B->rho','B->omega','Bs->phi','Bs->K*']
@@ -21,7 +21,7 @@ for p in processes:
                    function=ff_function(bsz.ff, p, implementation=iname, n=3))
     i.set_description("3-parameter BSZ parametrization (see arXiv:1503.05534)")
 
-    iname = p + ' lattice'
+    iname = p + ' SSE'
     i = Implementation(name=iname, quantity=quantity,
-                   function=ff_function(lattice.ff, p, implementation=iname, n=2))
-    i.set_description("2-parameter lattice parametrization")
+                   function=ff_function(sse.ff, p, implementation=iname, n=2))
+    i.set_description("2-parameter simplified series expansion")

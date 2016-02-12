@@ -22,7 +22,7 @@ def csv_to_dict(filename):
 
 
 def load_parameters(file_res, file_cov, process, constraints):
-    implementation_name = process + ' lattice'
+    implementation_name = process + ' SSE'
     res_dict = csv_to_dict(file_res)
     cov_dict = csv_to_dict(file_cov)
     keys_sorted = sorted(res_dict.keys())

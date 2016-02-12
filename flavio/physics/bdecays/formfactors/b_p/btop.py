@@ -19,4 +19,4 @@ for p in processes:
     iname = p + ' BCL4'
     i = Implementation(name=iname, quantity=quantity,
                    function=ff_function(bcl.ff, p, implementation=iname, n=4))
-    i.set_description("3-parameter BCL parametrization (see arXiv:0807.2722).")
+    i.set_description("4-parameter BCL parametrization (see arXiv:0807.2722).")

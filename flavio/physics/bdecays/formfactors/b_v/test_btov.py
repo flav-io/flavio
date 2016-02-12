@@ -34,7 +34,7 @@ class TestBtoV(unittest.TestCase):
     def test_lattice(self):
         c = copy.copy(default_parameters)
         lattice_parameters.lattice_load(c)
-        fflatt = Implementation.get_instance('B->K* lattice').get_central(constraints_obj=c, wc_obj=None, q2=12.)
+        fflatt = Implementation.get_instance('B->K* SSE').get_central(constraints_obj=c, wc_obj=None, q2=12.)
         self.assertAlmostEqual(fflatt['V'], 0.84, places=2)
         self.assertAlmostEqual(fflatt['A0'], 0.861, places=3)
         self.assertAlmostEqual(fflatt['A1'], 0.440, places=3)
@@ -43,7 +43,7 @@ class TestBtoV(unittest.TestCase):
         self.assertAlmostEqual(fflatt['T2'], 0.433, places=3)
         self.assertAlmostEqual(fflatt['T23'], 0.809, places=3)
         # FIXME this still doesn't work well due to the resonance mass problem
-        fflatt = Implementation.get_instance('Bs->phi lattice').get_central(constraints_obj=c, wc_obj=None, q2=12.)
+        fflatt = Implementation.get_instance('Bs->phi SSE').get_central(constraints_obj=c, wc_obj=None, q2=12.)
         self.assertAlmostEqual(fflatt['V'], 0.767, places=2)
         self.assertAlmostEqual(fflatt['A0'], 0.907, places=2)
         self.assertAlmostEqual(fflatt['A1'], 0.439, places=2)
@@ -51,7 +51,7 @@ class TestBtoV(unittest.TestCase):
         self.assertAlmostEqual(fflatt['T1'], 0.680, places=2)
         self.assertAlmostEqual(fflatt['T2'], 0.439, places=2)
         self.assertAlmostEqual(fflatt['T23'], 0.810, places=2)
-        fflatt = Implementation.get_instance('Bs->K* lattice').get_central(constraints_obj=c, wc_obj=None, q2=12.)
+        fflatt = Implementation.get_instance('Bs->K* SSE').get_central(constraints_obj=c, wc_obj=None, q2=12.)
         self.assertAlmostEqual(fflatt['V'], 0.584, places=3)
         self.assertAlmostEqual(fflatt['A0'], 0.884, places=3)
         self.assertAlmostEqual(fflatt['A1'], 0.370, places=3)
