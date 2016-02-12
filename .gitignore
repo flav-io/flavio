@@ -1,4 +1,5 @@
 nosetests.json
+*.npy
 
 # editor tmp files
 *~
