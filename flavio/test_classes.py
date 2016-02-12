@@ -10,7 +10,7 @@ class TestClasses(unittest.TestCase):
         p = Parameter( 'test_mb' )
         self.assertEqual( p, Parameter.get_instance('test_mb') )
         p.set_description('b quark mass')
-        self.assertEqual( p.get_description(), 'b quark mass' )
+        self.assertEqual( p.description, 'b quark mass' )
         # removing dummy instances
         Parameter.del_instance('test_mb')
 
@@ -22,10 +22,6 @@ class TestClasses(unittest.TestCase):
         c.add_constraint( ['test_mb'], d )
         # checking central values
         self.assertEqual( c.get_central('test_mb'), 4.2)
-        with self.assertRaises(ValueError):
-            # adding a constraint with a different central value should raise an error
-            d2 = NormalDistribution(4.8, 0.2)
-            c.add_constraint( ['test_mb'], d2 )
         # checking types and shapes of random values
         self.assertEqual( type(d.get_random()), float)
         self.assertEqual( d.get_random(3).shape, (3,))
@@ -41,7 +37,7 @@ class TestClasses(unittest.TestCase):
         o = Observable( 'test_obs' )
         self.assertEqual( o, Observable.get_instance('test_obs') )
         o.set_description('some test observables')
-        self.assertEqual( o.get_description(), 'some test observables' )
+        self.assertEqual( o.description, 'some test observables' )
         # removing dummy instances
         Observable.del_instance('test_obs')
 

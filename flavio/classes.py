@@ -91,10 +91,11 @@ class Constraints(object):
           # { <constraint1>: [parameter1, parameter2, ...], <constraint2>: ...}
           # where the <constraint>s are instances of ProbabilityDistribution
           # and the parameters string names, while _parameters has the form
-          # { parameter1: [<constraint1>, <constraint2>], ... }
+          # { parameter1: [(num1, <constraint1>)]} where num1 is 0 for a
+          # univariate constraints and otherwise gives the position of
+          # parameter1 in the multivariate vector.
           # In summary, having these to dicts allow a bijective mapping between
-          # constraints (that might apply to multiple parameters) and parameters
-          # (that might be subject to several constraints).
+          # constraints (that might apply to multiple parameters) and parameters.
           self._constraints = OrderedDict()
           self._parameters = OrderedDict()
 
@@ -108,19 +109,13 @@ class Constraints(object):
 
           `constraint` must be an instance of a child of ProbabilityDistribution.
 
-          Note that if there already exists a constraint, the central values
-          of the old and new constraint must coincide."""
+          Note that if there already exists a constraint, it will be removed."""
           for num, parameter in enumerate(parameters):
-              # check if there is a constraint and what its central value is
-              try: # look at the central value of an existing constraint
-                  central_value = self.get_central(parameter)
-              except: # if the parameter is not constrained yet, no need to check the central value
-                  pass
-              else: # if the central value of the new constraint is different from an existing constraint, raise an error
-                  if np.ravel([constraint.central_value])[num] != central_value:
-                      raise ValueError("The central values of all constraints on one parameter/observable must be equal")
+              # remove constraints if there are any
+              if parameter in self._parameters:
+                  self.remove_constraints(parameter)
           # populate the dictionaries defined in __init__
-              self._parameters.setdefault(parameter,[]).append((num, constraint))
+              self._parameters[parameter] = [(num, constraint)]
           self._constraints[constraint] = parameters
 
       def set_constraint(self, parameter, constraint_string):
@@ -128,9 +123,8 @@ class Constraints(object):
           that can be e.g. of the form 1.55(3)(1) or 4.0±0.1. Existing
           constraints will be removed."""
           pds = constraints_from_string(constraint_string)
-          self.remove_constraints(parameter)
-          for pd in pds:
-              self.add_constraint([parameter], pd)
+          combined_pd = combine_distributions(pds)
+          self.add_constraint([parameter], combined_pd)
 
       def remove_constraints(self, parameter):
           """Remove all constraints on a parameter."""
@@ -141,8 +135,6 @@ class Constraints(object):
           if parameter not in self._parameters.keys():
               raise ValueError('No constraints applied to parameter/observable ' + self.parameter)
           else:
-              # since the central values of all constraints must be equal,
-              # it suffices to look at the first one
               num, constraint = self._parameters[parameter][0]
               # return the num-th entry of the central value vector
               return np.ravel([constraint.central_value])[num]
@@ -451,6 +443,35 @@ class Measurement(Constraints, NamedInstanceClass):
 
 
 # Auxiliary functions
+
+def combine_distributions(probability_distributions):
+    """Combine a set of univariate probability distributions.
+
+    This function is meant for combining uncertainties on a single parameter/
+    observable. As an argument, it takes a list of Gaussians that all have
+    the same mean. It returns their convolution, but with location equal to the
+    original mean.
+
+    This should be generalized to other kinds of distributions in the future...
+    """
+    # if there's just one: return it immediately
+    if len(probability_distributions) == 1:
+        return probability_distributions[0]
+    central_value = probability_distributions[0].central_value # central value of the first dist
+    assert isinstance(central_value, float), "Combination only implemented for univariate distributions"
+    gaussians = []
+    for pd in probability_distributions:
+        if pd.central_value != central_value:
+            raise ValueError("All distributions to be combined must have the same central value")
+        if isinstance(pd, DeltaDistribution):
+            # delta distributions (= no error) can be skipped
+            continue
+        elif isinstance(pd, NormalDistribution):
+            gaussians.append(pd)
+        else:
+            raise ValueError("Combination only implemented for normal distributions")
+    err_squared = sum([pd.standard_deviation**2 for pd in gaussians])
+    return NormalDistribution(central_value=central_value, standard_deviation=math.sqrt(err_squared))
 
 
 def errors_from_string(constraint_string):
