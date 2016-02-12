@@ -86,30 +86,42 @@ def BR_tot_function(B, P, lep):
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 _func = {'dBR/dq2': dBRdq2_function, 'BR': BR_tot_function, '<BR>': BR_binned_function}
 _desc = {'dBR/dq2': 'Differential', 'BR': 'Total', '<BR>': 'Binned'}
+_tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'\langle\text{BR}\rangle'}
+_args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max']}
 
 for l in ['e', 'mu', 'tau']:
     for br in ['dBR/dq2', 'BR', '<BR>']:
         _obs_name = br + "(B+->D"+l+"nu)"
         _obs = Observable(_obs_name)
         _obs.set_description(_desc[br] + r" branching ratio of $B^+\to D^{0}"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
+        _obs.tex = r'$' + _tex_br[br] + r"(B^+\to D^{0}"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
+        _obs.arguments = _args[br]
         Prediction(_obs_name, _func[br]('B+', 'D0', l))
 
         _obs_name = br + "(B0->D"+l+"nu)"
         _obs = Observable(_obs_name)
         _obs.set_description(_desc[br] + r" branching ratio of $B^0\to D^{-}"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
+        _obs.tex = r'$' + _tex_br[br] + r"(B^0\to D^{-}"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
+        _obs.arguments = _args[br]
         Prediction(_obs_name, _func[br]('B0', 'D+', l))
 
         _obs_name = br + "(Bs->K"+l+"nu)"
         _obs = Observable(_obs_name)
         _obs.set_description(_desc[br] + r" branching ratio of $B_s\to K^{-}"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
+        _obs.tex = r'$' + _tex_br[br] + r"(B_s\to K^{-}"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
+        _obs.arguments = _args[br]
         Prediction(_obs_name, _func[br]('Bs', 'K+', l))
 
         _obs_name = br + "(B+->pi"+l+"nu)"
         _obs = Observable(_obs_name)
         _obs.set_description(_desc[br] + r" branching ratio of $B^+\to \pi^0"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
+        _obs.tex = r'$' + _tex_br[br] + r"(B^+\to \pi^0"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
+        _obs.arguments = _args[br]
         Prediction(_obs_name, _func[br]('B+', 'pi0', l))
 
         _obs_name = br + "(B0->pi"+l+"nu)"
         _obs = Observable(_obs_name)
         _obs.set_description(_desc[br] + r" branching ratio of $B^0\to \pi^-"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
+        _obs.tex = r'$' + _tex_br[br] + r"(B^0\to \pi^-"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
+        _obs.arguments = _args[br]
         Prediction(_obs_name, _func[br]('B0', 'pi+', l))

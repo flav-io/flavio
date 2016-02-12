@@ -110,10 +110,12 @@ for l in ['e', 'mu', 'tau']:
     _obs_name = "BR(Bs->"+l+l+")"
     _obs = Observable(_obs_name)
     _obs.set_description(r"Time-integrated branching ratio of $B_s\to "+_tex[l]+"^+"+_tex[l]+"^-$.")
+    _obs.tex = r"$\overline{\text{BR}}(B_s\to "+_tex[l]+"^+"+_tex[l]+"^-)$."
     Prediction(_obs_name, bqll_obs_function(br_timeint, 'Bs', l))
 
     # For the B^0 decay, we take the prompt branching ratio since DeltaGamma is negligible
     _obs_name = "BR(Bd->"+l+l+")"
     _obs = Observable(_obs_name)
     _obs.set_description(r"Branching ratio of $B^0\to "+_tex[l]+"^+"+_tex[l]+"^-$.")
+    _obs.tex = r"$\text{BR}(B^0\to "+_tex[l]+"^+"+_tex[l]+"^-)$."
     Prediction(_obs_name, bqll_obs_function(br_inst, 'B0', l))

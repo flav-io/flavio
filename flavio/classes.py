@@ -321,6 +321,7 @@ class Observable(NamedInstanceClass):
       super().__init__(name)
       self.arguments = arguments
       self.prediction = None
+      self.tex = ''
 
    def set_prediction(self, prediction):
       self.prediction = prediction

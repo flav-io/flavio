@@ -79,18 +79,25 @@ def BVgamma_function(function, B, V):
 
 # Observable and Prediction instances
 
-_func = {'BR': BR, 'ACP': ACP, 'S': S}
-_tex = {'BR': 'BR', 'ACP': r'A_{CP}', 'S': 'S'}
-_desc = {'BR': 'Branching ratio', 'ACP': 'Direct CP asymmetry', 'S': 'Mixing-induced CP asymmetry'}
+_func = {'BR': BR, 'ACP': ACP}
+_tex = {'BR': r'\text{BR}', 'ACP': r'A_{CP}'}
+_desc = {'BR': 'Branching ratio', 'ACP': 'Direct CP asymmetry'}
 
 for key in _func.keys():
-    if key != 'S': # S=0 for charged B decays (no mixing)!
-        _obs_name = key + "(B+->K*gamma)"
-        _obs = Observable(_obs_name)
-        _obs.set_description(_desc[key] + r" of $B^+\to K^{*+}\gamma$")
-        Prediction(_obs_name, BVgamma_function(_func[key], 'B+', 'K*+'))
+    _obs_name = key + "(B+->K*gamma)"
+    _obs = Observable(_obs_name)
+    _obs.set_description(_desc[key] + r" of $B^+\to K^{*+}\gamma$")
+    _obs.tex = r'$' + _tex[key] + r"(B^+\to K^{*+}\gamma)$"
+    Prediction(_obs_name, BVgamma_function(_func[key], 'B+', 'K*+'))
 
     _obs_name = key + "(B0->K*gamma)"
     _obs = Observable(_obs_name)
     _obs.set_description(_desc[key] + r" of $B^0\to K^{*0}\gamma$")
+    _obs.tex = r'$' + _tex[key] + r"(B^0\to K^{*0}\gamma)$"
     Prediction(_obs_name, BVgamma_function(_func[key], 'B0', 'K*0'))
+
+_obs_name = "S_K*gamma"
+_obs = Observable(_obs_name)
+_obs.set_description(r"Mixing-induced CP asymmetry in $B^0\to K^{*0}\gamma$")
+_obs.tex = r'$S_{K^{*}\gamma}$'
+Prediction(_obs_name, BVgamma_function(S, 'B0', 'K*0'))
