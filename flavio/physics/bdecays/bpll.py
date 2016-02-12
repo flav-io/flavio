@@ -7,6 +7,8 @@ from flavio.physics.running import running
 from flavio.physics.common import conjugate_par, conjugate_wc
 from flavio.physics.bdecays import matrixelements, angular
 from flavio.physics.bdecays.wilsoncoefficients import get_wceff, wctot_dict
+from scipy.integrate import quad
+from flavio.classes import Observable, Prediction
 
 """Functions for exclusive $B\to P\ell^+\ell^-$ decays."""
 
@@ -69,3 +71,45 @@ def FH_cpaverage_num(J, J_bar):
 def bpll_dbrdq2(q2, wc_obj, par, B, P, lep):
     tauB = par['tau_'+B]
     return tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, lep)
+
+# denominator of normalized observables
+def denominator(J, J_bar):
+    return 2*dGdq2_cpaverage(J, J_bar)
+
+def bpll_obs_int(function, q2_min, q2_max, wc_obj, par, B, P, lep):
+    def obs(q2):
+        return bpll_obs(function, q2, wc_obj, par, B, P, lep)
+    return quad(obs, q2_min, q2_max, epsrel=0.01, epsabs=0)[0]
+
+def bpll_obs_int_ratio_func(func_num, func_den, B, P, lep):
+    return lambda wc_obj, par, q2_min, q2_max: bpll_obs_int(func_num, q2_min, q2_max, wc_obj, par, B, P, lep)/bpll_obs_int(func_den, q2_min, q2_max, wc_obj, par, B, P, lep)
+
+def bpll_obs_ratio_func(func_num, func_den, B, P, lep):
+    return lambda wc_obj, par, q2: bpll_obs(func_num, q2, wc_obj, par, B, P, lep)/bpll_obs_int(func_den, q2, wc_obj, par, B, P, lep)
+
+# Observable and Prediction instances
+
+_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
+_observables = {
+'AFB': {'func_num': AFB_cpaverage_num, 'tex': r'A_\text{FB}', 'desc': 'forward-backward asymmetry'},
+'FH': {'func_num': FH_cpaverage_num, 'tex': r'F_H', 'desc': 'flat term'},
+}
+_hadr = {
+'B0->K': {'tex': r"B^0\to K^0", 'B': 'B0', 'V': 'K0', },
+'B+->K': {'tex': r"B^+\to K^+", 'B': 'B+', 'V': 'K+', },
+}
+
+for l in ['e', 'mu', 'tau']:
+    for M in _hadr.keys():
+        for obs in sorted(_observables.keys()):
+            _obs_name = "<" + obs + ">("+M+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+            _obs.set_description('Binned ' + _observables[obs]['desc'] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            Prediction(_obs_name, bpll_obs_int_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['V'], l))
+
+            _obs_name = obs + "("+M+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2'])
+            _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            Prediction(_obs_name, bpll_obs_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['V'], l))
