@@ -15,7 +15,7 @@ class TestBVgamma(unittest.TestCase):
     def test_bksgamma(self):
         # S and ACP should vanish as there are no strong phases or power corrections yet
         flavio.Observable.get_instance("ACP(B0->K*gamma)").prediction_central(par, wc)
-        flavio.Observable.get_instance("S(B0->K*gamma)").prediction_central(par, wc)
+        flavio.Observable.get_instance("S_K*gamma").prediction_central(par, wc)
         # # rough numerical comparison of CP-averaged observables to 1503.05534v1
         # # FIXME this should work much better with NLO corrections ...
         self.assertAlmostEqual(
