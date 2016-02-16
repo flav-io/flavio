@@ -47,6 +47,14 @@ def _read_yaml_object_values_correlated(obj, constraints):
             errors.append(sqrt(squared_error))
         correlation = _fix_correlation_matrix(parameter_group['correlation'], len(parameter_names))
         covariance = np.outer(np.asarray(errors), np.asarray(errors))*correlation
+        if not np.all(np.linalg.eigvals(covariance) > 0):
+            # if the covariance matrix is not positive definite, try a dirty trick:
+            # multiply all the correlations by 0.99.
+            n_dim = len(correlation)
+            correlation = (correlation - np.eye(n_dim))*0.99 + np.eye(n_dim)
+            covariance = np.outer(np.asarray(errors), np.asarray(errors))*correlation
+            # if it still isn't positive definite, give up.
+            assert np.all(np.linalg.eigvals(covariance) > 0), "The covariance matrix is not positive definite!" + str(covariance)
         constraints.add_constraint(parameter_names, MultivariateNormalDistribution(central_values, covariance))
 
 def read_file_values(filename, constraints):
