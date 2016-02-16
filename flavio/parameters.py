@@ -5,7 +5,7 @@ import csv
 import flavio
 import re
 
-def _read_yaml_object(obj, constraints):
+def _read_yaml_object_metadata(obj, constraints):
     parameters = yaml.load(obj)
     for parameter_name, info in parameters.items():
         p = Parameter(parameter_name)
@@ -13,12 +13,22 @@ def _read_yaml_object(obj, constraints):
             p.description = info['description']
         if 'tex' in info and info['tex'] is not None:
             p.tex = info['tex']
-        constraints.set_constraint(parameter_name, info['value'])
 
-def read_file(filename, constraints):
+def read_file_metadata(filename, constraints):
     """Read parameter values from a YAML file."""
     with open(filename, 'r') as f:
-        _read_yaml_object(f, constraints)
+        _read_yaml_object_metadata(f, constraints)
+
+def _read_yaml_object_values(obj, constraints):
+    parameters = yaml.load(obj)
+    for parameter_name, value in parameters.items():
+        p = Parameter.get_instance(parameter_name) # this will raise an error if the parameter doesn't exist!
+        constraints.set_constraint(parameter_name, value)
+
+def read_file_values(filename, constraints):
+    """Read parameter values from a YAML file."""
+    with open(filename, 'r') as f:
+        _read_yaml_object_values(f, constraints)
 
 # particles from the PDG data file whose mass we're interested in)
 pdg_include = ['B(s)', 'B(s)*', 'B*+', 'B*0', 'B+', 'B0', 'D(s)', 'D(s)*', 'D+', 'D0',
@@ -174,8 +184,11 @@ def read_pdg(year, constraints):
 # Create the object
 default_parameters = ParameterConstraints()
 
-# Read the parameters from the default YAML data file
-_read_yaml_object(pkgutil.get_data('flavio', 'data/parameters.yml'), default_parameters)
+# Read the parameter metadata from the default YAML data file
+_read_yaml_object_metadata(pkgutil.get_data('flavio', 'data/parameters_metadata.yml'), default_parameters)
+
+# Read the parameter values from the default YAML data file
+_read_yaml_object_values(pkgutil.get_data('flavio', 'data/parameters_uncorrelated.yml'), default_parameters)
 
 # Read the parameters from the default PDG data file
 read_pdg(2015, default_parameters)
