@@ -4,10 +4,8 @@ renormalization scale:
 
     # B decays
     bll: 4.8      # B->l+ l-
-    bpll: 4.8     # B->P l+ l-
-    bvll: 4.8     # B->V l+ l-
-    bvlnu: 4.8    # B->V l nu
-    bplnu: 4.8    # B->P l nu
+    bpll: 4.8     # B->P l+ l-, B->P l nu
+    bvll: 4.8     # B->V l+ l-, B->V l nu
     bvgamma: 4.8  # B->V gamma
 
     # meson mixing

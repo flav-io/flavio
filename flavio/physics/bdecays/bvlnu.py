@@ -56,7 +56,7 @@ def prefactor(q2, par, B, V, lep):
     return 4*GF/sqrt(2)*Vij
 
 def get_angularcoeff(q2, wc_obj, par, B, V, lep):
-    scale = config['renormalization scale']['bvlnu']
+    scale = config['renormalization scale']['bvll']
     wc = get_wceff_fccc(q2, wc_obj, par, B, V, lep)
     ml = par['m_'+lep]
     mB = par['m_'+B]
