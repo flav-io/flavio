@@ -3,76 +3,76 @@
 # for now, just assume 99% correlation
 -
   values:
-    f_K+: 0.1556(4) # FLAG-3 preliminary Nf=2+1+1
-    f_K0: 0.1556(4)
+    - f_K+: 0.1556(4) # FLAG-3 preliminary Nf=2+1+1
+    - f_K0: 0.1556(4)
   correlation: 0.99
 -
   values:
-    f_perp_K*+: 0.163(8) # FLAG-3 preliminary Nf=2+1+1
-    f_perp_K*0: 0.163(8)
+    - f_perp_K*+: 0.163(8) # FLAG-3 preliminary Nf=2+1+1
+    - f_perp_K*0: 0.163(8)
   correlation: 0.99
 -
   values:
-    f_perp_rho+: 0.160(11) # FLAG-3 preliminary Nf=2+1+1
-    f_perp_rho0: 0.160(11)
+    - f_perp_rho+: 0.160(11) # FLAG-3 preliminary Nf=2+1+1
+    - f_perp_rho0: 0.160(11)
   correlation: 0.99
 -
   values:
-    f_pi+: 0.1302(14)  # FLAG 2013 Nf=2+1
-    f_pi0: 0.1302(14)
+    - f_pi+: 0.1302(14)  # FLAG 2013 Nf=2+1
+    - f_pi0: 0.1302(14)
   correlation: 0.99
 -
   values:
-    f_B+: 0.1905(42)
-    f_B0: 0.1905(42)  # FLAG 2013 Nf=2+1
+    - f_B+: 0.1905(42)
+    - f_B0: 0.1905(42)  # FLAG 2013 Nf=2+1
   correlation: 0.99
 -
   values:
-    f_D+: 0.2092(33)
-    f_D0: 0.2092(33)  # FLAG 2013 Nf=2+1
+    - f_D+: 0.2092(33)
+    - f_D0: 0.2092(33)  # FLAG 2013 Nf=2+1
   correlation: 0.99
 -
   values:
-    f_K*+: 0.203(6)
-    f_K*0: 0.203(6)  # 1501.06569 table 1
+    - f_K*+: 0.203(6)
+    - f_K*0: 0.203(6)  # 1501.06569 table 1
   correlation: 0.99
 -
   values:
-    a2_para_K*+: 0.16(9)
-    a2_para_K*0: 0.16(9)
+    - a2_para_K*+: 0.16(9)
+    - a2_para_K*0: 0.16(9)
   correlation: 0.99
 -
   values:
-    a2_perp_K*+: 0.10(8)
-    a2_perp_K*0: 0.10(8)
+    - a2_perp_K*+: 0.10(8)
+    - a2_perp_K*0: 0.10(8)
   correlation: 0.99
 -
   values:
-    a1_para_K*+: 0.06(4)
-    a1_para_K*0: 0.06(4)
+    - a1_para_K*+: 0.06(4)
+    - a1_para_K*0: 0.06(4)
   correlation: 0.99
 -
   values:
-    a1_perp_K*+: 0.04(3)
-    a1_perp_K*0: 0.04(3)
+    - a1_perp_K*+: 0.04(3)
+    - a1_perp_K*0: 0.04(3)
   correlation: 0.99
 -
   values:
-    a2_para_rho+: 0.17(7)
-    a2_para_rho0: 0.17(7)
+    - a2_para_rho+: 0.17(7)
+    - a2_para_rho0: 0.17(7)
   correlation: 0.99
 -
   values:
-    a2_perp_rho+: 0.14(6)
-    a2_perp_rho0: 0.14(6)
+    - a2_perp_rho+: 0.14(6)
+    - a2_perp_rho0: 0.14(6)
   correlation: 0.99
 
 # B->D* form factors, HFAG 2014
 -
   values:
-    B->D* CLN-IW rho2: 1.207 ± 0.026
-    B->D* CLN-IW R_1(1): 1.406 ± 0.033
-    B->D* CLN-IW R_2(1): 0.853 ± 0.020
+    - B->D* CLN-IW rho2: 1.207 ± 0.026
+    - B->D* CLN-IW R_1(1): 1.406 ± 0.033
+    - B->D* CLN-IW R_2(1): 0.853 ± 0.020
   correlation:
     [[1, 0.568, -0.809],
      [1, -0.758],
@@ -81,12 +81,12 @@
 # B->D form factors, HPQCD 2015, 1505.03925
 -
   values:
-    B->D BCL3 a0_f0: 0.647(29)
-    B->D BCL3 a1_f0: 0.27(30)
-    B->D BCL3 a2_f0: -0.09(2.94)
-    B->D BCL3 a0_f+: 0.836(33)
-    B->D BCL3 a1_f+: -2.66(52)
-    B->D BCL3 a2_f+: -0.07(2.96)
+    - B->D BCL3 a0_f0: 0.647(29)
+    - B->D BCL3 a1_f0: 0.27(30)
+    - B->D BCL3 a2_f0: -0.09(2.94)
+    - B->D BCL3 a0_f+: 0.836(33)
+    - B->D BCL3 a1_f+: -2.66(52)
+    - B->D BCL3 a2_f+: -0.07(2.96)
   correlation:
     [[1., -0.129085, -0.0593469, 0.506834, 0.249601,
       0.0642397], [-0.129085, 1., -0.121474, 0.0543674, 0.365951,

@@ -33,7 +33,8 @@ def _read_yaml_object_values_correlated(obj, constraints):
         parameter_names = []
         central_values = []
         errors = []
-        for parameter_name, value in parameter_group['values'].items():
+        for dict_list in parameter_group['values']:
+            parameter_name, value = list(dict_list.items())[0]
             Parameter.get_instance(parameter_name) # this will raise an error if the parameter doesn't exist!
             parameter_names.append(parameter_name)
             error_dict = errors_from_string(value)
@@ -227,4 +228,3 @@ flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load_v1_combined(defau
 
 # Read default parameters for B->P form factors
 flavio.physics.bdecays.formfactors.b_p.bcl_parameters.load_parameters('data/arxiv-1509-06235v1/b_k.yml', default_parameters)
-# flavio.physics.bdecays.formfactors.b_p.bcl_parameters.load_parameters('data/arXiv-1507-01618v3/b_pi.yml', default_parameters)
