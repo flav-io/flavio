@@ -1,5 +1,6 @@
 from flavio.physics.bdecays.formfactors.b_p import bcl
 from flavio.classes import AuxiliaryQuantity, Implementation
+from flavio.config import config
 
 processes = ['B->K', 'B->D', 'B->pi']
 
@@ -13,10 +14,24 @@ for p in processes:
 
     iname = p + ' BCL3'
     i = Implementation(name=iname, quantity=quantity,
-                   function=ff_function(bcl.ff, p, implementation=iname, n=3))
+                   function=ff_function(bcl.ff, p, n=3))
     i.set_description("3-parameter BCL parametrization (see arXiv:0807.2722).")
 
     iname = p + ' BCL4'
     i = Implementation(name=iname, quantity=quantity,
-                   function=ff_function(bcl.ff, p, implementation=iname, n=4))
+                   function=ff_function(bcl.ff, p, n=4))
     i.set_description("4-parameter BCL parametrization (see arXiv:0807.2722).")
+
+    iname = p + ' BCL3-IW'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ff_function(bcl.ff_isgurwise, p,
+                   scale=config['renormalization scale']['bpll'], n=3))
+    i.set_description("3-parameter BCL parametrization using improved Isgur-Wise relation"
+                      " for the tensor form factor")
+
+    iname = p + ' BCL4-IW'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ff_function(bcl.ff_isgurwise, p,
+                   scale=config['renormalization scale']['bpll'], n=4))
+    i.set_description("4-parameter BCL parametrization using improved Isgur-Wise relation"
+                      " for the tensor form factor")

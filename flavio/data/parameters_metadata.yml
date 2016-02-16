@@ -290,3 +290,23 @@ B->D* CLN-IW R_2(1):
 B->D* CLN-IW h_A1(1):
   tex: $h_{A_1}(1)$
   description:
+
+# Parameters for B->D form factors in the BCL parametrization
+B->D BCL3 a0_f+:
+  tex: $a_0^{(+)}$
+  description:
+B->D BCL3 a1_f+:
+  tex: $a_0^{(+)}$
+  description:
+B->D BCL3 a2_f+:
+  tex: $a_0^{(+)}$
+  description:
+B->D BCL3 a0_f0:
+  tex: $a_0^{(0)}$
+  description:
+B->D BCL3 a1_f0:
+  tex: $a_0^{(0)}$
+  description:
+B->D BCL3 a2_f0:
+  tex: $a_0^{(0)}$
+  description:

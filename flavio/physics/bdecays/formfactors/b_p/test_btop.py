@@ -1,6 +1,6 @@
 import unittest
 from math import sqrt,radians,asin
-from flavio.physics.bdecays.formfactors.b_p import btop, bcl_parameters
+from flavio.physics.bdecays.formfactors.b_p import btop, bcl_parameters, bcl
 import numpy as np
 import copy
 from flavio.parameters import default_parameters
@@ -10,6 +10,12 @@ c = copy.copy(default_parameters)
 bcl_parameters.load_parameters('data/arxiv-1509-06235v1/b_k.yml', c)
 
 class TestBtoP(unittest.TestCase):
+    def test_bcl_iw(self):
+        c = copy.copy(default_parameters)
+        par = c.get_central_all()
+        bcl.ff_isgurwise('B->D', 1, par, 4.8, n=3)
+        Implementation.get_instance('B->D BCL3-IW').get_central(constraints_obj=c, wc_obj=None, q2=1)
+
     def test_lattice(self):
         # compare to digitized fig. 18 of 1509.06235v1
         ff_latt = Implementation.get_instance('B->K BCL3').get_central(constraints_obj=c, wc_obj=None, q2=0)
