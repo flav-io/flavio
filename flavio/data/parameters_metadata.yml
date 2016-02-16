@@ -310,3 +310,41 @@ B->D BCL3 a1_f0:
 B->D BCL3 a2_f0:
   tex: $a_0^{(0)}$
   description:
+
+# Parameters for B->pi form factors in the BCL parametrization
+B->pi BCL4 a0_f+:
+  tex: $a_0^{(+)}$
+  description:
+B->pi BCL4 a1_f+:
+  tex: $a_0^{(+)}$
+  description:
+B->pi BCL4 a2_f+:
+  tex: $a_0^{(+)}$
+  description:
+B->pi BCL4 a3_f+:
+  tex: $a_0^{(+)}$
+  description:
+B->pi BCL4 a0_f0:
+  tex: $a_0^{(0)}$
+  description:
+B->pi BCL4 a1_f0:
+  tex: $a_0^{(0)}$
+  description:
+B->pi BCL4 a2_f0:
+  tex: $a_0^{(0)}$
+  description:
+B->pi BCL4 a3_f0:
+  tex: $a_0^{(0)}$
+  description:
+B->pi BCL4 a0_fT:
+  tex: $a_0^{(T)}$
+  description:
+B->pi BCL4 a1_fT:
+  tex: $a_0^{(T)}$
+  description:
+B->pi BCL4 a2_fT:
+  tex: $a_0^{(T)}$
+  description:
+B->pi BCL4 a3_fT:
+  tex: $a_0^{(T)}$
+  description:
