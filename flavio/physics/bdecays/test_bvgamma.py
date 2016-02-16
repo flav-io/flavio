@@ -19,8 +19,8 @@ class TestBVgamma(unittest.TestCase):
         # # rough numerical comparison of CP-averaged observables to 1503.05534v1
         # # FIXME this should work much better with NLO corrections ...
         self.assertAlmostEqual(
-            flavio.Observable.get_instance("BR(B0->K*gamma)").prediction_central(par, wc)*1e4/4.22,
-             1, places=-1)
+            flavio.Observable.get_instance("BR(B0->K*gamma)").prediction_central(par, wc)*1e5/4.22,
+             1, places=0)
         self.assertAlmostEqual(
-            flavio.Observable.get_instance("BR(B+->K*gamma)").prediction_central(par, wc)*1e4/4.42,
-         1, places=-1)
+            flavio.Observable.get_instance("BR(B+->K*gamma)").prediction_central(par, wc)*1e5/4.42,
+             1, places=0)

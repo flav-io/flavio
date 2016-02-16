@@ -1,12 +1,13 @@
 from math import sqrt,pi
 from cmath import exp
 import numpy as np
+import flavio
 from flavio.physics.bdecays.common import meson_quark, meson_ff
 from flavio.physics import ckm, mesonmixing
 from flavio.config import config
 from flavio.physics.running import running
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
-from flavio.physics.common import conjugate_par, conjugate_wc
+from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
 from flavio.classes import AuxiliaryQuantity, Observable, Prediction
 
 """Functions for exclusive $B\to V\gamma$ decays."""
@@ -18,22 +19,40 @@ def prefactor(par, B, V):
     alphaem = running.get_alpha(par, scale)['alpha_e']
     mb = running.get_mb(par, scale)
     GF = par['Gmu']
-    di_dj = meson_quark[(B,V)]
-    xi_t = ckm.xi('t',di_dj)(par)
+    bq = meson_quark[(B,V)]
+    xi_t = ckm.xi('t',bq)(par)
     return ( sqrt((GF**2 * alphaem * mB**3 * mb**2)/(32 * pi**4)
                   * (1-mV**2/mB**2)**3) * xi_t )
 
-def amps(wc, par, B, V):
+def amps_ff(wc, par, B, V):
     N = prefactor(par, B, V)
-    qiqj = meson_quark[(B,V)]
+    bq = meson_quark[(B,V)]
     ff_name = meson_ff[(B,V)] + ' form factor'
     ff = AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=0.)
-    c7 = wc['C7eff_'+qiqj] # e.g. C7eff_bs
-    c7p = wc['C7effp_'+qiqj]
+    scale = config['renormalization scale']['bvgamma']
+    bq = meson_quark[(B,V)]
+    delta_C7 = flavio.physics.bdecays.matrixelements.delta_C7(par=par, wc=wc, q2=0, scale=scale, qiqj=bq)
+    c7 = wc['C7eff_'+bq] + delta_C7
+    c7p = wc['C7effp_'+bq]
     a = {}
     a['L'] = N * c7  * ff['T1']
     a['R'] = N * c7p * ff['T1']
     return a
+
+def amps_qcdf(wc, par, B, V):
+    N = prefactor(par, B, V)
+    scale = config['renormalization scale']['bvgamma']
+    T_perp = flavio.physics.bdecays.bvll.qcdf.T_perp(q2=0, par=par, wc=wc, B=B, V=V, scale=scale)
+    a = {}
+    a['L'] = N * T_perp
+    a['R'] = 0
+    return a
+
+def amps(*args, **kwargs):
+    return add_dict((
+        amps_ff(*args, **kwargs),
+        amps_qcdf(*args, **kwargs),
+        ))
 
 def amps_bar(wc, par, B, V):
     par_c = conjugate_par(par)

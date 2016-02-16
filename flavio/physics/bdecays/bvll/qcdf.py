@@ -52,7 +52,7 @@ def T_para_minus_WA(q2, par, wc, B, V, scale):
 
 # B->V, NLO spectator scattering
 
-# (23)-(26) of of hep-ph/0106067v2
+# (23)-(26) of hep-ph/0106067v2
 
 # chromomagnetic dipole contribution
 def T_perp_plus_O8(q2, par, wc, B, V, u, scale):
@@ -118,16 +118,21 @@ def En_V(mB, mV, q2):
     """Energy of the vector meson"""
     return (mB**2 - q2 + mV**2)/(2*mB)
 
-# (27) of of hep-ph/0106067v2
+# (27) of hep-ph/0106067v2
 def t_perp(q2, u, mq, par, B, V):
     mB = par['m_'+B]
     mV = par['m_'+V]
     EV = En_V(mB, mV, q2)
     ubar = 1 - u
+    if q2 == 0.: # limiting case for q2->0: eq. (33) of hep-ph/0106067v2
+        x0 = sqrt(1/4. - mq**2/(ubar * mB**2))
+        xp = 1/2. + x0
+        xm = 1/2. - x0
+        return 4/ubar * (1 + 2*mq**2/(ubar*mB**2) * (L1(xp) + L1(xm)) )
     return ((2*mB)/(ubar * EV) * i1_bfs(q2, u, mq, mB)
             + q2/(ubar**2 * EV**2) * B0diffBFS(q2, u, mq, mB))
 
-# (28) of of hep-ph/0106067v2
+# (28) of hep-ph/0106067v2
 def t_para(q2, u, mq, par, B, V):
     mB = par['m_'+B]
     mV = par['m_'+V]
@@ -142,7 +147,7 @@ def B0diffBFS(q2, u, mq, mB):
         return -log(-(2/q2)) + log(-(2/(q2*u + mB**2 * ubar)))
     return B0(ubar * mB**2 + u * q2, mq) - B0(q2, mq)
 
-# (29) of of hep-ph/0106067v2
+# (29) of hep-ph/0106067v2
 def B0(s, mq):
     if s==0.:
         return -2.
@@ -153,7 +158,7 @@ def B0(s, mq):
     iepsilon = 1e-8j
     return -2*sqrt(4*mq**2/s - 1) * atan(1/sqrt(4*(mq**2-iepsilon)/s - 1))
 
-# (30), (31) of of hep-ph/0106067v2
+# (30), (31) of hep-ph/0106067v2
 def i1_bfs(q2, u, mq, mB):
     ubar = 1 - u
     x0 = sqrt(1/4. - mq**2/(ubar * mB**2 + u * q2))
@@ -164,7 +169,7 @@ def i1_bfs(q2, u, mq, mB):
     ym = 1/2. - y0
     return 1 + (2 * mq**2)/(ubar * (mB**2 - q2)) * (L1(xp) + L1(xm) - L1(yp) - L1(ym))
 
-# (32) of of hep-ph/0106067v2
+# (32) of hep-ph/0106067v2
 def L1(x):
     if x == 0.:
         return -(pi**2/6.)
