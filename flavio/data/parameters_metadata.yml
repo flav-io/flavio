@@ -51,9 +51,15 @@ f_Bs:
 f_B0:
   tex: $f_{B^0}$
   description: $B^0$ decay constant
+f_B+:
+  tex: $f_{B^\pm}$
+  description: $B^\pm$ decay constant
 f_D0:
   tex: $f_{D^0}$
   description: $D^0$ decay constant
+f_D+:
+  tex: $f_{D^\pm}$
+  description: $D^\pm$ decay constant
 f_Ds:
   tex: $f_{D_s}$
   description: $D_s$ decay constant
@@ -66,6 +72,9 @@ f_omega:
 f_K*0:
   tex: $f_{K^{*0}}$
   description: $K^{*0}$ decay constant
+f_K*+:
+  tex: $f_{K^{*\pm}}$
+  description: $K^{*\pm}$ decay constant
 f_phi:
   tex: $f_{\phi}$
   description: $\phi$ decay constant
@@ -75,7 +84,13 @@ f_phi:
 f_perp_K*0:
   tex:
   description:
+f_perp_K*+:
+  tex:
+  description:
 f_perp_rho0:
+  tex:
+  description:
+f_perp_rho+:
   tex:
   description:
 f_perp_omega:
@@ -100,6 +115,24 @@ a2_para_rho0:
   tex:
   description:
 a2_perp_rho0:
+  tex:
+  description:
+a2_para_K*+:
+  tex:
+  description:
+a2_perp_K*+:
+  tex:
+  description:
+a1_para_K*+:
+  tex:
+  description:
+a1_perp_K*+:
+  tex:
+  description:
+a2_para_rho+:
+  tex:
+  description:
+a2_perp_rho+:
   tex:
   description:
 a2_para_omega:

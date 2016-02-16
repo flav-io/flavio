@@ -4,6 +4,8 @@ from flavio.classes import *
 import csv
 import flavio
 import re
+from flavio.measurements import _fix_correlation_matrix
+from math import sqrt
 
 def _read_yaml_object_metadata(obj, constraints):
     parameters = yaml.load(obj)
@@ -24,6 +26,27 @@ def _read_yaml_object_values(obj, constraints):
     for parameter_name, value in parameters.items():
         p = Parameter.get_instance(parameter_name) # this will raise an error if the parameter doesn't exist!
         constraints.set_constraint(parameter_name, value)
+
+def _read_yaml_object_values_correlated(obj, constraints):
+    list_ = yaml.load(obj)
+    for parameter_group in list_:
+        parameter_names = []
+        central_values = []
+        errors = []
+        for parameter_name, value in parameter_group['values'].items():
+            Parameter.get_instance(parameter_name) # this will raise an error if the parameter doesn't exist!
+            parameter_names.append(parameter_name)
+            error_dict = errors_from_string(value)
+            central_values.append(error_dict['central_value'])
+            squared_error = 0.
+            for sym_err in error_dict['symmetric_errors']:
+                squared_error += sym_err**2
+            for asym_err in error_dict['asymmetric_errors']:
+                squared_error += asym_err[0]*asym_err[1]
+            errors.append(sqrt(squared_error))
+        correlation = _fix_correlation_matrix(parameter_group['correlation'], len(parameter_names))
+        covariance = np.outer(np.asarray(errors), np.asarray(errors))*correlation
+        constraints.add_constraint(parameter_names, MultivariateNormalDistribution(central_values, covariance))
 
 def read_file_values(filename, constraints):
     """Read parameter values from a YAML file."""
@@ -187,8 +210,11 @@ default_parameters = ParameterConstraints()
 # Read the parameter metadata from the default YAML data file
 _read_yaml_object_metadata(pkgutil.get_data('flavio', 'data/parameters_metadata.yml'), default_parameters)
 
-# Read the parameter values from the default YAML data file
+# Read the uncorrelated parameter values from the default YAML data file
 _read_yaml_object_values(pkgutil.get_data('flavio', 'data/parameters_uncorrelated.yml'), default_parameters)
+
+# Read the correlated parameter values from the default YAML data file
+_read_yaml_object_values_correlated(pkgutil.get_data('flavio', 'data/parameters_correlated.yml'), default_parameters)
 
 # Read the parameters from the default PDG data file
 read_pdg(2015, default_parameters)

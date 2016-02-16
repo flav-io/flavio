@@ -17,32 +17,16 @@ gamma: 1.27(12)
 
 # Meson decay constants
 
-f_K+: 0.1556(4)    # FLAG-3 preliminary Nf=2+1+1
-f_K0: 0.1556(4)    # FLAG-3 preliminary Nf=2+1+1
-f_pi+: 0.1302(14)  # FLAG 2013 Nf=2+1
-f_pi0: 0.1302(14)  # FLAG 2013 Nf=2+1
 f_Bs: 0.2277(45)  # FLAG 2013 Nf=2+1
-f_B0: 0.1905(42)  # FLAG 2013 Nf=2+1
-f_D0: 0.2092(33)  # FLAG 2013 Nf=2+1
 f_Ds: 0.2486(27)  # FLAG 2013 Nf=2+1
 f_rho0: 0.212(4)  # 1501.06569 table 1
 f_omega: 0.185(5)  # 1501.06569 table 1
-f_K*0: 0.203(6)  # 1501.06569 table 1
 f_phi: 0.231(5)  # 1501.06569 table 1
 
-# Parmaters needed for meson light-cone distribution amplitudes
+# Parameters needed for meson light-cone distribution amplitudes
 
-# all taken from 1212.2242 table 5
-f_perp_K*0: 0.163(8)
-f_perp_rho0: 0.160(11)
 f_perp_omega: 0.139(18)
 f_perp_phi: 0.191(6)
-a2_para_K*0: 0.16(9)
-a2_perp_K*0: 0.10(8)
-a1_para_K*0: 0.06(4)
-a1_perp_K*0: 0.04(3)
-a2_para_rho0: 0.17(7)
-a2_perp_rho0: 0.14(6)
 a2_para_omega: 0.15(12)
 a2_perp_omega: 0.14(12)
 a2_para_phi: 0.23(8)
