@@ -49,7 +49,7 @@ def _load(obj):
                         squared_error += sym_err**2
                     for asym_err in error_dict['asymmetric_errors']:
                         squared_error += asym_err[0]*asym_err[1]
-                        errors.append(sqrt(squared_error))
+                    errors.append(sqrt(squared_error))
             else: # otherwise, 'values' is a dict just containing name: constraint_string
                 for obs, value in m_data['values'].items():
                     observables.append(obs)
@@ -72,6 +72,17 @@ def _fix_correlation_matrix(corr, n_dim):
     of lists containing only the upper right of the symmetric correlation
     matrix, e.g. [[1, 0.1, 0.2], [1, 0.3], [1, 0.05]]. This function builds the
     full matrix."""
+    if n_dim == 2:
+        # if the number of dimensions is just 2, the correlation could just
+        # be given as a number
+        try:
+            float(corr)
+        except ValueError:
+            # if it's not a number, go on below
+            pass
+        else:
+            # if it's a number, return the 2x2 matrix
+            return  [[1, float(corr)], [float(corr), 1]]
     if not isinstance(corr, list):
         raise TypeError("Correlation matrix must be of type list")
     if len(corr) != n_dim:
