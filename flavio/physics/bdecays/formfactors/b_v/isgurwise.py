@@ -17,14 +17,6 @@ def improved_isgur_wise(q2, ff, par, B, V, scale):
     # eq. (3.6) of arXiv:1006.5013
     ff['T1'] = kappa*ff['V']
     ff['T2'] = kappa*ff['A1']
-    # converting A12 -> A2
-    A2 = (((mB + mV)*(-16*ff['A12']*mB*mV**2
-        + ff['A1']*(mB + mV)*(mB**2 - mV**2 - q2)))
-        / (mB**4 + (mV**2 - q2)**2 - 2*mB**2*(mV**2 + q2)))
-    T3 = kappa*A2*mB**2/q2
-    # converting T3->T23
-    ff['T3'] = T3
-    ff['A2'] = A2
-    ff['T23'] = (((mB - mV)*(mB + mV)* (mB**2 + 3*mV**2 - q2)*ff['T2']
-            - ((mB - mV)**2 - q2)* ((mB + mV)**2 - q2)*T3)/ (8.*mB*(mB - mV)*mV**2))
+    # derived in analogy to arXiv:1006.5013 using hep-ph/0404250
+    ff['T23'] = kappa*ff['A12'] * 2*mB**2/q2
     return ff
