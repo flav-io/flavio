@@ -1,7 +1,8 @@
-from flavio.physics.bdecays.formfactors.b_v import bsz, sse
+from flavio.physics.bdecays.formfactors.b_v import bsz, sse, cln
 from flavio.classes import AuxiliaryQuantity, Implementation
+from flavio.config import config
 
-processes = ['B->K*','B->rho','B->omega','Bs->phi','Bs->K*']
+processes = ['B->K*','B->rho','B->omega','Bs->phi','Bs->K*','B->D*']
 
 def ff_function(function, process, **kwargs):
     return lambda wc_obj, par_dict, q2: function(process, q2, par_dict, **kwargs)
@@ -25,3 +26,9 @@ for p in processes:
     i = Implementation(name=iname, quantity=quantity,
                    function=ff_function(sse.ff, p, implementation=iname, n=2))
     i.set_description("2-parameter simplified series expansion")
+
+    iname = p + ' CLN-IW'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ff_function(cln.ff, p, scale=config['renormalization scale']['bvll']))
+    i.set_description("CLN parametrization using improved Isgur-Wise relations"
+                      " for the tensor form factors")

@@ -1,6 +1,6 @@
 import unittest
 from math import sqrt,radians,asin
-from flavio.physics.bdecays.formfactors.b_v import btov, bsz_parameters, lattice_parameters
+from flavio.physics.bdecays.formfactors.b_v import btov, bsz_parameters, lattice_parameters, cln
 import numpy as np
 from flavio.classes import Implementation
 from flavio.parameters import default_parameters
@@ -8,6 +8,13 @@ import copy
 
 
 class TestBtoV(unittest.TestCase):
+
+    def test_cln(self):
+        c = copy.copy(default_parameters)
+        par = c.get_central_all()
+        cln.ff('B->D*', 1, par, 4.8)
+        Implementation.get_instance('B->D* CLN-IW').get_central(constraints_obj=c, wc_obj=None, q2=1)
+
     def test_bsz3(self):
         c = copy.copy(default_parameters)
         bsz_parameters.bsz_load_v1_lcsr(c)

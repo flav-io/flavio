@@ -273,3 +273,20 @@ DeltaGamma/Gamma_B0:
 DeltaGamma/Gamma_Bs:
   tex: $\Delta \Gamma_s/\Gamma_s$
   description: Relative decay width difference in the $B_s$ system
+
+# Parameters for B->D* form factors in the CLN parametrization
+B->D* CLN-IW rho2:
+  tex: $\rho^2$
+  description:
+B->D* CLN-IW R_0(1):
+  tex: $R_1(1)$
+  description:
+B->D* CLN-IW R_1(1):
+  tex: $R_1(1)$
+  description:
+B->D* CLN-IW R_2(1):
+  tex: $R_2(1)$
+  description:
+B->D* CLN-IW h_A1(1):
+  tex: $h_{A_1}(1)$
+  description:

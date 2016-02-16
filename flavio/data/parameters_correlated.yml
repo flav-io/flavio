@@ -66,3 +66,14 @@
     a2_perp_rho+: 0.14(6)
     a2_perp_rho0: 0.14(6)
   correlation: 0.99
+
+# B->D* form factors, HFAG 2014
+-
+  values:
+    B->D* CLN-IW rho2: 1.207 ± 0.026
+    B->D* CLN-IW R_1(1): 1.406 ± 0.033
+    B->D* CLN-IW R_2(1): 0.853 ± 0.020
+  correlation:
+    [[1, 0.568, -0.809],
+     [1, -0.758],
+     [1]]
