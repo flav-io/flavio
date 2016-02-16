@@ -51,7 +51,7 @@ def prefactor(q2, par, B, V, lep):
         Vij = ckm.get_ckm(par)[0,2] # V_{ub} for b->u transitions
     if qi_qj == 'bc':
         Vij = ckm.get_ckm(par)[1,2] # V_{cb} for b->c transitions
-    if q2 <= 4*ml**2:
+    if q2 <= ml**2:
         return 0
     return 4*GF/sqrt(2)*Vij
 
