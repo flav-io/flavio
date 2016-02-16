@@ -37,8 +37,11 @@ par = {
 
 class TestBMatrixElements(unittest.TestCase):
     def test_functions(self):
-        # for F_8i, just see if this raises an exception
-        matrixelements.F_87(0.1, 0.2, 0.3)
+        # check if the limit q2->0 is implemented correctly
+        self.assertAlmostEqual(matrixelements.F_87(0.1, 0.),
+                               matrixelements.F_87(0.1, 1e-8),
+                               places=6)
+        # for F_89, just see if this raises an exception
         matrixelements.F_89(0.4, 0.5)
         wc_obj = WilsonCoefficients()
         wc = wctot_dict(wc_obj, 'bsmumu', 4.2, par)

@@ -117,16 +117,17 @@ def F_89(Ls, sh):
     + (14212/135. - 32/3 * pi**2) * sh**2 + (193444/945.
     - 560/27. * pi**2) * sh**3 + 16/9. * Ls * (1 + sh + sh**2 + sh**3))
 
-def F_87(Lmu, Ls, sh):
+def F_87(Lmu, sh):
     """Function $F_8^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_8$, as given in eq. (40) of hep-ph/0312063.
 
     `sh` is $\hat s=q^2/m_b^2$,
-    `Ls` is $\ln(\hat s)$.
     """
+    if sh==0.:
+        return (-4*(33 + 24*Lmu + 6j*pi - 2*pi**2))/27.
     return (-32/9. * Lmu + 8/27. * pi**2 - 44/9. - 8/9. * 1j * pi
     + (4/3. * pi**2 - 40/3.) * sh + (32/9. * pi**2 - 316/9.) * sh**2
-    + (200/27. * pi**2 - 658/9.) * sh**3 - 8/9. * Ls * (sh + sh**2 + sh**3))
+    + (200/27. * pi**2 - 658/9.) * sh**3 - 8/9. * log(sh) * (sh + sh**2 + sh**3))
 
 
 # Functions for the two-loop virtual corrections to the matrix elements of
@@ -206,8 +207,7 @@ def delta_C7(par, wc, q2, scale, qiqj):
     sh = q2/mb**2
     z = mc**2/mb**2
     Lmu = log(scale/mb)
-    Ls = log(sh)
-    delta_t = wc['C8eff_'+qiqj] * F_87(Lmu, Ls, sh) + wc['C1_'+qiqj] * F_17(muh, z, sh) + wc['C2_'+qiqj] * F_27(muh, z, sh)
+    delta_t = wc['C8eff_'+qiqj] * F_87(Lmu, sh) + wc['C1_'+qiqj] * F_17(muh, z, sh) + wc['C2_'+qiqj] * F_27(muh, z, sh)
     return -alpha_s/(4*pi) * delta_t
 
 def delta_C9(par, wc, q2, scale, qiqj):
