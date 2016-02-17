@@ -25,49 +25,16 @@ def get_ff(q2, par, B, V):
     ff_name = meson_ff[(B,V)] + ' form factor'
     return AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
 
-def transversity_to_helicity(ta):
-    H={}
-    H['0' ,'V'] = -1j * (ta['0_R'] + ta['0_L'])
-    H['0' ,'A'] = -1j * (ta['0_R'] - ta['0_L'])
-    H['pl' ,'V'] = 1j * ((ta['para_R'] + ta['para_L']) + (ta['perp_R'] + ta['perp_L']))/sqrt(2)
-    H['pl' ,'A'] = 1j * ((ta['para_R'] - ta['para_L']) + (ta['perp_R'] - ta['perp_L']))/sqrt(2)
-    H['mi' ,'V'] = 1j * ((ta['para_R'] + ta['para_L']) - (ta['perp_R'] + ta['perp_L']))/sqrt(2)
-    H['mi' ,'A'] = 1j * ((ta['para_R'] - ta['para_L']) - (ta['perp_R'] - ta['perp_L']))/sqrt(2)
-    return H
 
-
-def transversity_amps_qcdf(q2, wc, par, B, V, lep):
-    """QCD factorization corrections to B->Vll transversity amplitudes."""
-    mB = par['m_'+B]
-    mV = par['m_'+V]
+def helicity_amps_ff(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
+    par = par_dict.copy()
+    if cp_conjugate:
+        par = conjugate_par(par)
     scale = config['renormalization scale']['bvll']
-    # using the b quark pole mass here!
-    mb = running.get_mb_pole(par)
-    N = prefactor(q2, par, B, V, lep)/4
-    T_perp = qcdf.T_perp(q2, par, wc, B, V, scale)
-    T_para = qcdf.T_para(q2, par, wc, B, V, scale)
-    ta = {}
-    ta['perp_L'] = N * sqrt(2)*2 * (mB**2-q2) * mb / q2 * T_perp
-    ta['perp_R'] =  ta['perp_L']
-    ta['para_L'] = -ta['perp_L']
-    ta['para_R'] =  ta['para_L']
-    ta['0_L'] = ( N * mb * (mB**2 - q2)**2 )/(mB**2 * mV * sqrt(q2)) * T_para
-    ta['0_R'] = ta['0_L']
-    ta['t'] = 0
-    ta['S'] = 0
-    return ta
-
-def helicity_amps_qcdf(q2, wc, par, B, V, lep):
-    ml = par['m_'+lep]
-    mB = par['m_'+B]
-    mV = par['m_'+V]
-    X = sqrt(lambda_K(mB**2,q2,mV**2))/2.
-    ta = transversity_amps_qcdf(q2, wc, par, B, V, lep)
-    h = transversity_to_helicity(ta)
-    return h
-
-def helicity_amps_ff(q2, wc, par, B, V, lep):
-    scale = config['renormalization scale']['bvll']
+    label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
+    wc = wctot_dict(wc_obj, label, scale, par)
+    if cp_conjugate:
+        wc = conjugate_wc(wc)
     wc_eff = get_wceff(q2, wc, par, B, V, lep, scale)
     ml = par['m_'+lep]
     mB = par['m_'+B]
@@ -78,13 +45,25 @@ def helicity_amps_ff(q2, wc, par, B, V, lep):
     h = angular.helicity_amps_v(q2, mB, mV, mb, 0, ml, ml, ff, wc_eff, N)
     return h
 
-def helicity_amps(*args, **kwargs):
+# get spectator scattering contribution
+def get_ss(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
+    # this only needs to be done for low q2 - which doesn't exist for taus!
+    if lep == 'tau' or q2 >= 9:
+        return {('0' ,'V'): 0, ('0' ,'A'): 0,
+                ('pl' ,'V'): 0, ('pl' ,'A'): 0,
+                ('mi' ,'V'): 0, ('mi' ,'A'): 0, }
+    ss_name = B+'->'+V+lep+lep + ' spectator scattering'
+    return AuxiliaryQuantity.get_instance(ss_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+
+
+def helicity_amps(q2, wc_obj, par, B, V, lep):
     return add_dict((
-        helicity_amps_ff(*args, **kwargs),
-        helicity_amps_qcdf(*args, **kwargs),
+        helicity_amps_ff(q2, wc_obj, par, B, V, lep, cp_conjugate=False),
+        get_ss(q2, wc_obj, par, B, V, lep, cp_conjugate=False)
         ))
 
-def helicity_amps_bar(q2, wc, par, B, V, lep):
-    par_c = conjugate_par(par)
-    wc_c = conjugate_wc(wc)
-    return helicity_amps(q2, wc_c, par_c, B, V, lep)
+def helicity_amps_bar(q2, wc_obj, par, B, V, lep):
+    return add_dict((
+        helicity_amps_ff(q2, wc_obj, par, B, V, lep, cp_conjugate=True),
+        get_ss(q2, wc_obj, par, B, V, lep, cp_conjugate=True)
+        ))

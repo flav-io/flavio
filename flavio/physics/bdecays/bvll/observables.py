@@ -115,15 +115,13 @@ def FLhat_num(J, J_bar):
 
 def bvll_obs(function, q2, wc_obj, par, B, V, lep):
     scale = config['renormalization scale']['bvll']
-    label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
-    wc = wctot_dict(wc_obj, label, scale, par)
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mV = par['m_'+V]
     mb = running.get_mb(par, scale)
     ff = get_ff(q2, par, B, V)
-    h = helicity_amps(q2, wc, par, B, V, lep)
-    h_bar = helicity_amps_bar(q2, wc, par, B, V, lep)
+    h = helicity_amps(q2, wc_obj, par, B, V, lep)
+    h_bar = helicity_amps_bar(q2, wc_obj, par, B, V, lep)
     J = angular.angularcoeffs_general_v(h, q2, mB, mV, mb, 0, ml, ml)
     J_bar = angular.angularcoeffs_general_v(h_bar, q2, mB, mV, mb, 0, ml, ml)
     return function(J, J_bar)

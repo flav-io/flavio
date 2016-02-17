@@ -25,7 +25,7 @@ class TestBVll(unittest.TestCase):
     def test_bksll(self):
         # just some trivial tests to see if calling the functions raises an error
         q2 = 3.5
-        h = helicity_amps(q2, wc, par, 'B0', 'K*0', 'mu')
+        h = helicity_amps(q2, wc_obj, par, 'B0', 'K*0', 'mu')
         scale = config['renormalization scale']['bvll']
         ml = par['m_mu']
         mB = par['m_B0']

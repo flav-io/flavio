@@ -9,6 +9,9 @@ from flavio.physics.functions import li2, ei
 from flavio.physics.running import running
 from flavio.physics.bdecays.common import meson_spectator, quark_charge, meson_quark
 from flavio.physics.bdecays import matrixelements
+from flavio.config import config
+from flavio.physics.bdecays.common import lambda_K, beta_l
+import flavio
 
 def complex_quad(func, a, b, **kwargs):
     def real_func(x):
@@ -258,3 +261,34 @@ def T_perp(q2, par, wc, B, V, scale):
         points = None
     T_tot = complex_quad( lambda u: T_plus(u) + T_minus(u), 0, 1, points=points, epsrel=0.01, epsabs=0 )[0]
     return T_tot
+
+
+def transversity_amps_qcdf(q2, wc, par, B, V, lep):
+    """QCD factorization corrections to B->Vll transversity amplitudes."""
+    mB = par['m_'+B]
+    mV = par['m_'+V]
+    scale = config['renormalization scale']['bvll']
+    # using the b quark pole mass here!
+    mb = running.get_mb_pole(par)
+    N = flavio.physics.bdecays.bvll.amplitudes.prefactor(q2, par, B, V, lep)/4
+    T_perp_ = T_perp(q2, par, wc, B, V, scale)
+    T_para_ = T_para(q2, par, wc, B, V, scale)
+    ta = {}
+    ta['perp_L'] = N * sqrt(2)*2 * (mB**2-q2) * mb / q2 * T_perp_
+    ta['perp_R'] =  ta['perp_L']
+    ta['para_L'] = -ta['perp_L']
+    ta['para_R'] =  ta['para_L']
+    ta['0_L'] = ( N * mb * (mB**2 - q2)**2 )/(mB**2 * mV * sqrt(q2)) * T_para_
+    ta['0_R'] = ta['0_L']
+    ta['t'] = 0
+    ta['S'] = 0
+    return ta
+
+def helicity_amps_qcdf(q2, wc, par, B, V, lep):
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
+    X = sqrt(lambda_K(mB**2,q2,mV**2))/2.
+    ta = transversity_amps_qcdf(q2, wc, par, B, V, lep)
+    h = flavio.physics.bdecays.angular.transversity_to_helicity(ta)
+    return h

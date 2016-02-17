@@ -5,6 +5,18 @@ r"""Generic $B\to V \ell_1 \bar \ell_2$ helicity amplitudes and angular
 distribution. Can be used for $B\to V\ell^+\ell^-$, $B\to V\ell\nu$, and
 lepton flavour violating decays."""
 
+
+
+def transversity_to_helicity(ta):
+    H={}
+    H['0' ,'V'] = -1j * (ta['0_R'] + ta['0_L'])
+    H['0' ,'A'] = -1j * (ta['0_R'] - ta['0_L'])
+    H['pl' ,'V'] = 1j * ((ta['para_R'] + ta['para_L']) + (ta['perp_R'] + ta['perp_L']))/sqrt(2)
+    H['pl' ,'A'] = 1j * ((ta['para_R'] - ta['para_L']) + (ta['perp_R'] - ta['perp_L']))/sqrt(2)
+    H['mi' ,'V'] = 1j * ((ta['para_R'] + ta['para_L']) - (ta['perp_R'] + ta['perp_L']))/sqrt(2)
+    H['mi' ,'A'] = 1j * ((ta['para_R'] - ta['para_L']) - (ta['perp_R'] - ta['perp_L']))/sqrt(2)
+    return H
+
 def helicity_amps_v(q2, mB, mV, mqh, mql, ml1, ml2, ff, wc, prefactor):
     laB = lambda_K(mB**2, mV**2, q2)
     H = {}

@@ -38,3 +38,9 @@ implementation:
   B->K form factor: B->K BCL3
   B->D form factor: B->D BCL3-IW
   B->pi form factor: B->pi BCL4
+
+  # B->Vll non-factorizable spectator scattering corrections
+  B0->K*0ee spectator scattering: B0->K*0ee QCDF
+  B0->K*0mumu spectator scattering: B0->K*0mumu QCDF
+  B+->K*+ee spectator scattering: B0->K*0ee QCDF
+  B+->K*+mumu spectator scattering: B0->K*0mumu QCDF
