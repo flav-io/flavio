@@ -45,8 +45,8 @@ def T_para_minus_WA(q2, par, wc, B, V, scale):
     mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
     if q == 'u':
         # for an up-type spectator quark, additional contribution from current-current operators
-        xi_t = ckm.xi('t', meson_quark[(B,V)])
-        xi_u = ckm.xi('u', meson_quark[(B,V)])
+        xi_t = ckm.xi('t', qiqj)(par)
+        xi_u = ckm.xi('u', qiqj)(par)
         T_cc = eq * 4*mB/mb * 3*wc['C2_'+qiqj] * xi_u/xi_t
     # QCD penguin contribution to LO WA
     T_p = -eq * 4*mB/mb * (wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 12*wc['C5_'+qiqj] + 16*wc['C6_'+qiqj]))
