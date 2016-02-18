@@ -32,6 +32,16 @@ a2_perp_omega: 0.14(12)
 a2_para_phi: 0.23(8)
 a2_perp_phi: 0.14(7)
 
+# odd Gegenbauers vanish for rho, omega, phi
+a1_para_omega: 0
+a1_perp_omega: 0
+a1_para_phi: 0
+a1_perp_phi: 0
+a1_para_rho0: 0
+a1_perp_rho0: 0
+a1_para_rho+: 0
+a1_perp_rho+: 0
+
 
 # Meson bag parameters
 

@@ -111,6 +111,12 @@ a1_para_K*0:
 a1_perp_K*0:
   tex:
   description:
+a1_para_rho0:
+  tex:
+  description:
+a1_perp_rho0:
+  tex:
+  description:
 a2_para_rho0:
   tex:
   description:
@@ -129,16 +135,34 @@ a1_para_K*+:
 a1_perp_K*+:
   tex:
   description:
+a1_para_rho+:
+  tex:
+  description:
+a1_perp_rho+:
+  tex:
+  description:
 a2_para_rho+:
   tex:
   description:
 a2_perp_rho+:
   tex:
   description:
+a1_para_omega:
+  tex:
+  description:
+a1_perp_omega:
+  tex:
+  description:
 a2_para_omega:
   tex:
   description:
 a2_perp_omega:
+  tex:
+  description:
+a1_para_phi:
+  tex:
+  description:
+a1_perp_phi:
   tex:
   description:
 a2_para_phi:
