@@ -146,6 +146,8 @@ def acot(x):
 def SeidelA(q2, mb, mu):
     """Function $A(s\equiv q^2)$ defined in eq. (29) of hep-ph/0403185v2.
     """
+    if q2==0:
+        return 1/729. * (833 + 120j*pi - 312 * log(mb**2/mu**2))
     sh = q2/mb**2
     z = (4 * mb**2)/q2
     return (-(104)/(243) * log((mb**2)/(mu**2)) + (4 * sh)/(27 * (1 - sh)) *

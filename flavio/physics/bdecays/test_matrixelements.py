@@ -41,6 +41,9 @@ class TestBMatrixElements(unittest.TestCase):
         self.assertAlmostEqual(matrixelements.F_87(0.1, 0.),
                                matrixelements.F_87(0.1, 1e-8),
                                places=6)
+        self.assertAlmostEqual(matrixelements.SeidelA(0, 4, 5),
+                               matrixelements.SeidelA(1e-8, 4, 5),
+                               places=6)
         # for F_89, just see if this raises an exception
         matrixelements.F_89(0.4, 0.5)
         wc_obj = WilsonCoefficients()
