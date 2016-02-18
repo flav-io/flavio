@@ -40,6 +40,11 @@ def get_angularcoeff(q2, wc, par, B, P, lep):
     return J
 
 def bpll_obs(function, q2, wc_obj, par, B, P, lep):
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    mP = par['m_'+P]
+    if q2 < 4*ml**2 or q2 > (mB-mP)**2:
+        return 0
     scale = config['renormalization scale']['bpll']
     wc = wctot_dict(wc_obj, meson_quark[(B,P)]+lep+lep, scale, par)
     wc_c = conjugate_wc(wc)
@@ -76,16 +81,28 @@ def bpll_dbrdq2(q2, wc_obj, par, B, P, lep):
 def denominator(J, J_bar):
     return 2*dGdq2_cpaverage(J, J_bar)
 
-def bpll_obs_int(function, q2_min, q2_max, wc_obj, par, B, P, lep):
+def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, lep):
     def obs(q2):
         return bpll_obs(function, q2, wc_obj, par, B, P, lep)
-    return quad(obs, q2_min, q2_max, epsrel=0.01, epsabs=0)[0]
+    return quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
 
 def bpll_obs_int_ratio_func(func_num, func_den, B, P, lep):
-    return lambda wc_obj, par, q2_min, q2_max: bpll_obs_int(func_num, q2_min, q2_max, wc_obj, par, B, P, lep)/bpll_obs_int(func_den, q2_min, q2_max, wc_obj, par, B, P, lep)
+    def fct(wc_obj, par, q2min, q2max):
+        num = bpll_obs_int(func_num, q2min, q2max, wc_obj, par, B, P, lep)
+        if num == 0:
+            return 0
+        den = bpll_obs_int(func_den, q2min, q2max, wc_obj, par, B, P, lep)
+        return num/den
+    return fct
 
 def bpll_obs_ratio_func(func_num, func_den, B, P, lep):
-    return lambda wc_obj, par, q2: bpll_obs(func_num, q2, wc_obj, par, B, P, lep)/bpll_obs(func_den, q2, wc_obj, par, B, P, lep)
+    def fct(wc_obj, par, q2):
+        num = bpll_obs(func_num, q2, wc_obj, par, B, P, lep)
+        if num == 0:
+            return 0
+        den = bpll_obs(func_den, q2, wc_obj, par, B, P, lep)
+        return num/den
+    return fct
 
 # Observable and Prediction instances
 

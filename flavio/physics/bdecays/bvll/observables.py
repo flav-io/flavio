@@ -114,10 +114,12 @@ def FLhat_num(J, J_bar):
 
 
 def bvll_obs(function, q2, wc_obj, par, B, V, lep):
-    scale = config['renormalization scale']['bvll']
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mV = par['m_'+V]
+    if q2 < 4*ml**2 or q2 > (mB-mV)**2:
+        return 0
+    scale = config['renormalization scale']['bvll']
     mb = running.get_mb(par, scale)
     ff = get_ff(q2, par, B, V)
     h = helicity_amps(q2, wc_obj, par, B, V, lep)
@@ -130,18 +132,30 @@ def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):
     tauB = par['tau_'+B]
     return tauB * bvll_obs(dGdq2_ave, q2, wc_obj, par, B, V, lep)
 
-def bvll_obs_int(function, q2_min, q2_max, wc_obj, par, B, V, lep):
+def bvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep):
     def obs(q2):
         return bvll_obs(function, q2, wc_obj, par, B, V, lep)
-    return quad(obs, q2_min, q2_max, epsrel=0.01, epsabs=0)[0]
+    return quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
 
 
 def bvll_obs_int_ratio_func(func_num, func_den, B, V, lep):
-    return lambda wc_obj, par, q2_min, q2_max: bvll_obs_int(func_num, q2_min, q2_max, wc_obj, par, B, V, lep)/bvll_obs_int(func_den, q2_min, q2_max, wc_obj, par, B, V, lep)
+    def fct(wc_obj, par, q2min, q2max):
+        num = bvll_obs_int(func_num, q2min, q2max, wc_obj, par, B, V, lep)
+        if num == 0:
+            return 0
+        denom = bvll_obs_int(func_den, q2min, q2max, wc_obj, par, B, V, lep)
+        return num/denom
+    return fct
 
 
 def bvll_obs_ratio_func(func_num, func_den, B, V, lep):
-    return lambda wc_obj, par, q2: bvll_obs(func_num, q2, wc_obj, par, B, V, lep)/bvll_obs(func_den, q2, wc_obj, par, B, V, lep)
+    def fct(wc_obj, par, q2):
+        num = bvll_obs(func_num, q2, wc_obj, par, B, V, lep)
+        if num == 0:
+            return 0
+        denom = bvll_obs(func_den, q2, wc_obj, par, B, V, lep)
+        return num/denom
+    return fct
 
 
 # Observable and Prediction instances

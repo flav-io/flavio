@@ -77,6 +77,11 @@ def dGdq2(J):
     return 3/4. * (2 * J['1s'] + J['1c']) - 1/4. * (2 * J['2s'] + J['2c'])
 
 def dBRdq2(q2, wc_obj, par, B, V, lep):
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
+    if q2 < ml**2 or q2 > (mB-mV)**2:
+        return 0
     tauB = par['tau_'+B]
     J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
     return tauB * dGdq2(J)

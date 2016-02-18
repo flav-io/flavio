@@ -29,23 +29,25 @@ def helicity_amps(q2, wc, par, B, V, l1, l2):
     return h
 
 def bvlilj_obs(function, q2, wc_obj, par, B, V, l1, l2):
-    scale = flavio.config['renormalization scale']['bvll']
-    label = flavio.physics.bdecays.common.meson_quark[(B,V)] + l1 + l2 # e.g. bsemu, bdtaue
-    wc = wc_obj.get_wc(label, scale, par)
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
     mB = par['m_'+B]
     mV = par['m_'+V]
+    if q2 < (ml1+ml2)**2 or q2 > (mB-mV)**2:
+        return 0
+    scale = flavio.config['renormalization scale']['bvll']
+    label = flavio.physics.bdecays.common.meson_quark[(B,V)] + l1 + l2 # e.g. bsemu, bdtaue
+    wc = wc_obj.get_wc(label, scale, par)
     mb = flavio.physics.running.running.get_mb(par, scale)
     ff = flavio.physics.bdecays.bvll.amplitudes.get_ff(q2, par, B, V)
     h = helicity_amps(q2, wc, par, B, V, l1, l2)
     J = flavio.physics.bdecays.angular.angularcoeffs_general_v(h, q2, mB, mV, mb, 0, ml1, ml2)
     return function(J)
 
-def bvlilj_obs_int(function, q2_min, q2_max, wc_obj, par, B, V, l1, l2):
+def bvlilj_obs_int(function, q2min, q2max, wc_obj, par, B, V, l1, l2):
     def obs(q2):
         return bvlilj_obs(function, q2, wc_obj, par, B, V, l1, l2)
-    return scipy.integrate.quad(obs, q2_min, q2_max, epsrel=0.01, epsabs=0)[0]
+    return scipy.integrate.quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
 
 def BR_tot(wc_obj, par, B, V, l1, l2):
     mB = par['m_'+B]
