@@ -337,6 +337,44 @@ Bs->phi deltaC9 c_- Im:
   description:
 
 
+# Parameters for subleading hadronic effects in B->Pll
+B0->K0 deltaC9 a Re:
+  tex: $\text{Re}\,a^{\Delta_9}$
+  description:
+B0->K0 deltaC9 b Re:
+  tex: $\text{Re}\,b^{\Delta_9}$
+  description:
+B0->K0 deltaC9 c Re:
+  tex: $\text{Re}\,c^{\Delta_9}$
+  description:
+B0->K0 deltaC9 a Im:
+  tex: $\text{Im}\,a^{\Delta_9}$
+  description:
+B0->K0 deltaC9 b Im:
+  tex: $\text{Im}\,b^{\Delta_9}$
+  description:
+B0->K0 deltaC9 c Im:
+  tex: $\text{Im}\,c^{\Delta_9}$
+  description:
+B+->K+ deltaC9 a Re:
+  tex: $\text{Im}\,a^{\Delta_9}$
+  description:
+B+->K+ deltaC9 b Re:
+  tex: $\text{Im}\,b^{\Delta_9}$
+  description:
+B+->K+ deltaC9 c Re:
+  tex: $\text{Im}\,c^{\Delta_9}$
+  description:
+B+->K+ deltaC9 a Im:
+  tex: $\text{Im}\,a^{\Delta_9}$
+  description:
+B+->K+ deltaC9 b Im:
+  tex: $\text{Im}\,b^{\Delta_9}$
+  description:
+B+->K+ deltaC9 c Im:
+  tex: $\text{Im}\,c^{\Delta_9}$
+  description:
+
 
 # Meson bag parameters
 

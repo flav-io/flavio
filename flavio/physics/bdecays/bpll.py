@@ -4,7 +4,7 @@ from flavio.physics import ckm
 from flavio.classes import AuxiliaryQuantity
 from flavio.config import config
 from flavio.physics.running import running
-from flavio.physics.common import conjugate_par, conjugate_wc
+from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
 from flavio.physics.bdecays import matrixelements, angular
 from flavio.physics.bdecays.wilsoncoefficients import get_wceff, wctot_dict
 from scipy.integrate import quad
@@ -23,21 +23,53 @@ def prefactor(q2, par, B, P, lep):
         return 0
     return 4*GF/sqrt(2)*xi_t*alphaem/(4*pi)
 
+# form factors
 def get_ff(q2, par, B, P):
     ff_name = meson_ff[(B,P)] + ' form factor'
     return AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
 
-def get_angularcoeff(q2, wc, par, B, P, lep):
+# get subleading hadronic contribution
+def get_subleading(q2, wc_obj, par_dict, B, P, lep, cp_conjugate):
+    if q2 <= 9:
+        sub_name = B+'->'+P+lep+lep + ' subleading effects at low q2'
+        return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+    elif q2 > 14:
+        sub_name = B+'->'+P+lep+lep + ' subleading effects at high q2'
+        return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+    else:
+        return {}
+
+
+def helicity_amps_ff(q2, wc_obj, par_dict, B, P, lep, cp_conjugate):
+    par = par_dict.copy()
+    if cp_conjugate:
+        par = conjugate_par(par)
+    scale = config['renormalization scale']['bpll']
+    label = meson_quark[(B,P)] + lep + lep # e.g. bsmumu, bdtautau
+    wc = wctot_dict(wc_obj, label, scale, par)
+    if cp_conjugate:
+        wc = conjugate_wc(wc)
+    wc_eff = get_wceff(q2, wc, par, B, P, lep, scale)
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mP = par['m_'+P]
-    scale = config['renormalization scale']['bpll']
     mb = running.get_mb(par, scale)
     N = prefactor(q2, par, B, P, lep)
     ff = get_ff(q2, par, B, P)
-    h = angular.helicity_amps_p(q2, mB, mP, mb, 0, ml, ml, ff, wc, N)
-    J = angular.angularcoeffs_general_p(h, q2, mB, mP, mb, 0, ml, ml)
-    return J
+    h = angular.helicity_amps_p(q2, mB, mP, mb, 0, ml, ml, ff, wc_eff, N)
+    return h
+
+def helicity_amps(q2, wc_obj, par, B, P, lep):
+    return add_dict((
+        helicity_amps_ff(q2, wc_obj, par, B, P, lep, cp_conjugate=False),
+        get_subleading(q2, wc_obj, par, B, P, lep, cp_conjugate=False)
+        ))
+
+def helicity_amps_bar(q2, wc_obj, par, B, P, lep):
+    return add_dict((
+        helicity_amps_ff(q2, wc_obj, par, B, P, lep, cp_conjugate=False),
+        get_subleading(q2, wc_obj, par, B, P, lep, cp_conjugate=False)
+        ))
 
 def bpll_obs(function, q2, wc_obj, par, B, P, lep):
     ml = par['m_'+lep]
@@ -46,13 +78,11 @@ def bpll_obs(function, q2, wc_obj, par, B, P, lep):
     if q2 < 4*ml**2 or q2 > (mB-mP)**2:
         return 0
     scale = config['renormalization scale']['bpll']
-    wc = wctot_dict(wc_obj, meson_quark[(B,P)]+lep+lep, scale, par)
-    wc_c = conjugate_wc(wc)
-    par_c = conjugate_par(par)
-    wc_eff = get_wceff(q2, wc, par, B, P, lep, scale)
-    wc_eff_c = get_wceff(q2, wc_c, par_c, B, P, lep, scale)
-    J     = get_angularcoeff(q2, wc_eff,   par,   B, P, lep)
-    J_bar = get_angularcoeff(q2, wc_eff_c, par_c, B, P, lep)
+    mb = running.get_mb(par, scale)
+    h     = helicity_amps(q2, wc_obj, par, B, P, lep)
+    h_bar = helicity_amps_bar(q2, wc_obj, par, B, P, lep)
+    J     = angular.angularcoeffs_general_p(h, q2, mB, mP, mb, 0, ml, ml)
+    J_bar = angular.angularcoeffs_general_p(h_bar, q2, mB, mP, mb, 0, ml, ml)
     return function(J, J_bar)
 
 def dGdq2(J):
@@ -112,8 +142,8 @@ _observables = {
 'FH': {'func_num': FH_cpaverage_num, 'tex': r'F_H', 'desc': 'flat term'},
 }
 _hadr = {
-'B0->K': {'tex': r"B^0\to K^0", 'B': 'B0', 'V': 'K0', },
-'B+->K': {'tex': r"B^+\to K^+", 'B': 'B+', 'V': 'K+', },
+'B0->K': {'tex': r"B^0\to K^0", 'B': 'B0', 'P': 'K0', },
+'B+->K': {'tex': r"B^+\to K^+", 'B': 'B+', 'P': 'K+', },
 }
 
 for l in ['e', 'mu', 'tau']:
@@ -123,10 +153,10 @@ for l in ['e', 'mu', 'tau']:
             _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
             _obs.set_description('Binned ' + _observables[obs]['desc'] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
             _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
-            Prediction(_obs_name, bpll_obs_int_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['V'], l))
+            Prediction(_obs_name, bpll_obs_int_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['P'], l))
 
             _obs_name = obs + "("+M+l+l+")"
             _obs = Observable(name=_obs_name, arguments=['q2'])
             _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
             _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
-            Prediction(_obs_name, bpll_obs_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['V'], l))
+            Prediction(_obs_name, bpll_obs_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['P'], l))
