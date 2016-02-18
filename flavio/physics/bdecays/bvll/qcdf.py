@@ -40,17 +40,28 @@ def get_input(par, B, V, scale):
     eps_u = xi_u/xi_t
     return mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj
 
-# see eqs. (18), (19), (50), (79) of hep-ph/0106067v2
+# see eqs. (18), (50), (79) of hep-ph/0106067v2
+# and eqs. (47), (48) of hep-ph/0412400
 def T_para_minus_WA(q2, par, wc, B, V, scale):
     mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
+    T_t = -eq * 4*mB/mb * (wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 12*wc['C5_'+qiqj] + 16*wc['C6_'+qiqj]))
+    # the (u) contribution depends on the flavour of the spectator quark:
     if q == 'u':
-        # for an up-type spectator quark, additional contribution from current-current operators
-        xi_t = ckm.xi('t', qiqj)(par)
-        xi_u = ckm.xi('u', qiqj)(par)
-        T_cc = eq * 4*mB/mb * 3*wc['C2_'+qiqj] * xi_u/xi_t
-    # QCD penguin contribution to LO WA
-    T_p = -eq * 4*mB/mb * (wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 12*wc['C5_'+qiqj] + 16*wc['C6_'+qiqj]))
-    return T_p
+        T_u = +eq * 4*mB/mb * 3*(wc['C2_'+qiqj])
+    elif q == 'd' or q == 's':
+        if V == 'omega':
+            T_u = +eq * 4*mB/mb * (4/3. * wc['C1_'+qiqj] + wc['C2_'+qiqj])
+            # there is also an additional contribution to T_t
+            T_t = T_t + 6 * 2 * (wc['C3_'+qiqj] + 10*wc['C5_'+qiqj])
+        elif V == 'rho0':
+            T_u = -eq * 4*mB/mb * (4/3. * wc['C1_'+qiqj] + wc['C2_'+qiqj])
+        elif V == 'K*0':
+            T_u = 0
+        elif V == 'phi':
+            T_u = 0
+            # there is also an additional contribution to T_t
+            T_t = T_t + 6 * (wc['C3_'+qiqj] + 10*wc['C5_'+qiqj])
+    return T_t + eps_u * T_u
 
 
 # B->V, NLO spectator scattering
