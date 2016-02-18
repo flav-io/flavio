@@ -7,6 +7,7 @@ import scipy.interpolate
 from flavio.physics.running import running
 from flavio.physics import ckm
 from flavio.physics.functions import li2, zeta
+from functools import lru_cache
 
 # functions for C9eff
 
@@ -65,6 +66,7 @@ _F_19 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_19)
 _F_27 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_27)
 _F_29 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_29)
 
+@lru_cache(maxsize=32)
 def F_17(muh, z, sh):
     """Function $F_1^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_1$, as defined in arXiv:0810.4077.
@@ -75,6 +77,7 @@ def F_17(muh, z, sh):
     """
     return _F_17([muh, z, sh])[0]
 
+@lru_cache(maxsize=32)
 def F_19(muh, z, sh):
     """Function $F_1^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_1$, as defined in arXiv:0810.4077.
@@ -85,6 +88,7 @@ def F_19(muh, z, sh):
     """
     return _F_19([muh, z, sh])[0]
 
+@lru_cache(maxsize=32)
 def F_27(muh, z, sh):
     """Function $F_2^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_2$, as defined in arXiv:0810.4077.
@@ -95,6 +99,7 @@ def F_27(muh, z, sh):
     """
     return _F_27([muh, z, sh])[0]
 
+@lru_cache(maxsize=32)
 def F_29(muh, z, sh):
     """Function $F_2^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_2$, as defined in arXiv:0810.4077.
@@ -137,6 +142,7 @@ def F_87(Lmu, sh):
 def acot(x):
     return pi/2.-atan(x)
 
+@lru_cache(maxsize=32)
 def SeidelA(q2, mb, mu):
     """Function $A(s\equiv q^2)$ defined in eq. (29) of hep-ph/0403185v2.
     """
@@ -151,6 +157,7 @@ def SeidelA(q2, mb, mu):
     (1 - sh)**4) * (36 * acot( sqrt(z - 1))**2 + pi**2 * (-4 + 9 * sh - 9 *
     sh**2 + 3 * sh**3)))
 
+@lru_cache(maxsize=32)
 def SeidelB(q2, mb, mu):
     """Function $A(s\equiv q^2)$ defined in eq. (30) of hep-ph/0403185v2.
     """
@@ -201,25 +208,37 @@ def delta_C7(par, wc, q2, scale, qiqj):
     alpha_s = running.get_alpha(par, scale)['alpha_s']
     mb = running.get_mb_pole(par)
     mc = running.get_mc_pole(par)
-    xi_t = ckm.xi('t', qiqj)
-    xi_u = ckm.xi('u', qiqj)
+    xi_t = ckm.xi('t', qiqj)(par)
+    xi_u = ckm.xi('u', qiqj)(par)
     muh = scale/mb
     sh = q2/mb**2
     z = mc**2/mb**2
     Lmu = log(scale/mb)
-    delta_t = wc['C8eff_'+qiqj] * F_87(Lmu, sh) + wc['C1_'+qiqj] * F_17(muh, z, sh) + wc['C2_'+qiqj] * F_27(muh, z, sh)
-    return -alpha_s/(4*pi) * delta_t
+    # computing this once to save time
+    delta_tmp = wc['C1_'+qiqj] * F_17(muh, z, sh) + wc['C2_'+qiqj] * F_27(muh, z, sh)
+    delta_t = wc['C8eff_'+qiqj] * F_87(Lmu, sh) + delta_tmp
+    delta_u = delta_tmp + wc['C1_'+qiqj] * Fu_17(q2, mb, scale) + wc['C2_'+qiqj] * Fu_27(q2, mb, scale)
+    # note the minus sign between delta_t and delta_u. This is because of a sign
+    # switch in the definition of the "Fu" functions between hep-ph/0403185
+    # (used here) and hep-ph/0412400, see footnote 5 of 0811.1214.
+    return -alpha_s/(4*pi) * (delta_t - xi_u/xi_t * delta_u)
 
 def delta_C9(par, wc, q2, scale, qiqj):
     alpha_s = running.get_alpha(par, scale)['alpha_s']
     mb = running.get_mb_pole(par)
     mc = running.get_mc_pole(par)
-    xi_t = ckm.xi('t', qiqj)
-    xi_u = ckm.xi('u', qiqj)
+    xi_t = ckm.xi('t', qiqj)(par)
+    xi_u = ckm.xi('u', qiqj)(par)
     muh = scale/mb
     sh = q2/mb**2
     z = mc**2/mb**2
     Lmu = log(scale/mb)
     Ls = log(sh)
-    delta_t = wc['C8eff_'+qiqj] * F_89(Ls, sh) + wc['C1_'+qiqj] * F_19(muh, z, sh) + wc['C2_'+qiqj] * F_29(muh, z, sh)
-    return -alpha_s/(4*pi) * delta_t
+    # computing this once to save time
+    delta_tmp = wc['C1_'+qiqj] * F_19(muh, z, sh) + wc['C2_'+qiqj] * F_29(muh, z, sh)
+    delta_t = wc['C8eff_'+qiqj] * F_89(Ls, sh) + delta_tmp
+    delta_u = delta_tmp + wc['C1_'+qiqj] * Fu_19(q2, mb, scale) + wc['C2_'+qiqj] * Fu_29(q2, mb, scale)
+    # note the minus sign between delta_t and delta_u. This is because of a sign
+    # switch in the definition of the "Fu" functions between hep-ph/0403185
+    # (used here) and hep-ph/0412400, see footnote 5 of 0811.1214.
+    return -alpha_s/(4*pi) * (delta_t - xi_u/xi_t * delta_u)
