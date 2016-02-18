@@ -141,7 +141,7 @@ def bvll_obs_int_ratio_func(func_num, func_den, B, V, lep):
 
 
 def bvll_obs_ratio_func(func_num, func_den, B, V, lep):
-    return lambda wc_obj, par, q2: bvll_obs(func_num, q2, wc_obj, par, B, V, lep)/bvll_obs_int(func_den, q2, wc_obj, par, B, V, lep)
+    return lambda wc_obj, par, q2: bvll_obs(func_num, q2, wc_obj, par, B, V, lep)/bvll_obs(func_den, q2, wc_obj, par, B, V, lep)
 
 
 # Observable and Prediction instances
