@@ -52,8 +52,10 @@ implementation:
   B+->K*+mumu subleading effects at low q2: B0->K*0mumu deltaC7 polynomial
   B0->K*0ee subleading effects at high q2: B0->K*0ee deltaC9 shift
   B0->K*0mumu subleading effects at high q2: B0->K*0mumu deltaC9 shift
+  B0->K*0tautau subleading effects at high q2: B0->K*0tautau deltaC9 shift
   B+->K*+ee subleading effects at high q2: B0->K*0ee deltaC9 shift
   B+->K*+mumu subleading effects at high q2: B0->K*0mumu deltaC9 shift
+  B+->K*+tautau subleading effects at high q2: B0->K*0tautau deltaC9 shift
 
   # B->Pll subleading hadronic effects
   B0->K0ee subleading effects at low q2: B0->K0ee deltaC9 polynomial
@@ -62,5 +64,7 @@ implementation:
   B+->K+mumu subleading effects at low q2: B0->K0mumu deltaC9 polynomial
   B0->K0ee subleading effects at high q2: B0->K0ee deltaC9 shift
   B0->K0mumu subleading effects at high q2: B0->K0mumu deltaC9 shift
+  B0->K0tautau subleading effects at high q2: B0->K0tautau deltaC9 shift
   B+->K+ee subleading effects at high q2: B0->K0ee deltaC9 shift
   B+->K+mumu subleading effects at high q2: B0->K0mumu deltaC9 shift
+  B+->K+tautau subleading effects at high q2: B0->K0tautau deltaC9 shift

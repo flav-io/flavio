@@ -83,8 +83,8 @@ def helicity_amps_deltaC9_polynomial(q2, par, B, V, lep):
 # a constant shift, e.g. for high q^2
 def helicity_amps_deltaC9_constant(q2, par, B, V, lep):
     deltaC9_0   = par[B+'->'+V+' deltaC9 c_0 Re'] + 1j*par[B+'->'+V+' deltaC9 c_0 Im']
-    deltaC9_pl   = par[B+'->'+V+' deltaC9 c_pl Re'] + 1j*par[B+'->'+V+' deltaC9 c_pl Im']
-    deltaC9_mi   = par[B+'->'+V+' deltaC9 c_mi Re'] + 1j*par[B+'->'+V+' deltaC9 c_mi Im']
+    deltaC9_pl   = par[B+'->'+V+' deltaC9 c_+ Re'] + 1j*par[B+'->'+V+' deltaC9 c_+ Im']
+    deltaC9_mi   = par[B+'->'+V+' deltaC9 c_- Re'] + 1j*par[B+'->'+V+' deltaC9 c_- Im']
     deltaC9_dict = { ('0','V'): deltaC9_0, ('pl','V'): deltaC9_pl, ('mi','V'): deltaC9_mi }
     return helicity_amps_deltaC9(q2, deltaC9_dict, par, B, V, lep)
 
