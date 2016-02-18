@@ -281,6 +281,62 @@ Bs->phi deltaC7 a_- Im:
 Bs->phi deltaC7 b_- Im:
   tex: r'\text{Im}b^{\Delta_7}_-'
   description:
+B0->K*0 deltaC9 c_0 Re:
+  tex: r'\text{Re}c^{\Delta_9}_0'
+  description:
+B0->K*0 deltaC9 c_+ Re:
+  tex: r'\text{Re}c^{\Delta_9}_+'
+  description:
+B0->K*0 deltaC9 c_- Re:
+  tex: r'\text{Re}c^{\Delta_9}_-'
+  description:
+B+->K*+ deltaC9 c_0 Re:
+  tex: r'\text{Re}c^{\Delta_9}_0'
+  description:
+B+->K*+ deltaC9 c_+ Re:
+  tex: r'\text{Re}c^{\Delta_9}_+'
+  description:
+B+->K*+ deltaC9 c_- Re:
+  tex: r'\text{Re}c^{\Delta_9}_-'
+  description:
+Bs->phi deltaC9 c_0 Re:
+  tex: r'\text{Re}c^{\Delta_9}_0'
+  description:
+Bs->phi deltaC9 c_+ Re:
+  tex: r'\text{Re}c^{\Delta_9}_+'
+  description:
+Bs->phi deltaC9 c_- Re:
+  tex: r'\text{Re}c^{\Delta_9}_-'
+  description:
+B0->K*0 deltaC9 c_0 Im:
+  tex: r'\text{Im}c^{\Delta_9}_0'
+  description:
+B0->K*0 deltaC9 c_+ Im:
+  tex: r'\text{Im}c^{\Delta_9}_+'
+  description:
+B0->K*0 deltaC9 c_- Im:
+  tex: r'\text{Im}c^{\Delta_9}_-'
+  description:
+B+->K*+ deltaC9 c_0 Im:
+  tex: r'\text{Im}c^{\Delta_9}_0'
+  description:
+B+->K*+ deltaC9 c_+ Im:
+  tex: r'\text{Im}c^{\Delta_9}_+'
+  description:
+B+->K*+ deltaC9 c_- Im:
+  tex: r'\text{Im}c^{\Delta_9}_-'
+  description:
+Bs->phi deltaC9 c_0 Im:
+  tex: r'\text{Im}c^{\Delta_9}_0'
+  description:
+Bs->phi deltaC9 c_+ Im:
+  tex: r'\text{Im}c^{\Delta_9}_+'
+  description:
+Bs->phi deltaC9 c_- Im:
+  tex: r'\text{Im}c^{\Delta_9}_-'
+  description:
+
+
 
 # Meson bag parameters
 

@@ -80,6 +80,14 @@ def helicity_amps_deltaC9_polynomial(q2, par, B, V, lep):
     deltaC9_dict = { ('0','V'): deltaC9_0, ('pl','V'): deltaC9_pl, ('mi','V'): deltaC9_mi }
     return helicity_amps_deltaC9(q2, deltaC9_dict, par, B, V, lep)
 
+# a constant shift, e.g. for high q^2
+def helicity_amps_deltaC9_constant(q2, par, B, V, lep):
+    deltaC9_0   = par[B+'->'+V+' deltaC9 c_0 Re'] + 1j*par[B+'->'+V+' deltaC9 c_0 Im']
+    deltaC9_pl   = par[B+'->'+V+' deltaC9 c_pl Re'] + 1j*par[B+'->'+V+' deltaC9 c_pl Im']
+    deltaC9_mi   = par[B+'->'+V+' deltaC9 c_mi Re'] + 1j*par[B+'->'+V+' deltaC9 c_mi Im']
+    deltaC9_dict = { ('0','V'): deltaC9_0, ('pl','V'): deltaC9_pl, ('mi','V'): deltaC9_mi }
+    return helicity_amps_deltaC9(q2, deltaC9_dict, par, B, V, lep)
+
 
 # Functions returning functions needed for Implementation
 def fct_deltaC7_polynomial(B, V, lep):
@@ -98,17 +106,24 @@ def fct_deltaC9_polynomial(B, V, lep):
         return helicity_amps_deltaC9_polynomial(q2, par_dict, B, V, lep)
     return fct
 
-# AuxiliaryQuantity & Implementatation: subleading effects at low q^2
+def fct_deltaC9_constant(B, V, lep):
+    def fct(wc_obj, par_dict, q2, cp_conjugate):
+        par = par_dict.copy()
+        if cp_conjugate:
+            par = conjugate_par(par)
+        return helicity_amps_deltaC9_constant(q2, par_dict, B, V, lep)
+    return fct
 
-# loop over hadronic transitions and lepton flavours
-for had in [('B0','K*0'), ('B+','K*+'), ('B0','rho0'), ('B+','rho+'), ('Bs','phi'), ]:
+# AuxiliaryQuantity & Implementatation: subleading effects at LOW q^2
+
+for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ]:
     for l in ['e', 'mu', ]:
         process = had[0] + '->' + had[1] + l+l # e.g. B0->K*0mumu
         quantity = process + ' subleading effects at low q2'
         a = AuxiliaryQuantity(name=quantity, arguments=['q2', 'cp_conjugate'])
         a.description = ('Contribution to ' + process + ' helicity amplitudes from'
                         'subleading hadronic effects (i.e. all effects not included'
-                        'elsewhere)')
+                        r'elsewhere) at $q^2$ below the charmonium resonances')
 
         # Implementation: C7-polynomial
         iname = process + ' deltaC7 polynomial'
@@ -120,6 +135,24 @@ for had in [('B0','K*0'), ('B+','K*+'), ('B0','rho0'), ('B+','rho+'), ('Bs','phi
         # Implementation: C9-polynomial
         iname = process + ' deltaC9 polynomial'
         i = Implementation(name=iname, quantity=quantity,
-                       function=fct_deltaC7_polynomial(B=had[0], V=had[1], lep=l))
+                       function=fct_deltaC9_polynomial(B=had[0], V=had[1], lep=l))
         i.set_description(r"Effective shift in the Wilson coefficient $C_9(\mu_b)$"
                           r" as a first-order polynomial in $q^2$.")
+
+
+# AuxiliaryQuantity & Implementatation: subleading effects at HIGH q^2
+
+for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ]:
+    for l in ['e', 'mu', ]:
+        process = had[0] + '->' + had[1] + l+l # e.g. B0->K*0mumu
+        quantity = process + ' subleading effects at high q2'
+        a = AuxiliaryQuantity(name=quantity, arguments=['q2', 'cp_conjugate'])
+        a.description = ('Contribution to ' + process + ' helicity amplitudes from'
+                        'subleading hadronic effects (i.e. all effects not included'
+                        r'elsewhere) at $q^2$ above the charmonium resonances')
+
+        # Implementation: C9 constant shift
+        iname = process + ' deltaC9 shift'
+        i = Implementation(name=iname, quantity=quantity,
+                       function=fct_deltaC9_constant(B=had[0], V=had[1], lep=l))
+        i.set_description(r"Effective constant shift in the Wilson coefficient $C_9(\mu_b)$.")

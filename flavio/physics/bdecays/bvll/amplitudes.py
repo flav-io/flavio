@@ -56,9 +56,16 @@ def get_ss(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
 # get subleading hadronic contribution at low q2
 def get_subleading_low(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
     # this only needs to be done for low q2 - which doesn't exist for taus!
-    if lep == 'tau' or q2 >= 9:
+    if lep == 'tau' or q2 > 9:
         return {('0' ,'V'): 0,  ('pl' ,'V'): 0, ('mi' ,'V'): 0, }
     sub_name = B+'->'+V+lep+lep + ' subleading effects at low q2'
+    return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+
+# get subleading hadronic contribution at high q2
+def get_subleading_high(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
+    if q2 < 14:
+        return {('0' ,'V'): 0,  ('pl' ,'V'): 0, ('mi' ,'V'): 0, }
+    sub_name = B+'->'+V+lep+lep + ' subleading effects at high q2'
     return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
 
 
