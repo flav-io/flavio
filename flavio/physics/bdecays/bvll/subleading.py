@@ -143,7 +143,7 @@ for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ]:
 # AuxiliaryQuantity & Implementatation: subleading effects at HIGH q^2
 
 for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ]:
-    for l in ['e', 'mu', ]:
+    for l in ['e', 'mu', 'tau']:
         process = had[0] + '->' + had[1] + l+l # e.g. B0->K*0mumu
         quantity = process + ' subleading effects at high q2'
         a = AuxiliaryQuantity(name=quantity, arguments=['q2', 'cp_conjugate'])
