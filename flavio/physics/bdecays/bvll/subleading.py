@@ -122,7 +122,7 @@ for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ]:
         quantity = process + ' subleading effects at low q2'
         a = AuxiliaryQuantity(name=quantity, arguments=['q2', 'cp_conjugate'])
         a.description = ('Contribution to ' + process + ' helicity amplitudes from'
-                        'subleading hadronic effects (i.e. all effects not included'
+                        ' subleading hadronic effects (i.e. all effects not included'
                         r'elsewhere) at $q^2$ below the charmonium resonances')
 
         # Implementation: C7-polynomial
@@ -148,7 +148,7 @@ for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ]:
         quantity = process + ' subleading effects at high q2'
         a = AuxiliaryQuantity(name=quantity, arguments=['q2', 'cp_conjugate'])
         a.description = ('Contribution to ' + process + ' helicity amplitudes from'
-                        'subleading hadronic effects (i.e. all effects not included'
+                        ' subleading hadronic effects (i.e. all effects not included'
                         r'elsewhere) at $q^2$ above the charmonium resonances')
 
         # Implementation: C9 constant shift

@@ -46,7 +46,7 @@ for had in [('B0','K*0'), ('B+','K*+'), ('B0','rho0'), ('B+','rho+'), ('Bs','phi
         quantity = process + ' spectator scattering'
         a = AuxiliaryQuantity(name=quantity, arguments=['q2', 'cp_conjugate'])
         a.description = ('Contribution to ' + process + ' helicity amplitudes from'
-                        'non-factorizable spectator scattering.')
+                        ' non-factorizable spectator scattering.')
 
         # Implementation: QCD factorization
         iname = process + ' QCDF'

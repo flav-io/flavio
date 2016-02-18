@@ -174,166 +174,166 @@ a2_perp_phi:
 
 # Parameters for subleading hadronic effects in B->Vll
 B0->K*0 deltaC7 a_0 Re:
-  tex: r'\text{Re}a^{\Delta_7}_0'
+  tex: $\text{Re}\,a^{\Delta_7}_0$
   description:
 B0->K*0 deltaC7 b_0 Re:
-  tex: r'\text{Re}b^{\Delta_7}_0'
+  tex: $\text{Re}\,b^{\Delta_7}_0$
   description:
 B0->K*0 deltaC7 a_+ Re:
-  tex: r'\text{Re}a^{\Delta_7}_+'
+  tex: $\text{Re}\,a^{\Delta_7}_+$
   description:
 B0->K*0 deltaC7 b_+ Re:
-  tex: r'\text{Re}b^{\Delta_7}_+'
+  tex: $\text{Re}\,b^{\Delta_7}_+$
   description:
 B0->K*0 deltaC7 a_- Re:
-  tex: r'\text{Re}a^{\Delta_7}_-'
+  tex: $\text{Re}\,a^{\Delta_7}_-$
   description:
 B0->K*0 deltaC7 b_- Re:
-  tex: r'\text{Re}b^{\Delta_7}_-'
+  tex: $\text{Re}\,b^{\Delta_7}_-$
   description:
 B+->K*+ deltaC7 a_0 Re:
-  tex: r'\text{Re}a^{\Delta_7}_0'
+  tex: $\text{Re}\,a^{\Delta_7}_0$
   description:
 B+->K*+ deltaC7 b_0 Re:
-  tex: r'\text{Re}b^{\Delta_7}_0'
+  tex: $\text{Re}\,b^{\Delta_7}_0$
   description:
 B+->K*+ deltaC7 a_+ Re:
-  tex: r'\text{Re}a^{\Delta_7}_+'
+  tex: $\text{Re}\,a^{\Delta_7}_+$
   description:
 B+->K*+ deltaC7 b_+ Re:
-  tex: r'\text{Re}b^{\Delta_7}_+'
+  tex: $\text{Re}\,b^{\Delta_7}_+$
   description:
 B+->K*+ deltaC7 a_- Re:
-  tex: r'\text{Re}a^{\Delta_7}_-'
+  tex: $\text{Re}\,a^{\Delta_7}_-$
   description:
 B+->K*+ deltaC7 b_- Re:
-  tex: r'\text{Re}b^{\Delta_7}_-'
+  tex: $\text{Re}\,b^{\Delta_7}_-$
   description:
 Bs->phi deltaC7 a_0 Re:
-  tex: r'\text{Re}a^{\Delta_7}_0'
+  tex: $\text{Re}\,a^{\Delta_7}_0$
   description:
 Bs->phi deltaC7 b_0 Re:
-  tex: r'\text{Re}b^{\Delta_7}_0'
+  tex: $\text{Re}\,b^{\Delta_7}_0$
   description:
 Bs->phi deltaC7 a_+ Re:
-  tex: r'\text{Re}a^{\Delta_7}_+'
+  tex: $\text{Re}\,a^{\Delta_7}_+$
   description:
 Bs->phi deltaC7 b_+ Re:
-  tex: r'\text{Re}b^{\Delta_7}_+'
+  tex: $\text{Re}\,b^{\Delta_7}_+$
   description:
 Bs->phi deltaC7 a_- Re:
-  tex: r'\text{Re}a^{\Delta_7}_-'
+  tex: $\text{Re}\,a^{\Delta_7}_-$
   description:
 Bs->phi deltaC7 b_- Re:
-  tex: r'\text{Re}b^{\Delta_7}_-'
+  tex: $\text{Re}\,b^{\Delta_7}_-$
   description:
 B0->K*0 deltaC7 a_0 Im:
-  tex: r'\text{Im}a^{\Delta_7}_0'
+  tex: $\text{Im}\,a^{\Delta_7}_0$
   description:
 B0->K*0 deltaC7 b_0 Im:
-  tex: r'\text{Im}b^{\Delta_7}_0'
+  tex: $\text{Im}\,b^{\Delta_7}_0$
   description:
 B0->K*0 deltaC7 a_+ Im:
-  tex: r'\text{Im}a^{\Delta_7}_+'
+  tex: $\text{Im}\,a^{\Delta_7}_+$
   description:
 B0->K*0 deltaC7 b_+ Im:
-  tex: r'\text{Im}b^{\Delta_7}_+'
+  tex: $\text{Im}\,b^{\Delta_7}_+$
   description:
 B0->K*0 deltaC7 a_- Im:
-  tex: r'\text{Im}a^{\Delta_7}_-'
+  tex: $\text{Im}\,a^{\Delta_7}_-$
   description:
 B0->K*0 deltaC7 b_- Im:
-  tex: r'\text{Im}b^{\Delta_7}_-'
+  tex: $\text{Im}\,b^{\Delta_7}_-$
   description:
 B+->K*+ deltaC7 a_0 Im:
-  tex: r'\text{Im}a^{\Delta_7}_0'
+  tex: $\text{Im}\,a^{\Delta_7}_0$
   description:
 B+->K*+ deltaC7 b_0 Im:
-  tex: r'\text{Im}b^{\Delta_7}_0'
+  tex: $\text{Im}\,b^{\Delta_7}_0$
   description:
 B+->K*+ deltaC7 a_+ Im:
-  tex: r'\text{Im}a^{\Delta_7}_+'
+  tex: $\text{Im}\,a^{\Delta_7}_+$
   description:
 B+->K*+ deltaC7 b_+ Im:
-  tex: r'\text{Im}b^{\Delta_7}_+'
+  tex: $\text{Im}\,b^{\Delta_7}_+$
   description:
 B+->K*+ deltaC7 a_- Im:
-  tex: r'\text{Im}a^{\Delta_7}_-'
+  tex: $\text{Im}\,a^{\Delta_7}_-$
   description:
 B+->K*+ deltaC7 b_- Im:
-  tex: r'\text{Im}b^{\Delta_7}_-'
+  tex: $\text{Im}\,b^{\Delta_7}_-$
   description:
 Bs->phi deltaC7 a_0 Im:
-  tex: r'\text{Im}a^{\Delta_7}_0'
+  tex: $\text{Im}\,a^{\Delta_7}_0$
   description:
 Bs->phi deltaC7 b_0 Im:
-  tex: r'\text{Im}b^{\Delta_7}_0'
+  tex: $\text{Im}\,b^{\Delta_7}_0$
   description:
 Bs->phi deltaC7 a_+ Im:
-  tex: r'\text{Im}a^{\Delta_7}_+'
+  tex: $\text{Im}\,a^{\Delta_7}_+$
   description:
 Bs->phi deltaC7 b_+ Im:
-  tex: r'\text{Im}b^{\Delta_7}_+'
+  tex: $\text{Im}\,b^{\Delta_7}_+$
   description:
 Bs->phi deltaC7 a_- Im:
-  tex: r'\text{Im}a^{\Delta_7}_-'
+  tex: $\text{Im}\,a^{\Delta_7}_-$
   description:
 Bs->phi deltaC7 b_- Im:
-  tex: r'\text{Im}b^{\Delta_7}_-'
+  tex: $\text{Im}\,b^{\Delta_7}_-$
   description:
 B0->K*0 deltaC9 c_0 Re:
-  tex: r'\text{Re}c^{\Delta_9}_0'
+  tex: $\text{Re}\,c^{\Delta_9}_0$
   description:
 B0->K*0 deltaC9 c_+ Re:
-  tex: r'\text{Re}c^{\Delta_9}_+'
+  tex: $\text{Re}\,c^{\Delta_9}_+$
   description:
 B0->K*0 deltaC9 c_- Re:
-  tex: r'\text{Re}c^{\Delta_9}_-'
+  tex: $\text{Re}\,c^{\Delta_9}_-$
   description:
 B+->K*+ deltaC9 c_0 Re:
-  tex: r'\text{Re}c^{\Delta_9}_0'
+  tex: $\text{Re}\,c^{\Delta_9}_0$
   description:
 B+->K*+ deltaC9 c_+ Re:
-  tex: r'\text{Re}c^{\Delta_9}_+'
+  tex: $\text{Re}\,c^{\Delta_9}_+$
   description:
 B+->K*+ deltaC9 c_- Re:
-  tex: r'\text{Re}c^{\Delta_9}_-'
+  tex: $\text{Re}\,c^{\Delta_9}_-$
   description:
 Bs->phi deltaC9 c_0 Re:
-  tex: r'\text{Re}c^{\Delta_9}_0'
+  tex: $\text{Re}\,c^{\Delta_9}_0$
   description:
 Bs->phi deltaC9 c_+ Re:
-  tex: r'\text{Re}c^{\Delta_9}_+'
+  tex: $\text{Re}\,c^{\Delta_9}_+$
   description:
 Bs->phi deltaC9 c_- Re:
-  tex: r'\text{Re}c^{\Delta_9}_-'
+  tex: $\text{Re}\,c^{\Delta_9}_-$
   description:
 B0->K*0 deltaC9 c_0 Im:
-  tex: r'\text{Im}c^{\Delta_9}_0'
+  tex: $\text{Im}\,c^{\Delta_9}_0$
   description:
 B0->K*0 deltaC9 c_+ Im:
-  tex: r'\text{Im}c^{\Delta_9}_+'
+  tex: $\text{Im}\,c^{\Delta_9}_+$
   description:
 B0->K*0 deltaC9 c_- Im:
-  tex: r'\text{Im}c^{\Delta_9}_-'
+  tex: $\text{Im}\,c^{\Delta_9}_-$
   description:
 B+->K*+ deltaC9 c_0 Im:
-  tex: r'\text{Im}c^{\Delta_9}_0'
+  tex: $\text{Im}\,c^{\Delta_9}_0$
   description:
 B+->K*+ deltaC9 c_+ Im:
-  tex: r'\text{Im}c^{\Delta_9}_+'
+  tex: $\text{Im}\,c^{\Delta_9}_+$
   description:
 B+->K*+ deltaC9 c_- Im:
-  tex: r'\text{Im}c^{\Delta_9}_-'
+  tex: $\text{Im}\,c^{\Delta_9}_-$
   description:
 Bs->phi deltaC9 c_0 Im:
-  tex: r'\text{Im}c^{\Delta_9}_0'
+  tex: $\text{Im}\,c^{\Delta_9}_0$
   description:
 Bs->phi deltaC9 c_+ Im:
-  tex: r'\text{Im}c^{\Delta_9}_+'
+  tex: $\text{Im}\,c^{\Delta_9}_+$
   description:
 Bs->phi deltaC9 c_- Im:
-  tex: r'\text{Im}c^{\Delta_9}_-'
+  tex: $\text{Im}\,c^{\Delta_9}_-$
   description:
 
 
