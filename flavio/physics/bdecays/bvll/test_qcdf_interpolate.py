@@ -19,6 +19,7 @@ class TestQCDFInterpolate(unittest.TestCase):
                 self.assertAlmostEqual(amps_in[i]/(amps_ex[i]), 1, places=2)
             else:
                 self.assertEqual(amps_in[i], 0)
+
         # and the same game again for different q2 and process
         q2 = 0.15
         B = 'B+'

@@ -28,6 +28,14 @@ def ha_qcdf_function(B, V, lep):
         flavio.physics.bdecays.bvll.qcdf.helicity_amps_qcdf(q2, wc, par_dict, B, V, lep)
     return function
 
+# ... and the same for the interpolated version (see qcdf_interpolate.py)
+def ha_qcdf_interpolate_function(B, V, lep):
+    scale = flavio.config.config['renormalization scale']['bvll']
+    label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
+    def function(wc_obj, par_dict, q2, cp_conjugate):
+        flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par_dict, B, V, lep, cp_conjugate)
+    return function
+
 # loop over hadronic transitions and lepton flavours
 # BTW, it is not necessary to loop over tau: for tautau final states, the minimum
 # q2=4*mtau**2 is so high that QCDF is not valid anymore anyway!
@@ -44,3 +52,9 @@ for had in [('B0','K*0'), ('B+','K*+'), ('B0','rho0'), ('B+','rho+'), ('Bs','phi
         i = Implementation(name=iname, quantity=quantity,
                        function=ha_qcdf_function(B=had[0], V=had[1], lep=l))
         i.set_description("QCD factorization")
+
+        # Implementation: interpolated QCD factorization
+        iname = process + ' QCDF interpolated'
+        i = Implementation(name=iname, quantity=quantity,
+                       function=ha_qcdf_interpolate_function(B=had[0], V=had[1], lep=l))
+        i.set_description("Interpolated version of QCD factorization")

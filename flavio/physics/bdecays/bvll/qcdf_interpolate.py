@@ -27,13 +27,17 @@ for process, hel_amps in data.items():
     interpolating_function_dict[process] = {}
     interpolating_function_dict[process] = scipy.interpolate.interp1d(q2_arr, hel_amps.view(float), axis=0)
 
-def helicity_amps_qcdf(q2, par, B, V, lep):
+def helicity_amps_qcdf(q2, par, B, V, lep, cp_conjugate=False):
     ml = par['m_'+lep]
     if lep == 'tau' or q2 < 4*ml**2 or q2 > 9:
         return {('0' ,'V'): 0, ('pl' ,'V'): 0, ('mi' ,'V'): 0}
     process = B + '->' + V # e.g. B0->K*0mumu
+    if cp_conjugate:
+        array_name = process + ' CP conjugate'
+    else:
+        array_name = process
     ha = {}
-    ha_arr = interpolating_function_dict[process](q2).view(complex)
+    ha_arr = interpolating_function_dict[array_name](q2).view(complex)
     # dividing the q^2 poles back in
     ha[('pl','V')] = ha_arr[0] / q2
     ha[('mi','V')] = ha_arr[1] / q2
