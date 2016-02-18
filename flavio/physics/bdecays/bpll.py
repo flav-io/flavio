@@ -85,7 +85,7 @@ def bpll_obs_int_ratio_func(func_num, func_den, B, P, lep):
     return lambda wc_obj, par, q2_min, q2_max: bpll_obs_int(func_num, q2_min, q2_max, wc_obj, par, B, P, lep)/bpll_obs_int(func_den, q2_min, q2_max, wc_obj, par, B, P, lep)
 
 def bpll_obs_ratio_func(func_num, func_den, B, P, lep):
-    return lambda wc_obj, par, q2: bpll_obs(func_num, q2, wc_obj, par, B, P, lep)/bpll_obs_int(func_den, q2, wc_obj, par, B, P, lep)
+    return lambda wc_obj, par, q2: bpll_obs(func_num, q2, wc_obj, par, B, P, lep)/bpll_obs(func_den, q2, wc_obj, par, B, P, lep)
 
 # Observable and Prediction instances
 

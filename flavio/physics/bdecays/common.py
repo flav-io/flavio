@@ -22,6 +22,7 @@ def beta_l(ml, q2):
 
 meson_quark = {
 ('B+','K+'): 'bs',
+('B0','K0'): 'bs',
 ('B0','K*0'): 'bs',
 ('B+','K*+'): 'bs',
 ('B0','pi0'): 'bd',
