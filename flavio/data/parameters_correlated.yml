@@ -67,6 +67,93 @@
     - a2_perp_rho0: 0.14(6)
   correlation: 0.99
 
+# Subleading hadronic effects in B->Vll
+-
+  values:
+    - B0->K*0 deltaC7 a_0 Re: 0 ± 0.06 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 a_0 Re: 0 ± 0.06
+    - Bs->phi deltaC7 a_0 Re: 0 ± 0.06
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+-
+  values:
+    - B0->K*0 deltaC7 b_0 Re: 0 ± 0.015 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 b_0 Re: 0 ± 0.015
+    - Bs->phi deltaC7 b_0 Re: 0 ± 0.015
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+-
+  values:
+    - B0->K*0 deltaC7 a_+ Re: 0 ± 0.015 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 a_+ Re: 0 ± 0.015
+    - Bs->phi deltaC7 a_+ Re: 0 ± 0.015
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+-
+  values:
+    - B0->K*0 deltaC7 b_+ Re: 0 ± 0.06 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 b_+ Re: 0 ± 0.06
+    - Bs->phi deltaC7 b_+ Re: 0 ± 0.06
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+-
+  values:
+    - B0->K*0 deltaC7 a_- Re: 0 ± 0.015 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 a_- Re: 0 ± 0.015
+    - Bs->phi deltaC7 a_- Re: 0 ± 0.015
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+-
+  values:
+    - B0->K*0 deltaC7 b_- Re: 0 ± 0.06 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 b_- Re: 0 ± 0.06
+    - Bs->phi deltaC7 b_- Re: 0 ± 0.06
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+-
+  values:
+    - B0->K*0 deltaC7 a_0 Im: 0 ± 0.06 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 a_0 Im: 0 ± 0.06
+    - Bs->phi deltaC7 a_0 Im: 0 ± 0.06
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+-
+  values:
+    - B0->K*0 deltaC7 b_0 Im: 0 ± 0.015 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 b_0 Im: 0 ± 0.015
+    - Bs->phi deltaC7 b_0 Im: 0 ± 0.015
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+-
+  values:
+    - B0->K*0 deltaC7 a_+ Im: 0 ± 0.015 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 a_+ Im: 0 ± 0.015
+    - Bs->phi deltaC7 a_+ Im: 0 ± 0.015
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+-
+  values:
+    - B0->K*0 deltaC7 b_+ Im: 0 ± 0.06 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 b_+ Im: 0 ± 0.06
+    - Bs->phi deltaC7 b_+ Im: 0 ± 0.06
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+-
+  values:
+    - B0->K*0 deltaC7 a_- Im: 0 ± 0.015 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 a_- Im: 0 ± 0.015
+    - Bs->phi deltaC7 a_- Im: 0 ± 0.015
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+-
+  values:
+    - B0->K*0 deltaC7 b_- Im: 0 ± 0.06 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 b_- Im: 0 ± 0.06
+    - Bs->phi deltaC7 b_- Im: 0 ± 0.06
+  correlation:
+    [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
+
+
 # B->D* form factors, HFAG 2014
 -
   values:

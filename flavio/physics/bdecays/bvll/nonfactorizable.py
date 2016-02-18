@@ -4,6 +4,7 @@ from flavio.classes import AuxiliaryQuantity, Implementation
 from flavio.physics.bdecays.common import meson_quark
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
+from flavio.config import config
 
 r"""Functions for spectator scattering corrections to $B\to V\ell^+\ell^-$ decays.
 
@@ -16,7 +17,7 @@ quark-loop spectator scattering.
 
 # function needed for the QCD factorization implementation (see qcdf.py)
 def ha_qcdf_function(B, V, lep):
-    scale = flavio.config.config['renormalization scale']['bvll']
+    scale = config['renormalization scale']['bvll']
     label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
     def function(wc_obj, par_dict, q2, cp_conjugate):
         par = par_dict.copy()
@@ -30,7 +31,7 @@ def ha_qcdf_function(B, V, lep):
 
 # ... and the same for the interpolated version (see qcdf_interpolate.py)
 def ha_qcdf_interpolate_function(B, V, lep):
-    scale = flavio.config.config['renormalization scale']['bvll']
+    scale = config['renormalization scale']['bvll']
     label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
     def function(wc_obj, par_dict, q2, cp_conjugate):
         flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par_dict, B, V, lep, cp_conjugate)
