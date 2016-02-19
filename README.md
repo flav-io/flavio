@@ -22,6 +22,12 @@ http://flav-io.github.io
 This web site is built with Jekyll and hosted on Github pages. You can check
 out its source (or submit pull requests) at http://github.com/flav-io/flavio-web.
 
+## Bugs and feature request
+
+Please submit bugs and feature request using
+[Github's issue system](https://github.com/flav-io/flavio/issues) rather than
+by E-mail. Thanks!
+
 ## License
 
-flavio is released under the MIT license.
+flavio is released under the MIT license. 
