@@ -11,7 +11,7 @@ import copy
 
 s = 1.519267515435317e+24
 
-c = copy.copy(default_parameters)
+c = copy.deepcopy(default_parameters)
 bsz_parameters.bsz_load_v1_lcsr(c)
 par = c.get_central_all()
 

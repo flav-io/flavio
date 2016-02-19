@@ -123,7 +123,7 @@ class BayesianFit(Fit):
         return par_dict
 
     def get_wc_obj(self, x):
-        wc_obj = copy.copy(self.wc_obj)
+        wc_obj = copy.deepcopy(self.wc_obj)
         d = self.array_to_dict(x)
         wc_obj.set_initial(d['fit_coefficients'], self.input_scale)
         return wc_obj

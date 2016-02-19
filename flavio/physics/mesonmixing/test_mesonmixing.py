@@ -9,7 +9,7 @@ import copy
 
 s = 1.519267515435317e+24
 
-c = copy.copy(default_parameters)
+c = copy.deepcopy(default_parameters)
 par = c.get_central_all()
 
 wc_obj = WilsonCoefficients()

@@ -6,12 +6,12 @@ import copy
 from flavio.parameters import default_parameters
 from flavio.classes import Parameter, Implementation
 
-c = copy.copy(default_parameters)
+c = copy.deepcopy(default_parameters)
 bcl_parameters.load_parameters('data/arxiv-1509-06235v1/b_k.yml', c)
 
 class TestBtoP(unittest.TestCase):
     def test_bcl_iw(self):
-        c = copy.copy(default_parameters)
+        c = copy.deepcopy(default_parameters)
         par = c.get_central_all()
         bcl.ff_isgurwise('B->D', 1, par, 4.8, n=3)
         Implementation.get_instance('B->D BCL3-IW').get_central(constraints_obj=c, wc_obj=None, q2=1)

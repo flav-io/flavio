@@ -202,7 +202,7 @@ class Constraints(object):
 
       def copy(self):
           # this is to have a .copy() method like for a dictionary
-          return copy.copy(self)
+          return copy.deepcopy(self)
 
 
 ########## ParameterConstraints Class ##########

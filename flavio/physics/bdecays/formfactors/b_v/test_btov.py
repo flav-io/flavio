@@ -10,13 +10,13 @@ import copy
 class TestBtoV(unittest.TestCase):
 
     def test_cln(self):
-        c = copy.copy(default_parameters)
+        c = copy.deepcopy(default_parameters)
         par = c.get_central_all()
         cln.ff('B->D*', 1, par, 4.8)
         Implementation.get_instance('B->D* CLN-IW').get_central(constraints_obj=c, wc_obj=None, q2=1)
 
     def test_bsz3(self):
-        c = copy.copy(default_parameters)
+        c = copy.deepcopy(default_parameters)
         bsz_parameters.bsz_load_v1_lcsr(c)
         # compare to numbers in table 4 of arXiv:1503.05534v1
         # B->K* all FFs
@@ -39,7 +39,7 @@ class TestBtoV(unittest.TestCase):
         self.assertAlmostEqual(ffbsz3['A1'], 0.246, places=3)
     #
     def test_lattice(self):
-        c = copy.copy(default_parameters)
+        c = copy.deepcopy(default_parameters)
         lattice_parameters.lattice_load(c)
         fflatt = Implementation.get_instance('B->K* SSE').get_central(constraints_obj=c, wc_obj=None, q2=12.)
         self.assertAlmostEqual(fflatt['V'], 0.84, places=2)
