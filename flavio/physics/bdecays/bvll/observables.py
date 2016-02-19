@@ -65,17 +65,6 @@ def A_experiment_num(J, J_bar, i):
         return -A_theory_num(J, J_bar, i)
     return A_theory_num(J, J_bar, i)
 
-def Pp_experiment(J, J_bar, i):
-    r"""Observable $P'_i$ in the LHCb convention.
-
-    See eq. (C.9) of arXiv:1506.03970v2.
-    """
-    Pp_to_S = {4: 4, 5: 5, 6: 7, 8: 8}
-    if i not in Pp_to_S.keys():
-        return ValueError("Observable P'_" + i + " not defined")
-    denom = sqrt(FL(J, J_bar)*(1 - FL(J, J_bar)))
-    return S_experiment(J, J_bar, Pp_to_S[i]) / denom
-
 def AFB_experiment(J, J_bar):
     r"""Forward-backward asymmetry in the LHCb convention.
 
@@ -137,6 +126,22 @@ def bvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep):
         return bvll_obs(function, q2, wc_obj, par, B, V, lep)
     return quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
 
+def bvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep):
+    def obs(q2):
+        return bvll_dbrdq2(q2, wc_obj, par, B, V, lep)
+    return quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
+
+# Functions returning functions needed for Prediction instances
+
+def bvll_dbrdq2_int_func(B, V, lep):
+    def fct(wc_obj, par, q2min, q2max):
+        return bvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep)
+    return fct
+
+def bvll_dbrdq2_func(B, V, lep):
+    def fct(wc_obj, par, q2):
+        return bvll_dbrdq2(q2, wc_obj, par, B, V, lep)
+    return fct
 
 def bvll_obs_int_ratio_func(func_num, func_den, B, V, lep):
     def fct(wc_obj, par, q2min, q2max):
@@ -147,13 +152,36 @@ def bvll_obs_int_ratio_func(func_num, func_den, B, V, lep):
         return num/denom
     return fct
 
-
 def bvll_obs_ratio_func(func_num, func_den, B, V, lep):
     def fct(wc_obj, par, q2):
         num = bvll_obs(func_num, q2, wc_obj, par, B, V, lep)
         if num == 0:
             return 0
         denom = bvll_obs(func_den, q2, wc_obj, par, B, V, lep)
+        return num/denom
+    return fct
+
+# function needed for the P' "optimized" observables
+# note that this is the convention used by LHCb, NOT the one used in 1303.5794!
+def bvll_pprime_func(func_num, B, V, lep):
+    def fct(wc_obj, par, q2):
+        num = bvll_obs(func_num, q2, wc_obj, par, B, V, lep)
+        if num == 0:
+            return 0
+        denom_2s = bvll_obs(lambda J, J_bar: S_experiment_num(J, J_bar, '2s'), q2, wc_obj, par, B, V, lep)
+        denom_2c = bvll_obs(lambda J, J_bar: S_experiment_num(J, J_bar, '2c'), q2, wc_obj, par, B, V, lep)
+        denom = 2*sqrt(-denom_2s*denom_2c)
+        return num/denom
+    return fct
+
+def bvll_pprime_int_func(func_num, B, V, lep):
+    def fct(wc_obj, par, q2min, q2max):
+        num = bvll_obs_int(func_num, q2min, q2max, wc_obj, par, B, V, lep)
+        if num == 0:
+            return 0
+        denom_2s = bvll_obs_int(lambda J, J_bar: S_experiment_num(J, J_bar, '2s'), q2min, q2max, wc_obj, par, B, V, lep)
+        denom_2c = bvll_obs_int(lambda J, J_bar: S_experiment_num(J, J_bar, '2c'), q2min, q2max, wc_obj, par, B, V, lep)
+        denom = 2*sqrt(-denom_2s*denom_2c)
         return num/denom
     return fct
 
@@ -171,6 +199,13 @@ _observables = {
 'S8': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 8), 'tex': r'S_8', 'desc': 'CP-averaged angular observable'},
 'S9': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 9), 'tex': r'S_9', 'desc': 'CP-averaged angular observable'},
 }
+_observables_pprime = {
+'P4p': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 4), 'tex': r'P_4^\prime', 'desc': "CP-averaged \"optimized\" angular observable"},
+'P5p': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 5), 'tex': r'P_5^\prime', 'desc': "CP-averaged \"optimized\" angular observable"},
+# yes, P6p depends on J_7, not J_6. Don't ask why.
+'P6p': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 7), 'tex': r'P_6^\prime', 'desc': "CP-averaged \"optimized\" angular observable"},
+'P8p': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 8), 'tex': r'P_8^\prime', 'desc': "CP-averaged \"optimized\" angular observable"},
+}
 _hadr = {
 'B0->K*': {'tex': r"B^0\to K^{*0}", 'B': 'B0', 'V': 'K*0', },
 'B+->K*': {'tex': r"B^+\to K^{*+}", 'B': 'B+', 'V': 'K*+', },
@@ -179,14 +214,47 @@ _hadr = {
 for l in ['e', 'mu', 'tau']:
     for M in _hadr.keys():
         for obs in sorted(_observables.keys()):
+
+            # binned angular observables
             _obs_name = "<" + obs + ">("+M+l+l+")"
             _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
             _obs.set_description('Binned ' + _observables[obs]['desc'] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
             _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
             Prediction(_obs_name, bvll_obs_int_ratio_func(_observables[obs]['func_num'], SA_den, _hadr[M]['B'], _hadr[M]['V'], l))
 
+            # differential angular observables
             _obs_name = obs + "("+M+l+l+")"
             _obs = Observable(name=_obs_name, arguments=['q2'])
             _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
             _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
             Prediction(_obs_name, bvll_obs_ratio_func(_observables[obs]['func_num'], SA_den, _hadr[M]['B'], _hadr[M]['V'], l))
+
+        for obs in sorted(_observables_pprime.keys()):
+
+            # binned "optimized" angular observables
+            _obs_name = "<" + obs + ">("+M+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+            _obs.set_description('Binned ' + _observables_pprime[obs]['desc'] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$\langle " + _observables_pprime[obs]['tex'] + r"\rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            Prediction(_obs_name, bvll_pprime_int_func(_observables_pprime[obs]['func_num'], _hadr[M]['B'], _hadr[M]['V'], l))
+
+            # differential "optimized"  angular observables
+            _obs_name = obs + "("+M+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2'])
+            _obs.set_description(_observables_pprime[obs]['desc'][0].capitalize() + _observables_pprime[obs]['desc'][1:] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$" + _observables_pprime[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            Prediction(_obs_name, bvll_pprime_func(_observables_pprime[obs]['func_num'], _hadr[M]['B'], _hadr[M]['V'], l))
+
+        # binned branching ratio
+        _obs_name = "<BR>("+M+l+l+")"
+        _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+        _obs.set_description(r"Binned branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+        _obs.tex = r"$\langle \text{BR} \rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        Prediction(_obs_name, bvll_dbrdq2_int_func(_hadr[M]['B'], _hadr[M]['V'], l))
+
+        # differential branching ratio
+        _obs_name = "dBR/dq2("+M+l+l+")"
+        _obs = Observable(name=_obs_name, arguments=['q2'])
+        _obs.set_description(r"Differntial branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+        _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        Prediction(_obs_name, bvll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['V'], l))
