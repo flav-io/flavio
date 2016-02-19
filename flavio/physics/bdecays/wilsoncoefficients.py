@@ -30,7 +30,16 @@ def wctot_dict(wc_obj, sector, scale, par):
     $\Delta F=1$ Wilson coefficients at a given scale, given a
     WilsonCoefficients instance."""
     wc_np_dict = wc_obj.get_wc(sector, scale, par)
-    wc_sm = running.get_wilson(par, _wcsm_120, wc_obj.rge_derivative[sector], 120., scale)
+    wcsm_120 = _wcsm_120.copy()
+    # now here comes an ugly fix. If we have b->s transitions, we should take
+    # into account the fact that C7' = C7*ms/mb, and the same for C8, which is
+    # not completely negligible. To find out whether we have b->s, we look at
+    # the "sector" string.
+    if sector[:2] == 'bs':
+        eps_s = running.get_ms(par, scale)/running.get_mb(par, scale)
+        wcsm_120[21] = eps_s * wcsm_120[6]
+        wcsm_120[22] = eps_s * wcsm_120[7]
+    wc_sm = running.get_wilson(par, wcsm_120, wc_obj.rge_derivative[sector], 120., scale)
     wc_labels = wc_obj.coefficients[sector]
     wc_sm_dict =  dict(zip(wc_labels, wc_sm))
     return add_dict((wc_np_dict, wc_sm_dict))

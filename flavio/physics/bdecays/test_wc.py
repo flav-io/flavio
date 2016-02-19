@@ -22,6 +22,7 @@ par = {
     'alpha_s': 0.1185,
     'm_Z': 91.1876,
     'm_b': 4.17,
+    'm_s': 0.1,
     'm_t': 173.1,
     'm_c': 1.275,
     'GF': 1.1663787e-5,
@@ -44,8 +45,7 @@ class TestBWilson(unittest.TestCase):
         -2.95667920e-01,  -1.63048361e-01,   4.11363023e+00,
         -4.19345312e+00,   3.43507549e-03,   1.22202095e-03,
         -1.03192325e-03,  -1.00703396e-04,  -3.17810374e-03])
-        wc_low_correct = np.concatenate([wc_low_correct, np.zeros(19)])
         wc_obj = eft.WilsonCoefficients()
         wc_low = wilsoncoefficients.wctot_dict(wc_obj, 'bsmumu', 4.2, par)
         wc_low_array = np.asarray([wc_low[key] for key in wc_obj.coefficients['bsmumu']])
-        np.testing.assert_almost_equal(wc_low_array, wc_low_correct, decimal=8)
+        np.testing.assert_almost_equal(wc_low_array[:15], wc_low_correct, decimal=8)
