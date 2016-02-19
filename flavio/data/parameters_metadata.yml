@@ -5,14 +5,14 @@ GF:
   tex: $G_F$
   description: Fermi constant
 alpha_e:
-  tex: $\alpha_e$
-  description: electromagnetic fine structure constant
+  tex: $\alpha_e(m_Z)$
+  description: electromagnetic fine structure constant in the $\overline{\text{MS}}$ scheme at the scale $m_Z$
 alpha_s:
-  tex: $\alpha_s$
-  description: strong coupling constant
+  tex: $\alpha_s(m_Z)$
+  description: strong coupling constant in the $\overline{\text{MS}}$ scheme at the scale $m_Z$
 s2w:
-  tex: $\sin^2 \hat\theta_w(M_Z)$
-  description: sine squared of the weak mixing angle in the $\overline{\text{MS}}$ scheme at the scale $M_Z$
+  tex: $\sin^2 \hat\theta_w(m_Z)$
+  description: sine squared of the weak mixing angle in the $\overline{\text{MS}}$ scheme at the scale $m_Z$
 
 
 # CKM parameters
@@ -82,95 +82,95 @@ f_phi:
 # Parmaters needed for meson light-cone distribution amplitudes
 
 f_perp_K*0:
-  tex:
-  description:
+  tex: $f^\perp_{K^{*0}}$
+  description: Transverse $K^{*0}$ decay constant at 1 GeV
 f_perp_K*+:
-  tex:
-  description:
+  tex: $f^\perp_{K^{\pm}}$
+  description: Transverse $K^{*\pm}$ decay constant at 1 GeV
 f_perp_rho0:
-  tex:
-  description:
+  tex: $f^\perp_{\rho^{0}}$
+  description: Transverse $\rho^{0}$ decay constant at 1 GeV
 f_perp_rho+:
-  tex:
-  description:
+  tex: $f^\perp_{\rho^{\pm}}$
+  description: Transverse $\rho^{\pm}$ decay constant at 1 GeV
 f_perp_omega:
-  tex:
-  description:
+  tex: $f^\perp_\omega$
+  description: Transverse $\omega$ decay constant at 1 GeV
 f_perp_phi:
-  tex:
-  description:
+  tex: $f^\perp_\phi$
+  description: Transverse $\phi$ decay constant at 1 GeV
 a2_para_K*0:
-  tex:
-  description:
+  tex: $a_2^{K^{*0}_\parallel}$
+  description: Second Gegenbauer moment of the parallely polarized $K^{*0}$ LCDA at 1 GeV
 a2_perp_K*0:
-  tex:
-  description:
+  tex: $a_2^{K^{*0}_\perp}$
+  description: Second Gegenbauer moment of the transversely polarized $K^{*0}$ LCDA at 1 GeV
 a1_para_K*0:
-  tex:
-  description:
+  tex: $a_1^{K^{*0}_\parallel}$
+  description: First Gegenbauer moment of the parallely polarized $K^{*0}$ LCDA at 1 GeV
 a1_perp_K*0:
-  tex:
-  description:
-a1_para_rho0:
-  tex:
-  description:
-a1_perp_rho0:
-  tex:
-  description:
-a2_para_rho0:
-  tex:
-  description:
-a2_perp_rho0:
-  tex:
-  description:
+  tex: $a_1^{K^{*0}_\perp}$
+  description: First Gegenbauer moment of the transversely polarized $K^{*0}$ LCDA at 1 GeV
 a2_para_K*+:
-  tex:
-  description:
+  tex: $a_2^{K^{*+}_\parallel}$
+  description: Second Gegenbauer moment of the parallely polarized $K^{*+}$ LCDA at 1 GeV
 a2_perp_K*+:
-  tex:
-  description:
+  tex: $a_2^{K^{*+}_\perp}$
+  description: Second Gegenbauer moment of the transversely polarized $K^{*+}$ LCDA at 1 GeV
 a1_para_K*+:
-  tex:
-  description:
+  tex: $a_1^{K^{*+}_\parallel}$
+  description: First Gegenbauer moment of the parallely polarized $K^{*+}$ LCDA at 1 GeV
 a1_perp_K*+:
-  tex:
-  description:
-a1_para_rho+:
-  tex:
-  description:
-a1_perp_rho+:
-  tex:
-  description:
+  tex: $a_1^{K^{*+}_\perp}$
+  description: First Gegenbauer moment of the transversely polarized $K^{*+}$ LCDA at 1 GeV
 a2_para_rho+:
-  tex:
-  description:
+  tex: $a_2^{\rho^{+}_\parallel}$
+  description: Second Gegenbauer moment of the parallely polarized $\rho^{+}$ LCDA at 1 GeV
 a2_perp_rho+:
-  tex:
-  description:
-a1_para_omega:
-  tex:
-  description:
-a1_perp_omega:
-  tex:
-  description:
+  tex: $a_2^{\rho^{+}_\perp}$
+  description: Second Gegenbauer moment of the transversely polarized $\rho^{+}$ LCDA at 1 GeV
+a1_para_rho+:
+  tex: $a_1^{\rho^{+}_\parallel}$
+  description: First Gegenbauer moment of the parallely polarized $\rho^{+}$ LCDA at 1 GeV
+a1_perp_rho+:
+  tex: $a_1^{\rho^{+}_\perp}$
+  description: First Gegenbauer moment of the transversely polarized $\rho^{+}$ LCDA at 1 GeV
+a2_para_rho0:
+  tex: $a_2^{\rho^{0}_\parallel}$
+  description: Second Gegenbauer moment of the parallely polarized $\rho^{0}$ LCDA at 1 GeV
+a2_perp_rho0:
+  tex: $a_2^{\rho^{0}_\perp}$
+  description: Second Gegenbauer moment of the transversely polarized $\rho^{0}$ LCDA at 1 GeV
+a1_para_rho0:
+  tex: $a_1^{\rho^{0}_\parallel}$
+  description: First Gegenbauer moment of the parallely polarized $\rho^{0}$ LCDA at 1 GeV
+a1_perp_rho0:
+  tex: $a_1^{\rho^{0}_\perp}$
+  description: First Gegenbauer moment of the transversely polarized $\rho^{0}$ LCDA at 1 GeV
 a2_para_omega:
-  tex:
-  description:
+  tex: $a_2^{\omega_\parallel}$
+  description: Second Gegenbauer moment of the parallely polarized $\omega$ LCDA at 1 GeV
 a2_perp_omega:
-  tex:
-  description:
-a1_para_phi:
-  tex:
-  description:
-a1_perp_phi:
-  tex:
-  description:
+  tex: $a_2^{\omega_\perp}$
+  description: Second Gegenbauer moment of the transversely polarized $\omega$ LCDA at 1 GeV
+a1_para_omega:
+  tex: $a_1^{\omega_\parallel}$
+  description: First Gegenbauer moment of the parallely polarized $\omega$ LCDA at 1 GeV
+a1_perp_omega:
+  tex: $a_1^{\omega_\perp}$
+  description: First Gegenbauer moment of the transversely polarized $\omega$ LCDA at 1 GeV
 a2_para_phi:
-  tex:
-  description:
+  tex: $a_2^{\phi_\parallel}$
+  description: Second Gegenbauer moment of the parallely polarized $\phi$ LCDA at 1 GeV
 a2_perp_phi:
-  tex:
-  description:
+  tex: $a_2^{\phi_\perp}$
+  description: Second Gegenbauer moment of the transversely polarized $\phi$ LCDA at 1 GeV
+a1_para_phi:
+  tex: $a_1^{\phi_\parallel}$
+  description: First Gegenbauer moment of the parallely polarized $\phi$ LCDA at 1 GeV
+a1_perp_phi:
+  tex: $a_1^{\phi_\perp}$
+  description: First Gegenbauer moment of the transversely polarized $\phi$ LCDA at 1 GeV
 
 # Parameters for subleading hadronic effects in B->Vll
 B0->K*0 deltaC7 a_0 Re:
@@ -385,96 +385,82 @@ B+->K+ deltaC9 c Im:
 # (see also flavio.physics.mesonmixing.common.bag_msbar2rgi())
 bag_B0_1:
   tex: $B_1^{(d)}$
-  description: $B^0$ bag parameter in the $\overline{\text{MS}}$ scheme at $m_b$
+  description: $B^0$ bag parameter of $O_1$ in the $\overline{\text{MS}}$ scheme at $m_b$
 bag_Bs_1:
   tex: $B_1^{(s)}$
-  description: $B_s$ bag parameter in the $\overline{\text{MS}}$ scheme at $m_b$
+  description: $B_s$ bag parameter of $O_1$ in the $\overline{\text{MS}}$ scheme at $m_b$
 bag_K0_1:
   tex: $B_1^{(K)}$
-  description: $K^0$ bag parameter in the $\overline{\text{MS}}$ scheme at 2 GeV
-bag_D0_1:
-  tex: $B_1^{(D)}$
-  description: $D^0$ bag parameter in the $\overline{\text{MS}}$ scheme at 3 GeV
+  description: $K^0$ bag parameter of $O_1$ in the $\overline{\text{MS}}$ scheme at 2 GeV
 
 # BSM operators
 bag_B0_2:
-  tex:
-  description:
+  tex: $B_2^{(d)}$
+  description: $B^0$ bag parameter of $O_2$ in the $\overline{\text{MS}}$ scheme at $m_b$
 bag_B0_3:
-  tex:
-  description:
+  tex: $B_3^{(d)}$
+  description: $B^0$ bag parameter of $O_3$ in the $\overline{\text{MS}}$ scheme at $m_b$
 bag_B0_4:
-  tex:
-  description:
+  tex: $B_4^{(d)}$
+  description: $B^0$ bag parameter of $O_4$ in the $\overline{\text{MS}}$ scheme at $m_b$
 bag_B0_5:
-  tex:
-  description:
+  tex: $B_5^{(d)}$
+  description: $B^0$ bag parameter of $O_5$ in the $\overline{\text{MS}}$ scheme at $m_b$
 bag_Bs_2:
-  tex:
-  description:
+  tex: $B_2^{(s)}$
+  description: $B_s$ bag parameter of $O_2$ in the $\overline{\text{MS}}$ scheme at $m_b$
 bag_Bs_3:
-  tex:
-  description:
+  tex: $B_3^{(s)}$
+  description: $B_s$ bag parameter of $O_3$ in the $\overline{\text{MS}}$ scheme at $m_b$
 bag_Bs_4:
-  tex:
-  description:
+  tex: $B_4^{(s)}$
+  description: $B_s$ bag parameter of $O_4$ in the $\overline{\text{MS}}$ scheme at $m_b$
 bag_Bs_5:
-  tex:
-  description:
+  tex: $B_5^{(s)}$
+  description: $B_s$ bag parameter of $O_5$ in the $\overline{\text{MS}}$ scheme at $m_b$
 
 bag_K0_2:
-  tex:
-  description:
+  tex: $B_2^{(K)}$
+  description: $K^0$ bag parameter of $O_2$ in the $\overline{\text{MS}}$ scheme at 2 GeV
 bag_K0_3:
-  tex:
-  description:
+  tex: $B_3^{(K)}$
+  description: $K^0$ bag parameter of $O_3$ in the $\overline{\text{MS}}$ scheme at 2 GeV
 bag_K0_4:
-  tex:
-  description:
+  tex: $B_4^{(K)}$
+  description: $K^0$ bag parameter of $O_4$ in the $\overline{\text{MS}}$ scheme at 2 GeV
 bag_K0_5:
-  tex:
-  description:
-bag_D0_2:
-  tex:
-  description:
-bag_D0_3:
-  tex:
-  description:
-bag_D0_4:
-  tex:
-  description:
-bag_D0_5:
-  tex:
-  description:
+  tex: $B_5^{(K)}$
+  description: $K^0$ bag parameter of $O_5$ in the $\overline{\text{MS}}$ scheme at 2 GeV
+
 
 
 # DeltaF=2 QCD correction factors
 
 eta_tt_B0:
   tex: $\eta_B$
-  description:
+  description: SM QCD correction factor for $B^0$ mixing
 eta_tt_Bs:
   tex: $\eta_B$
-  description:
+  description: SM QCD correction factor for $B_s$ mixing
 eta_tt_K0:
   tex: $\eta_{tt}$
-  description:
+  description: SM QCD correction factor for the top contribution to $K^0$ mixing
 eta_cc_K0:
   tex: $\eta_{cc}$
-  description:
+  description: SM QCD correction factor for the charm contribution to $K^0$ mixing
 eta_ct_K0:
   tex: $\eta_{ct}$
-  description:
+  description: SM QCD correction factor for the top-charm contribution to $K^0$ mixing
 
 
 # Parameters needed for epsilon_K
 
 kappa_epsilon:
   tex: $\kappa_\epsilon$
-  description:
+  description: Correction factor for $\epsilon_K$
 DeltaM_K0:
   tex: $\Delta M_K$
-  description:
+  description: Mass difference in the $K^0$ system
 
 
 # Coefficients parametrizing SM contributions to Gamma_12
