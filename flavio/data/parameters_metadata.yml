@@ -1,7 +1,7 @@
 
 # Coupling constants
 
-Gmu:
+GF:
   tex: $G_F$
   description: Fermi constant
 alpha_e:

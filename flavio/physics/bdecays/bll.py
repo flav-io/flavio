@@ -68,7 +68,7 @@ def br_inst(par, wc, B, lep):
     - lep: should be 'e', 'mu', or 'tau'
     """
     # paramaeters
-    GF = par['Gmu']
+    GF = par['GF']
     alphaem = running.get_alpha(par, 4.8)['alpha_e']
     ml = par['m_'+lep]
     mB = par['m_'+B]

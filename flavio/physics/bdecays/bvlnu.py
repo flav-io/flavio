@@ -38,7 +38,7 @@ def get_ff(q2, par, B, V):
     return AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
 
 def prefactor(q2, par, B, V, lep):
-    GF = par['Gmu']
+    GF = par['GF']
     scale = config['renormalization scale']['bvll']
     ml = par['m_'+lep]
     mB = par['m_'+B]

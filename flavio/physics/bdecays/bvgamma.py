@@ -18,7 +18,7 @@ def prefactor(par, B, V):
     scale = config['renormalization scale']['bvgamma']
     alphaem = running.get_alpha(par, scale)['alpha_e']
     mb = running.get_mb(par, scale)
-    GF = par['Gmu']
+    GF = par['GF']
     bq = meson_quark[(B,V)]
     xi_t = ckm.xi('t',bq)(par)
     return ( sqrt((GF**2 * alphaem * mB**3 * mb**2)/(32 * pi**4)

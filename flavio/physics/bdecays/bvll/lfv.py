@@ -4,7 +4,7 @@ from flavio.classes import Observable, Prediction
 from math import sqrt, pi
 
 def prefactor(q2, par, B, V, l1, l2):
-    GF = par['Gmu']
+    GF = par['GF']
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
     scale = flavio.config['renormalization scale']['bvll']

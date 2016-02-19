@@ -26,7 +26,7 @@ def S0_box(x, y, xu=0):
     return F_box(x, y) + F_box(xu, xu) - F_box(x, xu) - F_box(y, xu)
 
 def df2_prefactor(par):
-    GF = par['Gmu']
+    GF = par['GF']
     mW = par['m_W']
     return -GF**2/(4.*pi**2) * mW**2
 

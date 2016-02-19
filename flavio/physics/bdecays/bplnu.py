@@ -14,7 +14,7 @@ r"""Functions for exclusive $B\to P\ell\nu$ decays."""
 
 
 def prefactor(q2, par, B, P, lep):
-    GF = par['Gmu']
+    GF = par['GF']
     ml = par['m_'+lep]
     scale = config['renormalization scale']['bpll']
     alphaem = running.get_alpha(par, scale)['alpha_e']

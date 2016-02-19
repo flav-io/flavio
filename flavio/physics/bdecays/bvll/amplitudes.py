@@ -11,7 +11,7 @@ from flavio.physics.bdecays.bvll import qcdf
 from flavio.classes import AuxiliaryQuantity
 
 def prefactor(q2, par, B, V, lep):
-    GF = par['Gmu']
+    GF = par['GF']
     ml = par['m_'+lep]
     scale = config['renormalization scale']['bvll']
     alphaem = running.get_alpha(par, scale)['alpha_e']
