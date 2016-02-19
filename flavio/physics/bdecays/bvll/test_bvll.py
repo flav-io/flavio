@@ -29,4 +29,3 @@ class TestBVll(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=1)/5.7131974656129313e-8, 1, delta=delta)
         self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=6)/5.524478678779278e-8, 1, delta=delta)
         self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=15)/7.412258847550239e-8, 1, delta=delta)
-        # self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B+->K+mumu)", q2=15)/2.1824401629030333e-8, 1, delta=delta)

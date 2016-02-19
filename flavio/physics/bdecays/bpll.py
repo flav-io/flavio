@@ -103,9 +103,6 @@ def AFB_cpaverage_num(J, J_bar):
 def FH_cpaverage_num(J, J_bar):
     return (FH_num(J) + FH_num(J_bar))/2.
 
-def bpll_dbrdq2(q2, wc_obj, par, B, P, lep):
-    tauB = par['tau_'+B]
-    return tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, lep)
 
 # denominator of normalized observables
 def denominator(J, J_bar):
@@ -115,6 +112,28 @@ def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, lep):
     def obs(q2):
         return bpll_obs(function, q2, wc_obj, par, B, P, lep)
     return quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
+
+
+def bpll_dbrdq2(q2, wc_obj, par, B, P, lep):
+    tauB = par['tau_'+B]
+    return tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, lep)
+
+def bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, lep):
+    def obs(q2):
+        return bpll_dbrdq2(q2, wc_obj, par, B, P, lep)
+    return quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
+
+# Functions returning functions needed for Prediction instances
+
+def bpll_dbrdq2_int_func(B, P, lep):
+    def fct(wc_obj, par, q2min, q2max):
+        return bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, lep)
+    return fct
+
+def bpll_dbrdq2_func(B, P, lep):
+    def fct(wc_obj, par, q2):
+        return bpll_dbrdq2(q2, wc_obj, par, B, P, lep)
+    return fct
 
 def bpll_obs_int_ratio_func(func_num, func_den, B, P, lep):
     def fct(wc_obj, par, q2min, q2max):
@@ -160,3 +179,17 @@ for l in ['e', 'mu', 'tau']:
             _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
             _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
             Prediction(_obs_name, bpll_obs_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['P'], l))
+
+        # binned branching ratio
+        _obs_name = "<BR>("+M+l+l+")"
+        _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+        _obs.set_description(r"Binned branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+        _obs.tex = r"$\langle \text{BR} \rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        Prediction(_obs_name, bpll_dbrdq2_int_func(_hadr[M]['B'], _hadr[M]['P'], l))
+
+        # differential branching ratio
+        _obs_name = "dBR/dq2("+M+l+l+")"
+        _obs = Observable(name=_obs_name, arguments=['q2'])
+        _obs.set_description(r"Differntial branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+        _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        Prediction(_obs_name, bpll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['P'], l))
