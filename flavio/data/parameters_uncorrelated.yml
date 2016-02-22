@@ -101,3 +101,9 @@ DeltaGamma/Gamma_Bs: 0.124(9) # HFAG Summer 2015
 # B->D* form factors
 B->D* CLN-IW R_0(1): 1.14(11) # 1203.2654 appendix B
 B->D* CLN-IW h_A1(1): 0.906(4)(12) # 1403.0635
+B->D* IW a_T1: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
+B->D* IW a_T2: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
+B->D* IW a_T23: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
+
+# B->D form factors
+B->D IW a_T: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation

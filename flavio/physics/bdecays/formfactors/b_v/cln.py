@@ -38,5 +38,5 @@ def ff(process, q2, par, scale):
               - A2*(mB**4 + (mV**2 - q2)**2 - 2*mB**2*(mV**2 + q2)))
               / (16.*mB*mV**2*(mB + mV)))
     ff['V'] = R1/RV * hA1
-    ff = improved_isgur_wise(q2=q2, ff=ff, par=par, B=pd['B'], V=pd['V'], scale=scale)
+    ff = improved_isgur_wise(process=process, q2=q2, ff=ff, par=par, scale=scale)
     return ff

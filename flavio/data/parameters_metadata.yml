@@ -504,6 +504,25 @@ B->D* CLN-IW h_A1(1):
   tex: $h_{A_1}(1)$
   description:
 
+# Parameters for B->D* tensor form factors using Isgur-Wise relations
+
+B->D* IW a_T1:
+  tex: $a_{T_1}^{B\to D^*}$
+  description: Relative power correction to the $B\to D^*$ tensor form factor $T_1$ from the improved Isgur-Wise relation
+B->D* IW a_T2:
+  tex: $a_{T_2}^{B\to D^*}$
+  description: Relative power correction to the $B\to D^*$ tensor form factor $T_2$ from the improved Isgur-Wise relation
+B->D* IW a_T23:
+  tex: $a_{T_{23}}^{B\to D^*}$
+  description: Relative power correction to the $B\to D^*$ tensor form factor $T_{23}$ from the improved Isgur-Wise relation
+
+# Parameters for B->D tensor form factor using Isgur-Wise relations
+
+B->D IW a_T:
+  tex: $a_T^{B\to D}$
+  description: Relative power correction to the $B\to D$ tensor form factor from the improved Isgur-Wise relation
+
+
 # Parameters for B->D form factors in the BCL parametrization
 B->D BCL3 a0_f+:
   tex: $a_0^{(+)}$

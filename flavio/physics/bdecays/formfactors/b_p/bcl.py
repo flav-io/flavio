@@ -79,5 +79,5 @@ def ff_isgurwise(process, q2, par, scale, n=3):
         a[i] = [ par[process + ' BCL' + str(n) + ' a' + str(j) + '_' + i] for j in range(n) ]
     ff['f+'] = pole('f+', mres, q2) * param_fplusT(mB, mP, a['f+'], q2)
     ff['f0'] = pole('f0', mres, q2) * param_f0(mB, mP, a['f0'], q2)
-    ff = improved_isgur_wise(q2, ff, par, B=pd['B'], P=pd['P'], scale=scale)
+    ff = improved_isgur_wise(process, q2, ff, par, scale=scale)
     return ff
