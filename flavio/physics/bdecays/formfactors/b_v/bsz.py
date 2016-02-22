@@ -12,7 +12,7 @@ def pole(ff,mres,q2):
     m = mres[mresdict[ff]]
     return 1/(1-q2/m**2)
 
-# resonance masses used in BSZ
+# resonance masses used in arXiv:1503.05534v1
 mres_bsz = {}
 mres_bsz['b->d'] = [5.279, 5.324, 5.716];
 mres_bsz['b->s'] = [5.367, 5.415, 5.830];

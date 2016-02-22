@@ -4,24 +4,35 @@ from flavio.physics.bdecays.formfactors.common import z
 from flavio.physics.bdecays.formfactors.b_p.isgurwise import improved_isgur_wise
 
 def pole(ff, mres, q2):
+    if mres is None:
+        return 1.
     mresdict = {'f0': 0,'f+': 1,'fT': 1}
     m = mres[mresdict[ff]]
     if m == 0:
         return 1
     return 1/(1-q2/m**2)
 
-mres_lattice = {}
+resonance_masses = {}
 # resonance masses used in 1509.06235
-mres_lattice['b->s'] = [5.711, 5.4154];
+# this is m_Bs*(0+), m_Bs*(1-)
+resonance_masses['B->K'] = [5.711, 5.4154]
 # resonance masses used in 1505.03925
-mres_lattice['b->c'] = [6.420, 6.330];
-# resonance masses used in 1507.01618
-mres_lattice['b->u'] = [5.319, 5.319]; # this is just mB*
+resonance_masses['B->D'] = [6.420, 6.330]
+# resonance masses used in 1503.07839v2
+# this is m_B*(1-)
+resonance_masses['B->pi'] = [None, 5.319]
+# resonance masses used in 1501.05373v3
+# this is m_B*(0+), m_B*(1-)
+resonance_masses['Bs->K'] = [5.63, 5.3252]
 
+# the following dict maps transitions to mesons. Note that it doesn't really
+# matter whether the charged or neutral B/K/pi are used here. We don't
+# distinguish between charged and neutral form factors anyway.
 process_dict = {}
-process_dict['B->K'] =    {'B': 'B0', 'P': 'K0', 'q': 'b->s'}
-process_dict['B->D'] =    {'B': 'B+', 'P': 'D0', 'q': 'b->c'}
-process_dict['B->pi'] =   {'B': 'B+', 'P': 'pi0', 'q': 'b->u'}
+process_dict['B->K'] =    {'B': 'B0', 'P': 'K0',}
+process_dict['Bs->K'] =    {'B': 'Bs', 'P': 'K+',}
+process_dict['B->D'] =    {'B': 'B+', 'P': 'D0',}
+process_dict['B->pi'] =   {'B': 'B+', 'P': 'pi0',}
 
 
 def param_fplusT(mB, mP, a_i, q2):
@@ -41,7 +52,7 @@ def ff(process, q2, par, n=3):
     The standard convention defines the form factors $f_+$, $f_0$, and $f_T$.
     """
     pd = process_dict[process]
-    mres = mres_lattice[pd['q']]
+    mres = resonance_masses[process]
     mB = par['m_'+pd['B']]
     mP = par['m_'+pd['P']]
     ff = {}
@@ -59,7 +70,7 @@ def ff_isgurwise(process, q2, par, scale, n=3):
     an improved Isgur-Wise relation in the heavy quark limit for $f_T$.
     """
     pd = process_dict[process]
-    mres = mres_lattice[pd['q']]
+    mres = resonance_masses[process]
     mB = par['m_'+pd['B']]
     mP = par['m_'+pd['P']]
     ff = {}
