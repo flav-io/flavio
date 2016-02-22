@@ -7,7 +7,6 @@ from flavio.parameters import default_parameters
 from flavio.classes import Parameter, Implementation
 
 c = copy.deepcopy(default_parameters)
-bcl_parameters.load_parameters('data/arxiv-1509-06235v1/b_k.yml', c)
 
 class TestBtoP(unittest.TestCase):
     def test_bcl_iw(self):
