@@ -548,35 +548,64 @@ B->pi BCL4 a0_f+:
   tex: $a_0^{(+)}$
   description:
 B->pi BCL4 a1_f+:
-  tex: $a_0^{(+)}$
+  tex: $a_1^{(+)}$
   description:
 B->pi BCL4 a2_f+:
-  tex: $a_0^{(+)}$
+  tex: $a_2^{(+)}$
   description:
 B->pi BCL4 a3_f+:
-  tex: $a_0^{(+)}$
+  tex: $a_3^{(+)}$
   description:
 B->pi BCL4 a0_f0:
   tex: $a_0^{(0)}$
   description:
 B->pi BCL4 a1_f0:
-  tex: $a_0^{(0)}$
+  tex: $a_1^{(0)}$
   description:
 B->pi BCL4 a2_f0:
-  tex: $a_0^{(0)}$
+  tex: $a_2^{(0)}$
   description:
 B->pi BCL4 a3_f0:
-  tex: $a_0^{(0)}$
+  tex: $a_3^{(0)}$
   description:
 B->pi BCL4 a0_fT:
   tex: $a_0^{(T)}$
   description:
 B->pi BCL4 a1_fT:
-  tex: $a_0^{(T)}$
+  tex: $a_1^{(T)}$
   description:
 B->pi BCL4 a2_fT:
-  tex: $a_0^{(T)}$
+  tex: $a_2^{(T)}$
   description:
 B->pi BCL4 a3_fT:
+  tex: $a_3^{(T)}$
+  description:
+
+# Parameters for B->K form factors in the BCL parametrization
+B->K BCL3 a0_f+:
+  tex: $a_0^{(+)}$
+  description:
+B->K BCL3 a1_f+:
+  tex: $a_1^{(+)}$
+  description:
+B->K BCL3 a2_f+:
+  tex: $a_2^{(+)}$
+  description:
+B->K BCL3 a0_f0:
+  tex: $a_0^{(0)}$
+  description:
+B->K BCL3 a1_f0:
+  tex: $a_1^{(0)}$
+  description:
+B->K BCL3 a2_f0:
+  tex: $a_w^{(0)}$
+  description:
+B->K BCL3 a0_fT:
   tex: $a_0^{(T)}$
+  description:
+B->K BCL3 a1_fT:
+  tex: $a_1^{(T)}$
+  description:
+B->K BCL3 a2_fT:
+  tex: $a_2^{(T)}$
   description:
