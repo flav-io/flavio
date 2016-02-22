@@ -11,7 +11,7 @@ def sm_prediction(obs_name, *args, **kwargs):
     wc_sm = flavio.WilsonCoefficients()
     return obs.prediction_central(flavio.default_parameters, wc_sm, *args, **kwargs)
 
-def sm_uncertainty(obs_name, *args, N=50, **kwargs):
+def sm_uncertainty(obs_name, *args, N=100, **kwargs):
     obs = flavio.classes.Observable.get_instance(obs_name)
     wc_sm = flavio.WilsonCoefficients()
     par_random = [flavio.default_parameters.get_random_all() for i in range(N)]
