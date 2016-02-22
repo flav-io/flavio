@@ -53,7 +53,7 @@ def get_angularcoeff(q2, wc_obj, par, B, P, lep):
 def dGdq2(J):
     return 2 * (J['a'] + J['c']/3.)
 
-def dBRdq2(q2, wc_obj, par, B, P, lep):
+def dBRdq2_lep(q2, wc_obj, par, B, P, lep):
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mP = par['m_'+P]
@@ -62,6 +62,14 @@ def dBRdq2(q2, wc_obj, par, B, P, lep):
     tauB = par['tau_'+B]
     J = get_angularcoeff(q2, wc_obj, par, B, P, lep)
     return tauB * dGdq2(J)
+
+def dBRdq2(q2, wc_obj, par, B, P, lep):
+    if lep == 'l':
+        # average of e and mu!
+        return (dBRdq2_lep(q2, wc_obj, par, B, P, 'e') + dBRdq2_lep(q2, wc_obj, par, B, P, 'mu'))/2
+    else:
+        return dBRdq2_lep(q2, wc_obj, par, B, P, lep)
+
 
 def dBRdq2_function(B, P, lep):
     return lambda wc_obj, par, q2: dBRdq2(q2, wc_obj, par, B, P, lep)
@@ -88,13 +96,13 @@ def BR_tot_function(B, P, lep):
 
 # Observable and Prediction instances
 
-_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
+_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau', 'l': r'\ell'}
 _func = {'dBR/dq2': dBRdq2_function, 'BR': BR_tot_function, '<BR>': BR_binned_function}
 _desc = {'dBR/dq2': 'Differential', 'BR': 'Total', '<BR>': 'Binned'}
 _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'\langle\text{BR}\rangle'}
 _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max']}
 
-for l in ['e', 'mu', 'tau']:
+for l in ['e', 'mu', 'tau', 'l']:
     for br in ['dBR/dq2', 'BR', '<BR>']:
         _obs_name = br + "(B+->D"+l+"nu)"
         _obs = Observable(_obs_name)
