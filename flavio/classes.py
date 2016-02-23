@@ -126,6 +126,12 @@ class Constraints(object):
           combined_pd = combine_distributions(pds)
           self.add_constraint([parameter], combined_pd)
 
+      def get_constraint_string(self, parameter):
+          """Return a string of the form 4.0±0.1±0.3 for the constraints on
+          the parameter. Correlations are ignored."""
+          pds = self._parameters[parameter]
+          return string_from_constraints(pds)
+
       def remove_constraints(self, parameter):
           """Remove all constraints on a parameter."""
           self._parameters[parameter] = []
@@ -541,6 +547,35 @@ def errors_from_string(constraint_string):
             errors['asymmetric_errors'].append((right_err, left_err))
     return errors
 
+
+def errors_from_constraints(probability_distributions):
+  """Return a string of the form 4.0±0.1±0.3 for the constraints on
+  the parameter. Correlations are ignored."""
+  errors = {}
+  errors['symmetric_errors'] = []
+  errors['asymmetric_errors'] = []
+  for num, pd in probability_distributions:
+      errors['central_value'] = pd.central_value
+      if isinstance(pd, DeltaDistribution):
+          # delta distributions (= no error) can be skipped
+          continue
+      elif isinstance(pd, NormalDistribution):
+          errors['symmetric_errors'].append(pd.standard_deviation)
+      elif isinstance(pd, AsymmetricNormalDistribution):
+          errors['asymmetric_errors'].append((pd.right_deviation, pd.left_deviation))
+      elif isinstance(pd, MultivariateNormalDistribution):
+          errors['central_value'] = pd.central_value[num]
+          errors['symmetric_errors'].append(math.sqrt(pd.covariance[num, num]))
+  return errors
+
+def string_from_constraints(probability_distributions):
+    errors = errors_from_constraints(probability_distributions)
+    string = str(errors['central_value'])
+    for err in errors['symmetric_errors']:
+        string += ' ± ' + str(err)
+    for right_err, left_err in errors['asymmetric_errors']:
+        string += r' ^{+' + str(right_err) + r'}_{-' + str(left_err) + r'}'
+    return string
 
 def constraints_from_string(constraint_string):
     """Convert a string like '1.67(3)(5)' or '1.67+-0.03+-0.05' to a list
