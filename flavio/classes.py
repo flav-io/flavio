@@ -5,6 +5,7 @@ import copy
 import math
 from flavio.statistics.probability import *
 from flavio.parse_errors import *
+import scipy.stats
 
 def _is_number(s):
     try:
@@ -168,6 +169,16 @@ class Constraints(object):
                   # step 1+i: p_r += r_i - c
                   random_dict[parameter] += np.ravel([random_constraints[idx]])[num] - central_value
           return random_dict
+
+      def get_1d_errors(self, N=1000):
+          """Get the Gaussian standard deviation for every parameter/observable
+          obtained by generating N random values.."""
+          random_dict_list = [self.get_random_all() for i in range(N)]
+          interval_dict = {}
+          for k in random_dict_list[0].keys():
+              arr = np.array([r[k] for r in random_dict_list])
+              interval_dict[k] = np.std(arr)
+          return interval_dict
 
       def get_logprobability_all(self, par_dict, exclude_parameters=[]):
           """Return a dictionary with the logarithm of the probability for each
