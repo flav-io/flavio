@@ -4,11 +4,9 @@ from flavio.physics.bdecays.formfactors.common import z
 from flavio.physics.bdecays.formfactors.b_p.isgurwise import improved_isgur_wise
 
 def pole(ff, mres, q2):
-    if mres is None:
-        return 1.
     mresdict = {'f0': 0,'f+': 1,'fT': 1}
     m = mres[mresdict[ff]]
-    if m == 0:
+    if m == 0 or m is None:
         return 1
     return 1/(1-q2/m**2)
 
