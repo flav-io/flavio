@@ -20,7 +20,7 @@ Further information and the package documentation can be found at:
 http://flav-io.github.io
 
 This web site is built with Jekyll and hosted on Github pages. You can check
-out its source (or submit pull requests) at http://github.com/flav-io/flavio-web.
+out its source (or submit pull requests) at https://github.com/flav-io/flav-io.github.io.
 
 ## Bugs and feature request
 
