@@ -82,13 +82,21 @@ def BR_binned(q2min, q2max, wc_obj, par, B, P, lep):
 def BR_binned_function(B, P, lep):
     return lambda wc_obj, par, q2min, q2max: BR_binned(q2min, q2max, wc_obj, par, B, P, lep)
 
-def BR_tot(wc_obj, par, B, P, lep):
+def _BR_tot(wc_obj, par, B, P, lep):
     mB = par['m_'+B]
     mP = par['m_'+P]
     ml = par['m_'+lep]
     q2max = (mB-mP)**2
     q2min = ml**2
     return BR_binned(q2min, q2max, wc_obj, par, B, P, lep)
+
+def BR_tot(wc_obj, par, B, P, lep):
+    if lep == 'l':
+        # average of e and mu!
+        return (_BR_tot(wc_obj, par, B, P, 'e')+_BR_tot(wc_obj, par, B, P, 'mu'))/2.
+    else:
+        return _BR_tot(wc_obj, par, B, P, lep)
+
 
 def BR_tot_function(B, P, lep):
     return lambda wc_obj, par: BR_tot(wc_obj, par, B, P, lep)
