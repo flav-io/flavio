@@ -97,3 +97,37 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
 
    def logpdf(self, x):
        return scipy.stats.multivariate_normal.logpdf(x, self.central_value, self.covariance, allow_singular=True)
+
+
+
+
+# Auxiliary functions
+
+def combine_distributions(probability_distributions):
+    """Combine a set of univariate probability distributions.
+
+    This function is meant for combining uncertainties on a single parameter/
+    observable. As an argument, it takes a list of Gaussians that all have
+    the same mean. It returns their convolution, but with location equal to the
+    original mean.
+
+    This should be generalized to other kinds of distributions in the future...
+    """
+    # if there's just one: return it immediately
+    if len(probability_distributions) == 1:
+        return probability_distributions[0]
+    central_value = probability_distributions[0].central_value # central value of the first dist
+    assert isinstance(central_value, float), "Combination only implemented for univariate distributions"
+    gaussians = []
+    for pd in probability_distributions:
+        if pd.central_value != central_value:
+            raise ValueError("All distributions to be combined must have the same central value")
+        if isinstance(pd, DeltaDistribution):
+            # delta distributions (= no error) can be skipped
+            continue
+        elif isinstance(pd, NormalDistribution):
+            gaussians.append(pd)
+        else:
+            raise ValueError("Combination only implemented for normal distributions")
+    err_squared = sum([pd.standard_deviation**2 for pd in gaussians])
+    return NormalDistribution(central_value=central_value, standard_deviation=math.sqrt(err_squared))
