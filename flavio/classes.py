@@ -34,19 +34,19 @@ class NamedInstanceClass(object):
    """
 
    def __init__(self, name):
-      if not hasattr(self.__class__, '_instances'):
-          self.__class__._instances = OrderedDict()
-      self.__class__._instances[name] = self
+      if not hasattr(self.__class__, 'instances'):
+          self.__class__.instances = OrderedDict()
+      self.__class__.instances[name] = self
       self.name = name
       self.description = ''
 
    @classmethod
    def get_instance(cls, name):
-      return cls._instances[name]
+      return cls.instances[name]
 
    @classmethod
    def del_instance(cls, name):
-      del cls._instances[name]
+      del cls.instances[name]
 
    def set_description(self, description):
       self.description = description
@@ -309,7 +309,7 @@ class Implementation(NamedInstanceClass):
    @classmethod
    def show_all(cls):
       all_dict = {}
-      for name in cls._instances:
+      for name in cls.instances:
           inst = cls.get_instance(name)
           quant = inst.quantity
           descr = inst.description
