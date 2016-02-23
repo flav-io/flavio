@@ -1,2 +1,2 @@
-from .classes import *
 from . import fitters
+from . import probability
