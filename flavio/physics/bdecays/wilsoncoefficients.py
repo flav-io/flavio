@@ -106,8 +106,8 @@ def get_wceff_fccc(q2, wc_obj, par, B, P, lep):
     c['7']  = 0
     c['7p'] = 0
     c['v']  = (1 + wc['CV_'+bqlnu])/2.
-    c['vp'] = (1 + wc['CVp_'+bqlnu])/2.
-    c['a']  = -wc['CV_'+bqlnu]/2.
+    c['vp'] = wc['CVp_'+bqlnu]/2.
+    c['a']  = -(1+wc['CV_'+bqlnu])/2.
     c['ap'] = -wc['CVp_'+bqlnu]/2.
     c['s']  = 1/2 * mb * wc['CS_'+bqlnu]/2.
     c['sp'] = 1/2 * mb * wc['CSp_'+bqlnu]/2.
