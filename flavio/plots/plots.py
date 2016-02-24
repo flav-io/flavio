@@ -1,5 +1,6 @@
 from collections import OrderedDict
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import numpy as np
 import flavio
 from scipy.optimize import brentq
@@ -50,3 +51,61 @@ def density_contour(x, y, xmin, xmax, ymin, ymax, covariance_factor=None):
     ax = plt.gca()
     ax.contourf(xx, yy, f, levels=levels, colors=flavio.plots.colors.reds[3:])
     ax.contour(xx, yy, f, levels=levels, colors=flavio.plots.colors.reds[::-1], linewidths=0.7)
+
+
+def q2_plot_th_diff(obs_name, q2min, q2max, wc=None, q2steps=100, **kwargs):
+    obs = flavio.classes.Observable.get_instance(obs_name)
+    if obs.arguments != ['q2']:
+        raise ValueError(r"Only observables that depend on $q^2$ (and nothing else) are allowed")
+    q2_arr = np.arange(q2min, q2max, (q2max-q2min)/(q2steps-1))
+    if wc is None:
+        wc = flavio.WilsonCoefficients() # SM Wilson coefficients
+        obs_arr = [flavio.sm_prediction(obs_name, q2) for q2 in q2_arr]
+    else:
+        obs_arr = [flavio.np_prediction(obs_name, wc, q2) for q2 in q2_arr]
+    ax = plt.gca()
+    if 'c' not in kwargs and 'color' not in kwargs:
+        kwargs['c'] = 'k'
+    ax.plot(q2_arr, obs_arr, **kwargs)
+
+def q2_plot_th_bin(obs_name, bin_list, wc=None, N=50, **kwargs):
+    obs = flavio.classes.Observable.get_instance(obs_name)
+    if obs.arguments != ['q2min', 'q2max']:
+        raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
+    if wc is None:
+        wc = flavio.WilsonCoefficients() # SM Wilson coefficients
+        obs_dict = {bin_: flavio.sm_prediction(obs_name, *bin_) for bin_ in bin_list}
+        obs_err_dict = {bin_: flavio.sm_uncertainty(obs_name, *bin_, N=N) for bin_ in bin_list}
+    else:
+        wc = flavio.WilsonCoefficients() # SM Wilson coefficients
+        obs_dict = {bin_:flavio.np_prediction(obs_name, wc, *bin_) for bin_ in bin_list}
+    ax = plt.gca()
+    for bin_, central in obs_dict.items():
+        q2min, q2max = bin_
+        err = obs_err_dict[bin_]
+        if 'fc' not in kwargs and 'facecolor' not in kwargs:
+            kwargs['fc'] = flavio.plots.colors.pastel[3]
+        if 'linewidth' not in kwargs and 'lw' not in kwargs:
+            kwargs['lw'] = 0
+        ax.add_patch(patches.Rectangle((q2min, central-err), q2max-q2min, 2*err,**kwargs))
+
+def q2_plot_exp(obs_name, col_dict=None, **kwargs):
+    obs = flavio.classes.Observable.get_instance(obs_name)
+    if obs.arguments != ['q2min', 'q2max']:
+        raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
+    for m_name, m_obj in flavio.Measurement.instances.items():
+        obs_name_list = m_obj.all_parameters
+        obs_name_list_binned = [o for o in obs_name_list if isinstance(o, tuple) and o[0]==obs_name]
+        if not obs_name_list_binned:
+            continue
+        central = m_obj.get_central_all()
+        err = m_obj.get_1d_errors()
+        for _, q2min, q2max in obs_name_list_binned:
+            c = central[(obs_name, q2min, q2max)]
+            e = err[(obs_name, q2min, q2max)]
+            ax=plt.gca()
+            if col_dict is not None:
+                if m_obj.experiment in col_dict:
+                    col = col_dict[m_obj.experiment]
+                    kwargs['c'] = col
+            ax.errorbar((q2max+q2min)/2., c, yerr=e, xerr=(q2max-q2min)/2, **kwargs)
