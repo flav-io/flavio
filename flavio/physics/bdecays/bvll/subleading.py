@@ -114,7 +114,7 @@ def fct_deltaC9_constant(B, V, lep):
         return helicity_amps_deltaC9_constant(q2, par_dict, B, V, lep)
     return fct
 
-# AuxiliaryQuantity & Implementatation: subleading effects at LOW q^2
+# AuxiliaryQuantity & Implementation: subleading effects at LOW q^2
 
 for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ]:
     for l in ['e', 'mu', ]:
@@ -140,7 +140,7 @@ for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ]:
                           r" as a first-order polynomial in $q^2$.")
 
 
-# AuxiliaryQuantity & Implementatation: subleading effects at HIGH q^2
+# AuxiliaryQuantity & Implementation: subleading effects at HIGH q^2
 
 for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ]:
     for l in ['e', 'mu', 'tau']:
