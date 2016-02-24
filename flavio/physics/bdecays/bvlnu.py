@@ -84,6 +84,9 @@ def dBRdq2_lep(q2, wc_obj, par, B, V, lep):
         return 0
     tauB = par['tau_'+B]
     J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
+    if V == 'rho0':
+        # factor of 1/2 for neutral rho due to rho = (uubar-ddbar)/sqrt(2)
+        return tauB * dGdq2(J) / 2.
     return tauB * dGdq2(J)
 
 
