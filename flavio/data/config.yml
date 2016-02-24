@@ -36,7 +36,7 @@ implementation:
 
   # B->P form factors
   B->K form factor: B->K BCL3
-  B->D form factor: B->D BCL3-IW
+  B->D form factor: B->D BCL3-IW-t0max
   B->pi form factor: B->pi BCL4
 
   # B->Vll non-factorizable spectator scattering corrections

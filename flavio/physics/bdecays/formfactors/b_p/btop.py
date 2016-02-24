@@ -35,3 +35,17 @@ for p in processes:
                    scale=config['renormalization scale']['bpll'], n=4))
     i.set_description("4-parameter BCL parametrization using improved Isgur-Wise relation"
                       " for the tensor form factor")
+
+    iname = p + ' BCL3-IW-t0max'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ff_function(bcl.ff_isgurwise, p,
+                   scale=config['renormalization scale']['bpll'], n=3, t0='tm'))
+    i.set_description("3-parameter BCL parametrization using improved Isgur-Wise relation"
+                      r" for the tensor form factor and taking $t_0=t_-$ in the $z$ expansion")
+
+    iname = p + ' BCL4-IW-t0max'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ff_function(bcl.ff_isgurwise, p,
+                   scale=config['renormalization scale']['bpll'], n=4, t0='tm'))
+    i.set_description("4-parameter BCL parametrization using improved Isgur-Wise relation"
+                      r" for the tensor form factor and taking $t_0=t_-$ in the $z$ expansion")

@@ -39,6 +39,8 @@ def z(mB, mM, q2, t0=None):
     tp = (mB+mM)**2
     if t0 is None:
         t0 = tp*(1-sqrt(1-tm/tp))
+    elif t0 == 'tm':
+        t0 = tm
     sq2 = sqrt(tp-q2)
     st0 = sqrt(tp-t0)
     return (sq2-st0)/(sq2+st0)
