@@ -45,7 +45,7 @@ def M12_d_SM(par, meson):
     if meson == 'K0':
         eta_cc = par['eta_cc_'+meson]
         eta_ct = par['eta_ct_'+meson]
-        M12 = M12 - (eta_cc*C_cc + 2*eta_ct*C_ct) * me_rgi
+        M12 = M12 - (eta_cc*C_cc + eta_ct*C_ct) * me_rgi
     return M12
 
 
