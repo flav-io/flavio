@@ -33,6 +33,16 @@ HFAG UT summer 2015:
     S_psiphi: -0.034 ± 0.033 # NB this is actually phi_s^ccbars
     S_psiK: 0.679 ± 0.020 # NB this is actually an average of several b->ccbard modes
 
+HFAG K*gamma summer 2015:
+  experiment: HFAG
+  inspire: Amhis:2012bh
+  url: http://www.slac.stanford.edu/xorg/hfag/triangle/summer2015/index.shtml
+  values:
+    S_K*gamma: -0.16 ± 0.22
+    ACP(B0->K*gamma): -0.04 ± 0.14
+  #to do: correlation: 0.06
+
+
 PDG kaon CPV:
   experiment: PDG
   values:
