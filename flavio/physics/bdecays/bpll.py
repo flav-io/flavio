@@ -144,6 +144,16 @@ def bpll_obs_int_ratio_func(func_num, func_den, B, P, lep):
         return num/den
     return fct
 
+def bpll_obs_int_ratio_leptonflavour(func, B, P, l1, l2):
+    def fct(wc_obj, par, q2min, q2max):
+        num = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, l1)
+        if num == 0:
+            return 0
+        denom = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, l2)
+        return num/denom
+    return fct
+
+
 def bpll_obs_ratio_func(func_num, func_den, B, P, lep):
     def fct(wc_obj, par, q2):
         num = bpll_obs(func_num, q2, wc_obj, par, B, P, lep)
@@ -193,3 +203,14 @@ for l in ['e', 'mu', 'tau']:
         _obs.set_description(r"Differntial branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
         _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
         Prediction(_obs_name, bpll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['P'], l))
+
+# Lepton flavour ratios
+for l in [('mu','e'), ('tau','mu'),]:
+    for M in _hadr.keys():
+
+            # binned ratio of BRs
+            _obs_name = "<R"+l[0]+l[1]+">("+M+"ll)"
+            _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+            _obs.set_description(r"Ratio of partial branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
+            _obs.tex = r"$\langle R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} \rangle(" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
+            Prediction(_obs_name, bpll_obs_int_ratio_leptonflavour(dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], *l))

@@ -152,6 +152,15 @@ def bvll_obs_int_ratio_func(func_num, func_den, B, V, lep):
         return num/denom
     return fct
 
+def bvll_obs_int_ratio_leptonflavour(func, B, V, l1, l2):
+    def fct(wc_obj, par, q2min, q2max):
+        num = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l1)
+        if num == 0:
+            return 0
+        denom = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l2)
+        return num/denom
+    return fct
+
 def bvll_obs_ratio_func(func_num, func_den, B, V, lep):
     def fct(wc_obj, par, q2):
         num = bvll_obs(func_num, q2, wc_obj, par, B, V, lep)
@@ -214,8 +223,8 @@ _observables_pprime = {
 'P8p': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 8), 'tex': r'P_8^\prime', 'desc': "CP-averaged \"optimized\" angular observable"},
 }
 _hadr = {
-'B0->K*': {'tex': r"B^0\to K^{*0}", 'B': 'B0', 'V': 'K*0', },
-'B+->K*': {'tex': r"B^+\to K^{*+}", 'B': 'B+', 'V': 'K*+', },
+'B0->K*': {'tex': r"B^0\to K^{\ast 0}", 'B': 'B0', 'V': 'K*0', },
+'B+->K*': {'tex': r"B^+\to K^{\ast +}", 'B': 'B+', 'V': 'K*+', },
 }
 
 for l in ['e', 'mu', 'tau']:
@@ -265,3 +274,14 @@ for l in ['e', 'mu', 'tau']:
         _obs.set_description(r"Differntial branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
         _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
         Prediction(_obs_name, bvll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['V'], l))
+
+# Lepton flavour ratios
+for l in [('mu','e'), ('tau','mu'),]:
+    for M in _hadr.keys():
+
+            # binned ratio of BRs
+            _obs_name = "<R"+l[0]+l[1]+">("+M+"ll)"
+            _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+            _obs.set_description(r"Ratio of partial branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
+            _obs.tex = r"$\langle R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} \rangle(" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
+            Prediction(_obs_name, bvll_obs_int_ratio_leptonflavour(dGdq2_ave, _hadr[M]['B'], _hadr[M]['V'], *l))
