@@ -1,3 +1,3 @@
 from . import colors
-from . import plots
+from ._plots import *
 from . import config
