@@ -1,3 +1,16 @@
+# This file contains the configuration options. If you want to modify them,
+# you have to options (without modifying the code itself):
+#
+# 1) You create a copy of this file (or a subset of this file), modify the
+#    it at will and overload the default configuration by calling:
+#
+#    with open('test.yml', 'r') as f:
+#       flavio.config.update(yaml.load(f))
+#
+# 2) By directly modifying the flavio.config dictionary, e.g.
+#
+#    flavio.config['CKM matrix'] = 'Wolfenstein'
+
 
 # set the renormalization scale for different processes.
 renormalization scale:

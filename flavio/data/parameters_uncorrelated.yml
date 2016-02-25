@@ -1,3 +1,25 @@
+# This file contains the central values and uncertainties of parameters
+# whose uncertainties are not correlated with any others.
+#
+# To modify them, without modifiying this file directly, you have two options.
+#
+# 1) Create a copy of this file (or a subset of it) and read it into your
+#    ParameterConstraints() object, e.g.:
+#
+#    my_parameters = flavio.ParameterConstraints()
+#    flavio.parameters.read_file_values('my_parameters_uncorr.yml', my_parameters)
+#
+#    Instead of my_parameters, you can also overload the flavio default parameters
+#    by calling
+#
+#    flavio.parameters.read_file_values(..., flavio.default_parameters)
+#
+# 2) Modify values at runtime by calling, for instance,
+#
+#    my_parameters = flavio.ParameterConstraints()
+#    my_parameters.set_constraint('alpha_s', '0.1176(8)')
+#
+#    this can also be done with flavio.default_parameters instead of my_parameters.
 
 # Coupling constants
 
