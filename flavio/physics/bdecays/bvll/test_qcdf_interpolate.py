@@ -34,7 +34,7 @@ class TestQCDFInterpolate(unittest.TestCase):
                 self.assertEqual(amps_in[i], 0)
 
         # and the same game again for different q2 and process
-        q2 = 6.235
+        q2 = 5.935
         B = 'Bs'
         V = 'phi'
         lep = 'mu'
