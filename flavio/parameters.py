@@ -180,7 +180,16 @@ def read_pdg(year, constraints):
             # otherwise, create it
             m = Parameter(parameter_name)
         m.tex = r'$m_{' + tex_name + '}$'
-        m.description = r'$' + tex_name + r'$ mass'
+        if tex_name =='b' or tex_name == 'c':
+            m.tex = r'$m_{' + tex_name + '}(m_{' + tex_name + '})$'
+            m.description = r'$' + tex_name + r'$ quark mass in the $\overline{\text{MS}}$ scheme at the scale $m_' + tex_name + r'$'
+        elif tex_name =='s' or tex_name =='u' or tex_name =='d':
+            m.tex = r'$m_{' + tex_name + r'}(2\,\text{GeV})$'
+            m.description = r'$' + tex_name + r'$ quark mass in the $\overline{\text{MS}}$ scheme at 2 GeV'
+        elif tex_name =='t':
+            m.description = r'$' + tex_name + r'$ quark pole mass'
+        else:
+            m.description = r'$' + tex_name + r'$ mass'
         m_central, m_right, m_left = particles[particle]['mass']
         m_left = abs(m_left) # make left error positive
         if m_right == m_left:

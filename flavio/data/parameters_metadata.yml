@@ -526,86 +526,86 @@ B->D IW a_T:
 # Parameters for B->D form factors in the BCL parametrization
 B->D BCL3 a0_f+:
   tex: $a_0^{(+)}$
-  description:
+  description: BCL $B\to D$ form factor parametrization coefficient $a_0$ of $f_+$
 B->D BCL3 a1_f+:
-  tex: $a_0^{(+)}$
-  description:
+  tex: $a_1^{(+)}$
+  description: BCL $B\to D$ form factor parametrization coefficient $a_1$ of $f_+$
 B->D BCL3 a2_f+:
-  tex: $a_0^{(+)}$
-  description:
+  tex: $a_2^{(+)}$
+  description: BCL $B\to D$ form factor parametrization coefficient $a_2$ of $f_+$
 B->D BCL3 a0_f0:
   tex: $a_0^{(0)}$
-  description:
+  description: BCL $B\to D$ form factor parametrization coefficient $a_0$ of $f_0$
 B->D BCL3 a1_f0:
-  tex: $a_0^{(0)}$
-  description:
+  tex: $a_1^{(0)}$
+  description: BCL $B\to D$ form factor parametrization coefficient $a_1$ of $f_0$
 B->D BCL3 a2_f0:
-  tex: $a_0^{(0)}$
-  description:
+  tex: $a_2^{(0)}$
+  description: BCL $B\to D$ form factor parametrization coefficient $a_2$ of $f_0$
 
 # Parameters for B->pi form factors in the BCL parametrization
 B->pi BCL4 a0_f+:
   tex: $a_0^{(+)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_0$ of $f_+$
 B->pi BCL4 a1_f+:
   tex: $a_1^{(+)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_1$ of $f_+$
 B->pi BCL4 a2_f+:
   tex: $a_2^{(+)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_2$ of $f_+$
 B->pi BCL4 a3_f+:
   tex: $a_3^{(+)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_3$ of $f_+$
 B->pi BCL4 a0_f0:
   tex: $a_0^{(0)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_0$ of $f_0$
 B->pi BCL4 a1_f0:
   tex: $a_1^{(0)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_1$ of $f_0$
 B->pi BCL4 a2_f0:
   tex: $a_2^{(0)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_2$ of $f_0$
 B->pi BCL4 a3_f0:
   tex: $a_3^{(0)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_3$ of $f_T$
 B->pi BCL4 a0_fT:
   tex: $a_0^{(T)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_0$ of $f_T$
 B->pi BCL4 a1_fT:
   tex: $a_1^{(T)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_1$ of $f_T$
 B->pi BCL4 a2_fT:
   tex: $a_2^{(T)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_2$ of $f_T$
 B->pi BCL4 a3_fT:
   tex: $a_3^{(T)}$
-  description:
+  description: BCL $B\to \pi$ form factor parametrization coefficient $a_3$ of $f_T$
 
 # Parameters for B->K form factors in the BCL parametrization
 B->K BCL3 a0_f+:
   tex: $a_0^{(+)}$
-  description:
+  description: BCL $B\to K$ form factor parametrization coefficient $a_0$ of $f_+$
 B->K BCL3 a1_f+:
   tex: $a_1^{(+)}$
-  description:
+  description: BCL $B\to K$ form factor parametrization coefficient $a_1$ of $f_+$
 B->K BCL3 a2_f+:
   tex: $a_2^{(+)}$
-  description:
+  description: BCL $B\to K$ form factor parametrization coefficient $a_2$ of $f_+$
 B->K BCL3 a0_f0:
   tex: $a_0^{(0)}$
-  description:
+  description: BCL $B\to K$ form factor parametrization coefficient $a_0$ of $f_0$
 B->K BCL3 a1_f0:
   tex: $a_1^{(0)}$
-  description:
+  description: BCL $B\to K$ form factor parametrization coefficient $a_1$ of $f_0$
 B->K BCL3 a2_f0:
   tex: $a_w^{(0)}$
-  description:
+  description: BCL $B\to K$ form factor parametrization coefficient $a_2$ of $f_0$
 B->K BCL3 a0_fT:
   tex: $a_0^{(T)}$
-  description:
+  description: BCL $B\to K$ form factor parametrization coefficient $a_0$ of $f_T$
 B->K BCL3 a1_fT:
   tex: $a_1^{(T)}$
-  description:
+  description: BCL $B\to K$ form factor parametrization coefficient $a_1$ of $f_T$
 B->K BCL3 a2_fT:
   tex: $a_2^{(T)}$
-  description:
+  description: BCL $B\to K$ form factor parametrization coefficient $a_2$ of $f_T$

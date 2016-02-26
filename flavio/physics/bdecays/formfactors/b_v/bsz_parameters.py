@@ -8,6 +8,9 @@ ai = ["a0","a1","a2"]
 ff_a  = [(ff,a) for ff in FFs for a in ai]
 a_ff_string  = [a + '_' + ff for ff in FFs for a in ai]
 
+tex_a = {'a0': 'a_0', 'a1': 'a_1', 'a2': 'a_2', }
+tex_ff = {'A0': 'A_0', 'A1': 'A_1', 'A12': r'A_{12}','V': 'V', 'T1': 'T_1','T2': 'T_2', 'T23': r'T_{23}', }
+
 def get_ffpar(filename):
     f = pkgutil.get_data('flavio.physics', filename)
     data = json.loads(f.decode('utf-8'))
@@ -35,6 +38,11 @@ def load_parameters(filename, process, constraints):
             p = Parameter.get_instance(parameter_name)
         except: # otherwise, create a new one
             p = Parameter(parameter_name)
+            # get LaTeX representation of coefficient and form factor names
+            _tex_a = tex_a[parameter_name.split(' ')[-1].split('_')[0]]
+            _tex_ff = tex_ff[parameter_name.split(' ')[-1].split('_')[-1]]
+            p.tex = r'$' + _tex_a + r'^{' + _tex_ff + r'}$'
+            p.description = r'BSZ form factor parametrization coefficient $' + _tex_a + r'$ of $' + _tex_ff + r'$'
         else: # if parameter exists, remove existing constraints
             constraints.remove_constraints(parameter_name)
     [central, unc, corr] = get_ffpar(filename)
