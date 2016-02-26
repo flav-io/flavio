@@ -55,15 +55,5 @@ def sm_error_budget(obs_name, *args, N=50, **kwargs):
             obs.prediction_par(par, wc_sm, *args, **kwargs)
             for par in par_random_p
         ])
-        individual_errors[p] = np.std(all_pred)/pred_central
+        individual_errors[p] = np.std(all_pred)/abs(pred_central)
     return individual_errors
-
-
-    # all_pred = np.array([
-    #     obs.prediction_par(par, wc_sm)
-    #     for par in par_random
-    # ])
-    # par_keys = par_random[0].keys()
-    # par_random_arr = np.array([np.array([p[key] for key in par_keys]) for p in par_random])
-    # corr_dict = { list(par_keys)[i]: np.corrcoef(par_random_arr[:,i],all_pred)[0,1] for i in range(len(par_keys)) }
-    # return par_keys, par_random_arr, all_pred#OrderedDict(sorted(corr_dict.items(), key=lambda t: t[1]))
