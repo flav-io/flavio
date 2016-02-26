@@ -94,20 +94,23 @@ def get_wceff_lfv(q2, wc, par, B, M, l1, l2, scale):
     c['tp'] = 0
     return c
 
-def get_wceff_fccc(q2, wc_obj, par, B, P, lep):
+def get_wceff_fccc(q2, wc_obj, par, B, P, lep, scale):
     """Get a dictionary with the effective $b\to(c,u)$ Wilson coefficients
     in the convention appropriate for the generalized angular distributions.
     """
-    scale = config['renormalization scale']['bpll']
     bqlnu = meson_quark[(B,P)] + lep + 'nu'
     wc = wc_obj.get_wc(bqlnu, scale, par)
     mb = running.get_mb(par, scale)
+    alpha_e = running.get_alpha(par, scale)['alpha_e']
+    # SM Wilson coefficient of $V_{qb} \bar c_L \gamma_\mu b_L \bar \nu_L \gamma^\mu \ell_L$
+    # 1 (tree-level) + 1-loop EW correction a la Sirlin
+    c_sm = 1 + alpha_e/pi * log(par['m_Z']/scale)
     c = {}
     c['7']  = 0
     c['7p'] = 0
-    c['v']  = (1 + wc['CV_'+bqlnu])/2.
+    c['v']  = (c_sm + wc['CV_'+bqlnu])/2.
     c['vp'] = wc['CVp_'+bqlnu]/2.
-    c['a']  = -(1+wc['CV_'+bqlnu])/2.
+    c['a']  = -(c_sm + wc['CV_'+bqlnu])/2.
     c['ap'] = -wc['CVp_'+bqlnu]/2.
     c['s']  = 1/2 * mb * wc['CS_'+bqlnu]/2.
     c['sp'] = 1/2 * mb * wc['CSp_'+bqlnu]/2.
