@@ -6,15 +6,48 @@ import numpy as np
 from collections import OrderedDict
 
 def np_prediction(obs_name, wc_obj, *args, **kwargs):
+    """Get the central value of the new physics prediction of an observable.
+
+    Parameters
+    ----------
+
+    - `obs_name`: name of the observable as a string
+    - `wc_obj`: an instance of `flavio.WilsonCoefficients`
+
+    Additional arguments are passed to the observable and are necessary,
+    depending on the observable (e.g. $q^2$-dependent observables).
+    """
     obs = flavio.classes.Observable.get_instance(obs_name)
     return obs.prediction_central(flavio.default_parameters, wc_obj, *args, **kwargs)
 
 def sm_prediction(obs_name, *args, **kwargs):
+    """Get the central value of the Standard Model prediction of an observable.
+
+    Parameters
+    ----------
+
+    - `obs_name`: name of the observable as a string
+
+    Additional arguments are passed to the observable and are necessary,
+    depending on the observable (e.g. $q^2$-dependent observables).
+    """
     obs = flavio.classes.Observable.get_instance(obs_name)
     wc_sm = flavio.WilsonCoefficients()
     return obs.prediction_central(flavio.default_parameters, wc_sm, *args, **kwargs)
 
 def sm_uncertainty(obs_name, *args, N=100, **kwargs):
+    """Get the uncertainty of the Standard Model prediction of an observable.
+
+    Parameters
+    ----------
+
+    - `obs_name`: name of the observable as a string
+    - `N` (optional): number of random evaluations of the observable.
+    The relative accuracy of the uncertainty returned is given by $1/\sqrt{2N}$.
+
+    Additional arguments are passed to the observable and are necessary,
+    depending on the observable (e.g. $q^2$-dependent observables).
+    """
     obs = flavio.classes.Observable.get_instance(obs_name)
     wc_sm = flavio.WilsonCoefficients()
     par_random = [flavio.default_parameters.get_random_all() for i in range(N)]
@@ -25,6 +58,19 @@ def sm_uncertainty(obs_name, *args, N=100, **kwargs):
     return np.std(all_pred)
 
 def sm_error_budget(obs_name, *args, N=50, **kwargs):
+    """Get the *relative* uncertainty of the Standard Model prediction due to
+    variation of individual observables.
+
+    Parameters
+    ----------
+
+    - `obs_name`: name of the observable as a string
+    - `N` (optional): number of random evaluations of the observable.
+    The relative accuracy of the uncertainties returned is given by $1/\sqrt{2N}$.
+
+    Additional arguments are passed to the observable and are necessary,
+    depending on the observable (e.g. $q^2$-dependent observables).
+    """
     obs = flavio.classes.Observable.get_instance(obs_name)
     wc_sm = flavio.WilsonCoefficients()
     par_central = flavio.default_parameters.get_central_all()
