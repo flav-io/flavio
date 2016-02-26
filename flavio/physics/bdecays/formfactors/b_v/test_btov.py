@@ -49,7 +49,6 @@ class TestBtoV(unittest.TestCase):
         self.assertAlmostEqual(fflatt['T1'], 0.711, places=3)
         self.assertAlmostEqual(fflatt['T2'], 0.433, places=3)
         self.assertAlmostEqual(fflatt['T23'], 0.809, places=3)
-        # FIXME this still doesn't work well due to the resonance mass problem
         fflatt = Implementation.get_instance('Bs->phi SSE').get_central(constraints_obj=c, wc_obj=None, q2=12.)
         self.assertAlmostEqual(fflatt['V'], 0.767, places=2)
         self.assertAlmostEqual(fflatt['A0'], 0.907, places=2)
