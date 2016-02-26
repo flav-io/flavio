@@ -11,6 +11,7 @@ from flavio.physics.bdecays import matrixelements, angular
 from flavio.physics import ckm
 from flavio.physics.bdecays.bvll import qcdf
 from flavio.classes import AuxiliaryQuantity
+import warnings
 
 
 def prefactor(q2, par, B, V, lep):
@@ -76,6 +77,8 @@ def get_subleading_high(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
 
 
 def helicity_amps(q2, wc_obj, par, B, V, lep):
+    if q2 >= 8.7 and q2 < 14:
+        warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
     return add_dict((
         helicity_amps_ff(q2, wc_obj, par, B, V, lep, cp_conjugate=False),
         get_ss(q2, wc_obj, par, B, V, lep, cp_conjugate=False),
@@ -83,6 +86,8 @@ def helicity_amps(q2, wc_obj, par, B, V, lep):
         ))
 
 def helicity_amps_bar(q2, wc_obj, par, B, V, lep):
+    if q2 >= 8.7 and q2 < 14:
+        warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
     return add_dict((
         helicity_amps_ff(q2, wc_obj, par, B, V, lep, cp_conjugate=True),
         get_ss(q2, wc_obj, par, B, V, lep, cp_conjugate=True),

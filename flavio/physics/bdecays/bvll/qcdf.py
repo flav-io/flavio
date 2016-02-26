@@ -300,6 +300,8 @@ def transversity_amps_qcdf(q2, wc, par, B, V, lep):
     return ta
 
 def helicity_amps_qcdf(q2, wc, par, B, V, lep):
+    if q2 > 6:
+        warnings.warn("The QCDF corrections should not be trusted for q2 above 6 GeV^2")
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mV = par['m_'+V]

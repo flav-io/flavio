@@ -61,12 +61,16 @@ def helicity_amps_ff(q2, wc_obj, par_dict, B, P, lep, cp_conjugate):
     return h
 
 def helicity_amps(q2, wc_obj, par, B, P, lep):
+    if q2 >= 8.7 and q2 < 14:
+        warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
     return add_dict((
         helicity_amps_ff(q2, wc_obj, par, B, P, lep, cp_conjugate=False),
         get_subleading(q2, wc_obj, par, B, P, lep, cp_conjugate=False)
         ))
 
 def helicity_amps_bar(q2, wc_obj, par, B, P, lep):
+    if q2 >= 8.7 and q2 < 14:
+        warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
     return add_dict((
         helicity_amps_ff(q2, wc_obj, par, B, P, lep, cp_conjugate=False),
         get_subleading(q2, wc_obj, par, B, P, lep, cp_conjugate=False)
