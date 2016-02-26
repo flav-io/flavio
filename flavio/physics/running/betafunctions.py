@@ -5,8 +5,8 @@ from math import pi
 
 
 def beta_qcd(als, ale, mu, f):
-    """RHS of the QCD beta function written in the form
-    d/d\mu \alpha_s = \beta
+    r"""Right-hand side of the QCD beta function written in the (unconventional) form
+    $d \alpha_s /d\mu= \beta(\mu)$
     """
     #FIXME QED part only implemented for f=5
     b=np.zeros((3,3), dtype=float)
@@ -23,8 +23,8 @@ def beta_qcd(als, ale, mu, f):
     return -1/2./pi/mu*als**2*(couplings*b).sum()
 
 def beta_qed(ale, als, mu, f):
-    """RHS of the QED beta function written in the form
-    d/d\mu \alpha_e = \beta
+    r"""RHS of the QED beta function written in the (unconventional) form
+    $d \alpha_e /d\mu= \beta(\mu)$
     """
     #FIXME only implemented for f=5
     b=np.zeros((2,2), dtype=float)
@@ -38,8 +38,8 @@ def beta_qed(ale, als, mu, f):
     return 1/2./pi/mu*ale**2*(couplings*b).sum()
 
 def beta_qcd_qed(alpha, mu, nf):
-    """RHS of the QCD and QED beta function written in the form
-    $$\frac{d}{\mu} \vec\alpha = \vec\beta$$
+    r"""RHS of the QCD and QED beta function written in the (unconventional) form
+    $$\frac{d}{d\mu} \vec\alpha = \vec\beta(\mu)$$
     where $\vec\alpha^T=(\alpha_s,\alpha_e)$
     """
     bs =  beta_qcd(alpha[0], alpha[1], mu, nf)

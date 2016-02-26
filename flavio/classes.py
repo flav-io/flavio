@@ -1,10 +1,13 @@
+"""Base classes for `flavio`"""
+
+
 import numpy as np
 from .config import config
 from collections import OrderedDict
 import copy
 import math
 from flavio.statistics.probability import *
-from flavio.parse_errors import *
+from flavio._parse_errors import *
 import scipy.stats
 
 def _is_number(s):

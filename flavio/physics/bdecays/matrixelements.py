@@ -71,9 +71,9 @@ def F_17(muh, z, sh):
     """Function $F_1^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_1$, as defined in arXiv:0810.4077.
 
-    `muh` is $\hatmu=mu/m_b$,
-    `z` is $z=m_c^2/m_b^2$,
-    `sh` is $\hat s=q^2/m_b^2$.
+    - `muh` is $\hat \mu=mu/m_b$,
+    - `z` is $z=m_c^2/m_b^2$,
+    - `sh` is $\hat s=q^2/m_b^2$.
     """
     return _F_17([muh, z, sh])[0]
 
@@ -82,9 +82,9 @@ def F_19(muh, z, sh):
     """Function $F_1^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_1$, as defined in arXiv:0810.4077.
 
-    `muh` is $\hatmu=mu/m_b$,
-    `z` is $z=m_c^2/m_b^2$,
-    `sh` is $\hat s=q^2/m_b^2$.
+    - `muh` is $\hat \mu=mu/m_b$,
+    - `z` is $z=m_c^2/m_b^2$,
+    - `sh` is $\hat s=q^2/m_b^2$.
     """
     return _F_19([muh, z, sh])[0]
 
@@ -93,9 +93,9 @@ def F_27(muh, z, sh):
     """Function $F_2^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_2$, as defined in arXiv:0810.4077.
 
-    `muh` is $\hatmu=mu/m_b$,
-    `z` is $z=m_c^2/m_b^2$,
-    `sh` is $\hat s=q^2/m_b^2$.
+    - `muh` is $\hat \mu=mu/m_b$,
+    - `z` is $z=m_c^2/m_b^2$,
+    - `sh` is $\hat s=q^2/m_b^2$.
     """
     return _F_27([muh, z, sh])[0]
 
@@ -104,9 +104,9 @@ def F_29(muh, z, sh):
     """Function $F_2^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_2$, as defined in arXiv:0810.4077.
 
-    `muh` is $\hatmu=mu/m_b$,
-    `z` is $z=m_c^2/m_b^2$,
-    `sh` is $\hat s=q^2/m_b^2$.
+    - `muh` is $\hat \mu=mu/m_b$,
+    - `z` is $z=m_c^2/m_b^2$,
+    - `sh` is $\hat s=q^2/m_b^2$.
     """
     return _F_29([muh, z, sh])[0]
 
@@ -115,8 +115,8 @@ def F_89(Ls, sh):
     """Function $F_8^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_8$, as given in eq. (39) of hep-ph/0312063.
 
-    `sh` is $\hat s=q^2/m_b^2$,
-    `Ls` is $\ln(\hat s)$.
+    - `sh` is $\hat s=q^2/m_b^2$,
+    - `Ls` is $\ln(\hat s)$.
     """
     return (104/9. - 32/27. * pi**2 + (1184/27. - 40/9. * pi**2) * sh
     + (14212/135. - 32/3 * pi**2) * sh**2 + (193444/945.
@@ -126,7 +126,7 @@ def F_87(Lmu, sh):
     """Function $F_8^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_8$, as given in eq. (40) of hep-ph/0312063.
 
-    `sh` is $\hat s=q^2/m_b^2$,
+    - `sh` is $\hat s=q^2/m_b^2$,
     """
     if sh==0.:
         return (-4*(33 + 24*Lmu + 6j*pi - 2*pi**2))/27.

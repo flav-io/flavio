@@ -29,14 +29,8 @@ def ff(process, q2, par, implementation, n=2):
     $A_0$, $A_1$, $A_{12}$, $V$, $T_1$, $T_2$, $T_{23}$.
 
     The SSE defines
-    $$F_i(q^2) = P_i(q^2) \sum_k \al_k^i \,z(q^2)^k$$
+    $$F_i(q^2) = P_i(q^2) \sum_k a_k^i \,z(q^2)^k$$
     where $P_i(q^2)=(1-q^2/m_{R,i}^2)^{-1}$ is a simple pole.
-
-    Parameters
-    ----------
-    #FIXME
-    q2 : float
-        momentum transfer squared $q^2$
     """
     pd = process_dict[process]
     mres = mres_bsz[pd['q']]

@@ -18,11 +18,13 @@ def br_lifetime_corr(y, ADeltaGamma):
 
     Parameters
     ----------
-    - y: relative decay rate difference, $y_q = \tau_{B_q} \Delta\Gamma_q /2$
-    - ADeltaGamma: $A_{\Delta\Gamma_q}$ as defined, e.g., in arXiv:1204.1735
+
+    - `y`: relative decay rate difference, $y_q = \tau_{B_q} \Delta\Gamma_q /2$
+    - `ADeltaGamma`: $A_{\Delta\Gamma_q}$ as defined, e.g., in arXiv:1204.1735
 
     Returns
     -------
+
     $\frac{1-y_q^2}{1+A_{\Delta\Gamma_q} y_q}$
     """
     return (1 - y**2)/(1 + ADeltaGamma*y)
@@ -32,13 +34,16 @@ def amplitudes(par, wc, B, lep):
 
     Parameters
     ----------
-    - par: parameter dictionary
-    - B: should be 'Bs' or 'B0'
-    - lep: should be 'e', 'mu', or 'tau'
+
+    - `par`: parameter dictionary
+    - `B`: should be `'Bs'` or `'B0'`
+    - `lep`: should be `'e'`, `'mu'`, or `'tau'`
 
     Returns
     -------
-    P, S where
+
+    `(P, S)` where
+
     - $P = \frac{2m_\ell}{m_{B_q}} (C_{10}-C_{10}') + m_{B_q} (C_P-C_P')$
     - $S = m_{B_q} (C_S-C_S')$
     """
@@ -64,9 +69,10 @@ def br_inst(par, wc, B, lep):
 
     Parameters
     ----------
-    - par: parameter dictionary
-    - B: should be 'Bs' or 'B0'
-    - lep: should be 'e', 'mu', or 'tau'
+
+    - `par`: parameter dictionary
+    - `B`: should be `'Bs'` or `'B0'`
+    - `lep`: should be `'e'`, `'mu'`, or `'tau'`
     """
     # paramaeters
     GF = par['GF']

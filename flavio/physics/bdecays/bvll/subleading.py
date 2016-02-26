@@ -34,7 +34,8 @@ def helicity_amps_deltaC7(q2, deltaC7_dict, par, B, V, lep):
     residual uncertainties due to subleading non-factorizable hadronic effects.
 
     The input dictionary `deltaC7_dict` should be of the form
-    { ('0','V'): deltaC7_0, ('pl','V'): deltaC7_pl, ('mi','V'): deltaC7_mi }
+
+    `{ ('0','V'): deltaC7_0, ('pl','V'): deltaC7_pl, ('mi','V'): deltaC7_mi }`
     """
     ha = {}
     for amp in [('0','V'), ('pl','V'), ('mi','V')]:
@@ -48,7 +49,8 @@ def helicity_amps_deltaC9(q2, deltaC9_dict, par, B, V, lep):
     residual uncertainties due to subleading non-factorizable hadronic effects.
 
     The input dictionary `deltaC9_dict` should be of the form
-    { ('0','V'): deltaC9_0, ('pl','V'): deltaC9_pl, ('mi','V'): deltaC9_mi }
+
+    `{ ('0','V'): deltaC9_0, ('pl','V'): deltaC9_pl, ('mi','V'): deltaC9_mi }`
     """
     ha = {}
     for amp in [('0','V'), ('pl','V'), ('mi','V')]:

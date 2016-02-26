@@ -65,7 +65,7 @@ def gamma_df2_array(f, alpha_s):
 
 def gamma_df2(c, alpha_s, mu, nf):
     r"""RHS of the RGE for $\Delta F=2$ Wilson coefficients written in the form
-    $$\frac{d}{d\mu} \vec C = \gamma^T \vec C / \mu \equiv \vec\R$$
+    $$\frac{d}{d\mu} \vec C = \gamma^T \vec C / \mu \equiv \vec R$$
     """
     gamma = gamma_df2_array(nf, alpha_s)
     return np.dot(gamma.T, c)/mu

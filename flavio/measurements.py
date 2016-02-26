@@ -1,3 +1,5 @@
+"""Functions for parsing the measurement data files"""
+
 import yaml
 import pkgutil
 from flavio.classes import *

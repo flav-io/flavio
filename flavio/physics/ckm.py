@@ -15,14 +15,11 @@ def ckm_standard(t12, t13, t23, delta):
 
     Parameters
     ----------
-    t12 : float
-        CKM angle $\theta_{12}$ in radians
-    t13 : float
-        CKM angle $\theta_{13}$ in radians
-    t23 : float
-        CKM angle $\theta_{23}$ in radians
-    delta : float
-        CKM phase $\delta=\gamma$ in radians
+
+    - `t12`: CKM angle $\theta_{12}$ in radians
+    - `t13`: CKM angle $\theta_{13}$ in radians
+    - `t23`: CKM angle $\theta_{23}$ in radians
+    - `delta`: CKM phase $\delta=\gamma$ in radians
     """
     c12 = cos(t12)
     c13 = cos(t13)
@@ -57,22 +54,21 @@ def ckm_wolfenstein(laC, A, rhobar, etabar):
 
     This function does not rely on an expansion in the Cabibbo angle but
     defines, to all orders in $\lambda$,
+
     - $\lambda = \sin\theta_{12}$
     - $A\lambda^2 = \sin\theta_{23}$
     - $A\lambda^3(\rho-i \eta) = \sin\theta_{13}e^{-i\delta}$
+
     where $\rho = \bar\rho/(1-\lambda^2/2)$ and
     $\eta = \bar\eta/(1-\lambda^2/2)$.
 
     Parameters
     ----------
-    laC : float
-        Wolfenstein parameter $\lambda$ (sine of Cabibbo angle)
-    A : float
-        Wolfenstein parameter A
-    rhobar : float
-        Wolfenstein parameter $\bar\rho = \rho(1-\lambda^2/2)$
-    etabar : float
-        Wolfenstein parameter $\bar\eta = \eta(1-\lambda^2/2)$
+
+    - `laC`: Wolfenstein parameter $\lambda$ (sine of Cabibbo angle)
+    - `A`: Wolfenstein parameter $A$
+    - `rhobar`: Wolfenstein parameter $\bar\rho = \rho(1-\lambda^2/2)$
+    - `etabar`: Wolfenstein parameter $\bar\eta = \eta(1-\lambda^2/2)$
     """
     rho = rhobar/(1 - laC**2/2.)
     eta = etabar/(1 - laC**2/2.)
@@ -88,7 +84,7 @@ def ckm_wolfenstein(laC, A, rhobar, etabar):
 
 @lru_cache(maxsize=2)
 def ckm_tree(Vus, Vub, Vcb, gamma):
-    """CKM matrix in the tree parametrization and standard phase
+    r"""CKM matrix in the tree parametrization and standard phase
     convention.
 
     In this parametrization, the parameters are directly measured from
@@ -97,6 +93,7 @@ def ckm_tree(Vus, Vub, Vcb, gamma):
     Model. This function involves no analytical approximations.
 
     Relation to the standard parametrization:
+
     - $V_{us} = \cos \theta_{13} \sin \theta_{12}$
     - $|V_{ub}| = |\sin \theta_{13}|$
     - $V_{cb} = \cos \theta_{13} \sin \theta_{23}$
@@ -104,14 +101,11 @@ def ckm_tree(Vus, Vub, Vcb, gamma):
 
     Parameters
     ----------
-    Vus : float
-        CKM matrix element $V_{us}$
-    Vub : float
-        Absolute value of CKM matrix element $|V_{ub}|$
-    Vcb : float
-        CKM matrix element $V_{cb}$
-    gamma : float
-        CKM phase $\gamma=\delta$ in radians
+
+    - `Vus`: CKM matrix element $V_{us}$
+    - `Vub`: Absolute value of CKM matrix element $|V_{ub}|$
+    - `Vcb`: CKM matrix element $V_{cb}$
+    - `gamma`: CKM phase $\gamma=\delta$ in radians
     """
     return np.array([[sqrt(1 - Vub**2)*sqrt(1 - Vus**2/(1 - Vub**2)),
         Vus,
@@ -168,20 +162,18 @@ def xi_kl_ij(par, k, l, i, j):
     V = get_ckm(par)
     return V[k,i] * V[l,j].conj()
 
-q_dict_u = {'u': 0, 'c': 1, 't': 2}
-q_dict_d = {'d': 0, 's': 1, 'b': 2}
+_q_dict_u = {'u': 0, 'c': 1, 't': 2}
+_q_dict_d = {'d': 0, 's': 1, 'b': 2}
 
 def xi(a, bc):
-    r"""Returns the CKM combination $\xi_a^{bc} = V_{ab}V_{ac}^*$ if `a` is
-      in `['u','c','t']` or $\xi_a^{bc} = V_{ba}V_{ca}^*$ if `a` is in
+    r"""Returns the CKM combination $\xi_a^{bc} = V_{ab}V_{ac}^\ast$ if `a` is
+      in `['u','c','t']` or $\xi_a^{bc} = V_{ba}V_{ca}^\ast$ if `a` is in
       `['d','s','b']`.
 
       Parameters
       ----------
-      a : string
-          should be either one of `['u','c','t']` or one of `['d','s','b']`
-      bc : string
-          should be a two-letter string with two up-type or down-type flavours,
+      - `a`: should be either one of `['u','c','t']` or one of `['d','s','b']`
+      - `bc`: should be a two-letter string with two up-type or down-type flavours,
           e.g. `'cu'`, `'bs'`. If `a` is up-type, `bc` must be down-type and vice
           versa.
 
@@ -189,13 +181,13 @@ def xi(a, bc):
       -------
       A function that takes a parameter dictionary as input, just like `get_ckm`.
     """
-    if a in q_dict_u:
-        kl_num = q_dict_u[a]
-        i_num = q_dict_d[bc[0]]
-        j_num = q_dict_d[bc[1]]
+    if a in _q_dict_u:
+        kl_num = _q_dict_u[a]
+        i_num = _q_dict_d[bc[0]]
+        j_num = _q_dict_d[bc[1]]
         return lambda par: xi_kl_ij(par, kl_num, kl_num, i_num, j_num)
     else:
-        ij_num = q_dict_d[a]
-        k_num = q_dict_u[bc[0]]
-        l_num = q_dict_u[bc[1]]
+        ij_num = _q_dict_d[a]
+        k_num = _q_dict_u[bc[0]]
+        l_num = _q_dict_u[bc[1]]
         return lambda par: xi_kl_ij(par, k_num, l_num, ij_num, ij_num)

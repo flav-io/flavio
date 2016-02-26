@@ -1,4 +1,6 @@
-"""Functions for running of quark masses."""
+"""Functions for running of quark masses.
+
+This module is based on the formulas in the `RunDec` papers, arXiv:hep-ph/0004189 and arXiv:1201.6149"""
 
 from math import log,pi
 import numpy as np
@@ -20,8 +22,8 @@ def gamma3_qcd(nf):
           (-332./243. + 64.*zeta(3)/27.)*nf**3)/256.)
 
 def gamma_qcd(mq, als, mu, f):
-    """RHS of the QCD gamma function written in the form
-    d/d\mu m = gamma
+    r"""RHS of the QCD gamma function written in the (unconventional) form
+    $d/d\mu m = gamma(\mu)$
     """
     g0 = gamma0_qcd(f)*(als/pi)**1
     g1 = gamma1_qcd(f)*(als/pi)**2
@@ -30,7 +32,7 @@ def gamma_qcd(mq, als, mu, f):
     return -2*mq/mu*(g0 + g1 + g2 + g3)
 
 def mq(mu, mu0, m0, par, nf=5):
-    """Returns m^{(nf)} at the scale mu using 3-loop QCD RGEs"""
+    r"""Returns $m^{(nf)}$ at the scale $\mu$ using 3-loop QCD RGEs"""
     # x[0] is m_q
     # x[1] is alpha_s
     ale_mz = par['alphae_MZ']

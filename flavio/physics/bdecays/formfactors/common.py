@@ -24,16 +24,18 @@ def z(mB, mM, q2, t0=None):
 
     Parameters
     ----------
-    mB : float
+
+    - `mB`:
         initial pseudoscalar meson mass
-    mM : float
+    - `mM`:
         final meson meson mass
-    q2 : float
+    - `q2`:
         momentum transfer squared $q^2$
-    t0 : float, optional
+    - `t0` (optional):
         parameter $t_0$.
         If not given, chosen as $t_0 = t_+ (1-\sqrt{1-t_-/t_+})$ where
         $t_\pm = (m_B \pm m_M)^2$.
+        If equal to `'tm'`, set to $t_0=t_-$
     """
     tm = (mB-mM)**2
     tp = (mB+mM)**2

@@ -8,7 +8,8 @@ from flavio.physics.running import running
 from flavio.physics import ckm
 
 def matrixelements(par, meson):
-    """Returns the matrix elements"""
+    r"""Returns a dictionary with the values of the matrix elements of the
+    $\Delta F=2$ operators."""
     mM = par['m_'+meson]
     fM = par['f_'+meson]
     BM = lambda i: par['bag_' + meson + '_' + str(i)]
@@ -28,7 +29,7 @@ def matrixelements(par, meson):
     return me
 
 def M12_d_SM(par, meson):
-    """Standard model contribution to the mixing amplitude $M_{12}$ of
+    r"""Standard model contribution to the mixing amplitude $M_{12}$ of
     meson $K^0$, $B^0$, or $B_s$.
 
     Defined as

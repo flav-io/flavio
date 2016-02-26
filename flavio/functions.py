@@ -1,3 +1,6 @@
+"""Main functions for user interaction. All of these are imported into the
+top-level namespace."""
+
 import flavio
 import numpy as np
 from collections import OrderedDict

@@ -9,9 +9,10 @@ def F_box(x, y):
 
     Parameters
     ----------
-    x : float
+
+    - `x`:
         $m_{u_i}^2/m_W^2$
-    y : float
+    - `y`:
         $m_{u_j}^2/m_W^2$
     """
     if x == y:
@@ -41,14 +42,15 @@ def cvll_d(par, meson):
 
     Parameters
     ----------
-    par : dict
+
+    - `par`:
         parameter dictionary
-    meson : string
-        should be one of 'B0', 'Bs', or 'K0'
+    - `meson`:
+        should be one of `'B0'`, `'Bs'`, or `'K0'`
 
     Returns
     -------
-    a tuple of three complex numbers (C_tt, C_cc, C_ct) that contain the top-,
+    a tuple of three complex numbers `(C_tt, C_cc, C_ct)` that contain the top-,
     charm-, and charm-top-contribution to the Wilson coefficient. This
     separation is necessary as they run differently.
     """

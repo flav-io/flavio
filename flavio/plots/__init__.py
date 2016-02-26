@@ -1,5 +1,5 @@
-"""Plotting functions"""
+"""Module for making pretty plots"""
 
 from . import colors
-from ._plots import *
+from .plotfunctions import *
 from . import config

@@ -49,7 +49,7 @@ def wctot_dict(wc_obj, sector, scale, par):
     return add_dict((wc_np_dict, wc_sm_dict))
 
 def get_wceff(q2, wc, par, B, M, lep, scale):
-    """Get a dictionary with the effective $\Delta F=1$ Wilson coefficients
+    r"""Get a dictionary with the effective $\Delta F=1$ Wilson coefficients
     in the convention appropriate for the generalized angular distributions.
     """
     xi_u = ckm.xi('u',meson_quark[(B,M)])(par)
@@ -77,7 +77,7 @@ def get_wceff(q2, wc, par, B, M, lep, scale):
     return c
 
 def get_wceff_lfv(q2, wc, par, B, M, l1, l2, scale):
-    """Get a dictionary with the effective $\Delta F=1$ Wilson coefficients
+    r"""Get a dictionary with the effective $\Delta F=1$ Wilson coefficients
     with lepton flavour violation
     in the convention appropriate for the generalized angular distributions.
     """
@@ -99,7 +99,7 @@ def get_wceff_lfv(q2, wc, par, B, M, l1, l2, scale):
     return c
 
 def get_wceff_fccc(q2, wc_obj, par, B, P, lep, scale):
-    """Get a dictionary with the effective $b\to(c,u)$ Wilson coefficients
+    r"""Get a dictionary with the effective $b\to(c,u)$ Wilson coefficients
     in the convention appropriate for the generalized angular distributions.
     """
     bqlnu = meson_quark[(B,P)] + lep + 'nu'

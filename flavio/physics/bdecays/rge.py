@@ -375,14 +375,18 @@ def gamma11_B_910(f):
 # putting everything together
 
 def gamma_all_orders(f, als, ale):
-    """Returns the ADM in the basis
+    r"""Returns the ADM in the basis
+
+    ```
     [ C_1, C_2, C_3, C_4, C_5, C_6,
     C_7^eff, C_8^eff,
     C_9, C_10,
     C_3^Q, C_4^Q, C_5^Q, C_6^Q,
     Cb ]
+    ```
+
     where all operators are defined as in hep-ph/0512066 *except*
-    C_9,10, which are defined with an additional alpha/4pi prefactor.
+    $C_{9,10}$, which are defined with an additional $\alpha/4\pi$ prefactor.
 
     Output is a (3,2,15,15)-array where the last 2 axes are the 15 Wilson
     coefficients and the first to axes are the QCD and QED orders; 0 is LO,
@@ -429,16 +433,20 @@ def gamma_all_orders(f, als, ale):
     return g
 
 def gamma_all(f, als, ale, n_s=3, n_e=2):
-    """Returns the ADM in the basis
+    r"""Returns the ADM in the basis
+
+    ```
     [ C_1, C_2, C_3, C_4, C_5, C_6,
     C_7^eff, C_8^eff,
     C_9, C_10,
     C_3^Q, C_4^Q, C_5^Q, C_6^Q,
     Cb ]
-    where all operators are defined as in hep-ph/0512066 *except*
-    C_9,10, which are defined with an additional alpha/4pi prefactor.
+    ```
 
-    The arguments n_s and n_e can be used to limit the QCD and QED orders taken
+    where all operators are defined as in hep-ph/0512066 *except*
+    $C_{9,10}$, which are defined with an additional $\alpha/4\pi$ prefactor.
+
+    The arguments `n_s` and `n_e` can be used to limit the QCD and QED orders taken
     into account. 1 is LO, 2 is NLO, 3 is NNLO (only for QCD).
     """
     g = gamma_all_orders(f, als, ale)

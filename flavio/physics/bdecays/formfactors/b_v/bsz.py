@@ -32,22 +32,10 @@ def ff(process, q2, par, implementation, n=2):
     $A_0$, $A_1$, $A_{12}$, $V$, $T_1$, $T_2$, $T_{23}$.
 
     The BSZ parametrization defines
-    $$F_i(q^2) = P_i(q^2) \sum_k \al_k^i \,\left[z(q^2)-z(0)\right]^k$$
-    where $P_i(q^2)=(1-q^2/m_{R,i}^2)^{-1}$ is a simple pole.
 
-    Parameters
-    ----------
-    process : dict
-        Dictionary of the form {'mres': [m0m, m1m, m1p], 'mB': float, 'mV': float}
-        containing the initial and final state meson masses as well as the
-        resonance mass to be used in the pole, corresponding to the masses of the
-        resonances with $J^P=0^-, 1^-, 1^+$, respectively.
-    a_i : dict
-        a dictionary containing two- or three-dimensional vectors with the
-        series expansion coefficients. The keys of the dictionary must be
-        'A0', 'A1', 'A12', 'V', 'T1', 'T2', 'T23'.
-    q2 : float
-        momentum transfer squared $q^2$
+    $$F_i(q^2) = P_i(q^2) \sum_k a_k^i \,\left[z(q^2)-z(0)\right]^k$$
+
+    where $P_i(q^2)=(1-q^2/m_{R,i}^2)^{-1}$ is a simple pole.
     """
     pd = process_dict[process]
     mres = mres_bsz[pd['q']]
