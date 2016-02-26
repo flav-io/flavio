@@ -1,7 +1,8 @@
+"""Anomalous dimension matrix for meson-antimeson mixing"""
+
 import numpy as np
 from math import pi
 from flavio.physics.running import running
-"""Anomalous dimension matrix for meson-antimeson mixing"""
 
 N = 3 # QCD number of colours
 

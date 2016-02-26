@@ -2,7 +2,9 @@
 
 import yaml
 import pkgutil
-from flavio.classes import *
+from flavio.classes import Measurement, Observable
+from flavio._parse_errors import constraints_from_string, errors_from_string
+from flavio.statistics import probability
 import numpy as np
 from math import sqrt
 
@@ -73,7 +75,7 @@ def _load(obj):
                 covariance = np.outer(np.asarray(errors), np.asarray(errors))*correlation
                 # if it still isn't positive definite, give up.
                 assert np.all(np.linalg.eigvals(covariance) > 0), "The covariance matrix is not positive definite!" + str(covariance)
-            m.add_constraint(observables, MultivariateNormalDistribution(central_values, covariance))
+            m.add_constraint(observables, probability.MultivariateNormalDistribution(central_values, covariance))
 
 
 

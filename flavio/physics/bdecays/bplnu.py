@@ -1,13 +1,12 @@
 r"""Functions for exclusive $B\to P\ell\nu$ decays."""
 
-from math import sqrt,pi
-from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
+from math import sqrt
+from flavio.physics.bdecays.common import meson_quark, meson_ff
 from flavio.physics import ckm
 from flavio.classes import AuxiliaryQuantity
 from flavio.config import config
 from flavio.physics.running import running
-from flavio.physics.common import conjugate_par, conjugate_wc
-from flavio.physics.bdecays import matrixelements, angular
+from flavio.physics.bdecays import angular
 from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc
 from flavio.classes import Observable, Prediction
 from scipy.integrate import quad

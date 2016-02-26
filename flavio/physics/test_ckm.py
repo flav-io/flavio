@@ -1,9 +1,8 @@
 import unittest
-from math import sqrt,radians,asin,degrees
+from math import radians,asin,degrees
 import cmath
 from flavio.physics.ckm import *
 import numpy as np
-from flavio.config import config
 
 # some values close to the real ones
 Vus = 0.22
