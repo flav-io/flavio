@@ -1,3 +1,5 @@
+"""Functions for exclusive $B\to V\ell^+\ell^-$ decays."""
+
 from math import sqrt,pi
 import numpy as np
 from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
@@ -11,7 +13,6 @@ from .amplitudes import *
 from scipy.integrate import quad
 from flavio.classes import Observable, Prediction
 
-"""Functions for exclusive $B\to V\ell^+\ell^-$ decays."""
 
 def dGdq2(J):
     return 3/4. * (2 * J['1s'] + J['1c']) - 1/4. * (2 * J['2s'] + J['2c'])

@@ -1,3 +1,6 @@
+r"""Functions for radiative, leptonic, and semi-leptonic tree-level as well
+as FCNC $B$ decays."""
+
 from . import formfactors
 from . import bvll
 from . import bvlnu

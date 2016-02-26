@@ -1,9 +1,9 @@
+r"""Anomalous dimension matrices for $\Delta F=1$ operators."""
+
 import numpy as np
 from math import pi
 from flavio.physics.running import running
 from flavio.physics.functions import zeta
-
-"""Anomalous dimension matrices for $\Delta F=1$ operators."""
 
 # this file contains the anomalous dimension matrices (ADMs) for the operators
 # C_1, C_2 (current-current operators), where C_2 = 1 at LO,

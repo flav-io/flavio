@@ -1,9 +1,10 @@
-from flavio.physics.bdecays.common import lambda_K
-from math import sqrt, pi
-
 r"""Generic $B\to V \ell_1 \bar \ell_2$ helicity amplitudes and angular
 distribution. Can be used for $B\to V\ell^+\ell^-$, $B\to V\ell\nu$, and
 lepton flavour violating decays."""
+
+
+from flavio.physics.bdecays.common import lambda_K
+from math import sqrt, pi
 
 
 

@@ -1,3 +1,5 @@
+r"""Common functions needed for $B$ decays."""
+
 from math import sqrt,pi,log
 import pkgutil
 import numpy as np
@@ -6,7 +8,6 @@ import scipy.interpolate
 from flavio.physics.running import running
 from flavio.physics import ckm
 
-"""Common functions needed for B decays."""
 
 def lambda_K(a,b,c):
     r"""Källén function $\lambda$.

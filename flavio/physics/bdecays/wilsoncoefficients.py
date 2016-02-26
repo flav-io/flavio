@@ -1,3 +1,6 @@
+r"""Standard Model Wilson coefficients for $\Delta B=1$ transitions as well
+as tree-level $B$ decays"""
+
 from math import sqrt,pi,log
 import pkgutil
 import numpy as np
@@ -9,6 +12,7 @@ from flavio.physics.common import add_dict
 from flavio.config import config
 from flavio.physics.bdecays.common import meson_quark
 from flavio.physics.bdecays import matrixelements
+
 
 # SM Wilson coefficients at 120 GeV in the basis
 # [ C_1, C_2, C_3, C_4, C_5, C_6,

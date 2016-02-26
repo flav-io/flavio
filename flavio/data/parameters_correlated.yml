@@ -1,3 +1,7 @@
+# This file contains paraemeter values and uncertainties for parameters
+# that have correlated uncertainties
+
+
 # Decay constants of charged and neutral mesons are highly correlated; in
 # fact they are equal up to isosin breaking effects.
 # for now, just assume 99% correlation

@@ -1,3 +1,5 @@
+r"""Functions for exclusive $B\to V\gamma$ decays."""
+
 from math import sqrt,pi
 from cmath import exp
 import numpy as np
@@ -10,7 +12,6 @@ from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
 from flavio.classes import AuxiliaryQuantity, Observable, Prediction
 
-"""Functions for exclusive $B\to V\gamma$ decays."""
 
 def prefactor(par, B, V):
     mB = par['m_'+B]

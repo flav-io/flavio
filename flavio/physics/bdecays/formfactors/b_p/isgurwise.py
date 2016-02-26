@@ -1,8 +1,9 @@
+r"""Functions for imroved Isgur-Wise relations to obtain tensor
+form factor $f_T$ from $f_+$ and $f_0$s in the heavy quark limit."""
+
 import flavio
 from math import pi,log
 
-"""Functions for imroved Isgur-Wise relations to obtain tensor
-form factor f_T from f_+ and f_0 in the heavy quark limit."""
 
 
 def improved_isgur_wise(process, q2, ff, par, scale):

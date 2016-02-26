@@ -1,7 +1,10 @@
+r"""Observables in lepton flavour violating decays $B\to V\ell\ell^\prime$"""
+
 import flavio
 import scipy.integrate
 from flavio.classes import Observable, Prediction
 from math import sqrt, pi
+
 
 def prefactor(q2, par, B, V, l1, l2):
     GF = par['GF']

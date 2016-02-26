@@ -1,12 +1,12 @@
+"""This file contains the functions that allow to regenerate the data files
+for the interpolation of the QCDF corrections. It is normally not needed."""
+
 import flavio
 import numpy as np
 from flavio.physics.bdecays.bvll import qcdf
 from flavio.config import config
 from flavio.physics.bdecays.common import meson_quark
 from flavio.physics.common import conjugate_par
-
-"""This file contains the functions that allow to regenerate the data files
-for the interpolation of the QCDF corrections. It is normally not needed."""
 
 # we will interpolate from 0 to 9 GeV^2 (above, QCDF is not applicable)
 # shifted by 10^-6 to avoid the q2=0 singularity but be below the e+e- threshold

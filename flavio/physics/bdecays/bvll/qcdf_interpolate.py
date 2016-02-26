@@ -1,10 +1,3 @@
-import flavio
-import numpy as np
-import pkgutil
-import pkg_resources
-import scipy.interpolate
-import math
-
 """Functions for interpolated version of the QCDF spectator scattering
 corrections.
 
@@ -17,6 +10,14 @@ over light-cone distribution amplitudes.
 Interpolating them leads to a drastic speed-up at the cost of some (unnecessary)
 precision.
 """
+
+import flavio
+import numpy as np
+import pkgutil
+import pkg_resources
+import scipy.interpolate
+import math
+
 
 q2_arr = np.arange(0 + 1e-6, 9 + 1e-6, 0.1)
 

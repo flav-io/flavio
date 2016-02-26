@@ -1,3 +1,6 @@
+r"""Functions for observables in exclusive semi-leptonic $B\to V\ell^+\ell^-$ FCNC decays."""
+
+
 from . import amplitudes
 from . import observables
 from . import qcdf

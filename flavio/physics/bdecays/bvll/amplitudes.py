@@ -1,3 +1,5 @@
+"""Functions for constructing the helicity amplitudes"""
+
 from flavio.physics.bdecays.common import lambda_K, beta_l
 from math import sqrt, pi
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict, get_wceff
@@ -9,6 +11,7 @@ from flavio.physics.bdecays import matrixelements, angular
 from flavio.physics import ckm
 from flavio.physics.bdecays.bvll import qcdf
 from flavio.classes import AuxiliaryQuantity
+
 
 def prefactor(q2, par, B, V, lep):
     GF = par['GF']

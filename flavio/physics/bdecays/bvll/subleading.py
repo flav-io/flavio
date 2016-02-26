@@ -1,3 +1,7 @@
+r"""Functions to parametrize subleading hadronic effects in $B\to V\ell^+\ell^-$
+decays."""
+
+
 import flavio
 import numpy as np
 from flavio.classes import AuxiliaryQuantity, Implementation
@@ -5,9 +9,6 @@ from flavio.physics.bdecays.common import meson_quark
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
 from flavio.config import config
-
-r"""Functions to parametrize subleading hadronic effects in $B\to V\ell^+\ell^-$
-decays."""
 
 
 # First, we define functions that allow us to get a contribution to the

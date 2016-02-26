@@ -1,3 +1,5 @@
+r"""Functions for exclusive $B\to V\ell\nu$ decays."""
+
 from math import sqrt,pi
 from flavio.physics.bdecays.common import lambda_K, meson_quark, meson_ff
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
@@ -10,7 +12,6 @@ from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc
 from flavio.classes import Observable, Prediction
 from scipy.integrate import quad
 
-r"""Functions for exclusive $B\to V\ell\nu$ decays."""
 
 
 def get_wceff(q2, wc_obj, par, B, V, lep):

@@ -1,3 +1,9 @@
+r"""Functions for spectator scattering corrections to $B\to V\ell^+\ell^-$ decays.
+
+This includes weak annihilation, chromomagnetic contributions, and light
+quark-loop spectator scattering.
+"""
+
 import flavio
 import numpy as np
 from flavio.classes import AuxiliaryQuantity, Implementation
@@ -6,11 +12,6 @@ from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
 from flavio.config import config
 
-r"""Functions for spectator scattering corrections to $B\to V\ell^+\ell^-$ decays.
-
-This includes weak annihilation, chromomagnetic contributions, and light
-quark-loop spectator scattering.
-"""
 
 
 # Auxiliary quantities and implementations

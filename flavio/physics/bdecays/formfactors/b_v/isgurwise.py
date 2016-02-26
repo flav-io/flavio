@@ -1,8 +1,8 @@
-import flavio
-from math import pi,log
-
 """Functions for imroved Isgur-Wise relations to obtain tensor
 form factors from vector form factors in the heavy quark limit."""
+
+import flavio
+from math import pi,log
 
 
 def improved_isgur_wise(process, q2, ff, par, scale):

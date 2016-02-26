@@ -1,3 +1,5 @@
+r"""Functions for exclusive $B\to P\ell^+\ell^-$ decays."""
+
 from math import sqrt,pi
 from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
 from flavio.physics import ckm
@@ -10,7 +12,6 @@ from flavio.physics.bdecays.wilsoncoefficients import get_wceff, wctot_dict
 from scipy.integrate import quad
 from flavio.classes import Observable, Prediction
 
-"""Functions for exclusive $B\to P\ell^+\ell^-$ decays."""
 
 def prefactor(q2, par, B, P, lep):
     GF = par['GF']

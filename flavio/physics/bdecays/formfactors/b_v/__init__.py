@@ -1,3 +1,5 @@
+r"""Functions for $B\to V$ form factors"""
+
 from . import btov
 from . import bsz_parameters
 from . import bsz

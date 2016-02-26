@@ -1,3 +1,7 @@
+r"""Functions for the branching ratios and effective lifetimes of the leptonic
+decays $B_q \to \ell^+\ell^-$, where $q=d$ or $s$ and $\ell=e$, $\mu$. or
+$\tau$."""
+
 from math import pi,sqrt
 from flavio.physics import ckm
 from flavio.physics.running import running
@@ -6,9 +10,6 @@ from flavio.classes import Observable, Prediction
 from flavio.config import config
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 
-r"""Functions for the branching ratios and effective lifetimes of the leptonic
-decays $B_q \to \ell^+\ell^-$, where $q=d$ or $s$ and $\ell=e$, $\mu$. or
-$\tau$."""
 
 def br_lifetime_corr(y, ADeltaGamma):
     r"""Correction factor relating the experimentally measured branching ratio

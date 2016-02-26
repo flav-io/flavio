@@ -1,3 +1,6 @@
+r"""QCD factorization corrections to $B\to V\ell^+\ell^-$ at low $q^2$"""
+
+
 from math import pi,exp
 from cmath import sqrt,atan,log
 import mpmath
@@ -12,6 +15,7 @@ from flavio.physics.bdecays import matrixelements
 from flavio.config import config
 from flavio.physics.bdecays.common import lambda_K, beta_l
 import flavio
+
 
 def complex_quad(func, a, b, **kwargs):
     def real_func(x):
