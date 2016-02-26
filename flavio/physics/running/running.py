@@ -54,7 +54,7 @@ def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out):
             if scale_stop == scale_out:
                 return sol
             initial_nf = sol
-            scale_in_nf = thresholds[nf]
+            scale_in_nf = thresholds[nf+1]
     return sol
 
 def get_alpha(par, scale):
