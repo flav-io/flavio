@@ -1,3 +1,6 @@
+"""Special mathematical functions"""
+
+
 import scipy
 import mpmath
 

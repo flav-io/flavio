@@ -1,9 +1,10 @@
+"""Functions for running of quark masses."""
+
 from math import log,pi
 import numpy as np
 from flavio.physics.functions import zeta
 from flavio.physics.running.masses import zeta
 
-"""Functions for running of quark masses."""
 
 def gamma0_qcd(nf):
     return 1.0

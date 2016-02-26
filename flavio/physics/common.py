@@ -1,6 +1,6 @@
-from collections import Counter
-
 """Common functions for physics."""
+
+from collections import Counter
 
 def conjugate_par(par_dict):
     """Given a dictionary of parameter values, return the dictionary where

@@ -1,3 +1,6 @@
+r"""$\Delta F=2$ observables"""
+
+
 from flavio.physics.mesonmixing import amplitude
 from flavio.physics.mesonmixing import common
 from flavio.physics import ckm

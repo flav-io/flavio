@@ -1,3 +1,5 @@
+"""Default configuration options for `matplotlib`"""
+
 from matplotlib import rc, rcParams
 
 rc('text', usetex=True)

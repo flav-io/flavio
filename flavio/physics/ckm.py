@@ -1,11 +1,12 @@
+"""Functions needed for the CKM matrix as well as for frequently used
+combinations of CKM elements."""
+
 from math import cos,sin
 from cmath import exp,sqrt,phase
 import numpy as np
 from functools import lru_cache
 from flavio.classes import AuxiliaryQuantity, Implementation
 
-"""Functions needed for the CKM matrix as well as for frequently used
-combinations of CKM elements."""
 
 @lru_cache(maxsize=2)
 def ckm_standard(t12, t13, t23, delta):

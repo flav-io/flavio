@@ -1,8 +1,8 @@
+r"""$\Delta F=2$ Wilson coefficient in the Standard Model."""
+
 from math import log,pi,sqrt
 from flavio.physics.mesonmixing.common import meson_quark
 from flavio.physics import ckm
-
-"""Wilson coefficient in the Standard Model."""
 
 def F_box(x, y):
     r"""$\Delta F=2$ box loop function.

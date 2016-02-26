@@ -1,5 +1,5 @@
 
-"""Plot colour schemes."""
+"""Colour schemes for plots."""
 
 # this was generated with the brewer2mpl package by calling
 # brewer2mpl.get_map('Pastel1', 'qualitative', 9).mpl_colors

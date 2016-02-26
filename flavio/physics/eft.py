@@ -1,3 +1,5 @@
+"""Classes for effective field theory (EFT) Wilson coefficients"""
+
 import numpy as np
 from flavio.physics.running import running
 from flavio.physics.bdecays import rge as rge_db1

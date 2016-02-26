@@ -1,3 +1,5 @@
+"""Functions for the dispersive and absorptive  parts of the meson-antimeson mixing amplitude"""
+
 from math import log,pi,sqrt
 from flavio.physics.mesonmixing.wilsoncoefficient import cvll_d
 from flavio.physics.mesonmixing.common import meson_quark, bag_msbar2rgi

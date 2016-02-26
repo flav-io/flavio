@@ -1,3 +1,5 @@
+"""Functions to solve the renormalization group equations (RGEs) numerically."""
+
 from flavio.physics.running import betafunctions
 from flavio.physics.running import masses
 from scipy.integrate import odeint

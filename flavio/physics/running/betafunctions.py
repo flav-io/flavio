@@ -1,7 +1,7 @@
+"""Functions for running of QCD and QED gauge couplings below the weak scale."""
+
 import numpy as np
 from math import pi
-
-"""Functions for running of QCD and QED gauge couplings below the weak scale."""
 
 
 def beta_qcd(als, ale, mu, f):
