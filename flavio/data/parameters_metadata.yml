@@ -175,205 +175,205 @@ a1_perp_phi:
 # Parameters for subleading hadronic effects in B->Vll
 B0->K*0 deltaC7 a_0 Re:
   tex: $\text{Re}\,a^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC7 b_0 Re:
   tex: $\text{Re}\,b^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC7 a_+ Re:
   tex: $\text{Re}\,a^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC7 b_+ Re:
   tex: $\text{Re}\,b^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC7 a_- Re:
   tex: $\text{Re}\,a^{\Delta_7}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC7 b_- Re:
   tex: $\text{Re}\,b^{\Delta_7}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 a_0 Re:
   tex: $\text{Re}\,a^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 b_0 Re:
   tex: $\text{Re}\,b^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 a_+ Re:
   tex: $\text{Re}\,a^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 b_+ Re:
   tex: $\text{Re}\,b^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 a_- Re:
   tex: $\text{Re}\,a^{\Delta_7}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 b_- Re:
   tex: $\text{Re}\,b^{\Delta_7}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 a_0 Re:
   tex: $\text{Re}\,a^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 b_0 Re:
   tex: $\text{Re}\,b^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 a_+ Re:
   tex: $\text{Re}\,a^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 b_+ Re:
   tex: $\text{Re}\,b^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 a_- Re:
   tex: $\text{Re}\,a^{\Delta_7}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 b_- Re:
   tex: $\text{Re}\,b^{\Delta_7}_-$
   description:
 B0->K*0 deltaC7 a_0 Im:
   tex: $\text{Im}\,a^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC7 b_0 Im:
   tex: $\text{Im}\,b^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC7 a_+ Im:
   tex: $\text{Im}\,a^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC7 b_+ Im:
   tex: $\text{Im}\,b^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC7 a_- Im:
   tex: $\text{Im}\,a^{\Delta_7}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC7 b_- Im:
   tex: $\text{Im}\,b^{\Delta_7}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 a_0 Im:
   tex: $\text{Im}\,a^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 b_0 Im:
   tex: $\text{Im}\,b^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 a_+ Im:
   tex: $\text{Im}\,a^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 b_+ Im:
   tex: $\text{Im}\,b^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 a_- Im:
   tex: $\text{Im}\,a^{\Delta_7}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC7 b_- Im:
   tex: $\text{Im}\,b^{\Delta_7}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 a_0 Im:
   tex: $\text{Im}\,a^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 b_0 Im:
   tex: $\text{Im}\,b^{\Delta_7}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 a_+ Im:
   tex: $\text{Im}\,a^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 b_+ Im:
   tex: $\text{Im}\,b^{\Delta_7}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 a_- Im:
   tex: $\text{Im}\,a^{\Delta_7}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC7 b_- Im:
   tex: $\text{Im}\,b^{\Delta_7}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC9 c_0 Re:
   tex: $\text{Re}\,c^{\Delta_9}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at high $q^2$
 B0->K*0 deltaC9 c_+ Re:
   tex: $\text{Re}\,c^{\Delta_9}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at high $q^2$
 B0->K*0 deltaC9 c_- Re:
   tex: $\text{Re}\,c^{\Delta_9}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at high $q^2$
 B+->K*+ deltaC9 c_0 Re:
   tex: $\text{Re}\,c^{\Delta_9}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at high $q^2$
 B+->K*+ deltaC9 c_+ Re:
   tex: $\text{Re}\,c^{\Delta_9}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at high $q^2$
 B+->K*+ deltaC9 c_- Re:
   tex: $\text{Re}\,c^{\Delta_9}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at high $q^2$
 Bs->phi deltaC9 c_0 Re:
   tex: $\text{Re}\,c^{\Delta_9}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at high $q^2$
 Bs->phi deltaC9 c_+ Re:
   tex: $\text{Re}\,c^{\Delta_9}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at high $q^2$
 Bs->phi deltaC9 c_- Re:
   tex: $\text{Re}\,c^{\Delta_9}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at high $q^2$
 B0->K*0 deltaC9 c_0 Im:
   tex: $\text{Im}\,c^{\Delta_9}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at high $q^2$
 B0->K*0 deltaC9 c_+ Im:
   tex: $\text{Im}\,c^{\Delta_9}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at high $q^2$
 B0->K*0 deltaC9 c_- Im:
   tex: $\text{Im}\,c^{\Delta_9}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at high $q^2$
 B+->K*+ deltaC9 c_0 Im:
   tex: $\text{Im}\,c^{\Delta_9}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at high $q^2$
 B+->K*+ deltaC9 c_+ Im:
   tex: $\text{Im}\,c^{\Delta_9}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at high $q^2$
 B+->K*+ deltaC9 c_- Im:
   tex: $\text{Im}\,c^{\Delta_9}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at high $q^2$
 Bs->phi deltaC9 c_0 Im:
   tex: $\text{Im}\,c^{\Delta_9}_0$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at high $q^2$
 Bs->phi deltaC9 c_+ Im:
   tex: $\text{Im}\,c^{\Delta_9}_+$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at high $q^2$
 Bs->phi deltaC9 c_- Im:
   tex: $\text{Im}\,c^{\Delta_9}_-$
-  description:
+  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at high $q^2$
 
 
 # Parameters for subleading hadronic effects in B->Pll
 B0->K0 deltaC9 a Re:
   tex: $\text{Re}\,a^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^0\ell^+\ell^-$ at low $q^2$
 B0->K0 deltaC9 b Re:
   tex: $\text{Re}\,b^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^0\ell^+\ell^-$ at low $q^2$
 B0->K0 deltaC9 c Re:
   tex: $\text{Re}\,c^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^0\ell^+\ell^-$ at high $q^2$
 B0->K0 deltaC9 a Im:
   tex: $\text{Im}\,a^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^0\ell^+\ell^-$ at low $q^2$
 B0->K0 deltaC9 b Im:
   tex: $\text{Im}\,b^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^0\ell^+\ell^-$ at low $q^2$
 B0->K0 deltaC9 c Im:
   tex: $\text{Im}\,c^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^0\to K^0\ell^+\ell^-$ at high $q^2$
 B+->K+ deltaC9 a Re:
   tex: $\text{Im}\,a^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at low $q^2$
 B+->K+ deltaC9 b Re:
   tex: $\text{Im}\,b^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at low $q^2$
 B+->K+ deltaC9 c Re:
   tex: $\text{Im}\,c^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at high $q^2$
 B+->K+ deltaC9 a Im:
   tex: $\text{Im}\,a^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at low $q^2$
 B+->K+ deltaC9 b Im:
   tex: $\text{Im}\,b^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at low $q^2$
 B+->K+ deltaC9 c Im:
   tex: $\text{Im}\,c^{\Delta_9}$
-  description:
+  description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at low $q^2$
 
 
 # Meson bag parameters
