@@ -467,17 +467,17 @@ DeltaM_K0:
 
 # cf. 1511.09466 eq. (81)-(82)
 Gamma12_Bs_c:
-  tex:
-  description:
+  tex: $c$
+  description: Coefficient in the approximate equality $\Delta \Gamma_s/M_{12}^s=10^{-4}[c+a\frac{\lambda_u}{\lambda_t}]$
 Gamma12_Bs_a:
-  tex:
-  description:
+  tex: $a$
+  description: Coefficient in the approximate equality $\Delta \Gamma_s/M_{12}^s=10^{-4}[c+a\frac{\lambda_u}{\lambda_t}]$
 Gamma12_B0_c:
-  tex:
-  description:
+  tex: $c$
+  description: Coefficient in the approximate equality $\Delta \Gamma_d/M_{12}^d=10^{-4}[c+a\frac{\lambda_u}{\lambda_t}]$
 Gamma12_B0_a:
-  tex:
-  description:
+  tex: $a$
+  description: Coefficient in the approximate equality $\Delta \Gamma_d/M_{12}^d=10^{-4}[c+a\frac{\lambda_u}{\lambda_t}]$
 
 # experimental decay width differences
 DeltaGamma/Gamma_B0:
@@ -488,21 +488,21 @@ DeltaGamma/Gamma_Bs:
   description: Relative decay width difference in the $B_s$ system
 
 # Parameters for B->D* form factors in the CLN parametrization
-B->D* CLN-IW rho2:
+B->D* CLN rho2:
   tex: $\rho^2$
-  description:
-B->D* CLN-IW R_0(1):
+  description: Shape parameter in the CLN form factor parametrization
+B->D* CLN R_0(1):
+  tex: $R_0(1)$
+  description: Ratio of CLN form factors at $w=1$
+B->D* CLN R_1(1):
   tex: $R_1(1)$
-  description:
-B->D* CLN-IW R_1(1):
-  tex: $R_1(1)$
-  description:
-B->D* CLN-IW R_2(1):
+  description: Ratio of CLN form factors at $w=1$
+B->D* CLN R_2(1):
   tex: $R_2(1)$
-  description:
-B->D* CLN-IW h_A1(1):
+  description: Ratio of CLN form factors at $w=1$
+B->D* CLN h_A1(1):
   tex: $h_{A_1}(1)$
-  description:
+  description: Universal CLN form factor at $w=1$
 
 # Parameters for B->D* tensor form factors using Isgur-Wise relations
 

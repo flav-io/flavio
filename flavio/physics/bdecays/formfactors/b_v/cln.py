@@ -19,11 +19,11 @@ def ff(process, q2, par, scale):
     w = (mB**2 + mV*+2 - q2) / (2*mB*mV)
     z = (sqrt(w+1)-sqrt(2))/(sqrt(w+1)+sqrt(2))
     RV = 2*sqrt(mB*mV)/(mB+mV)
-    hA1_1 = par[process + ' CLN-IW h_A1(1)']
-    R1_1 = par[process + ' CLN-IW R_1(1)']
-    R2_1 = par[process + ' CLN-IW R_2(1)']
-    R0_1 = par[process + ' CLN-IW R_0(1)']
-    rho2 = par[process + ' CLN-IW rho2']
+    hA1_1 = par[process + ' CLN h_A1(1)']
+    R1_1 = par[process + ' CLN R_1(1)']
+    R2_1 = par[process + ' CLN R_2(1)']
+    R0_1 = par[process + ' CLN R_0(1)']
+    rho2 = par[process + ' CLN rho2']
     hA1 = hA1_1 * (1 - 8*rho2*z + (53*rho2-15)*z**2 - (231*rho2-91)*z**3)
     R1 = R1_1 - 0.12*(w-1) + 0.05*(w-1)**2
     R2 = R2_1 + 0.11*(w-1) - 0.06*(w-1)**2
