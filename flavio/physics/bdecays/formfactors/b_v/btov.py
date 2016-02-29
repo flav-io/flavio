@@ -24,7 +24,7 @@ for p in processes:
 
     iname = p + ' SSE'
     i = Implementation(name=iname, quantity=quantity,
-                   function=ff_function(sse.ff, p, implementation=iname, n=2))
+                   function=ff_function(sse.ff, p, n=2))
     i.set_description("2-parameter simplified series expansion")
 
     iname = p + ' CLN-IW'
