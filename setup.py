@@ -4,10 +4,16 @@ use_setuptools()
 from setuptools import setup, find_packages
 
 setup(name='flavio',
+      version='0.1',
       author='David M. Straub',
       author_email='david.straub@tum.de',
       url='https://flav-io.github.io',
       description='A Python package for flavour physics phenomenology in the Standard Model and beyond',
+      long_description="""``flavio`` is a package to compute observables in flavour physics
+      both within the Standard Model of particle physics and in the presence of new
+      physics encoded in Wilson coefficients of local dimension-6 operators.
+      Observables implemented include rare B meson decays and meson-antimeson
+      mixing.""",
       license='MIT',
       packages=find_packages(),
       package_data={
