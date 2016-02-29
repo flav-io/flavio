@@ -8,15 +8,15 @@ from flavio.parameters import default_parameters
 from flavio.classes import Parameter
 
 c = default_parameters.copy()
-c.set_constraint('B->K BCL3 a0_f+', 0.428)
-c.set_constraint('B->K BCL3 a1_f+', -0.674)
-c.set_constraint('B->K BCL3 a2_f+', -1.12)
-c.set_constraint('B->K BCL3 a0_f0', 0.545)
-c.set_constraint('B->K BCL3 a1_f0', -1.91)
-c.set_constraint('B->K BCL3 a2_f0', 1.83)
-c.set_constraint('B->K BCL3 a0_fT', 0.402)
-c.set_constraint('B->K BCL3 a1_fT', -0.535)
-c.set_constraint('B->K BCL3 a2_fT', -0.286)
+c.set_constraint('B->K BCL a0_f+', 0.428)
+c.set_constraint('B->K BCL a1_f+', -0.674)
+c.set_constraint('B->K BCL a2_f+', -1.12)
+c.set_constraint('B->K BCL a0_f0', 0.545)
+c.set_constraint('B->K BCL a1_f0', -1.91)
+c.set_constraint('B->K BCL a2_f0', 1.83)
+c.set_constraint('B->K BCL a0_fT', 0.402)
+c.set_constraint('B->K BCL a1_fT', -0.535)
+c.set_constraint('B->K BCL a2_fT', -0.286)
 
 par = c.get_central_all()
 
