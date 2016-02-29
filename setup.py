@@ -4,7 +4,7 @@ use_setuptools()
 from setuptools import setup, find_packages
 
 setup(name='flavio',
-      version='0.1',
+      version='0.1.3',
       author='David M. Straub',
       author_email='david.straub@tum.de',
       url='https://flav-io.github.io',
@@ -17,8 +17,13 @@ setup(name='flavio',
       license='MIT',
       packages=find_packages(),
       package_data={
-      'flavio':['data/*'],
-      'flavio.physics':['physics/data/arXiv-1503-05534v1/*','physics/data/arXiv-1501-00367v2/*']
+      'flavio':['data/*',
+                'physics/data/arXiv-0810-4077v3/*',
+                'physics/data/arXiv-1503-05534v1/*',
+                'physics/data/arXiv-1501-00367v2/*',
+                'physics/data/pdg/*',
+                'physics/data/qcdf_interpolate/*',
+                ]
       },
       install_requires=['numpy', 'scipy', 'setuptools>=3.3', 'pyyaml'],
       extras_require={
