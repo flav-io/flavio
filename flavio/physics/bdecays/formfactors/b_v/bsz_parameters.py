@@ -28,7 +28,7 @@ def get_ffpar(filename):
     return [central, unc, corr]
 
 def load_parameters(filename, process, constraints):
-    implementation_name = process + ' BSZ3'
+    implementation_name = process + ' BSZ'
     parameter_names = [implementation_name + ' ' + coeff_name for coeff_name in a_ff_string]
     # a0_A0 and a0_T2 are not treated as independent parameters!
     parameter_names.remove(implementation_name + ' a0_A0')

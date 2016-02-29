@@ -14,12 +14,12 @@ for p in processes:
 
     iname = p + ' BSZ2'
     i = Implementation(name=iname, quantity=quantity,
-                   function=ff_function(bsz.ff, p, implementation=iname, n=2))
+                   function=ff_function(bsz.ff, p, n=2))
     i.set_description("2-parameter BSZ parametrization (see arXiv:1503.05534)")
 
     iname = p + ' BSZ3'
     i = Implementation(name=iname, quantity=quantity,
-                   function=ff_function(bsz.ff, p, implementation=iname, n=3))
+                   function=ff_function(bsz.ff, p, n=3))
     i.set_description("3-parameter BSZ parametrization (see arXiv:1503.05534)")
 
     iname = p + ' SSE'
