@@ -3,8 +3,11 @@ use_setuptools()
 
 from setuptools import setup, find_packages
 
+with open('flavio/_version.py') as f:
+    exec(f.read())
+
 setup(name='flavio',
-      version='0.1.3',
+      version=__version__,
       author='David M. Straub',
       author_email='david.straub@tum.de',
       url='https://flav-io.github.io',
