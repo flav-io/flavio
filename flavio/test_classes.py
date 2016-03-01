@@ -1,7 +1,8 @@
 import unittest
 import numpy as np
-from .classes import *
-from .config import config
+from flavio.classes import *
+from flavio.statistics.probability import *
+from flavio.config import config
 import scipy.integrate
 import math
 

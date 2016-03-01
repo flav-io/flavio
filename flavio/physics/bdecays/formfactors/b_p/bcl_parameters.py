@@ -1,7 +1,8 @@
 import yaml
 import pkgutil
 import numpy as np
-from flavio.classes import Parameter, MultivariateNormalDistribution
+from flavio.classes import Parameter
+from flavio.statistics.probability import MultivariateNormalDistribution
 
 def load_parameters(filename, constraints):
     f = pkgutil.get_data('flavio.physics', filename)

@@ -1,7 +1,8 @@
 import pkgutil
 import csv
 import numpy as np
-from flavio.classes import Parameter, MultivariateNormalDistribution
+from flavio.classes import Parameter
+from flavio.statistics.probability import MultivariateNormalDistribution
 
 def csv_to_dict(filename):
     f = pkgutil.get_data('flavio.physics', filename)

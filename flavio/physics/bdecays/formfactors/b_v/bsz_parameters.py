@@ -1,7 +1,8 @@
 import numpy as np
 import json
 import pkgutil
-from flavio.classes import Parameter, MultivariateNormalDistribution
+from flavio.classes import Parameter
+from flavio.statistics.probability import MultivariateNormalDistribution
 
 FFs = ["A0","A1","A12","V","T1","T2","T23"]
 ai = ["a0","a1","a2"]

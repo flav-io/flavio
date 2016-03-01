@@ -6,8 +6,7 @@ from .config import config
 from collections import OrderedDict
 import copy
 import math
-from flavio.statistics.probability import *
-from flavio._parse_errors import *
+from flavio._parse_errors import constraints_from_string, combine_distributions, errors_from_string
 import scipy.stats
 
 def _is_number(s):

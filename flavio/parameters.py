@@ -3,6 +3,7 @@
 import yaml
 import pkgutil
 from flavio.classes import *
+from flavio.statistics.probability import *
 import csv
 import flavio
 import re
