@@ -598,7 +598,7 @@ B->K BCL a1_f0:
   tex: $a_1^{(0)}$
   description: BCL $B\to K$ form factor parametrization coefficient $a_1$ of $f_0$
 B->K BCL a2_f0:
-  tex: $a_w^{(0)}$
+  tex: $a_2^{(0)}$
   description: BCL $B\to K$ form factor parametrization coefficient $a_2$ of $f_0$
 B->K BCL a0_fT:
   tex: $a_0^{(T)}$
