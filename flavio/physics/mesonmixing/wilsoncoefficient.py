@@ -3,6 +3,7 @@ r"""$\Delta F=2$ Wilson coefficient in the Standard Model."""
 from math import log,pi,sqrt
 from flavio.physics.mesonmixing.common import meson_quark
 from flavio.physics import ckm
+import flavio
 
 def F_box(x, y):
     r"""$\Delta F=2$ box loop function.
@@ -32,7 +33,7 @@ def df2_prefactor(par):
     return -GF**2/(4.*pi**2) * mW**2
 
 
-def cvll_d(par, meson):
+def cvll_d(par, meson, scale=80):
     r"""Contributions to the Standard Model Wilson coefficient $C_V^{LL}$
     for $B^0$, $B_s$, and $K$ mixing at the matching scale.
 
@@ -54,9 +55,9 @@ def cvll_d(par, meson):
     charm-, and charm-top-contribution to the Wilson coefficient. This
     separation is necessary as they run differently.
     """
-    mt = par['m_t']
-    mc = par['m_c']
-    mu = par['m_u']
+    mt = flavio.physics.running.running.get_mt(par, scale)
+    mc = flavio.physics.running.running.get_mc(par, scale)
+    mu = flavio.physics.running.running.get_mu(par, scale)
     mW = par['m_W']
     xt = mt**2/mW**2
     xc = mc**2/mW**2
