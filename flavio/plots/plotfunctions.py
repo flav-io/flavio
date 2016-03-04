@@ -32,7 +32,11 @@ def error_budget_pie(err_dict, other_cutoff=0.03):
 def find_confidence_interval(x, pdf, confidence_level):
     return pdf[pdf > x].sum() - confidence_level
 
-def density_contour(x, y, xmin, xmax, ymin, ymax, covariance_factor=None):
+def density_contour(x, y, covariance_factor=None):
+    xmin = min(x)
+    ymin = min(y)
+    xmax = max(x)
+    ymax = max(y)
     xx, yy = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
     positions = np.vstack([xx.ravel(), yy.ravel()])
     values = np.vstack([x, y])
