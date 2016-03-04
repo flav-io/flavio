@@ -39,7 +39,7 @@ gamma: 1.27(12)
 
 # Meson decay constants
 
-f_Bs: 0.2277(45)  # FLAG 2013 Nf=2+1
+f_Bs: 0.2260(22)  # PDG/arXiv:1509.02220
 f_Ds: 0.2486(27)  # FLAG 2013 Nf=2+1
 f_rho0: 0.212(4)  # 1501.06569 table 1
 f_omega: 0.185(5)  # 1501.06569 table 1
