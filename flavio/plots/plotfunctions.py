@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 import flavio
-from scipy.optimize import brentq
+import scipy.optimize
 from scipy.stats import gaussian_kde
 
 def error_budget_pie(err_dict, other_cutoff=0.03):
@@ -44,8 +44,8 @@ def density_contour(x, y, xmin, xmax, ymin, ymax, covariance_factor=None):
 
     f = np.reshape(kernel(positions).T, xx.shape)*(ymax-ymin)*(xmax-xmin)/1e4
 
-    one_sigma = brentq(find_confidence_interval, 0., 1., args=(f.T, 0.68))
-    two_sigma = brentq(find_confidence_interval, 0., 1., args=(f.T, 0.95))
+    one_sigma = scipy.optimize.brentq(find_confidence_interval, 0., 1., args=(f.T, 0.68))
+    two_sigma = scipy.optimize.brentq(find_confidence_interval, 0., 1., args=(f.T, 0.95))
     levels = [two_sigma, one_sigma, np.max(f)]
 
     ax = plt.gca()
@@ -109,3 +109,38 @@ def q2_plot_exp(obs_name, col_dict=None, **kwargs):
                     col = col_dict[m_obj.experiment]
                     kwargs['c'] = col
             ax.errorbar((q2max+q2min)/2., c, yerr=e, xerr=(q2max-q2min)/2, **kwargs)
+
+def band_plot(likelihood_fct, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, col=None, contour_args={}, contourf_args={}):
+    ax = plt.gca()
+    _x = np.arange(x_min, x_max, (x_max-x_min)/(steps))
+    _y = np.arange(y_min, y_max, (y_max-y_min)/(steps))
+    x, y = np.meshgrid(_x, _y)
+    @np.vectorize
+    def f_vect(x, y): # needed for evaluation on meshgrid
+        return likelihood_fct([x,y])
+    z = f_vect(x, y)
+    z = z - np.max(z) # subtract the best fit point (on the grid)
+    if col is not None and isinstance(col, int):
+        contourf_args['colors'] = [flavio.plots.colors.pastel[col]]
+        contour_args['colors'] = [flavio.plots.colors.set1[col]]
+    else:
+        if 'colors' not in contourf_args:
+            contourf_args['colors'] = [flavio.plots.colors.pastel[0]]
+        if 'colors' not in contour_args:
+            contour_args['colors'] = [flavio.plots.colors.set1[0]]
+    if 'linestyle' not in contour_args:
+        contour_args['linestyles'] = 'solid'
+    ax.contourf(x, y, z, levels=[-n_sigma**2, 0], **contourf_args)
+    ax.contour(x, y, z, levels=[-n_sigma**2], **contour_args)
+
+def flavio_branding(x=0.8, y=0.94, version=True):
+    props = dict(facecolor='white', alpha=0.4, lw=1.2)
+    ax = plt.gca()
+    text = r'\textsf{\textbf{flavio}}'
+    if version:
+        text += r'\textsf{\scriptsize{ v' + flavio.__version__ + '}}'
+    ax.text(x, y, text, transform=ax.transAxes, fontsize=12, verticalalignment='top', bbox=props, alpha=0.4)
+
+def flavio_box(x_min, x_max, y_min, y_max):
+    ax = plt.gca()
+    ax.add_patch(patches.Rectangle((x_min, y_min), x_max-x_min, y_max-y_min, facecolor='#ffffff', edgecolor='#666666', alpha=0.5, ls=':', lw=0.7))
