@@ -8,5 +8,5 @@ import os
 class TestFLHA(unittest.TestCase):
     def test_flha(self):
         test_file = os.path.join(os.path.dirname(__file__), '..', 'data', 'test', 'SPheno.spc.MSSM')
-        wc = flha.get_wc_from_file(test_file)
+        wc = flha.read_wilson(test_file)
         self.assertIsInstance(wc, flavio.WilsonCoefficients)

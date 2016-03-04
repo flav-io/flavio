@@ -12,7 +12,7 @@ import logging
 
 log = logging.getLogger('SLHA')
 
-def prefactors_bsll(par, scale):
+def _prefactors_bsll(par, scale):
     GF = par['GF']
     alpha_e = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
     xi_t = flavio.physics.ckm.xi('t', 'bs')(par)
@@ -36,7 +36,7 @@ def prefactors_bsll(par, scale):
            }
 
 
-flha_dict ={
+_flha_dict ={
 (30, 4422): 'C7eff_bs',
 (30, 4322): 'C7effp_bs',
 (30, 6421): 'C8eff_bs',
@@ -51,7 +51,7 @@ flha_dict ={
 (305131, 4237): 'C10p_bsmumu',
  }
 
-def get_wc_from_file(filename):
+def read_wilson(filename):
     if not os.path.exists(filename):
         log.error("File " + filename + " not found.")
         return keys
@@ -59,15 +59,15 @@ def get_wc_from_file(filename):
     wc_flha = card.matrices['fwcoef']
     scale = wc_flha.scale
     par_dict = flavio.default_parameters.get_central_all()
-    prefac = prefactors_bsll(par_dict, scale)
+    prefac = _prefactors_bsll(par_dict, scale)
     wc_dict = {}
     for k, v in wc_flha.dict().items():
         if k[-1] != 1: # only look at NP-only Wilson coefficients
             continue
-        if k[:2] not in flha_dict:
+        if k[:2] not in _flha_dict:
             log.warning('Wilson coefficient ' + str(k[:2]) + ' unknown to flavio; ignored.')
             continue
-        wc_name = flha_dict[k[:2]]
+        wc_name = _flha_dict[k[:2]]
         if wc_name not in prefac:
             wc_dict[wc_name] = v
         else:
