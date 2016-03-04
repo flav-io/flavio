@@ -36,9 +36,9 @@ def DeltaGamma(M12, G12):
     aM12 = abs(M12)
     aG12 = abs(G12)
     phi12 = phase(-M12/G12)
-    return sqrt(2)*sqrt(-4*aM12**2 - aG12**2 +
+    return sqrt(2)*cmath.sqrt(-4*aM12**2 - aG12**2 +
                 sqrt(16*aM12**4 + 8*aM12**2*aG12**2 +
-                    aG12**4 + 16*aM12**2*aG12**2*cos(phi12)**2))
+                    aG12**4 + 16*aM12**2*aG12**2*cos(phi12)**2)).real
 
 def q_over_p(M12, G12):
     r"""Ratio $q/p$ as a function of $M_{12}$ and $\Gamma_{12}$."""
