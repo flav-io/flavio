@@ -5,7 +5,6 @@ from . import plots
 from . import parameters
 from . import measurements
 from . import functions
-from . import examples
 from . import classes
 from .classes import Measurement, Parameter, ParameterConstraints, Observable, NamedInstanceClass
 from .config import config

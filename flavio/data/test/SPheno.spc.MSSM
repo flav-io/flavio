@@ -4,7 +4,7 @@
 # SPheno v3.3.8  
 #   W. Porod, Comput. Phys. Commun. 153 (2003) 275-315, hep-ph/0301101
 #   W. Porod, F.Staub, Comput.Phys.Commun.183 (2012) 2458-2469, arXiv:1104.1573
-# SARAH: 4.8.0   
+# SARAH: 4.8.1   
 #   F. Staub; arXiv:0806.0538 (online manual)
 #   F. Staub; Comput. Phys. Commun. 181 (2010) 1077-1086; arXiv:0909.2863
 #   F. Staub; Comput. Phys. Commun. 182 (2011)  808-833; arXiv:1002.0840
@@ -18,11 +18,11 @@
 #  
 # in case of problems send email to florian.staub@cern.ch and goodsell@lpthe.jussieu.fr 
 # ----------------------------------------------------------------------
-# Created: 02.03.2016,  15:20
+# Created: 04.03.2016,  10:00
 Block SPINFO         # Program information
      1   SPhenoSARAH      # spectrum calculator
      2   v3.3.8      # version number of SPheno
-     9   4.8.0       # version number of SARAH
+     9   4.8.1       # version number of SARAH
 Block MODSEL  # Input parameters
      1  1   #  GUT scale input
      2  1   #  Boundary conditions 
@@ -570,9 +570,9 @@ Block EFFHIGGSCOUPLINGS # values of loop-induced couplings
         36           21           21     0.94204843E-06 # A-Gluon-Gluon 
         36           22           23     0.00000000E+00 # A-Photon-Z (not yet calculated by SPheno) 
 Block SPhenoLowEnergy # low energy observables 
-      20    1.14224094E-15  # (g-2)_e
-      21    4.88356103E-11  # (g-2)_mu
-      22    1.39086916E-08  # (g-2)_tau
+      20    1.14224095E-15  # (g-2)_e
+      21    4.88358369E-11  # (g-2)_mu
+      22    1.39268197E-08  # (g-2)_tau
       23    0.00000000E+00  # EDM(e)
       24    0.00000000E+00  # EDM(mu)
       25    0.00000000E+00  # EDM(tau)
@@ -614,8 +614,8 @@ Block FlavorKitQFV # quark flavor violating observables
     5001    9.91107231E-01  # BR(B-> s e e)/BR(B-> s e e)_SM
     5002    1.59026997E-06  # BR(B-> s mu mu)
     5003    9.90952071E-01  # BR(B-> s mu mu)/BR(B-> s mu mu)_SM
-    6000    1.10892889E-07  # BR(B -> K mu mu)
-    6001    9.99035035E-01  # BR(B -> K mu mu)/BR(B -> K mu mu)_SM
+    6000    1.09837557E-07  # BR(B -> K mu mu)
+    6001    9.89527537E-01  # BR(B -> K mu mu)/BR(B -> K mu mu)_SM
     7000    4.09410109E-05  # BR(B->s nu nu)
     7001    9.99736727E-01  # BR(B->s nu nu)/BR(B->s nu nu)_SM
     7002    1.89568385E-06  # BR(B->D nu nu)
@@ -668,41 +668,56 @@ Block FWCOEF Q=  1.60000000E+02  # Wilson coefficients at scale Q
       030 6321   00   2    -0.17455590E-10    # coeffC8p
       030 6421   00   1    -0.44170393E-10    # coeffC8NP
       030 6321   00   1    -0.17455590E-10    # coeffC8pNP
-  0305111 4133   00   0     0.20721339E-08    # coeffC9eeSM
-  0305111 4133   00   2     0.20718447E-08    # coeffC9ee
-  0305111 4233   00   2    -0.50287101E-14    # coeffC9Pee
-  0305111 4133   00   1    -0.28921764E-12    # coeffC9eeNP
-  0305111 4233   00   1    -0.50287101E-14    # coeffC9PeeNP
-  0305111 4137   00   0    -0.78885512E-08    # coeffC10eeSM
-  0305111 4137   00   2    -0.78869068E-08    # coeffC10ee
-  0305111 4237   00   2    -0.50719419E-13    # coeffC10Pee
-  0305111 4137   00   1     0.16444536E-11    # coeffC10eeNP
-  0305111 4237   00   1    -0.50719419E-13    # coeffC10PeeNP
-  0305131 4133   00   0     0.20721329E-08    # coeffC9mumuSM
-  0305131 4133   00   2     0.20718436E-08    # coeffC9mumu
-  0305131 4233   00   2    -0.50286944E-14    # coeffC9Pmumu
-  0305131 4133   00   1    -0.28937089E-12    # coeffC9mumuNP
-  0305131 4233   00   1    -0.50286944E-14    # coeffC9PmumuNP
-  0305131 4137   00   0    -0.78885522E-08    # coeffC10mumuSM
-  0305131 4137   00   2    -0.78869079E-08    # coeffC10mumu
-  0305131 4237   00   2    -0.50719423E-13    # coeffC10Pmumu
-  0305131 4137   00   1    -0.99590409E-08    # coeffC10mumuNP
-  0305131 4237   00   1    -0.50719423E-13    # coeffC10PmumuNP
-  0305121 4137   00   0    -0.12184348E-07    # coeffC11nu1nu1SM
-  0305121 4137   00   2    -0.12182759E-07    # coeffC11nu1nu1
-  0305121 4237   00   2     0.50718658E-13    # coeffC11Pnu1nu1
-  0305121 4137   00   1     0.15889143E-11    # coeffC11nu1nu1NP
-  0305121 4237   00   1     0.50718658E-13    # coeffC11Pnu1nu1NP
-  0305141 4137   00   0    -0.12184232E-07    # coeffC11nu2nu2SM
-  0305141 4137   00   2    -0.12182642E-07    # coeffC11nu2nu2
-  0305141 4237   00   2     0.50718643E-13    # coeffC11Pnu2nu2
-  0305141 4137   00   1     0.15890764E-11    # coeffC11nu2nu2NP
-  0305141 4237   00   1     0.50718643E-13    # coeffC11Pnu2nu2NP
-  0305161 4137   00   0    -0.12159446E-07    # coeffC11nu3nu3SM
-  0305161 4137   00   2    -0.12157810E-07    # coeffC11nu3nu3
-  0305161 4237   00   2     0.50714467E-13    # coeffC11Pnu3nu3
-  0305161 4137   00   1     0.16355003E-11    # coeffC11nu3nu3NP
-  0305161 4237   00   1     0.50714467E-13    # coeffC11Pnu3nu3NP
+  0305111 4133   00   0     0.10360670E-08    # coeffC9eeSM
+  0305111 4133   00   2     0.10359224E-08    # coeffC9ee
+  0305111 4233   00   2    -0.25143550E-14    # coeffC9Pee
+  0305111 4133   00   1    -0.14460882E-12    # coeffC9eeNP
+  0305111 4233   00   1    -0.25143550E-14    # coeffC9PeeNP
+  0305111 4137   00   0    -0.39442756E-08    # coeffC10eeSM
+  0305111 4137   00   2    -0.39434534E-08    # coeffC10ee
+  0305111 4237   00   2    -0.25359710E-13    # coeffC10Pee
+  0305111 4137   00   1     0.82222678E-12    # coeffC10eeNP
+  0305111 4237   00   1    -0.25359710E-13    # coeffC10PeeNP
+  0305131 4133   00   0     0.10360665E-08    # coeffC9mumuSM
+  0305131 4133   00   2     0.10359218E-08    # coeffC9mumu
+  0305131 4233   00   2    -0.25143472E-14    # coeffC9Pmumu
+  0305131 4133   00   1    -0.14468545E-12    # coeffC9mumuNP
+  0305131 4233   00   1    -0.25143472E-14    # coeffC9PmumuNP
+  0305131 4137   00   0    -0.39442761E-08    # coeffC10mumuSM
+  0305131 4137   00   2    -0.39434540E-08    # coeffC10mumu
+  0305131 4237   00   2    -0.25359711E-13    # coeffC10Pmumu
+  0305131 4137   00   1     0.82215247E-12    # coeffC10mumuNP
+  0305131 4237   00   1    -0.25359711E-13    # coeffC10PmumuNP
+  0305121 4141   00   0    -0.12184348E-07    # coeffCLnu1nu1SM
+  0305121 4141   00   2    -0.12182759E-07    # coeffCLnu1nu1
+  0305121 4241   00   2     0.50718658E-13    # coeffCLPnu1nu1
+  0305121 4141   00   1     0.15889143E-11    # coeffCLnu1nu1NP
+  0305121 4241   00   1     0.50718658E-13    # coeffCLPnu1nu1NP
+  0305141 4141   00   0    -0.12184232E-07    # coeffCLnu2nu2SM
+  0305141 4141   00   2    -0.12182642E-07    # coeffCLnu2nu2
+  0305141 4241   00   2     0.50718643E-13    # coeffCLPnu2nu2
+  0305141 4141   00   1     0.15890764E-11    # coeffCLnu2nu2NP
+  0305141 4241   00   1     0.50718643E-13    # coeffCLPnu2nu2NP
+  0305161 4141   00   0    -0.12159446E-07    # coeffCLnu3nu3SM
+  0305161 4141   00   2    -0.12157810E-07    # coeffCLnu3nu3
+  0305161 4241   00   2     0.50714467E-13    # coeffCLPnu3nu3
+  0305161 4141   00   1     0.16355003E-11    # coeffCLnu3nu3NP
+  0305161 4241   00   1     0.50714467E-13    # coeffCLPnu3nu3NP
+  0305121 4142   00   0     0.00000000E+00    # coeffCRnu1nu1SM
+  0305121 4142   00   2     0.00000000E+00    # coeffCRnu1nu1
+  0305121 4242   00   2     0.00000000E+00    # coeffCRPnu1nu1
+  0305121 4142   00   1     0.00000000E+00    # coeffCRnu1nu1NP
+  0305121 4242   00   1     0.00000000E+00    # coeffCRPnu1nu1NP
+  0305141 4142   00   0     0.00000000E+00    # coeffCRnu2nu2SM
+  0305141 4142   00   2     0.00000000E+00    # coeffCRnu2nu2
+  0305141 4242   00   2     0.00000000E+00    # coeffCRPnu2nu2
+  0305141 4142   00   1     0.00000000E+00    # coeffCRnu2nu2NP
+  0305141 4242   00   1     0.00000000E+00    # coeffCRPnu2nu2NP
+  0305161 4142   00   0     0.00000000E+00    # coeffCRnu3nu3SM
+  0305161 4142   00   2     0.00000000E+00    # coeffCRnu3nu3
+  0305161 4242   00   2     0.00000000E+00    # coeffCRPnu3nu3
+  0305161 4142   00   1     0.00000000E+00    # coeffCRnu3nu3NP
+  0305161 4242   00   1     0.00000000E+00    # coeffCRPnu3nu3NP
 Block IMFWCOEF Q=  1.60000000E+02  # Im(Wilson coefficients) at scale Q 
       030 4422   00   0     0.64275156E-10    # coeffC7sm
       030 4422   00   2     0.63992117E-10    # coeffC7
@@ -714,41 +729,56 @@ Block IMFWCOEF Q=  1.60000000E+02  # Im(Wilson coefficients) at scale Q
       030 6321   00   2     0.14165894E-11    # coeffC8p
       030 6421   00   1    -0.78292643E-12    # coeffC8NP
       030 6321   00   1     0.14165894E-11    # coeffC8pNP
-  0305111 4133   00   0    -0.36999150E-10    # coeffC9eeSM
-  0305111 4133   00   2    -0.36996339E-10    # coeffC9ee
-  0305111 4233   00   2     0.89152097E-16    # coeffC9Pee
-  0305111 4133   00   1     0.28114302E-14    # coeffC9eeNP
-  0305111 4233   00   1     0.89152097E-16    # coeffC9PeeNP
-  0305111 4137   00   0     0.14078085E-09    # coeffC10eeSM
-  0305111 4137   00   2     0.14075304E-09    # coeffC10ee
-  0305111 4237   00   2     0.89909777E-15    # coeffC10Pee
-  0305111 4137   00   1    -0.27802893E-13    # coeffC10eeNP
-  0305111 4237   00   1     0.89909777E-15    # coeffC10PeeNP
-  0305131 4133   00   0    -0.36999132E-10    # coeffC9mumuSM
-  0305131 4133   00   2    -0.36996318E-10    # coeffC9mumu
-  0305131 4233   00   2     0.89151722E-16    # coeffC9Pmumu
-  0305131 4133   00   1     0.28141254E-14    # coeffC9mumuNP
-  0305131 4233   00   1     0.89151722E-16    # coeffC9PmumuNP
-  0305131 4137   00   0     0.14078086E-09    # coeffC10mumuSM
-  0305131 4137   00   2     0.14075306E-09    # coeffC10mumu
-  0305131 4237   00   2     0.89909814E-15    # coeffC10Pmumu
-  0305131 4137   00   1     0.17775220E-09    # coeffC10mumuNP
-  0305131 4237   00   1     0.89909814E-15    # coeffC10PmumuNP
-  0305121 4137   00   0     0.21750915E-09    # coeffC11nu1nu1SM
-  0305121 4137   00   2     0.21748139E-09    # coeffC11nu1nu1
-  0305121 4237   00   2    -0.89910212E-15    # coeffC11Pnu1nu1
-  0305121 4137   00   1    -0.27765164E-13    # coeffC11nu1nu1NP
-  0305121 4237   00   1    -0.89910212E-15    # coeffC11Pnu1nu1NP
-  0305141 4137   00   0     0.21750615E-09    # coeffC11nu2nu2SM
-  0305141 4137   00   2     0.21747838E-09    # coeffC11nu2nu2
-  0305141 4237   00   2    -0.89910175E-15    # coeffC11Pnu2nu2
-  0305141 4137   00   1    -0.27768001E-13    # coeffC11nu2nu2NP
-  0305141 4237   00   1    -0.89910175E-15    # coeffC11Pnu2nu2NP
-  0305161 4137   00   0     0.21704156E-09    # coeffC11nu3nu3SM
-  0305161 4137   00   2     0.21701298E-09    # coeffC11nu3nu3
-  0305161 4237   00   2    -0.89899655E-15    # coeffC11Pnu3nu3
-  0305161 4137   00   1    -0.28580827E-13    # coeffC11nu3nu3NP
-  0305161 4237   00   1    -0.89899655E-15    # coeffC11Pnu3nu3NP
+  0305111 4133   00   0    -0.18499575E-10    # coeffC9eeSM
+  0305111 4133   00   2    -0.18498169E-10    # coeffC9ee
+  0305111 4233   00   2     0.44576048E-16    # coeffC9Pee
+  0305111 4133   00   1     0.14057151E-14    # coeffC9eeNP
+  0305111 4233   00   1     0.44576048E-16    # coeffC9PeeNP
+  0305111 4137   00   0     0.70390423E-10    # coeffC10eeSM
+  0305111 4137   00   2     0.70376522E-10    # coeffC10ee
+  0305111 4237   00   2     0.44954888E-15    # coeffC10Pee
+  0305111 4137   00   1    -0.13901446E-13    # coeffC10eeNP
+  0305111 4237   00   1     0.44954888E-15    # coeffC10PeeNP
+  0305131 4133   00   0    -0.18499566E-10    # coeffC9mumuSM
+  0305131 4133   00   2    -0.18498159E-10    # coeffC9mumu
+  0305131 4233   00   2     0.44575861E-16    # coeffC9Pmumu
+  0305131 4133   00   1     0.14070627E-14    # coeffC9mumuNP
+  0305131 4233   00   1     0.44575861E-16    # coeffC9PmumuNP
+  0305131 4137   00   0     0.70390432E-10    # coeffC10mumuSM
+  0305131 4137   00   2     0.70376532E-10    # coeffC10mumu
+  0305131 4237   00   2     0.44954907E-15    # coeffC10Pmumu
+  0305131 4137   00   1    -0.13900100E-13    # coeffC10mumuNP
+  0305131 4237   00   1     0.44954907E-15    # coeffC10PmumuNP
+  0305121 4141   00   0     0.21750915E-09    # coeffCLnu1nu1SM
+  0305121 4141   00   2     0.21748139E-09    # coeffCLnu1nu1
+  0305121 4241   00   2    -0.89910212E-15    # coeffCLPnu1nu1
+  0305121 4141   00   1    -0.27765164E-13    # coeffCLnu1nu1NP
+  0305121 4241   00   1    -0.89910212E-15    # coeffCLPnu1nu1NP
+  0305141 4141   00   0     0.21750615E-09    # coeffCLnu2nu2SM
+  0305141 4141   00   2     0.21747838E-09    # coeffCLnu2nu2
+  0305141 4241   00   2    -0.89910175E-15    # coeffCLPnu2nu2
+  0305141 4141   00   1    -0.27768001E-13    # coeffCLnu2nu2NP
+  0305141 4241   00   1    -0.89910175E-15    # coeffCLPnu2nu2NP
+  0305161 4141   00   0     0.21704156E-09    # coeffCLnu3nu3SM
+  0305161 4141   00   2     0.21701298E-09    # coeffCLnu3nu3
+  0305161 4241   00   2    -0.89899655E-15    # coeffCLPnu3nu3
+  0305161 4141   00   1    -0.28580827E-13    # coeffCLnu3nu3NP
+  0305161 4241   00   1    -0.89899655E-15    # coeffCLPnu3nu3NP
+  0305121 4142   00   0     0.00000000E+00    # coeffCRnu1nu1SM
+  0305121 4142   00   2     0.00000000E+00    # coeffCRnu1nu1
+  0305121 4242   00   2     0.00000000E+00    # coeffCRPnu1nu1
+  0305121 4142   00   1     0.00000000E+00    # coeffCRnu1nu1NP
+  0305121 4242   00   1     0.00000000E+00    # coeffCRPnu1nu1NP
+  0305141 4142   00   0     0.00000000E+00    # coeffCRnu2nu2SM
+  0305141 4142   00   2     0.00000000E+00    # coeffCRnu2nu2
+  0305141 4242   00   2     0.00000000E+00    # coeffCRPnu2nu2
+  0305141 4142   00   1     0.00000000E+00    # coeffCRnu2nu2NP
+  0305141 4242   00   1     0.00000000E+00    # coeffCRPnu2nu2NP
+  0305161 4142   00   0     0.00000000E+00    # coeffCRnu3nu3SM
+  0305161 4142   00   2     0.00000000E+00    # coeffCRnu3nu3
+  0305161 4242   00   2     0.00000000E+00    # coeffCRPnu3nu3
+  0305161 4142   00   1     0.00000000E+00    # coeffCRnu3nu3NP
+  0305161 4242   00   1     0.00000000E+00    # coeffCRPnu3nu3NP
 Block FineTuning #  
        0    1.05189732E+03  #  Overall FT 
        1    1.49559022E+01  # m0

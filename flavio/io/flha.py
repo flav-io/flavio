@@ -17,7 +17,7 @@ def prefactors_bsll(par, scale):
     alpha_e = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
     xi_t = flavio.physics.ckm.xi('t', 'bs')(par)
     pre_all = -4*GF/sqrt(2)*xi_t
-    pre_910 = pre_all * alpha_e/(4*pi)*2
+    pre_910 = pre_all * alpha_e/(4*pi)
     pre_7 =   pre_all /(16*pi**2)
     pre_8 =   pre_all /(16*pi**2)
     return {
@@ -62,7 +62,7 @@ def get_wc_from_file(filename):
     prefac = prefactors_bsll(par_dict, scale)
     wc_dict = {}
     for k, v in wc_flha.dict().items():
-        if k[-1] != 1:
+        if k[-1] != 1: # only look at NP-only Wilson coefficients
             continue
         if k[:2] not in flha_dict:
             log.warning('Wilson coefficient ' + str(k[:2]) + ' unknown to flavio; ignored.')
@@ -71,7 +71,6 @@ def get_wc_from_file(filename):
         if wc_name not in prefac:
             wc_dict[wc_name] = v
         else:
-            print(wc_name, v)
             wc_dict[wc_name] = v / prefac[wc_name]
     wc_obj =  flavio.WilsonCoefficients()
     wc_obj.set_initial(wc_dict, scale=scale)
