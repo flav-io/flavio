@@ -1,6 +1,6 @@
 """Functions for reading a set of Wilson coefficients from an FLHA file.
-This assumes the normalization convention used by SPheno modulues generated
-by FlavorKit with SARAH 4.8.0 and should not be used with other FLHA-compatible
+This assumes the normalization convention used by SPheno modules generated
+by FlavorKit with SARAH 4.8.1+ and should not be used with other FLHA-compatible
 files, as the normalization is not fixed by the accord."""
 
 
