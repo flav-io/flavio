@@ -21,6 +21,7 @@ setup(name='flavio',
       packages=find_packages(),
       package_data={
       'flavio':['data/*',
+                'data/test/*',
                 'physics/data/arXiv-0810-4077v3/*',
                 'physics/data/arXiv-1503-05534v1/*',
                 'physics/data/arXiv-1501-00367v2/*',
