@@ -52,6 +52,23 @@ _flha_dict ={
  }
 
 def read_wilson(filename):
+    r"""Read new physics contributions to Wilson coefficients from an output file
+    in FLHA format produced by a SPheno module generated with SARAH 4.8.1+
+    with FlavorKit.
+
+    *Caution*: this function should not be used with FLHA files produced by any
+    other code, in particular not the default version of SPheno or older
+    SARAH/FlavorKit versions, as they use different normalization conventions
+    for the Wilson coefficients.
+
+    Input
+    -----
+
+    - `filename`: the path to the file as a string
+
+    Returns an instance of `flavio.WilsonCoefficients` that can be used for
+    `flavio.np_prediction`, for instance.
+    """
     if not os.path.exists(filename):
         log.error("File " + filename + " not found.")
         return keys
