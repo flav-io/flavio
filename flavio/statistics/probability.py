@@ -24,8 +24,24 @@ class ProbabilityDistribution(object):
 
 
 
-class DeltaDistribution(ProbabilityDistribution):
+class UniformDistribution(ProbabilityDistribution):
 
+   def __init__(self, central_value, half_range):
+      super().__init__(central_value)
+      self.half_range = half_range
+      self.range = (self.central_value - self.half_range,
+                    self.central_value + self.half_range)
+
+   def get_random(self, size=None):
+      return np.random.uniform(self.range[0], self.range[1], size)
+
+   def logpdf(self, x):
+       if x < self.range[0] or x >= self.range[1]:
+           return 0
+       else:
+           return -math.log(2*self.half_range)
+
+class DeltaDistribution(ProbabilityDistribution):
    def __init__(self, central_value):
       super().__init__(central_value)
 
