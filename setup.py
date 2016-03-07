@@ -20,7 +20,7 @@ setup(name='flavio',
       license='MIT',
       packages=find_packages(),
       package_data={
-      'flavio':['data/*',
+      'flavio':['data/*.yml',
                 'data/test/*',
                 'physics/data/arXiv-0810-4077v3/*',
                 'physics/data/arXiv-1503-05534v1/*',
