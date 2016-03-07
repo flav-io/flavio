@@ -1,7 +1,6 @@
 from ._version import __version__
 from . import physics
 from . import statistics
-from . import plots
 from . import parameters
 from . import measurements
 from . import functions
