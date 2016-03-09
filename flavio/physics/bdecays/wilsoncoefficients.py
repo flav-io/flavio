@@ -35,15 +35,23 @@ def wctot_dict(wc_obj, sector, scale, par):
     WilsonCoefficients instance."""
     wc_np_dict = wc_obj.get_wc(sector, scale, par)
     wcsm_120 = _wcsm_120.copy()
+    wc_sm = running.get_wilson(par, wcsm_120, wc_obj.rge_derivative[sector], 120., scale)
     # now here comes an ugly fix. If we have b->s transitions, we should take
     # into account the fact that C7' = C7*ms/mb, and the same for C8, which is
     # not completely negligible. To find out whether we have b->s, we look at
     # the "sector" string.
     if sector[:2] == 'bs':
+        # go from the effective to the "non-effective" WCs
+        yi = np.array([0, 0, -1/3., -4/9., -20/3., -80/9.])
+        zi = np.array([0, 0, 1, -1/6., 20, -10/3.])
+        c7 = wc_sm[6] - np.dot(yi, wc_sm[:6]) # c7 (not effective!)
+        c8 = wc_sm[7] - np.dot(zi, wc_sm[:6]) # c8 (not effective!)
         eps_s = running.get_ms(par, scale)/running.get_mb(par, scale)
-        wcsm_120[21] = eps_s * wcsm_120[6]
-        wcsm_120[22] = eps_s * wcsm_120[7]
-    wc_sm = running.get_wilson(par, wcsm_120, wc_obj.rge_derivative[sector], 120., scale)
+        c7p = eps_s * c7
+        c8p = eps_s * c8
+        # go back to the effective WCs
+        wc_sm[21] = c7p + np.dot(yi, wc_sm[15:21]) # c7p_eff
+        wc_sm[22] = c7p + np.dot(zi, wc_sm[15:21]) # c8p_eff
     wc_labels = wc_obj.coefficients[sector]
     wc_sm_dict =  dict(zip(wc_labels, wc_sm))
     return add_dict((wc_np_dict, wc_sm_dict))
