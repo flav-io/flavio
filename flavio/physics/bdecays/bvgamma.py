@@ -88,7 +88,8 @@ def S(wc_obj, par, B, V):
     a, a_bar = get_a_abar(wc_obj, par, B, V)
     q_over_p = mesonmixing.observables.q_over_p(wc_obj, par, B)
     beta = ckm.get_ckmangle_beta(par)
-    num = q_over_p * (a['L'].conj()*a_bar['L']+a['R'].conj()*a_bar['R'])
+    # minus sign from different convention of q/p compared to Ball/Zwicky
+    num = -q_over_p * (a['L'].conj()*a_bar['L']+a['R'].conj()*a_bar['R'])
     den = Gamma_CPaverage(a, a_bar)
     return num.imag / den
 
