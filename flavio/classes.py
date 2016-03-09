@@ -6,7 +6,7 @@ from .config import config
 from collections import OrderedDict
 import copy
 import math
-from flavio._parse_errors import constraints_from_string, combine_distributions, errors_from_string
+from flavio._parse_errors import constraints_from_string, combine_distributions, errors_from_string, string_from_constraints
 import scipy.stats
 
 def _is_number(s):
@@ -226,6 +226,14 @@ class Constraints(object):
 
 ########## ParameterConstraints Class ##########
 class ParameterConstraints(Constraints):
+    """
+    """
+
+    def __init__(self):
+        super().__init__()
+
+########## WilsonCoefficientPriors Class ##########
+class WilsonCoefficientPriors(Constraints):
     """
     """
 
