@@ -4,6 +4,7 @@ import matplotlib.patches as patches
 import numpy as np
 import flavio
 import scipy.optimize
+import scipy.interpolate
 from scipy.stats import gaussian_kde
 
 def error_budget_pie(err_dict, other_cutoff=0.03):
@@ -148,3 +149,17 @@ def flavio_branding(x=0.8, y=0.94, version=True):
 def flavio_box(x_min, x_max, y_min, y_max):
     ax = plt.gca()
     ax.add_patch(patches.Rectangle((x_min, y_min), x_max-x_min, y_max-y_min, facecolor='#ffffff', edgecolor='#666666', alpha=0.5, ls=':', lw=0.7))
+
+def smooth_density_histogram(data, N=20, plotargs={}, fillargs={}):
+    """A smooth (interpolated) density histogram. N (default: 20) is the number
+    of steps."""
+    y, binedges = np.histogram(data, bins=N)
+    x = 0.5*(binedges[1:]+binedges[:-1])
+    f = scipy.interpolate.interp1d(x, y, kind='cubic')
+    ax = plt.gca()
+    if 'color' not in plotargs:
+        plotargs['color'] = flavio.plots.colors.set1[0]
+    if 'facecolor' not in fillargs:
+        fillargs['facecolor'] = flavio.plots.colors.pastel[0]
+    ax.plot(x, y, **plotargs)
+    ax.fill_between(x, 0, y, **fillargs)
