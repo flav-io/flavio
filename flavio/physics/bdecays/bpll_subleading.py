@@ -34,7 +34,7 @@ def helicity_amps_deltaC9(q2, deltaC9, par, B, P, lep):
     the Wilson coefficient $C_9(\mu_b)$. This can be used to parametrize
     residual uncertainties due to subleading non-factorizable hadronic effects.
     """
-    return _helicity_amps_deltaC(q2, deltaC9, '9', par, B, P, lep)
+    return _helicity_amps_deltaC(q2, deltaC9, 'v', par, B, P, lep)
 
 # One possibility is to parametrize the effective shift in C7 or C9 as a simple
 # polynomial in q2.
