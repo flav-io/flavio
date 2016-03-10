@@ -29,6 +29,11 @@ _wcsm_120[:15] = np.array([  1.99030910e-01,   1.00285703e+00,  -4.17672471e-04,
         -4.06926405e+00,   6.15944332e-03,   0.00000000e+00,
         -1.12876870e-03,   0.00000000e+00,  -3.24099235e-03])
 
+# di->djnunu Wilson coefficient
+def CL_SM(par):
+    return -6.352 #TODO
+
+
 def wctot_dict(wc_obj, sector, scale, par):
     r"""Get a dictionary with the total (SM + new physics) values  of the
     $\Delta F=1$ Wilson coefficients at a given scale, given a
