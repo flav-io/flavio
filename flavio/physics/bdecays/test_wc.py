@@ -5,6 +5,7 @@ from . import common
 from . import wilsoncoefficients
 from .. import eft
 from ..running import running
+import flavio
 
 s = 1.519267515435317e+24
 
@@ -49,3 +50,13 @@ class TestBWilson(unittest.TestCase):
         wc_low = wilsoncoefficients.wctot_dict(wc_obj, 'bsmumu', 4.2, par)
         wc_low_array = np.asarray([wc_low[key] for key in wc_obj.coefficients['bsmumu']])
         np.testing.assert_almost_equal(wc_low_array[:15], wc_low_correct, decimal=8)
+
+    def test_clnu(self):
+        par_dict = flavio.default_parameters.get_central_all()
+        par_dict['alpha_s'] = 0.1184
+        par_dict['alpha_e'] = 1/127.925
+        par_dict['s2w']  = 0.2315
+        par_dict['m_t']  = 173.3
+        cl = wilsoncoefficients.CL_SM(par_dict)
+        # comparing the central value of X_t to (4.2) of 1009.0947
+        self.assertAlmostEqual(-cl*par_dict['s2w']/1.469, 1, delta=0.01)

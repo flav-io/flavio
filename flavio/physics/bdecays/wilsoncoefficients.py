@@ -12,7 +12,7 @@ from flavio.physics.common import add_dict
 from flavio.config import config
 from flavio.physics.bdecays.common import meson_quark
 from flavio.physics.bdecays import matrixelements
-
+import flavio
 
 # SM Wilson coefficients at 120 GeV in the basis
 # [ C_1, C_2, C_3, C_4, C_5, C_6,
@@ -31,7 +31,22 @@ _wcsm_120[:15] = np.array([  1.99030910e-01,   1.00285703e+00,  -4.17672471e-04,
 
 # di->djnunu Wilson coefficient
 def CL_SM(par):
-    return -6.352 #TODO
+    r"""SM Wilson coefficient for $d_i\to d_j\nu\bar\nu$ transitions.
+
+    This is implemented as an approximate formula as a function of the top
+    mass."""
+    # EW NLO corrections arXiv:1009.0947
+    scale = 120. # <- result has very little sensitivity to high matching scale
+    mt = flavio.physics.running.running.get_mt(par, scale)
+    s2w = par['s2w']
+    Xt0_165 = 1.50546 # LO result for mt=165, scale=120
+    Xt0 = Xt0_165 * (1 + 1.14064 * (mt/165. - 1)) # LO
+    Xt1 = Xt0_165 * (-0.031435 - 0.139303 * (mt/165. - 1)) # QCD NLO
+    # (4.3), (4.4) of 1009.0947: NLO EW
+    XtEW = Xt0 * (1 - 1.11508 + 1.12316*1.15338**(mt/165.)-0.179454*(mt/165)) - 1
+    XtEW = XtEW * 0.00062392534457616328 # <- alpha_em/4pi at 120 GeV
+    Xt = Xt0 + Xt1 + XtEW
+    return -Xt/s2w
 
 
 def wctot_dict(wc_obj, sector, scale, par):
