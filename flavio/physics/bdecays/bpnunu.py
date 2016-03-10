@@ -106,8 +106,8 @@ for M in _hadr.keys():
     # differential branching ratio
     _obs_name = "dBR/dq2("+M+"nunu)"
     _obs = flavio.classes.Observable(name=_obs_name, arguments=['q2'])
-    _obs.set_description(r"Differential differential branching ratio of $" + _hadr[M]['tex'] + r"\nu\bar\nu$")
-    _obs.tex = r"$\langle \text{BR} \rangle(" + _hadr[M]['tex'] + r"\nu\bar\nu)$"
+    _obs.set_description(r"Differential branching ratio of $" + _hadr[M]['tex'] + r"\nu\bar\nu$")
+    _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _hadr[M]['tex'] + r"\nu\bar\nu)$"
     flavio.classes.Prediction(_obs_name, dbrdq2_summed(_hadr[M]['B'], _hadr[M]['P']))
 
     # total branching ratio
