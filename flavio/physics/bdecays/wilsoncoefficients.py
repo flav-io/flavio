@@ -106,6 +106,28 @@ def get_wceff_lfv(q2, wc, par, B, M, l1, l2, scale):
     c['tp'] = 0
     return c
 
+
+def get_wceff_nunu(q2, wc, par, B, M, nu1, nu2, scale):
+    r"""Get a dictionary with the effective $\Delta F=1$ Wilson coefficients
+    with neutrinos in the final state
+    in the convention appropriate for the generalized angular distributions.
+    """
+    qiqj=meson_quark[(B,M)]
+    c = {}
+    c['7']  = 0
+    c['7p'] = 0
+    c['v']  =  wc['CL_'+qiqj+nu1+nu2]
+    c['vp'] =  wc['CR_'+qiqj+nu1+nu2]
+    c['a']  = -wc['CL_'+qiqj+nu1+nu2]
+    c['ap'] = -wc['CR_'+qiqj+nu1+nu2]
+    c['s']  = 0
+    c['sp'] = 0
+    c['p']  = 0
+    c['pp'] = 0
+    c['t']  = 0
+    c['tp'] = 0
+    return c
+
 def get_wceff_fccc(q2, wc_obj, par, B, P, lep, scale):
     r"""Get a dictionary with the effective $b\to(c,u)$ Wilson coefficients
     in the convention appropriate for the generalized angular distributions.

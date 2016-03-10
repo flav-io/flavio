@@ -6,16 +6,22 @@ from flavio.physics.bdecays import rge as rge_db1
 from flavio.physics.mesonmixing import rge as rge_df2
 
 
-# Anomalous dimensions for DeltaF=1
+# Anomalous dimensions for DeltaF=2
 def adm_df2(nf, alpha_s, alpha_e):
     return rge_df2.gamma_df2_array(nf, alpha_s)
 
 # Anomalous dimensions for DeltaB=1
 def adm_db1(nf, alpha_s, alpha_e):
+    # this is the ADM for the SM basis
     A_L = rge_db1.gamma_all(nf, alpha_s, alpha_e)
+    # initialize with zeros
     A = np.zeros((34,34))
+    # fill in the SM ADM
     A[:15,:15] = A_L
+    # the ADM for the primed SM basis is the same as for the SM
     A[15:30,15:30] = A_L
+    # note that the enties 30-33 remain zero: these are the scalar and
+    # pseudoscalar operators
     return A
 
 # List of all Wilson coefficients in the Standard basis
@@ -33,6 +39,8 @@ _ll = ['ee', 'mumu', 'tautau']
 _lilj = ['emu', 'mue', 'etau', 'taue', 'mutau', 'taumu']
 _lnu = ['enu', 'munu', 'taunu']
 _fccc = ['bc', 'bu']
+_nunu = ['nuenue', 'numunumu', 'nutaunutau']
+_nuinuj = ['nuenumu', 'numunue', 'nuenutau', 'nutaunue', 'numunutau', 'nutaunumu']
 
 # DeltaF=2 operators
 for qq in _fcnc:
@@ -60,7 +68,17 @@ for qq in _fcnc:
                             'CSp_'+qq+ll, 'CPp_'+qq+ll, ]
         adm[qq + ll] = adm_db1 # FIXME this is not correct yetfor s->dll
 
-    # DeltaF=1 LFV devays
+    # DeltaF=1 decays with same-flavour neutrinos in the final state
+    for ll in _nunu:
+        coefficients[qq + ll] = [ 'CL_'+qq+ll, 'CR_'+qq+ll, ]
+        adm[qq + ll] = None # they don't run
+
+    # DeltaF=1 decays with differently flavoured neutrinos in the final state
+    for ll in _nuinuj:
+        coefficients[qq + ll] = [ 'CL_'+qq+ll, 'CR_'+qq+ll, ]
+        adm[qq + ll] = None # they don't run
+
+    # DeltaF=1 LFV decays
     for ll in _lilj:
         coefficients[qq + ll] = [ 'C9_'+qq+ll, 'C10_'+qq+ll, # semi-leptonic
                             'C9p_'+qq+ll, 'C10p_'+qq+ll,
