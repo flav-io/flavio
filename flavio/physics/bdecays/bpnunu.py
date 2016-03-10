@@ -114,5 +114,5 @@ for M in _hadr.keys():
     _obs_name = "BR("+M+"nunu)"
     _obs = flavio.classes.Observable(name=_obs_name)
     _obs.set_description(r"Branching ratio of $" + _hadr[M]['tex'] + r"\nu\bar\nu$")
-    _obs.tex = r"$\text{BR}" + _hadr[M]['tex'] + r"\nu\bar\nu)$"
+    _obs.tex = r"$\text{BR}(" + _hadr[M]['tex'] + r"\nu\bar\nu)$"
     flavio.classes.Prediction(_obs_name, BRtot_summed(_hadr[M]['B'], _hadr[M]['P']))
