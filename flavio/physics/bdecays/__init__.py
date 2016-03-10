@@ -8,4 +8,6 @@ from . import bll
 from . import bpll
 from . import bpll_subleading
 from . import bplnu
+from . import bvnunu
+from . import bpnunu
 from . import bvgamma
