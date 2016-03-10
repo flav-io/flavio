@@ -88,8 +88,10 @@ def dbrdq2_summed(B, P):
 
 
 _hadr = {
-'B0->K': {'tex': r"B^0\to K^{\ast 0}", 'B': 'B0', 'P': 'K0', },
-'B+->K': {'tex': r"B^+\to K^{\ast +}", 'B': 'B+', 'P': 'K+', },
+'B0->K': {'tex': r"B^0\to K^0", 'B': 'B0', 'P': 'K0', },
+'B+->K': {'tex': r"B^+\to K^+", 'B': 'B+', 'P': 'K+', },
+'B0->pi': {'tex': r"B^0\to \pi^0", 'B': 'B0', 'P': 'pi0', },
+'B+->pi': {'tex': r"B^+\to \pi^+", 'B': 'B+', 'P': 'pi+', },
 }
 
 for M in _hadr.keys():
