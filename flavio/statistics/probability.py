@@ -96,7 +96,7 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
       return np.random.multivariate_normal(self.central_value, self.covariance, size)
 
    def logpdf(self, x):
-       return scipy.stats.multivariate_normal.logpdf(x, self.central_value, self.covariance, allow_singular=True)
+       return scipy.stats.multivariate_normal.logpdf(x, self.central_value, self.covariance)
 
 
 
