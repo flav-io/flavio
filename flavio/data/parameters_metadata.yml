@@ -462,6 +462,14 @@ DeltaM_K0:
   tex: $\Delta M_K$
   description: Mass difference in the $K^0$ system
 
+# Parameters needed for K decays
+
+BR(K+->pienu):
+  tex: $\text{BR}(K^+\to\pi^0e^+\nu_e)$
+  description: Experimental branching ratio of $K^+\to\pi^0e^+\nu_e$
+deltaPcu:
+  tex: $\delta P_{c,u}$
+  description: Contributions to the $K^+\to\pi^+\nu\bar\nu$ amplitude not described by the dimension-6 effective Hamiltonian.
 
 # Coefficients parametrizing SM contributions to Gamma_12
 
