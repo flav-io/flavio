@@ -21,9 +21,9 @@ def kpinunu_amplitude(wc_obj, par, nu1, nu2):
     Vus = abs(flavio.physics.ckm.get_ckm(par)[0,1])
     PcX = kpinunu_charm(par)
     deltaPcu = par['deltaPcu']
-    amp = xi_t * X / s2w # top contribution
+    amp = xi_t * X # top contribution
     if nu1 == nu2: # add the charm contribution if neutrino flavours coincide
-        amp += xi_c * (PcX + deltaPcu)  * Vus**4 / s2w
+        amp += xi_c * (PcX + deltaPcu)  * Vus**4
     return amp
 
 def kpinunu_charm(par):
@@ -34,29 +34,19 @@ def kpinunu_charm(par):
     # approximate formula for NNLO perturbative result: (14) of hep-ph/0603079
     return 0.379 * (mc/1.3)**2.155 * (alpha_s/0.1187)**(-1.417)
 
-def br_normalization(par):
-    r"""Normaliuation factor for $K^+\pi^+\nu\bar\nu$ and $K_L\pi^0\nu\bar\nu$
-    branching ratios. They are normalized to the experimental
-    $K^+\to \pi^0 e^+\nu_e$ branching ratio."""
-    scale = flavio.config['renormalization scale']['kdecays']
-    alphaem = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
-    BR_Kl3 = par['BR(K+->pienu)']
-    Vus = abs(flavio.physics.ckm.get_ckm(par)[0,1])
-    return alphaem**2 * BR_Kl3 / 2. / pi**2 / Vus**2
-
 def br_kplus_pinunu(wc_obj, par, nu1, nu2):
     r"""Branching ratio of $K^+\pi^+\nu\bar\nu$ for fixed neutrino flavours"""
     amp = kpinunu_amplitude(wc_obj, par, nu1, nu2)
-    norm = br_normalization(par)
-    return abs(amp)**2 * norm
+    Vus_tilde = 0.225 #  this is because kappa_plus is defined for a fixed value of Vus!
+    Vus = abs(flavio.physics.ckm.get_ckm(par)[0,1])
+    return abs(amp)**2 * par['kappa_plus_tilde'] / Vus_tilde**8 / Vus**2 / 3.
 
 def br_klong_pinunu(wc_obj, par, nu1, nu2):
     r"""Branching ratio of $K_L\pi^0\nu\bar\nu$ for fixed neutrino flavours"""
     amp = kpinunu_amplitude(wc_obj, par, nu1, nu2)
-    norm = br_normalization(par)
-    tau_L = par['tau_KL']
-    tau_p = par['tau_K+']
-    return amp.imag**2 * norm * tau_L/tau_p
+    Vus_tilde = 0.225 #  this is because kappa_plus is defined for a fixed value of Vus!
+    Vus = abs(flavio.physics.ckm.get_ckm(par)[0,1])
+    return amp.imag**2 * par['kappa_L_tilde'] / Vus_tilde**8 / Vus**2 / 3.
 
 def br_kplus_pinunu_summed(wc_obj, par):
     r"""Branching ratio of $K^+\pi^+\nu\bar\nu$ summed over neutrino flavours"""

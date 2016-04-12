@@ -97,8 +97,9 @@ kappa_epsilon: 0.923(6)       # 1111.1699
 DeltaM_K0: 3.483(6)e-15 # PDG; this is (0.5293±0.0009)*1e10/s
 
 # Parameters needed for K decays
-BR(K+->pienu): 4.82e-2
 deltaPcu: 0.04(2) # hep-ph/0503107
+kappa_plus_tilde: 0.5173(25)e-10
+kappa_L_tilde: 2.231(13)e-10
 
 # Coefficients parametrizing SM contributions to Gamma_12
 

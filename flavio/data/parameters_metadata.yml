@@ -464,9 +464,12 @@ DeltaM_K0:
 
 # Parameters needed for K decays
 
-BR(K+->pienu):
-  tex: $\text{BR}(K^+\to\pi^0e^+\nu_e)$
-  description: Experimental branching ratio of $K^+\to\pi^0e^+\nu_e$
+kappa_plus_tilde:
+  tex: $\tilde{\kappa}_+$
+  description: Parameter $\kappa_+$ containing the hadronic form factor information needed for the $K^+\to\pi^+\nu\bar\nu$ branching ratio, determined assuming $V_{us}\equiv0.225$
+kappa_L_tilde:
+  tex: $\tilde{\kappa}_L$
+  description: Parameter $\kappa_L$ containing the hadronic form factor information needed for the $K_L\to\pi^0\nu\bar\nu$ branching ratio, determined assuming $V_{us}\equiv0.225$
 deltaPcu:
   tex: $\delta P_{c,u}$
   description: Contributions to the $K^+\to\pi^+\nu\bar\nu$ amplitude not described by the dimension-6 effective Hamiltonian.
