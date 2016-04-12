@@ -64,14 +64,14 @@ def br_klong_pinunu_summed(wc_obj, par):
 
 _obs_name = "BR(K+->pinunu)"
 _obs = flavio.classes.Observable(name=_obs_name)
-_tex = r"K^+\pi^+\nu\bar\nu"
+_tex = r"K^+\to\pi^+\nu\bar\nu"
 _obs.set_description(r"Branching ratio of $" + _tex + r"$")
-_obs.tex = r"$\langle \text{BR} \rangle(" + _tex + r")$"
+_obs.tex = r"$\text{BR}(" + _tex + r")$"
 flavio.classes.Prediction(_obs_name, br_kplus_pinunu_summed)
 
 _obs_name = "BR(KL->pinunu)"
 _obs = flavio.classes.Observable(name=_obs_name)
-_tex = r"K_L\pi^0\nu\bar\nu"
+_tex = r"K_L\to\pi^0\nu\bar\nu"
 _obs.set_description(r"Branching ratio of $" + _tex + r"$")
-_obs.tex = r"$\langle \text{BR} \rangle(" + _tex + r")$"
+_obs.tex = r"$\text{BR}(" + _tex + r")$"
 flavio.classes.Prediction(_obs_name, br_klong_pinunu_summed)
