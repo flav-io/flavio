@@ -1331,3 +1331,10 @@ Belle B->K*mumu 2016:
       q2min: 14.18
       q2max: 19
       value: 0.242 + 0.301 - 0.309 ± 0.233
+
+
+ATLAS Bs->mumu 2016:
+  experiment: ATLAS
+  inspire: Aaboud:2016ire
+  values:
+    BR(Bs->mumu): (0.9 + 1.1 - 0.8)*1e-9
