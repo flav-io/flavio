@@ -5,7 +5,7 @@ import numpy as np
 import flavio
 import scipy.optimize
 import scipy.interpolate
-from scipy.stats import gaussian_kde
+import scipy.stats
 
 def error_budget_pie(err_dict, other_cutoff=0.03):
     """Pie chart of an observable's error budget."""
@@ -41,7 +41,7 @@ def density_contour(x, y, covariance_factor=None):
     xx, yy = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
     positions = np.vstack([xx.ravel(), yy.ravel()])
     values = np.vstack([x, y])
-    kernel = gaussian_kde(values)
+    kernel = scipy.stats.gaussian_kde(values)
 
     if covariance_factor is not None:
         kernel.covariance_factor = lambda: covariance_factor
@@ -135,8 +135,13 @@ def band_plot(likelihood_fct, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, c
             contour_args['colors'] = [flavio.plots.colors.set1[0]]
     if 'linestyle' not in contour_args:
         contour_args['linestyles'] = 'solid'
-    ax.contourf(x, y, z, levels=[-n_sigma**2, 0], **contourf_args)
-    ax.contour(x, y, z, levels=[-n_sigma**2], **contour_args)
+    # get the correct values for 2D confidence/credibility contours for n sigma
+    chi2_1dof = scipy.stats.chi2(1)
+    chi2_2dof = scipy.stats.chi2(2)
+    cl_nsigma = chi2_1dof.cdf(n_sigma**2) # this is roughly 0.68 for n_sigma=1 etc.
+    y_nsigma = chi2_2dof.ppf(cl_nsigma) # this is roughly 2.3 for n_sigma=1 etc.
+    ax.contourf(x, y, z, levels=[-y_nsigma, 0], **contourf_args)
+    ax.contour(x, y, z, levels=[-y_nsigma], **contour_args)
 
 def flavio_branding(x=0.8, y=0.94, version=True):
     props = dict(facecolor='white', alpha=0.4, lw=1.2)
