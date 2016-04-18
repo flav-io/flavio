@@ -1,3 +1,9 @@
+"""A fit is a collection of observables and parameters that can be used to
+perform statistical analyses within a particular statistical framework.
+
+Fits are instances of descendants of the `Fit` class (which is not meant
+to be used directly)."""
+
 import flavio
 import numpy as np
 import copy
