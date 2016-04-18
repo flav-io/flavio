@@ -62,3 +62,10 @@ def bsz_load_v1_combined(constraints):
     load_parameters('data/arXiv-1503-05534v1/BKstar_LCSR-Lattice.json', 'B->K*', constraints)
     load_parameters('data/arXiv-1503-05534v1/Bsphi_LCSR-Lattice.json', 'Bs->phi', constraints)
     load_parameters('data/arXiv-1503-05534v1/BsKstar_LCSR-Lattice.json', 'Bs->K*', constraints)
+
+def bsz_load_v2_lcsr(constraints):
+    load_parameters('data/arXiv-1503-05534v2/BKstar_LCSR.json', 'B->K*', constraints)
+    load_parameters('data/arXiv-1503-05534v2/Bomega_LCSR.json', 'B->omega', constraints)
+    load_parameters('data/arXiv-1503-05534v2/Brho_LCSR.json', 'B->rho', constraints)
+    load_parameters('data/arXiv-1503-05534v2/Bsphi_LCSR.json', 'Bs->phi', constraints)
+    load_parameters('data/arXiv-1503-05534v2/BsKstar_LCSR.json', 'Bs->K*', constraints)

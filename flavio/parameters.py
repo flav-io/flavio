@@ -248,6 +248,6 @@ read_pdg(2015, default_parameters)
 
 # Read default parameters for B->V form factors
 ## first load LCSR-only form factors
-flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load_v1_lcsr(default_parameters)
+flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load_v2_lcsr(default_parameters)
 ## then load combined LCSR-lattice fits. Overwrites LCSR ones for B->K*, Bs->K*, Bs->phi, but not B->rho, B->omega
-flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load_v1_combined(default_parameters)
+# flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load_v1_combined(default_parameters)
