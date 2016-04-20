@@ -29,3 +29,16 @@ class TestBVll(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=1)/5.7131974656129313e-8, 1, delta=delta)
         self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=6)/5.524478678779278e-8, 1, delta=delta)
         self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=15)/7.412258847550239e-8, 1, delta=delta)
+        # this is just a very rough comparison to the literature
+        delta = 0.2
+        self.assertAlmostEqual(flavio.sm_prediction("P1(B0->K*mumu)", q2=3), 0, delta=delta)
+        delta = 0.1
+        self.assertAlmostEqual(flavio.sm_prediction("P1(B0->K*mumu)", q2=17), -0.64, delta=delta)
+        delta = 0.1
+        self.assertAlmostEqual(flavio.sm_prediction("P2(B0->K*mumu)", q2=6)/(2/3.*0.179/0.325), 1, delta=delta)
+        delta = 0.1
+        self.assertAlmostEqual(flavio.sm_prediction("P2(B0->K*mumu)", q2=17)/0.36, 1, delta=delta)
+        delta = 0.02
+        self.assertAlmostEqual(flavio.sm_prediction("P3(B0->K*mumu)", q2=3), 0, delta=delta)
+        delta = 0.02
+        self.assertAlmostEqual(flavio.sm_prediction("P3(B0->K*mumu)", q2=17), 0, delta=delta)

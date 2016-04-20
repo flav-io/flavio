@@ -24,6 +24,10 @@ def dGdq2_ave(J, J_bar):
 def SA_den(J, J_bar):
     return 2*dGdq2_ave(J, J_bar)
 
+# denominator of P_i observables
+def P_den(J, J_bar):
+    return S_theory_num(J, J_bar, '2s')
+
 def S_theory(J, J_bar, i):
     r"""CP-averaged angular observable $S_i$ in the theory convention."""
     return S_theory_num(J, J_bar, i)/SA_den(J, J_bar)
@@ -216,6 +220,13 @@ _observables = {
 'A8': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 8), 'tex': r'A_8', 'desc': 'Angular CP asymmetry'},
 'A9': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 9), 'tex': r'A_9', 'desc': 'Angular CP asymmetry'},
 }
+# for the P observables, the convention of LHCb is used. This differs by a
+# sign in P_2 and P_3 from the convention in arXiv:1303.5794
+_observables_p = {
+'P1': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 3)/2., 'tex': r'P_1', 'desc': "CP-averaged \"optimized\" angular observable"},
+'P2': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, '6s')/8., 'tex': r'P_2', 'desc': "CP-averaged \"optimized\" angular observable"},
+'P3': {'func_num': lambda J, J_bar: -S_experiment_num(J, J_bar, 9)/4., 'tex': r'P_3', 'desc': "CP-averaged \"optimized\" angular observable"},
+}
 _observables_pprime = {
 'P4p': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 4), 'tex': r'P_4^\prime', 'desc': "CP-averaged \"optimized\" angular observable"},
 'P5p': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 5), 'tex': r'P_5^\prime', 'desc': "CP-averaged \"optimized\" angular observable"},
@@ -246,9 +257,25 @@ for l in ['e', 'mu', 'tau']:
             _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
             Prediction(_obs_name, bvll_obs_ratio_func(_observables[obs]['func_num'], SA_den, _hadr[M]['B'], _hadr[M]['V'], l))
 
+        for obs in sorted(_observables_p.keys()):
+
+            # binned "optimized" angular observables P
+            _obs_name = "<" + obs + ">("+M+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+            _obs.set_description('Binned ' + _observables_p[obs]['desc'] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$\langle " + _observables_p[obs]['tex'] + r"\rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            Prediction(_obs_name, bvll_obs_int_ratio_func(_observables_p[obs]['func_num'], P_den, _hadr[M]['B'], _hadr[M]['V'], l))
+
+            # differential "optimized"  angular observables
+            _obs_name = obs + "("+M+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2'])
+            _obs.set_description(_observables_p[obs]['desc'][0].capitalize() + _observables_p[obs]['desc'][1:] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$" + _observables_p[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            Prediction(_obs_name, bvll_obs_ratio_func(_observables_p[obs]['func_num'], P_den, _hadr[M]['B'], _hadr[M]['V'], l))
+
         for obs in sorted(_observables_pprime.keys()):
 
-            # binned "optimized" angular observables
+            # binned "optimized" angular observables P'
             _obs_name = "<" + obs + ">("+M+l+l+")"
             _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
             _obs.set_description('Binned ' + _observables_pprime[obs]['desc'] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
