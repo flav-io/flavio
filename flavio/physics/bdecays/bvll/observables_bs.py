@@ -6,6 +6,7 @@ import flavio
 from . import observables
 from flavio.classes import Observable, Prediction
 import cmath
+from scipy.integrate import quad
 
 def bsvll_obs(function, q2, wc_obj, par, B, V, lep):
     ml = par['m_'+lep]
@@ -123,13 +124,13 @@ def bsvll_obs_ratio_func(func_num, func_den, B, V, lep):
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 _observables = {
-'FL': {'func_num': FL_num_Bs, 'tex': r'F_L', 'desc': 'Time-averaged longitudinal polarization fraction'},
-'S3': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 3), 'tex': r'S_3', 'desc': 'Time-averaged, CP-averaged angular observable'},
-'S4': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 4), 'tex': r'S_4', 'desc': 'Time-averaged, CP-averaged angular observable'},
-'S7': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 7), 'tex': r'S_7', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'FL': {'func_num': FL_num_Bs, 'tex': r'\overline{F_L}', 'desc': 'Time-averaged longitudinal polarization fraction'},
+'S3': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 3), 'tex': r'\overline{S_3}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S4': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 4), 'tex': r'\overline{S_4}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S7': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 7), 'tex': r'\overline{S_7}', 'desc': 'Time-averaged, CP-averaged angular observable'},
 }
 _hadr = {
-'Bs->phi': {'tex': r"B_s\to \phi", 'B': 'Bs', 'V': 'phi', },
+'Bs->phi': {'tex': r"B_s\to \phi ", 'B': 'Bs', 'V': 'phi', },
 }
 for l in ['e', 'mu', 'tau']:
     for M in _hadr.keys():
@@ -152,15 +153,15 @@ for l in ['e', 'mu', 'tau']:
         # binned branching ratio
         _obs_name = "<dBR/dq2>("+M+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-        _obs.set_description(r"Binned differential branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
-        _obs.tex = r"$\langle \text{BR} \rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        _obs.set_description(r"Binned time-integrated differential branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+        _obs.tex = r"$\langle \frac{d\overline{\text{BR}}}{dq^2} \rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
         Prediction(_obs_name, bsvll_dbrdq2_int_func(_hadr[M]['B'], _hadr[M]['V'], l))
 
         # differential branching ratio
         _obs_name = "dBR/dq2("+M+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2'])
-        _obs.set_description(r"Differntial branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
-        _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        _obs.set_description(r"Differential time-integrated branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+        _obs.tex = r"$\frac{d\overline{\text{BR}}}{dq^2}(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
         Prediction(_obs_name, bsvll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['V'], l))
 
 # Lepton flavour ratios

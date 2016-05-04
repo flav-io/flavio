@@ -199,13 +199,13 @@ for l in ['e', 'mu', 'tau']:
         _obs_name = "<dBR/dq2>("+M+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
         _obs.set_description(r"Binned differential branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
-        _obs.tex = r"$\langle \text{BR} \rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
         Prediction(_obs_name, bpll_dbrdq2_int_func(_hadr[M]['B'], _hadr[M]['P'], l))
 
         # differential branching ratio
         _obs_name = "dBR/dq2("+M+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2'])
-        _obs.set_description(r"Differntial branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+        _obs.set_description(r"Differential branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
         _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
         Prediction(_obs_name, bpll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['P'], l))
 
