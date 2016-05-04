@@ -5,7 +5,7 @@ lepton flavour violating decays."""
 
 from flavio.physics.bdecays.common import lambda_K
 from math import sqrt, pi
-
+import cmath
 
 
 def transversity_to_helicity(ta):
@@ -98,8 +98,62 @@ def angularcoeffs_general_Gbasis_v(H, q2, mB, mV, mqh, mql, ml1, ml2):
     prefactor = sqrt(laB)*sqrt(laGa)/(2**9 * pi**3 * mB**3 * q2)
     return {k: prefactor*v for k, v in G.items()}
 
-def angularcoeffs_general_v(*args, **kwargs):
-    G = angularcoeffs_general_Gbasis_v(*args, **kwargs)
+def angularcoeffs_h_Gbasis_v(phi, H, Htilde, q2, mB, mV, mqh, mql, ml1, ml2):
+    qp = -cmath.exp(1j * phi) # here it is assumed that q/p is a pure phase, as appropriate for B and Bs mixing
+    laB = lambda_K(mB**2, mV**2, q2)
+    laGa = lambda_K(q2, ml1**2, ml2**2)
+    E1 = sqrt(ml1**2+laGa/(4 * q2))
+    E2 = sqrt(ml2**2+laGa/(4 * q2))
+    G = {}
+    G[0,0,0] = (
+         4/9 * (3 * E1 * E2+laGa/(4 * q2)) * (2 * _Re(-qp * Htilde['pl','V'] * _Co(H['pl','V']))+2 * _Re(-qp * Htilde['mi','V'] * _Co(H['mi','V']))+2 * _Re(-qp * Htilde['0','V'] * _Co(H['0','V']))+2 * _Re(-qp * Htilde['pl','A'] * _Co(H['pl','A']))+2 * _Re(-qp * Htilde['mi','A'] * _Co(H['mi','A']))+2 * _Re(-qp * Htilde['0','A'] * _Co(H['0','A'])))
+         +4 * ml1 * ml2/3 * (2 * _Re(-qp * Htilde['pl','V'] * _Co(H['pl','V']))+2 * _Re(-qp * Htilde['mi','V'] * _Co(H['mi','V']))+2 * _Re(-qp * Htilde['0','V'] * _Co(H['0','V']))-2 * _Re(-qp * Htilde['pl','A'] * _Co(H['pl','A']))-2 * _Re(-qp * Htilde['mi','A'] * _Co(H['mi','A']))-2 * _Re(-qp * Htilde['0','A'] * _Co(H['0','A'])))
+         +4/3 * (E1 * E2-ml1 * ml2+laGa/(4 * q2)) * 2 * _Re(-qp * Htilde['S'] * _Co(H['S']))+4/3 * (E1 * E2+ml1 * ml2+laGa/(4 * q2)) * 2 * _Re(-qp * Htilde['P'] * _Co(H['P']))
+         +16/9 * (3 * (E1 * E2+ml1 * ml2)-laGa/(4 * q2)) * (2 * _Re(-qp * Htilde['pl','Tt'] * _Co(H['pl','Tt']))+2 * _Re(-qp * Htilde['mi','Tt'] * _Co(H['mi','Tt']))+2 * _Re(-qp * Htilde['0','Tt'] * _Co(H['0','Tt'])))
+         +8/9 * (3 * (E1 * E2-ml1 * ml2)-laGa/(4 * q2)) * (2 * _Re(-qp * Htilde['pl','T'] * _Co(H['pl','T']))+2 * _Re(-qp * Htilde['mi','T'] * _Co(H['mi','T']))+2 * _Re(-qp * Htilde['0','T'] * _Co(H['0','T'])))
+         +16/3 * (ml1 * E2+ml2 * E1) * _Im((-qp * Htilde['pl','V']  * _Co(H['pl','Tt']) + _Co(-qp) * H['pl','V']  * _Co(Htilde['pl','Tt']))+(-qp * Htilde['mi','V']  * _Co(H['mi','Tt']) + _Co(-qp) * H['mi','V']  * _Co(Htilde['mi','Tt']))+(-qp * Htilde['0','V']  * _Co(H['0','Tt']) + _Co(-qp) * H['0','V']  * _Co(Htilde['0','Tt'])))
+         +8 * sqrt(2)/3 * (ml1 * E2-ml2 * E1) * _Im((-qp * Htilde['pl','A']  * _Co(H['pl','T']) + _Co(-qp) * H['pl','A']  * _Co(Htilde['pl','T']))+(-qp * Htilde['mi','A']  * _Co(H['mi','T']) + _Co(-qp) * H['mi','A']  * _Co(Htilde['mi','T']))+(-qp * Htilde['0','A']  * _Co(H['0','T']) + _Co(-qp) * H['0','A']  * _Co(Htilde['0','T']))))
+    G[0,1,0] = (4 * sqrt(laGa)/3 * (
+        _Re((-qp * Htilde['pl','V']  * _Co(H['pl','A']) + _Co(-qp) * H['pl','V']  * _Co(Htilde['pl','A']))-(-qp * Htilde['mi','V']  * _Co(H['mi','A']) + _Co(-qp) * H['mi','V']  * _Co(Htilde['mi','A'])))
+        +2 * sqrt(2)/q2 * (ml1**2-ml2**2) * _Re((-qp * Htilde['pl','T']  * _Co(H['pl','Tt']) + _Co(-qp) * H['pl','T']  * _Co(Htilde['pl','Tt']))-(-qp * Htilde['mi','T']  * _Co(H['mi','Tt']) + _Co(-qp) * H['mi','T']  * _Co(Htilde['mi','Tt'])))
+        +2 * (ml1+ml2)/sqrt(q2) * _Im((-qp * Htilde['pl','A']  * _Co(H['pl','Tt']) + _Co(-qp) * H['pl','A']  * _Co(Htilde['pl','Tt']))-(-qp * Htilde['mi','A']  * _Co(H['mi','Tt']) + _Co(-qp) * H['mi','A']  * _Co(Htilde['mi','Tt'])))
+        +sqrt(2)*(ml1-ml2)/sqrt(q2) * _Im((-qp * Htilde['pl','V']  * _Co(H['pl','T']) + _Co(-qp) * H['pl','V']  * _Co(Htilde['pl','T']))-(-qp * Htilde['mi','V']  * _Co(H['mi','T']) + _Co(-qp) * H['mi','V']  * _Co(Htilde['mi','T'])))
+        -(ml1-ml2)/sqrt(q2) * _Re((-qp * Htilde['0','A']  * _Co(H['P']) + _Co(-qp) * H['0','A']  * _Co(Htilde['P'])))-(ml1+ml2)/sqrt(q2) * _Re((-qp * Htilde['0','V']  * _Co(H['S']) + _Co(-qp) * H['0','V']  * _Co(Htilde['S'])))
+        +_Im(sqrt(2) * (-qp * Htilde['0','T']  * _Co(H['P']) + _Co(-qp) * H['0','T']  * _Co(Htilde['P']))+2 * (-qp * Htilde['0','Tt']  * _Co(H['S']) + _Co(-qp) * H['0','Tt']  * _Co(Htilde['S'])))
+        ))
+    G[0,2,0] = -2/9 * laGa/q2 * (
+    -2 * _Re(-qp * Htilde['pl','V'] * _Co(H['pl','V']))-2 * _Re(-qp * Htilde['mi','V'] * _Co(H['mi','V']))+2 * 2 * _Re(-qp * Htilde['0','V'] * _Co(H['0','V']))-2 * _Re(-qp * Htilde['pl','A'] * _Co(H['pl','A']))-2 * _Re(-qp * Htilde['mi','A'] * _Co(H['mi','A']))+2 * 2 * _Re(-qp * Htilde['0','A'] * _Co(H['0','A']))
+    -2 * (-2 * _Re(-qp * Htilde['pl','T'] * _Co(H['pl','T']))-2 * _Re(-qp * Htilde['mi','T'] * _Co(H['mi','T']))+2 * 2 * _Re(-qp * Htilde['0','T'] * _Co(H['0','T'])))-4 * (-2 * _Re(-qp * Htilde['pl','Tt'] * _Co(H['pl','Tt']))-2 * _Re(-qp * Htilde['mi','Tt'] * _Co(H['mi','Tt']))+2 * 2 * _Re(-qp * Htilde['0','Tt'] * _Co(H['0','Tt']))))
+    G[2,0,0] = (-4/9 * (3 * E1 * E2+laGa/(4 * q2)) * (2 * _Re(-qp * Htilde['pl','V'] * _Co(H['pl','V']))+2 * _Re(-qp * Htilde['mi','V'] * _Co(H['mi','V']))-2 * 2 * _Re(-qp * Htilde['0','V'] * _Co(H['0','V']))+2 * _Re(-qp * Htilde['pl','A'] * _Co(H['pl','A']))+2 * _Re(-qp * Htilde['mi','A'] * _Co(H['mi','A']))
+    -2 * 2 * _Re(-qp * Htilde['0','A'] * _Co(H['0','A'])))-4 * ml1 * ml2/3 * (2 * _Re(-qp * Htilde['pl','V'] * _Co(H['pl','V']))+2 * _Re(-qp * Htilde['mi','V'] * _Co(H['mi','V']))-2 * 2 * _Re(-qp * Htilde['0','V'] * _Co(H['0','V']))-2 * _Re(-qp * Htilde['pl','A'] * _Co(H['pl','A']))
+    -2 * _Re(-qp * Htilde['mi','A'] * _Co(H['mi','A']))+2 * 2 * _Re(-qp * Htilde['0','A'] * _Co(H['0','A'])))+8/3 * (E1 * E2-ml1 * ml2+laGa/(4 * q2)) * 2 * _Re(-qp * Htilde['S'] * _Co(H['S']))
+    +8/3 * (E1 * E2+ml1 * ml2+laGa/(4 * q2)) * 2 * _Re(-qp * Htilde['P'] * _Co(H['P']))
+    -16/9 * (3 * (E1 * E2+ml1 * ml2)-laGa/(4 * q2)) * (2 * _Re(-qp * Htilde['pl','Tt'] * _Co(H['pl','Tt']))+2 * _Re(-qp * Htilde['mi','Tt'] * _Co(H['mi','Tt']))-2 * 2 * _Re(-qp * Htilde['0','Tt'] * _Co(H['0','Tt'])))
+    -8/9 * (3 * (E1 * E2-ml1 * ml2)-laGa/(4 * q2)) * (2 * _Re(-qp * Htilde['pl','T'] * _Co(H['pl','T']))+2 * _Re(-qp * Htilde['mi','T'] * _Co(H['mi','T']))-2 * 2 * _Re(-qp * Htilde['0','T'] * _Co(H['0','T'])))
+    -16/3 * (ml1 * E2+ml2 * E1) * _Im((-qp * Htilde['pl','V']  * _Co(H['pl','Tt']) + _Co(-qp) * H['pl','V']  * _Co(Htilde['pl','Tt']))+(-qp * Htilde['mi','V']  * _Co(H['mi','Tt']) + _Co(-qp) * H['mi','V']  * _Co(Htilde['mi','Tt']))-2 * (-qp * Htilde['0','V']  * _Co(H['0','Tt']) + _Co(-qp) * H['0','V']  * _Co(Htilde['0','Tt'])))
+    -8 * sqrt(2)/3 * (ml1 * E2-ml2 * E1) * _Im((-qp * Htilde['pl','A']  * _Co(H['pl','T']) + _Co(-qp) * H['pl','A']  * _Co(Htilde['pl','T']))+(-qp * Htilde['mi','A']  * _Co(H['mi','T']) + _Co(-qp) * H['mi','A']  * _Co(Htilde['mi','T']))-2 * (-qp * Htilde['0','A']  * _Co(H['0','T']) + _Co(-qp) * H['0','A']  * _Co(Htilde['0','T']))))
+    G[2,1,0] = (-4 * sqrt(laGa)/3 * (_Re((-qp * Htilde['pl','V']  * _Co(H['pl','A']) + _Co(-qp) * H['pl','V']  * _Co(Htilde['pl','A']))-(-qp * Htilde['mi','V']  * _Co(H['mi','A']) + _Co(-qp) * H['mi','V']  * _Co(Htilde['mi','A'])))
+    +2 * sqrt(2) * (ml1**2-ml2**2)/q2 * _Re((-qp * Htilde['pl','T']  * _Co(H['pl','Tt']) + _Co(-qp) * H['pl','T']  * _Co(Htilde['pl','Tt']))-(-qp * Htilde['mi','T']  * _Co(H['mi','Tt']) + _Co(-qp) * H['mi','T']  * _Co(Htilde['mi','Tt'])))
+    +2 * (ml1+ml2)/sqrt(q2) * _Im((-qp * Htilde['pl','A']  * _Co(H['pl','Tt']) + _Co(-qp) * H['pl','A']  * _Co(Htilde['pl','Tt']))-(-qp * Htilde['mi','A']  * _Co(H['mi','Tt']) + _Co(-qp) * H['mi','A']  * _Co(Htilde['mi','Tt'])))
+    +sqrt(2) * (ml1-ml2)/sqrt(q2) * _Im((-qp * Htilde['pl','V']  * _Co(H['pl','T']) + _Co(-qp) * H['pl','V']  * _Co(Htilde['pl','T']))-(-qp * Htilde['mi','V']  * _Co(H['mi','T']) + _Co(-qp) * H['mi','V']  * _Co(Htilde['mi','T'])))
+    +2 * (ml1-ml2)/sqrt(q2) * _Re((-qp * Htilde['0','A']  * _Co(H['P']) + _Co(-qp) * H['0','A']  * _Co(Htilde['P'])))+2 * (ml1+ml2)/sqrt(q2) * _Re((-qp * Htilde['0','V']  * _Co(H['S']) + _Co(-qp) * H['0','V']  * _Co(Htilde['S'])))
+    -2 * _Im(sqrt(2) * (-qp * Htilde['0','T']  * _Co(H['P']) + _Co(-qp) * H['0','T']  * _Co(Htilde['P']))+2 * (-qp * Htilde['0','Tt']  * _Co(H['S']) + _Co(-qp) * H['0','Tt']  * _Co(Htilde['S'])))))
+    G[2,2,0] = (-2/9 * laGa/q2 * (2 * _Re(-qp * Htilde['pl','V'] * _Co(H['pl','V']))+2 * _Re(-qp * Htilde['mi','V'] * _Co(H['mi','V']))+4 * 2 * _Re(-qp * Htilde['0','V'] * _Co(H['0','V']))+2 * _Re(-qp * Htilde['pl','A'] * _Co(H['pl','A']))+2 * _Re(-qp * Htilde['mi','A'] * _Co(H['mi','A']))
+    +4 * 2 * _Re(-qp * Htilde['0','A'] * _Co(H['0','A']))-2 * (2 * _Re(-qp * Htilde['pl','T'] * _Co(H['pl','T']))+2 * _Re(-qp * Htilde['mi','T'] * _Co(H['mi','T']))+4 * 2 * _Re(-qp * Htilde['0','T'] * _Co(H['0','T'])))-4 * (2 * _Re(-qp * Htilde['pl','Tt'] * _Co(H['pl','Tt']))+2 * _Re(-qp * Htilde['mi','Tt'] * _Co(H['mi','Tt']))+4 * 2 * _Re(-qp * Htilde['0','Tt'] * _Co(H['0','Tt'])))))
+    G[2,1,1] = (4/sqrt(3) * sqrt(laGa) * ((-qp * Htilde['pl','V']  * _Co(H['0','A']) + _Co(-qp) * H['pl','V']  * _Co(Htilde['0','A']))+(-qp * Htilde['pl','A']  * _Co(H['0','V']) + _Co(-qp) * H['pl','A']  * _Co(Htilde['0','V']))-(-qp * Htilde['0','V']  * _Co(H['mi','A']) + _Co(-qp) * H['0','V']  * _Co(Htilde['mi','A']))-(-qp * Htilde['0','A']  * _Co(H['mi','V']) + _Co(-qp) * H['0','A']  * _Co(Htilde['mi','V']))
+    +(ml1+ml2)/sqrt(q2) * ((-qp * Htilde['pl','V']  * _Co(H['S']) + _Co(-qp) * H['pl','V']  * _Co(Htilde['S']))+(-qp * Htilde['S']  * _Co(H['mi','V']) + _Co(-qp) * H['S']  * _Co(Htilde['mi','V'])))-sqrt(2) * 1j * ((-qp * Htilde['P']  * _Co(H['mi','T']) + _Co(-qp) * H['P']  * _Co(Htilde['mi','T']))-(-qp * Htilde['pl','T']  * _Co(H['P']) + _Co(-qp) * H['pl','T']  * _Co(Htilde['P']))
+    +sqrt(2)*((-qp * Htilde['S']  * _Co(H['mi','Tt']) + _Co(-qp) * H['S']  * _Co(Htilde['mi','Tt']))-(-qp * Htilde['pl','Tt']  * _Co(H['S']) + _Co(-qp) * H['pl','Tt']  * _Co(Htilde['S']))))
+    +(ml1-ml2)/sqrt(q2) * ((-qp * Htilde['pl','A']  * _Co(H['P']) + _Co(-qp) * H['pl','A']  * _Co(Htilde['P']))+(-qp * Htilde['P']  * _Co(H['mi','A']) + _Co(-qp) * H['P']  * _Co(Htilde['mi','A'])))
+    -2 * 1j * (ml1+ml2)/sqrt(q2) * ((-qp * Htilde['pl','A']  * _Co(H['0','Tt']) + _Co(-qp) * H['pl','A']  * _Co(Htilde['0','Tt']))+(-qp * Htilde['0','Tt']  * _Co(H['mi','A']) + _Co(-qp) * H['0','Tt']  * _Co(Htilde['mi','A']))-(-qp * Htilde['pl','Tt']  * _Co(H['0','A']) + _Co(-qp) * H['pl','Tt']  * _Co(Htilde['0','A']))-(-qp * Htilde['0','A']  * _Co(H['mi','Tt']) + _Co(-qp) * H['0','A']  * _Co(Htilde['mi','Tt'])))
+    -sqrt(2) * 1j * (ml1-ml2)/sqrt(q2) * ((-qp * Htilde['pl','V']  * _Co(H['0','T']) + _Co(-qp) * H['pl','V']  * _Co(Htilde['0','T']))+(-qp * Htilde['0','T']  * _Co(H['mi','V']) + _Co(-qp) * H['0','T']  * _Co(Htilde['mi','V']))-(-qp * Htilde['pl','T']  * _Co(H['0','V']) + _Co(-qp) * H['pl','T']  * _Co(Htilde['0','V']))-(-qp * Htilde['0','V']  * _Co(H['mi','T']) + _Co(-qp) * H['0','V']  * _Co(Htilde['mi','T'])))
+    +2 * sqrt(2) * (ml1**2-ml2**2)/q2 * ((-qp * Htilde['pl','T']  * _Co(H['0','Tt']) + _Co(-qp) * H['pl','T']  * _Co(Htilde['0','Tt']))+(-qp * Htilde['pl','Tt']  * _Co(H['0','T']) + _Co(-qp) * H['pl','Tt']  * _Co(Htilde['0','T']))-(-qp * Htilde['0','T']  * _Co(H['mi','Tt']) + _Co(-qp) * H['0','T']  * _Co(Htilde['mi','Tt']))-(-qp * Htilde['0','Tt']  * _Co(H['mi','T']) + _Co(-qp) * H['0','Tt']  * _Co(Htilde['mi','T'])))))
+    G[2,2,1] = (4/3 * laGa/q2 * ((-qp * Htilde['pl','V']  * _Co(H['0','V']) + _Co(-qp) * H['pl','V']  * _Co(Htilde['0','V']))+(-qp * Htilde['0','V']  * _Co(H['mi','V']) + _Co(-qp) * H['0','V']  * _Co(Htilde['mi','V']))+(-qp * Htilde['pl','A']  * _Co(H['0','A']) + _Co(-qp) * H['pl','A']  * _Co(Htilde['0','A']))+(-qp * Htilde['0','A']  * _Co(H['mi','A']) + _Co(-qp) * H['0','A']  * _Co(Htilde['mi','A']))
+    -2 * ((-qp * Htilde['pl','T']  * _Co(H['0','T']) + _Co(-qp) * H['pl','T']  * _Co(Htilde['0','T']))+(-qp * Htilde['0','T']  * _Co(H['mi','T']) + _Co(-qp) * H['0','T']  * _Co(Htilde['mi','T']))+2 * ((-qp * Htilde['pl','Tt']  * _Co(H['0','Tt']) + _Co(-qp) * H['pl','Tt']  * _Co(Htilde['0','Tt']))+(-qp * Htilde['0','Tt']  * _Co(H['mi','Tt']) + _Co(-qp) * H['0','Tt']  * _Co(Htilde['mi','Tt']))))))
+    G[2,2,2] = -8/3 * laGa/q2 * ((-qp * Htilde['pl','V']  * _Co(H['mi','V']) + _Co(-qp) * H['pl','V']  * _Co(Htilde['mi','V']))+(-qp * Htilde['pl','A']  * _Co(H['mi','A']) + _Co(-qp) * H['pl','A']  * _Co(Htilde['mi','A']))-2 * ((-qp * Htilde['pl','T']  * _Co(H['mi','T']) + _Co(-qp) * H['pl','T']  * _Co(Htilde['mi','T']))+2 * (-qp * Htilde['pl','Tt']  * _Co(H['mi','Tt']) + _Co(-qp) * H['pl','Tt']  * _Co(Htilde['mi','Tt']))))
+    prefactor = sqrt(laB)*sqrt(laGa)/(2**9 * pi**3 * mB**3 * q2)
+    return {k: prefactor*v for k, v in G.items()}
+
+def G_to_g(G):
     g = {}
     g['1s'] = 1/32 * (8 * G[0,0,0] + 2 * G[0,2,0] - 4 * G[2,0,0] - G[2,2,0] )
     g['1c'] = 1/16 * (4 * G[0,0,0] +  G[0,2,0] + 4 * G[2,0,0] + G[2,2,0] )
@@ -113,9 +167,21 @@ def angularcoeffs_general_v(*args, **kwargs):
     g[7] = sqrt(3)/16 * _Im(G[2,1,1])
     g[8] = 3/32 * _Im(G[2,2,1])
     g[9] = 3/32 * _Im(G[2,2,2])
+    return g
+
+def angularcoeffs_general_v(*args, **kwargs):
+    G = angularcoeffs_general_Gbasis_v(*args, **kwargs)
+    g = G_to_g(G)
     signflip = [4, '6s', '6c', 7, 9]
     J = {k: -8*4/3.*g[k] if k in signflip else 8*4/3.*g[k] for k in g}
     return J
+
+def angularcoeffs_h_v(*args, **kwargs):
+    h = angularcoeffs_h_Gbasis_v(*args, **kwargs)
+    g_h = G_to_g(h)
+    signflip = [4, '6s', '6c', 7, 9]
+    J_h = {k: -8*4/3.*g_h[k] if k in signflip else 8*4/3.*g_h[k] for k in g_h}
+    return J_h
 
 def helicity_amps_p(q2, mB, mP, mqh, mql, ml1, ml2, ff, wc, prefactor):
     laB = lambda_K(mB**2, mP**2, q2)

@@ -74,6 +74,7 @@ meson_ff = {
 ('Bs','K0'): 'Bs->K',
 ('Bs','K*+'): 'Bs->K*',
 ('Bs','K*0'): 'Bs->K*',
+('Bs','phi'): 'Bs->phi',
 ('B0','rho0'): 'B->rho',
 ('B+','rho+'): 'B->rho',
 ('B0','rho+'): 'B->rho',

@@ -3,6 +3,7 @@ r"""Functions for observables in exclusive semi-leptonic $B\to V\ell^+\ell^-$ FC
 
 from . import amplitudes
 from . import observables
+from . import observables_bs
 from . import qcdf
 from . import qcdf_interpolate
 from . import lfv
