@@ -46,8 +46,13 @@ def bvnunu_obs(function, q2, wc_obj, par, B, V, nu1, nu2):
 def bvnunu_dbrdq2_summed(q2, wc_obj, par, B, V):
     tauB = par['tau_'+B]
     lep =  ['e', 'mu', 'tau']
-    return tauB * sum([ bvnunu_obs(flavio.physics.bdecays.bvll.observables.dGdq2, q2, wc_obj, par, B, V, 'nu'+nu1, 'nu'+nu2)
-            for nu1 in lep for nu2 in lep ])
+    dbrdq2 = tauB * sum([ bvnunu_obs(flavio.physics.bdecays.bvll.observables.dGdq2, q2, wc_obj, par, B, V, 'nu'+nu1, 'nu'+nu2)
+        for nu1 in lep for nu2 in lep ])
+    if V == 'rho0':
+        # factor of 1/2 for neutral rho due to rho0 = (uubar-ddbar)/sqrt(2)
+        return dbrdq2/2.
+    else:
+        return dbrdq2
 
 def bvnunu_dbrdq2_int_summed(q2min, q2max, wc_obj, par, B, V):
     def obs(q2):

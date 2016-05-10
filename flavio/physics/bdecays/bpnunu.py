@@ -45,8 +45,13 @@ def bpnunu_obs(function, q2, wc_obj, par, B, P, nu1, nu2):
 def bpnunu_dbrdq2_summed(q2, wc_obj, par, B, P):
     tauB = par['tau_'+B]
     lep =  ['e', 'mu', 'tau']
-    return tauB * sum([ bpnunu_obs(flavio.physics.bdecays.bpll.dGdq2, q2, wc_obj, par, B, P, 'nu'+nu1, 'nu'+nu2)
+    dbrdq2 = tauB * sum([ bpnunu_obs(flavio.physics.bdecays.bpll.dGdq2, q2, wc_obj, par, B, P, 'nu'+nu1, 'nu'+nu2)
             for nu1 in lep for nu2 in lep ])
+    if P == 'pi0':
+        # factor of 1/2 for neutral pi due to pi0 = (uubar-ddbar)/sqrt(2)
+        return dbrdq2/2.
+    else:
+        return dbrdq2
 
 def bpnunu_dbrdq2_int_summed(q2min, q2max, wc_obj, par, B, P):
     def obs(q2):
