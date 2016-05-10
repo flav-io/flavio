@@ -43,15 +43,6 @@ def bvnunu_obs(function, q2, wc_obj, par, B, V, nu1, nu2):
     J = flavio.physics.bdecays.angular.angularcoeffs_general_v(h, q2, mB, mV, 4, 0, 0, 0)
     return function(J)
 
-def bvnunu_obs_int(function, q2min, q2max, wc_obj, par, B, V, nu1, nu2):
-    def obs(q2):
-        return bvnunu_obs(function, q2, wc_obj, par, B, V, nu1, nu2)
-    return scipy.integrate.quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
-
-def bvnunu_dbrdq2(q2, wc_obj, par, B, V, nu1, nu2):
-    tauB = par['tau_'+B]
-    return tauB * bvnunu_obs(flavio.physics.bdecays.bvll.observables.dGdq2, q2, wc_obj, par, B, V, lep)
-
 def bvnunu_dbrdq2_summed(q2, wc_obj, par, B, V):
     tauB = par['tau_'+B]
     lep =  ['e', 'mu', 'tau']
