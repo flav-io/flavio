@@ -45,3 +45,17 @@ class TestQCDFInterpolate(unittest.TestCase):
                 self.assertAlmostEqual(amps_in[i]/(amps_ex[i]), 1, places=0)
             else:
                 self.assertEqual(amps_in[i], 0)
+
+    def test_qcdf_contributions(self):
+        # check that the individual contributions sum to the total contribution
+        q2 = 4.679
+        B = 'B0'
+        V = 'K*0'
+        lep = 'mu'
+        amps_all = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, lep)
+        amps_WA = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, lep, contribution='WA')
+        amps_O8 = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, lep, contribution='O8')
+        amps_QSS = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, lep, contribution='QSS')
+        for i in amps_all.keys():
+            if not amps_all[i] == 0:
+                self.assertAlmostEqual(amps_all[i]/(amps_WA[i]+amps_O8[i]+amps_QSS[i]), 1, places=5)

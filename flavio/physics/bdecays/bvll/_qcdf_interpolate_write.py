@@ -27,37 +27,44 @@ par_dict_cpconj = conjugate_par(par_dict)
 
 array_dict = {}
 i = 0
+contributions_dict = {
+'all': {'include_WA': True,  'include_O8': True,  'include_QSS': True},
+'WA':  {'include_WA': True,  'include_O8': False, 'include_QSS': False},
+'O8':  {'include_WA': False, 'include_O8': True,  'include_QSS': False},
+'QSS': {'include_WA': False, 'include_O8': False, 'include_QSS': True },
+}
 for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi')]: #, ('B0','rho0'), ('B+','rho+') ]:
     for cp_conjugate in [False, True]: # compute it for the decay and its CP conjugate
-        l = 'e'
-        process = had[0] + '->' + had[1] # e.g. B0->K*0
-        print('Computing ' + process + ' (' + str(i+1) + '/' + str(2*3) + ')')
-        # compute corrections for each q2 value
-        scale = config['renormalization scale']['bvll']
-        label = meson_quark[had] + l + l # e.g. bsee
-        wcsm_dict =  flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wcsm, label, scale, par_dict)
-        if cp_conjugate:
-            hel_amps_list = [ qcdf.helicity_amps_qcdf(q2, wcsm_dict, par_dict_cpconj, B=had[0], V=had[1], lep=l)
-                          for q2 in q2_arr]
-        else:
-            hel_amps_list = [ qcdf.helicity_amps_qcdf(q2, wcsm_dict, par_dict, B=had[0], V=had[1], lep=l)
-                          for q2 in q2_arr]
-        # turn into numpy array
-        hel_amps_arr = np.array([
-            [hel_amps[('pl','V')],
-             hel_amps[('mi','V')],
-             hel_amps[('0','V')]]
-            for hel_amps in hel_amps_list
-        ])
-        # divide out the q^2 poles to get a saner interpolant
-        hel_amps_arr[:,0] = q2_arr * hel_amps_arr[:,0]
-        hel_amps_arr[:,1] = q2_arr * hel_amps_arr[:,1]
-        hel_amps_arr[:,2] = np.sqrt(q2_arr) * hel_amps_arr[:,2]
-        if cp_conjugate:
-            array_name = process + ' CP conjugate'
-        else:
-            array_name = process
-        array_dict[array_name] = hel_amps_arr
-        i += 1
+        for contribution_name, contribution_dict in contributions_dict.items():
+            l = 'e'
+            process = had[0] + '->' + had[1] # e.g. B0->K*0
+            print('Computing ' + process + ' (' + str(i+1) + '/' + str(2*3) + ')')
+            # compute corrections for each q2 value
+            scale = config['renormalization scale']['bvll']
+            label = meson_quark[had] + l + l # e.g. bsee
+            wcsm_dict =  flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wcsm, label, scale, par_dict)
+            if cp_conjugate:
+                hel_amps_list = [ qcdf.helicity_amps_qcdf(q2, wcsm_dict, par_dict_cpconj, B=had[0], V=had[1], lep=l, **contribution_dict)
+                              for q2 in q2_arr]
+            else:
+                hel_amps_list = [ qcdf.helicity_amps_qcdf(q2, wcsm_dict, par_dict, B=had[0], V=had[1], lep=l, **contribution_dict)
+                              for q2 in q2_arr]
+            # turn into numpy array
+            hel_amps_arr = np.array([
+                [hel_amps[('pl','V')],
+                 hel_amps[('mi','V')],
+                 hel_amps[('0','V')]]
+                for hel_amps in hel_amps_list
+            ])
+            # divide out the q^2 poles to get a saner interpolant
+            hel_amps_arr[:,0] = q2_arr * hel_amps_arr[:,0]
+            hel_amps_arr[:,1] = q2_arr * hel_amps_arr[:,1]
+            hel_amps_arr[:,2] = np.sqrt(q2_arr) * hel_amps_arr[:,2]
+            if cp_conjugate:
+                array_name = process + ' CP conjugate ' + contribution_name
+            else:
+                array_name = process + ' ' + contribution_name
+            array_dict[array_name] = hel_amps_arr
+            i += 1
 
 np.savez('qcdf_interpolate', **array_dict)
