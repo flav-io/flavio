@@ -15,7 +15,7 @@ from flavio.physics.bdecays import matrixelements
 from flavio.config import config
 from flavio.physics.bdecays.common import lambda_K, beta_l
 import flavio
-
+import warnings
 
 def complex_quad(func, a, b, **kwargs):
     def real_func(x):
@@ -221,7 +221,10 @@ def lB_plus(par, B):
 
 # (15) of hep-ph/0106067v2
 
-def T_para(q2, par, wc, B, V, scale):
+def T_para(q2, par, wc, B, V, scale,
+           include_WA=True, include_O8=True, include_QSS=True):
+    if not include_WA and not include_O8 and not include_QSS:
+        raise InputError("At least one contribution to the QCDF corrections has to be switched on")
     mB = par['m_'+B]
     mV = par['m_'+V]
     mc = running.get_mc_pole(par)
@@ -234,13 +237,20 @@ def T_para(q2, par, wc, B, V, scale):
     def phiV_para(u):
         return phiV(u, a1_para, a2_para)
     def T_minus(u):
-        return N / lB_minus(q2=q2, par=par, B=B) * phiV_para(u) * (
-                T_para_minus_WA(q2=q2, par=par, wc=wc, B=B, V=V, scale=scale)
-              + T_para_minus_O8(q2=q2, par=par, wc=wc, B=B, V=V, u=u, scale=scale)
-              + T_para_minus_QSS(q2=q2, par=par, wc=wc, B=B, V=V, u=u, scale=scale))
+        T = 0
+        if include_WA:
+            T += T_para_minus_WA(q2=q2, par=par, wc=wc, B=B, V=V, scale=scale)
+        if include_O8:
+            T += T_para_minus_O8(q2=q2, par=par, wc=wc, B=B, V=V, u=u, scale=scale)
+        if include_QSS:
+            T += T_para_minus_QSS(q2=q2, par=par, wc=wc, B=B, V=V, u=u, scale=scale)
+        return N / lB_minus(q2=q2, par=par, B=B) * phiV_para(u) * T
     def T_plus(u):
-        return N / lB_plus(par=par, B=B) * phiV_para(u) * (
+        if include_QSS:
+            return N / lB_plus(par=par, B=B) * phiV_para(u) * (
                 T_para_plus_QSS(q2=q2, par=par, wc=wc, B=B, V=V, u=u, scale=scale))
+        else:
+            return 0
     u_sing = (mB**2 - 4*mc**2)/(-q2 + mB**2)
     if u_sing < 1:
         points = [u_sing]
@@ -251,7 +261,10 @@ def T_para(q2, par, wc, B, V, scale):
 
 
 
-def T_perp(q2, par, wc, B, V, scale):
+def T_perp(q2, par, wc, B, V, scale,
+           include_WA=True, include_O8=True, include_QSS=True):
+    if not include_WA and not include_O8 and not include_QSS:
+        raise InputError("At least one contribution to the QCDF corrections has to be switched on")
     mB = par['m_'+B]
     mV = par['m_'+V]
     mc = running.get_mc_pole(par)
@@ -266,9 +279,12 @@ def T_perp(q2, par, wc, B, V, scale):
     def T_minus(u):
         return 0
     def T_plus(u):
-        return N / lB_plus(par=par, B=B) * phiV_perp(u) * (
-                T_perp_plus_O8(q2=q2, par=par, wc=wc, B=B, V=V, u=u, scale=scale)
-              + T_perp_plus_QSS(q2, par, wc, B, V, u, scale))
+        T = 0
+        if include_O8:
+            T += T_perp_plus_O8(q2=q2, par=par, wc=wc, B=B, V=V, u=u, scale=scale)
+        if include_QSS:
+            T += T_perp_plus_QSS(q2, par, wc, B, V, u, scale)
+        return N / lB_plus(par=par, B=B) * phiV_perp(u) * T
     u_sing = (mB**2 - 4*mc**2)/(-q2 + mB**2)
     if u_sing < 1:
         points = [u_sing]
@@ -278,7 +294,7 @@ def T_perp(q2, par, wc, B, V, scale):
     return T_tot
 
 
-def transversity_amps_qcdf(q2, wc, par, B, V, lep):
+def transversity_amps_qcdf(q2, wc, par, B, V, lep, **kwargs):
     """QCD factorization corrections to B->Vll transversity amplitudes."""
     mB = par['m_'+B]
     mV = par['m_'+V]
@@ -286,8 +302,8 @@ def transversity_amps_qcdf(q2, wc, par, B, V, lep):
     # using the b quark pole mass here!
     mb = running.get_mb_pole(par)
     N = flavio.physics.bdecays.bvll.amplitudes.prefactor(q2, par, B, V, lep)/4
-    T_perp_ = T_perp(q2, par, wc, B, V, scale)
-    T_para_ = T_para(q2, par, wc, B, V, scale)
+    T_perp_ = T_perp(q2, par, wc, B, V, scale, **kwargs)
+    T_para_ = T_para(q2, par, wc, B, V, scale, **kwargs)
     ta = {}
     ta['perp_L'] = N * sqrt(2)*2 * (mB**2-q2) * mb / q2 * T_perp_
     ta['perp_R'] =  ta['perp_L']
@@ -299,13 +315,13 @@ def transversity_amps_qcdf(q2, wc, par, B, V, lep):
     ta['S'] = 0
     return ta
 
-def helicity_amps_qcdf(q2, wc, par, B, V, lep):
+def helicity_amps_qcdf(q2, wc, par, B, V, lep, **kwargs):
     if q2 > 6:
         warnings.warn("The QCDF corrections should not be trusted for q2 above 6 GeV^2")
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mV = par['m_'+V]
     X = sqrt(lambda_K(mB**2,q2,mV**2))/2.
-    ta = transversity_amps_qcdf(q2, wc, par, B, V, lep)
+    ta = transversity_amps_qcdf(q2, wc, par, B, V, lep, **kwargs)
     h = flavio.physics.bdecays.angular.transversity_to_helicity(ta)
     return h
