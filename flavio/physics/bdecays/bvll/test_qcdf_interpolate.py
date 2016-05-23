@@ -12,8 +12,8 @@ class TestQCDFInterpolate(unittest.TestCase):
         B = 'B0'
         V = 'K*0'
         lep = 'mu'
-        amps_in = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, lep)
-        amps_ex = flavio.physics.bdecays.bvll.qcdf.helicity_amps_qcdf(q2, wc, par, B, V, lep)
+        amps_in = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V)
+        amps_ex = flavio.physics.bdecays.bvll.qcdf.helicity_amps_qcdf(q2, wc, par, B, V)
         for i in amps_in.keys():
             if not amps_ex[i] == 0:
                 self.assertAlmostEqual(amps_in[i]/(amps_ex[i]), 1, places=2)
@@ -25,8 +25,8 @@ class TestQCDFInterpolate(unittest.TestCase):
         B = 'B+'
         V = 'K*+'
         lep = 'e'
-        amps_in = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, lep)
-        amps_ex = flavio.physics.bdecays.bvll.qcdf.helicity_amps_qcdf(q2, wc, par, B, V, lep)
+        amps_in = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V)
+        amps_ex = flavio.physics.bdecays.bvll.qcdf.helicity_amps_qcdf(q2, wc, par, B, V)
         for i in amps_in.keys():
             if not amps_ex[i] == 0:
                 self.assertAlmostEqual(amps_in[i]/(amps_ex[i]), 1, places=0)
@@ -38,8 +38,8 @@ class TestQCDFInterpolate(unittest.TestCase):
         B = 'Bs'
         V = 'phi'
         lep = 'mu'
-        amps_in = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, lep)
-        amps_ex = flavio.physics.bdecays.bvll.qcdf.helicity_amps_qcdf(q2, wc, par, B, V, lep)
+        amps_in = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V)
+        amps_ex = flavio.physics.bdecays.bvll.qcdf.helicity_amps_qcdf(q2, wc, par, B, V)
         for i in amps_in.keys():
             if not amps_ex[i] == 0:
                 self.assertAlmostEqual(amps_in[i]/(amps_ex[i]), 1, places=0)
@@ -52,10 +52,10 @@ class TestQCDFInterpolate(unittest.TestCase):
         B = 'B0'
         V = 'K*0'
         lep = 'mu'
-        amps_all = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, lep)
-        amps_WA = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, lep, contribution='WA')
-        amps_O8 = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, lep, contribution='O8')
-        amps_QSS = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, lep, contribution='QSS')
+        amps_all = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V)
+        amps_WA = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, contribution='WA')
+        amps_O8 = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, contribution='O8')
+        amps_QSS = flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par, B, V, contribution='QSS')
         for i in amps_all.keys():
             if not amps_all[i] == 0:
                 self.assertAlmostEqual(amps_all[i]/(amps_WA[i]+amps_O8[i]+amps_QSS[i]), 1, places=5)

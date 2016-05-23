@@ -21,7 +21,7 @@ def _helicity_amps_deltaC(q2, deltaC, C_name, par, B, V, lep):
     mV = par['m_'+V]
     scale = config['renormalization scale']['bvll']
     mb = flavio.physics.running.running.get_mb(par, scale)
-    N = flavio.physics.bdecays.bvll.amplitudes.prefactor(q2, par, B, V, lep)
+    N = flavio.physics.bdecays.bvll.amplitudes.prefactor(q2, par, B, V)
     ff = flavio.physics.bdecays.bvll.amplitudes.get_ff(q2, par, B, V)
     wc  = {'7': 0, '7p': 0, 'v': 0, 'a': 0, 's': 0, 'p': 0, 't': 0,'vp': 0, 'ap': 0, 'sp': 0, 'pp': 0, 'tp': 0, }
     wc[C_name] = deltaC

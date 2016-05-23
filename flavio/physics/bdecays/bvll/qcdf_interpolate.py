@@ -28,12 +28,12 @@ for process, hel_amps in data.items():
     interpolating_function_dict[process] = {}
     interpolating_function_dict[process] = scipy.interpolate.interp1d(q2_arr, hel_amps.view(float), axis=0)
 
-def helicity_amps_qcdf(q2, par, B, V, lep, cp_conjugate=False, contribution='all'):
+def helicity_amps_qcdf(q2, par, B, V, cp_conjugate=False, contribution='all'):
     if q2 > 6:
         warnings.warn("The QCDF corrections should not be trusted for q2 above 6 GeV^2")
-    ml = par['m_'+lep]
-    if lep == 'tau' or q2 < 4*ml**2 or q2 > 9:
-        return {('0' ,'V'): 0, ('pl' ,'V'): 0, ('mi' ,'V'): 0}
+    # ml = par['m_'+lep]
+    # if lep == 'tau' or q2 < 4*ml**2 or q2 > 9:
+    #     return {('0' ,'V'): 0, ('pl' ,'V'): 0, ('mi' ,'V'): 0}
     process = B + '->' + V # e.g. B0->K*0mumu
     if cp_conjugate:
         array_name = process + ' CP conjugate ' + contribution

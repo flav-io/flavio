@@ -14,15 +14,12 @@ from flavio.classes import AuxiliaryQuantity
 import warnings
 
 
-def prefactor(q2, par, B, V, lep):
+def prefactor(q2, par, B, V):
     GF = par['GF']
-    ml = par['m_'+lep]
     scale = config['renormalization scale']['bvll']
     alphaem = running.get_alpha(par, scale)['alpha_e']
     di_dj = meson_quark[(B,V)]
     xi_t = ckm.xi('t',di_dj)(par)
-    # if q2 <= 4*ml**2:
-    #     return 0
     return 4*GF/sqrt(2)*xi_t*alphaem/(4*pi)
 
 def get_ff(q2, par, B, V):
@@ -44,7 +41,7 @@ def helicity_amps_ff(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
     mB = par['m_'+B]
     mV = par['m_'+V]
     mb = running.get_mb(par, scale)
-    N = prefactor(q2, par, B, V, lep)
+    N = prefactor(q2, par, B, V)
     ff = get_ff(q2, par, B, V)
     h = angular.helicity_amps_v(q2, mB, mV, mb, 0, ml, ml, ff, wc_eff, N)
     return h
@@ -54,7 +51,7 @@ def get_ss(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
     # this only needs to be done for low q2 - which doesn't exist for taus!
     if lep == 'tau' or q2 >= 8.9:
         return {('0' ,'V'): 0, ('pl' ,'V'): 0, ('mi' ,'V'): 0, }
-    ss_name = B+'->'+V+lep+lep + ' spectator scattering'
+    ss_name = B+'->'+V+lep+lep+' spectator scattering'
     return AuxiliaryQuantity.get_instance(ss_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
 
 # get subleading hadronic contribution at low q2

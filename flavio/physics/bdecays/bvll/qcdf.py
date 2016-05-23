@@ -294,14 +294,14 @@ def T_perp(q2, par, wc, B, V, scale,
     return T_tot
 
 
-def transversity_amps_qcdf(q2, wc, par, B, V, lep, **kwargs):
+def transversity_amps_qcdf(q2, wc, par, B, V, **kwargs):
     """QCD factorization corrections to B->Vll transversity amplitudes."""
     mB = par['m_'+B]
     mV = par['m_'+V]
     scale = config['renormalization scale']['bvll']
     # using the b quark pole mass here!
     mb = running.get_mb_pole(par)
-    N = flavio.physics.bdecays.bvll.amplitudes.prefactor(q2, par, B, V, lep)/4
+    N = flavio.physics.bdecays.bvll.amplitudes.prefactor(q2, par, B, V)/4
     T_perp_ = T_perp(q2, par, wc, B, V, scale, **kwargs)
     T_para_ = T_para(q2, par, wc, B, V, scale, **kwargs)
     ta = {}
@@ -315,13 +315,12 @@ def transversity_amps_qcdf(q2, wc, par, B, V, lep, **kwargs):
     ta['S'] = 0
     return ta
 
-def helicity_amps_qcdf(q2, wc, par, B, V, lep, **kwargs):
+def helicity_amps_qcdf(q2, wc, par, B, V, **kwargs):
     if q2 > 6:
         warnings.warn("The QCDF corrections should not be trusted for q2 above 6 GeV^2")
-    ml = par['m_'+lep]
     mB = par['m_'+B]
     mV = par['m_'+V]
     X = sqrt(lambda_K(mB**2,q2,mV**2))/2.
-    ta = transversity_amps_qcdf(q2, wc, par, B, V, lep, **kwargs)
+    ta = transversity_amps_qcdf(q2, wc, par, B, V, **kwargs)
     h = flavio.physics.bdecays.angular.transversity_to_helicity(ta)
     return h

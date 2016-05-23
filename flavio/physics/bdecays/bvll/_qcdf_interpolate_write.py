@@ -41,10 +41,10 @@ for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi')]: #, ('B0','rho0'), ('B+','
             label = meson_quark[had] + l + l # e.g. bsee
             wcsm_dict =  flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wcsm, label, scale, par_dict)
             if cp_conjugate:
-                hel_amps_list = [ qcdf.helicity_amps_qcdf(q2, wcsm_dict, par_dict_cpconj, B=had[0], V=had[1], lep=l, **contribution_dict)
+                hel_amps_list = [ qcdf.helicity_amps_qcdf(q2, wcsm_dict, par_dict_cpconj, B=had[0], V=had[1], **contribution_dict)
                               for q2 in q2_arr]
             else:
-                hel_amps_list = [ qcdf.helicity_amps_qcdf(q2, wcsm_dict, par_dict, B=had[0], V=had[1], lep=l, **contribution_dict)
+                hel_amps_list = [ qcdf.helicity_amps_qcdf(q2, wcsm_dict, par_dict, B=had[0], V=had[1],  **contribution_dict)
                               for q2 in q2_arr]
             # turn into numpy array
             hel_amps_arr = np.array([
