@@ -61,20 +61,12 @@ implementation:
   Bs->phill spectator scattering: Bs->phill QCDF interpolated
 
   # B->Vll subleading hadronic effects
-  B0->K*0ee subleading effects at low q2: B0->K*0ee deltaC7 polynomial
-  B0->K*0mumu subleading effects at low q2: B0->K*0mumu deltaC7 polynomial
-  B+->K*+ee subleading effects at low q2: B0->K*0ee deltaC7 polynomial
-  B+->K*+mumu subleading effects at low q2: B0->K*0mumu deltaC7 polynomial
-  Bs->phiee subleading effects at low q2: Bs->phiee deltaC7 polynomial
-  Bs->phimumu subleading effects at low q2: Bs->phimumu deltaC7 polynomial
-  B0->K*0ee subleading effects at high q2: B0->K*0ee deltaC9 shift
-  B0->K*0mumu subleading effects at high q2: B0->K*0mumu deltaC9 shift
-  B0->K*0tautau subleading effects at high q2: B0->K*0tautau deltaC9 shift
-  B+->K*+ee subleading effects at high q2: B0->K*0ee deltaC9 shift
-  B+->K*+mumu subleading effects at high q2: B0->K*0mumu deltaC9 shift
-  B+->K*+tautau subleading effects at high q2: B0->K*+tautau deltaC9 shift
-  Bs->phiee subleading effects at high q2: Bs->phiee deltaC9 shift
-  Bs->phimumu subleading effects at high q2: Bs->phimumu deltaC9 shift
+  B0->K*0ll subleading effects at low q2: B0->K*0ll deltaC7 polynomial
+  B+->K*+ll subleading effects at low q2: B0->K*0ll deltaC7 polynomial
+  Bs->phill subleading effects at low q2: Bs->phill deltaC7 polynomial
+  B0->K*0ll subleading effects at high q2: B0->K*0ll deltaC9 shift
+  B+->K*+ll subleading effects at high q2: B0->K*0ll deltaC9 shift
+  Bs->phill subleading effects at high q2: Bs->phill deltaC9 shift
 
   # B->Pll subleading hadronic effects
   B0->K0ee subleading effects at low q2: B0->K0ee deltaC9 polynomial
