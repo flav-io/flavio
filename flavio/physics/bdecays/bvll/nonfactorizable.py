@@ -17,9 +17,9 @@ from flavio.config import config
 # Auxiliary quantities and implementations
 
 # function needed for the QCD factorization implementation (see qcdf.py)
-def ha_qcdf_function(B, V, lep):
+def ha_qcdf_function(B, V):
     scale = config['renormalization scale']['bvll']
-    label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
+    label = meson_quark[(B,V)] + 'll' # e.g. bsll
     def function(wc_obj, par_dict, q2, cp_conjugate):
         par = par_dict.copy()
         if cp_conjugate:
@@ -31,9 +31,9 @@ def ha_qcdf_function(B, V, lep):
     return function
 
 # ... and the same for the interpolated version (see qcdf_interpolate.py)
-def ha_qcdf_interpolate_function(B, V, lep, contribution='all'):
+def ha_qcdf_interpolate_function(B, V, contribution='all'):
     scale = config['renormalization scale']['bvll']
-    label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
+    label = meson_quark[(B,V)] + 'll' # e.g. bsll
     def function(wc_obj, par_dict, q2, cp_conjugate):
         return flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par_dict, B, V, cp_conjugate, contribution)
     return function
@@ -42,21 +42,20 @@ def ha_qcdf_interpolate_function(B, V, lep, contribution='all'):
 # BTW, it is not necessary to loop over tau: for tautau final states, the minimum
 # q2=4*mtau**2 is so high that QCDF is not valid anymore anyway!
 for had in [('B0','K*0'), ('B+','K*+'), ('B0','rho0'), ('B+','rho+'), ('Bs','phi'), ]:
-    for l in ['e', 'mu', ]:
-        process = had[0] + '->' + had[1] + l+l # e.g. B0->K*0mumu
-        quantity = process + ' spectator scattering'
-        a = AuxiliaryQuantity(name=quantity, arguments=['q2', 'cp_conjugate'])
-        a.description = ('Contribution to ' + process + ' helicity amplitudes from'
-                        ' non-factorizable spectator scattering.')
+    process = had[0] + '->' + had[1] + 'll' # e.g. B0->K*0mumu
+    quantity = process + ' spectator scattering'
+    a = AuxiliaryQuantity(name=quantity, arguments=['q2', 'cp_conjugate'])
+    a.description = ('Contribution to ' + process + ' helicity amplitudes from'
+                    ' non-factorizable spectator scattering.')
 
-        # Implementation: QCD factorization
-        iname = process + ' QCDF'
-        i = Implementation(name=iname, quantity=quantity,
-                       function=ha_qcdf_function(B=had[0], V=had[1], lep=l))
-        i.set_description("QCD factorization")
+    # Implementation: QCD factorization
+    iname = process + ' QCDF'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ha_qcdf_function(B=had[0], V=had[1]))
+    i.set_description("QCD factorization")
 
-        # Implementation: interpolated QCD factorization
-        iname = process + ' QCDF interpolated'
-        i = Implementation(name=iname, quantity=quantity,
-                       function=ha_qcdf_interpolate_function(B=had[0], V=had[1], lep=l))
-        i.set_description("Interpolated version of QCD factorization")
+    # Implementation: interpolated QCD factorization
+    iname = process + ' QCDF interpolated'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ha_qcdf_interpolate_function(B=had[0], V=had[1]))
+    i.set_description("Interpolated version of QCD factorization")

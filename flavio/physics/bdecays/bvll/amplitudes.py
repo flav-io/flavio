@@ -51,7 +51,7 @@ def get_ss(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
     # this only needs to be done for low q2 - which doesn't exist for taus!
     if lep == 'tau' or q2 >= 8.9:
         return {('0' ,'V'): 0, ('pl' ,'V'): 0, ('mi' ,'V'): 0, }
-    ss_name = B+'->'+V+lep+lep+' spectator scattering'
+    ss_name = B+'->'+V+'ll spectator scattering'
     return AuxiliaryQuantity.get_instance(ss_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
 
 # get subleading hadronic contribution at low q2

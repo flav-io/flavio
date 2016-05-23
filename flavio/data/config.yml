@@ -56,12 +56,9 @@ implementation:
   B->pi form factor: B->pi BCL4
 
   # B->Vll non-factorizable spectator scattering corrections
-  B0->K*0ee spectator scattering: B0->K*0ee QCDF interpolated
-  B0->K*0mumu spectator scattering: B0->K*0mumu QCDF interpolated
-  B+->K*+ee spectator scattering: B0->K*0ee QCDF interpolated
-  B+->K*+mumu spectator scattering: B0->K*0mumu QCDF interpolated
-  Bs->phiee spectator scattering: Bs->phiee QCDF interpolated
-  Bs->phimumu spectator scattering: Bs->phimumu QCDF interpolated
+  B0->K*0ll spectator scattering: B0->K*0ll QCDF interpolated
+  B+->K*+ll spectator scattering: B0->K*0ll QCDF interpolated
+  Bs->phill spectator scattering: Bs->phill QCDF interpolated
 
   # B->Vll subleading hadronic effects
   B0->K*0ee subleading effects at low q2: B0->K*0ee deltaC7 polynomial
