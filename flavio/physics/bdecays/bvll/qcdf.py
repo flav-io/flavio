@@ -224,7 +224,7 @@ def lB_plus(par, B):
 def T_para(q2, par, wc, B, V, scale,
            include_WA=True, include_O8=True, include_QSS=True):
     if not include_WA and not include_O8 and not include_QSS:
-        raise InputError("At least one contribution to the QCDF corrections has to be switched on")
+        raise ValueError("At least one contribution to the QCDF corrections has to be switched on")
     mB = par['m_'+B]
     mV = par['m_'+V]
     mc = running.get_mc_pole(par)
@@ -264,7 +264,7 @@ def T_para(q2, par, wc, B, V, scale,
 def T_perp(q2, par, wc, B, V, scale,
            include_WA=True, include_O8=True, include_QSS=True):
     if not include_WA and not include_O8 and not include_QSS:
-        raise InputError("At least one contribution to the QCDF corrections has to be switched on")
+        raise ValueError("At least one contribution to the QCDF corrections has to be switched on")
     mB = par['m_'+B]
     mV = par['m_'+V]
     mc = running.get_mc_pole(par)
