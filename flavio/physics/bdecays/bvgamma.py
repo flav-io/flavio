@@ -56,7 +56,7 @@ def amps_subleading(wc, par, B, V):
     ff = AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=0.)
     a = {}
     a['L'] = N * deltaC7_mi  * ff['T1']
-    a['R'] = N * deltaC7_pl * ff['T1']
+    a['R'] = 0
     return a
 
 def amps(*args, **kwargs):
