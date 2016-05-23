@@ -21,8 +21,8 @@ def prefactor(q2, par, B, V, lep):
     alphaem = running.get_alpha(par, scale)['alpha_e']
     di_dj = meson_quark[(B,V)]
     xi_t = ckm.xi('t',di_dj)(par)
-    if q2 <= 4*ml**2:
-        return 0
+    # if q2 <= 4*ml**2:
+    #     return 0
     return 4*GF/sqrt(2)*xi_t*alphaem/(4*pi)
 
 def get_ff(q2, par, B, V):

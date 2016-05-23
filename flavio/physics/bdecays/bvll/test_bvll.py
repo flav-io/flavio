@@ -45,6 +45,21 @@ class TestBVll(unittest.TestCase):
         delta = 0.02
         self.assertAlmostEqual(flavio.sm_prediction("P3(B0->K*mumu)", q2=17), 0, delta=delta)
 
+    def test_unphysical(self):
+        # check BR calculation yields zero outside kinematical limits
+        self.assertEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=0.01), 0)
+        self.assertEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=25), 0)
+        # and also *at* kinemetical limits
+        par = flavio.default_parameters.get_central_all()
+        q2min = 4*par['m_mu']**2
+        q2max = (par['m_B0']-par['m_K*0'])**2
+        self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=q2min), 0, delta=1e-10)
+        self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=q2max), 0, delta=1e-10)
+
+        # same for angular observables (make sure no division by 0)
+        self.assertEqual(flavio.sm_prediction("S5(B0->K*mumu)", q2=0.01), 0)
+        self.assertEqual(flavio.sm_prediction("S5(B0->K*mumu)", q2=25), 0)
+
     def test_bs_timedep(self):
         q2 = 3
         wc_obj = flavio.WilsonCoefficients()
