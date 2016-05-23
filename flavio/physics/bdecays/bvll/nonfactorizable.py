@@ -31,11 +31,11 @@ def ha_qcdf_function(B, V, lep):
     return function
 
 # ... and the same for the interpolated version (see qcdf_interpolate.py)
-def ha_qcdf_interpolate_function(B, V, lep):
+def ha_qcdf_interpolate_function(B, V, lep, contribution='all'):
     scale = config['renormalization scale']['bvll']
     label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
     def function(wc_obj, par_dict, q2, cp_conjugate):
-        return flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par_dict, B, V, lep, cp_conjugate)
+        return flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par_dict, B, V, lep, cp_conjugate, contribution)
     return function
 
 # loop over hadronic transitions and lepton flavours
