@@ -8,7 +8,7 @@ from flavio.physics.bdecays.common import meson_quark, meson_ff
 from flavio.physics import ckm, mesonmixing
 from flavio.config import config
 from flavio.physics.running import running
-from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
+from flavio.physics.bdecays.wilsoncoefficients import wctot_dict, get_wceff
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
 from flavio.classes import AuxiliaryQuantity, Observable, Prediction
 
@@ -25,59 +25,77 @@ def prefactor(par, B, V):
     return ( sqrt((GF**2 * alphaem * mB**3 * mb**2)/(32 * pi**4)
                   * (1-mV**2/mB**2)**3) * xi_t )
 
-def amps_ff(wc, par, B, V):
+def prefactor_helicityamps(q2, par, B, V):
+    N = prefactor(par, B, V)
+    N_BVll = flavio.physics.bdecays.bvll.amplitudes.prefactor(q2, par, B, V)
+    mB = par['m_'+B]
+    mV = par['m_'+V]
+    laB = flavio.physics.bdecays.common.lambda_K(mB**2, mV**2, q2)
+    scale = config['renormalization scale']['bvgamma']
+    mb = flavio.physics.running.running.get_mb(par, scale)
+    return N/(+1j * mb/q2 * sqrt(laB) * (-2))/N_BVll
+
+
+def amps_ff(wc_obj, par_dict, B, V, cp_conjugate):
+    par = par_dict.copy()
+    if cp_conjugate:
+        par = conjugate_par(par)
     N = prefactor(par, B, V)
     bq = meson_quark[(B,V)]
     ff_name = meson_ff[(B,V)] + ' form factor'
     ff = AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=0.)
     scale = config['renormalization scale']['bvgamma']
+    # these are the b->qee Wilson coefficients - they contain the b->qgamma ones as a subset
+    wc = wctot_dict(wc_obj, bq+'ee', scale, par)
+    if cp_conjugate:
+        wc = conjugate_wc(wc)
     delta_C7 = flavio.physics.bdecays.matrixelements.delta_C7(par=par, wc=wc, q2=0, scale=scale, qiqj=bq)
-    c7 = wc['C7eff_'+bq] + delta_C7
-    c7p = wc['C7effp_'+bq]
     a = {}
-    a['L'] = N * c7  * ff['T1']
-    a['R'] = N * c7p * ff['T1']
+    a['L'] = N * (wc['C7eff_'+bq] + delta_C7)  * ff['T1']
+    a['R'] = N * wc['C7effp_'+bq] * ff['T1']
     return a
 
-def amps_qcdf(wc, par, B, V):
-    N = prefactor(par, B, V)
+def amps_ss(wc_obj, par, B, V, cp_conjugate):
     scale = config['renormalization scale']['bvgamma']
-    T_perp = flavio.physics.bdecays.bvll.qcdf.T_perp(q2=0, par=par, wc=wc, B=B, V=V, scale=scale)
+    ss_name = B+'->'+V+'ll spectator scattering'
+    q2=0.001 # away from zero to avoid pole
+    amps = AuxiliaryQuantity.get_instance(ss_name).prediction(par_dict=par, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+    N = prefactor_helicityamps(q2, par, B, V)
     a = {}
-    a['L'] = N * T_perp
-    a['R'] = 0
+    a['L'] = -N * amps[('mi' ,'V')]
+    a['R'] = +N * amps[('pl' ,'V')]
     return a
 
-def amps_subleading(wc, par, B, V):
-    deltaC7_pl  = par[B+'->'+V+' deltaC7 a_+ Re']
-    deltaC7_mi  = par[B+'->'+V+' deltaC7 a_- Re']
-    N = prefactor(par, B, V)
-    ff_name = meson_ff[(B,V)] + ' form factor'
-    ff = AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=0.)
+def amps_subleading(wc_obj, par, B, V, cp_conjugate):
+    scale = config['renormalization scale']['bvgamma']
+    sub_name = B+'->'+V+ 'll subleading effects at low q2'
+    q2=0.001 # away from zero to avoid pole
+    amps = AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+    N = prefactor_helicityamps(q2, par, B, V)
     a = {}
-    a['L'] = N * deltaC7_mi  * ff['T1']
-    a['R'] = 0
+    a['L'] = -N * amps[('mi' ,'V')]
+    a['R'] = +N * amps[('pl' ,'V')]
     return a
 
 def amps(*args, **kwargs):
     return add_dict((
-        amps_ff(*args, **kwargs),
-        amps_qcdf(*args, **kwargs),
-        amps_subleading(*args, **kwargs),
+        amps_ff(*args, **kwargs, cp_conjugate=False),
+        amps_ss(*args, **kwargs, cp_conjugate=False),
+        amps_subleading(*args, **kwargs, cp_conjugate=False),
         ))
 
-def amps_bar(wc, par, B, V):
-    par_c = conjugate_par(par)
-    wc_c = conjugate_wc(wc)
-    a = amps(wc_c, par_c, B, V)
+def amps_bar(*args, **kwargs):
+    a = add_dict((
+        amps_ff(*args, **kwargs, cp_conjugate=True),
+        amps_ss(*args, **kwargs, cp_conjugate=True),
+        amps_subleading(*args, **kwargs, cp_conjugate=True),
+        ))
     return {'L': a['R'], 'R': a['L']}
 
 def get_a_abar(wc_obj, par, B, V):
     scale = config['renormalization scale']['bvll']
-    # these are the b->qee Wilson coefficients - they contain the b->qgamma ones as a subset
-    wc = wctot_dict(wc_obj, meson_quark[(B,V)] + 'ee', scale, par)
-    a = amps(wc, par, B, V)
-    a_bar = amps_bar(wc, par, B, V)
+    a = amps(wc_obj, par, B, V)
+    a_bar = amps_bar(wc_obj, par, B, V)
     return a, a_bar
 
 def Gamma(a):
