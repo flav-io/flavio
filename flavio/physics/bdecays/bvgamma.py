@@ -31,7 +31,6 @@ def amps_ff(wc, par, B, V):
     ff_name = meson_ff[(B,V)] + ' form factor'
     ff = AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=0.)
     scale = config['renormalization scale']['bvgamma']
-    bq = meson_quark[(B,V)]
     delta_C7 = flavio.physics.bdecays.matrixelements.delta_C7(par=par, wc=wc, q2=0, scale=scale, qiqj=bq)
     c7 = wc['C7eff_'+bq] + delta_C7
     c7p = wc['C7effp_'+bq]
@@ -49,10 +48,22 @@ def amps_qcdf(wc, par, B, V):
     a['R'] = 0
     return a
 
+def amps_subleading(wc, par, B, V):
+    deltaC7_pl  = par[B+'->'+V+' deltaC7 a_+ Re']
+    deltaC7_mi  = par[B+'->'+V+' deltaC7 a_- Re']
+    N = prefactor(par, B, V)
+    ff_name = meson_ff[(B,V)] + ' form factor'
+    ff = AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=0.)
+    a = {}
+    a['L'] = N * deltaC7_mi  * ff['T1']
+    a['R'] = N * deltaC7_pl * ff['T1']
+    return a
+
 def amps(*args, **kwargs):
     return add_dict((
         amps_ff(*args, **kwargs),
         amps_qcdf(*args, **kwargs),
+        amps_subleading(*args, **kwargs),
         ))
 
 def amps_bar(wc, par, B, V):
