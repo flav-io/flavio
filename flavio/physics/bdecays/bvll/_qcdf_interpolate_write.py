@@ -18,9 +18,6 @@ wcsm = flavio.WilsonCoefficients()
 # central default values are assumed by all parameters
 
 par = flavio.default_parameters.copy()
-# set an artificially small electron mass because we want to interpolate
-# below the e+e- threshold to be safe
-par.set_constraint('m_e',0.0001)
 par_dict = par.get_central_all()
 par_dict_cpconj = conjugate_par(par_dict)
 
