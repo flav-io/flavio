@@ -11,6 +11,12 @@
 #
 #    flavio.config['CKM matrix'] = 'Wolfenstein'
 
+# technical settings
+settings:
+    # set the cache size for memoization. A larger number will result in more
+    # memory consumption, but (to some extent) faster evaluation.
+    cache size: 1000
+
 
 # set the renormalization scale for different processes.
 renormalization scale:

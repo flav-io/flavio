@@ -8,6 +8,7 @@ from flavio.physics.running import running
 from flavio.physics import ckm
 from flavio.physics.functions import li2, zeta
 from functools import lru_cache
+from flavio.config import config
 
 # functions for C9eff
 
@@ -66,7 +67,7 @@ _F_19 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_19)
 _F_27 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_27)
 _F_29 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_29)
 
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=config['settings']['cache size'])
 def F_17(muh, z, sh):
     """Function $F_1^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_1$, as defined in arXiv:0810.4077.
@@ -77,7 +78,7 @@ def F_17(muh, z, sh):
     """
     return _F_17([muh, z, sh])[0]
 
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=config['settings']['cache size'])
 def F_19(muh, z, sh):
     """Function $F_1^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_1$, as defined in arXiv:0810.4077.
@@ -88,7 +89,7 @@ def F_19(muh, z, sh):
     """
     return _F_19([muh, z, sh])[0]
 
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=config['settings']['cache size'])
 def F_27(muh, z, sh):
     """Function $F_2^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_2$, as defined in arXiv:0810.4077.
@@ -99,7 +100,7 @@ def F_27(muh, z, sh):
     """
     return _F_27([muh, z, sh])[0]
 
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=config['settings']['cache size'])
 def F_29(muh, z, sh):
     """Function $F_2^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_2$, as defined in arXiv:0810.4077.
@@ -142,7 +143,7 @@ def F_87(Lmu, sh):
 def acot(x):
     return pi/2.-atan(x)
 
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=config['settings']['cache size'])
 def SeidelA(q2, mb, mu):
     """Function $A(s\equiv q^2)$ defined in eq. (29) of hep-ph/0403185v2.
     """
@@ -159,7 +160,7 @@ def SeidelA(q2, mb, mu):
     (1 - sh)**4) * (36 * acot( sqrt(z - 1))**2 + pi**2 * (-4 + 9 * sh - 9 *
     sh**2 + 3 * sh**3)))
 
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=config['settings']['cache size'])
 def SeidelB(q2, mb, mu):
     """Function $A(s\equiv q^2)$ defined in eq. (30) of hep-ph/0403185v2.
     """

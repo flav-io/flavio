@@ -19,7 +19,7 @@ def rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out):
         raise ValueError('RG evolution below the strange threshold not implemented.')
     return _rg_evolve_sm(tuple(initial_condition), derivative_nf, scale_in, scale_out)
 
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=config['settings']['cache size'])
 def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out):
     # quark mass thresholds
     thresholds = {
