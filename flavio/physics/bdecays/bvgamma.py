@@ -33,7 +33,7 @@ def prefactor_helicityamps(q2, par, B, V):
     laB = flavio.physics.bdecays.common.lambda_K(mB**2, mV**2, q2)
     scale = config['renormalization scale']['bvgamma']
     mb = flavio.physics.running.running.get_mb(par, scale)
-    return N/(+1j * mb/q2 * sqrt(laB) * (-2))/N_BVll
+    return N/(+1j * mb/q2 * sqrt(laB) * 2)/N_BVll
 
 
 def amps_ff(wc_obj, par_dict, B, V, cp_conjugate):
