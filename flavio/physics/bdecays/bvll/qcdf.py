@@ -6,9 +6,8 @@ from cmath import sqrt,atan,log
 import mpmath
 import numpy as np
 from scipy.special import eval_gegenbauer
-from scipy.integrate import quad
 from flavio.physics import ckm
-from flavio.physics.functions import li2, ei
+from flavio.math.functions import li2, ei
 from flavio.physics.running import running
 from flavio.physics.bdecays.common import meson_spectator, quark_charge, meson_quark
 from flavio.physics.bdecays import matrixelements
@@ -17,14 +16,6 @@ from flavio.physics.bdecays.common import lambda_K, beta_l
 import flavio
 import warnings
 
-def complex_quad(func, a, b, **kwargs):
-    def real_func(x):
-        return np.real(func(x))
-    def imag_func(x):
-        return np.imag(func(x))
-    real_integral = quad(real_func, a, b, **kwargs)
-    imag_integral = quad(imag_func, a, b, **kwargs)
-    return (real_integral[0] + 1j*imag_integral[0], real_integral[1:], imag_integral[1:])
 
 # B->V, LO weak annihaltion
 
@@ -256,7 +247,7 @@ def T_para(q2, par, wc, B, V, scale,
         points = [u_sing]
     else:
         points = None
-    T_tot = complex_quad( lambda u: T_plus(u) + T_minus(u), 0, 1, points=points, epsrel=0.01, epsabs=0 )[0]
+    T_tot = flavio.math.integrate.nintegrate_complex( lambda u: T_plus(u) + T_minus(u), 0, 1, points=points)
     return T_tot
 
 
@@ -290,7 +281,7 @@ def T_perp(q2, par, wc, B, V, scale,
         points = [u_sing]
     else:
         points = None
-    T_tot = complex_quad( lambda u: T_plus(u) + T_minus(u), 0, 1, points=points, epsrel=0.01, epsabs=0 )[0]
+    T_tot = flavio.math.integrate.nintegrate_complex( lambda u: T_plus(u) + T_minus(u), 0, 1, points=points)
     return T_tot
 
 

@@ -6,7 +6,7 @@ from io import StringIO
 import scipy.interpolate
 from flavio.physics.running import running
 from flavio.physics import ckm
-from flavio.physics.functions import li2, zeta
+from flavio.math.functions import li2, zeta
 from functools import lru_cache
 from flavio.config import config
 

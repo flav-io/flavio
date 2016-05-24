@@ -1,5 +1,6 @@
 r"""Functions for exclusive $B\to P\ell^+\ell^-$ decays."""
 
+import flavio
 from math import sqrt,pi
 from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
 from flavio.physics import ckm
@@ -9,7 +10,6 @@ from flavio.physics.running import running
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
 from flavio.physics.bdecays import matrixelements, angular
 from flavio.physics.bdecays.wilsoncoefficients import get_wceff, wctot_dict
-from scipy.integrate import quad
 from flavio.classes import Observable, Prediction
 import warnings
 
@@ -116,7 +116,7 @@ def denominator(J, J_bar):
 def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, lep):
     def obs(q2):
         return bpll_obs(function, q2, wc_obj, par, B, P, lep)
-    return quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max)
 
 
 def bpll_dbrdq2(q2, wc_obj, par, B, P, lep):
@@ -126,7 +126,7 @@ def bpll_dbrdq2(q2, wc_obj, par, B, P, lep):
 def bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, lep):
     def obs(q2):
         return bpll_dbrdq2(q2, wc_obj, par, B, P, lep)
-    return quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]/(q2max-q2min)
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
 
 # Functions returning functions needed for Prediction instances
 

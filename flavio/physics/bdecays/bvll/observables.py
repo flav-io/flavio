@@ -129,12 +129,12 @@ def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):
 def bvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep):
     def obs(q2):
         return bvll_obs(function, q2, wc_obj, par, B, V, lep)
-    return quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max)
 
 def bvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep):
     def obs(q2):
         return bvll_dbrdq2(q2, wc_obj, par, B, V, lep)
-    return quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]/(q2max-q2min)
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
 
 # Functions returning functions needed for Prediction instances
 

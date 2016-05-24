@@ -106,3 +106,34 @@ def sm_error_budget(obs_name, *args, N=50, **kwargs):
         ])
         individual_errors[p] = np.std(all_pred)/abs(pred_central)
     return individual_errors
+
+def sm_covariance(obs_list, N=100, **kwargs):
+    """Get the covariance matrix of the Standard Model predictions for a
+    list of observables.
+
+    Parameters
+    ----------
+
+    - `obs_list`: a list of observables that should be given either as a string
+    name (for observables that do not depend on any arguments) or as a tuple
+    of a string and values for the arguements the observable depends on (e.g.
+    the values of `q2min` and `q2max` for a binned observable)
+    - `N` (optional): number of random evaluations of the observables.
+    The relative accuracy of the uncertainties returned is given by $1/\sqrt{2N}$.
+    """
+    wc_sm = flavio.WilsonCoefficients()
+    par_random = [flavio.default_parameters.get_random_all() for i in range(N)]
+    def get_prediction(obs, par):
+        if isinstance(obs, str):
+             obs_obj = flavio.classes.Observable.get_instance(obs)
+             return obs_obj.prediction_par(par, wc_sm, **kwargs)
+        elif isinstance(obs, tuple):
+             obs_obj = flavio.classes.Observable.get_instance(obs[0])
+             return obs_obj.prediction_par(par, wc_sm, *obs[1:], **kwargs)
+    all_pred = np.array([
+        [get_prediction(obs, par)
+            for par in par_random
+        ]
+        for obs in obs_list
+    ])
+    return np.cov(all_pred)

@@ -57,7 +57,7 @@ def bvnunu_dbrdq2_summed(q2, wc_obj, par, B, V):
 def bvnunu_dbrdq2_int_summed(q2min, q2max, wc_obj, par, B, V):
     def obs(q2):
         return bvnunu_dbrdq2_summed(q2, wc_obj, par, B, V)
-    return scipy.integrate.quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]/(q2max-q2min)
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
 
 def bvnunu_BRtot_summed(wc_obj, par, B, V):
     def obs(q2):
@@ -66,7 +66,7 @@ def bvnunu_BRtot_summed(wc_obj, par, B, V):
     mV = par['m_'+V]
     q2max = (mB-mV)**2
     q2min = 0
-    return scipy.integrate.quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max)
 
 # Functions returning functions needed for Prediction instances
 

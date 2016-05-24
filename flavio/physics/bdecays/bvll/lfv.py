@@ -50,7 +50,7 @@ def bvlilj_obs(function, q2, wc_obj, par, B, V, l1, l2):
 def bvlilj_obs_int(function, q2min, q2max, wc_obj, par, B, V, l1, l2):
     def obs(q2):
         return bvlilj_obs(function, q2, wc_obj, par, B, V, l1, l2)
-    return scipy.integrate.quad(obs, q2min, q2max, epsrel=0.01, epsabs=0)[0]
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max)
 
 def BR_tot(wc_obj, par, B, V, l1, l2):
     mB = par['m_'+B]

@@ -4,7 +4,7 @@ This module is based on the formulas in the `RunDec` papers, arXiv:hep-ph/000418
 
 from math import log,pi
 import numpy as np
-from flavio.physics.functions import zeta
+from flavio.math.functions import zeta
 from flavio.physics.running.masses import zeta
 
 

@@ -1,6 +1,7 @@
 r"""Functions for exclusive $B\to P\ell\nu$ decays."""
 
 from math import sqrt
+import flavio
 from flavio.physics.bdecays.common import meson_quark, meson_ff
 from flavio.physics import ckm
 from flavio.classes import AuxiliaryQuantity
@@ -9,7 +10,6 @@ from flavio.physics.running import running
 from flavio.physics.bdecays import angular
 from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc
 from flavio.classes import Observable, Prediction
-from scipy.integrate import quad
 
 
 
@@ -80,7 +80,7 @@ def dBRdq2_function(B, P, lep):
 def BR_binned(q2min, q2max, wc_obj, par, B, P, lep):
     def integrand(q2):
         return dBRdq2(q2, wc_obj, par, B, P, lep)
-    return quad(integrand, q2min, q2max, epsabs=0., epsrel=0.01)[0]
+    return flavio.math.integrate(integrand, q2min, q2max)
 
 def BR_binned_function(B, P, lep):
     return lambda wc_obj, par, q2min, q2max: BR_binned(q2min, q2max, wc_obj, par, B, P, lep)
