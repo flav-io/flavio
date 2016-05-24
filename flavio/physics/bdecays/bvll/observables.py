@@ -12,7 +12,7 @@ from flavio.physics.running import running
 from .amplitudes import *
 from scipy.integrate import quad
 from flavio.classes import Observable, Prediction
-
+import flavio
 
 def dGdq2(J):
     return 3/4. * (2 * J['1s'] + J['1c']) - 1/4. * (2 * J['2s'] + J['2c'])
