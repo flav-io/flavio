@@ -107,7 +107,7 @@ def sm_error_budget(obs_name, *args, N=50, **kwargs):
         individual_errors[p] = np.std(all_pred)/abs(pred_central)
     return individual_errors
 
-def sm_covariance(obs_list, N=100, **kwargs):
+def sm_covariance(obs_list, N=100, par_vary='all', **kwargs):
     """Get the covariance matrix of the Standard Model predictions for a
     list of observables.
 
@@ -120,9 +120,23 @@ def sm_covariance(obs_list, N=100, **kwargs):
     the values of `q2min` and `q2max` for a binned observable)
     - `N` (optional): number of random evaluations of the observables.
     The relative accuracy of the uncertainties returned is given by $1/\sqrt{2N}$.
+    - `par_vary`: a list of parameters to vary. Defaults to 'all', i.e. all
+    parameters are varied according to their probability distributions.
     """
     wc_sm = flavio.WilsonCoefficients()
-    par_random = [flavio.default_parameters.get_random_all() for i in range(N)]
+    par_central_all = flavio.default_parameters.get_central_all()
+    par_random_all = [flavio.default_parameters.get_random_all() for i in range(N)]
+    def par_random_some(par_random, par_central):
+        # take the central values for the parameters not to be varied
+        par1 = {k: v for k, v in par_central.items() if k not in par_vary}
+        # take the random values for the parameters to be varied
+        par2 = {k: v for k, v in par_random.items() if k in par_vary}
+        par1.update(par2) # merge them
+        return par1
+    if par_vary == 'all':
+        par_random = par_random_all
+    else:
+        par_random = [par_random_some(par_random_all[i], par_central_all) for i in range(N)]
     def get_prediction(obs, par):
         if isinstance(obs, str):
              obs_obj = flavio.classes.Observable.get_instance(obs)
