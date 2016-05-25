@@ -80,7 +80,7 @@ def dBRdq2_function(B, P, lep):
 def BR_binned(q2min, q2max, wc_obj, par, B, P, lep):
     def integrand(q2):
         return dBRdq2(q2, wc_obj, par, B, P, lep)
-    return flavio.math.integrate(integrand, q2min, q2max)
+    return flavio.math.integrate.nintegrate(integrand, q2min, q2max)
 
 def BR_binned_function(B, P, lep):
     return lambda wc_obj, par, q2min, q2max: BR_binned(q2min, q2max, wc_obj, par, B, P, lep)
