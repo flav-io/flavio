@@ -1098,6 +1098,50 @@ Belle B+->rholnu 2013:
                [ 0.003,  0.008,  0.011,  0.014,  0.017,  0.023,  0.018,  0.023, -0.038,  1.   , -0.052],
                [ 0.003,  0.008,  0.011,  0.016,  0.018,  0.024,  0.024,  0.025, 0.027, -0.052,  1.   ]]
 
+
+
+BaBar B0->rholnu 2010:
+  experiment: BaBar
+  inspire: delAmoSanchez:2010af
+  values:
+    - name: <BR>(B0->rholnu)
+      q2min: 0
+      q2max: 8
+      value: 0.747 ± 0.234  e-4
+    - name: <BR>(B0->rholnu)
+      q2min: 8
+      q2max: 16
+      value: 0.980 ± 0.187  e-4
+    - name: <BR>(B0->rholnu)
+      q2min: 16
+      q2max: 20.3
+      value: 0.256 ± 0.072  e-4
+  correlation: [[ 1.   , 0.574, 0.380],
+                [ 0.574, 1.   , 0.389],
+                [ 0.380, 0.389, 1.   ]]
+
+BaBar B+->rholnu 2010:
+  experiment: BaBar
+  inspire: delAmoSanchez:2010af
+  values:
+    - name: <BR>(B+->rholnu)
+      q2min: 0
+      q2max: 8
+      value: 0.336 ± 0.109  e-4
+    - name: <BR>(B+->rholnu)
+      q2min: 8
+      q2max: 16
+      value: 0.523 ± 0.096  e-4
+    - name: <BR>(B+->rholnu)
+      q2min: 16
+      q2max: 20.3
+      value: 0.142 ± 0.036  e-4
+  correlation: [[ 1.   , 0.574, 0.380],
+                [ 0.574, 1.   , 0.389],
+                [ 0.380, 0.389, 1.   ]]
+
+
+
 LHCb B+->Kmumu BR 2014:
   experiment: LHCb
   inspire: Aaij:2014pli
