@@ -20,7 +20,8 @@ class Fit(flavio.NamedInstanceClass):
                  fit_wc_names=[],
                  fit_wc_function=None,
                  fit_wc_priors=None,
-                 input_scale=160.
+                 input_scale=160.,
+                 exclude_measurements=None,
                 ):
         # some checks to make sure the input is sane
         for p in fit_parameters + nuisance_parameters:
@@ -50,6 +51,7 @@ class Fit(flavio.NamedInstanceClass):
         self.parameters_central = self.par_obj.get_central_all()
         self.fit_parameters = fit_parameters
         self.nuisance_parameters = nuisance_parameters
+        self.exclude_measurements = exclude_measurements
         self.fit_wc_names = fit_wc_names
         self.fit_wc_function = fit_wc_function
         self.fit_wc_priors = fit_wc_priors
@@ -99,7 +101,10 @@ class Fit(flavio.NamedInstanceClass):
             else:
                 # else, add measurement name to output list
                 all_measurements.append(m_name)
-        return all_measurements
+        if self.exclude_measurements is None:
+            return all_measurements
+        else:
+            return list(set(all_measurements) - set(self.exclude_measurements))
 
 
 
@@ -116,6 +121,8 @@ class BayesianFit(Fit):
     - `nuisance_parameters`: a list of string names of nuisance parameters. The existing
       constraints on the parameter will be taken as prior.
     - `observables`: a list of observable names to be included in the fit
+    - `exclude_measurements`: a list of measurement names not to be included in
+    the fit
     - `fit_wc_names`: optional; a list of string names of arguments of the Wilson
       coefficient function below
     - `fit_wc_function`: optional; a function that has exactly the arguements listed
