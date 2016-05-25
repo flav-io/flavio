@@ -16,3 +16,11 @@ class TestBVll(unittest.TestCase):
         self.assertEqual(
             dBRdq2(q2, wc_obj, par, 'B0', 'rho+', 'e'),
             flavio.Observable.get_instance("dBR/dq2(B0->rhoenu)").prediction_central(constraints, wc_obj, q2=q2) )
+
+    def test_decays(self):
+        # just check if any of the modes raises an exception
+        flavio.Observable.get_instance("dBR/dq2(B0->rhoenu)").prediction_central(constraints, wc_obj, q2=3)
+        flavio.Observable.get_instance("dBR/dq2(B+->rhoenu)").prediction_central(constraints, wc_obj, q2=3)
+        flavio.Observable.get_instance("dBR/dq2(B0->D*enu)").prediction_central(constraints, wc_obj, q2=3)
+        flavio.Observable.get_instance("dBR/dq2(B+->D*enu)").prediction_central(constraints, wc_obj, q2=3)
+        flavio.Observable.get_instance("dBR/dq2(B+->omegaenu)").prediction_central(constraints, wc_obj, q2=3)

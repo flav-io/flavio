@@ -85,8 +85,9 @@ def dBRdq2_lep(q2, wc_obj, par, B, V, lep):
         return 0
     tauB = par['tau_'+B]
     J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
-    if V == 'rho0':
+    if V == 'rho0' or V == 'omega':
         # factor of 1/2 for neutral rho due to rho = (uubar-ddbar)/sqrt(2)
+        # and also for omega = (uubar+ddbar)/sqrt(2)
         return tauB * dGdq2(J) / 2.
     return tauB * dGdq2(J)
 
@@ -137,22 +138,22 @@ _func = {'dBR/dq2': dBRdq2_function, 'BR': BR_tot_function, '<BR>': BR_binned_fu
 _desc = {'dBR/dq2': 'Differential', 'BR': 'Total', '<BR>': 'Binned'}
 _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'\langle\text{BR}\rangle'}
 _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max']}
-
+_hadr = {
+'B0->D*': {'tex': r"B^0\to D^{\ast +}", 'B': 'B0', 'V': 'D*+', },
+'B+->D*': {'tex': r"B^+\to D^{\ast 0}", 'B': 'B+', 'V': 'D*0', },
+'B0->rho': {'tex': r"B^0\to rho^+", 'B': 'B0', 'V': 'rho+', },
+'B+->rho': {'tex': r"B^+\to rho^0", 'B': 'B+', 'V': 'rho0', },
+'B+->omega': {'tex': r"B^+\to \omega ", 'B': 'B+', 'V': 'omega', },
+}
 for l in ['e', 'mu', 'tau', 'l']:
     for br in ['dBR/dq2', 'BR', '<BR>']:
-        _obs_name = br + "(B+->D*"+l+"nu)"
-        _obs = Observable(_obs_name)
-        _obs.set_description(_desc[br] + r" branching ratio of $B^+\to D^{*0}"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
-        _obs.tex = r'$' + _tex_br[br] + r"(B^+\to D^{*0}"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
-        _obs.arguments = _args[br]
-        Prediction(_obs_name, _func[br]('B+', 'D*0', l))
-
-        _obs_name = br + "(B0->D*"+l+"nu)"
-        _obs = Observable(_obs_name)
-        _obs.set_description(_desc[br] + r" branching ratio of $B^0\to D^{*-}"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
-        _obs.tex = r'$' + _tex_br[br] + r"(B^0\to D^{*-}"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
-        _obs.arguments = _args[br]
-        Prediction(_obs_name, _func[br]('B0', 'D*+', l))
+        for M in _hadr.keys():
+            _obs_name = br + "("+M+l+"nu)"
+            _obs = Observable(_obs_name)
+            _obs.set_description(_desc[br] + r" branching ratio of $"+_hadr[M]['tex']+_tex[l]+r"^+\nu_"+_tex[l]+"$")
+            _obs.tex = r'$' + _tex_br[br] + r"("+_hadr[M]['tex']+_tex[l]+r"^+\nu_"+_tex[l]+")$"
+            _obs.arguments = _args[br]
+            Prediction(_obs_name, _func[br](_hadr[M]['B'], _hadr[M]['V'], l))
 
         _obs_name = br + "(Bs->K*"+l+"nu)"
         _obs = Observable(_obs_name)
@@ -160,17 +161,3 @@ for l in ['e', 'mu', 'tau', 'l']:
         _obs.tex = r'$' + _tex_br[br] + r"(B_s\to K^{*-}"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
         _obs.arguments = _args[br]
         Prediction(_obs_name, _func[br]('Bs', 'K*+', l))
-
-        _obs_name = br + "(B+->rho"+l+"nu)"
-        _obs = Observable(_obs_name)
-        _obs.set_description(_desc[br] + r" branching ratio of $B^+\to \rho^0"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
-        _obs.tex = r'$' + _tex_br[br] + r"(B^+\to \rho^0"+_tex[l]+r"^+\nu_"+_tex[l]+")$"
-        _obs.arguments = _args[br]
-        Prediction(_obs_name, _func[br]('B+', 'rho0', l))
-
-        _obs_name = br + "(B0->rho"+l+"nu)"
-        _obs = Observable(_obs_name)
-        _obs.set_description(_desc[br] + r" branching ratio of $B^0\to \rho^-"+_tex[l]+r"^+\nu_"+_tex[l]+"$")
-        _obs.tex = r'$' + _tex_br[br] + r"(B^0\to \rho^-" +_tex[l]+r"^+\nu_"+_tex[l]+")$"
-        _obs.arguments = _args[br]
-        Prediction(_obs_name, _func[br]('B0', 'rho+', l))
