@@ -94,7 +94,7 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, N=50, **kwargs):
             kwargs['lw'] = 0
         ax.add_patch(patches.Rectangle((q2min, central-err), q2max-q2min, 2*err,**kwargs))
 
-def q2_plot_exp(obs_name, col_dict=None, **kwargs):
+def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, **kwargs):
     obs = flavio.classes.Observable.get_instance(obs_name)
     if obs.arguments != ['q2min', 'q2max']:
         raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
@@ -107,6 +107,8 @@ def q2_plot_exp(obs_name, col_dict=None, **kwargs):
         err = m_obj.get_1d_errors()
         for _, q2min, q2max in obs_name_list_binned:
             c = central[(obs_name, q2min, q2max)]
+            if divide_binwidth:
+                c = c/(q2max-q2min)
             e = err[(obs_name, q2min, q2max)]
             ax=plt.gca()
             if col_dict is not None:
