@@ -1140,7 +1140,56 @@ BaBar B+->rholnu 2010:
                 [ 0.574, 1.   , 0.389],
                 [ 0.380, 0.389, 1.   ]]
 
+Belle B->omegalnu 2013:
+  experiment: Belle
+  inspire: Sibidanov:2013rkk
+  values:
+    - name: <BR>(B+->omegalnu)
+      q2min: 0
+      q2max: 7
+      value: 22.8±6.2  e-6
+    - name: <BR>(B+->omegalnu)
+      q2min: 7
+      q2max: 14
+      value: 56.5±10.6 e-6
+    - name: <BR>(B+->omegalnu)
+      q2min: 14
+      q2max: 21
+      value: 33.9±11.5 e-6
+  correlation: [[ 1.   , 0.015, 0.103],
+                [ 0.015, 1.   , 0.091],
+                [ 0.103, 0.091, 1.   ]]
 
+
+BaBar B->omegalnu 2012:
+  experiment: BaBar
+  inspire: Lees:2012vv
+  values:
+    - name: <BR>(B+->omegalnu)
+      q2min: 0
+      q2max: 4
+      value: 138.1 ± 49.7  e-7
+    - name: <BR>(B+->omegalnu)
+      q2min: 4
+      q2max: 8
+      value: 283.0 ± 45.8  e-7
+    - name: <BR>(B+->omegalnu)
+      q2min: 8
+      q2max: 12
+      value: 284.6 ± 78.6  e-7
+    - name: <BR>(B+->omegalnu)
+      q2min: 12
+      q2max: 16
+      value: 246.7 ± 93.9  e-7
+    - name: <BR>(B+->omegalnu)
+      q2min: 16
+      q2max: 20.2
+      value: 239.8 ± 117.7  e-7
+  correlation: [[1.,0.013,-0.053,-0.023,-0.199],
+                [0.013,1.,-0.233,-0.149,0.109],
+                [-0.053,-0.233,1.,0.174,0.063],
+                [-0.023,-0.149,0.174,1.,-0.009],
+                [-0.199,0.109,0.063,-0.009,1.]]
 
 LHCb B+->Kmumu BR 2014:
   experiment: LHCb
