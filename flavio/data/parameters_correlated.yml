@@ -12,13 +12,13 @@
   correlation: 0.99
 -
   values:
-    - f_perp_K*+: 0.163(8) # FLAG-3 preliminary Nf=2+1+1
-    - f_perp_K*0: 0.163(8)
+    - f_perp_K*+: 0.159(6) # 1503.05534v2 table 1
+    - f_perp_K*0: 0.159(6)
   correlation: 0.99
 -
   values:
-    - f_perp_rho+: 0.160(11) # FLAG-3 preliminary Nf=2+1+1
-    - f_perp_rho0: 0.160(11)
+    - f_perp_rho+: 0.160(7) # 1503.05534v2 table 1
+    - f_perp_rho0: 0.160(7)
   correlation: 0.99
 -
   values:
@@ -37,8 +37,8 @@
   correlation: 0.99
 -
   values:
-    - f_K*+: 0.203(6)
-    - f_K*0: 0.203(6)  # 1501.06569 table 1
+    - f_K*+: 0.204(7)
+    - f_K*0: 0.204(7)  # 1503.05534v2 table 1
   correlation: 0.99
 -
   values:
