@@ -73,7 +73,7 @@ def q2_plot_th_diff(obs_name, q2min, q2max, wc=None, q2steps=100, **kwargs):
         kwargs['c'] = 'k'
     ax.plot(q2_arr, obs_arr, **kwargs)
 
-def q2_plot_th_bin(obs_name, bin_list, wc=None, N=50, **kwargs):
+def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **kwargs):
     obs = flavio.classes.Observable.get_instance(obs_name)
     if obs.arguments != ['q2min', 'q2max']:
         raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
@@ -85,9 +85,14 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, N=50, **kwargs):
         wc = flavio.WilsonCoefficients() # SM Wilson coefficients
         obs_dict = {bin_:flavio.np_prediction(obs_name, wc, *bin_) for bin_ in bin_list}
     ax = plt.gca()
-    for bin_, central in obs_dict.items():
+    for bin_, central_ in obs_dict.items():
         q2min, q2max = bin_
         err = obs_err_dict[bin_]
+        if divide_binwidth:
+            err = err/(q2max-q2min)
+            central = central_/(q2max-q2min)
+        else:
+            central = central_
         if 'fc' not in kwargs and 'facecolor' not in kwargs:
             kwargs['fc'] = flavio.plots.colors.pastel[3]
         if 'linewidth' not in kwargs and 'lw' not in kwargs:
