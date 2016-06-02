@@ -141,8 +141,8 @@ _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max']}
 _hadr = {
 'B0->D*': {'tex': r"B^0\to D^{\ast +}", 'B': 'B0', 'V': 'D*+', },
 'B+->D*': {'tex': r"B^+\to D^{\ast 0}", 'B': 'B+', 'V': 'D*0', },
-'B0->rho': {'tex': r"B^0\to rho^+", 'B': 'B0', 'V': 'rho+', },
-'B+->rho': {'tex': r"B^+\to rho^0", 'B': 'B+', 'V': 'rho0', },
+'B0->rho': {'tex': r"B^0\to \rho^+", 'B': 'B0', 'V': 'rho+', },
+'B+->rho': {'tex': r"B^+\to \rho^0", 'B': 'B+', 'V': 'rho0', },
 'B+->omega': {'tex': r"B^+\to \omega ", 'B': 'B+', 'V': 'omega', },
 }
 for l in ['e', 'mu', 'tau', 'l']:
