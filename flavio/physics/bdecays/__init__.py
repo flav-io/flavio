@@ -11,3 +11,4 @@ from . import bplnu
 from . import bvnunu
 from . import bpnunu
 from . import bvgamma
+from . import bxgamma

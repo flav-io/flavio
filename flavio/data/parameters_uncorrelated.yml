@@ -122,3 +122,7 @@ B->D* IW a_T23: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
 
 # B->D form factors
 B->D IW a_T: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
+
+# B->Xqgamma uncertainty parameters
+delta_BXsgamma: 0 ± 0.06557 # 5% + 3% + 3%
+delta_BXdgamma: 0 ± 0.06557 # 5% + 3% + 3%

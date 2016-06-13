@@ -620,3 +620,18 @@ B->K BCL a1_fT:
 B->K BCL a2_fT:
   tex: $a_2^{(T)}$
   description: BCL $B\to K$ form factor parametrization coefficient $a_2$ of $f_T$
+
+# Experimental data needed for the normalization of BR(B->Xqgamma)
+C_BXlnu:
+  tex: $C$
+  description:
+BR(B->Xcenu)_exp:
+  tex: $\text{BR}(B\to X_ce\nu)_\text{exp}$
+  description: Experimental branching ratio of $B\to X_ce\nu$
+# B->Xqgamma uncertainty parameters
+delta_BXsgamma:
+  tex: $\delta_{bs\gamma}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders, interpolation, and non-perturbative effects in $B\to X_s\gamma$. The relative uncertainty is $1+\delta$.
+delta_BXdgamma:
+  tex: $\delta_{bd\gamma}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders, interpolation, and non-perturbative effects in $B\to X_d\gamma$. The relative uncertainty is $1+\delta$.

@@ -26,6 +26,7 @@ renormalization scale:
     bpll: 4.8     # B->P l+ l-, B->P l nu
     bvll: 4.8     # B->V l+ l-, B->V l nu
     bvgamma: 4.8  # B->V gamma
+    bxgamma: 2.  # B->X gamma
 
     # K decays
     kdecays: 2.  # K->pinunu
