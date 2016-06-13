@@ -11,16 +11,16 @@ def rg_evolve(initial_condition, derivative, scale_in, scale_out):
     sol = odeint(derivative, initial_condition, [scale_in, scale_out])
     return sol[1]
 
-def rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out):
+def rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out, nf_out=None):
     if scale_in == scale_out:
         # no need to run!
         return initial_condition
     if scale_out < 0.1:
         raise ValueError('RG evolution below the strange threshold not implemented.')
-    return _rg_evolve_sm(tuple(initial_condition), derivative_nf, scale_in, scale_out)
+    return _rg_evolve_sm(tuple(initial_condition), derivative_nf, scale_in, scale_out, nf_out)
 
 @lru_cache(maxsize=config['settings']['cache size'])
-def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out):
+def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out, nf_out):
     # quark mass thresholds
     thresholds = {
         3: 0.1,
@@ -36,8 +36,11 @@ def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out):
         for nf in (6,5,4,3):
             if scale_in <= thresholds[nf]:
                 continue
-             # run either to next threshold or to final scale, whichever is closer
-            scale_stop = max(thresholds[nf], scale_out)
+            if nf_out is not None and nf == nf_out:
+                scale_stop = scale_out
+            else:
+                # run either to next threshold or to final scale, whichever is closer
+                scale_stop = max(thresholds[nf], scale_out)
             sol = rg_evolve(initial_nf, derivative_nf(nf), scale_in_nf, scale_stop)
             if scale_stop == scale_out:
                 return sol
@@ -59,13 +62,13 @@ def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out):
             scale_in_nf = thresholds[nf+1]
     return sol
 
-def get_alpha(par, scale):
+def get_alpha(par, scale, nf_out=None):
     r"""Get the running $\overline{\mathrm{MS}}$ $\alpha_s$ and $\alpha_e$
     at the specified scale.
     """
     alpha_in = [par[('alpha_s')], par[('alpha_e')]]
     scale_in = par['m_Z']
-    alpha_out = rg_evolve_sm(alpha_in, betafunctions.betafunctions_qcd_qed_nf, scale_in, scale)
+    alpha_out = rg_evolve_sm(alpha_in, betafunctions.betafunctions_qcd_qed_nf, scale_in, scale, nf_out=nf_out)
     return dict(zip(('alpha_s','alpha_e'),alpha_out))
 
 
@@ -77,37 +80,37 @@ def _derivative_mq_nf(nf):
     return lambda x, mu: _derivative_mq(x, mu, nf)
 
 
-def get_mq(par, m_in, scale_in, scale_out):
-    alphas_in = get_alpha(par, scale_in)['alpha_s']
+def get_mq(par, m_in, scale_in, scale_out, nf_out=None):
+    alphas_in = get_alpha(par, scale_in, nf_out=nf_out)['alpha_s']
     x_in = [alphas_in, m_in]
-    sol = rg_evolve_sm(x_in, _derivative_mq_nf, scale_in, scale_out)
+    sol = rg_evolve_sm(x_in, _derivative_mq_nf, scale_in, scale_out, nf_out=nf_out)
     return sol[1]
 
 
-def get_mb(par, scale):
+def get_mb(par, scale, nf_out=None):
     r"""Get the running $b$ quark mass at the specified scale."""
     m = par['m_b']
-    return get_mq(par=par, m_in=m, scale_in=m, scale_out=scale)
+    return get_mq(par=par, m_in=m, scale_in=m, scale_out=scale, nf_out=nf_out)
 
-def get_mc(par, scale):
+def get_mc(par, scale, nf_out=None):
     r"""Get the running $c$ quark mass at the specified scale."""
     m = par['m_c']
-    return get_mq(par=par, m_in=m, scale_in=m, scale_out=scale)
+    return get_mq(par=par, m_in=m, scale_in=m, scale_out=scale, nf_out=nf_out)
 
-def get_mu(par, scale):
+def get_mu(par, scale, nf_out=None):
     r"""Get the running $u$ quark mass at the specified scale."""
     m = par['m_u']
-    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale)
+    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale, nf_out=nf_out)
 
-def get_md(par, scale):
+def get_md(par, scale, nf_out=None):
     r"""Get the running $d$ quark mass at the specified scale."""
     m = par['m_d']
-    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale)
+    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale, nf_out=nf_out)
 
-def get_ms(par, scale):
+def get_ms(par, scale, nf_out=None):
     r"""Get the running $s$ quark mass at the specified scale."""
     m = par['m_s']
-    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale)
+    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale, nf_out=nf_out)
 
 def get_mc_pole(par, nl=2): # for mc, default to 2-loop conversion only due to renormalon ambiguity!
     r"""Get the $c$ quark pole mass, using the 2-loop conversion
@@ -155,16 +158,16 @@ def make_wilson_rge_derivative(adm):
         return lambda x, mu: derivative(x, mu, nf)
     return derivative_nf
 
-def get_wilson(par, c_in, derivative_nf, scale_in, scale_out):
+def get_wilson(par, c_in, derivative_nf, scale_in, scale_out, nf_out=None):
     r"""RG evolution of a vector of Wilson coefficients.
 
     In terms of the anomalous dimension matrix $\gamma$, the RGE reads
     $$\mu\frac{d}{d\mu} \vec C = \gamma^T(n_f, \alpha_s, \alpha_e) \vec C$$
     """
-    alpha_in = get_alpha(par, scale_in)
+    alpha_in = get_alpha(par, scale_in, nf_out=nf_out)
     # x is (c_1, ..., c_N, alpha_s, alpha_e)
     c_in_real = np.asarray(c_in, dtype=complex).view(np.float)
     x_in = np.append(c_in_real, [alpha_in['alpha_s'], alpha_in['alpha_e']])
-    sol = rg_evolve_sm(x_in, derivative_nf, scale_in, scale_out)
+    sol = rg_evolve_sm(x_in, derivative_nf, scale_in, scale_out, nf_out=nf_out)
     c_out = sol[:-2]
     return c_out.view(np.complex)
