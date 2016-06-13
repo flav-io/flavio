@@ -13,7 +13,7 @@ par = default_parameters#
 
 class TestBVgamma(unittest.TestCase):
     def test_bksgamma(self):
-        # S and ACP should vanish as there are no strong phases or power corrections yet
+        # just check if this works
         flavio.Observable.get_instance("ACP(B0->K*gamma)").prediction_central(par, wc)
         flavio.Observable.get_instance("S_K*gamma").prediction_central(par, wc)
         # numerical comparison to  David's old Mathematica code
@@ -23,3 +23,9 @@ class TestBVgamma(unittest.TestCase):
         self.assertAlmostEqual(
             flavio.Observable.get_instance("BR(B+->K*gamma)").prediction_central(par, wc)*1e5/4.11625,
              1, places=1)
+
+    def test_bksgamma(self):
+        # just check if this works
+        flavio.Observable.get_instance("ACP(Bs->phigamma)").prediction_central(par, wc)
+        flavio.Observable.get_instance("S_phigamma").prediction_central(par, wc)
+        flavio.Observable.get_instance("BR(Bs->phigamma)").prediction_central(par, wc)

@@ -113,15 +113,25 @@ def ACP(wc_obj, par, B, V):
     a, a_bar = get_a_abar(wc_obj, par, B, V)
     return ( Gamma(a) - Gamma(a_bar) )/( Gamma(a) + Gamma(a_bar) )
 
-def S(wc_obj, par, B, V):
+def S_A_complex(wc_obj, par, B, V):
     a, a_bar = get_a_abar(wc_obj, par, B, V)
     q_over_p = mesonmixing.observables.q_over_p(wc_obj, par, B)
     beta = ckm.get_ckmangle_beta(par)
-    # minus sign from different convention of q/p compared to Ball/Zwicky
-    num = -q_over_p * (a['L'].conj()*a_bar['L']+a['R'].conj()*a_bar['R'])
     den = Gamma_CPaverage(a, a_bar)
-    return num.imag / den
+    # minus sign from different convention of q/p compared to Ball/Zwicky
+    return -q_over_p * (a['L'].conj()*a_bar['L']+a['R'].conj()*a_bar['R'])/den
 
+def S(wc_obj, par, B, V):
+    return S_A_complex(wc_obj, par, B, V).imag
+
+def A_DeltaGamma(wc_obj, par, B, V):
+    return S_A_complex(wc_obj, par, B, V).real
+
+def BR_timeint(wc_obj, par, B, V):
+    A = A_DeltaGamma(wc_obj, par, B, V)
+    BR0 = BR(wc_obj, par, B, V)
+    y = par['DeltaGamma/Gamma_'+B]/2.
+    return (1 + A*y)/(1-y**2)
 
 def BVgamma_function(function, B, V):
     return lambda wc_obj, par: function(wc_obj, par, B, V)
@@ -146,8 +156,26 @@ for key in _func.keys():
     _obs.tex = r'$' + _tex[key] + r"(B^0\to K^{*0}\gamma)$"
     Prediction(_obs_name, BVgamma_function(_func[key], 'B0', 'K*0'))
 
+_obs_name = "ACP(Bs->phigamma)"
+_obs = Observable(_obs_name)
+_obs.set_description(_desc['ACP'] + r" of $B_s\to \phi\gamma$")
+_obs.tex = r'$' + _tex['ACP'] + r"(B_s\to \phi\gamma)$"
+Prediction(_obs_name, BVgamma_function(_func['ACP'], 'Bs', 'phi'))
+
+_obs_name = "BR(Bs->phigamma)"
+_obs = Observable(_obs_name)
+_obs.set_description(r"Time-integrated branching ratio of $B_s\to \phi\gamma$")
+_obs.tex = r"$\overline{\text{BR}}(B_s\to \phi\gamma)$"
+Prediction(_obs_name, BVgamma_function(BR_timeint, 'Bs', 'phi'))
+
 _obs_name = "S_K*gamma"
 _obs = Observable(_obs_name)
 _obs.set_description(r"Mixing-induced CP asymmetry in $B^0\to K^{*0}\gamma$")
 _obs.tex = r'$S_{K^{*}\gamma}$'
 Prediction(_obs_name, BVgamma_function(S, 'B0', 'K*0'))
+
+_obs_name = "S_phigamma"
+_obs = Observable(_obs_name)
+_obs.set_description(r"Mixing-induced CP asymmetry in $B_s\to \phi\gamma$")
+_obs.tex = r'$S_{\phi\gamma}$'
+Prediction(_obs_name, BVgamma_function(S, 'Bs', 'phi'))
