@@ -9,7 +9,7 @@ from flavio.config import config
 from flavio.physics.running import running
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
 from flavio.physics.bdecays import matrixelements, angular
-from flavio.physics.bdecays.wilsoncoefficients import get_wceff, wctot_dict
+from flavio.physics.bdecays.wilsoncoefficients import get_wceff, get_wceff_lfv, wctot_dict
 from flavio.classes import Observable, Prediction
 import warnings
 
@@ -48,7 +48,11 @@ def helicity_amps_ff(q2, wc_obj, par_dict, B, P, l1, l2, cp_conjugate):
         par = conjugate_par(par)
     scale = config['renormalization scale']['bpll']
     label = meson_quark[(B,P)] + l1 + l2 # e.g. bsmumu, bdtautau
-    wc = wctot_dict(wc_obj, label, scale, par)
+    if l1 == l2:
+        # include SM contributions for LF conserving decay
+        wc = wctot_dict(wc_obj, label, scale, par)
+    else:
+        wc = wc_obj.get_wc(label, scale, par)
     if cp_conjugate:
         wc = conjugate_wc(wc)
     if l1 == l2:
@@ -78,7 +82,7 @@ def helicity_amps(q2, wc_obj, par, B, P, l1, l2):
 
 def helicity_amps_bar(q2, wc_obj, par, B, P, l1, l2):
     if l1 != l2:
-        return helicity_amps_ff(q2, wc_obj, par, B, P, l1, l2, cp_conjugate=FaTruelse)
+        return helicity_amps_ff(q2, wc_obj, par, B, P, l1, l2, cp_conjugate=True)
     else:
         if q2 >= 8.7 and q2 < 14:
             warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
@@ -147,6 +151,18 @@ def bpll_dbrdq2_int_func(B, P, l1, l2):
         return bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2)
     return fct
 
+def bpll_dbrdq2_tot_func(B, P, l1, l2):
+    def fct(wc_obj, par):
+        mB = par['m_'+B]
+        mP = par['m_'+P]
+        ml1 = par['m_'+l1]
+        ml2 = par['m_'+l2]
+        q2max = (mB-mP)**2
+        q2min = (ml1+ml2)**2
+        return bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2)
+    return fct
+
+
 def bpll_dbrdq2_func(B, P, l1, l2):
     def fct(wc_obj, par, q2):
         return bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2)
@@ -191,6 +207,9 @@ _hadr = {
 'B0->K': {'tex': r"B^0\to K^0", 'B': 'B0', 'P': 'K0', },
 'B+->K': {'tex': r"B^+\to K^+", 'B': 'B+', 'P': 'K+', },
 }
+_tex_lfv = {'emu': 'e^+\mu^-', 'mue': '\mu^+e^-',
+    'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
+    'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-'}
 
 for l in ['e', 'mu', 'tau']:
     for M in _hadr.keys():
@@ -231,3 +250,13 @@ for l in [('mu','e'), ('tau','mu'),]:
             _obs.set_description(r"Ratio of partial branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
             _obs.tex = r"$\langle R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} \rangle(" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
             Prediction(_obs_name, bpll_obs_int_ratio_leptonflavour(dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], *l))
+
+# Lepton flavour violating decays
+for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
+    for M in _hadr.keys():
+        for br in ['BR',]:
+            _obs_name = br + "("+M+''.join(ll)+")"
+            _obs = Observable(_obs_name)
+            _obs.set_description(r"Total branching ratio of $"+_hadr[M]['tex']+' '+_tex_lfv[''.join(ll)]+r"$")
+            _obs.tex = r"$\text{BR}(" + _hadr[M]['tex']+' '+_tex_lfv[''.join(ll)]+r")$"
+            Prediction(_obs_name, bpll_dbrdq2_tot_func(_hadr[M]['B'], _hadr[M]['P'], ll[0], ll[1]))
