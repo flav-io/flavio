@@ -150,5 +150,5 @@ for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau
         _obs_name = "BR("+B+"->"+''.join(ll)+")"
         _obs = Observable(_obs_name)
         _obs.set_description(r"Branching ratio of $"+_tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]+r"$.")
-        _obs.tex = r"$"+_tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]+r"$"
+        _obs.tex = r"$\text{BR}("+_tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]+r"$)"
         Prediction(_obs_name, bqll_obs_function(br_inst, B, ll[0], ll[1]))
