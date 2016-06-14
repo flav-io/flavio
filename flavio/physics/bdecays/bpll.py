@@ -205,15 +205,15 @@ _observables = {
 }
 _hadr = {
 'B0->K': {'tex': r"B^0\to K^0", 'B': 'B0', 'P': 'K0', },
-'B+->K': {'tex': r"B^+\to K^+", 'B': 'B+', 'P': 'K+', },
+'B+->K': {'tex': r"B^\pm\to K^\pm ", 'B': 'B+', 'P': 'K+', },
 }
 _hadr_lfv = {
-'B0->K': {'tex': r"B^0\to K^0", 'B': 'B0', 'P': 'K0', },
-'B+->K': {'tex': r"B^+\to K^+", 'B': 'B+', 'P': 'K+', },
-'B0->pi': {'tex': r"B^0\to \pi^0", 'B': 'B0', 'P': 'pi0', },
-'B+->pi': {'tex': r"B^+\to \pi^+", 'B': 'B+', 'P': 'pi+', },
+'B0->K': {'tex': r"\bar B^0\to \bar K^0", 'B': 'B0', 'P': 'K0', },
+'B+->K': {'tex': r"B^-\to K^-", 'B': 'B+', 'P': 'K+', },
+'B0->pi': {'tex': r"\bar B^0\to \pi^0", 'B': 'B0', 'P': 'pi0', },
+'B+->pi': {'tex': r"B^-\to \pi^-", 'B': 'B+', 'P': 'pi+', },
 }
-_tex_lfv = {'emu': 'e^+\mu^-', 'mue': '\mu^+e^-',
+_tex_lfv = {'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
     'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
     'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-'}
 

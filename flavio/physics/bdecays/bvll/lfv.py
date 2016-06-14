@@ -73,20 +73,20 @@ def BR_tot_function_leptonsum(B, V, l1, l2):
 
 # Observable and Prediction instances
 
-_tex = {'emu': 'e^+\mu^-', 'mue': '\mu^+e^-',
+_tex = {'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
     'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
     'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-'}
-_tex_lsum = {'emu': 'e^\pm\mu^\mp',  'etau': r'e^\pm\tau^\mp', 'mutau': r'\mu^\pm\tau^\mp'}
+_tex_lsum = {'emu': r'e^\pm\mu^\mp',  'etau': r'e^\pm\tau^\mp', 'mutau': r'\mu^\pm\tau^\mp'}
 _func = {'BR': BR_tot_function, }
 _desc = { 'BR': 'Total', }
 _tex_br = {'BR': r'\text{BR}', }
 _args = {'BR': None, }
 _hadr = {
-'B0->K*': {'tex': r"B^0\to K^{*0}", 'B': 'B0', 'V': 'K*0', },
-'B+->K*': {'tex': r"B^+\to K^{*+}", 'B': 'B+', 'V': 'K*+', },
-'B+->rho': {'tex': r"B^+\to \rho^{+}", 'B': 'B+', 'V': 'rho+', },
-'B0->rho': {'tex': r"B^0\to \rho^{0}", 'B': 'B0', 'V': 'rho0', },
-'Bs->phi': {'tex': r"B_s\to \phi", 'B': 'Bs', 'V': 'phi', },
+'B0->K*': {'tex': r"\bar B^0\to \bar K^{*0}", 'B': 'B0', 'V': 'K*0', },
+'B+->K*': {'tex': r"B^-\to K^{*-}", 'B': 'B+', 'V': 'K*+', },
+'B+->rho': {'tex': r"B^-\to \rho^{-}", 'B': 'B+', 'V': 'rho+', },
+'B0->rho': {'tex': r"\bar B^0\to \rho^{0}", 'B': 'B0', 'V': 'rho0', },
+'Bs->phi': {'tex': r"\bar B_s\to \phi", 'B': 'Bs', 'V': 'phi', },
 }
 
 for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:

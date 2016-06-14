@@ -141,8 +141,8 @@ for l in ['e', 'mu', 'tau']:
     _obs.tex = r"$\text{BR}(B^0\to "+_tex[l]+"^+"+_tex[l]+"^-)$."
     Prediction(_obs_name, bqll_obs_function(br_inst, 'B0', l, l))
 
-_tex_B = {'B0': 'B^0', 'Bs': r'B_s'}
-_tex_lfv = {'emu': 'e^+\mu^-', 'mue': '\mu^+e^-',
+_tex_B = {'B0': r'\bar B^0', 'Bs': r'\bar B_s'}
+_tex_lfv = {'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
     'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
     'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-'}
 for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
