@@ -44,6 +44,8 @@ class TestBPll(unittest.TestCase):
         # test for errors
         self.assertEqual(flavio.sm_prediction('BR(B0->Kemu)'), 0)
         self.assertEqual(flavio.sm_prediction('BR(B+->Ktaumu)'), 0)
+        self.assertEqual(flavio.sm_prediction('BR(B+->pitaumu)'), 0)
+        self.assertEqual(flavio.sm_prediction('BR(B0->pitaumu)'), 0)
         obs_1 = flavio.classes.Observable.get_instance("BR(B0->Kemu)")
         obs_2 = flavio.classes.Observable.get_instance("BR(B0->Kmue)")
         self.assertEqual(obs_1.prediction_central(flavio.default_parameters, wc_sm), 0)

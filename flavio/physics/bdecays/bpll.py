@@ -207,6 +207,12 @@ _hadr = {
 'B0->K': {'tex': r"B^0\to K^0", 'B': 'B0', 'P': 'K0', },
 'B+->K': {'tex': r"B^+\to K^+", 'B': 'B+', 'P': 'K+', },
 }
+_hadr_lfv = {
+'B0->K': {'tex': r"B^0\to K^0", 'B': 'B0', 'P': 'K0', },
+'B+->K': {'tex': r"B^+\to K^+", 'B': 'B+', 'P': 'K+', },
+'B0->pi': {'tex': r"B^0\to \pi^0", 'B': 'B0', 'P': 'pi0', },
+'B+->pi': {'tex': r"B^+\to \pi^+", 'B': 'B+', 'P': 'pi+', },
+}
 _tex_lfv = {'emu': 'e^+\mu^-', 'mue': '\mu^+e^-',
     'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
     'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-'}
@@ -253,10 +259,10 @@ for l in [('mu','e'), ('tau','mu'),]:
 
 # Lepton flavour violating decays
 for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
-    for M in _hadr.keys():
+    for M in _hadr_lfv:
         for br in ['BR',]:
             _obs_name = br + "("+M+''.join(ll)+")"
             _obs = Observable(_obs_name)
-            _obs.set_description(r"Total branching ratio of $"+_hadr[M]['tex']+' '+_tex_lfv[''.join(ll)]+r"$")
-            _obs.tex = r"$\text{BR}(" + _hadr[M]['tex']+' '+_tex_lfv[''.join(ll)]+r")$"
-            Prediction(_obs_name, bpll_dbrdq2_tot_func(_hadr[M]['B'], _hadr[M]['P'], ll[0], ll[1]))
+            _obs.set_description(r"Total branching ratio of $"+_hadr_lfv[M]['tex']+' '+_tex_lfv[''.join(ll)]+r"$")
+            _obs.tex = r"$\text{BR}(" + _hadr_lfv[M]['tex']+' '+_tex_lfv[''.join(ll)]+r")$"
+            Prediction(_obs_name, bpll_dbrdq2_tot_func(_hadr_lfv[M]['B'], _hadr_lfv[M]['P'], ll[0], ll[1]))
