@@ -97,4 +97,4 @@ for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau
             _obs.set_description(_desc[br] + r" branching ratio of $"+_hadr[M]['tex']+' '+_tex[''.join(ll)]+r"$")
             _obs.tex = r'$' + _tex_br[br] + "(" + _hadr[M]['tex']+' '+_tex[''.join(ll)]+r")$"
             _obs.arguments = _args[br]
-            Prediction(_obs_name, _func[br]('B0', 'K*0', ll[0], ll[1]))
+            Prediction(_obs_name, _func[br](_hadr[M]['B'], _hadr[M]['V'], ll[0], ll[1]))

@@ -16,3 +16,8 @@ class TestLFV(unittest.TestCase):
             obs_1.prediction_central(flavio.default_parameters, wc_np)
             /obs_2.prediction_central(flavio.default_parameters, wc_np),
             4.,  places=10)
+        # test for errors
+        flavio.sm_prediction("BR(B+->K*mue)")
+        flavio.sm_prediction("BR(B0->rhotaue)")
+        flavio.sm_prediction("BR(B+->rhotaumu)")
+        flavio.sm_prediction("BR(Bs->phimutau)")
