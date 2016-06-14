@@ -24,3 +24,4 @@ class TestBVll(unittest.TestCase):
         flavio.Observable.get_instance("dBR/dq2(B0->D*enu)").prediction_central(constraints, wc_obj, q2=3)
         flavio.Observable.get_instance("dBR/dq2(B+->D*enu)").prediction_central(constraints, wc_obj, q2=3)
         flavio.Observable.get_instance("dBR/dq2(B+->omegaenu)").prediction_central(constraints, wc_obj, q2=3)
+        flavio.Observable.get_instance("dBR/dq2(Bs->K*enu)").prediction_central(constraints, wc_obj, q2=3)
