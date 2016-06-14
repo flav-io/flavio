@@ -53,6 +53,7 @@ def amplitudes(par, wc, B, l1, l2):
     mB = par['m_'+B]
     # Wilson coefficients
     qqll = meson_quark[B] + l1 + l2
+    # For LFV expressions see arXiv:1602.00881 eq. (5)
     C9m = wc['C9_'+qqll] - wc['C9p_'+qqll] # only relevant for l1 != l2!
     C10m = wc['C10_'+qqll] - wc['C10p_'+qqll]
     CPm = wc['CP_'+qqll] - wc['CPp_'+qqll]
@@ -139,3 +140,15 @@ for l in ['e', 'mu', 'tau']:
     _obs.set_description(r"Branching ratio of $B^0\to "+_tex[l]+"^+"+_tex[l]+"^-$.")
     _obs.tex = r"$\text{BR}(B^0\to "+_tex[l]+"^+"+_tex[l]+"^-)$."
     Prediction(_obs_name, bqll_obs_function(br_inst, 'B0', l, l))
+
+_tex_B = {'B0': 'B^0', 'Bs': r'B_s'}
+_tex_lfv = {'emu': 'e^+\mu^-', 'mue': '\mu^+e^-',
+    'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
+    'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-'}
+for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
+    for B in ['Bs', 'B0']:
+        _obs_name = "BR("+B+"->"+''.join(ll)+")"
+        _obs = Observable(_obs_name)
+        _obs.set_description(r"Branching ratio of $"+_tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]+r"$.")
+        _obs.tex = r"$"+_tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]+r"$"
+        Prediction(_obs_name, bqll_obs_function(br_inst, B, ll[0], ll[1]))

@@ -6,9 +6,9 @@ from math import radians
 from flavio.physics.eft import WilsonCoefficients
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 from flavio.classes import Parameter, Observable
-
 from flavio.parameters import default_parameters
 import copy
+import flavio
 
 s = 1.519267515435317e+24
 
@@ -57,3 +57,8 @@ class TestBll(unittest.TestCase):
         self.assertAlmostEqual(br_timeint(par_default, wc_tau, 'Bs', 'tau', 'tau')/Observable.get_instance('BR(Bs->tautau)').prediction_central(default_parameters, wc_obj), 1, places=4)
         self.assertAlmostEqual(br_timeint(par_default, wc_e, 'Bs', 'e', 'e')/Observable.get_instance('BR(Bs->ee)').prediction_central(default_parameters, wc_obj), 1, places=4)
         self.assertAlmostEqual(br_timeint(par_default, wc, 'Bs', 'mu', 'mu')/Observable.get_instance('BR(Bs->mumu)').prediction_central(default_parameters, wc_obj), 1, places=4)
+
+    def test_bsll_lfv(self):
+        # test for errors
+        self.assertEqual(flavio.sm_prediction('BR(B0->emu)'), 0)
+        self.assertEqual(flavio.sm_prediction('BR(Bs->taumu)'), 0)
