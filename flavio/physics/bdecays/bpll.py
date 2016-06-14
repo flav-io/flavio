@@ -13,14 +13,15 @@ from flavio.physics.bdecays.wilsoncoefficients import get_wceff, wctot_dict
 from flavio.classes import Observable, Prediction
 import warnings
 
-def prefactor(q2, par, B, P, lep):
+def prefactor(q2, par, B, P, l1, l2):
     GF = par['GF']
-    ml = par['m_'+lep]
+    ml1 = par['m_'+l1]
+    ml2 = par['m_'+l2]
     scale = config['renormalization scale']['bpll']
     alphaem = running.get_alpha(par, scale)['alpha_e']
     di_dj = meson_quark[(B,P)]
     xi_t = ckm.xi('t',di_dj)(par)
-    if q2 <= 4*ml**2:
+    if q2 <= (ml1+ml2)**2:
         return 0
     return 4*GF/sqrt(2)*xi_t*alphaem/(4*pi)
 
@@ -41,53 +42,64 @@ def get_subleading(q2, wc_obj, par_dict, B, P, lep, cp_conjugate):
         return {}
 
 
-def helicity_amps_ff(q2, wc_obj, par_dict, B, P, lep, cp_conjugate):
+def helicity_amps_ff(q2, wc_obj, par_dict, B, P, l1, l2, cp_conjugate):
     par = par_dict.copy()
     if cp_conjugate:
         par = conjugate_par(par)
     scale = config['renormalization scale']['bpll']
-    label = meson_quark[(B,P)] + lep + lep # e.g. bsmumu, bdtautau
+    label = meson_quark[(B,P)] + l1 + l2 # e.g. bsmumu, bdtautau
     wc = wctot_dict(wc_obj, label, scale, par)
     if cp_conjugate:
         wc = conjugate_wc(wc)
-    wc_eff = get_wceff(q2, wc, par, B, P, lep, scale)
-    ml = par['m_'+lep]
+    if l1 == l2:
+        wc_eff = get_wceff(q2, wc, par, B, P, l1, scale)
+    else:
+        wc_eff = get_wceff_lfv(q2, wc, par, B, P, l1, l2, scale)
+    ml1 = par['m_'+l1]
+    ml2 = par['m_'+l2]
     mB = par['m_'+B]
     mP = par['m_'+P]
     mb = running.get_mb(par, scale)
-    N = prefactor(q2, par, B, P, lep)
+    N = prefactor(q2, par, B, P, l1, l2)
     ff = get_ff(q2, par, B, P)
-    h = angular.helicity_amps_p(q2, mB, mP, mb, 0, ml, ml, ff, wc_eff, N)
+    h = angular.helicity_amps_p(q2, mB, mP, mb, 0, ml1, ml2, ff, wc_eff, N)
     return h
 
-def helicity_amps(q2, wc_obj, par, B, P, lep):
-    if q2 >= 8.7 and q2 < 14:
-        warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
-    return add_dict((
-        helicity_amps_ff(q2, wc_obj, par, B, P, lep, cp_conjugate=False),
-        get_subleading(q2, wc_obj, par, B, P, lep, cp_conjugate=False)
-        ))
+def helicity_amps(q2, wc_obj, par, B, P, l1, l2):
+    if l1 != l2:
+        return helicity_amps_ff(q2, wc_obj, par, B, P, l1, l2, cp_conjugate=False)
+    else:
+        if q2 >= 8.7 and q2 < 14:
+            warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
+        return add_dict((
+            helicity_amps_ff(q2, wc_obj, par, B, P, l1, l2, cp_conjugate=False),
+            get_subleading(q2, wc_obj, par, B, P, l1, cp_conjugate=False)
+            ))
 
-def helicity_amps_bar(q2, wc_obj, par, B, P, lep):
-    if q2 >= 8.7 and q2 < 14:
-        warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
-    return add_dict((
-        helicity_amps_ff(q2, wc_obj, par, B, P, lep, cp_conjugate=True),
-        get_subleading(q2, wc_obj, par, B, P, lep, cp_conjugate=True)
-        ))
+def helicity_amps_bar(q2, wc_obj, par, B, P, l1, l2):
+    if l1 != l2:
+        return helicity_amps_ff(q2, wc_obj, par, B, P, l1, l2, cp_conjugate=FaTruelse)
+    else:
+        if q2 >= 8.7 and q2 < 14:
+            warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
+        return add_dict((
+            helicity_amps_ff(q2, wc_obj, par, B, P, l1, l2, cp_conjugate=True),
+            get_subleading(q2, wc_obj, par, B, P, l1, cp_conjugate=True)
+            ))
 
-def bpll_obs(function, q2, wc_obj, par, B, P, lep):
-    ml = par['m_'+lep]
+def bpll_obs(function, q2, wc_obj, par, B, P, l1, l2):
+    ml1 = par['m_'+l1]
+    ml2 = par['m_'+l2]
     mB = par['m_'+B]
     mP = par['m_'+P]
-    if q2 < 4*ml**2 or q2 > (mB-mP)**2:
+    if q2 <= (ml1+ml2)**2 or q2 > (mB-mP)**2:
         return 0
     scale = config['renormalization scale']['bpll']
     mb = running.get_mb(par, scale)
-    h     = helicity_amps(q2, wc_obj, par, B, P, lep)
-    h_bar = helicity_amps_bar(q2, wc_obj, par, B, P, lep)
-    J     = angular.angularcoeffs_general_p(h, q2, mB, mP, mb, 0, ml, ml)
-    J_bar = angular.angularcoeffs_general_p(h_bar, q2, mB, mP, mb, 0, ml, ml)
+    h     = helicity_amps(q2, wc_obj, par, B, P, l1, l2)
+    h_bar = helicity_amps_bar(q2, wc_obj, par, B, P, l1, l2)
+    J     = angular.angularcoeffs_general_p(h, q2, mB, mP, mb, 0, ml1, ml2)
+    J_bar = angular.angularcoeffs_general_p(h_bar, q2, mB, mP, mb, 0, ml1, ml2)
     return function(J, J_bar)
 
 def dGdq2(J):
@@ -113,58 +125,58 @@ def FH_cpaverage_num(J, J_bar):
 def denominator(J, J_bar):
     return 2*dGdq2_cpaverage(J, J_bar)
 
-def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, lep):
+def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, l1, l2):
     def obs(q2):
-        return bpll_obs(function, q2, wc_obj, par, B, P, lep)
+        return bpll_obs(function, q2, wc_obj, par, B, P, l1, l2)
     return flavio.math.integrate.nintegrate(obs, q2min, q2max)
 
 
-def bpll_dbrdq2(q2, wc_obj, par, B, P, lep):
+def bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2):
     tauB = par['tau_'+B]
-    return tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, lep)
+    return tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, l1, l2)
 
-def bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, lep):
+def bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2):
     def obs(q2):
-        return bpll_dbrdq2(q2, wc_obj, par, B, P, lep)
+        return bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2)
     return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
 
 # Functions returning functions needed for Prediction instances
 
-def bpll_dbrdq2_int_func(B, P, lep):
+def bpll_dbrdq2_int_func(B, P, l1, l2):
     def fct(wc_obj, par, q2min, q2max):
-        return bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, lep)
+        return bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2)
     return fct
 
-def bpll_dbrdq2_func(B, P, lep):
+def bpll_dbrdq2_func(B, P, l1, l2):
     def fct(wc_obj, par, q2):
-        return bpll_dbrdq2(q2, wc_obj, par, B, P, lep)
+        return bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2)
     return fct
 
-def bpll_obs_int_ratio_func(func_num, func_den, B, P, lep):
+def bpll_obs_int_ratio_func(func_num, func_den, B, P, l1, l2):
     def fct(wc_obj, par, q2min, q2max):
-        num = bpll_obs_int(func_num, q2min, q2max, wc_obj, par, B, P, lep)
+        num = bpll_obs_int(func_num, q2min, q2max, wc_obj, par, B, P, l1, l2)
         if num == 0:
             return 0
-        den = bpll_obs_int(func_den, q2min, q2max, wc_obj, par, B, P, lep)
+        den = bpll_obs_int(func_den, q2min, q2max, wc_obj, par, B, P, l1, l2)
         return num/den
     return fct
 
-def bpll_obs_int_ratio_leptonflavour(func, B, P, l1, l2):
+def bpll_obs_int_ratio_leptonflavour(func, B, P, lnum, lden):
     def fct(wc_obj, par, q2min, q2max):
-        num = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, l1)
+        num = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lnum, lnum)
         if num == 0:
             return 0
-        denom = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, l2)
+        denom = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lden, lden)
         return num/denom
     return fct
 
 
-def bpll_obs_ratio_func(func_num, func_den, B, P, lep):
+def bpll_obs_ratio_func(func_num, func_den, B, P, l1, l2):
     def fct(wc_obj, par, q2):
-        num = bpll_obs(func_num, q2, wc_obj, par, B, P, lep)
+        num = bpll_obs(func_num, q2, wc_obj, par, B, P, l1, l2)
         if num == 0:
             return 0
-        den = bpll_obs(func_den, q2, wc_obj, par, B, P, lep)
+        den = bpll_obs(func_den, q2, wc_obj, par, B, P, l1, l2)
         return num/den
     return fct
 
@@ -187,27 +199,27 @@ for l in ['e', 'mu', 'tau']:
             _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
             _obs.set_description('Binned ' + _observables[obs]['desc'] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
             _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
-            Prediction(_obs_name, bpll_obs_int_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['P'], l))
+            Prediction(_obs_name, bpll_obs_int_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['P'], l, l))
 
             _obs_name = obs + "("+M+l+l+")"
             _obs = Observable(name=_obs_name, arguments=['q2'])
             _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
             _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
-            Prediction(_obs_name, bpll_obs_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['P'], l))
+            Prediction(_obs_name, bpll_obs_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['P'], l, l))
 
         # binned branching ratio
         _obs_name = "<dBR/dq2>("+M+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
         _obs.set_description(r"Binned differential branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
         _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
-        Prediction(_obs_name, bpll_dbrdq2_int_func(_hadr[M]['B'], _hadr[M]['P'], l))
+        Prediction(_obs_name, bpll_dbrdq2_int_func(_hadr[M]['B'], _hadr[M]['P'], l, l))
 
         # differential branching ratio
         _obs_name = "dBR/dq2("+M+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2'])
         _obs.set_description(r"Differential branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
         _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
-        Prediction(_obs_name, bpll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['P'], l))
+        Prediction(_obs_name, bpll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['P'], l, l))
 
 # Lepton flavour ratios
 for l in [('mu','e'), ('tau','mu'),]:
