@@ -35,25 +35,25 @@ class TestBll(unittest.TestCase):
     def test_bsll(self):
         # just some trivial tests to see if calling the functions raises an error
         self.assertGreater(br_lifetime_corr(0.08, -1), 0)
-        self.assertEqual(len(amplitudes(par, wc, 'Bs', 'mu')), 2)
+        self.assertEqual(len(amplitudes(par, wc, 'Bs', 'mu', 'mu')), 2)
         # ADeltaGamma should be +1.0 in the SM
         self.assertEqual(ADeltaGamma(par, wc, 'Bs', 'mu'), 1.0)
         # BR should be around 3.5e-9
-        self.assertAlmostEqual(br_inst(par, wc, 'Bs', 'mu')*1e9, 3.5, places=0)
+        self.assertAlmostEqual(br_inst(par, wc, 'Bs', 'mu', 'mu')*1e9, 3.5, places=0)
         # correction factor should enhance the BR by roughly 7%
-        self.assertAlmostEqual(br_timeint(par, wc, 'Bs', 'mu')/br_inst(par, wc, 'Bs', 'mu'), 1.07, places=2)
+        self.assertAlmostEqual(br_timeint(par, wc, 'Bs', 'mu', 'mu')/br_inst(par, wc, 'Bs', 'mu', 'mu'), 1.07, places=2)
         # ratio of Bs->mumu and Bs->ee BRs should be roughly given by ratio of squared masses
         self.assertAlmostEqual(
-            br_timeint(par, wc_e, 'Bs', 'e')/br_timeint(par, wc, 'Bs', 'mu')/par['m_e']**2*par['m_mu']**2,
+            br_timeint(par, wc_e, 'Bs', 'e', 'e')/br_timeint(par, wc, 'Bs', 'mu', 'mu')/par['m_e']**2*par['m_mu']**2,
             1., places=2)
         # comparison to 1311.0903
         self.assertAlmostEqual(abs(ckm.xi('t','bs')(par))/par['Vcb'], 0.980, places=3)
-        self.assertAlmostEqual(br_timeint(par, wc, 'Bs', 'mu')/3.65e-9, 1, places=1)
-        self.assertAlmostEqual(br_timeint(par, wc_e, 'Bs', 'e')/8.54e-14, 1, places=1)
-        self.assertAlmostEqual(br_timeint(par, wc_tau, 'Bs', 'tau')/7.73e-7, 1, places=1)
+        self.assertAlmostEqual(br_timeint(par, wc, 'Bs', 'mu', 'mu')/3.65e-9, 1, places=1)
+        self.assertAlmostEqual(br_timeint(par, wc_e, 'Bs', 'e', 'e')/8.54e-14, 1, places=1)
+        self.assertAlmostEqual(br_timeint(par, wc_tau, 'Bs', 'tau', 'tau')/7.73e-7, 1, places=1)
 
     def test_bsll_classes(self):
         par_default = default_parameters.get_central_all()
-        self.assertAlmostEqual(br_timeint(par_default, wc_tau, 'Bs', 'tau')/Observable.get_instance('BR(Bs->tautau)').prediction_central(default_parameters, wc_obj), 1, places=4)
-        self.assertAlmostEqual(br_timeint(par_default, wc_e, 'Bs', 'e')/Observable.get_instance('BR(Bs->ee)').prediction_central(default_parameters, wc_obj), 1, places=4)
-        self.assertAlmostEqual(br_timeint(par_default, wc, 'Bs', 'mu')/Observable.get_instance('BR(Bs->mumu)').prediction_central(default_parameters, wc_obj), 1, places=4)
+        self.assertAlmostEqual(br_timeint(par_default, wc_tau, 'Bs', 'tau', 'tau')/Observable.get_instance('BR(Bs->tautau)').prediction_central(default_parameters, wc_obj), 1, places=4)
+        self.assertAlmostEqual(br_timeint(par_default, wc_e, 'Bs', 'e', 'e')/Observable.get_instance('BR(Bs->ee)').prediction_central(default_parameters, wc_obj), 1, places=4)
+        self.assertAlmostEqual(br_timeint(par_default, wc, 'Bs', 'mu', 'mu')/Observable.get_instance('BR(Bs->mumu)').prediction_central(default_parameters, wc_obj), 1, places=4)
