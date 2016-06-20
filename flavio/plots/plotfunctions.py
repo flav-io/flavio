@@ -124,8 +124,8 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, **kwargs):
 
 def band_plot(likelihood_fct, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, col=None, contour_args={}, contourf_args={}):
     ax = plt.gca()
-    _x = np.arange(x_min, x_max, (x_max-x_min)/(steps))
-    _y = np.arange(y_min, y_max, (y_max-y_min)/(steps))
+    _x = np.linspace(x_min, x_max, steps)
+    _y = np.linspace(y_min, y_max, steps)
     x, y = np.meshgrid(_x, _y)
     @np.vectorize
     def f_vect(x, y): # needed for evaluation on meshgrid
