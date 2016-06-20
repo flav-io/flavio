@@ -24,8 +24,10 @@ ka2 = np.array([[0.114381,-0.686288,0,0,0,0,9.11217,0.215745],
 
 def BRBXgamma(wc_obj, par, q, E0):
     r"""Branching ratio of $B\to X_q\gamma$ ($q=s$ or $d$) normalized to
-    $B\to X_c\ell\nu taken from experiment. `E0` is the photon energy
-    cutoff in GeV. See arXiv:1503.01789 and references therein."""
+    $B\to X_c\ell\nu$ taken from experiment. `E0` is the photon energy
+    cutoff $E_0$ in GeV
+    (currently works only for `E0=1.6`).
+    See arXiv:1503.01789 and references therein."""
     scale = flavio.config['renormalization scale']['bxgamma']
     alphaem = 1/137.035999139 # this is alpha_e(0), a constant for our purposes
     bq = 'b' + q
@@ -44,6 +46,9 @@ def BRBXgamma(wc_obj, par, q, E0):
     return BRSL * abs(xi_t)**2/abs(Vcb)**2 * 6*alphaem/pi/C * (PE0 + P_nonpert + P_uncertainty)
 
 def PE0_BXgamma(wc, par, q, E0, CPodd):
+    r"""Branching ratio of $B\to X_q\gamma$ without the prefactor.
+    At leading order in the SM, this function is equal to
+    $(C_7^{\mathrm{eff}})^2$."""
     bq = 'b' + q
     if E0 != 1.6:
         raise ValueError("BR(B->Xqgamma) is not implemented for E0 different from 1.6 GeV")
