@@ -12,7 +12,7 @@ class emceeScan(object):
 
     def __init__(self, fit, nwalkers=None, **kwargs):
 
-        assert isinstance(fit, flavio.statistics.classes.BayesianFit), "emcee fit object must be an instance of BayesianFit"
+        assert isinstance(fit, flavio.statistics.fits.BayesianFit), "emcee fit object must be an instance of BayesianFit"
         self.fit = fit
 
         self.dimension = len(fit.get_random)
