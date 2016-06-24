@@ -79,16 +79,16 @@ def amps_subleading(wc_obj, par, B, V, cp_conjugate):
 
 def amps(*args, **kwargs):
     return add_dict((
-        amps_ff(*args, **kwargs, cp_conjugate=False),
-        amps_ss(*args, **kwargs, cp_conjugate=False),
-        amps_subleading(*args, **kwargs, cp_conjugate=False),
+        amps_ff(*args, cp_conjugate=False, **kwargs),
+        amps_ss(*args, cp_conjugate=False, **kwargs),
+        amps_subleading(*args, cp_conjugate=False, **kwargs),
         ))
 
 def amps_bar(*args, **kwargs):
     a = add_dict((
-        amps_ff(*args, **kwargs, cp_conjugate=True),
-        amps_ss(*args, **kwargs, cp_conjugate=True),
-        amps_subleading(*args, **kwargs, cp_conjugate=True),
+        amps_ff(*args, cp_conjugate=True, **kwargs),
+        amps_ss(*args, cp_conjugate=True, **kwargs),
+        amps_subleading(*args, cp_conjugate=True, **kwargs),
         ))
     return {'L': a['R'], 'R': a['L']}
 
