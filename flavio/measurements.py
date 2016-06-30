@@ -24,10 +24,17 @@ def _load(obj):
                     args = Observable.get_instance(value_dict['name']).arguments
                     args_num = [value_dict[a] for a in args]
                     constraints = constraints_from_string(value_dict['value'])
+
+                    error_dict = errors_from_string(value_dict['value'])
+                    central_value = error_dict['central_value']
+                    squared_error = 0.
+                    for sym_err in error_dict['symmetric_errors']:
+                        squared_error += sym_err**2
+                    for asym_err in error_dict['asymmetric_errors']:
+                        squared_error += asym_err[0]*asym_err[1]
                     args_num.insert(0, value_dict['name'])
                     obs_tuple = tuple(args_num)
-                    for constraint in constraints:
-                        m.add_constraint([obs_tuple], constraint)
+                    m.add_constraint([obs_tuple], probability.NormalDistribution(central_value, sqrt(squared_error)))
             else: # otherwise, 'values' is a dict just containing name: constraint_string
                 for obs, value in m_data['values'].items():
                     constraints = constraints_from_string(value)
