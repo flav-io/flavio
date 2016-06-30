@@ -226,6 +226,7 @@ _observables_p = {
 'P1': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 3)/2., 'tex': r'P_1', 'desc': "CP-averaged \"optimized\" angular observable"},
 'P2': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, '6s')/8., 'tex': r'P_2', 'desc': "CP-averaged \"optimized\" angular observable"},
 'P3': {'func_num': lambda J, J_bar: -S_experiment_num(J, J_bar, 9)/4., 'tex': r'P_3', 'desc': "CP-averaged \"optimized\" angular observable"},
+'ATIm': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 9)/2., 'tex': r'A_T^\text{Im}', 'desc': "Transverse CP asymmetry"},
 }
 _observables_pprime = {
 'P4p': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 4), 'tex': r'P_4^\prime', 'desc': "CP-averaged \"optimized\" angular observable"},
