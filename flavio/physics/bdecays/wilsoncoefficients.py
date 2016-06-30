@@ -53,7 +53,7 @@ def wctot_dict(wc_obj, sector, scale, par, nf_out=None):
     r"""Get a dictionary with the total (SM + new physics) values  of the
     $\Delta F=1$ Wilson coefficients at a given scale, given a
     WilsonCoefficients instance."""
-    wc_np_dict = wc_obj.get_wc(sector, scale, par)
+    wc_np_dict = wc_obj.get_wc(sector, scale, par, nf_out=nf_out)
     wcsm_120 = _wcsm_120.copy()
     wc_sm = running.get_wilson(par, wcsm_120, wc_obj.rge_derivative[sector], 120., scale, nf_out=nf_out)
     # now here comes an ugly fix. If we have b->s transitions, we should take

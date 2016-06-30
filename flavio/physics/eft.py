@@ -112,7 +112,7 @@ class WilsonCoefficients(object):
                 raise KeyError("Wilson coefficient " + name + " not known")
             self.initial[name] = (scale, value)
 
-    def get_wc(self, sector, scale, par):
+    def get_wc(self, sector, scale, par, nf_out=None):
         # intialize with complex zeros
         values_in = np.zeros(len(self.coefficients[sector]), dtype=complex)
         # see if an initial value exists
@@ -133,5 +133,5 @@ class WilsonCoefficients(object):
             # if the sector has vanishing anomalous dimensions, nno need to run!
             return dict(zip(self.coefficients[sector],values_in)) # these are just the initial values
         # otherwise, run
-        values_out = running.get_wilson(par, values_in, self.rge_derivative[sector], scale_in, scale)
+        values_out = running.get_wilson(par, values_in, self.rge_derivative[sector], scale_in, scale, nf_out=nf_out)
         return dict(zip(self.coefficients[sector],values_out))
