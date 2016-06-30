@@ -11,6 +11,7 @@ import os
 import logging
 
 log = logging.getLogger('SLHA')
+log.setLevel('WARNING')
 
 def _prefactors_bsll(par, scale):
     GF = par['GF']
@@ -70,8 +71,7 @@ def read_wilson(filename):
     `flavio.np_prediction`, for instance.
     """
     if not os.path.exists(filename):
-        log.error("File " + filename + " not found.")
-        return keys
+        raise ValueError("File " + filename + " not found.")
     card = flavio.io.slha.read(filename)
     wc_flha = card.matrices['fwcoef']
     scale = wc_flha.scale
@@ -92,3 +92,38 @@ def read_wilson(filename):
     wc_obj =  flavio.WilsonCoefficients()
     wc_obj.set_initial(wc_dict, scale=scale)
     return wc_obj
+
+def read_ckm(filename, par_constraints):
+    r"""Read CKM Wolfenstein parameters from the `VCKMIN` block of an FLHA
+    file.
+
+    Input
+    -----
+
+    - `filename`: the path to the file as a string
+    - `par_constraints`: an instance of `flavio.ParameterConstraints`, e.g.
+    `flavio.default_parameters`
+
+    Note that you have to set the config option
+    `config['implementation']['CKM matrix']`
+    to `Wolfenstein` first; otherwise an error is raised.
+
+    *Caution*: since the FLHA/SLHA format does not specify uncertainties,
+    the parameters are assumed to be known exactly.
+    """
+    if not os.path.exists(filename):
+        raise ValueError("File " + filename + " not found.")
+    if flavio.config['implementation']['CKM matrix'] != 'Wolfenstein':
+        log.warning('CKM matrix parametrization is not set to "Wolfenstein". read_ckm will have no effect!')
+    card = flavio.io.slha.read(filename)
+    try:
+        wc_flha = card.blocks['vckmin']
+        try:
+            par_constraints.set_constraint('laC', wc_flha[1])
+            par_constraints.set_constraint('A', wc_flha[2])
+            par_constraints.set_constraint('rhob', wc_flha[3])
+            par_constraints.set_constraint('etab', wc_flha[4])
+        except KeyError:
+            raise KeyError("One of the Wolfenstein parameters seems to be missing from the VCKMIN block")
+    except KeyError:
+        raise ValueError("This file does not contain a VCKMIN block")
