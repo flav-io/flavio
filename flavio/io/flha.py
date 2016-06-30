@@ -106,7 +106,7 @@ def read_ckm(filename, par_constraints):
 
     Note that you have to set the config option
     `config['implementation']['CKM matrix']`
-    to `Wolfenstein` first; otherwise an error is raised.
+    to `Wolfenstein` first; otherwise a warning is issued.
 
     *Caution*: since the FLHA/SLHA format does not specify uncertainties,
     the parameters are assumed to be known exactly.
