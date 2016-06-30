@@ -65,6 +65,11 @@ def read_file_values(filename, constraints):
     with open(filename, 'r') as f:
         _read_yaml_object_values(f, constraints)
 
+def read_file_values_correlated(filename, constraints):
+    """Read parameter values from a YAML file."""
+    with open(filename, 'r') as f:
+        _read_yaml_object_values_correlated(f, constraints)
+
 # particles from the PDG data file whose mass we're interested in)
 pdg_include = ['B(s)', 'B(s)*', 'B*+', 'B*0', 'B+', 'B0', 'D(s)', 'D(s)*', 'D+', 'D0',
                'H', 'J/psi(1S)', 'K(L)', 'K(S)', 'K*(892)+', 'K*(892)0', 'K+', 'K0',
