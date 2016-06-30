@@ -119,7 +119,7 @@ def S_A_complex(wc_obj, par, B, V):
     beta = ckm.get_ckmangle_beta(par)
     den = Gamma_CPaverage(a, a_bar)
     # minus sign from different convention of q/p compared to Ball/Zwicky
-    return -q_over_p * (a['L'].conj()*a_bar['L']+a['R'].conj()*a_bar['R'])/den
+    return -q_over_p * (a['L']*a_bar['L'].conj()+a['R']*a_bar['R'].conj())/den
 
 def S(wc_obj, par, B, V):
     return S_A_complex(wc_obj, par, B, V).imag
@@ -131,7 +131,7 @@ def BR_timeint(wc_obj, par, B, V):
     A = A_DeltaGamma(wc_obj, par, B, V)
     BR0 = BR(wc_obj, par, B, V)
     y = par['DeltaGamma/Gamma_'+B]/2.
-    return (1 + A*y)/(1-y**2)
+    return (1 + A*y)/(1-y**2) * BR0
 
 def BVgamma_function(function, B, V):
     return lambda wc_obj, par: function(wc_obj, par, B, V)
