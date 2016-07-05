@@ -59,7 +59,7 @@ def amplitudes(par, wc, B, l1, l2):
     CPm = wc['CP_'+qqll] - wc['CPp_'+qqll]
     CSm = wc['CS_'+qqll] - wc['CSp_'+qqll]
     P = (ml2 + ml1)/mB * C10m + mB * CPm
-    S = (ml2 - ml1)/mB * C10m + mB * CSm
+    S = (ml2 - ml1)/mB * C9m + mB * CSm
     return P, S
 
 def ADeltaGamma(par, wc, B, lep):
