@@ -148,11 +148,11 @@ def get_wceff_nunu(q2, wc, par, B, M, nu1, nu2, scale):
     c['tp'] = 0
     return c
 
-def get_wceff_fccc(q2, wc_obj, par, B, P, lep, scale):
+def get_wceff_fccc(wc_obj, par, bq, lep, scale):
     r"""Get a dictionary with the effective $b\to(c,u)$ Wilson coefficients
     in the convention appropriate for the generalized angular distributions.
     """
-    bqlnu = meson_quark[(B,P)] + lep + 'nu'
+    bqlnu = bq + lep + 'nu'
     wc = wc_obj.get_wc(bqlnu, scale, par)
     mb = running.get_mb(par, scale)
     alpha_e = running.get_alpha(par, scale)['alpha_e']

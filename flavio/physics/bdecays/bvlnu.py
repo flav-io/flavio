@@ -13,27 +13,6 @@ from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc
 from flavio.classes import Observable, Prediction
 
 
-
-def get_wceff(q2, wc_obj, par, B, V, lep):
-    scale = config['renormalization scale']['bvll']
-    bqlnu = meson_quark[(B,V)] + lep + 'nu'
-    wc = wc_obj.get_wc(bqlnu, scale, par)
-    mb = running.get_mb(par, scale)
-    c = {}
-    c['7']  = 0
-    c['7p'] = 0
-    c['v']  = (1 + wc['CV_'+bqlnu])/2.
-    c['vp'] = (1 + wc['CVp_'+bqlnu])/2.
-    c['a']  = -wc['CV_'+bqlnu]/2.
-    c['ap'] = -wc['CVp_'+bqlnu]/2.
-    c['s']  = 1/2 * mb * wc['CS_'+bqlnu]/2.
-    c['sp'] = 1/2 * mb * wc['CSp_'+bqlnu]/2.
-    c['p']  = -1/2 * mb * wc['CS_'+bqlnu]/2.
-    c['pp'] = -1/2 * mb * wc['CSp_'+bqlnu]/2.
-    c['t']  = wc['CT_'+bqlnu]
-    c['tp'] = 0
-    return c
-
 def get_ff(q2, par, B, V):
     ff_name = meson_ff[(B,V)] + ' form factor'
     return AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
@@ -58,7 +37,7 @@ def prefactor(q2, par, B, V, lep):
 
 def get_angularcoeff(q2, wc_obj, par, B, V, lep):
     scale = config['renormalization scale']['bvll']
-    wc = get_wceff_fccc(q2, wc_obj, par, B, V, lep, scale)
+    wc = get_wceff_fccc(wc_obj, par, meson_quark[(B,V)], lep, scale)
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mV = par['m_'+V]
