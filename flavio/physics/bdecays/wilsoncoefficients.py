@@ -148,6 +148,13 @@ def get_wceff_nunu(q2, wc, par, B, M, nu1, nu2, scale):
     c['tp'] = 0
     return c
 
+def get_CVSM(par, bq, scale):
+    r"""Get the Wilson coefficient of the operator $C_V$ in $b\to q\ell\nu$
+    in the SM."""
+    alpha_e = running.get_alpha(par, scale)['alpha_e']
+    # 1 (tree-level) + 1-loop EW correction a la Sirlin
+    return 1 + alpha_e/pi * log(par['m_Z']/scale)
+
 def get_wceff_fccc(wc_obj, par, bq, lep, scale):
     r"""Get a dictionary with the effective $b\to(c,u)$ Wilson coefficients
     in the convention appropriate for the generalized angular distributions.
@@ -155,10 +162,7 @@ def get_wceff_fccc(wc_obj, par, bq, lep, scale):
     bqlnu = bq + lep + 'nu'
     wc = wc_obj.get_wc(bqlnu, scale, par)
     mb = running.get_mb(par, scale)
-    alpha_e = running.get_alpha(par, scale)['alpha_e']
-    # SM Wilson coefficient of $V_{qb} \bar c_L \gamma_\mu b_L \bar \nu_L \gamma^\mu \ell_L$
-    # 1 (tree-level) + 1-loop EW correction a la Sirlin
-    c_sm = 1 + alpha_e/pi * log(par['m_Z']/scale)
+    c_sm = get_CVSM(par, bq, scale)
     c = {}
     c['7']  = 0
     c['7p'] = 0
