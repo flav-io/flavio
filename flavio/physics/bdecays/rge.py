@@ -455,3 +455,15 @@ def gamma_all(f, als, ale, n_s=3, n_e=2):
 def run_wc_df1(par, c_in, scale_in, scale_out):
     adm = gamma_all
     return running.get_wilson(par, c_in, running.make_wilson_rge_derivative(adm), scale_in, scale_out)
+
+def gamma_fccc(als, ale):
+    r"""Returns the ADMs for $d_i\to d_j\ell\nu decays in the basis
+
+    ```
+    [ C_V, C_S, C_T, C'_V, C'_S ]
+    ```
+    """
+    g=np.zeros((1,1,5,5), dtype=float)
+    a = (als/(4*pi))
+    g[0,0,2,2] = a*( 8/3 ) # tensor operator
+    return g.sum(axis=(0,1))

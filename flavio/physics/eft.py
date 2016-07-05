@@ -5,7 +5,6 @@ from flavio.physics.running import running
 from flavio.physics.bdecays import rge as rge_db1
 from flavio.physics.mesonmixing import rge as rge_df2
 
-
 # Anomalous dimensions for DeltaF=2
 def adm_df2(nf, alpha_s, alpha_e):
     return rge_df2.gamma_df2_array(nf, alpha_s)
@@ -23,6 +22,10 @@ def adm_db1(nf, alpha_s, alpha_e):
     # note that the enties 30-33 remain zero: these are the scalar and
     # pseudoscalar operators
     return A
+
+# Anomalous dimensions for d_i->d_jlnu processes
+def adm_ddlnu(nf, alpha_s, alpha_e):
+    return rge_db1.gamma_fccc(alpha_s, alpha_e)
 
 # List of all Wilson coefficients in the Standard basis
 
@@ -91,7 +94,7 @@ for qq in _fcnc:
         for ll in _lnu:
             coefficients[qq + ll] = [ 'CV_'+qq+ll, 'CS_'+qq+ll, 'CT_'+qq+ll,
                                 'CVp_'+qq+ll, 'CSp_'+qq+ll, ]
-            adm[qq + ll] = None
+            adm[qq + ll] = adm_ddlnu
 
 
 class WilsonCoefficients(object):
