@@ -652,3 +652,18 @@ c4_K+munu:
 c2t_K+lnu:
   tex: $\tilde{c}_2^{(K)}$
   description: Chiral perturbation theory coefficient in $K^+\to\ell^+\nu$
+c1_pi+lnu:
+  tex: $c_1^{(\pi)}$
+  description: Chiral perturbation theory coefficient in $\pi^+\to\ell^+\nu$
+c2_pi+lnu:
+  tex: $c_2^{(\pi)}$
+  description: Chiral perturbation theory coefficient in $\pi^+\to\ell^+\nu$
+c3_pi+lnu:
+  tex: $c_3^{(\pi)}$
+  description: Chiral perturbation theory coefficient in $\pi^+\to\ell^+\nu$
+c4_pi+munu:
+  tex: $c_4^{(\pi)}(m_\mu)$
+  description: Chiral perturbation theory coefficient in $\pi^+\to\mu^+\nu$
+c2t_pi+lnu:
+  tex: $\tilde{c}_2^{(\pi)}$
+  description: Chiral perturbation theory coefficient in $\pi^+\to\ell^+\nu$

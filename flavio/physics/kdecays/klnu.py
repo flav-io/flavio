@@ -1,27 +1,32 @@
-r"""Functions for $K\to\ell\nu$ decays."""
+r"""Functions for $K\to\ell\nu$ and $\pi\to\ell\nu$ decays."""
 
 import flavio
 from flavio.physics.bdecays.blnu import br_plnu_general
 from math import pi, log
 from flavio.math.functions import li2
 
-def br_klnu(wc_obj, par, lep):
-    r"""Branching ratio of $K^+\to\ell^+\nu_\ell$."""
+def br_plnu(wc_obj, par, P, lep):
+    r"""Branching ratio of $P^+\to\ell^+\nu_\ell$."""
     # CKM element
-    Vus = flavio.physics.ckm.get_ckm(par)[0,1]
+    if P=='K+':
+        Vij = flavio.physics.ckm.get_ckm(par)[0,1]
+        qiqj = 'su'
+    elif P=='pi+':
+        Vij = flavio.physics.ckm.get_ckm(par)[0,0]
+        qiqj = 'du'
     # renormalization scale is m_rho
     scale = par['m_rho0']
     # Wilson coefficients
-    wc = wc_obj.get_wc('su' + lep + 'nu', scale, par)
+    wc = wc_obj.get_wc(qiqj + lep + 'nu', scale, par)
     # add SM contribution to Wilson coefficient
-    wc['CV_su'+lep+'nu'] += flavio.physics.bdecays.wilsoncoefficients.get_CVSM(par, 'su', scale)
-    return br_plnu_general(wc, par, Vus, 'K+', lep, delta=delta_Plnu(par, 'K+', lep))
+    wc['CV_'+qiqj+lep+'nu'] += flavio.physics.bdecays.wilsoncoefficients.get_CVSM(par, qiqj, scale)
+    return br_plnu_general(wc, par, Vij, P, lep, delta=delta_Plnu(par, P, lep))
 
-def r_klnu(wc_obj, par):
+def r_plnu(wc_obj, par, P):
     # resumming logs according to (111) of 0707.4464
     # (this is negligibly small for the individual rates)
     rg_corr = 1.00055
-    return rg_corr*br_klnu(wc_obj, par, 'e')/br_klnu(wc_obj, par, 'mu')
+    return rg_corr*br_plnu(wc_obj, par, P, 'e')/br_plnu(wc_obj, par, P, 'mu')
 
 def delta_Plnu(par, P, lep):
     mrho = par['m_rho0']
@@ -47,25 +52,32 @@ def F(z):
             -2*(1+z)/(1-z)*li2(1-z) )
 
 # function returning function needed for prediction instance
-def br_klnu_fct(lep):
+def br_plnu_fct(P, lep):
     def f(wc_obj, par):
-        return br_klnu(wc_obj, par, lep)
+        return br_plnu(wc_obj, par, P, lep)
+    return f
+
+def r_plnu_fct(P):
+    def f(wc_obj, par):
+        return r_plnu(wc_obj, par, P)
     return f
 
 # Observable and Prediction instances
 
 # Individual (e and mu) modes
 _tex = {'e': 'e', 'mu': '\mu'}
-for l in ['e', 'mu']:
-    _obs_name = "BR(K+->"+l+"nu)"
-    _obs = flavio.classes.Observable(_obs_name)
-    _obs.set_description(r"Branching ratio of $K^+\to "+_tex[l]+r"^+\nu_"+_tex[l]+r"(\gamma)$")
-    _obs.tex = r"$\text{BR}(K^+\to "+_tex[l]+r"^+\nu_"+_tex[l]+r")$"
-    flavio.classes.Prediction(_obs_name, br_klnu_fct(l))
+_tex_p = {'K+': r'K^+', 'pi+': r'\pi^+',}
+for P in ['K+', 'pi+']:
+    for l in ['e', 'mu']:
+        _obs_name = "BR("+P+"->"+l+"nu)"
+        _obs = flavio.classes.Observable(_obs_name)
+        _obs.set_description(r"Branching ratio of $"+_tex_p[P]+r"\to "+_tex[l]+r"^+\nu_"+_tex[l]+r"(\gamma)$")
+        _obs.tex = r"$\text{BR}("+_tex_p[P]+r"\to "+_tex[l]+r"^+\nu_"+_tex[l]+r")$"
+        flavio.classes.Prediction(_obs_name, br_plnu_fct(P, l))
 
-# e/mu ratio
-_obs_name = "Remu(K+->lnu)"
-_obs = flavio.classes.Observable(_obs_name)
-_obs.set_description(r"Ratio of branching ratios of $K^+\to e^+\nu_e$ and $K^+\to \mu^+\nu_\mu$")
-_obs.tex = r"$R_{e\mu}(K^+\to \ell^+\nu)$"
-flavio.classes.Prediction(_obs_name, r_klnu)
+    # e/mu ratios
+    _obs_name = "Remu("+P+"->lnu)"
+    _obs = flavio.classes.Observable(_obs_name)
+    _obs.set_description(r"Ratio of branching ratios of $"+_tex_p[P]+r"\to e^+\nu_e$ and $"+_tex_p[P]+r"\to \mu^+\nu_\mu$")
+    _obs.tex = r"$R_{e\mu}("+_tex_p[P]+r"\to \ell^+\nu)$"
+    flavio.classes.Prediction(_obs_name, r_plnu_fct(P))

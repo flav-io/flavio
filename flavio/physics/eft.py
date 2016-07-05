@@ -38,7 +38,7 @@ _fcnc = ['bs', 'bd', 'sd', ]
 _ll = ['ee', 'mumu', 'tautau']
 _lilj = ['emu', 'mue', 'etau', 'taue', 'mutau', 'taumu']
 _lnu = ['enu', 'munu', 'taunu']
-_fccc = ['bc', 'bu', 'su']
+_fccc = ['bc', 'bu', 'su', 'du']
 _nunu = ['nuenue', 'numunumu', 'nutaunutau']
 _nuinuj = ['nuenumu', 'numunue', 'nuenutau', 'nutaunue', 'numunutau', 'nutaunumu']
 

@@ -133,3 +133,8 @@ c2_K+lnu: 4.3(0.4)(0.01) # table 1 of 0707.4464
 c3_K+lnu: -4.73(9.2)(0.28) # matching error inflated by factor 4!
 c4_K+munu: 0.22(0.01)
 c2t_K+lnu: 7.84(0.07)e-2
+c1_pi+lnu: -2.56(50) # (115) of 0707.4464
+c2_pi+lnu: 5.2(0.4)(0.01) # table 1 of 0707.4464
+c3_pi+lnu: -10.5(2.3)(0.53) # matching error inflated by factor 4!
+c4_pi+munu: 1.69(0.07)
+c2t_pi+lnu: 0
