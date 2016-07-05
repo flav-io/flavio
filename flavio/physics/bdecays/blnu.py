@@ -44,6 +44,6 @@ _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 for l in ['e', 'mu', 'tau']:
     _obs_name = "BR(B+->"+l+"nu)"
     _obs = flavio.classes.Observable(_obs_name)
-    _obs.set_description(r"Branching ratio of $B^+\to "+_tex[l]+r"\nu_"+_tex[l]+r"$")
-    _obs.tex = r"$\text{BR}(B^+\to "+_tex[l]+r"\nu_"+_tex[l]+r")$"
+    _obs.set_description(r"Branching ratio of $B^+\to "+_tex[l]+r"^+\nu_"+_tex[l]+r"$")
+    _obs.tex = r"$\text{BR}(B^+\to "+_tex[l]+r"^+\nu_"+_tex[l]+r")$"
     flavio.classes.Prediction(_obs_name, br_blnu_fct(l))
