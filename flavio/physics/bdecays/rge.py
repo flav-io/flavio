@@ -13,6 +13,18 @@ from flavio.math.functions import zeta
 # C_10 (semi-leptonic axial vector operator) with prefactor e^2/16pi^2
 # C_3Q-C_6Q, C_b (electroweak penguins) as defined by Huber/Lunghi/Misiak/Wyler.
 
+def Qsum(f):
+    r"""Sum of quark charges for $n_f$ active quark flavours"""
+    d = {
+    1: 2/3., # u
+    2: 1/3., # ud
+    3: 0, # uds
+    4: 2/3., # udsc
+    5: 1/3., # udscb
+    6: 1, # udscbt
+    }
+    return d[f]
+
 # (36) of hep-ph/0411071v5
 def gamma0_16(f):
     return np.array([[-4, 8/3., 0, -2/9., 0, 0], [12, 0, 0, 4/3., 0, 0], [0, 0, 0, -52/3., 0, 2],
@@ -73,7 +85,7 @@ def gamma1_78(f):
 # (11) of hep-ph/0504194v2
 def gamma2_78(f):
     Qd = -1/3.
-    Qbar = 1/3.
+    Qbar = Qsum(f)
     return np.array([[307448/81.- (23776*f)/81.- (352*f**2)/81.,
       0], [-((1600*Qbar)/
         27) + (159872/81.- (17108*f)/81.- (352*f**2)/81.)*Qd,
@@ -81,7 +93,7 @@ def gamma2_78(f):
 
 # (5.9) of hep-ph/0612329
 def gamma0_16_78(f):
-    Qbar = 1/3.
+    Qbar = Qsum(f)
     Qu = 2/3.
     return np.array([[(8/243.) - (4/3.)*Qu, (173/162.)], [-(16/81.) + 8*Qu, (70/27.)],
      [-(176/81.), (14/ 27)], [(88/243.) - (16/81.)*f, (74/81.) - (49/54.)*f],
@@ -89,7 +101,7 @@ def gamma0_16_78(f):
 
 # (5.10) of hep-ph/0612329
 def gamma1_16_78(f):
-    Qbar = 1/3.
+    Qbar = Qsum(f)
     Qu = 2/3.
     return np.array([[(12614/2187.) - (64/2187.)*f - (374/27.)*Qu + (2/27.)*f*Qu,
      (65867/ 5832) + (431/5832.)*f], [-(2332/729.) + (128/729.)*f + (136/ 9)*Qu - (4/9.)*f*Qu,
@@ -103,7 +115,7 @@ def gamma1_16_78(f):
 
 # (5.11) of hep-ph/0612329
 def gamma2_16_78(f):
-    Qbar = 1/3.
+    Qbar = Qsum(f)
     Qu = 2/3.
     g = np.zeros((6,2), dtype=float)
     g[:,0] = np.array([(77506102/ 531441) - (875374/177147.)*f + (560/19683.)*f**2 - (9731/ 162)*Qu + (11045/729.)*f*Qu + (316/729.)*f**2*Qu + (3695/ 486)*Qbar,
