@@ -126,3 +126,10 @@ B->D IW a_T: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
 # B->Xqgamma uncertainty parameters
 delta_BXsgamma: 0 ± 0.06557 # 5% + 3% + 3%
 delta_BXdgamma: 0 ± 0.06557 # 5% + 3% + 3%
+
+# ChPT parameters needed for P->lnu decays
+c1_K+lnu: -1.98(50) # (116) of 0707.4464
+c2_K+lnu: 4.3(0.4)(0.01) # table 1 of 0707.4464
+c3_K+lnu: -4.73(9.2)(0.28) # matching error inflated by factor 4!
+c4_K+munu: 0.22(0.01)
+c2t_K+lnu: 7.84(0.07)e-2

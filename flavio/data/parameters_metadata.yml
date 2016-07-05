@@ -635,3 +635,20 @@ delta_BXsgamma:
 delta_BXdgamma:
   tex: $\delta_{bd\gamma}$
   description: Quantity parametrizing the remaining theory uncertainty due to higher orders, interpolation, and non-perturbative effects in $B\to X_d\gamma$. The relative uncertainty is $1+\delta$.
+
+# ChPT parameters needed for P->lnu decays
+c1_K+lnu:
+  tex: $c_1^{(K)}$
+  description: Chiral perturbation theory coefficient in $K^+\to\ell^+\nu$
+c2_K+lnu:
+  tex: $c_2^{(K)}$
+  description: Chiral perturbation theory coefficient in $K^+\to\ell^+\nu$
+c3_K+lnu:
+  tex: $c_3^{(K)}$
+  description: Chiral perturbation theory coefficient in $K^+\to\ell^+\nu$
+c4_K+munu:
+  tex: $c_4^{(K)}(m_\mu)$
+  description: Chiral perturbation theory coefficient in $K^+\to\mu^+\nu$
+c2t_K+lnu:
+  tex: $\tilde{c}_2^{(K)}$
+  description: Chiral perturbation theory coefficient in $K^+\to\ell^+\nu$
