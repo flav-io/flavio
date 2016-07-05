@@ -46,6 +46,7 @@ meson_quark = {
 ('Bs','phi'): 'bs',
 'Bs': 'bs',
 'B0': 'bs',
+'B+': 'bu',
 }
 
 meson_spectator = {

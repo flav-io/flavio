@@ -22,7 +22,7 @@ settings:
 renormalization scale:
 
     # B decays
-    bll: 4.8      # B->l+ l-
+    bll: 4.8      # B->l+ l-, B->l nu
     bpll: 4.8     # B->P l+ l-, B->P l nu
     bvll: 4.8     # B->V l+ l-, B->V l nu
     bvgamma: 4.8  # B->V gamma
