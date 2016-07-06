@@ -6,7 +6,6 @@ from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_f
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 from flavio.physics.bdecays import matrixelements
 from flavio.physics import ckm
-from flavio.physics.bdecays.formfactors import FormFactorParametrization as FF
 from flavio.config import config
 from flavio.physics.running import running
 from .amplitudes import *
