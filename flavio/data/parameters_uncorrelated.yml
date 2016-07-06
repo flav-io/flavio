@@ -39,8 +39,6 @@ gamma: 1.27(12)
 
 # Meson decay constants
 
-f_Bs: 0.2260(22)  # PDG/arXiv:1509.02220
-f_Ds: 0.2486(27)  # FLAG 2013 Nf=2+1
 f_rho0: 0.212(4)  # 1501.06569 table 1
 f_omega: 0.185(5)  # 1501.06569 table 1
 f_phi: 0.231(5)  # 1501.06569 table 1
@@ -72,8 +70,7 @@ a1_perp_rho+: 0
 # the "hatted" ones need to be divided by 1.517
 # (for B_q) and 1.369 (for K) to obtain the MSbar ones
 # (see also flavio.physics.mesonmixing.common.bag_msbar2rgi())
-bag_Bs_1: 0.876(40)  # =1.33(6) for Bhat. FLAG 2013 Nf=2+1
-bag_K0_1: 0.5571(71) # =0.7627(97) for Bhat. FLAG-3 preliminary Nf=2+1
+bag_K0_1: 0.5237(131)(117) # =0.717(18)(16) for Bhat. FLAG 2016 Nf=2+1+1
 
 # BSM operators
 bag_K0_2: 0.44(3)(1)   # 1505.06639 table 1; converted from 3->2 GeV by multpying with 0.96
