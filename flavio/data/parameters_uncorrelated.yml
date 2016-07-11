@@ -31,8 +31,8 @@ s2w: 0.23126(5)       # PDG 2014
 
 # CKM parameters
 
-Vus: 0.2249(8)
-Vub: 3.72(16)e-3
+Vus: 0.2243(10)   # FLAG 2016 Nf=2+1
+Vub: 3.62(14)e-3  # FLAG 2016 Nf=2+1 B->pilnu
 Vcb: 4.221(78)e-2
 gamma: 1.27(12)
 
