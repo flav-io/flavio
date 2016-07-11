@@ -135,3 +135,16 @@ c2_pi+lnu: 5.2(0.4)(0.01) # table 1 of 0707.4464
 c3_pi+lnu: -10.5(2.3)(0.53) # matching error inflated by factor 4!
 c4_pi+munu: 1.69(0.07)
 c2t_pi+lnu: 0
+
+# Parameters needed for K->pi form factors
+K->pi f+(0): 0.9677(27)            # FLAG 2016 Nf=2+1
+K->pi fT(0): 0.417(15)             # 1108.1021
+K->pi sT: 1.10(14)                 #  "
+K->pi delta_K+pi0: 0.029(4)        # 1005.2323
+K->pi ln(C): 0.1998(138)           #  "
+K->pi Lambda_+: 24.22(1.16) 1e-3   #  "
+K->pi D: 0.0209(21)                # 0903.1654 table 1
+K->pi d: 0.0398(44)                #  "
+K->pi k: 0.0045(4)                 #  "
+K->pi H1: (1.92 + 0.63 - 0.32) e-3 # 0903.1654 table 2
+K->pi H2: (2.63 + 0.28 - 0.15) e-4 #  "

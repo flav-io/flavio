@@ -62,6 +62,9 @@ implementation:
   B->D form factor: B->D BCL3-IW-t0max
   B->pi form factor: B->pi BCL4
 
+  # Kaon form factors
+  K->pi form factor: K->pi dispersive + pole
+
   # B->Vll non-factorizable spectator scattering corrections
   B0->K*0ll spectator scattering: B0->K*0ll QCDF interpolated
   B+->K*+ll spectator scattering: B+->K*+ll QCDF interpolated

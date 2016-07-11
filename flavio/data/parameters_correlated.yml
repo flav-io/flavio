@@ -350,3 +350,14 @@
     - C_BXlnu: 0.567(7)
     - BR(B->Xcenu)_exp: 0.1067(16)
   correlation: -0.10
+
+# Electromagnetic corrections in Kl3 decays
+# 1005.2323 table 1 & eq. 18
+-
+  values:
+    - K0e3 delta_EM: 0.495(110)1e-2
+    - K+e3 delta_EM: 0.050(125)1e-2
+    - K0mu3 delta_EM: 0.700(110)1e-2
+    - K+mu3 delta_EM: 0.008(125)1e-2
+  correlation:
+    [[1, 0.081, 0.685, -0.147], [1, -0.147, 0.764], [1, 0.081], [1]]

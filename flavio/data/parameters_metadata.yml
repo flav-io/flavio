@@ -667,3 +667,52 @@ c4_pi+munu:
 c2t_pi+lnu:
   tex: $\tilde{c}_2^{(\pi)}$
   description: Chiral perturbation theory coefficient in $\pi^+\to\ell^+\nu$
+
+# Parameters needed for K->pi form factors
+K->pi f+(0):
+  tex: $f_+(0)$
+  description: $K\to\pi$ form factor $f_+$ at $q^2=0$
+K->pi fT(0):
+  tex: $f_T(0)$
+  description: $K\to\pi$ form factor $f_T$ at $q^2=0$
+K->pi sT:
+  tex: $s_T$
+  description: Parameter in the pole parametrization of the $K\to\pi$ tensor form factor
+K->pi delta_K+pi0:
+  tex: $\delta_{SU(2)}^{K^+\pi^0}$
+  description: Isospin breaking parameter in $K\to \pi\ell\nu$ decays
+K->pi ln(C):
+  tex: $\ln C$
+  description: Parameter in the dispersive parametrization of the $K\to\pi$ form factors
+K->pi Lambda_+:
+  tex: $\Lambda_+$
+  description: Parameter in the dispersive parametrization of the $K\to\pi$ form factors
+K->pi k:
+  tex: $k$
+  description: Parameter in the dispersive parametrization of the $K\to\pi$ form factors
+K->pi d:
+  tex: $d$
+  description: Parameter in the dispersive parametrization of the $K\to\pi$ form factors
+K->pi D:
+  tex: $D$
+  description: Parameter in the dispersive parametrization of the $K\to\pi$ form factors
+K->pi H1:
+  tex: $H_1$
+  description: Parameter in the dispersive parametrization of the $K\to\pi$ form factors
+K->pi H2:
+  tex: $H_s$
+  description: Parameter in the dispersive parametrization of the $K\to\pi$ form factors
+
+# Electromagnetic corrections in Kl3 decays
+K0e3 delta_EM:
+  tex: $\delta_\text{em}^{K^0e}$
+  description: Relative electromagnetic correction to $K^0\to\pi^+ e^-\nu$ decay rate
+K+e3 delta_EM:
+  tex: $\delta_\text{em}^{K^+e}$
+  description: Relative electromagnetic correction to $K^+\to\pi^0 e^+\bar\nu$ decay rate
+K0mu3 delta_EM:
+  tex: $\delta_\text{em}^{K^0\mu}$
+  description: Relative electromagnetic correction to $K^0\to\pi^+ \mu^-\nu$ decay rate
+K+mu3 delta_EM:
+  tex: $\delta_\text{em}^{K^+\mu}$
+  description: Relative electromagnetic correction to $K^+\to\pi^0 \mu^+\bar\nu$ decay rate
