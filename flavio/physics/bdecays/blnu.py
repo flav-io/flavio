@@ -30,7 +30,7 @@ def br_blnu(wc_obj, par, lep):
     # Wilson coefficients
     wc = wc_obj.get_wc('bu' + lep + 'nu', scale, par)
     # add SM contribution to Wilson coefficient
-    wc['CV_bu'+lep+'nu'] += flavio.physics.bdecays.wilsoncoefficients.get_CVSM(par, 'bu', scale)
+    wc['CV_bu'+lep+'nu'] += flavio.physics.bdecays.wilsoncoefficients.get_CVSM(par, scale)
     return br_plnu_general(wc, par, Vub, 'B+', lep, delta=0)
 
 # function returning function needed for prediction instance

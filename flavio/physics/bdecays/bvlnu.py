@@ -37,11 +37,11 @@ def prefactor(q2, par, B, V, lep):
 
 def get_angularcoeff(q2, wc_obj, par, B, V, lep):
     scale = config['renormalization scale']['bvll']
-    wc = get_wceff_fccc(wc_obj, par, meson_quark[(B,V)], lep, scale)
+    mb = running.get_mb(par, scale)
+    wc = get_wceff_fccc(wc_obj, par, meson_quark[(B,V)], lep, mb, scale)
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mV = par['m_'+V]
-    mb = running.get_mb(par, scale)
     qi_qj = meson_quark[(B, V)]
     if qi_qj == 'bu':
         mlight = 0. # neglecting the up quark mass

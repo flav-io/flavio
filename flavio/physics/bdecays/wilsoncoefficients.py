@@ -148,32 +148,34 @@ def get_wceff_nunu(q2, wc, par, B, M, nu1, nu2, scale):
     c['tp'] = 0
     return c
 
-def get_CVSM(par, bq, scale):
-    r"""Get the Wilson coefficient of the operator $C_V$ in $b\to q\ell\nu$
-    in the SM."""
-    alpha_e = running.get_alpha(par, scale)['alpha_e']
-    # 1 (tree-level) + 1-loop EW correction a la Sirlin
-    return 1 + alpha_e/pi * log(par['m_Z']/scale)
+def get_CVSM(par, scale):
+    r"""Get the Wilson coefficient of the operator $C_V$ in $d_i\to d_j\ell\nu$
+    in the SM including EW corrections."""
+    if scale > 2: # for B physics
+        alpha_e = running.get_alpha(par, scale)['alpha_e']
+        return 1 + alpha_e/pi * log(par['m_Z']/scale)
+    else: # for K and pi physocs
+        # Marciano & Sirlin 1993
+        return 1.0232
 
-def get_wceff_fccc(wc_obj, par, bq, lep, scale):
-    r"""Get a dictionary with the effective $b\to(c,u)$ Wilson coefficients
+def get_wceff_fccc(wc_obj, par, qiqj, lep, mqi, scale):
+    r"""Get a dictionary with the $d_i\to d_j$ Wilson coefficients
     in the convention appropriate for the generalized angular distributions.
     """
-    bqlnu = bq + lep + 'nu'
-    wc = wc_obj.get_wc(bqlnu, scale, par)
-    mb = running.get_mb(par, scale)
-    c_sm = get_CVSM(par, bq, scale)
+    qqlnu = qiqj + lep + 'nu'
+    wc = wc_obj.get_wc(qqlnu, scale, par)
+    c_sm = get_CVSM(par, scale)
     c = {}
     c['7']  = 0
     c['7p'] = 0
-    c['v']  = (c_sm + wc['CV_'+bqlnu])/2.
-    c['vp'] = wc['CVp_'+bqlnu]/2.
-    c['a']  = -(c_sm + wc['CV_'+bqlnu])/2.
-    c['ap'] = -wc['CVp_'+bqlnu]/2.
-    c['s']  = 1/2 * mb * wc['CS_'+bqlnu]/2.
-    c['sp'] = 1/2 * mb * wc['CSp_'+bqlnu]/2.
-    c['p']  = -1/2 * mb * wc['CS_'+bqlnu]/2.
-    c['pp'] = -1/2 * mb * wc['CSp_'+bqlnu]/2.
-    c['t']  = wc['CT_'+bqlnu]
+    c['v']  = (c_sm + wc['CV_'+qqlnu])/2.
+    c['vp'] = wc['CVp_'+qqlnu]/2.
+    c['a']  = -(c_sm + wc['CV_'+qqlnu])/2.
+    c['ap'] = -wc['CVp_'+qqlnu]/2.
+    c['s']  = 1/2 * mqi * wc['CS_'+qqlnu]/2.
+    c['sp'] = 1/2 * mqi * wc['CSp_'+qqlnu]/2.
+    c['p']  = -1/2 * mqi * wc['CS_'+qqlnu]/2.
+    c['pp'] = -1/2 * mqi * wc['CSp_'+qqlnu]/2.
+    c['t']  = wc['CT_'+qqlnu]
     c['tp'] = 0
     return c

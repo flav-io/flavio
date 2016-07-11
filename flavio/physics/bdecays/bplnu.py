@@ -37,8 +37,8 @@ def get_angularcoeff(q2, wc_obj, par, B, P, lep):
     mB = par['m_'+B]
     mP = par['m_'+P]
     scale = config['renormalization scale']['bpll']
-    wc = get_wceff_fccc(wc_obj, par, meson_quark[(B,P)], lep, scale)
     mb = running.get_mb(par, scale)
+    wc = get_wceff_fccc(wc_obj, par, meson_quark[(B,P)], lep, mb, scale)
     N = prefactor(q2, par, B, P, lep)
     ff = get_ff(q2, par, B, P)
     qi_qj = meson_quark[(B, P)]
