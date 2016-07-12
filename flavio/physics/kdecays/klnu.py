@@ -64,20 +64,29 @@ def r_plnu_fct(P):
 
 # Observable and Prediction instances
 
-# Individual (e and mu) modes
 _tex = {'e': 'e', 'mu': '\mu'}
 _tex_p = {'K+': r'K^+', 'pi+': r'\pi^+',}
-for P in ['K+', 'pi+']:
-    for l in ['e', 'mu']:
-        _obs_name = "BR("+P+"->"+l+"nu)"
-        _obs = flavio.classes.Observable(_obs_name)
-        _obs.set_description(r"Branching ratio of $"+_tex_p[P]+r"\to "+_tex[l]+r"^+\nu_"+_tex[l]+r"(\gamma)$")
-        _obs.tex = r"$\text{BR}("+_tex_p[P]+r"\to "+_tex[l]+r"^+\nu_"+_tex[l]+r")$"
-        flavio.classes.Prediction(_obs_name, br_plnu_fct(P, l))
 
-    # e/mu ratios
-    _obs_name = "Remu("+P+"->lnu)"
+# K+->lnu
+for l in ['e', 'mu']:
+    # Individual (e and mu) modes
+    _obs_name = "BR(K+->"+l+"nu)"
     _obs = flavio.classes.Observable(_obs_name)
-    _obs.set_description(r"Ratio of branching ratios of $"+_tex_p[P]+r"\to e^+\nu_e$ and $"+_tex_p[P]+r"\to \mu^+\nu_\mu$")
-    _obs.tex = r"$R_{e\mu}("+_tex_p[P]+r"\to \ell^+\nu)$"
-    flavio.classes.Prediction(_obs_name, r_plnu_fct(P))
+    _obs.set_description(r"Branching ratio of $K^+\to "+_tex[l]+r"^+\nu_"+_tex[l]+r"(\gamma)$")
+    _obs.tex = r"$\text{BR}(K^+\to "+_tex[l]+r"^+\nu_"+_tex[l]+r")$"
+    flavio.classes.Prediction(_obs_name, br_plnu_fct('K+', l))
+
+# e/mu ratios
+_obs_name = "Remu(K+->lnu)"
+_obs = flavio.classes.Observable(_obs_name)
+_obs.set_description(r"Ratio of branching ratios of $K^+\to e^+\nu_e$ and $K^+\to \mu^+\nu_\mu$")
+_obs.tex = r"$R_{e\mu}(K^+\to \ell^+\nu)$"
+flavio.classes.Prediction(_obs_name, r_plnu_fct('K+'))
+
+# for the pion decay, we only need the branching ratio of pi->enu, as
+# pi->munu is 100%!
+_obs_name = "BR(pi+->enu)"
+_obs = flavio.classes.Observable(_obs_name)
+_obs.set_description(r"Branching ratio of $\pi^+\to e^+\nu_e(\gamma)$")
+_obs.tex = r"$\text{BR}(\pi^+\to e^+\nu)$"
+flavio.classes.Prediction(_obs_name, r_plnu_fct('pi+'))
