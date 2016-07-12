@@ -112,7 +112,12 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
       return np.random.multivariate_normal(self.central_value, self.covariance, size)
 
    def logpdf(self, x):
-       return scipy.stats.multivariate_normal.logpdf(x, self.central_value, self.covariance)
+       # to avoid ill-conditioned covariance matrices, all data are rescaled
+       # by the inverse variances
+       err = np.sqrt(np.diag(self.covariance))
+       scale_matrix = np.outer(err, err)
+       pdf_scaled = scipy.stats.multivariate_normal.logpdf(x/err, self.central_value/err, self.covariance/scale_matrix)
+       return pdf_scaled + math.log(np.linalg.det(self.covariance/scale_matrix)/np.linalg.det(self.covariance))/2.
 
 
 
