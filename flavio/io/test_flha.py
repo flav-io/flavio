@@ -24,5 +24,5 @@ class TestFLHA(unittest.TestCase):
             self.assertEqual(cm.output, ['WARNING:SLHA:CKM matrix parametrization is not set to "Wolfenstein". read_ckm will have no effect!'])
         self.assertEqual(par.get_central('laC'), 2.25649637E-01)
         self.assertEqual(par.get_central('A'), 8.04207424E-01)
-        self.assertEqual(par.get_central('rhob'), 1.94560639E-01)
-        self.assertEqual(par.get_central('etab'), 4.55377988E-01)
+        self.assertEqual(par.get_central('rhobar'), 1.94560639E-01)
+        self.assertEqual(par.get_central('etabar'), 4.55377988E-01)

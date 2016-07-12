@@ -121,8 +121,8 @@ def read_ckm(filename, par_constraints):
         try:
             par_constraints.set_constraint('laC', wc_flha[1])
             par_constraints.set_constraint('A', wc_flha[2])
-            par_constraints.set_constraint('rhob', wc_flha[3])
-            par_constraints.set_constraint('etab', wc_flha[4])
+            par_constraints.set_constraint('rhobar', wc_flha[3])
+            par_constraints.set_constraint('etabar', wc_flha[4])
         except KeyError:
             raise KeyError("One of the Wolfenstein parameters seems to be missing from the VCKMIN block")
     except KeyError:
