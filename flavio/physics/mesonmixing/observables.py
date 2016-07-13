@@ -53,19 +53,19 @@ def amplitude_Bspsiphi(par):
     xi_c = ckm.xi('c', 'bs')(par) # V_cb V_cs*
     return xi_c
 
-def S(wc_obj, par, meson, amplitude):
+def S(wc_obj, par, meson, amplitude, etaCP):
     M12, G12 = get_M12_G12(wc_obj, par, meson)
     qp = common.q_over_p(M12, G12)
     A = amplitude(par)
     A_bar = amplitude(conjugate_par(par))
-    xi = qp * A / A_bar
-    return 2*xi.imag / ( 1 + abs(xi)**2 )
+    xi = etaCP * qp * A / A_bar
+    return -2*xi.imag / ( 1 + abs(xi)**2 )
 
 def S_BJpsiK(wc_obj, par):
-    return S(wc_obj, par, 'B0', amplitude_BJpsiK)
+    return S(wc_obj, par, 'B0', amplitude_BJpsiK, etaCP=-1)
 
 def S_Bspsiphi(wc_obj, par):
-    return S(wc_obj, par, 'Bs', amplitude_Bspsiphi)
+    return S(wc_obj, par, 'Bs', amplitude_Bspsiphi, etaCP=+1)
 
 
 # Observable and Prediction instances
