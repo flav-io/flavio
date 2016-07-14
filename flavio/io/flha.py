@@ -21,6 +21,7 @@ def _prefactors_bsll(par, scale):
     pre_910 = pre_all * alpha_e/(4*pi)
     pre_7 =   pre_all /(16*pi**2)
     pre_8 =   pre_all /(16*pi**2)
+    pre_nu =  pre_all * alpha_e/(4*pi)
     return {
             'C7eff_bs': pre_7,
             'C7effp_bs': pre_7,
@@ -34,27 +35,39 @@ def _prefactors_bsll(par, scale):
             'C9p_bsmumu': pre_910,
             'C10_bsmumu': pre_910,
             'C10p_bsmumu': pre_910,
+            'CL_bsnuenue': pre_nu,
+            'CR_bsnuenue': pre_nu,
+            'CL_bsnumunumu': pre_nu,
+            'CR_bsnumunumu': pre_nu,
+            'CL_bsnutaunutau': pre_nu,
+            'CR_bsnutaunutau': pre_nu,
            }
 
 
 _flha_dict ={
-(30, 4422): 'C7eff_bs',
-(30, 4322): 'C7effp_bs',
-(30, 6421): 'C8eff_bs',
-(30, 6321): 'C8effp_bs',
-(305111, 4133): 'C9_bsee',
-(305111, 4233): 'C9p_bsee',
-(305111, 4137): 'C10_bsee',
-(305111, 4237): 'C10p_bsee',
-(305131, 4133): 'C9_bsmumu',
-(305131, 4233): 'C9p_bsmumu',
-(305131, 4137): 'C10_bsmumu',
-(305131, 4237): 'C10p_bsmumu',
- }
+(305, 4422): 'C7eff_bs',
+(305, 4322): 'C7effp_bs',
+(305, 6421): 'C8eff_bs',
+(305, 6321): 'C8effp_bs',
+(3051111, 4133): 'C9_bsee',
+(3051111, 4233): 'C9p_bsee',
+(3051111, 4137): 'C10_bsee',
+(3051111, 4237): 'C10p_bsee',
+(3051313, 4133): 'C9_bsmumu',
+(3051313, 4233): 'C9p_bsmumu',
+(3051313, 4137): 'C10_bsmumu',
+(3051313, 4237): 'C10p_bsmumu',
+(3051212, 4141): 'CL_bsnuenue',
+(3051212, 4241): 'CR_bsnuenue',
+(3051414, 4141): 'CL_bsnumunumu',
+(3051414, 4241): 'CR_bsnumunumu',
+(3051616, 4141): 'CL_bsnutaunutau',
+(3051616, 4241): 'CR_bsnutaunutau',
+}
 
 def read_wilson(filename):
     r"""Read new physics contributions to Wilson coefficients from an output file
-    in FLHA format produced by a SPheno module generated with SARAH 4.8.1+
+    in FLHA format produced by a SPheno module generated with SARAH 4.9.0+
     with FlavorKit.
 
     *Caution*: this function should not be used with FLHA files produced by any
