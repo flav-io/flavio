@@ -29,3 +29,4 @@ class TestBVgamma(unittest.TestCase):
         flavio.Observable.get_instance("ACP(Bs->phigamma)").prediction_central(par, wc)
         flavio.Observable.get_instance("S_phigamma").prediction_central(par, wc)
         flavio.Observable.get_instance("BR(Bs->phigamma)").prediction_central(par, wc)
+        flavio.Observable.get_instance("ADeltaGamma(Bs->phigamma)").prediction_central(par, wc)

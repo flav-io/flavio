@@ -168,6 +168,12 @@ _obs.set_description(r"Time-integrated branching ratio of $B_s\to \phi\gamma$")
 _obs.tex = r"$\overline{\text{BR}}(B_s\to \phi\gamma)$"
 Prediction(_obs_name, BVgamma_function(BR_timeint, 'Bs', 'phi'))
 
+_obs_name = "ADeltaGamma(Bs->phigamma)"
+_obs = Observable(_obs_name)
+_obs.set_description(r"Mass-eigenstate rate asymmetry in $B_s\to \phi\gamma$")
+_obs.tex = r"$A_{\Delta\Gamma}(B_s\to \phi\gamma)$"
+Prediction(_obs_name, BVgamma_function(A_DeltaGamma, 'Bs', 'phi'))
+
 _obs_name = "S_K*gamma"
 _obs = Observable(_obs_name)
 _obs.set_description(r"Mixing-induced CP asymmetry in $B^0\to K^{*0}\gamma$")
