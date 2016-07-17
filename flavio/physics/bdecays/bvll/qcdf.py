@@ -148,7 +148,7 @@ def t_para(q2, u, mq, par, B, V):
     EV = En_V(mB, mV, q2)
     ubar = 1 - u
     return ((2*mB)/(ubar * EV) * i1_bfs(q2, u, mq, mB)
-            + (ubar*mB + u*q2)/(ubar**2 * EV**2) * B0diffBFS(q2, u, mq, mB))
+            + (ubar*mB**2 + u*q2)/(ubar**2 * EV**2) * B0diffBFS(q2, u, mq, mB))
 
 def B0diffBFS(q2, u, mq, mB):
     ubar = 1 - u
