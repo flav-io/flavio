@@ -1,14 +1,18 @@
 import scipy
 import numpy as np
+import warnings
 
 def nintegrate(f, a, b, epsrel=0.01, **kwargs):
-    return scipy.integrate.quad(f, a, b, epsrel=epsrel, epsabs=0, **kwargs)[0]
+    with warnings.catch_warnings():
+        # ignore AccuracyWarning that is issued when an integral is zero
+        warnings.simplefilter("ignore")
+        return scipy.integrate.quadrature(f, a, b, rtol=epsrel, tol=0, vec_func=False, **kwargs)[0]
 
 def nintegrate_fast(f, a, b, N=5, **kwargs):
-    x = np.linspace(a,b,5)
+    x = np.linspace(a,b,N)
     y = np.array([f(X) for X in x])
     f_interp = scipy.interpolate.interp1d(x, y, kind='cubic')
-    x_fine = np.linspace(a,b,20)
+    x_fine = np.linspace(a,b,N*4)
     y_interp = np.array([f_interp(X) for X in x_fine])
     return np.trapz(y_interp, x=x_fine)
 
