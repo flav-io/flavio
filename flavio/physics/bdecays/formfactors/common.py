@@ -1,7 +1,9 @@
 from math import sqrt
 import numpy as np
+from flavio.config import config
+from functools import lru_cache
 
-
+@lru_cache(maxsize=config['settings']['cache size'])
 def z(mB, mM, q2, t0=None):
     r"""Form factor expansion parameter $z$.
 

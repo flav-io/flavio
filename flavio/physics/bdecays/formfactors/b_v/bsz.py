@@ -1,7 +1,10 @@
 from math import sqrt
 import numpy as np
 from flavio.physics.bdecays.formfactors.common import z
+from flavio.config import config
+from functools import lru_cache
 
+@lru_cache(maxsize=config['settings']['cache size'])
 def zs(mB, mV, q2, t0):
     zq2 = z(mB, mV, q2, t0)
     z0 = z(mB, mV, 0, t0)
