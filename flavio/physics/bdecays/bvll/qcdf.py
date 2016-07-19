@@ -37,19 +37,20 @@ def get_input(par, B, V, scale):
 
 # see eqs. (18), (50), (79) of hep-ph/0106067v2
 # and eqs. (47), (48) of hep-ph/0412400
-def T_para_minus_WA(q2, par, wc, B, V, scale):
+def Cq34(q2, par, wc, B, V, scale):
+    # this is -C_q^12 (for q=u) or C_q^34 - eps_u * C_q^12 (for q=d,s) of hep-ph/0412400
     mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
-    T_t = -eq * 4*mB/mb * (wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 12*wc['C5_'+qiqj] + 16*wc['C6_'+qiqj]))
+    T_t = -wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 12*wc['C5_'+qiqj] + 16*wc['C6_'+qiqj])
     # the (u) contribution depends on the flavour of the spectator quark:
     if q == 'u':
-        T_u = +eq * 4*mB/mb * 3*(wc['C2_'+qiqj])
+        T_u = -3*(wc['C2_'+qiqj])
     elif q == 'd' or q == 's':
         if V == 'omega':
-            T_u = +eq * 4*mB/mb * (4/3. * wc['C1_'+qiqj] + wc['C2_'+qiqj])
+            T_u = -(4/3. * wc['C1_'+qiqj] + wc['C2_'+qiqj])
             # there is also an additional contribution to T_t
             T_t = T_t + 6 * 2 * (wc['C3_'+qiqj] + 10*wc['C5_'+qiqj])
         elif V == 'rho0':
-            T_u = -eq * 4*mB/mb * (4/3. * wc['C1_'+qiqj] + wc['C2_'+qiqj])
+            T_u = +(4/3. * wc['C1_'+qiqj] + wc['C2_'+qiqj])
         elif V == 'K*0':
             T_u = 0
         elif V == 'phi':
@@ -57,6 +58,10 @@ def T_para_minus_WA(q2, par, wc, B, V, scale):
             # there is also an additional contribution to T_t
             T_t = T_t + 6 * (wc['C3_'+qiqj] + 10*wc['C5_'+qiqj])
     return T_t + eps_u * T_u
+
+def T_para_minus_WA(q2, par, wc, B, V, scale):
+    mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
+    return -eq * 4*mB/mb * Cq34(q2, par, wc, B, V, scale)
 
 
 # B->V, NLO spectator scattering

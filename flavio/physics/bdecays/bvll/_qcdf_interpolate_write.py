@@ -35,7 +35,7 @@ for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi')]: #, ('B0','rho0'), ('B+','
         for contribution_name, contribution_dict in contributions_dict.items():
             l = 'e'
             process = had[0] + '->' + had[1] # e.g. B0->K*0
-            print('Computing ' + process + ' (' + str(i+1) + '/' + str(2*3) + ')')
+            print('Computing ' + process + ', contribution: ' + contribution_name + ' (' + str(i+1) + '/' + str(2*3*4) + ')')
             # compute corrections for each q2 value
             scale = config['renormalization scale']['bvll']
             label = meson_quark[had] + l + l # e.g. bsee

@@ -19,7 +19,8 @@ from flavio.config import config
 # function needed for the QCD factorization implementation (see qcdf.py)
 def ha_qcdf_function(B, V):
     scale = config['renormalization scale']['bvll']
-    label = meson_quark[(B,V)] + 'll' # e.g. bsll
+    label = meson_quark[(B,V)] + 'ee' # the lepton flavour is irrelevant here
+                                      # as only dipole and 4-quark operators contribute!
     def function(wc_obj, par_dict, q2, cp_conjugate):
         par = par_dict.copy()
         if cp_conjugate:
@@ -33,7 +34,6 @@ def ha_qcdf_function(B, V):
 # ... and the same for the interpolated version (see qcdf_interpolate.py)
 def ha_qcdf_interpolate_function(B, V, contribution='all'):
     scale = config['renormalization scale']['bvll']
-    label = meson_quark[(B,V)] + 'll' # e.g. bsll
     def function(wc_obj, par_dict, q2, cp_conjugate):
         return flavio.physics.bdecays.bvll.qcdf_interpolate.helicity_amps_qcdf(q2, par_dict, B, V, cp_conjugate, contribution)
     return function
