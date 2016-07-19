@@ -64,6 +64,21 @@ def T_para_minus_WA(q2, par, wc, B, V, scale):
     return -eq * 4*mB/mb * Cq34(q2, par, wc, B, V, scale)
 
 
+# B->V, weak annihaltion at O(1/mb)
+
+# (51) of hep-ph/0412400
+
+def T_perp_WA_PowC_1(q2, par, wc, B, V, scale):
+    mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
+    # NB, the remaining prefactors are added below in the function T_perp
+    return -eq * 4/mb * (wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 3*wc['C5_'+qiqj] + 4*wc['C6_'+qiqj]))
+
+def T_perp_WA_PowC_2(q2, par, wc, B, V, scale):
+    mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
+    # NB, the remaining prefactors are added below in the function T_perp
+    return eq * 2/mb * Cq34(q2, par, wc, B, V, scale)
+
+
 # B->V, NLO spectator scattering
 
 # (23)-(26) of hep-ph/0106067v2
@@ -267,6 +282,7 @@ def T_perp(q2, par, wc, B, V, scale,
     EV = En_V(mB, mV, q2)
     fB = par['f_'+B]
     fVperp = par['f_perp_'+V]
+    fVpara = par['f_'+V]
     N = pi**2 / 3. * fB * fVperp / mB
     a1_perp = par['a1_perp_'+V]
     a2_perp = par['a2_perp_'+V]
@@ -281,12 +297,22 @@ def T_perp(q2, par, wc, B, V, scale,
         if include_QSS:
             T += T_perp_plus_QSS(q2, par, wc, B, V, u, scale)
         return N / lB_plus(par=par, B=B) * phiV_perp(u) * T
+    def T_powercorr_1(u):
+        T=0
+        if include_WA:
+            T += T_perp_WA_PowC_1(q2, par, wc, B, V, scale)
+        ubar = 1 - u
+        # cf. (51) of hep-ph/0412400
+        return N * phiV_perp(u)/(ubar+u*q2/mB**2) * T
     u_sing = (mB**2 - 4*mc**2)/(-q2 + mB**2)
     if u_sing < 1:
         points = [u_sing]
     else:
         points = None
-    T_tot = flavio.math.integrate.nintegrate_complex( lambda u: T_plus(u) + T_minus(u), 0, 1, points=points)
+    T_tot = flavio.math.integrate.nintegrate_complex( lambda u: T_plus(u) + T_minus(u) + T_powercorr_1(u), 0, 1, points=points)
+    if include_WA:
+    # cf. (51) of hep-ph/0412400
+        T_tot += N / lB_plus(par=par, B=B) * fVpara/fVperp * mV/(1-q2/mB**2) * T_perp_WA_PowC_2(q2, par, wc, B, V, scale)
     return T_tot
 
 
