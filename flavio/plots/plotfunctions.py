@@ -8,7 +8,23 @@ import scipy.interpolate
 import scipy.stats
 
 def error_budget_pie(err_dict, other_cutoff=0.03):
-    """Pie chart of an observable's error budget."""
+    """Pie chart of an observable's error budget.
+
+    Parameters:
+
+    - `err_dict`: Dictionary as return from `flavio.sm_error_budget`
+    - `other_cutoff`: If an individual error contribution divided by the total
+      error is smaller than this number, it is lumped under "other". Defaults
+      to 0.03.
+
+    Note that for uncorrelated parameters, the total uncertainty is the squared
+    sum of the individual uncertainties, so the relative size of the wedges does
+    not correspond to the relative contribution to the total uncertainty.
+
+    If the uncertainties of individual parameters are correlated, the total
+    uncertainty can be larger or smaller than the squared sum of the individual
+    uncertainties, so the representation can be misleading.
+    """
     err_tot = sum(err_dict.values())
     err_dict_sorted = OrderedDict(sorted(err_dict.items(), key=lambda t: -t[1]))
     labels = []
@@ -34,6 +50,15 @@ def find_confidence_interval(x, pdf, confidence_level):
     return pdf[pdf > x].sum() - confidence_level
 
 def density_contour(x, y, covariance_factor=None):
+    r"""A contour plot with 1 and 2 $\sigma$ contours of the density of points
+    (useful for MCMC analyses).
+
+    Parameters:
+
+    - `x`, `y`: lists or numpy arrays with the x and y coordinates of the points
+    - `covariance_factor`: optional, numerical factor to tweak the smoothness
+    of the contours
+    """
     xmin = min(x)
     ymin = min(y)
     xmax = max(x)
@@ -59,6 +84,8 @@ def density_contour(x, y, covariance_factor=None):
 
 
 def q2_plot_th_diff(obs_name, q2min, q2max, wc=None, q2steps=100, **kwargs):
+    r"""Plot the central theory prediction of a $q^2$-dependent observable
+    as a function of $q^2$."""
     obs = flavio.classes.Observable.get_instance(obs_name)
     if obs.arguments != ['q2']:
         raise ValueError(r"Only observables that depend on $q^2$ (and nothing else) are allowed")
@@ -74,6 +101,9 @@ def q2_plot_th_diff(obs_name, q2min, q2max, wc=None, q2steps=100, **kwargs):
     ax.plot(q2_arr, obs_arr, **kwargs)
 
 def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **kwargs):
+    r"""Plot the binned theory prediction with uncertainties of a
+    $q^2$-dependent observable as a function of $q^2$  (in the form of coloured
+    boxes)."""
     obs = flavio.classes.Observable.get_instance(obs_name)
     if obs.arguments != ['q2min', 'q2max']:
         raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
@@ -100,6 +130,8 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
         ax.add_patch(patches.Rectangle((q2min, central-err), q2max-q2min, 2*err,**kwargs))
 
 def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, **kwargs):
+    r"""Plot all existing experimental measurements of a $q^2$-dependent
+    observable as a function of $q^2$  (in the form of coloured crosses)."""
     obs = flavio.classes.Observable.get_instance(obs_name)
     if obs.arguments != ['q2min', 'q2max']:
         raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
@@ -124,6 +156,21 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, **kwargs):
 
 
 def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, col=None, contour_args={}, contourf_args={}):
+    r"""Plot coloured confidence contours (or bands) given a log likelihood
+    function.
+
+    Parameters:
+
+    - `log_likelihood`: function returning the logarithm of the likelihood.
+      Can e.g. be the method of the same name of a FastFit instance.
+    - `x_min`, `x_max`, `y_min`, `y_max`: plot boundaries
+    - `n_sigma`: plot confidence level corresponding to this number of standard
+      deviations (defaults to 1)
+    - `steps`: number of grid steps in each dimension (total computing time is
+      this number squared times the computing time of one `log_likelihood` call!)
+    - `col` (optional): number between 0 and 9 to choose the color of the plot
+      from a predefined palette
+    """
     ax = plt.gca()
     _x = np.linspace(x_min, x_max, steps)
     _y = np.linspace(y_min, y_max, steps)
@@ -153,6 +200,7 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, c
 
 
 def flavio_branding(x=0.8, y=0.94, version=True):
+    """Displays a little box containing 'flavio'"""
     props = dict(facecolor='white', alpha=0.4, lw=1.2)
     ax = plt.gca()
     text = r'\textsf{\textbf{flavio}}'
@@ -164,9 +212,9 @@ def flavio_box(x_min, x_max, y_min, y_max):
     ax = plt.gca()
     ax.add_patch(patches.Rectangle((x_min, y_min), x_max-x_min, y_max-y_min, facecolor='#ffffff', edgecolor='#666666', alpha=0.5, ls=':', lw=0.7))
 
-def smooth_density_histogram(data, N=20, plotargs={}, fillargs={}):
-    """A smooth (interpolated) density histogram. N (default: 20) is the number
-    of steps."""
+def smooth_histogram(data, N=20, plotargs={}, fillargs={}):
+    """A smooth (interpolated) histogram. N (default: 20) is the number of
+    steps."""
     y, binedges = np.histogram(data, bins=N)
     x = 0.5*(binedges[1:]+binedges[:-1])
     f = scipy.interpolate.interp1d(x, y, kind='cubic')
