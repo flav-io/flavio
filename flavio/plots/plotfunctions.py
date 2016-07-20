@@ -130,7 +130,7 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, c
     x, y = np.meshgrid(_x, _y)
     @np.vectorize
     def chi2_vect(x, y): # needed for evaluation on meshgrid
-        return -log_likelihood([x,y])/2
+        return -2*log_likelihood([x,y])
     z = chi2_vect(x, y)
     z = z - np.min(z) # subtract the best fit point (on the grid)
     if col is not None and isinstance(col, int):
