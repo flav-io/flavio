@@ -90,9 +90,9 @@
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
   values:
-    - B0->K*0 deltaC7p a_+ Re: 0 ± 0.002
-    - B+->K*+ deltaC7p a_+ Re: 0 ± 0.002
-    - Bs->phi deltaC7p a_+ Re: 0 ± 0.002
+    - B0->K*0 deltaC7p a_+ Re: 0 ± 0.004
+    - B+->K*+ deltaC7p a_+ Re: 0 ± 0.004
+    - Bs->phi deltaC7p a_+ Re: 0 ± 0.004
   correlation:
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
@@ -132,9 +132,9 @@
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
   values:
-    - B0->K*0 deltaC7p a_+ Im: 0 ± 0.002
-    - B+->K*+ deltaC7p a_+ Im: 0 ± 0.002
-    - Bs->phi deltaC7p a_+ Im: 0 ± 0.002
+    - B0->K*0 deltaC7p a_+ Im: 0 ± 0.004
+    - B+->K*+ deltaC7p a_+ Im: 0 ± 0.004
+    - Bs->phi deltaC7p a_+ Im: 0 ± 0.004
   correlation:
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
