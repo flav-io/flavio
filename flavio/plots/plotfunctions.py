@@ -122,16 +122,17 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, **kwargs):
                     kwargs['c'] = col
             ax.errorbar((q2max+q2min)/2., c, yerr=e, xerr=(q2max-q2min)/2, **kwargs)
 
-def band_plot(likelihood_fct, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, col=None, contour_args={}, contourf_args={}):
+
+def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, col=None, contour_args={}, contourf_args={}):
     ax = plt.gca()
     _x = np.linspace(x_min, x_max, steps)
     _y = np.linspace(y_min, y_max, steps)
     x, y = np.meshgrid(_x, _y)
     @np.vectorize
-    def f_vect(x, y): # needed for evaluation on meshgrid
-        return likelihood_fct([x,y])
-    z = f_vect(x, y)
-    z = z - np.max(z) # subtract the best fit point (on the grid)
+    def chi2_vect(x, y): # needed for evaluation on meshgrid
+        return -log_likelihood([x,y])/2
+    z = chi2_vect(x, y)
+    z = z - np.min(z) # subtract the best fit point (on the grid)
     if col is not None and isinstance(col, int):
         contourf_args['colors'] = [flavio.plots.colors.pastel[col]]
         contour_args['colors'] = [flavio.plots.colors.set1[col]]
@@ -147,8 +148,9 @@ def band_plot(likelihood_fct, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, c
     chi2_2dof = scipy.stats.chi2(2)
     cl_nsigma = chi2_1dof.cdf(n_sigma**2) # this is roughly 0.68 for n_sigma=1 etc.
     y_nsigma = chi2_2dof.ppf(cl_nsigma) # this is roughly 2.3 for n_sigma=1 etc.
-    ax.contourf(x, y, z, levels=[-y_nsigma, 0], **contourf_args)
-    ax.contour(x, y, z, levels=[-y_nsigma], **contour_args)
+    ax.contourf(x, y, z, levels=[0, y_nsigma], **contourf_args)
+    ax.contour(x, y, z, levels=[y_nsigma], **contour_args)
+
 
 def flavio_branding(x=0.8, y=0.94, version=True):
     props = dict(facecolor='white', alpha=0.4, lw=1.2)
