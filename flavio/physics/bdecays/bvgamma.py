@@ -131,7 +131,7 @@ def BR_timeint(wc_obj, par, B, V):
     A = A_DeltaGamma(wc_obj, par, B, V)
     BR0 = BR(wc_obj, par, B, V)
     y = par['DeltaGamma/Gamma_'+B]/2.
-    return (1 + A*y)/(1-y**2) * BR0
+    return (1 - A*y)/(1-y**2) * BR0
 
 def BVgamma_function(function, B, V):
     return lambda wc_obj, par: function(wc_obj, par, B, V)
