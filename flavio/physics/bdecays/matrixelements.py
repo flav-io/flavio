@@ -62,10 +62,10 @@ _f_val_17 = _f_array[:,3].reshape(11,11,51) + 1j*_f_array[:,4].reshape(11,11,51)
 _f_val_19 = _f_array[:,5].reshape(11,11,51) + 1j*_f_array[:,6].reshape(11,11,51)
 _f_val_27 = _f_array[:,7].reshape(11,11,51) + 1j*_f_array[:,8].reshape(11,11,51)
 _f_val_29 = _f_array[:,9].reshape(11,11,51) + 1j*_f_array[:,10].reshape(11,11,51)
-_F_17 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_17)
-_F_19 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_19)
-_F_27 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_27)
-_F_29 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_29)
+_F_17 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_17, bounds_error=False, fill_value=None)
+_F_19 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_19, bounds_error=False, fill_value=None)
+_F_27 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_27, bounds_error=False, fill_value=None)
+_F_29 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_29, bounds_error=False, fill_value=None)
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def F_17(muh, z, sh):
@@ -210,7 +210,7 @@ def Fu_29(q2, mb, mu):
 def delta_C7(par, wc, q2, scale, qiqj):
     alpha_s = running.get_alpha(par, scale)['alpha_s']
     mb = running.get_mb_pole(par)
-    mc = running.get_mc_pole(par)
+    mc = par['m_c BVgamma']
     xi_t = ckm.xi('t', qiqj)(par)
     xi_u = ckm.xi('u', qiqj)(par)
     muh = scale/mb

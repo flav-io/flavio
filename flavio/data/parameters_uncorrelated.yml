@@ -124,6 +124,10 @@ B->D IW a_T: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
 delta_BXsgamma: 0 ± 0.06557 # 5% + 3% + 3%
 delta_BXdgamma: 0 ± 0.06557 # 5% + 3% + 3%
 
+# charm quark mass entering alpha_s corrections to B->Vgamma.
+# Its uncertainty is due to the scheme ambiguity.
+m_c BVgamma: 1.5 +- 0.2
+
 # ChPT parameters needed for P->lnu decays
 c1_K+lnu: -1.98(50) # (116) of 0707.4464
 c2_K+lnu: 4.3(0.4)(0.01) # table 1 of 0707.4464

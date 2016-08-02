@@ -708,6 +708,11 @@ delta_BXdgamma:
   tex: $\delta_{bd\gamma}$
   description: Quantity parametrizing the remaining theory uncertainty due to higher orders, interpolation, and non-perturbative effects in $B\to X_d\gamma$. The relative uncertainty is $1+\delta$.
 
+# charm quark mass entering alpha_s corrections to B->Vgamma.
+m_c BVgamma:
+  tex: $m_c$
+  description: Charm quark mass entering $O(\alpha_s)$ corrections to matrix elements in exclusive radiative $B$ decays. Uncertainty contains scheme ambiguity at $O(\alpha_s)$.
+
 # ChPT parameters needed for P->lnu decays
 c1_K+lnu:
   tex: $c_1^{(K)}$
