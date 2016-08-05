@@ -1,4 +1,6 @@
-# flavio: flavour phenomenology in the Standard model and beyond
+<a href="https://travis-ci.org/flav-io/flavio">![Build Status](https://travis-ci.org/flav-io/flavio.svg?branch=master)</a>
+
+# flavio – flavour phenomenology in the Standard model and beyond
 
 flavio is a Python package to compute observables in flavour physics both in
 the Standard Model and in the presence of new physics encoded in Wilson
