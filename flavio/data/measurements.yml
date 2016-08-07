@@ -16,6 +16,13 @@ HFAG rad 2014:
     BR(B0->K*gamma): 43.3 ± 1.5 e-6
     BR(B->Xsgamma): 343 ± 21 ± 7 e-6
 
+HFAG acp 2016:
+  experiment: HFAG
+  inspire: Amhis:2012bh
+  url: http://www.slac.stanford.edu/xorg/hfag/rare/July2016/acp/OUTPUT/TABLES/acp.pdf
+  values:
+    ACP(B->Xgamma): 0.032 ± 0.034
+
 Belle phigamma 2014:
   experiment: Belle
   inspire: Dutta:2014sxo
