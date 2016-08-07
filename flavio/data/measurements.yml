@@ -14,7 +14,13 @@ HFAG rad 2014:
   values:
     BR(B+->K*gamma): 42.1 ± 1.8 e-6
     BR(B0->K*gamma): 43.3 ± 1.5 e-6
-    BR(B->Xsgamma): 343 ± 21 ± 7 e-6
+
+HFAG rad 2016:
+  experiment: HFAG
+  inspire: Amhis:2012bh
+  url: http://www.slac.stanford.edu/xorg/hfag/rare/July2016/radll/index.html
+  values:
+    BR(B->Xsgamma): 349 ± 19 e-6
 
 HFAG acp 2016:
   experiment: HFAG
