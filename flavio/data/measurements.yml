@@ -36,6 +36,11 @@ LHCb rad 2012:
     BR(Bs->phigamma): 3.5 ± 0.4 e-5
     ACP(B0->K*gamma): (0.8 ± 1.7 ± 0.9) e-2
 
+LHCb phigamma 2016:
+  experiment: LHCb
+  values:
+    ADeltaGamma(Bs->phigamma): -0.98 + 0.46 - 0.52 + 0.23 - 0.20
+
 HFAG osc summer 2015:
   experiment: HFAG
   inspire: Amhis:2012bh
