@@ -28,6 +28,7 @@ HFAG acp 2016:
   url: http://www.slac.stanford.edu/xorg/hfag/rare/July2016/acp/OUTPUT/TABLES/acp.pdf
   values:
     ACP(B->Xgamma): 0.032 ± 0.034
+    ACP(B0->K*gamma): -0.002 ± 0.015
 
 Belle phigamma 2014:
   experiment: Belle
@@ -40,7 +41,6 @@ LHCb rad 2012:
   inspire: Aaij:2012ita
   values:
     BR(Bs->phigamma): 3.5 ± 0.4 e-5
-    ACP(B0->K*gamma): (0.8 ± 1.7 ± 0.9) e-2
 
 LHCb phigamma 2016:
   experiment: LHCb
@@ -73,8 +73,6 @@ HFAG K*gamma summer 2015:
   url: http://www.slac.stanford.edu/xorg/hfag/triangle/summer2015/index.shtml
   values:
     S_K*gamma: -0.16 ± 0.22
-    ACP(B0->K*gamma): -0.04 ± 0.14
-  #to do: correlation: 0.06
 
 
 PDG kaon CPV:
