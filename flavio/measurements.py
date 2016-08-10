@@ -23,8 +23,6 @@ def _load(obj):
                     # arguments (like q^2)
                     args = Observable.get_instance(value_dict['name']).arguments
                     args_num = [value_dict[a] for a in args]
-                    constraints = constraints_from_string(value_dict['value'])
-
                     error_dict = errors_from_string(value_dict['value'])
                     central_value = error_dict['central_value']
                     squared_error = 0.
@@ -37,9 +35,15 @@ def _load(obj):
                     m.add_constraint([obs_tuple], probability.NormalDistribution(central_value, sqrt(squared_error)))
             else: # otherwise, 'values' is a dict just containing name: constraint_string
                 for obs, value in m_data['values'].items():
-                    constraints = constraints_from_string(value)
-                    for constraint in constraints:
-                        m.add_constraint([obs], constraint)
+                    error_dict = errors_from_string(value)
+                    central_value = error_dict['central_value']
+                    squared_error = 0.
+                    for sym_err in error_dict['symmetric_errors']:
+                        squared_error += sym_err**2
+                    for asym_err in error_dict['asymmetric_errors']:
+                        squared_error += asym_err[0]*asym_err[1]
+                    m.add_constraint([obs], probability.NormalDistribution(central_value, sqrt(squared_error)))
+
         else:
             observables = []
             central_values = []
@@ -83,8 +87,6 @@ def _load(obj):
                 # if it still isn't positive definite, give up.
                 assert np.all(np.linalg.eigvals(covariance) > 0), "The covariance matrix is not positive definite!" + str(covariance)
             m.add_constraint(observables, probability.MultivariateNormalDistribution(central_values, covariance))
-
-
 
 def _fix_correlation_matrix(corr, n_dim):
     """In the input file, the correlation matrix can be specified as a list
