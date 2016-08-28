@@ -8,8 +8,7 @@ coefficients of dimension-6 operators.
 
 ## Project status
 
-The project is currently in beta phase, so should not be used for published
-papers.
+The project is currently in beta phase, so should be used with reasonable caution.
 
 ## Contributors
 
