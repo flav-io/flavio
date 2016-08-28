@@ -1,4 +1,4 @@
-<a href="https://travis-ci.org/flav-io/flavio">![Build Status](https://travis-ci.org/flav-io/flavio.svg?branch=master)</a>
+<a href="https://travis-ci.org/flav-io/flavio">![Build Status](https://travis-ci.org/flav-io/flavio.svg?branch=master)</a> [![DOI](https://zenodo.org/badge/22356/flav-io/flavio.svg)](https://zenodo.org/badge/latestdoi/22356/flav-io/flavio)
 
 # flavio – flavour phenomenology in the Standard model and beyond
 
@@ -41,4 +41,4 @@ flavio is released under the MIT license.
 
 If you use flavio in a project, please cite:
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.59955.svg)](http://dx.doi.org/10.5281/zenodo.59955)
+[![DOI](https://zenodo.org/badge/22356/flav-io/flavio.svg)](https://zenodo.org/badge/latestdoi/22356/flav-io/flavio)
