@@ -50,7 +50,7 @@ class pypmcScan(object):
 
     @property
     def result(self):
-        return self.mc.history[:][self.find_burnin:]
+        return self.mc.samples[:][self.find_burnin:]
 
     def save_result(self, file):
         res = self.result
