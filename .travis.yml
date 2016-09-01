@@ -22,5 +22,8 @@ before_install:
 install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose
   - pip install flavio[plotting,sampling]
+  - pip install coveralls
 
-script: nosetests
+script: nosetests --with-coverage --cover-package=flavio
+
+after_success: coveralls
