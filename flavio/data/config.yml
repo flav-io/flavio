@@ -31,6 +31,9 @@ renormalization scale:
     # K decays
     kdecays: 2.  # K->pinunu
 
+    #  D decays
+    dll: 2.      # D->l nu
+
     # meson mixing
     Bs mixing: 4.2  # Bs-Bsbar mixing
     B0 mixing: 4.2  # B0-B0bar mixing

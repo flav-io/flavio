@@ -3,7 +3,7 @@ r"""Functions for $B\to\ell\nu$ decays."""
 import flavio
 from math import pi
 
-def br_plnu_general(wc, par, Vij, P, lep, delta=0):
+def br_plnu_general(wc, par, Vij, P, qiqj, lep, delta=0):
     r"""Branching ratio of general $P^+\to\ell^+\nu_\ell$ decay.
 
     `Vij` is the appropriate CKM matrix element.
@@ -16,7 +16,7 @@ def br_plnu_general(wc, par, Vij, P, lep, delta=0):
     tau = par['tau_'+P]
     f = par['f_'+P]
     # Wilson coefficient dependence
-    qqlnu = flavio.physics.bdecays.common.meson_quark[P] + lep + 'nu'
+    qqlnu = qiqj + lep + 'nu'
     rWC = (wc['CV_'+qqlnu] - wc['CVp_'+qqlnu]) + mP**2/ml * (wc['CS_'+qqlnu] - wc['CSp_'+qqlnu])
     N = tau * GF**2 * f**2 / (8*pi) * mP * ml**2  * (1 - ml**2/mP**2)**2
     return N * abs(Vij)**2 * abs(rWC)**2 * (1 + delta)
@@ -31,7 +31,7 @@ def br_blnu(wc_obj, par, lep):
     wc = wc_obj.get_wc('bu' + lep + 'nu', scale, par)
     # add SM contribution to Wilson coefficient
     wc['CV_bu'+lep+'nu'] += flavio.physics.bdecays.wilsoncoefficients.get_CVSM(par, scale, nf=5)
-    return br_plnu_general(wc, par, Vub, 'B+', lep, delta=0)
+    return br_plnu_general(wc, par, Vub, 'B+', 'bu', lep, delta=0)
 
 # function returning function needed for prediction instance
 def br_blnu_fct(lep):
