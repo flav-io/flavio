@@ -23,7 +23,7 @@ class TestKpilnu(unittest.TestCase):
         self.assertEqual(flavio.physics.kdecays.kpilnu.dBRdq2(1.5, wc_obj, par, 'KL', 'pi+', 'mu'), 0)
         self.assertEqual(flavio.physics.kdecays.kpilnu.dBRdq2(0.1, wc_obj, par, 'KL', 'pi+', 'tau'), 0)
         # compare central predictions to PDG values
-        self.assertAlmostEqual(flavio.sm_prediction('BR(KL->pienu)')*1e2/40.55, 1, delta=0.02)
-        self.assertAlmostEqual(flavio.sm_prediction('BR(K+->pienu)')*1e2/5.07, 1, delta=0.03)
+        self.assertAlmostEqual(flavio.sm_prediction('BR(KL->pienu)')*1e2/40.55, 1, delta=0.04)
+        self.assertAlmostEqual(flavio.sm_prediction('BR(K+->pienu)')*1e2/5.07, 1, delta=0.04)
         self.assertAlmostEqual(flavio.sm_prediction('BR(KL->pimunu)')*1e2/27.04, 1, delta=0.02)
         self.assertAlmostEqual(flavio.sm_prediction('BR(K+->pimunu)')*1e2/3.352, 1, delta=0.03)

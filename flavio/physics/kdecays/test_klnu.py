@@ -12,7 +12,7 @@ class TestKlnu(unittest.TestCase):
         # compare to the experimental values
         self.assertAlmostEqual(
             flavio.Observable.get_instance("BR(K+->enu)").prediction_central(constraints, wc_obj),
-            1.582e-5, delta=3*0.007e-5)
+            1.582e-5, delta=4*0.007e-5)
         self.assertAlmostEqual(
             flavio.Observable.get_instance("BR(K+->munu)").prediction_central(constraints, wc_obj),
             63.56e-2, delta=8*0.11e-2)

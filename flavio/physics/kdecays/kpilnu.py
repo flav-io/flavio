@@ -23,7 +23,7 @@ def get_angularcoeff(q2, wc_obj, par, K, P, lep):
     # renormalization scale is m_rho
     scale = par['m_rho0']
     ms = flavio.physics.running.running.get_ms(par, scale)
-    wc = flavio.physics.bdecays.wilsoncoefficients.get_wceff_fccc(wc_obj, par, 'su', lep, ms, scale)
+    wc = flavio.physics.bdecays.wilsoncoefficients.get_wceff_fccc(wc_obj, par, 'su', lep, ms, scale, nf=3)
     N = 4*GF/sqrt(2)*Vus
     ff = get_ff(q2, par, K)
     h = flavio.physics.bdecays.angular.helicity_amps_p(q2, mK, mP, ms, 0, ml, 0, ff, wc, N)

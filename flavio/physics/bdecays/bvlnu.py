@@ -38,7 +38,7 @@ def prefactor(q2, par, B, V, lep):
 def get_angularcoeff(q2, wc_obj, par, B, V, lep):
     scale = config['renormalization scale']['bvll']
     mb = running.get_mb(par, scale)
-    wc = get_wceff_fccc(wc_obj, par, meson_quark[(B,V)], lep, mb, scale)
+    wc = get_wceff_fccc(wc_obj, par, meson_quark[(B,V)], lep, mb, scale, nf=5)
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mV = par['m_'+V]

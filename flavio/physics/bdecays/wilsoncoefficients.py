@@ -148,23 +148,23 @@ def get_wceff_nunu(q2, wc, par, B, M, nu1, nu2, scale):
     c['tp'] = 0
     return c
 
-def get_CVSM(par, scale):
+def get_CVSM(par, scale, nf):
     r"""Get the Wilson coefficient of the operator $C_V$ in $d_i\to d_j\ell\nu$
     in the SM including EW corrections."""
-    if scale > 2: # for B physics
+    if nf >= 4: # for B and D physics
         alpha_e = running.get_alpha(par, scale)['alpha_e']
         return 1 + alpha_e/pi * log(par['m_Z']/scale)
-    else: # for K and pi physocs
+    else: # for K and pi physics
         # Marciano & Sirlin 1993
-        return 1.0232
+        return sqrt(1.0232)
 
-def get_wceff_fccc(wc_obj, par, qiqj, lep, mqi, scale):
+def get_wceff_fccc(wc_obj, par, qiqj, lep, mqi, scale, nf=5):
     r"""Get a dictionary with the $d_i\to d_j$ Wilson coefficients
     in the convention appropriate for the generalized angular distributions.
     """
     qqlnu = qiqj + lep + 'nu'
     wc = wc_obj.get_wc(qqlnu, scale, par)
-    c_sm = get_CVSM(par, scale)
+    c_sm = get_CVSM(par, scale, nf)
     c = {}
     c['7']  = 0
     c['7p'] = 0
