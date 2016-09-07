@@ -7,20 +7,7 @@ from io import StringIO
 import scipy.interpolate
 from flavio.physics.running import running
 from flavio.physics import ckm
-
-
-def lambda_K(a,b,c):
-    r"""Källén function $\lambda$.
-
-    $\lambda(a,b,c) = a^2 + b^2 + c^2 - 2 (ab + bc + ac)$
-    """
-    z = a**2 + b**2 + c**2 - 2*(a*b + b*c + a*c)
-    if z < 0:
-        # to avoid sqrt(-1e-16) type errors due to numerical inaccuracies
-        return 0
-    else:
-        return z
-
+from flavio.physics.common import lambda_K
 
 def beta_l(ml, q2):
     if q2 == 0:
