@@ -37,6 +37,9 @@ renormalization scale:
     #  D decays
     dll: 2.      # D->l nu
 
+    #  tau decays
+    taudecays: 1.8
+
     # meson mixing
     Bs mixing: 4.2  # Bs-Bsbar mixing
     B0 mixing: 4.2  # B0-B0bar mixing

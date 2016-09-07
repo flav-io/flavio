@@ -3,6 +3,7 @@
 from . import bdecays
 from . import kdecays
 from . import ddecays
+from . import taudecays
 from . import mesonmixing
 from . import edms
 from . import running
