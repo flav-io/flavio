@@ -768,7 +768,7 @@ B->K BCL a2_fT:
   tex: $a_2^{(T)}$
   description: BCL $B\to K$ form factor parametrization coefficient $a_2$ of $f_T$
 
-# Experimental data needed for the normalization of BR(B->Xqgamma)
+# Experimental data needed for the normalization of BR(B->Xqgamma) and BR(B->Xqll)
 C_BXlnu:
   tex: $C$
   description:
@@ -782,6 +782,13 @@ delta_BXsgamma:
 delta_BXdgamma:
   tex: $\delta_{bd\gamma}$
   description: Quantity parametrizing the remaining theory uncertainty due to higher orders, interpolation, and non-perturbative effects in $B\to X_d\gamma$. The relative uncertainty is $1+\delta$.
+# B->Xqll uncertainty parameters
+delta_BXsll:
+  tex: $\delta_{bsll}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\ell^+\ell^-$. The relative uncertainty is $1+\delta$.
+delta_BXdll:
+  tex: $\delta_{bdll}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\ell^+\ell^-$. The relative uncertainty is $1+\delta$.
 
 # charm quark mass entering alpha_s corrections to B->Vgamma.
 m_c BVgamma:

@@ -25,6 +25,7 @@ renormalization scale:
     bll: 4.8      # B->l+ l-, B->l nu
     bpll: 4.8     # B->P l+ l-, B->P l nu
     bvll: 4.8     # B->V l+ l-, B->V l nu
+    bxll: 2.5     # B->X l+ l-
     bvgamma: 4.8  # B->V gamma
     bxgamma: 2.  # B->X gamma
     lambdab: 4.8 # Lambdab->Lambda l+ l-

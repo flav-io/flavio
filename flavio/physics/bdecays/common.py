@@ -45,6 +45,8 @@ meson_quark = {
 ('B0','D*+'): 'bc',
 ('B+','D*0'): 'bc',
 ('Bs','phi'): 'bs',
+('B','Xs'): 'bs',
+('B','Xd'): 'bd',
 'Bs': 'bs',
 'B0': 'bs',
 'B+': 'bu',
