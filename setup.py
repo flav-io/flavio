@@ -26,6 +26,7 @@ setup(name='flavio',
                 'physics/data/arXiv-1503-05534v1/*',
                 'physics/data/arXiv-1503-05534v2/*',
                 'physics/data/arXiv-1501-00367v2/*',
+                'physics/data/arXiv-1602-01399v1/*',
                 'physics/data/pdg/*',
                 'physics/data/qcdf_interpolate/*',
                 ]

@@ -283,9 +283,9 @@ class AuxiliaryQuantity(NamedInstanceClass):
             raise KeyError("No implementation specified for auxiliary quantity " + self.name)
         return Implementation.get_instance(implementation_name)
 
-    def prediction_central(self, wc_obj, *args, **kwargs):
+    def prediction_central(self, constraints_obj, wc_obj, *args, **kwargs):
         implementation = self.get_implementation()
-        return implementation.get_central(wc_obj, *args, **kwargs)
+        return implementation.get_central(constraints_obj, wc_obj, *args, **kwargs)
 
     def prediction(self, par_dict, wc_obj, *args, **kwargs):
         implementation = self.get_implementation()
@@ -342,6 +342,10 @@ class Implementation(NamedInstanceClass):
 
     def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
         par_dict = constraints_obj.get_central_all()
+        return self.function(wc_obj, par_dict, *args, **kwargs)
+
+    def get_random(self, constraints_obj, wc_obj, *args, **kwargs):
+        par_dict = constraints_obj.get_random_all()
         return self.function(wc_obj, par_dict, *args, **kwargs)
 
     def get(self, par_dict, wc_obj, *args, **kwargs):
