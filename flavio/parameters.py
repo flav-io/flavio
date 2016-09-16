@@ -96,6 +96,7 @@ pdg_translate = {
     'f(0)(980)': 'f0',
     "eta'(958)": "eta'",
     'omega(782)': 'omega',
+    'Lambda(b)' : 'Lambdab',
     'Higgs' : 'h', # this is necessary for the 2013 data file
     'H' : 'h',
     }
