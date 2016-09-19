@@ -8,7 +8,7 @@ import warnings
 
 
 def helicity_amps(q2, mLb, mL, ff):
-    """$\Lambda_b\to \Lambda\ell^+\ell^-$ helicity amplitudes.
+    r"""$\Lambda_b\to \Lambda\ell^+\ell^-$ helicity amplitudes.
 
     See (3.12)-(3.15) of arXiv:1410.2115."""
     sp = (mLb + mL)**2 - q2
@@ -217,13 +217,13 @@ for l in ['e', 'mu', ]: # tau requires lepton mass dependence!
         # binned angular observables
         _obs_name = "<" + obs + ">(Lambdab->Lambda"+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-        _obs.set_description("Binned " + _observables[obs]['desc'] + r" in $\Lambda_b\to\Lambda" +_tex[l]+r"^+"+_tex[l]+"^-$")
-        _obs.tex = r"$\langle" + _observables[obs]['tex'] + "\rangle(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        _obs.set_description("Binned " + _observables[obs]['desc'] + r" in $\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-$")
+        _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
         Prediction(_obs_name, obs_int_ratio_func(_observables[obs]['func_num'], dGdq2, l))
 
         # differential angular observables
         _obs_name = obs + "(Lambdab->Lambda"+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2'])
-        _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $\Lambda_b\to\Lambda" +_tex[l]+r"^+"+_tex[l]+"^-$")
-        _obs.tex = r"$" + _observables[obs]['tex'] + "(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-$")
+        _obs.tex = r"$" + _observables[obs]['tex'] + r"(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
         Prediction(_obs_name, obs_ratio_func(_observables[obs]['func_num'], dGdq2, l))
