@@ -20,8 +20,8 @@ before_install:
   - sudo ln -s /run/shm /dev/shm
 
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy nose
-  - pip install flavio[sampling]
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose
+  - pip install flavio[sampling,plotting]
   - pip install coveralls
 
 script: nosetests --with-coverage --cover-package=flavio
