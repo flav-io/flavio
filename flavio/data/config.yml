@@ -27,6 +27,7 @@ renormalization scale:
     bvll: 4.8     # B->V l+ l-, B->V l nu
     bvgamma: 4.8  # B->V gamma
     bxgamma: 2.  # B->X gamma
+    lambdab: 4.8 # Lambdab->Lambda l+ l-
 
     # K decays
     kdecays: 2.  # K->pinunu
@@ -65,6 +66,9 @@ implementation:
   B->D form factor: B->D BCL3-IW-t0max
   B->pi form factor: B->pi BCL4
 
+  # Lambdab form factors
+  Lambdab->Lambda form factor: Lambdab->Lambda SSE3
+  
   # Kaon form factors
   K->pi form factor: K->pi dispersive + pole
 

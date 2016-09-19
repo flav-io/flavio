@@ -793,3 +793,9 @@ K0mu3 delta_EM:
 K+mu3 delta_EM:
   tex: $\delta_\text{em}^{K^+\mu}$
   description: Relative electromagnetic correction to $K^+\to\pi^0 \mu^+\bar\nu$ decay rate
+
+# Lambda decay parameters
+
+Lambda->ppi alpha_-:
+  tex: $\alpha_-$
+  description: $\Lambda\to p \pi^-$ decay parameter
