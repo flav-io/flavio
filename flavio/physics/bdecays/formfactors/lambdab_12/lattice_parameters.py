@@ -30,6 +30,14 @@ ffname_dict = {
  'htildepp': 'fT50', # htildepp means htilde+ and htildeperp
  }
 
+tex_a = {'a0': 'a_0', 'a1': 'a_1', 'a2': 'a_2', }
+tex_ff = {
+ 'fA0': r'f^A_0', 'fAperp': r'f^A_\perp', 'fAt': r'f^A_t',
+ 'fT0': r'f^T_0', 'fT50': r'f^{T5}_0', 'fT5perp': r'f^{T5}_\perp',
+ 'fTperp': r'f^T_\perp', 'fV0': r'f^V_0', 'fVperp': r'f^V_\perp',
+ 'fVt': r'f^V_t'
+ }
+
 def translate_parameters(name):
     """Function to translate the parameter names from the ones used in the
     data files (e.g. 'a0_fplus') to the ones used in flavio (e.g. 'a0_fV0')."""
@@ -50,6 +58,10 @@ def load_parameters(file_res, file_cov, process, constraints):
             p = Parameter.get_instance(parameter_name)
         except: # otherwise, create a new one
             p = Parameter(parameter_name)
+            _tex_a = tex_a[parameter_name.split(' ')[-1].split('_')[0]]
+            _tex_ff = tex_ff[parameter_name.split(' ')[-1].split('_')[-1]]
+            p.tex = r'$' + _tex_a + r'^{' + _tex_ff + r'}$'
+            p.description = r'SSE form factor parametrization coefficient $' + _tex_a + r'$ of $' + _tex_ff + r'$'
         else: # if parameter exists, remove existing constraints
             constraints.remove_constraints(parameter_name)
     constraints.add_constraint(parameter_names,
