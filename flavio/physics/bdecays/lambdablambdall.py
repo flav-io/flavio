@@ -134,6 +134,18 @@ def get_obs(function, q2, wc_obj, par, lep):
 def dGdq2(K):
     return 2*K['1ss'] + K['1cc']
 
+def FL_num(K):
+    return 2*K['1ss'] - K['1cc']
+
+def AFBl_num(K):
+    return (3/2.) * K['1c']
+
+def AFBh_num(K):
+    return K['2ss'] + K['2cc']/2.
+
+def AFBlh_num(K):
+    return (3/4.) * K['2c']
+
 def dbrdq2(q2, wc_obj, par, lep):
     tauLb = par['tau_Lambdab']
     return tauLb * get_obs(dGdq2, q2, wc_obj, par, lep)
@@ -142,6 +154,11 @@ def dbrdq2_int(q2min, q2max, wc_obj, par, lep):
     def obs(q2):
         return dbrdq2(q2, wc_obj, par, lep)
     return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
+
+def obs_int(function, q2min, q2max, wc_obj, par, lep):
+    def obs(q2):
+        return get_obs(function, q2, wc_obj, par, lep)
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max)
 
 # Functions returning functions needed for Prediction instances
 
@@ -155,21 +172,58 @@ def dbrdq2_func(lep):
         return dbrdq2(q2, wc_obj, par, lep)
     return fct
 
+def obs_ratio_func(func_num, func_den, lep):
+    def fct(wc_obj, par, q2):
+        num = get_obs(func_num, q2, wc_obj, par, lep)
+        if num == 0:
+            return 0
+        denom = get_obs(func_den, q2, wc_obj, par, lep)
+        return num/denom
+    return fct
+
+def obs_int_ratio_func(func_num, func_den, lep):
+    def fct(wc_obj, par, q2min, q2max):
+        num = obs_int(func_num, q2min, q2max, wc_obj, par, lep)
+        if num == 0:
+            return 0
+        denom = obs_int(func_den, q2min, q2max, wc_obj, par, lep)
+        return num/denom
+    return fct
+
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
-
+_observables = {
+'FL': {'func_num': FL_num, 'tex': r'F_L', 'desc': 'longitudinal polarization fraction'},
+'AFBl': {'func_num': AFBl_num, 'tex': r'A_\text{FB}^\ell', 'desc': 'leptonic forward-backward asymmetry'},
+'AFBh': {'func_num': AFBh_num, 'tex': r'A_\text{FB}^h', 'desc': 'hadronic forward-backward asymmetry'},
+'AFBlh': {'func_num': AFBlh_num, 'tex': r'A_\text{FB}^{\ell h}', 'desc': 'lepton-hadron forward-backward asymmetry'},
+}
 for l in ['e', 'mu', ]: # tau requires lepton mass dependence!
+    # binned branching ratio
+    _obs_name = "<dBR/dq2>(Lambdab->Lambda"+l+l+")"
+    _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+    _obs.set_description(r"Binned differential branching ratio of $\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-$")
+    _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
+    Prediction(_obs_name, dbrdq2_int_func(l))
 
-        # binned branching ratio
-        _obs_name = "<dBR/dq2>(Lambdab->Lambda"+l+l+")"
+    # differential branching ratio
+    _obs_name = "dBR/dq2(Lambdab->Lambda"+l+l+")"
+    _obs = Observable(name=_obs_name, arguments=['q2'])
+    _obs.set_description(r"Differential branching ratio of $\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-$")
+    _obs.tex = r"$\frac{d\text{BR}}{dq^2}(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
+    Prediction(_obs_name, dbrdq2_func(l))
+
+    for obs in _observables:
+        # binned angular observables
+        _obs_name = "<" + obs + ">(Lambdab->Lambda"+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-        _obs.set_description(r"Binned differential branching ratio of $\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-$")
-        _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
-        Prediction(_obs_name, dbrdq2_int_func(l))
+        _obs.set_description("Binned " + _observables[obs]['desc'] + r" in $\Lambda_b\to\Lambda" +_tex[l]+r"^+"+_tex[l]+"^-$")
+        _obs.tex = r"$\langle" + _observables[obs]['tex'] + "\rangle(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        Prediction(_obs_name, obs_int_ratio_func(_observables[obs]['func_num'], dGdq2, l))
 
-        # differential branching ratio
-        _obs_name = "dBR/dq2(Lambdab->Lambda"+l+l+")"
+        # differential angular observables
+        _obs_name = obs + "(Lambdab->Lambda"+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2'])
-        _obs.set_description(r"Differential branching ratio of $\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-$")
-        _obs.tex = r"$\frac{d\text{BR}}{dq^2}(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
-        Prediction(_obs_name, dbrdq2_func(l))
+        _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $\Lambda_b\to\Lambda" +_tex[l]+r"^+"+_tex[l]+"^-$")
+        _obs.tex = r"$" + _observables[obs]['tex'] + "(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        Prediction(_obs_name, obs_ratio_func(_observables[obs]['func_num'], dGdq2, l))
