@@ -65,14 +65,6 @@ def get_subleading(q2, wc_obj, par_dict, B, V, cp_conjugate):
     else:
         return {}
 
-# get subleading hadronic contribution at high q2
-def get_subleading_high(q2, wc_obj, par_dict, B, V, cp_conjugate):
-    if q2 < 14:
-        return {('0' ,'V'): 0,  ('pl' ,'V'): 0, ('mi' ,'V'): 0, }
-    sub_name = B+'->'+V + 'll subleading effects at high q2'
-    return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
-
-
 def helicity_amps(q2, wc_obj, par, B, V, lep):
     if q2 >= 8.7 and q2 < 14:
         warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
