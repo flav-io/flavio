@@ -34,6 +34,6 @@ setup(name='flavio',
       install_requires=['numpy', 'scipy>=0.14', 'setuptools>=3.3', 'pyyaml', 'mpmath'],
       extras_require={
             'testing': ['nose'],
-            'plotting': ['matplotlib'],
+            'plotting': ['matplotlib>=1.4'],
             'sampling': ['pypmc>=1.1', 'emcee']},
     )
