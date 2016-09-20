@@ -115,7 +115,7 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
         wc = flavio.WilsonCoefficients() # SM Wilson coefficients
         obs_dict = {bin_:flavio.np_prediction(obs_name, wc, *bin_) for bin_ in bin_list}
     ax = plt.gca()
-    for bin_, central_ in obs_dict.items():
+    for _i, (bin_, central_) in enumerate(obs_dict.items()):
         q2min, q2max = bin_
         err = obs_err_dict[bin_]
         if divide_binwidth:
@@ -127,6 +127,10 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
             kwargs['fc'] = flavio.plots.colors.pastel[3]
         if 'linewidth' not in kwargs and 'lw' not in kwargs:
             kwargs['lw'] = 0
+        if _i > 0:
+            # the label should only be set for one (i.e. the first)
+            # of the boxes, otherwise it will appear multiply in the legend
+            kwargs.pop('label', None)
         ax.add_patch(patches.Rectangle((q2min, central-err), q2max-q2min, 2*err,**kwargs))
 
 def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, **kwargs):
@@ -142,17 +146,25 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, **kwargs):
             continue
         central = m_obj.get_central_all()
         err = m_obj.get_1d_errors()
+        x = []
+        y = []
+        dx = []
+        dy = []
         for _, q2min, q2max in obs_name_list_binned:
             c = central[(obs_name, q2min, q2max)]
             if divide_binwidth:
                 c = c/(q2max-q2min)
             e = err[(obs_name, q2min, q2max)]
             ax=plt.gca()
-            if col_dict is not None:
-                if m_obj.experiment in col_dict:
-                    col = col_dict[m_obj.experiment]
-                    kwargs['c'] = col
-            ax.errorbar((q2max+q2min)/2., c, yerr=e, xerr=(q2max-q2min)/2, **kwargs)
+            x.append((q2max+q2min)/2.)
+            dx.append((q2max-q2min)/2)
+            y.append(c)
+            dy.append(e)
+        if col_dict is not None:
+            if m_obj.experiment in col_dict:
+                col = col_dict[m_obj.experiment]
+                kwargs['c'] = col
+        ax.errorbar(x, y, yerr=dy, xerr=dx, label=m_obj.experiment, fmt='.', **kwargs)
 
 
 def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, col=None, contour_args={}, contourf_args={}):
