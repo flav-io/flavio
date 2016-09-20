@@ -85,7 +85,19 @@ def density_contour(x, y, covariance_factor=None):
 
 def q2_plot_th_diff(obs_name, q2min, q2max, wc=None, q2steps=100, **kwargs):
     r"""Plot the central theory prediction of a $q^2$-dependent observable
-    as a function of $q^2$."""
+    as a function of $q^2$.
+
+    Parameters:
+
+    - `q2min`, `q2max`: minimum and maximum $q^2$ values in GeV^2
+    - `wc` (optional): `WilsonCoefficient` instance to define beyond-the-SM
+      Wilson coefficients
+    - `q2steps` (optional): number of $q^2$ steps. Defaults to 100. Less is
+      faster but less precise.
+
+    Additional keyword arguments are passed to the matplotlib plot function,
+    e.g. 'c' for colour.
+    """
     obs = flavio.classes.Observable.get_instance(obs_name)
     if obs.arguments != ['q2']:
         raise ValueError(r"Only observables that depend on $q^2$ (and nothing else) are allowed")
@@ -103,7 +115,26 @@ def q2_plot_th_diff(obs_name, q2min, q2max, wc=None, q2steps=100, **kwargs):
 def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **kwargs):
     r"""Plot the binned theory prediction with uncertainties of a
     $q^2$-dependent observable as a function of $q^2$  (in the form of coloured
-    boxes)."""
+    boxes).
+
+    Parameters:
+
+    - `bin_list`: a list of tuples containing bin boundaries
+    - `wc` (optional): `WilsonCoefficient` instance to define beyond-the-SM
+      Wilson coefficients
+    - `divide_binwidth` (optional): this should be set to True when comparing
+      integrated branching ratios from experiments with different bin widths
+      or to theory predictions for a differential branching ratio. It will
+      divide all values and uncertainties by the bin width (i.e. dimensionless
+      integrated BRs will be converted to integrated differential BRs with
+      dimensions of GeV$^{-2}$). Defaults to False.
+    - `N` (optional): number of random draws to determine the uncertainty.
+      Defaults to 50. Larger is slower but more precise. The relative
+      error of the theory uncertainty scales as $1/\sqrt{2N}$.
+
+    Additional keyword arguments are passed to the matplotlib add_patch function,
+    e.g. 'fc' for face colour.
+    """
     obs = flavio.classes.Observable.get_instance(obs_name)
     if obs.arguments != ['q2min', 'q2max']:
         raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
@@ -134,7 +165,25 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
 
 def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurements=None, **kwargs):
     r"""Plot all existing experimental measurements of a $q^2$-dependent
-    observable as a function of $q^2$  (in the form of coloured crosses)."""
+    observable as a function of $q^2$  (in the form of coloured crosses).
+
+    Parameters:
+
+    - `col_dict` (optional): a dictionary to assign colours to specific
+      experiments, e.g. `{'BaBar': 'b', 'Belle': 'r'}`
+    - `divide_binwidth` (optional): this should be set to True when comparing
+      integrated branching ratios from experiments with different bin widths
+      or to theory predictions for a differential branching ratio. It will
+      divide all values and uncertainties by the bin width (i.e. dimensionless
+      integrated BRs will be converted to integrated differential BRs with
+      dimensions of GeV$^{-2}$). Defaults to False.
+    - `include_measurements` (optional): a list of strings with measurement
+      names (see measurements.yml) to include in the plot. By default, all
+      existing measurements will be included.
+
+    Additional keyword arguments are passed to the matplotlib errorbar function,
+    e.g. 'c' for colour.
+    """
     obs = flavio.classes.Observable.get_instance(obs_name)
     if obs.arguments != ['q2min', 'q2max']:
         raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
