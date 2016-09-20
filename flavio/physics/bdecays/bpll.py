@@ -13,16 +13,12 @@ from flavio.physics.bdecays.wilsoncoefficients import get_wceff, get_wceff_lfv, 
 from flavio.classes import Observable, Prediction
 import warnings
 
-def prefactor(q2, par, B, P, l1, l2):
+def prefactor(q2, par, B, P):
     GF = par['GF']
-    ml1 = par['m_'+l1]
-    ml2 = par['m_'+l2]
     scale = config['renormalization scale']['bpll']
     alphaem = running.get_alpha(par, scale)['alpha_e']
     di_dj = meson_quark[(B,P)]
     xi_t = ckm.xi('t',di_dj)(par)
-    if q2 <= (ml1+ml2)**2:
-        return 0
     return 4*GF/sqrt(2)*xi_t*alphaem/(4*pi)
 
 # form factors
@@ -33,10 +29,10 @@ def get_ff(q2, par, B, P):
 # get subleading hadronic contribution
 def get_subleading(q2, wc_obj, par_dict, B, P, lep, cp_conjugate):
     if q2 <= 9:
-        sub_name = B+'->'+P+lep+lep + ' subleading effects at low q2'
+        sub_name = B+'->'+P + 'll subleading effects at low q2'
         return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
     elif q2 > 14:
-        sub_name = B+'->'+P+lep+lep + ' subleading effects at high q2'
+        sub_name = B+'->'+P + 'll subleading effects at high q2'
         return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
     else:
         return {}
@@ -64,7 +60,7 @@ def helicity_amps_ff(q2, wc_obj, par_dict, B, P, l1, l2, cp_conjugate):
     mB = par['m_'+B]
     mP = par['m_'+P]
     mb = running.get_mb(par, scale)
-    N = prefactor(q2, par, B, P, l1, l2)
+    N = prefactor(q2, par, B, P)
     ff = get_ff(q2, par, B, P)
     h = angular.helicity_amps_p(q2, mB, mP, mb, 0, ml1, ml2, ff, wc_eff, N)
     return h
