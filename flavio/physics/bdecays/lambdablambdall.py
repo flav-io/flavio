@@ -4,6 +4,7 @@ import flavio
 from math import sqrt,pi
 from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
 from flavio.classes import Observable, Prediction, AuxiliaryQuantity
+from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
 import warnings
 
 
@@ -99,8 +100,20 @@ def angular_coefficients(ta, alpha):
                               + ta['para1', 'L'] * ta['para0', 'L'].conj() ).imag
     return K
 
+def get_ff(q2, par):
+    ff_aux = AuxiliaryQuantity.get_instance('Lambdab->Lambda form factor')
+    return ff_aux.prediction(par_dict=par, wc_obj=None, q2=q2)
 
-def get_transverity_amps(q2, wc_obj, par_dict, lep, cp_conjugate):
+def prefactor(q2, par, scale):
+    xi_t = flavio.physics.ckm.xi('t','bs')(par)
+    alphaem = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
+    mLb = par['m_Lambdab']
+    mL = par['m_Lambda']
+    la_K = flavio.physics.bdecays.common.lambda_K(mLb**2, mL**2, q2)
+    return par['GF'] * xi_t * alphaem * sqrt(q2) * la_K**(1/4.) / sqrt(3 * 2 * mLb**3 * pi**5) / 32.
+
+
+def get_transverity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
     par = par_dict.copy()
     if cp_conjugate:
         par = conjugate_par(par)
@@ -108,17 +121,34 @@ def get_transverity_amps(q2, wc_obj, par_dict, lep, cp_conjugate):
     mLb = par['m_Lambdab']
     mL = par['m_Lambda']
     mb = flavio.physics.running.running.get_mb(par, scale)
-    ff_aux = AuxiliaryQuantity.get_instance('Lambdab->Lambda form factor')
-    ff = ff_aux.prediction(par_dict=par, wc_obj=None, q2=q2)
+    ff = get_ff(q2, par)
     wc = flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wc_obj, 'bs' + lep + lep, scale, par)
     wc_eff = flavio.physics.bdecays.wilsoncoefficients.get_wceff(q2, wc, par, 'Lambdab', 'Lambda', lep, scale)
     ha = helicity_amps(q2, mLb, mL, ff)
-    xi_t = flavio.physics.ckm.xi('t','bs')(par)
-    alphaem = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
-    la_K = flavio.physics.bdecays.common.lambda_K(mLb**2, mL**2, q2)
-    N = par['GF'] * xi_t * alphaem * sqrt(q2) * la_K**(1/4.) / sqrt(3 * 2 * mLb**3 * pi**5) / 32.
+    N = prefactor(q2, par, scale)
     ta_ff = transverity_amps(ha, q2, mLb, mL, mb, 0, wc_eff, N)
     return ta_ff
+
+
+# get subleading hadronic contribution at low q2
+def get_subleading(q2, wc_obj, par_dict, cp_conjugate):
+    if q2 <= 9:
+        sub_name = 'Lambdab->Lambdall subleading effects at low q2'
+        return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+    elif q2 > 14:
+        sub_name = 'Lambdab->Lambdall subleading effects at high q2'
+        return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+    else:
+        return {}
+
+def get_transverity_amps(q2, wc_obj, par, lep, cp_conjugate):
+    if q2 >= 8.7 and q2 < 14:
+        warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
+    return add_dict((
+        get_transverity_amps_ff(q2, wc_obj, par, lep, cp_conjugate),
+        get_subleading(q2, wc_obj, par, cp_conjugate)
+        ))
+
 
 def get_obs(function, q2, wc_obj, par, lep):
     ml = par['m_'+lep]

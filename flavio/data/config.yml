@@ -68,7 +68,7 @@ implementation:
 
   # Lambdab form factors
   Lambdab->Lambda form factor: Lambdab->Lambda SSE3
-  
+
   # Kaon form factors
   K->pi form factor: K->pi dispersive + pole
 
@@ -96,3 +96,7 @@ implementation:
   B+->K+ee subleading effects at high q2: B+->K+ee deltaC9 shift
   B+->K+mumu subleading effects at high q2: B+->K+mumu deltaC9 shift
   B+->K+tautau subleading effects at high q2: B+->K+tautau deltaC9 shift
+
+  # Lambdab->Lambdall subleading hadronic effects
+  Lambdab->Lambdall subleading effects at low q2: Lambdab->Lambdall deltaC7 polynomial
+  Lambdab->Lambdall subleading effects at high q2: Lambdab->Lambdall deltaC9 shift

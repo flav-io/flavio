@@ -155,3 +155,29 @@ K->pi H2: (2.63 + 0.28 - 0.15) e-4 #  "
 
 # Lambda decay parameters
 Lambda->ppi alpha_-: 0.642(13) # PDG
+
+# Parameters for subleading hadronic effects in Lambdab->Lambdall
+Lambdab->Lambda deltaC7 a_perp0 Re: 0 ± 0.1
+Lambdab->Lambda deltaC7 a_perp0 Im: 0 ± 0.1
+Lambdab->Lambda deltaC7 a_para0 Re: 0 ± 0.1
+Lambdab->Lambda deltaC7 a_para0 Im: 0 ± 0.1
+Lambdab->Lambda deltaC7 a_perp1 Re: 0 ± 0.03
+Lambdab->Lambda deltaC7 a_perp1 Im: 0 ± 0.03
+Lambdab->Lambda deltaC7 a_para1 Re: 0 ± 0.03
+Lambdab->Lambda deltaC7 a_para1 Im: 0 ± 0.03
+Lambdab->Lambda deltaC7 b_perp0 Re: 0 ± 0.05
+Lambdab->Lambda deltaC7 b_perp0 Im: 0 ± 0.05
+Lambdab->Lambda deltaC7 b_para0 Re: 0 ± 0.05
+Lambdab->Lambda deltaC7 b_para0 Im: 0 ± 0.05
+Lambdab->Lambda deltaC7 b_perp1 Re: 0 ± 0.02
+Lambdab->Lambda deltaC7 b_perp1 Im: 0 ± 0.02
+Lambdab->Lambda deltaC7 b_para1 Re: 0 ± 0.02
+Lambdab->Lambda deltaC7 b_para1 Im: 0 ± 0.02
+Lambdab->Lambda deltaC9 c_perp0 Re: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_perp0 Im: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_para0 Re: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_para0 Im: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_perp1 Re: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_perp1 Im: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_para1 Re: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_para1 Im: 0 ± 0.3

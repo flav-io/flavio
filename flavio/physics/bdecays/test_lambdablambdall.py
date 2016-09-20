@@ -32,3 +32,19 @@ class TestLambdabLambdall(unittest.TestCase):
         ass_sm(self, '<AFBh>(Lambdab->Lambdamumu)', 15, 20, -0.2710, 0.002)
         ass_sm(self, '<AFBlh>(Lambdab->Lambdamumu)', 4, 6, 0.021, 0.005)
         ass_sm(self, '<AFBlh>(Lambdab->Lambdamumu)', 15, 20, 0.1398, 0.002)
+
+    def test_lambdablambdall_subleading(self):
+        ta_high = flavio.classes.AuxiliaryQuantity(
+        'Lambdab->Lambdall subleading effects at high q2'
+        ).prediction_central(par_nominal, wc_sm, q2=15, cp_conjugate=False)
+        ta_low = flavio.classes.AuxiliaryQuantity(
+        'Lambdab->Lambdall subleading effects at low q2'
+        ).prediction_central(par_nominal, wc_sm, q2=1, cp_conjugate=False)
+        # check that the keys contain all the transversity amps
+        allamps = {('para0','L'), ('para1','L'), ('perp0','L'), ('perp1','L'),
+                   ('para0','R'), ('para1','R'), ('perp0','R'), ('perp1','R')}
+        self.assertEqual(set(ta_high.keys()), allamps)
+        self.assertEqual(set(ta_low.keys()), allamps)
+        # check that the central values are actually all zero
+        # self.assertEqual(set(ta_high.values()), {0})
+        # self.assertEqual(set(ta_low.values()), {0})

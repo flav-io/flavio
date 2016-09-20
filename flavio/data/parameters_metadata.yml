@@ -448,6 +448,81 @@ B+->K+ deltaC9 c Im:
   description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at low $q^2$
 
 
+# Parameters for subleading hadronic effects in Lambdab->Lambdall
+Lambdab->Lambda deltaC7 a_perp0 Re:
+  tex: $\text{Re}\,a^{\Delta_7}_{\perp_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 a_para0 Re:
+  tex: $\text{Re}\,a^{\Delta_7}_{\parallel_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 a_perp1 Re:
+  tex: $\text{Re}\,a^{\Delta_7}_{\perp_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 a_para1 Re:
+  tex: $\text{Re}\,a^{\Delta_7}_{\parallel_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 a_perp0 Im:
+  tex: $\text{Im}\,a^{\Delta_7}_{\perp_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 a_para0 Im:
+  tex: $\text{Im}\,a^{\Delta_7}_{\parallel_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 a_perp1 Im:
+  tex: $\text{Im}\,a^{\Delta_7}_{\perp_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 a_para1 Im:
+  tex: $\text{Im}\,a^{\Delta_7}_{\parallel_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 b_perp0 Re:
+  tex: $\text{Re}\,b^{\Delta_7}_{\perp_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 b_para0 Re:
+  tex: $\text{Re}\,b^{\Delta_7}_{\parallel_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 b_perp1 Re:
+  tex: $\text{Re}\,b^{\Delta_7}_{\perp_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 b_para1 Re:
+  tex: $\text{Re}\,b^{\Delta_7}_{\parallel_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 b_perp0 Im:
+  tex: $\text{Im}\,b^{\Delta_7}_{\perp_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 b_para0 Im:
+  tex: $\text{Im}\,b^{\Delta_7}_{\parallel_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 b_perp1 Im:
+  tex: $\text{Im}\,b^{\Delta_7}_{\perp_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC7 b_para1 Im:
+  tex: $\text{Im}\,b^{\Delta_7}_{\parallel_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC9 c_perp0 Re:
+  tex: $\text{Re}\,c^{\Delta_9}_{\perp_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC9 c_para0 Re:
+  tex: $\text{Re}\,c^{\Delta_9}_{\parallel_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC9 c_perp1 Re:
+  tex: $\text{Re}\,c^{\Delta_9}_{\perp_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC9 c_para1 Re:
+  tex: $\text{Re}\,c^{\Delta_9}_{\parallel_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC9 c_perp0 Im:
+  tex: $\text{Im}\,c^{\Delta_9}_{\perp_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC9 c_para0 Im:
+  tex: $\text{Im}\,c^{\Delta_9}_{\parallel_0}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC9 c_perp1 Im:
+  tex: $\text{Im}\,c^{\Delta_9}_{\perp_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+Lambdab->Lambda deltaC9 c_para1 Im:
+  tex: $\text{Im}\,c^{\Delta_9}_{\parallel_1}$
+  description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
+
+
 # Meson bag parameters
 
 # SM operator
