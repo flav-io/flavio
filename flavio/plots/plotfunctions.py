@@ -132,13 +132,15 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
             kwargs.pop('label', None)
         ax.add_patch(patches.Rectangle((q2min, central-err), q2max-q2min, 2*err,**kwargs))
 
-def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, **kwargs):
+def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurements=None, **kwargs):
     r"""Plot all existing experimental measurements of a $q^2$-dependent
     observable as a function of $q^2$  (in the form of coloured crosses)."""
     obs = flavio.classes.Observable.get_instance(obs_name)
     if obs.arguments != ['q2min', 'q2max']:
         raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
     for m_name, m_obj in flavio.Measurement.instances.items():
+        if include_measurements is not None and m_name not in include_measurements:
+            continue
         obs_name_list = m_obj.all_parameters
         obs_name_list_binned = [o for o in obs_name_list if isinstance(o, tuple) and o[0]==obs_name]
         if not obs_name_list_binned:
@@ -151,9 +153,10 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, **kwargs):
         dy = []
         for _, q2min, q2max in obs_name_list_binned:
             c = central[(obs_name, q2min, q2max)]
+            e = err[(obs_name, q2min, q2max)]
             if divide_binwidth:
                 c = c/(q2max-q2min)
-            e = err[(obs_name, q2min, q2max)]
+                e = e/(q2max-q2min)
             ax=plt.gca()
             x.append((q2max+q2min)/2.)
             dx.append((q2max-q2min)/2)
