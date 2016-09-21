@@ -1,6 +1,7 @@
 import unittest
 from .running import *
 import numpy as np
+import flavio
 
 par = {}
 par['alpha_s'] = 0.1185
@@ -23,6 +24,11 @@ par_pdg['m_b'] = 4.18
 par_noqed = par.copy()
 par_noqed['alpha_e'] = 0.
 
+# to compare to 1107.3100
+par_ks = par.copy()
+par_ks['m_c'] = 1.329
+par_ks['m_b'] = 4.183
+
 class TestRunning(unittest.TestCase):
 
     def test_runningcouplings(self):
@@ -41,4 +47,14 @@ class TestRunning(unittest.TestCase):
         np.testing.assert_almost_equal(get_mb_pole(par, nl=2)/4.78248, 1,decimal=2)
         np.testing.assert_almost_equal(get_mc_pole(par, nl=2)/1.68375, 1,decimal=2)
         np.testing.assert_almost_equal(get_mb_pole(par, nl=3)/4.92987, 1,decimal=2)
-        np.testing.assert_almost_equal(get_mc_pole(par, nl=3)/1.96099, 1,decimal=2)
+        # compare to 1107.3100
+        # KS -> MSbar conversion
+        self.assertAlmostEqual(
+            flavio.physics.running.masses.mKS2mMS(4.55, 4, get_alpha(par_ks, 4.55)['alpha_s'], Mu=1, nl=2),
+            4.20, delta=0.01)
+        self.assertAlmostEqual(
+            flavio.physics.running.masses.mKS2mMS(1.15, 3, get_alpha(par_ks, 1.15)['alpha_s'], Mu=1, nl=2),
+            1.329, delta=0.01)
+        # MSbar -> KS conversion
+        self.assertAlmostEqual(get_mb_KS(par_ks, 1.), 4.553, delta=0.01)
+        self.assertAlmostEqual(get_mc_KS(par_ks, 1.), 1.091, delta=0.07) # this is satisfied poorly!
