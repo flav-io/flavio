@@ -28,6 +28,7 @@ renormalization scale:
     bxll: 5     # B->X l+ l-
     bvgamma: 4.8  # B->V gamma
     bxgamma: 2.  # B->X gamma
+    bxlnu: 4.6  # B->X l nu
     lambdab: 4.8 # Lambdab->Lambda l+ l-
 
     # K decays

@@ -386,3 +386,17 @@
     - K+mu3 delta_EM: 0.008(125)1e-2
   correlation:
     [[1, 0.081, 0.685, -0.147], [1, -0.147, 0.764], [1, 0.081], [1]]
+
+# parameters needed for power corrections to B->Xlnu
+# (from the global semi-leptonic fit, arXiv:1411.6560)
+-
+  values:
+    - mu_pi^2: 0.465(68)
+    - rho_D^3: 0.170(38)
+    - mu_G^2: 0.332(62)
+    - rho_LS^3: -0.150(96)
+  correlation:
+    [[1, 0.711, -0.025, 0.041],
+     [1, -0.064, -0.154],
+     [1, -0.032],
+     [1]]

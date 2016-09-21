@@ -822,6 +822,20 @@ lambda_2:
   tex: $\lambda_2$
   description: Matrix element of $B$ meson magnetic moment operator
 
+# parameters needed for power corrections to B->Xlnu
+mu_pi^2:
+  tex: $\mu_\pi^2$
+  description:
+mu_G^2:
+  tex: $\mu_G^2$
+  description:
+rho_D^3:
+  tex: $\rho_D^3$
+  description:
+rho_LS^3:
+  tex: $\rho_LS^3$
+  description:
+
 # charm quark mass entering alpha_s corrections to B->Vgamma.
 m_c BVgamma:
   tex: $m_c$
