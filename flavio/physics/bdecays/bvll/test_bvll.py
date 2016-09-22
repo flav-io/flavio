@@ -31,6 +31,13 @@ class TestBVll(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=1)/5.7131974656129313e-8, 1, delta=delta)
         self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=6)/5.524478678779278e-8, 1, delta=delta)
         self.assertAlmostEqual(flavio.sm_prediction("dBR/dq2(B0->K*mumu)", q2=15)/7.412258847550239e-8, 1, delta=delta)
+        # direct CP asymmetry should be close to 0
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B0->K*mumu)", q2=1), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B0->K*mumu)", q2=6), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B0->K*mumu)", q2=17), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->K*mumu)", q2=1), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->K*mumu)", q2=6), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->K*mumu)", q2=17), 0, delta=0.01)
         # this is just a very rough comparison to the literature
         delta = 0.2
         self.assertAlmostEqual(flavio.sm_prediction("P1(B0->K*mumu)", q2=3), 0, delta=delta)

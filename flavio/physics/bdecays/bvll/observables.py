@@ -19,6 +19,9 @@ def dGdq2(J):
 def dGdq2_ave(J, J_bar):
     return ( dGdq2(J) + dGdq2(J_bar) )/2.
 
+def dGdq2_diff(J, J_bar):
+    return ( dGdq2(J) - dGdq2(J_bar) )/2.
+
 # denominator of S_i and A_i observables
 def SA_den(J, J_bar):
     return 2*dGdq2_ave(J, J_bar)
@@ -203,6 +206,7 @@ def bvll_pprime_int_func(func_num, B, V, lep):
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 _observables = {
+'ACP': {'func_num': dGdq2_diff, 'tex': r'A_\text{CP}', 'desc': 'Direct CP asymmetry'},
 'AFB': {'func_num': AFB_experiment_num, 'tex': r'A_\text{FB}', 'desc': 'forward-backward asymmetry'},
 'FL': {'func_num': FL_num, 'tex': r'F_L', 'desc': 'longitudinal polarization fraction'},
 'S3': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 3), 'tex': r'S_3', 'desc': 'CP-averaged angular observable'},
