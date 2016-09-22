@@ -1430,15 +1430,11 @@ LHCb B0->K*mumu BR 2016:
       q2min: 15.0
       q2max: 19.0
       value: 0.488 + 0.021 - 0.022 ± 0.008 ± 0.033 e-7
-    - name: BR(B0->K*mumu)
-      value: 1.036 + 0.018 - 0.017 ± 0.007 ± 0.070 e-6
 
 LHCb Bs->phimumu BR 2015:
   experiment: LHCb
   inspire: Aaij:2015esa
   values:
-    - name: BR(Bs->phimumu)
-      value: 7.97 + 0.45 - 0.43 ± 0.22 ± 0.23 ± 0.60 e-7
     - name: <dBR/dq2>(Bs->phimumu)
       q2min: 0.1
       q2max: 2.0
