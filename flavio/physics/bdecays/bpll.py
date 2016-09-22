@@ -113,6 +113,8 @@ def FH_num(J):
 
 def dGdq2_cpaverage(J, J_bar):
     return (dGdq2(J) + dGdq2(J_bar))/2.
+def dGdq2_cpdiff(J, J_bar):
+    return (dGdq2(J) - dGdq2(J_bar))/2.
 
 def AFB_cpaverage_num(J, J_bar):
     return (AFB_num(J) + AFB_num(J_bar))/2.
@@ -196,6 +198,7 @@ def bpll_obs_ratio_func(func_num, func_den, B, P, l1, l2):
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 _observables = {
+'ACP': {'func_num': dGdq2_cpdiff, 'tex': r'A_\text{CP}', 'desc': 'Direct CP asymmetry'},
 'AFB': {'func_num': AFB_cpaverage_num, 'tex': r'A_\text{FB}', 'desc': 'forward-backward asymmetry'},
 'FH': {'func_num': FH_cpaverage_num, 'tex': r'F_H', 'desc': 'flat term'},
 }

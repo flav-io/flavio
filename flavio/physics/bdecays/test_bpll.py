@@ -37,6 +37,13 @@ class TestBPll(unittest.TestCase):
         flavio.sm_prediction('dBR/dq2(B0->Kmumu)', q2=3)
         flavio.sm_prediction('AFB(B0->Kmumu)', q2=15)
         flavio.sm_prediction('FH(B+->Kmumu)', q2=21)
+        # direct CP asymmetry should be close to 0
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B0->Kmumu)", q2=1), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B0->Kmumu)", q2=6), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B0->Kmumu)", q2=17), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->Kmumu)", q2=1), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->Kmumu)", q2=6), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->Kmumu)", q2=17), 0, delta=0.01)
 
     def test_bpll_lfv(self):
         # rough numerical test for branching ratio at high q^2 to old code
