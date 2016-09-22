@@ -1386,9 +1386,455 @@ LHCb B+->K*mumu BR 2014:
       q2max: 19.0
       value:  39.5 + 8.0 - 7.3 ± 2.8 e-9
 
+LHCb B0->K*mumu BR 2016:
+  experiment: LHCb
+  inspire: Aaij:2016flj
+  values:
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 0.10
+      q2max: 0.98
+      value: 1.163 + 0.076 - 0.084 ± 0.033 ± 0.079 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 1.1
+      q2max: 2.5
+      value: 0.373 + 0.036 - 0.035 ± 0.011 ± 0.025 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 2.5
+      q2max: 4.0
+      value: 0.383 + 0.035 - 0.038 ± 0.010 ± 0.026 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 4.0
+      q2max: 6.0
+      value: 0.410 + 0.031 - 0.030 ± 0.011 ± 0.028 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 6.0
+      q2max: 8.0
+      value: 0.496 + 0.032 - 0.032 ± 0.012 ± 0.034 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: 0.558 + 0.036 - 0.036 ± 0.014 ± 0.038 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 15.0
+      q2max: 17.0
+      value: 0.611 + 0.031 - 0.042 ± 0.023 ± 0.042 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 17.0
+      q2max: 19.0
+      value: 0.385 + 0.029 - 0.024 ± 0.018 ± 0.026 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 1.1
+      q2max: 6.0
+      value: 0.392 + 0.020 - 0.019 ± 0.010 ± 0.027 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 15.0
+      q2max: 19.0
+      value: 0.488 + 0.021 - 0.022 ± 0.008 ± 0.033 e-7
+    - name: BR(B0->K*mumu)
+      value: 1.036 + 0.018 - 0.017 ± 0.007 ± 0.070 e-6
+
+LHCb Bs->phimumu BR 2015:
+  experiment: LHCb
+  inspire: Aaij:2015esa
+  values:
+    - name: BR(Bs->phimumu)
+      value: 7.97 + 0.45 - 0.43 ± 0.22 ± 0.23 ± 0.60 e-7
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 5.85 + 0.73 - 0.69  ± 0.14 ± 0.44 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 5.0
+      value: 2.56 + 0.42 - 0.39 ± 0.06 ± 0.19 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 5.0
+      q2max: 8.0
+      value: 3.21 + 0.44 - 0.42 ± 0.08 ± 0.24 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: 4.71 + 0.69 - 0.65 ± 0.15 ± 0.36 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 17.0
+      value: 4.52 + 0.57 - 0.54 ± 0.12 ± 0.34 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 17.0
+      q2max: 19.0
+      value: 3.96 + 0.57 - 0.54 ± 0.14 ± 0.30 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 2.58 + 0.33 - 0.31 ± 0.08 ± 0.19 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 19.0
+      value: 4.04 + 0.39 - 0.38 ± 0.13 ± 0.30 e-8
+
+LHCb Bs->phimumu 2015 0.1-2.0 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2015esa
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.20 + 0.08 - 0.09 ± 0.02
+    - name: <S3>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: -0.05 + 0.13 - 0.13 ± 0.01
+    - name: <S4>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.27 + 0.28 - 0.18 ± 0.01
+    - name: <A5>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: -0.02 + 0.13 - 0.13 ± 0.00
+    - name: <A6>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: -0.19 + 0.15 - 0.15 ± 0.01
+    - name: <S7>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.04 + 0.12 - 0.12 ± 0.00
+    - name: <A8>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.10 + 0.14 - 0.14 ± 0.00
+    - name: <A9>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.03 + 0.14 - 0.14 ± 0.01
+  correlation: [[1.00, 0.03, -0.15, 0.00, 0.02, 0.10, 0.03, 0.00],
+                [1.00, 0.04, 0.07, 0.00, 0.05, -0.18, -0.05],
+                [1.00, -0.13, -0.09, -0.19, 0.06, -0.09],
+                [1.00, 0.11, 0.06, -0.14, 0.10],
+                [1.00, 0.07, -0.03, -0.16],
+                [1.00, -0.30, 0.03],
+                [1.00, 0.06],
+                [1.00]]
+
+LHCb Bs->phimumu 2015 2.0-5.0 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2015esa
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 5.0
+      value: 0.68 + 0.16 - 0.13 ± 0.03
+    - name: <S3>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 5.0
+      value: -0.06 + 0.19 - 0.23 ± 0.01
+    - name: <S4>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 5.0
+      value: -0.47 + 0.30 - 0.44 ± 0.01
+    - name: <A5>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 5.0
+      value: 0.09 + 0.28 - 0.22 ± 0.01
+    - name: <A6>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 5.0
+      value: 0.09 + 0.20 - 0.19 ± 0.02
+    - name: <S7>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 5.0
+      value: -0.03 + 0.18 - 0.23 ± 0.01
+    - name: <A8>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 5.0
+      value: 0.19 + 0.26 - 0.21 ± 0.01
+    - name: <A9>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 5.0
+      value: -0.13 + 0.24 - 0.30 ± 0.01
+  correlation: [[1.00, -0.05, 0.27, 0.04, -0.09, 0.02, 0.02, -0.16],
+                [1.00, -0.23, -0.06, -0.05, 0.20, -0.11, 0.40],
+                [1.00, 0.11, 0.16, 0.14, -0.41, -0.33],
+                [1.00, -0.24, -0.31, 0.06, 0.08],
+                [1.00, -0.03, 0.05, 0.11],
+                [1.00, -0.05, -0.02],
+                [1.00, -0.16],
+                [1.00]]
+
+LHCb Bs->phimumu 2015 5.0-8.0 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2015esa
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 5.0
+      q2max: 8.0
+      value: 0.54 + 0.10 - 0.09 ± 0.02
+    - name: <S3>(Bs->phimumu)
+      q2min: 5.0
+      q2max: 8.0
+      value: -0.10 + 0.20 - 0.29 ± 0.01
+    - name: <S4>(Bs->phimumu)
+      q2min: 5.0
+      q2max: 8.0
+      value: -0.10 + 0.15 - 0.18 ± 0.01
+    - name: <A5>(Bs->phimumu)
+      q2min: 5.0
+      q2max: 8.0
+      value: 0.04 + 0.17 - 0.17 ± 0.01
+    - name: <A6>(Bs->phimumu)
+      q2min: 5.0
+      q2max: 8.0
+      value: -0.01 + 0.14 - 0.12 ± 0.01
+    - name: <S7>(Bs->phimumu)
+      q2min: 5.0
+      q2max: 8.0
+      value: 0.04 + 0.16 - 0.20 ± 0.01
+    - name: <A8>(Bs->phimumu)
+      q2min: 5.0
+      q2max: 8.0
+      value: -0.12 + 0.17 - 0.19 ± 0.01
+    - name: <A9>(Bs->phimumu)
+      q2min: 5.0
+      q2max: 8.0
+      value: -0.03 + 0.17 - 0.16 ± 0.01
+  correlation: [[1.00, -0.03, -0.01, 0.11, 0.01, 0.03, -0.07, 0.09],
+                [1.00, -0.03, -0.01, -0.02, -0.18, 0.00, 0.05],
+                [1.00, -0.05, -0.01, -0.03, 0.20, -0.08],
+                [1.00, 0.00, 0.14, -0.05, -0.16],
+                [1.00, 0.00, 0.05, -0.25],
+                [1.00, 0.04, -0.14],
+                [1.00, -0.04],
+                [1.00]]
+
+LHCb Bs->phimumu 2015 11.0-12.5 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2015esa
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: 0.29 + 0.11 - 0.11 ± 0.04
+    - name: <S3>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: -0.19 + 0.20 - 0.23 ± 0.01
+    - name: <S4>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: -0.47 + 0.21 - 0.29 ± 0.01
+    - name: <A5>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: 0.08 + 0.21 - 0.21 ± 0.01
+    - name: <A6>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: -0.16 + 0.16 - 0.18 ± 0.01
+    - name: <S7>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: 0.00 + 0.15 - 0.17 ± 0.01
+    - name: <A8>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: -0.01 + 0.15 - 0.15 ± 0.01
+    - name: <A9>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: -0.02 + 0.16 - 0.15 ± 0.01
+  correlation: [[1.00, 0.21, 0.11, 0.20, 0.06, 0.21, -0.05, 0.03],
+                [1.00, 0.02, 0.12, 0.18, 0.08, -0.02, 0.04],
+                [1.00, -0.11, -0.37, 0.26, -0.01, -0.09],
+                [1.00, -0.16, -0.07, 0.22, 0.04],
+                [1.00, -0.04, -0.11, 0.14],
+                [1.00, -0.36, 0.08],
+                [1.00, -0.23],
+                [1.00]]
+
+LHCb Bs->phimumu 2015 15.0-17.0 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2015esa
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 17.0
+      value: 0.23 + 0.09 - 0.08 ± 0.02
+    - name: <S3>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 17.0
+      value: -0.06 + 0.16 - 0.19 ± 0.01
+    - name: <S4>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 17.0
+      value: -0.03 + 0.15 - 0.15 ± 0.01
+    - name: <A5>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 17.0
+      value: 0.02 + 0.13 - 0.14 ± 0.01
+    - name: <A6>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 17.0
+      value: 0.01 + 0.12 - 0.17 ± 0.01
+    - name: <S7>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 17.0
+      value: 0.12 + 0.16 - 0.13 ± 0.01
+    - name: <A8>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 17.0
+      value: 0.08 + 0.16 - 0.18 ± 0.01
+    - name: <A9>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 17.0
+      value: 0.21 + 0.18 - 0.12 ± 0.01
+  correlation: [[1.00, -0.01, -0.01, 0.07, -0.05, 0.06, -0.06, -0.06],
+                [1.00, 0.03, -0.06, 0.11, -0.08, -0.06, 0.15],
+                [1.00, 0.01, -0.07, 0.04, 0.22, 0.04],
+                [1.00, -0.04, 0.14, 0.05, 0.01],
+                [1.00, 0.05, 0.01, -0.09],
+                [1.00, -0.03, 0.06],
+                [1.00, -0.11],
+                [1.00]]
+
+LHCb Bs->phimumu 2015 17.0-19.0 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2015esa
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 17.0
+      q2max: 19.0
+      value: 0.40 + 0.13 - 0.15 ± 0.02
+    - name: <S3>(Bs->phimumu)
+      q2min: 17.0
+      q2max: 19.0
+      value: -0.07 + 0.23 - 0.27 ± 0.02
+    - name: <S4>(Bs->phimumu)
+      q2min: 17.0
+      q2max: 19.0
+      value: -0.39 + 0.25 - 0.34 ± 0.02
+    - name: <A5>(Bs->phimumu)
+      q2min: 17.0
+      q2max: 19.0
+      value: 0.13 + 0.29 - 0.27 ± 0.01
+    - name: <A6>(Bs->phimumu)
+      q2min: 17.0
+      q2max: 19.0
+      value: -0.04 + 0.18 - 0.19 ± 0.01
+    - name: <S7>(Bs->phimumu)
+      q2min: 17.0
+      q2max: 19.0
+      value: 0.20 + 0.29 - 0.22 ± 0.01
+    - name: <A8>(Bs->phimumu)
+      q2min: 17.0
+      q2max: 19.0
+      value: -0.16 + 0.24 - 0.29 ± 0.01
+    - name: <A9>(Bs->phimumu)
+      q2min: 17.0
+      q2max: 19.0
+      value: -0.02 + 0.19 - 0.19 ± 0.01
+  correlation: [[1.00, -0.12, 0.08, -0.32, 0.06, -0.04, 0.15, -0.01],
+                [1.00, -0.04, 0.40, 0.16, 0.22, 0.00, 0.02],
+                [1.00, 0.25, 0.30, -0.13, 0.40, 0.14],
+                [1.00, -0.05, 0.16, -0.06, 0.28],
+                [1.00, -0.03, 0.19, -0.05],
+                [1.00, -0.02, 0.18],
+                [1.00, -0.02],
+                [1.00]]
+
+LHCb Bs->phimumu 2015 1.0-6.0 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2015esa
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.63 + 0.09 - 0.09 ± 0.03
+    - name: <S3>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: -0.02 + 0.12 - 0.13 ± 0.01
+    - name: <S4>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: -0.19 + 0.14 - 0.13 ± 0.01
+    - name: <A5>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.20 + 0.13 - 0.13 ± 0.00
+    - name: <A6>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.08 + 0.12 - 0.11 ± 0.01
+    - name: <S7>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: -0.03 + 0.14 - 0.14 ± 0.01
+    - name: <A8>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: -0.00 + 0.15 - 0.17 ± 0.00
+    - name: <A9>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: -0.01 + 0.13 - 0.13 ± 0.01
+  correlation: [[1.00, -0.02, 0.08, 0.08, -0.04, 0.07, 0.03, -0.05],
+                [1.00, -0.07, 0.13, -0.13, 0.10, -0.06, 0.12],
+                [1.00, 0.17, 0.10, -0.06, -0.01, -0.13],
+                [1.00, -0.14, -0.05, -0.05, 0.04],
+                [1.00, -0.04, -0.09, -0.06],
+                [1.00, 0.07, 0.04],
+                [1.00, -0.10],
+                [1.00]]
+
+LHCb Bs->phimumu 2015 15.0-19.0 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2015esa
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 19.0
+      value: 0.29 + 0.07 - 0.06 ± 0.02
+    - name: <S3>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 19.0
+      value: -0.09 + 0.11 - 0.12 ± 0.01
+    - name: <S4>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 19.0
+      value: -0.14 + 0.11 - 0.11 ± 0.01
+    - name: <A5>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 19.0
+      value: 0.11 + 0.10 - 0.10 ± 0.00
+    - name: <A6>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 19.0
+      value: 0.00 + 0.10 - 0.11 ± 0.01
+    - name: <S7>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 19.0
+      value: 0.13 + 0.11 - 0.11 ± 0.01
+    - name: <A8>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 19.0
+      value: 0.03 + 0.12 - 0.12 ± 0.00
+    - name: <A9>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 19.0
+      value: 0.12 + 0.11 - 0.09 ± 0.00
+  correlation: [[1.00, 0.01, -0.05, -0.03, 0.00, 0.07, -0.04, -0.08],
+                [1.00, -0.03, 0.16, 0.09, 0.05, 0.02, 0.07],
+                [1.00, 0.12, 0.03, 0.03, 0.24, 0.09],
+                [1.00, -0.09, 0.08, 0.04, 0.14],
+                [1.00, 0.05, 0.05, -0.11],
+                [1.00, 0.01, 0.10],
+                [1.00, -0.07],
+                [1.00]]
+
 LHCb B->K*ee 2013:
   experiment: LHCb
-  inspire:
+  inspire: Aaij:2015dea
   values:
     - name: <FL>(B0->K*ee)
       q2min: 0.002
@@ -1407,11 +1853,924 @@ LHCb B->K*ee 2013:
       q2max: 1.12
       value: 0.05 ± 0.09 ± 0.025 # P2 = 1/2 * ATRe
 
+LHCb B->Kee 2014:
+  experiment: LHCb
+  inspire: Aaij:2014ora
+  values:
+    - name: <Rmue>(B+->Kll)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.745 + 0.090 - 0.074 ± 0.036
+    - name: <dBR/dq2>(B+->Kee)
+      q2min: 1.0
+      q2max: 6.0
+      value: 1.56 + 0.19 - 0.15 + 0.06 - 0.04 e-7
+
+LHCb B->K*mumu 2013 0.1-2.0:
+  experiment: LHCb
+  inspire: Aaij:2013qta
+  values:
+    - name: <P4p>(B0->K*mumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.00 + 0.26 - 0.26 ± 0.03
+    - name: <P5p>(B0->K*mumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.45 + 0.19 - 0.22 ± 0.09
+    - name: <P6p>(B0->K*mumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: -0.24 + 0.19 - 0.22 ± 0.05
+    - name: <P8p>(B0->K*mumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: -0.06 + 0.28 - 0.28 ± 0.02
+    - name: <S4>(B0->K*mumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.00 + 0.12 - 0.12 ± 0.03
+    - name: <S5>(B0->K*mumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.22 + 0.09 - 0.10 ± 0.04
+    - name: <S7>(B0->K*mumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: -0.11 + 0.11 - 0.11 ± 0.03
+    - name: <S8>(B0->K*mumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: -0.03 + 0.13 - 0.12 ± 0.01
+
+LHCb B->K*mumu 2013 2.0-4.3:
+  experiment: LHCb
+  inspire: Aaij:2013qta
+  values:
+    - name: <P4p>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: -0.37 + 0.29 - 0.26 ± 0.08
+    - name: <P5p>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.29 + 0.39 - 0.38 ± 0.07
+    - name: <P6p>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.15 + 0.36 - 0.38 ± 0.05
+    - name: <P8p>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: -0.15 + 0.29 - 0.28 ± 0.07
+    - name: <S4>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: -0.14 + 0.13 - 0.12 ± 0.03
+    - name: <S5>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.11 + 0.14 - 0.13 ± 0.03
+    - name: <S7>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.06 + 0.15 - 0.15 ± 0.02
+    - name: <S8>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: -0.06 + 0.12 - 0.12 ± 0.02
+
+LHCb B->K*mumu 2013 4.3-8.68:
+  experiment: LHCb
+  inspire: Aaij:2013qta
+  values:
+    - name: <P4p>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: -0.59 + 0.15 - 0.12 ± 0.05
+    - name: <P5p>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: -0.19 + 0.16 - 0.16 ± 0.03
+    - name: <P6p>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: -0.04 + 0.15 - 0.15 ± 0.05
+    - name: <P8p>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 0.29 + 0.17 - 0.19 ± 0.03
+    - name: <S4>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: -0.29 + 0.06 - 0.06 ± 0.02
+    - name: <S5>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: -0.09 + 0.08 - 0.08 ± 0.01
+    - name: <S7>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: -0.02 + 0.07 - 0.08 ± 0.04
+    - name: <S8>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 0.15 + 0.08 - 0.08 ± 0.01
+
+LHCb B->K*mumu 2013 10.09-12.9:
+  experiment: LHCb
+  inspire: Aaij:2013qta
+  values:
+    - name: <P4p>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.9
+      value: -0.46 + 0.20 - 0.17 ± 0.03
+    - name: <P5p>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.9
+      value: -0.79 + 0.16 - 0.19 ± 0.19
+    - name: <P6p>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.9
+      value: -0.31 + 0.23 - 0.22 ± 0.05
+    - name: <P8p>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.9
+      value: -0.06 + 0.23 - 0.22 ± 0.02
+    - name: <S4>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.9
+      value: -0.23 + 0.09 - 0.08 ± 0.02
+    - name: <S5>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.9
+      value: -0.40 + 0.08 - 0.10 ± 0.10
+    - name: <S7>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.9
+      value: -0.16 + 0.11 - 0.12 ± 0.03
+    - name: <S8>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.9
+      value: -0.03 + 0.10 - 0.10 ± 0.01
+
+LHCb B->K*mumu 2013 14.18-16.0:
+  experiment: LHCb
+  inspire: Aaij:2013qta
+  values:
+    - name: <P4p>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.0
+      value: 0.09 + 0.35 - 0.27 ± 0.04
+    - name: <P5p>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.0
+      value: -0.79 + 0.20 - 0.13 ± 0.18
+    - name: <P6p>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.0
+      value: -0.18 + 0.25 - 0.24 ± 0.03
+    - name: <P8p>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.0
+      value: -0.20 + 0.30 - 0.25 ± 0.03
+    - name: <S4>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.0
+      value: 0.04 + 0.14 - 0.08 ± 0.01
+    - name: <S5>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.0
+      value: -0.38 + 0.10 - 0.09 ± 0.09
+    - name: <S7>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.0
+      value: -0.09 + 0.13 - 0.14 ± 0.01
+    - name: <S8>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.0
+      value: -0.10 + 0.13 - 0.12 ± 0.02
+
+LHCb B->K*mumu 2013 16.0-19.0:
+  experiment: LHCb
+  inspire: Aaij:2013qta
+  values:
+    - name: <P4p>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: -0.35 + 0.26 - 0.22 ± 0.03
+    - name: <P5p>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: -0.60 + 0.19 - 0.16 ± 0.09
+    - name: <P6p>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.31 + 0.38 - 0.37 ± 0.10
+    - name: <P8p>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.06 + 0.26 - 0.27 ± 0.03
+    - name: <S4>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: -0.17 + 0.11 - 0.09 ± 0.01
+    - name: <S5>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: -0.29 + 0.09 - 0.08 ± 0.04
+    - name: <S7>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.15 + 0.16 - 0.15 ± 0.03
+    - name: <S8>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.03 + 0.12 - 0.12 ± 0.02
+
+LHCb B->K*mumu 2013 1.0-6.0:
+  experiment: LHCb
+  inspire: Aaij:2013qta
+  values:
+    - name: <P4p>(B0->K*mumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: -0.29 + 0.18 - 0.16 ± 0.03
+    - name: <P5p>(B0->K*mumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.21 + 0.20 - 0.21 ± 0.03
+    - name: <P6p>(B0->K*mumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: -0.18 + 0.21 - 0.21 ± 0.03
+    - name: <P8p>(B0->K*mumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.23 + 0.18 - 0.19 ± 0.02
+
 ATLAS Bs->mumu 2016:
   experiment: ATLAS
   inspire: Aaboud:2016ire
   values:
     BR(Bs->mumu): (0.9 + 1.1 - 0.8)*1e-9
+
+LHCb B0->K*mumu BR 2013:
+  experiment: LHCb
+  inspire: Aaij:2013iag
+  values:
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.60 ± 0.06 ± 0.05 ± 0.04 + 0.00 - 0.05 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.30 ± 0.03 ± 0.03 ± 0.02 + 0.00 - 0.02 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 0.49 ± 0.04 ± 0.04 ± 0.03 + 0.00 - 0.04 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 0.43 ± 0.04 ± 0.04 ± 0.03 + 0.00 - 0.03 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.0
+      value: 0.56 ± 0.06 ± 0.04 ± 0.04 + 0.00 - 0.05 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.41 ± 0.04 ± 0.04 ± 0.03 + 0.00 - 0.03 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.34 ± 0.03 ± 0.04 ± 0.02 + 0.00 - 0.03 e-7
+
+LHCb B0->K*mumu 2013 0.10-2.00 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2013iag
+  values:
+    - name: <FL>(B0->K*mumu)
+      q2min: 0.10
+      q2max: 2.00
+      value: 0.37 + 0.10 - 0.09 + 0.04 - 0.03
+    - name: <AFB>(B0->K*mumu)
+      q2min: 0.10
+      q2max: 2.00
+      value: -0.02 + 0.12 - 0.12 + 0.01 - 0.01
+    - name: <S3>(B0->K*mumu)
+      q2min: 0.10
+      q2max: 2.00
+      value: -0.05 + 0.12 - 0.12 + 0.01 - 0.01
+    - name: <S9>(B0->K*mumu)
+      q2min: 0.10
+      q2max: 2.00
+      value: 0.06 + 0.12 - 0.12 + 0.01 - 0.01
+    - name: <A9>(B0->K*mumu)
+      q2min: 0.10
+      q2max: 2.00
+      value: 0.14 + 0.11 - 0.11 + 0.01 - 0.01
+
+LHCb B0->K*mumu 2013 2.00-4.30 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2013iag
+  values:
+    - name: <FL>(B0->K*mumu)
+      q2min: 2.00
+      q2max: 4.30
+      value: 0.74 + 0.10 - 0.09 + 0.02 - 0.03
+    - name: <AFB>(B0->K*mumu)
+      q2min: 2.00
+      q2max: 4.30
+      value: -0.20 + 0.08 - 0.08 + 0.01 - 0.01
+    - name: <S3>(B0->K*mumu)
+      q2min: 2.00
+      q2max: 4.30
+      value: -0.04 + 0.10 - 0.06 + 0.01 - 0.01
+    - name: <S9>(B0->K*mumu)
+      q2min: 2.00
+      q2max: 4.30
+      value: -0.03 + 0.11 - 0.04 + 0.01 - 0.01
+    - name: <A9>(B0->K*mumu)
+      q2min: 2.00
+      q2max: 4.30
+      value: 0.06 + 0.12 - 0.08 + 0.01 - 0.01
+
+LHCb B0->K*mumu 2013 4.30-8.68 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2013iag
+  values:
+    - name: <FL>(B0->K*mumu)
+      q2min: 4.30
+      q2max: 8.68
+      value: 0.57 + 0.07 - 0.07 + 0.03 - 0.03
+    - name: <AFB>(B0->K*mumu)
+      q2min: 4.30
+      q2max: 8.68
+      value: 0.16 + 0.06 - 0.05 + 0.01 - 0.01
+    - name: <S3>(B0->K*mumu)
+      q2min: 4.30
+      q2max: 8.68
+      value: 0.08 + 0.07 - 0.06 + 0.01 - 0.01
+    - name: <S9>(B0->K*mumu)
+      q2min: 4.30
+      q2max: 8.68
+      value: 0.01 + 0.07 - 0.08 + 0.01 - 0.01
+    - name: <A9>(B0->K*mumu)
+      q2min: 4.30
+      q2max: 8.68
+      value: -0.13 + 0.07 - 0.07 + 0.01 - 0.01
+
+LHCb B0->K*mumu 2013 10.09-12.86 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2013iag
+  values:
+    - name: <FL>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 0.48 + 0.08 - 0.09 + 0.03 - 0.03
+    - name: <AFB>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 0.28 + 0.07 - 0.06 + 0.02 - 0.02
+    - name: <S3>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: -0.16 + 0.11 - 0.07 + 0.01 - 0.01
+    - name: <S9>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: -0.01 + 0.10 - 0.11 + 0.01 - 0.01
+    - name: <A9>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 0.00 + 0.11 - 0.11 + 0.01 - 0.01
+
+LHCb B0->K*mumu 2013 14.18-16.00 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2013iag
+  values:
+    - name: <FL>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 0.33 + 0.08 - 0.07 + 0.02 - 0.03
+    - name: <AFB>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 0.51 + 0.07 - 0.05 + 0.02 - 0.02
+    - name: <S3>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 0.03 + 0.09 - 0.10 + 0.01 - 0.01
+    - name: <S9>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 0.00 + 0.09 - 0.08 + 0.01 - 0.01
+    - name: <A9>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: -0.06 + 0.11 - 0.08 + 0.01 - 0.01
+
+LHCb B0->K*mumu 2013 16.00-19.00 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2013iag
+  values:
+    - name: <FL>(B0->K*mumu)
+      q2min: 16:00
+      q2max: 19.00
+      value: 0.38 + 0.09 - 0.07 + 0.03 - 0.03
+    - name: <AFB>(B0->K*mumu)
+      q2min: 16:00
+      q2max: 19.00
+      value: 0.30 + 0.08 - 0.08 + 0.01 - 0.02
+    - name: <S3>(B0->K*mumu)
+      q2min: 16:00
+      q2max: 19.00
+      value: -0.22 + 0.10 - 0.09 + 0.02 - 0.01
+    - name: <S9>(B0->K*mumu)
+      q2min: 16:00
+      q2max: 19.00
+      value: 0.06 + 0.11 - 0.10 + 0.01 - 0.01
+    - name: <A9>(B0->K*mumu)
+      q2min: 16:00
+      q2max: 19.00
+      value: 0.00 + 0.11 - 0.10 + 0.01 - 0.01
+
+LHCb B0->K*mumu 2013 1.00-6.00 GeV^2:
+  experiment: LHCb
+  inspire: Aaij:2013iag
+  values:
+    - name: <FL>(B0->K*mumu)
+      q2min: 1.00
+      q2max: 6.00
+      value: 0.65 + 0.08 - 0.07 + 0.03 - 0.03
+    - name: <AFB>(B0->K*mumu)
+      q2min: 1.00
+      q2max: 6.00
+      value: -0.17 + 0.06 - 0.06 + 0.01 - 0.01
+    - name: <S3>(B0->K*mumu)
+      q2min: 1.00
+      q2max: 6.00
+      value: 0.03 + 0.07 - 0.07 + 0.01 - 0.01
+    - name: <S9>(B0->K*mumu)
+      q2min: 1.00
+      q2max: 6.00
+      value: 0.07 + 0.09 - 0.08 + 0.01 - 0.01
+    - name: <A9>(B0->K*mumu)
+      q2min: 1.00
+      q2max: 6.00
+      value: 0.03 + 0.08 - 0.08 + 0.01 - 0.01
+
+LHCb Bs->phimumu BR 2013:
+  experiment: LHCb
+  inspire: Aaij:2013aln
+  values:
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 4.72 + 1.09 - 0.98 ± 0.20 ± 0.47 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 2.30 + 0.79 - 0.69 ± 0.11 ± 0.23 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 3.15 + 0.58 - 0.53 ± 0.12 ± 0.31 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 10.09
+      q2max: 12.90
+      value: 4.26 + 0.81 - 0.75 ± 0.26 ± 0.43 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 4.17 + 1.04 - 0.93 ± 0.24 ± 0.42 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 3.52 + 0.76 - 0.70 ± 0.20 ± 0.35 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 2.27 + 0.50 - 0.46 ± 0.11 ± 0.23 e-8
+    - name: BR(Bs->phimumu)
+      value: 7.07 + 0.64 - 0.59 ± 0.17 ± 0.71 e-7
+
+LHCb Bs->phimumu FL 2013:
+  experiment: LHCb
+  inspire: Aaij:2013aln
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.37 + 0.19 - 0.17 ± 0.07
+    - name: <FL>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.53 + 0.25 - 0.23 ± 0.10
+    - name: <FL>(Bs->phimumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 0.81 + 0.11 - 0.13 ± 0.05
+    - name: <FL>(Bs->phimumu)
+      q2min: 10.09
+      q2max: 12.90
+      value: 0.33 + 0.14 - 0.12 ± 0.06
+    - name: <FL>(Bs->phimumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 0.34 + 0.18 - 0.17 ± 0.07
+    - name: <FL>(Bs->phimumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.16 + 0.17 - 0.10 ± 0.07
+    - name: <FL>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.56 + 0.17 - 0.16 ± 0.09
+
+LHCb Bs->phimumu S3 2013:
+  experiment: LHCb
+  inspire: Aaij:2013aln
+  values:
+    - name: <S3>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: -0.11 + 0.28 - 0.25 ± 0.05
+    - name: <S3>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: -0.97 + 0.53 - 0.03 ± 0.17
+    - name: <S3>(Bs->phimumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 0.25 + 0.21 - 0.24 ± 0.05
+    - name: <S3>(Bs->phimumu)
+      q2min: 10.09
+      q2max: 12.90
+      value: 0.24 + 0.27 - 0.25 ± 0.06
+    - name: <S3>(Bs->phimumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: -0.03 + 0.29 - 0.31 ± 0.06
+    - name: <S3>(Bs->phimumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.19 + 0.30 - 0.31 ± 0.05
+    - name: <S3>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: -0.21 + 0.24 - 0.22 ± 0.08
+
+LHCb Bs->phimumu A6 2013:
+  experiment: LHCb
+  inspire: Aaij:2013aln
+  values:
+    - name: <A6>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 0.04 + 0.27 - 0.32 ± 0.12
+    - name: <A6>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.47 + 0.39 - 0.42 ± 0.14
+    - name: <A6>(Bs->phimumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: -0.02 + 0.20 - 0.21 ± 0.10
+    - name: <A6>(Bs->phimumu)
+      q2min: 10.09
+      q2max: 12.90
+      value: -0.06 + 0.20 - 0.20 ± 0.08
+    - name: <A6>(Bs->phimumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: -0.06 + 0.30 - 0.30 ± 0.08
+    - name: <A6>(Bs->phimumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.26 + 0.22 - 0.24 ± 0.08
+    - name: <A6>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.20 + 0.29 - 0.27 ± 0.07
+
+LHCb Bs->phimumu A9 2013:
+  experiment: LHCb
+  inspire: Aaij:2013aln
+  values:
+    - name: <A9>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: -0.16 + 0.30 - 0.27 ± 0.09
+    - name: <A9>(Bs->phimumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: -0.40 + 0.52 - 0.35 ± 0.11
+    - name: <A9>(Bs->phimumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: -0.13 + 0.27 - 0.26 ± 0.10
+    - name: <A9>(Bs->phimumu)
+      q2min: 10.09
+      q2max: 12.90
+      value: 0.29 + 0.25 - 0.26 ± 0.10
+    - name: <A9>(Bs->phimumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 0.24 + 0.36 - 0.35 ± 0.12
+    - name: <A9>(Bs->phimumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.27 + 0.31 - 0.28 ± 0.11
+    - name: <A9>(Bs->phimumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: -0.30 + 0.30 - 0.29 ± 0.11
+
+LHCb B+->Kmumu BR 2012:
+  experiment: LHCb
+  inspire: Aaij:2012vr
+  values:
+    - name: <dBR/dq2>(B+->Kmumu)
+      q2min: 0.05
+      q2max: 2.0
+      value: 2.85 ± 0.27 ± 0.14 e-8
+    - name: <dBR/dq2>(B+->Kmumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 2.49 ± 0.23 ± 0.10 e-8
+    - name: <dBR/dq2>(B+->Kmumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 2.29 ± 0.16 ± 0.09 e-8
+    - name: <dBR/dq2>(B+->Kmumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 2.04 ± 0.18 ± 0.08 e-8
+    - name: <dBR/dq2>(B+->Kmumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 2.07 ± 0.20 ± 0.08 e-8
+    - name: <dBR/dq2>(B+->Kmumu)
+      q2min: 16.0
+      q2max: 18.0
+      value: 1.77 ± 0.18 ± 0.09 e-8
+    - name: <dBR/dq2>(B+->Kmumu)
+      q2min: 18.0
+      q2max: 22.0
+      value: 0.78 ± 0.10 ± 0.04 e-8
+    - name: <dBR/dq2>(B+->Kmumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 2.41 ± 0.17 ± 0.14 e-8
+    - name: BR(B+->Kmumu)
+      value: 4.36 ± 0.15 ± 0.18 e-7
+
+LHCb B+->Kmumu FH 2012:
+  experiment: LHCb
+  inspire: Aaij:2012vr
+  values:
+    - name: <FH>(B+->Kmumu)
+      q2min: 0.05
+      q2max: 2.0
+      value: 0.00 + 0.12 - 0.00 + 0.06 - 0.00
+    - name: <FH>(B+->Kmumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.14 + 0.16 - 0.10 + 0.04 - 0.02
+    - name: <FH>(B+->Kmumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 0.04 + 0.10 - 0.04 + 0.06 - 0.04
+    - name: <FH>(B+->Kmumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 0.11 + 0.20 - 0.08 + 0.02 - 0.01
+    - name: <FH>(B+->Kmumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 0.08 + 0.28 - 0.08 + 0.02 - 0.01
+    - name: <FH>(B+->Kmumu)
+      q2min: 16.0
+      q2max: 18.0
+      value: 0.18 + 0.22 - 0.14 + 0.01 - 0.04
+    - name: <FH>(B+->Kmumu)
+      q2min: 18.0
+      q2max: 22.0
+      value: 0.14 + 0.31 - 0.14 + 0.01 - 0.02
+    - name: <FH>(B+->Kmumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.05 + 0.08 - 0.05 + 0.04 - 0.02
+
+LHCb B+->Kmumu AFB 2012:
+  experiment: LHCb
+  inspire: Aaij:2012vr
+  values:
+    - name: <AFB>(B+->Kmumu)
+      q2min: 0.05
+      q2max: 2.0
+      value: 0.00 + 0.06 - 0.05 + 0.03 - 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.07 + 0.08 - 0.05 + 0.02 - 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: -0.02 + 0.03 - 0.05 + 0.03 - 0.03
+    - name: <AFB>(B+->Kmumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: -0.03 + 0.07 - 0.07 + 0.01 - 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: -0.01 + 0.12 - 0.06 + 0.01 - 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 16.0
+      q2max: 18.0
+      value: -0.09 + 0.07 - 0.09 + 0.02 - 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 18.0
+      q2max: 22.0
+      value: 0.02 + 0.11 - 0.11 + 0.01 - 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.02 + 0.05 - 0.03 + 0.02 - 0.01
+
+LHCb B0->K*mumu AFB 2011:
+  experiment: LHCb
+  inspire: Aaij:2011aa
+  values:
+    - name: <AFB>(B0->K*mumu)
+      q2min: 0.10
+      q2max: 2.0
+      value: -0.15 + 0.20 - 0.20 ± 0.06
+    - name: <AFB>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.05 + 0.16 - 0.20 ± 0.04
+    - name: <AFB>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 0.27 + 0.06 - 0.08 ± 0.02
+    - name: <AFB>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 0.27 + 0.11 - 0.13 ± 0.02
+    - name: <AFB>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 0.47 + 0.06 - 0.08 ± 0.03
+    - name: <AFB>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.16 + 0.11 - 0.13 ± 0.06
+    - name: <AFB>(B0->K*mumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: -0.06 + 0.13 - 0.14 ± 0.04
+
+LHCb B0->K*mumu FL 2011:
+  experiment: LHCb
+  inspire: Aaij:2011aa
+  values:
+    - name: <FL>(B0->K*mumu)
+      q2min: 0.10
+      q2max: 2.0
+      value: 0.00 + 0.13 - 0.00 ± 0.02
+    - name: <FL>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.77 + 0.15 - 0.15 ± 0.03
+    - name: <FL>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 0.60 + 0.06 - 0.07 ± 0.01
+    - name: <FL>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 0.41 + 0.11 - 0.11 ± 0.03
+    - name: <FL>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 0.37 + 0.09 - 0.09 ± 0.05
+    - name: <FL>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.26 + 0.10 - 0.08 ± 0.03
+    - name: <FL>(B0->K*mumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.55 + 0.10 - 0.10 ± 0.03
+
+LHCb B0->K*mumu BR 2011:
+  experiment: LHCb
+  inspire: Aaij:2011aa
+  values:
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 0.10
+      q2max: 2.0
+      value: 0.61 ± 0.12 ± 0.06 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.34 ± 0.09 ± 0.02 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 0.69 ± 0.08 ± 0.05 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 0.55 ± 0.09 ± 0.07 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 0.63 ± 0.11 ± 0.05 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 16.0
+      q2max: 19.0
+      value: 0.50 ± 0.08 ± 0.05 e-7
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.42 ± 0.06 ± 0.03 e-7
+
+LHCb B0->Kmumu BR 2012:
+  experiment: LHCb
+  inspire: Aaij:2012cq
+  values:
+    - name: <dBR/dq2>(B0->Kmumu)
+      q2min: 0.05
+      q2max: 2.0
+      value: 1.1 + 1.4 - 1.2 e-8
+    - name: <dBR/dq2>(B0->Kmumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.3 + 1.1 - 0.9 e-8
+    - name: <dBR/dq2>(B0->Kmumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 2.8 + 0.7 - 0.7 e-8
+    - name: <dBR/dq2>(B0->Kmumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 1.8 + 0.8 - 0.7 e-8
+    - name: <dBR/dq2>(B0->Kmumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 1.1 + 0.7 - 0.5 e-8
+    - name: <dBR/dq2>(B0->Kmumu)
+      q2min: 16.0
+      q2max: 23.0
+      value: 0.5 + 0.3 - 0.2 e-8
+    - name: <dBR/dq2>(B0->Kmumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 1.3 + 0.9 - 0.7 e-8
+    - name: BR(B0->Kmumu)
+      value: 0.31 + 0.07 - 0.06 e-6
+
+LHCb B+->Kmumu BR 2012:
+  experiment: LHCb
+  inspire: Aaij:2012cq
+  values:
+    - name: <dBR/dq2>(B+->K*mumu)
+      q2min: 0.05
+      q2max: 2.0
+      value: 7.0 + 3.1 - 3.0 e-8
+    - name: <dBR/dq2>(B+->K*mumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: 5.4 + 2.6 - 2.4 e-8
+    - name: <dBR/dq2>(B+->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 5.7 + 2.0 - 1.7 e-8
+    - name: <dBR/dq2>(B+->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 7.7 + 2.6 - 2.4 e-8
+    - name: <dBR/dq2>(B+->K*mumu)
+      q2min: 14.18
+      q2max: 16.00
+      value: 5.5 + 2.6 - 2.1 e-8
+    - name: <dBR/dq2>(B+->K*mumu)
+      q2min: 16.0
+      q2max: 19.3
+      value: 3.8 + 1.4 - 1.4 e-8
+    - name: <dBR/dq2>(B+->K*mumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 5.8 + 1.8 - 1.7 e-8
+    - name: BR(B+->K*mumu)
+      value: 1.16 ± 0.19 e-6
 
 PDG 2015:
   experiment: PDG
