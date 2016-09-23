@@ -157,7 +157,7 @@ def bpll_dbrdq2_tot_func(B, P, l1, l2):
         ml2 = par['m_'+l2]
         q2max = (mB-mP)**2
         q2min = (ml1+ml2)**2
-        return bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2)
+        return bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2)*(q2max-q2min)
     return fct
 
 
