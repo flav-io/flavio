@@ -24,3 +24,9 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(pdf_p_1.logpdf(1.55), -np.inf)
         self.assertAlmostEqual(pdf_n_1.logpdf(1.55), pdf_n_2.logpdf(1.55), delta=0.001)
         self.assertEqual(pdf_n_1.logpdf(1.99), -np.inf)
+
+    def test_limit(self):
+        p1 = flavio.statistics.probability.GaussianUpperLimit(1.78, 0.68268949)
+        p2 = flavio.statistics.probability.HalfNormalDistribution(0, 1.78)
+        self.assertAlmostEqual(p1.logpdf(0.237), p2.logpdf(0.237), delta=0.0001)
+        self.assertEqual(p2.logpdf(-1), -np.inf)

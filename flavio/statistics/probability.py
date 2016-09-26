@@ -116,6 +116,20 @@ class HalfNormalDistribution(ProbabilityDistribution):
        else:
            return math.log(2) + scipy.stats.norm.logpdf(x, self.central_value, abs(self.standard_deviation))
 
+
+class GaussianUpperLimit(HalfNormalDistribution):
+   def __init__(self, limit, confidence_level):
+      if confidence_level > 1 or confidence_level < 0:
+          raise ValueError("Confidence level should be between 0 und 1")
+      super().__init__(central_value=0,
+                       standard_deviation=self.get_standard_deviation(limit, confidence_level))
+      self.limit = limit
+      self.confidence_level = confidence_level
+
+   def get_standard_deviation(self, limit, confidence_level):
+       """Convert the confidence level into a Gaussian standard deviation"""
+       return limit*scipy.stats.norm.ppf(0.5+confidence_level/2.)
+
 class MultivariateNormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, covariance):
