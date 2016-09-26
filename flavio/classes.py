@@ -50,6 +50,11 @@ class NamedInstanceClass(object):
     def del_instance(cls, name):
         del cls.instances[name]
 
+    @classmethod
+    def clear_all(cls):
+        """Delete all instances."""
+        cls.instances = OrderedDict()
+
     def set_description(self, description):
         self.description = description
 
