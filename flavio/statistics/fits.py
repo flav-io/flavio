@@ -22,6 +22,7 @@ class Fit(flavio.NamedInstanceClass):
                  fit_wc_priors=None,
                  input_scale=160.,
                  exclude_measurements=None,
+                 include_measurements=None,
                 ):
         # some checks to make sure the input is sane
         for p in fit_parameters + nuisance_parameters:
@@ -36,6 +37,8 @@ class Fit(flavio.NamedInstanceClass):
                     flavio.classes.Observable.get_instance(obs)
             except:
                 raise ValueError("Observable " + str(obs) + " not found!")
+        if exclude_measurements is not None and include_measurements is not None:
+            raise ValueError("The options exclude_measurements and include_measurements must not be specified simultaneously")
         # check that no parameter appears as fit *and* nuisance parameter
         intersect = set(fit_parameters).intersection(nuisance_parameters)
         assert intersect == set(), "Parameters appearing as fit_parameters and nuisance_parameters: " + str(intersect)
@@ -52,6 +55,7 @@ class Fit(flavio.NamedInstanceClass):
         self.fit_parameters = fit_parameters
         self.nuisance_parameters = nuisance_parameters
         self.exclude_measurements = exclude_measurements
+        self.include_measurements = include_measurements
         self.fit_wc_names = fit_wc_names
         self.fit_wc_function = fit_wc_function
         self.fit_wc_priors = fit_wc_priors
@@ -101,10 +105,12 @@ class Fit(flavio.NamedInstanceClass):
             else:
                 # else, add measurement name to output list
                 all_measurements.append(m_name)
-        if self.exclude_measurements is None:
+        if self.exclude_measurements is None and self.include_measurements is None:
             return all_measurements
-        else:
+        elif self.exclude_measurements is not None:
             return list(set(all_measurements) - set(self.exclude_measurements))
+        elif self.include_measurements is not None:
+            return list(set(all_measurements) & set(self.include_measurements))
 
 
 
@@ -121,8 +127,10 @@ class BayesianFit(Fit):
     - `nuisance_parameters`: a list of string names of nuisance parameters. The existing
       constraints on the parameter will be taken as prior.
     - `observables`: a list of observable names to be included in the fit
-    - `exclude_measurements`: a list of measurement names not to be included in
-    the fit
+    - `exclude_measurements`: optional; a list of measurement names *not* to be included in
+    the fit. By default, all existing measurements are included.
+    - `include_measurements`: optional; a list of measurement names to be included in
+    the fit. By default, all existing measurements are included.
     - `fit_wc_names`: optional; a list of string names of arguments of the Wilson
       coefficient function below
     - `fit_wc_function`: optional; a function that has exactly the arguements listed

@@ -27,6 +27,11 @@ class TestClasses(unittest.TestCase):
             Fit('test_fit_1', par, [],  ['blabla'], ['test_obs'])
         def wc_fct(C):
             return {'CVLL_bsbs': C}
+        with self.assertRaises(ValueError):
+            # specify include_measurements and exclude_measurements simultaneously
+            Fit('test_fit_1', par, ['m_b'],  ['m_c'], ['test_obs'], ['C'], wc_fct,
+            include_measurements=['measurement of test_obs'],
+            exclude_measurements=['measurement of test_obs'])
         fit = Fit('test_fit_1', par, ['m_b'],  ['m_c'], ['test_obs'], ['C'], wc_fct)
         self.assertEqual(fit.fit_parameters, ['m_b'])
         self.assertEqual(fit.nuisance_parameters, ['m_c'])
