@@ -1,6 +1,13 @@
 import re
 from flavio.statistics.probability import *
 
+# for strings of the form '< 5.3e-8 @ 95% CL'
+_pattern_upperlimit = re.compile(r"^\s*<\s*([-+]?\d+\.?\d*)([eE][-+]?\d+)?\s*@\s*(\d+\.?\d*)\s*\%\s*C[\.\s]*L[\.\s]*$")
+# for strings of the form '1.67(3)(5) 1e-3'
+_pattern_brackets = re.compile(r"^\(?\s*(-?\d+\.?\d*)\s*((?:\(\s*\d+\.?\d*\s*\)\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
+# for strings of the form '(1.67 +- 0.3 +- 0.5) * 1e-3'
+_pattern_plusminus = re.compile(r"^\(?\s*(-?\d+\.?\d*)\s*((?:[+\-±\\pm]+\s*\d+\.?\d*\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
+
 def errors_from_string(constraint_string):
     """Convert a string like '1.67(3)(5)' or '1.67+-0.03+-0.05' to a dictionary
     of central values errors."""
@@ -17,13 +24,9 @@ def errors_from_string(constraint_string):
             return {'central_value': float(constraint_string)}
         except:
             pass
-    # for strings of the form '1.67(3)(5) 1e-3'
-    pattern_brackets = re.compile(r"^\(?\s*(-?\d+\.?\d*)\s*((?:\(\s*\d+\.?\d*\s*\)\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
-    # for strings of the form '(1.67 +- 0.3 +- 0.5) * 1e-3'
-    pattern_plusminus = re.compile(r"^\(?\s*(-?\d+\.?\d*)\s*((?:[+\-±\\pm]+\s*\d+\.?\d*\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
-    m = pattern_brackets.match(constraint_string)
+    m = _pattern_brackets.match(constraint_string)
     if m is None:
-        m = pattern_plusminus.match(constraint_string)
+        m = _pattern_plusminus.match(constraint_string)
     if m is None:
         raise ValueError("Constraint " + constraint_string + " not understood")
     # extracting the central value and overall power of 10
