@@ -101,6 +101,21 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
            r = 2*p_left/(p_left+p_right)
            return math.log(r) + scipy.stats.norm.logpdf(x, self.central_value, self.right_deviation)
 
+class HalfNormalDistribution(ProbabilityDistribution):
+
+   def __init__(self, central_value, standard_deviation):
+      super().__init__(central_value)
+      self.standard_deviation = standard_deviation
+
+   def get_random(self, size=None):
+      return self.central_value + np.sign(self.standard_deviation)*abs(np.random.normal(0, abs(self.standard_deviation), size))
+
+   def logpdf(self, x):
+       if np.sign(self.standard_deviation) * (x - self.central_value) < 0:
+           return -np.inf
+       else:
+           return math.log(2) + scipy.stats.norm.logpdf(x, self.central_value, abs(self.standard_deviation))
+
 class MultivariateNormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, covariance):
