@@ -43,7 +43,6 @@ def _load(obj):
                     for asym_err in error_dict['asymmetric_errors']:
                         squared_error += asym_err[0]*asym_err[1]
                     m.add_constraint([obs], probability.NormalDistribution(central_value, sqrt(squared_error)))
-
         else:
             observables = []
             central_values = []
@@ -87,6 +86,7 @@ def _load(obj):
                 # if it still isn't positive definite, give up.
                 assert np.all(np.linalg.eigvals(covariance) > 0), "The covariance matrix is not positive definite!" + str(covariance)
             m.add_constraint(observables, probability.MultivariateNormalDistribution(central_values, covariance))
+    return list(measurements.keys())
 
 def _fix_correlation_matrix(corr, n_dim):
     """In the input file, the correlation matrix can be specified as a list
@@ -127,9 +127,27 @@ def _fix_correlation_matrix(corr, n_dim):
     return corr_out
 
 
-def load(filename):
+def read_file(filename):
     """Read measurements from a YAML file."""
     with open(filename, 'r') as f:
-        _load(f)
+        return _load(f)
 
-_load(pkgutil.get_data('flavio', 'data/measurements.yml'))
+def read_url(url):
+    """Read measurements from a URL."""
+    try:
+        import requests
+    except:
+        raise ImportError("You need to install the python requests module to load measurements from a URL.")
+    res = requests.get(url)
+    return _load(res.text)
+
+# alias for function name prior to v0.13
+load = read_file
+
+def read_default():
+    """Read all measurements from `data/measurements.yml`.
+
+    This function is invoked once when the package is loaded."""
+    return _load(pkgutil.get_data('flavio', 'data/measurements.yml'))
+
+read_default()
