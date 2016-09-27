@@ -8,22 +8,10 @@ _pattern_brackets = re.compile(r"^\(?\s*(-?\d+\.?\d*)\s*((?:\(\s*\d+\.?\d*\s*\)\
 # for strings of the form '(1.67 +- 0.3 +- 0.5) * 1e-3'
 _pattern_plusminus = re.compile(r"^\(?\s*(-?\d+\.?\d*)\s*((?:[+\-±\\pm]+\s*\d+\.?\d*\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
 
+
 def errors_from_string(constraint_string):
     """Convert a string like '1.67(3)(5)' or '1.67+-0.03+-0.05' to a dictionary
     of central values errors."""
-    try:
-        float(constraint_string)
-        # if the string represents just a number, return a DeltaDistribution
-        return {'central_value': float(constraint_string)}
-    except ValueError:
-        # first of all, replace dashes (that can come from copy-and-pasting latex) by minuses
-        constraint_string = constraint_string.replace('−','-')
-        # try again if the number is a float now
-        try:
-            float(constraint_string)
-            return {'central_value': float(constraint_string)}
-        except:
-            pass
     m = _pattern_brackets.match(constraint_string)
     if m is None:
         m = _pattern_plusminus.match(constraint_string)
@@ -70,6 +58,17 @@ def errors_from_string(constraint_string):
             errors['asymmetric_errors'].append((right_err, left_err))
     return errors
 
+def limit_from_string(constraint_string):
+    m = _pattern_upperlimit.match(constraint_string)
+    if m is None:
+        raise ValueError("Constraint " + constraint_string + " not understood")
+    sg, ex, cl_pc = m.groups()
+    if ex is None:
+        limit = float(sg)
+    else:
+        limit = float(sg + ex)
+    cl = float(cl_pc)/100.
+    return limit, cl
 
 def errors_from_constraints(probability_distributions):
   """Return a string of the form 4.0±0.1±0.3 for the constraints on
@@ -103,12 +102,32 @@ def string_from_constraints(probability_distributions):
 def constraints_from_string(constraint_string):
     """Convert a string like '1.67(3)(5)' or '1.67+-0.03+-0.05' to a list
     of ProbabilityDistribution instances."""
-    errors = errors_from_string(constraint_string)
-    if 'symmetric_errors' not in errors and 'asymmetric_errors' not in errors:
-        return [DeltaDistribution(errors['central_value'])]
-    pd = []
-    for err in errors['symmetric_errors']:
-        pd.append(NormalDistribution(errors['central_value'], err))
-    for err_right, err_left in errors['asymmetric_errors']:
-        pd.append(AsymmetricNormalDistribution(errors['central_value'], err_right, err_left))
-    return pd
+    # first of all, replace dashes (that can come from copy-and-pasting latex) by minuses
+    try:
+        float(constraint_string)
+        # if the string represents just a number, return a DeltaDistribution
+        return [DeltaDistribution(float(constraint_string))]
+    except ValueError:
+        # first of all, replace dashes (that can come from copy-and-pasting latex) by minuses
+        constraint_string = constraint_string.replace('−','-')
+        # try again if the number is a float now
+        try:
+            float(constraint_string)
+            return {'central_value': float(constraint_string)}
+        except:
+            pass
+    if _pattern_upperlimit.match(constraint_string):
+        limit, cl = limit_from_string(constraint_string)
+        return [GaussianUpperLimit(limit, cl)]
+    elif _pattern_brackets.match(constraint_string) or _pattern_plusminus.match(constraint_string):
+        errors = errors_from_string(constraint_string)
+        if 'symmetric_errors' not in errors and 'asymmetric_errors' not in errors:
+            return [DeltaDistribution(errors['central_value'])]
+        pd = []
+        for err in errors['symmetric_errors']:
+            pd.append(NormalDistribution(errors['central_value'], err))
+        for err_right, err_left in errors['asymmetric_errors']:
+            pd.append(AsymmetricNormalDistribution(errors['central_value'], err_right, err_left))
+        return pd
+    else:
+        raise ValueError("Constraint " + constraint_string + " not understood")
