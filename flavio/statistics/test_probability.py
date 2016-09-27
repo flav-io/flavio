@@ -42,3 +42,16 @@ class TestProbability(unittest.TestCase):
         self.assertAlmostEqual(p_num.logpdf(-2.61), p_norm.logpdf(-2.61), delta=0.02)
         # just check if this raises an error
         p_num.get_random(100)
+
+    def test_convolute(self):
+        p_1 = flavio.statistics.probability.NormalDistribution(12.4, 0.346)
+        p_2 = flavio.statistics.probability.NormalDistribution(12.4, 2.463)
+        p_x = flavio.statistics.probability.NormalDistribution(12.3, 2.463)
+        from flavio.statistics.probability import convolute_distributions
+        # error if not the same central value:
+        with self.assertRaises(AssertionError):
+            convolute_distributions([p_1, p_x])
+        p_comb = convolute_distributions([p_1, p_2])
+        self.assertIsInstance(p_comb, flavio.statistics.probability.NormalDistribution)
+        self.assertEqual(p_comb.central_value, 12.4)
+        self.assertEqual(p_comb.standard_deviation, sqrt(0.346**2+2.463**2))

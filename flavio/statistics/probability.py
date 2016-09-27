@@ -177,31 +177,44 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
 
 # Auxiliary functions
 
-def combine_distributions(probability_distributions):
+def convolute_distributions(probability_distributions):
     """Combine a set of univariate probability distributions.
 
     This function is meant for combining uncertainties on a single parameter/
-    observable. As an argument, it takes a list of Gaussians that all have
-    the same mean. It returns their convolution, but with location equal to the
-    original mean.
+    observable. As an argument, it takes a list of probability distributions
+    that all have the same central value. It returns their convolution, but
+    with location equal to the original central value.
 
-    This should be generalized to other kinds of distributions in the future...
+    At present, this function is only implemented for univariate normal
+    distributions.
     """
     # if there's just one: return it immediately
     if len(probability_distributions) == 1:
         return probability_distributions[0]
     central_value = probability_distributions[0].central_value # central value of the first dist
     assert isinstance(central_value, float), "Combination only implemented for univariate distributions"
-    gaussians = []
-    for pd in probability_distributions:
-        if pd.central_value != central_value:
-            raise ValueError("All distributions to be combined must have the same central value")
-        if isinstance(pd, DeltaDistribution):
-            # delta distributions (= no error) can be skipped
-            continue
-        elif isinstance(pd, NormalDistribution):
-            gaussians.append(pd)
-        else:
-            raise ValueError("Combination only implemented for normal distributions")
-    err_squared = sum([pd.standard_deviation**2 for pd in gaussians])
-    return NormalDistribution(central_value=central_value, standard_deviation=math.sqrt(err_squared))
+    assert all(p.central_value == central_value for p in probability_distributions), \
+        "Distrubtions must all have the same central value"
+    # all normal dists
+    gaussians = [p for p in probability_distributions if isinstance(p, NormalDistribution)]
+    # let's alrady combined the normal distributions into 1
+    gaussian = _convolute_gaussians(gaussians)
+    # all delta dists -  they can be ignored!
+    deltas = [p for p in probability_distributions if isinstance(p, DeltaDistribution)]
+    # all other univariate dists
+    others = list(set(probability_distributions) - set(gaussians) - set(deltas))
+    if not others:
+        # if there are only the gaussians, we are done.
+        return gaussian
+    else:
+        raise ValueError("Combination only implemented for normal distributions")
+
+def _convolute_gaussians(probability_distributions):
+    assert all(isinstance(p, NormalDistribution) for p in probability_distributions), \
+        "Distributions should all be instances of NormalDistribution"
+    central_value = probability_distributions[0].central_value # central value of the first dist
+    assert all(p.central_value == central_value for p in probability_distributions), \
+        "Distrubtions must all have the same central value"
+    sigmas = np.array([p.standard_deviation for p in probability_distributions])
+    sigma = math.sqrt(np.sum(sigmas**2))
+    return NormalDistribution(central_value=central_value, standard_deviation=sigma)
