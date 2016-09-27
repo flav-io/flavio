@@ -145,6 +145,8 @@ class GaussianUpperLimit(HalfNormalDistribution):
    def __init__(self, limit, confidence_level):
       if confidence_level > 1 or confidence_level < 0:
           raise ValueError("Confidence level should be between 0 und 1")
+      if limit <= 0:
+          raise ValueError("The upper limit should be a positive number")
       super().__init__(central_value=0,
                        standard_deviation=self.get_standard_deviation(limit, confidence_level))
       self.limit = limit
