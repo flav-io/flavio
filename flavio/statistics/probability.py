@@ -238,7 +238,12 @@ def convolute_distributions(probability_distributions):
         # if there are only the gaussians, we are done.
         return gaussian
     else:
-        raise ValueError("Combination only implemented for normal distributions")
+    # otherwise, we need to combine the (combined) gaussian with the others
+        to_be_combined = others + [gaussian]
+        # turn all distributions into numerical distributions!
+        numerical = [NumericalDistribution.from_pd(p) for p in to_be_combined]
+        return _convolute_numerical(numerical)
+
 
 def _convolute_gaussians(probability_distributions):
     assert all(isinstance(p, NormalDistribution) for p in probability_distributions), \
@@ -249,3 +254,25 @@ def _convolute_gaussians(probability_distributions):
     sigmas = np.array([p.standard_deviation for p in probability_distributions])
     sigma = math.sqrt(np.sum(sigmas**2))
     return NormalDistribution(central_value=central_value, standard_deviation=sigma)
+
+def _convolute_numerical(probability_distributions, nsteps=1000):
+    assert all(isinstance(p, NumericalDistribution) for p in probability_distributions), \
+        "Distributions should all be instances of NumericalDistribution"
+    central_value = probability_distributions[0].central_value # central value of the first dist
+    assert all(p.central_value == central_value for p in probability_distributions), \
+        "Distrubtions must all have the same central value"
+    # the combined support is the one including all individual supports
+    supports = np.array([p.support for p in probability_distributions])
+    support = (supports[:,0].min(), supports[:,1].max())
+    delta = (support[1] - support[0])/(nsteps-1)
+    x = np.linspace(support[0], support[1], nsteps)
+    y = None
+    for pd in probability_distributions:
+        y1 = np.exp(pd.logpdf(x)) * delta
+        if y is None:
+            # first step
+            y = y1
+        else:
+            # convolution
+            y = scipy.signal.fftconvolve(y, y1, 'same')
+    return NumericalDistribution(central_value=central_value, x=x, y=y)
