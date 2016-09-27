@@ -31,8 +31,8 @@ class UniformDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, half_range):
       self.half_range = half_range
-      self.range = (self.central_value - self.half_range,
-                    self.central_value + self.half_range)
+      self.range = (central_value - half_range,
+                    central_value + half_range)
       super().__init__(central_value, support=self.range)
 
    def get_random(self, size=None):
@@ -40,7 +40,7 @@ class UniformDistribution(ProbabilityDistribution):
 
    def logpdf(self, x):
        if x < self.range[0] or x >= self.range[1]:
-           return 0
+           return -np.inf
        else:
            return -math.log(2*self.half_range)
 
