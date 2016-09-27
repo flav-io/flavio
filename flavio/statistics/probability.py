@@ -9,8 +9,9 @@ import math
 class ProbabilityDistribution(object):
    """Common base class for all probability distributions"""
 
-   def __init__(self, central_value):
+   def __init__(self, central_value, support):
       self.central_value = central_value
+      self.support = support
 
    def get_central(self):
       return self.central_value
@@ -29,10 +30,10 @@ class ProbabilityDistribution(object):
 class UniformDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, half_range):
-      super().__init__(central_value)
       self.half_range = half_range
       self.range = (self.central_value - self.half_range,
                     self.central_value + self.half_range)
+      super().__init__(central_value, support=self.range)
 
    def get_random(self, size=None):
       return np.random.uniform(self.range[0], self.range[1], size)
@@ -45,7 +46,7 @@ class UniformDistribution(ProbabilityDistribution):
 
 class DeltaDistribution(ProbabilityDistribution):
    def __init__(self, central_value):
-      super().__init__(central_value)
+      super().__init__(central_value, support=(central_value, central_value))
 
    def get_random(self, size=None):
       if size is None:
@@ -62,7 +63,9 @@ class DeltaDistribution(ProbabilityDistribution):
 class NormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, standard_deviation):
-      super().__init__(central_value)
+      super().__init__(central_value,
+                      support=(central_value-6*standard_deviation,
+                               central_value+6*standard_deviation))
       self.standard_deviation = standard_deviation
 
    def get_random(self, size=None):
@@ -74,7 +77,9 @@ class NormalDistribution(ProbabilityDistribution):
 class AsymmetricNormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, right_deviation, left_deviation):
-      super().__init__(central_value)
+      super().__init__(central_value,
+                       support=(central_value-6*left_deviation,
+                                central_value+6*right_deviation))
       if right_deviation < 0 or left_deviation < 0:
           raise ValueError("Left and right standard deviations must be positive numbers")
       self.right_deviation = right_deviation
@@ -106,7 +111,9 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
 class HalfNormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, standard_deviation):
-      super().__init__(central_value)
+      super().__init__(central_value,
+                       support=sorted((central_value,
+                                       central_value+6*standard_deviation)))
       self.standard_deviation = standard_deviation
 
    def get_random(self, size=None):
@@ -134,10 +141,13 @@ class GaussianUpperLimit(HalfNormalDistribution):
 class NumericalDistribution(ProbabilityDistribution):
    def __init__(self, x, y, central_value=None):
       if central_value is not None:
-          super().__init__(central_value=central_value)
+          if x[0] <= central_value <= x[-1]:
+              super().__init__(central_value=central_value, support=(x[0], x[-1]))
+          else:
+              raise ValueError("Central value must be within range provided")
       else:
           mode = x[np.argmax(y)]
-          super().__init__(central_value=mode)
+          super().__init__(central_value=mode, support=(x[0], x[-1]))
       _x_range = (x[-1]-x[0])
       _y_norm = y/sum(y)*_x_range # normalize PDF to 1
       self.logpdf_interp = scipy.interpolate.interp1d(x, np.log(_y_norm), fill_value=-np.inf)
@@ -157,7 +167,7 @@ class NumericalDistribution(ProbabilityDistribution):
 class MultivariateNormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, covariance):
-      super().__init__(central_value)
+      super().__init__(central_value, support=None)
       assert np.all(np.linalg.eigvals(covariance) > 0), "The covariance matrix is not positive definite!" + str(covariance)
       self.covariance = covariance
 
