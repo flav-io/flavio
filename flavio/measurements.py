@@ -19,30 +19,17 @@ def _load(obj):
         if 'correlation' not in m_data:
             if isinstance(m_data['values'], list):
                 for value_dict in m_data['values']:
-                    # if "value" is a list, it contains the values of observable
-                    # arguments (like q^2)
                     args = Observable.get_instance(value_dict['name']).arguments
+                    # numerical values of arguments, e.g. [1, 6]
                     args_num = [value_dict[a] for a in args]
-                    error_dict = errors_from_string(value_dict['value'])
-                    central_value = error_dict['central_value']
-                    squared_error = 0.
-                    for sym_err in error_dict['symmetric_errors']:
-                        squared_error += sym_err**2
-                    for asym_err in error_dict['asymmetric_errors']:
-                        squared_error += asym_err[0]*asym_err[1]
+                    # insert string name in front of argument values and turn it
+                    # into a tuple, e.g. ('FL(B0->K*mumu)', 1, 6)
                     args_num.insert(0, value_dict['name'])
                     obs_tuple = tuple(args_num)
-                    m.add_constraint([obs_tuple], probability.NormalDistribution(central_value, sqrt(squared_error)))
+                    m.set_constraint(obs_tuple, value_dict['value'])
             else: # otherwise, 'values' is a dict just containing name: constraint_string
                 for obs, value in m_data['values'].items():
-                    error_dict = errors_from_string(value)
-                    central_value = error_dict['central_value']
-                    squared_error = 0.
-                    for sym_err in error_dict['symmetric_errors']:
-                        squared_error += sym_err**2
-                    for asym_err in error_dict['asymmetric_errors']:
-                        squared_error += asym_err[0]*asym_err[1]
-                    m.add_constraint([obs], probability.NormalDistribution(central_value, sqrt(squared_error)))
+                    m.set_constraint(obs, value)
         else:
             observables = []
             central_values = []

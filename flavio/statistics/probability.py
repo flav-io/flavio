@@ -229,17 +229,24 @@ def convolve_distributions(probability_distributions):
     # all normal dists
     gaussians = [p for p in probability_distributions if isinstance(p, NormalDistribution)]
     # let's alrady combined the normal distributions into 1
-    gaussian = _convolve_gaussians(gaussians)
+    if gaussians:
+        gaussian = _convolve_gaussians(gaussians)
     # all delta dists -  they can be ignored!
     deltas = [p for p in probability_distributions if isinstance(p, DeltaDistribution)]
     # all other univariate dists
     others = list(set(probability_distributions) - set(gaussians) - set(deltas))
-    if not others:
+    if not others and not gaussians:
+        # if there is only a delta (or more than one), just return it
+        return deltas[0]
+    if gaussians and not others:
         # if there are only the gaussians, we are done.
         return gaussian
     else:
     # otherwise, we need to combine the (combined) gaussian with the others
-        to_be_combined = others + [gaussian]
+        if gaussians:
+            to_be_combined = others + [gaussian]
+        else:
+            to_be_combined = others
         # turn all distributions into numerical distributions!
         numerical = [NumericalDistribution.from_pd(p) for p in to_be_combined]
         return _convolve_numerical(numerical)
