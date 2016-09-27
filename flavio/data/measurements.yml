@@ -1495,7 +1495,7 @@ LHCb Bs->phimumu 2015 0.1-2.0 GeV^2:
     - name: <S7>(Bs->phimumu)
       q2min: 0.1
       q2max: 2.0
-      value: 0.04 + 0.12 - 0.12 ± 0.00
+      value: 0.04 + 0.12 - 0.12
     # - name: <A8>(Bs->phimumu)
     #   q2min: 0.1
     #   q2max: 2.0
