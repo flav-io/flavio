@@ -21,6 +21,14 @@ HFAG rad 2016:
   url: http://www.slac.stanford.edu/xorg/hfag/rare/July2016/radll/index.html
   values:
     BR(B->Xsgamma): 349 ± 19 e-6
+    BR(B+->Knunu): < 16e-6 @ 90% CL
+    BR(B+->pinunu): < 98e-6 @ 90% CL
+    BR(B+->rhonunu): < 213e-6 @ 90% CL
+    BR(B+->K*nunu): < 40e-6 @ 90% CL
+    BR(B0->Knunu): < 49e-6 @ 90% CL
+    BR(B0->pinunu): < 69e-6 @ 90% CL
+    BR(B0->rhonunu): < 208e-6 @ 90% CL
+    BR(B0->K*nunu): < 55e-6 @ 90% CL
 
 HFAG acp 2016:
   experiment: HFAG
