@@ -208,7 +208,7 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
 
 # Auxiliary functions
 
-def convolute_distributions(probability_distributions):
+def convolve_distributions(probability_distributions):
     """Combine a set of univariate probability distributions.
 
     This function is meant for combining uncertainties on a single parameter/
@@ -229,7 +229,7 @@ def convolute_distributions(probability_distributions):
     # all normal dists
     gaussians = [p for p in probability_distributions if isinstance(p, NormalDistribution)]
     # let's alrady combined the normal distributions into 1
-    gaussian = _convolute_gaussians(gaussians)
+    gaussian = _convolve_gaussians(gaussians)
     # all delta dists -  they can be ignored!
     deltas = [p for p in probability_distributions if isinstance(p, DeltaDistribution)]
     # all other univariate dists
@@ -242,10 +242,10 @@ def convolute_distributions(probability_distributions):
         to_be_combined = others + [gaussian]
         # turn all distributions into numerical distributions!
         numerical = [NumericalDistribution.from_pd(p) for p in to_be_combined]
-        return _convolute_numerical(numerical)
+        return _convolve_numerical(numerical)
 
 
-def _convolute_gaussians(probability_distributions):
+def _convolve_gaussians(probability_distributions):
     assert all(isinstance(p, NormalDistribution) for p in probability_distributions), \
         "Distributions should all be instances of NormalDistribution"
     central_value = probability_distributions[0].central_value # central value of the first dist
@@ -255,7 +255,7 @@ def _convolute_gaussians(probability_distributions):
     sigma = math.sqrt(np.sum(sigmas**2))
     return NormalDistribution(central_value=central_value, standard_deviation=sigma)
 
-def _convolute_numerical(probability_distributions, nsteps=1000):
+def _convolve_numerical(probability_distributions, nsteps=1000):
     assert all(isinstance(p, NumericalDistribution) for p in probability_distributions), \
         "Distributions should all be instances of NumericalDistribution"
     central_value = probability_distributions[0].central_value # central value of the first dist
