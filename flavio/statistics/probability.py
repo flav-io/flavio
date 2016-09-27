@@ -1,5 +1,7 @@
 import numpy as np
 import scipy.stats
+import scipy.interpolate
+import scipy.signal
 import math
 
 
@@ -116,7 +118,6 @@ class HalfNormalDistribution(ProbabilityDistribution):
        else:
            return math.log(2) + scipy.stats.norm.logpdf(x, self.central_value, abs(self.standard_deviation))
 
-
 class GaussianUpperLimit(HalfNormalDistribution):
    def __init__(self, limit, confidence_level):
       if confidence_level > 1 or confidence_level < 0:
@@ -129,6 +130,29 @@ class GaussianUpperLimit(HalfNormalDistribution):
    def get_standard_deviation(self, limit, confidence_level):
        """Convert the confidence level into a Gaussian standard deviation"""
        return limit*scipy.stats.norm.ppf(0.5+confidence_level/2.)
+
+class NumericalDistribution(ProbabilityDistribution):
+   def __init__(self, x, y, central_value=None):
+      if central_value is not None:
+          super().__init__(central_value=central_value)
+      else:
+          mode = x[np.argmax(y)]
+          super().__init__(central_value=mode)
+      _x_range = (x[-1]-x[0])
+      _y_norm = y/sum(y)*_x_range # normalize PDF to 1
+      self.logpdf_interp = scipy.interpolate.interp1d(x, np.log(_y_norm), fill_value=-np.inf)
+      _cdf = np.cumsum(_y_norm)/_x_range
+      # adapt the borders of the PPF to be 0 and 1
+      _cdf[0] = 0.
+      _cdf[-1] = 1.
+      self.ppf_interp = scipy.interpolate.interp1d(_cdf, x)
+
+   def get_random(self, size=None):
+      r = np.random.uniform(size=size)
+      return self.ppf_interp(r)
+
+   def logpdf(self, x):
+       return self.logpdf_interp(x)
 
 class MultivariateNormalDistribution(ProbabilityDistribution):
 

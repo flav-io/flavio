@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
 import flavio
+import scipy.stats
 from math import pi, sqrt, exp, log
 
 class TestProbability(unittest.TestCase):
@@ -30,3 +31,14 @@ class TestProbability(unittest.TestCase):
         p2 = flavio.statistics.probability.HalfNormalDistribution(0, 1.78)
         self.assertAlmostEqual(p1.logpdf(0.237), p2.logpdf(0.237), delta=0.0001)
         self.assertEqual(p2.logpdf(-1), -np.inf)
+
+    def test_numerical(self):
+        x = np.arange(-4,6,0.1)
+        y = scipy.stats.norm.pdf(x, loc=1)
+        y_crazy = 14.7 * y # multiply PDF by crazy number
+        p_num = flavio.statistics.probability.NumericalDistribution(x, y_crazy)
+        p_norm = flavio.statistics.probability.NormalDistribution(1, 1)
+        self.assertAlmostEqual(p_num.logpdf(0.237), p_norm.logpdf(0.237), delta=0.02)
+        self.assertAlmostEqual(p_num.logpdf(-2.61), p_norm.logpdf(-2.61), delta=0.02)
+        # just check if this raises an error
+        p_num.get_random(100)
