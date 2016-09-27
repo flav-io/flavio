@@ -95,7 +95,7 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
             x = abs(np.random.normal(0,self.left_deviation))
             return self.central_value - x
 
-   def logpdf(self, x):
+   def _logpdf(self, x):
        # values of the PDF at the central value
        p_right = scipy.stats.norm.pdf(self.central_value, self.central_value, self.right_deviation)
        p_left = scipy.stats.norm.pdf(self.central_value, self.central_value, self.left_deviation)
@@ -108,6 +108,10 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
            r = 2*p_left/(p_left+p_right)
            return math.log(r) + scipy.stats.norm.logpdf(x, self.central_value, self.right_deviation)
 
+   def logpdf(self, x):
+        _lpvect = np.vectorize(self._logpdf)
+        return _lpvect(x)
+
 class HalfNormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, standard_deviation):
@@ -119,11 +123,15 @@ class HalfNormalDistribution(ProbabilityDistribution):
    def get_random(self, size=None):
       return self.central_value + np.sign(self.standard_deviation)*abs(np.random.normal(0, abs(self.standard_deviation), size))
 
-   def logpdf(self, x):
+   def _logpdf(self, x):
        if np.sign(self.standard_deviation) * (x - self.central_value) < 0:
            return -np.inf
        else:
            return math.log(2) + scipy.stats.norm.logpdf(x, self.central_value, abs(self.standard_deviation))
+
+   def logpdf(self, x):
+        _lpvect = np.vectorize(self._logpdf)
+        return _lpvect(x)
 
 class GaussianUpperLimit(HalfNormalDistribution):
    def __init__(self, limit, confidence_level):
