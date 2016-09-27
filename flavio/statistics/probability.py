@@ -3,7 +3,7 @@ import scipy.stats
 import scipy.interpolate
 import scipy.signal
 import math
-
+from flavio.math.functions import normal_logpdf, normal_pdf
 
 ########## ProbabilityDistribution Class ##########
 class ProbabilityDistribution(object):
@@ -70,13 +70,15 @@ class NormalDistribution(ProbabilityDistribution):
       super().__init__(central_value,
                       support=(central_value-6*standard_deviation,
                                central_value+6*standard_deviation))
+      if standard_deviation <= 0:
+          raise ValueError("Standard deviation must be positive number")
       self.standard_deviation = standard_deviation
 
    def get_random(self, size=None):
       return np.random.normal(self.central_value, self.standard_deviation, size)
 
    def logpdf(self, x):
-       return scipy.stats.norm.logpdf(x, self.central_value, self.standard_deviation)
+       return normal_logpdf(x, self.central_value, self.standard_deviation)
 
 class AsymmetricNormalDistribution(ProbabilityDistribution):
 
@@ -84,10 +86,12 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
       super().__init__(central_value,
                        support=(central_value-6*left_deviation,
                                 central_value+6*right_deviation))
-      if right_deviation < 0 or left_deviation < 0:
+      if right_deviation <= 0 or left_deviation <= 0:
           raise ValueError("Left and right standard deviations must be positive numbers")
       self.right_deviation = right_deviation
       self.left_deviation = left_deviation
+      self.p_right = normal_pdf(self.central_value, self.central_value, self.right_deviation)
+      self.p_left = normal_pdf(self.central_value, self.central_value, self.left_deviation)
 
    def get_random(self, size=None):
         r = np.random.uniform()
@@ -101,16 +105,14 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
 
    def _logpdf(self, x):
        # values of the PDF at the central value
-       p_right = scipy.stats.norm.pdf(self.central_value, self.central_value, self.right_deviation)
-       p_left = scipy.stats.norm.pdf(self.central_value, self.central_value, self.left_deviation)
        if x < self.central_value:
            # left-hand side: scale factor
-           r = 2*p_right/(p_left+p_right)
-           return math.log(r) + scipy.stats.norm.logpdf(x, self.central_value, self.left_deviation)
+           r = 2*self.p_right/(self.p_left+self.p_right)
+           return math.log(r) + normal_logpdf(x, self.central_value, self.left_deviation)
        else:
            # left-hand side: scale factor
-           r = 2*p_left/(p_left+p_right)
-           return math.log(r) + scipy.stats.norm.logpdf(x, self.central_value, self.right_deviation)
+           r = 2*self.p_left/(self.p_left+self.p_right)
+           return math.log(r) + normal_logpdf(x, self.central_value, self.right_deviation)
 
    def logpdf(self, x):
         _lpvect = np.vectorize(self._logpdf)
@@ -122,6 +124,8 @@ class HalfNormalDistribution(ProbabilityDistribution):
       super().__init__(central_value,
                        support=sorted((central_value,
                                        central_value+6*standard_deviation)))
+      if standard_deviation == 0:
+          raise ValueError("Standard deviation must be non-zero number")
       self.standard_deviation = standard_deviation
 
    def get_random(self, size=None):
@@ -131,7 +135,7 @@ class HalfNormalDistribution(ProbabilityDistribution):
        if np.sign(self.standard_deviation) * (x - self.central_value) < 0:
            return -np.inf
        else:
-           return math.log(2) + scipy.stats.norm.logpdf(x, self.central_value, abs(self.standard_deviation))
+           return math.log(2) + normal_logpdf(x, self.central_value, abs(self.standard_deviation))
 
    def logpdf(self, x):
         _lpvect = np.vectorize(self._logpdf)
@@ -163,7 +167,7 @@ class NumericalDistribution(ProbabilityDistribution):
       _x_range = (x[-1]-x[0])
       _bin_width = _x_range/len(x)
       _y_norm = y/sum(y)/_bin_width # normalize PDF to 1
-      with np.errstate(divide='ignore'): # ignore warning from log(0)=-np.inf
+      with np.errstate(divide='ignore', invalid='ignore'): # ignore warning from log(0)=-np.inf
           self.logpdf_interp = scipy.interpolate.interp1d(x, np.log(_y_norm),
                                     fill_value=-np.inf, bounds_error=False)
       _cdf = np.cumsum(_y_norm)*_bin_width
