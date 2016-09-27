@@ -1,5 +1,6 @@
 import unittest
 import numpy as np
+import numpy.testing as npt
 import flavio
 import scipy.stats
 from math import pi, sqrt, exp, log
@@ -33,15 +34,33 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(p2.logpdf(-1), -np.inf)
 
     def test_numerical(self):
-        x = np.arange(-4,6,0.1)
+        x = np.arange(-5,7,0.01)
         y = scipy.stats.norm.pdf(x, loc=1)
         y_crazy = 14.7 * y # multiply PDF by crazy number
         p_num = flavio.statistics.probability.NumericalDistribution(x, y_crazy)
         p_norm = flavio.statistics.probability.NormalDistribution(1, 1)
         self.assertAlmostEqual(p_num.logpdf(0.237), p_norm.logpdf(0.237), delta=0.02)
         self.assertAlmostEqual(p_num.logpdf(-2.61), p_norm.logpdf(-2.61), delta=0.02)
+        self.assertAlmostEqual(p_num.ppf_interp(0.1), scipy.stats.norm.ppf(0.1, loc=1), delta=0.02)
+        self.assertAlmostEqual(p_num.ppf_interp(0.95), scipy.stats.norm.ppf(0.95, loc=1), delta=0.02)
         # just check if this raises an error
         p_num.get_random(100)
+
+    def test_numerical_from_analytic(self):
+        p_norm = flavio.statistics.probability.NormalDistribution(1.64, 0.32)
+        p_norm_num = flavio.statistics.probability.NumericalDistribution.from_pd(p_norm)
+        self.assertEqual(p_norm.central_value, p_norm_num.central_value)
+        self.assertEqual(p_norm.support, p_norm_num.support)
+        npt.assert_array_almost_equal(p_norm.logpdf([0.7, 1.9]), p_norm_num.logpdf([0.7, 1.9]), decimal=3)
+        p_asym = flavio.statistics.probability.AsymmetricNormalDistribution(1.64, 0.32, 0.67)
+        p_asym_num = flavio.statistics.probability.NumericalDistribution.from_pd(p_asym)
+        npt.assert_array_almost_equal(p_asym.logpdf([0.7, 1.9]), p_asym_num.logpdf([0.7, 1.9]), decimal=3)
+        p_unif = flavio.statistics.probability.UniformDistribution(1.64, 0.32)
+        p_unif_num = flavio.statistics.probability.NumericalDistribution.from_pd(p_unif)
+        npt.assert_array_almost_equal(p_unif.logpdf([0.7, 1.9]), p_unif_num.logpdf([0.7, 1.9]), decimal=3)
+        p_half = flavio.statistics.probability.HalfNormalDistribution(1.64, -0.32)
+        p_half_num = flavio.statistics.probability.NumericalDistribution.from_pd(p_half)
+        npt.assert_array_almost_equal(p_half.logpdf([0.7, 1.3]), p_half_num.logpdf([0.7, 1.3]), decimal=3)
 
     def test_convolute(self):
         p_1 = flavio.statistics.probability.NormalDistribution(12.4, 0.346)

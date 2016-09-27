@@ -38,11 +38,15 @@ class UniformDistribution(ProbabilityDistribution):
    def get_random(self, size=None):
       return np.random.uniform(self.range[0], self.range[1], size)
 
-   def logpdf(self, x):
+   def _logpdf(self, x):
        if x < self.range[0] or x >= self.range[1]:
            return -np.inf
        else:
            return -math.log(2*self.half_range)
+
+   def logpdf(self, x):
+        _lpvect = np.vectorize(self._logpdf)
+        return _lpvect(x)
 
 class DeltaDistribution(ProbabilityDistribution):
    def __init__(self, central_value):
@@ -157,9 +161,12 @@ class NumericalDistribution(ProbabilityDistribution):
           mode = x[np.argmax(y)]
           super().__init__(central_value=mode, support=(x[0], x[-1]))
       _x_range = (x[-1]-x[0])
-      _y_norm = y/sum(y)*_x_range # normalize PDF to 1
-      self.logpdf_interp = scipy.interpolate.interp1d(x, np.log(_y_norm), fill_value=-np.inf)
-      _cdf = np.cumsum(_y_norm)/_x_range
+      _bin_width = _x_range/len(x)
+      _y_norm = y/sum(y)/_bin_width # normalize PDF to 1
+      with np.errstate(divide='ignore'): # ignore warning from log(0)=-np.inf
+          self.logpdf_interp = scipy.interpolate.interp1d(x, np.log(_y_norm),
+                                    fill_value=-np.inf, bounds_error=False)
+      _cdf = np.cumsum(_y_norm)*_bin_width
       # adapt the borders of the PPF to be 0 and 1
       _cdf[0] = 0.
       _cdf[-1] = 1.
@@ -171,6 +178,12 @@ class NumericalDistribution(ProbabilityDistribution):
 
    def logpdf(self, x):
        return self.logpdf_interp(x)
+
+   @classmethod
+   def from_pd(cls, pd, nsteps=1000):
+       _x = np.linspace(pd.support[0], pd.support[-1], nsteps)
+       _y = np.exp(pd.logpdf(_x))
+       return cls(central_value=pd.central_value, x=_x, y=_y)
 
 class MultivariateNormalDistribution(ProbabilityDistribution):
 
