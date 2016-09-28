@@ -229,7 +229,10 @@ def convolve_distributions(probability_distributions):
     if len(probability_distributions) == 1:
         return probability_distributions[0]
     central_value = probability_distributions[0].central_value # central value of the first dist
-    assert isinstance(central_value, float), "Combination only implemented for univariate distributions"
+    try:
+        float(central_value)
+    except:
+        raise AssertionError("Combination only implemented for univariate distributions")
     assert all(p.central_value == central_value for p in probability_distributions), \
         "Distrubtions must all have the same central value"
     # all normal dists
@@ -279,6 +282,8 @@ def _convolve_numerical(probability_distributions, nsteps=1000):
     support = (supports[:,0].min(), supports[:,1].max())
     delta = (support[1] - support[0])/(nsteps-1)
     x = np.linspace(support[0], support[1], nsteps)
+    # position of the central value
+    n_x_central = math.floor((central_value - support[0])/delta)
     y = None
     for pd in probability_distributions:
         y1 = np.exp(pd.logpdf(x)) * delta
@@ -287,5 +292,7 @@ def _convolve_numerical(probability_distributions, nsteps=1000):
             y = y1
         else:
             # convolution
-            y = scipy.signal.fftconvolve(y, y1, 'same')
+            y = scipy.signal.fftconvolve(y, y1, 'full')
+            # cut out the convolved signal at the right place
+            y = y[n_x_central:nsteps + n_x_central]
     return NumericalDistribution(central_value=central_value, x=x, y=y)
