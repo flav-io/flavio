@@ -5,7 +5,7 @@ CMS+LHCb Bq->mumu 2014:
   inspire: CMS:2014xfa
   values:
     BR(Bs->mumu): (2.8+0.7-0.6)*1e-9
-    BR(Bd->mumu): (3.9+1.6-1.4)*1e-9
+    BR(Bd->mumu): (3.9+1.6-1.4)*1e-10
 
 HFAG rad 2014:
   experiment: HFAG
