@@ -221,7 +221,9 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
 
 def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
               interpolation_factor=3,
-              col=None, label=None, contour_args={}, contourf_args={}):
+              col=None, label=None,
+              pre_calculated_z=None,
+              contour_args={}, contourf_args={}):
     r"""Plot coloured confidence contours (or bands) given a log likelihood
     function.
 
@@ -242,6 +244,9 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
       from a predefined palette
     - `label` (optional): label that will be added to a legend created with
        maplotlib.pyplot.legend()
+    - `pre_calculated_z` (optional): z values for a band plot, previously
+       calculated. In this case, no likelihood scan is performed and time can
+       be saved.
     - `contour_args`: dictionary of additional options that will be passed
        to matplotlib.pyplot.contour() (that draws the contour lines)
     - `contourf_args`: dictionary of additional options that will be passed
@@ -255,7 +260,10 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
     @np.vectorize
     def chi2_vect(x, y): # needed for evaluation on meshgrid
         return -2*log_likelihood([x,y])
-    z = chi2_vect(x, y)
+    if pre_calculated_z is not None:
+        z = pre_calculated_z
+    else:
+        z = chi2_vect(x, y)
     # fine grid
     _x = np.linspace(x_min, x_max, steps*interpolation_factor)
     _y = np.linspace(y_min, y_max, steps*interpolation_factor)
@@ -289,6 +297,7 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
     CS = ax.contour(x, y, z, levels=levels, **contour_args)
     if label is not None:
         CS.collections[0].set_label(label)
+    return x, y, z
 
 
 def flavio_branding(x=0.8, y=0.94, version=True):
