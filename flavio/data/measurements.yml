@@ -72,7 +72,7 @@ HFAG UT summer 2015:
   inspire: Amhis:2012bh
   url: http://www.slac.stanford.edu/xorg/hfag/triangle/summer2015/index.shtml
   values:
-    S_psiphi: -0.034 ± 0.033 # NB this is actually phi_s^ccbars
+    S_psiphi: 0.033 ± 0.033 # NB this is actually -phi_s^ccbars
     S_psiK: 0.679 ± 0.020 # NB this is actually an average of several b->ccbard modes
 
 HFAG K*gamma summer 2015:
