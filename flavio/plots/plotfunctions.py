@@ -6,6 +6,7 @@ import flavio
 import scipy.optimize
 import scipy.interpolate
 import scipy.stats
+from numbers import Number
 
 def error_budget_pie(err_dict, other_cutoff=0.03):
     """Pie chart of an observable's error budget.
@@ -218,7 +219,8 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
         ax.errorbar(x, y, yerr=dy, xerr=dx, label=m_obj.experiment, fmt='.', **kwargs)
 
 
-def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, col=None, contour_args={}, contourf_args={}):
+def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
+              col=None, label=None, contour_args={}, contourf_args={}):
     r"""Plot coloured confidence contours (or bands) given a log likelihood
     function.
 
@@ -228,7 +230,8 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, c
       Can e.g. be the method of the same name of a FastFit instance.
     - `x_min`, `x_max`, `y_min`, `y_max`: plot boundaries
     - `n_sigma`: plot confidence level corresponding to this number of standard
-      deviations (defaults to 1)
+      deviations. Either a number (defaults to 1) or a tuple to plot several
+      contours.
     - `steps`: number of grid steps in each dimension (total computing time is
       this number squared times the computing time of one `log_likelihood` call!)
     - `col` (optional): number between 0 and 9 to choose the color of the plot
@@ -256,10 +259,19 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20, c
     # get the correct values for 2D confidence/credibility contours for n sigma
     chi2_1dof = scipy.stats.chi2(1)
     chi2_2dof = scipy.stats.chi2(2)
-    cl_nsigma = chi2_1dof.cdf(n_sigma**2) # this is roughly 0.68 for n_sigma=1 etc.
-    y_nsigma = chi2_2dof.ppf(cl_nsigma) # this is roughly 2.3 for n_sigma=1 etc.
-    ax.contourf(x, y, z, levels=[0, y_nsigma], **contourf_args)
-    ax.contour(x, y, z, levels=[y_nsigma], **contour_args)
+    def get_y(n):
+        cl_nsigma = chi2_1dof.cdf(n**2) # this is roughly 0.68 for n_sigma=1 etc.
+        return chi2_2dof.ppf(cl_nsigma) # this is roughly 2.3 for n_sigma=1 etc.
+    if isinstance(n_sigma, Number):
+        levels = [get_y(n_sigma)]
+    else:
+        levels = [get_y(n) for n in n_sigma]
+    # for the filling, need to add zero contour
+    levelsf = [0] + levels
+    ax.contourf(x, y, z, levels=levelsf, **contourf_args)
+    CS = ax.contour(x, y, z, levels=levels, **contour_args)
+    if label is not None:
+        CS.collections[0].set_label(label)
 
 
 def flavio_branding(x=0.8, y=0.94, version=True):
