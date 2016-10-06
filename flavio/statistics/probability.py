@@ -195,19 +195,21 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, covariance):
       super().__init__(central_value, support=None)
-      assert np.all(np.linalg.eigvals(covariance) > 0), "The covariance matrix is not positive definite!" + str(covariance)
       self.covariance = covariance
+      # to avoid ill-conditioned covariance matrices, all data are rescaled
+      # by the inverse variances
+      self.err = np.sqrt(np.diag(self.covariance))
+      self.scaled_covariance = self.covariance/np.outer(self.err, self.err)
+      assert np.all(np.linalg.eigvals(self.scaled_covariance) > 0), "The covariance matrix is not positive definite!" + str(covariance)
 
    def get_random(self, size=None):
       return np.random.multivariate_normal(self.central_value, self.covariance, size)
 
    def logpdf(self, x):
-       # to avoid ill-conditioned covariance matrices, all data are rescaled
-       # by the inverse variances
-       err = np.sqrt(np.diag(self.covariance))
-       scale_matrix = np.outer(err, err)
-       pdf_scaled = scipy.stats.multivariate_normal.logpdf(x/err, self.central_value/err, self.covariance/scale_matrix)
-       return pdf_scaled + math.log(np.linalg.det(self.covariance/scale_matrix)/np.linalg.det(self.covariance))/2.
+       # undoing the rescaling of the covariance
+       pdf_scaled = scipy.stats.multivariate_normal.logpdf(x/self.err, self.central_value/self.err, self.scaled_covariance)
+       sign, logdet =  np.linalg.slogdet(self.covariance)
+       return pdf_scaled + (np.linalg.slogdet(self.scaled_covariance)[1] - np.linalg.slogdet(self.covariance)[1])/2.
 
 
 

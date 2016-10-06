@@ -331,22 +331,13 @@ class FastFit(BayesianFit):
                                         for par in par_random])
         return np.cov(pred_arr)
 
-    def make_measurement(self, N=100):
+    def make_measurement(self, N=100, Nexp=1000):
         """Initialize the fit by producing a pseudo-measurement containing both
         experimental uncertainties as well as theory uncertainties stemming
         from nuisance parameters."""
-        central_exp, cov_exp = self._get_central_covariance_experiment(N)
+        central_exp, cov_exp = self._get_central_covariance_experiment(Nexp)
         cov_sm = self._get_covariance_sm(N)
         covariance = cov_exp + cov_sm
-        if not len(central_exp) == 1:
-            if not np.all(np.linalg.eigvals(covariance) > 0):
-                # if the covariance matrix is not positive definite, try a dirty trick:
-                # multiply all the correlations by 0.9.
-                n_dim = len(covariance)
-                err = np.sqrt(np.diag(covariance))
-                correlation = covariance/err/err[:,np.newaxis] # correlation matrix
-                correlation = (correlation - np.eye(n_dim))*0.9 + np.eye(n_dim)
-                covariance = np.outer(err, err) * correlation
         # add the Pseudo-measurement
         m = flavio.classes.Measurement('Pseudo-measurement for FastFit instance: ' + self.name)
         if len(central_exp) == 1:
