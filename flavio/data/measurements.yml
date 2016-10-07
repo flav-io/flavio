@@ -998,7 +998,7 @@ Belle B+->rholnu 2013 total BR:
   experiment: Belle
   inspire: Sibidanov:2013rkk
   values:
-    BR(B+->rholnu): 183.5±10.4
+    BR(B+->rholnu): 183.5±10.4 e-6
 
 Belle B+->pilnu 2013:
   experiment: Belle
