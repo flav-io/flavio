@@ -1868,7 +1868,7 @@ LHCb B->Kee 2014:
     - name: <dBR/dq2>(B+->Kee)
       q2min: 1.0
       q2max: 6.0
-      value: 1.56 + 0.19 - 0.15 + 0.06 - 0.04 e-7
+      value: 0.312 +0.038 -0.030 +0.012 -0.008 e-7 # this is 1.56 +0.19 -0.15 +0.06 -0.04 e-7 for the partial BR
 
 ATLAS Bs->mumu 2016:
   experiment: ATLAS
