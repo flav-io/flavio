@@ -236,6 +236,12 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
       this number squared times the computing time of one `log_likelihood` call!)
     - `col` (optional): number between 0 and 9 to choose the color of the plot
       from a predefined palette
+    - `label` (optional): label that will be added to a legend created with
+       maplotlib.pyplot.legend()
+    - `contour_args`: dictionary of additional options that will be passed
+       to matplotlib.pyplot.contour() (that draws the contour lines)
+    - `contourf_args`: dictionary of additional options that will be passed
+       to matplotlib.pyplot.contourf() (that paints the contour filling)
     """
     ax = plt.gca()
     _x = np.linspace(x_min, x_max, steps)
