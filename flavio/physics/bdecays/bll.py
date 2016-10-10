@@ -123,6 +123,36 @@ def bqll_obs_function(function, B, l1, l2):
     return lambda wc_obj, par: bqll_obs(function, wc_obj, par, B, l1, l2)
 
 
+# Bs -> l+l- effective lifetime
+
+def tau_ll(wc, par, B, lep):
+    r"""Effective B->l+l- lifetime as defined in eq. (26) of arXiv:1204.1737 .
+    This formula one either gets by integrating eq. (21) or by inverting eq. (27) of arXiv:1204.1737.
+
+    Parameters
+    ----------
+
+    - `wc`         : dict of Wilson coefficients
+    - `par`        : parameter dictionary
+    - `B`          : should be `'Bs'` or `'B0'`
+    - `lep`        : lepton: 'e', 'mu' or 'tau'
+
+    Returns
+    -------
+
+    $-\frac{\tau_{B_s} \left(y_s^2+2 A_{\Delta\Gamma_q} ys+1\right)}{\left(ys^2-1\right) (A_{\Delta\Gamma_q} ys+1)}$
+    """
+    ADG    = ADeltaGamma(par, wc, B, lep)
+    y      = .5*par['DeltaGamma/Gamma_'+B]
+    tauB   = par['tau_'+B]
+    return -(((1 + y**2 + 2*y*ADG)*tauB)/((-1 + y**2)*(1 + y*ADG)))
+
+def tau_ll_func(wc_obj, par, B, lep):
+    scale = config['renormalization scale']['bll']
+    label = meson_quark[B]+lep+lep
+    wc = wctot_dict(wc_obj, label, scale, par)
+    return tau_ll(wc, par, B, lep)
+
 # Observable and Prediction instances
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
@@ -140,6 +170,18 @@ for l in ['e', 'mu', 'tau']:
     _obs.set_description(r"Branching ratio of $B^0\to "+_tex[l]+"^+"+_tex[l]+"^-$.")
     _obs.tex = r"$\text{BR}(B^0\to "+_tex[l]+"^+"+_tex[l]+"^-)$."
     Prediction(_obs_name, bqll_obs_function(br_inst, 'B0', l, l))
+
+    # Add the effective lifetimes for Bs
+    _obs_name = 'tau_'+l+l
+    _obs = Observable(_obs_name)
+    _obs.set_description(r"Effective lifetime for $B_s \to "+_tex[l]+"^+"+_tex[l]+"^-$.")
+    _obs.tex = r"$\tau_{B_s \to " +_tex[l] +_tex[l] + "}$."
+    if l=='e':
+        Prediction(_obs_name, lambda wc_obj, par: tau_ll_func(wc_obj, par, 'Bs', 'e'))
+    if l=='mu':
+        Prediction(_obs_name, lambda wc_obj, par: tau_ll_func(wc_obj, par, 'Bs', 'mu'))
+    if l=='tau':
+        Prediction(_obs_name, lambda wc_obj, par: tau_ll_func(wc_obj, par, 'Bs', 'tau'))
 
 _tex_B = {'B0': r'\bar B^0', 'Bs': r'\bar B_s'}
 _tex_lfv = {'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
