@@ -62,3 +62,20 @@ class TestBll(unittest.TestCase):
         # test for errors
         self.assertEqual(flavio.sm_prediction('BR(B0->emu)'), 0)
         self.assertEqual(flavio.sm_prediction('BR(Bs->taumu)'), 0)
+
+    def test_EffectiveLifetimes(self):
+        # In this test we trivially check that the prefactors in (22) and (28) of arXiv:1204.1737 are the same
+
+        ys     = .5*par['DeltaGamma/Gamma_Bs']
+        tau_Bs = par['tau_Bs']
+
+        wc_dict = {'e': wc_e, 'mu': wc, 'tau': wc_tau}
+
+        for l in ['e', 'mu', 'tau']:
+            ADG    = ADeltaGamma(par, wc_dict[l], 'Bs', l)
+            tau    = tau_ll(wc_dict[l], par, 'Bs', l)
+
+            prefactor1 = br_lifetime_corr(ys, ADG)        # eq. (22) of arXiv:1204.1737
+            prefactor2 = 2.  - (1.-ys**2) * tau / tau_Bs  # eq. (28) of arXiv:1204.1737
+
+            self.assertAlmostEqual(prefactor1, prefactor2, places=8)
