@@ -282,7 +282,7 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
 
 def flavio_branding(x=0.8, y=0.94, version=True):
     """Displays a little box containing 'flavio'"""
-    props = dict(facecolor='white', alpha=0.4, lw=1.2)
+    props = dict(facecolor='white', alpha=0.4, lw=0)
     ax = plt.gca()
     text = r'\textsf{\textbf{flavio}}'
     if version:
