@@ -220,6 +220,7 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
 
 
 def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
+              interpolation_factor=3,
               col=None, label=None, contour_args={}, contourf_args={}):
     r"""Plot coloured confidence contours (or bands) given a log likelihood
     function.
@@ -234,6 +235,9 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
       contours.
     - `steps`: number of grid steps in each dimension (total computing time is
       this number squared times the computing time of one `log_likelihood` call!)
+    - `interpolation factor` (optional): in between the points on the grid
+      set by `steps`, the log likelihood is interpolated to get smoother contours.
+      This parameter sets the number of subdivisions (default: 3).
     - `col` (optional): number between 0 and 9 to choose the color of the plot
       from a predefined palette
     - `label` (optional): label that will be added to a legend created with
@@ -244,6 +248,7 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
        to matplotlib.pyplot.contourf() (that paints the contour filling)
     """
     ax = plt.gca()
+    # coarse grid
     _x = np.linspace(x_min, x_max, steps)
     _y = np.linspace(y_min, y_max, steps)
     x, y = np.meshgrid(_x, _y)
@@ -252,6 +257,12 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
         return -2*log_likelihood([x,y])
     z = chi2_vect(x, y)
     z = z - np.min(z) # subtract the best fit point (on the grid)
+    # fine grid
+    _x = np.linspace(x_min, x_max, steps*interpolation_factor)
+    _y = np.linspace(y_min, y_max, steps*interpolation_factor)
+    # interpolate z from coarse to fine grid
+    z = scipy.ndimage.zoom(z, zoom=interpolation_factor)
+    x, y = np.meshgrid(_x, _y)
     if col is not None and isinstance(col, int):
         contourf_args['colors'] = [flavio.plots.colors.pastel[col]]
         contour_args['colors'] = [flavio.plots.colors.set1[col]]
