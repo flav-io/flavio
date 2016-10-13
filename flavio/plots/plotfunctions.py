@@ -256,12 +256,12 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
     def chi2_vect(x, y): # needed for evaluation on meshgrid
         return -2*log_likelihood([x,y])
     z = chi2_vect(x, y)
-    z = z - np.min(z) # subtract the best fit point (on the grid)
     # fine grid
     _x = np.linspace(x_min, x_max, steps*interpolation_factor)
     _y = np.linspace(y_min, y_max, steps*interpolation_factor)
     # interpolate z from coarse to fine grid
     z = scipy.ndimage.zoom(z, zoom=interpolation_factor)
+    z = z - np.min(z) # subtract the best fit point (on the grid)
     x, y = np.meshgrid(_x, _y)
     if col is not None and isinstance(col, int):
         contourf_args['colors'] = [flavio.plots.colors.pastel[col]]
