@@ -220,7 +220,7 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
 
 
 def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
-              interpolation_factor=3,
+              interpolation_factor=1,
               col=None, label=None,
               pre_calculated_z=None,
               contour_args={}, contourf_args={}):
@@ -238,8 +238,9 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
     - `steps`: number of grid steps in each dimension (total computing time is
       this number squared times the computing time of one `log_likelihood` call!)
     - `interpolation factor` (optional): in between the points on the grid
-      set by `steps`, the log likelihood is interpolated to get smoother contours.
-      This parameter sets the number of subdivisions (default: 3).
+      set by `steps`, the log likelihood can be interpolated to get smoother contours.
+      This parameter sets the number of subdivisions (default: 1, i.e. no
+      interpolation). It should be larger than 1.
     - `col` (optional): number between 0 and 9 to choose the color of the plot
       from a predefined palette
     - `label` (optional): label that will be added to a legend created with
