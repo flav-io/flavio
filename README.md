@@ -10,10 +10,6 @@ coefficients of dimension-6 operators.
 
 The project is currently in beta phase, so should be used with reasonable caution.
 
-## Contributors
-
-- David M. Straub (<david.straub@tum.de>)
-
 ## Project web site
 
 Further information and the package documentation can be found at:
@@ -32,6 +28,21 @@ See http://flav-io.github.io/docs/installation.html for instructions.
 Please submit bugs and feature request using
 [Github's issue system](https://github.com/flav-io/flavio/issues) rather than
 by E-mail. Thanks!
+
+## Contributors
+
+Main author:
+
+- David M. Straub (<david.straub@tum.de>)
+
+Contributors:
+
+- Frederik Beaujean
+- Ece Gürler
+- Christoph Niehoff
+- Albert Puig
+- Stefanie Reichert
+- Peter Stangl
 
 ## License
 
