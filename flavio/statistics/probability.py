@@ -16,16 +16,6 @@ class ProbabilityDistribution(object):
    def get_central(self):
       return self.central_value
 
-    # here we define the __hash__ and __eq__ methods to be able to use
-    # instances as dictionary keys.
-
-   def __hash__(self):
-      return id(self)
-
-   def __eq__(self, other):
-      return id(self) == id(other)
-
-
 
 class UniformDistribution(ProbabilityDistribution):
 

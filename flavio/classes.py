@@ -95,16 +95,16 @@ class Constraints(object):
     """
 
     def __init__(self):
-            # Here we have two ordered dictionaries. _constraints has the form
-            # { <constraint1>: [parameter1, parameter2, ...], <constraint2>: ...}
+            # Here we have two data structures. _constraints has the form
+            # [ (<constraint1>, [parameter1, parameter2, ...]), (<constraint2>, ...) ]
             # where the <constraint>s are instances of ProbabilityDistribution
             # and the parameters string names, while _parameters has the form
             # { parameter1: [(num1, <constraint1>)]} where num1 is 0 for a
             # univariate constraints and otherwise gives the position of
             # parameter1 in the multivariate vector.
-            # In summary, having these to dicts allow a bijective mapping between
+            # In summary, having this list and dictionary allow a bijective mapping between
             # constraints (that might apply to multiple parameters) and parameters.
-        self._constraints = OrderedDict()
+        self._constraints = []
         self._parameters = OrderedDict()
 
     @property
@@ -124,7 +124,7 @@ class Constraints(object):
                 self.remove_constraints(parameter)
         # populate the dictionaries defined in __init__
             self._parameters[parameter] = [(num, constraint)]
-        self._constraints[constraint] = parameters
+        self._constraints.append((constraint, parameters))
 
     def set_constraint(self, parameter, constraint_string):
         """Set the constraints on a parameter/observable by specifying a string
@@ -161,7 +161,7 @@ class Constraints(object):
         """Get random values for all constrained parameters where they are
         distributed according to the probability distributions applied."""
         # first, generate random values for every single one of the constraints
-        random_constraints = [constraint.get_random() for constraint in self._constraints.keys()]
+        random_constraints = [constraint.get_random() for constraint, _ in self._constraints]
         random_dict = {}
         # now, iterate over the parameters
         for parameter, constraints in self._parameters.items():
@@ -172,7 +172,7 @@ class Constraints(object):
             central_value =  self.get_central(parameter)
             random_dict[parameter] = central_value  # step 1: p_r = c
             for num, constraint in constraints:
-                idx = list(self._constraints.keys()).index(constraint)
+                idx = ([constraint for constraint, _ in self._constraints]).index(constraint)
                 # step 1+i: p_r += r_i - c
                 random_dict[parameter] += np.ravel([random_constraints[idx]])[num] - central_value
         return random_dict
@@ -204,7 +204,7 @@ class Constraints(object):
           par_dict play no role.
         """
         prob_dict = {}
-        for constraint, parameters in self._constraints.items():
+        for constraint, parameters in self._constraints:
             def constraint_central_value(constraint, parameters, parameter):
                 # this function is required to get the central value for the
                 # excluded_parameters, consistently for univariate and multivariate
