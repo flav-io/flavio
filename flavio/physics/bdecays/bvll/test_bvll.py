@@ -122,3 +122,25 @@ class TestBVll(unittest.TestCase):
         flavio.sm_prediction("S3(Bs->phimumu)", q2=1)
         flavio.sm_prediction("S4(Bs->phimumu)", q2=1)
         flavio.sm_prediction("S7(Bs->phimumu)", q2=1)
+
+    def test_bvll_integrate_pole(self):
+        def f(q2):
+            # dummy function with a pole at q2=0
+            return 1e-10*(1 + 0.1*q2 + 0.01*q2**2)/q2
+        from flavio.math.integrate import nintegrate
+        from flavio.physics.bdecays.bvll.observables import nintegrate_pole
+        self.assertAlmostEqual(nintegrate_pole(f, 0.1, 10)/nintegrate(f, 0.1, 10, epsrel=0.001),
+                               1, delta=0.01)
+        self.assertAlmostEqual(nintegrate_pole(f, 0.001, 0.01)/nintegrate(f, 0.001, 0.01, epsrel=0.001),
+                               1, delta=0.01)
+        self.assertAlmostEqual(nintegrate_pole(f, 0.0005, 2)/nintegrate(f, 0.0005, 2, epsrel=0.0001),
+                               1, delta=0.03)
+        # try whether it also works with a well-behaved function
+        def g(q2):
+            return 1e-10*(1 + 0.1*q2 + 0.01*q2**2)
+        self.assertAlmostEqual(nintegrate_pole(g, 0.1, 10)/nintegrate(g, 0.1, 10, epsrel=0.001),
+                               1, delta=0.01)
+        self.assertAlmostEqual(nintegrate_pole(g, 0.001, 0.01)/nintegrate(g, 0.001, 0.01, epsrel=0.001),
+                               1, delta=0.01)
+        self.assertAlmostEqual(nintegrate_pole(g, 0.0005, 2)/nintegrate(g, 0.0005, 2, epsrel=0.001),
+                               1, delta=0.01)

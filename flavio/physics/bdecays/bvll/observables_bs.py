@@ -73,12 +73,12 @@ def bsvll_dbrdq2(q2, wc_obj, par, B, V, lep):
 def bsvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep):
     def obs(q2):
         return bsvll_obs(function, q2, wc_obj, par, B, V, lep)
-    return flavio.math.integrate.nintegrate(obs, q2min, q2max)
+    return flavio.physics.bdecays.bvll.observables.nintegrate_pole(obs, q2min, q2max)
 
 def bsvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep):
     def obs(q2):
         return bsvll_dbrdq2(q2, wc_obj, par, B, V, lep)
-    return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
+    return flavio.physics.bdecays.bvll.observables.nintegrate_pole(obs, q2min, q2max)/(q2max-q2min)
 
 # Functions returning functions needed for Prediction instances
 

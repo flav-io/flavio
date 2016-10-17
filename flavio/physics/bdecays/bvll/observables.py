@@ -1,6 +1,6 @@
 """Functions for exclusive $B\to V\ell^+\ell^-$ decays."""
 
-from math import sqrt,pi
+from math import sqrt, pi, log
 import numpy as np
 from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
@@ -128,15 +128,30 @@ def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):
     tauB = par['tau_'+B]
     return tauB * bvll_obs(dGdq2_ave, q2, wc_obj, par, B, V, lep)
 
+def nintegrate_pole(function, q2min, q2max):
+    # this is a special integration function to treat the presence of the
+    # photon pole at low q^2. If q2min is below 0.1 GeV^2, it adds and subtracts
+    # the 1/q^2-enhanced pole part to split the integral into a well-behaved part
+    # and one that is trivially solved analytically.
+    # This leads to a huge speed-up.
+    if q2min <= 0.1 and q2min > 0.0001:
+        q20 = q2min
+        f_q20 = function(q20)
+        int_a = flavio.math.integrate.nintegrate(lambda q2: function(q2)-f_q20*q20/q2, q2min, q2max)
+        int_b = f_q20*q20 * log(q2max/q2min)
+        return int_a + int_b
+    else:
+        return flavio.math.integrate.nintegrate(function, q2min, q2max)
+
 def bvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep):
     def obs(q2):
         return bvll_obs(function, q2, wc_obj, par, B, V, lep)
-    return flavio.math.integrate.nintegrate(obs, q2min, q2max)
+    return nintegrate_pole(obs, q2min, q2max)
 
 def bvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep):
     def obs(q2):
         return bvll_dbrdq2(q2, wc_obj, par, B, V, lep)
-    return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
+    return nintegrate_pole(obs, q2min, q2max)/(q2max-q2min)
 
 # Functions returning functions needed for Prediction instances
 
