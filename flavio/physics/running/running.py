@@ -67,7 +67,7 @@ def get_alpha(par, scale, nf_out=None):
     at the specified scale.
     """
     alpha_in = [par[('alpha_s')], par[('alpha_e')]]
-    scale_in = par['m_Z']
+    scale_in = 91.1876 # m_Z treated as a constant here
     alpha_out = rg_evolve_sm(alpha_in, betafunctions.betafunctions_qcd_qed_nf, scale_in, scale, nf_out=nf_out)
     return dict(zip(('alpha_s','alpha_e'),alpha_out))
 
