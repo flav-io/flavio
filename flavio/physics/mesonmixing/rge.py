@@ -43,7 +43,7 @@ def gamma_df2_dict(f):
     gamma['LR'][1,1,1] = -(203/6) * N**2 +(479/6) +(15/(2 * N**2)) +(10/3) * N * f -(22/(3 * N)) * f
     return gamma
 
-def gamma_df2_array(f, alpha_s):
+def gamma_df2_array(f, alpha_s, *args, **kwargs):
     gamma_dict = gamma_df2_dict(f)
     a =  alpha_s/(4.*pi)
     # C = alpha_s/(4pi) * ( C^0 + alpha_s/(4pi) * C^1 )
@@ -71,6 +71,7 @@ def gamma_df2(c, alpha_s, mu, nf):
     gamma = gamma_df2_array(nf, alpha_s)
     return np.dot(gamma.T, c)/mu
 
+df2_rge_derivative = running.make_wilson_rge_derivative(gamma_df2_array)
+
 def run_wc_df2(par, c_in, scale_in, scale_out):
-    adm = lambda nf, alpha_s, alpha_e: gamma_df2_array(nf, alpha_s)
-    return running.get_wilson(par, c_in, running.make_wilson_rge_derivative(adm), scale_in, scale_out)
+    return running.get_wilson(par, c_in, df2_rge_derivative, scale_in, scale_out)
