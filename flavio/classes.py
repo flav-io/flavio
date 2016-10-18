@@ -142,12 +142,12 @@ class Constraints(object):
 
     def remove_constraints(self, parameter):
         """Remove all constraints on a parameter."""
-        self._parameters[parameter] = []
+        self._parameters.pop(parameter, None)
 
     def get_central(self, parameter):
         """Get the central value of a parameter"""
         if parameter not in self._parameters.keys():
-            raise ValueError('No constraints applied to parameter/observable ' + self.parameter)
+            raise ValueError('No constraints applied to parameter/observable ' + parameter)
         else:
             num, constraint = self._parameters[parameter][0]
             # return the num-th entry of the central value vector

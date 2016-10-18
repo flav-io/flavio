@@ -31,6 +31,7 @@ class TestClasses(unittest.TestCase):
         c.add_constraint( ['test_mc', 'test_mb'], MultivariateNormalDistribution([1.2,4.2],[[0.01,0],[0,0.04]]) )
         c.get_logprobability_all(c.get_central_all())
         # removing dummy instances
+        c.remove_constraints('test_mb')
         Parameter.del_instance('test_mb')
         Parameter.del_instance('test_mc')
 
