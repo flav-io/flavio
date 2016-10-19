@@ -3,7 +3,7 @@ r"""Functions for inclusive $B\to X_q\ell^+\ell^-$ decays."""
 import flavio
 import numpy as np
 from math import pi, log, sqrt
-from flavio.math.functions import li, li2
+from flavio.math.functions import li2
 from flavio.classes import Observable, Prediction
 import warnings
 
