@@ -1,11 +1,12 @@
 import scipy
 import numpy as np
 import warnings
+from scipy.integrate.quadrature import AccuracyWarning
 
 def nintegrate(f, a, b, epsrel=0.01, **kwargs):
     with warnings.catch_warnings():
         # ignore AccuracyWarning that is issued when an integral is zero
-        warnings.simplefilter("ignore")
+        warnings.filterwarnings("ignore", category=AccuracyWarning)
         return scipy.integrate.quadrature(f, a, b, rtol=epsrel, tol=0, vec_func=False, **kwargs)[0]
 
 def nintegrate_fast(f, a, b, N=5, **kwargs):
