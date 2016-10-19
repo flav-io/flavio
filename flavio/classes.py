@@ -3,7 +3,7 @@
 
 import numpy as np
 from .config import config
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 import copy
 import math
 from flavio._parse_errors import constraints_from_string, convolve_distributions, errors_from_string, string_from_constraints
@@ -250,6 +250,16 @@ class WilsonCoefficientPriors(Constraints):
         super().__init__()
 
 
+def tree():
+    """Tree data structure.
+
+    See https://gist.github.com/hrldcpr/2012250"""
+    return defaultdict(tree)
+
+def dicts(t):
+    """Turn tree into nested dict"""
+    return {k: dicts(t[k]) for k in t}
+
 ########## Observable Class ##########
 class Observable(NamedInstanceClass):
     """An Observable is something that can be measured experimentally and
@@ -257,6 +267,8 @@ class Observable(NamedInstanceClass):
 
     def __init__(self, name, arguments=None):
         super().__init__(name)
+        if not hasattr(self.__class__, 'taxonomy'):
+            self.__class__.taxonomy = tree()
         self.arguments = arguments
         self.prediction = None
         self.tex = ''
@@ -269,6 +281,23 @@ class Observable(NamedInstanceClass):
 
     def prediction_par(self, par_dict, wc_obj, *args, **kwargs):
         return self.prediction.get_par(par_dict, wc_obj, *args, **kwargs)
+
+    def add_taxonomy(self, taxonomy_string):
+        """Add a metadata taxonomy for the observable.
+
+        `taxonomy_string` has to be a string of the form
+        'Category :: Subcategory :: Subsubcategory'
+        etc. LaTeX code is allowed. One observable can also have multiple
+        taxonomies (e.g. 'Animal :: Cat' and 'Pet :: Favourite Pet')"""
+        taxonomy_list = taxonomy_string.split(' :: ') + [ self.name ]
+        t = self.__class__.taxonomy
+        for node in taxonomy_list:
+            t = t[node]
+
+    @classmethod
+    def taxonomy_dict(cls):
+        """Return the hierarchical metadata taxonomy as a nested dictionary."""
+        return dicts(cls.taxonomy)
 
 
 ########## AuxiliaryQuantity Class ##########

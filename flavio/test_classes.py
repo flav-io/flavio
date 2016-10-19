@@ -99,3 +99,18 @@ class TestClasses(unittest.TestCase):
         self.assertAlmostEqual( pd.logpdf(1. - eps), pd.logpdf(1. + eps), places=8)
         # check that the PDF is properly normalized
         self.assertEqual( scipy.integrate.quad(lambda x: math.exp(pd.logpdf(x)), -np.inf, +np.inf)[0], 1)
+
+    def test_observable_taxonomy(self):
+        o1 = Observable( 'test_obs_1' )
+        o2 = Observable( 'test_obs_2' )
+        o1.add_taxonomy('test 1 :: test 2 :: test 3')
+        o2.add_taxonomy('test 1 :: test 2 :: test 3')
+        self.assertDictEqual(
+            Observable.taxonomy_dict()['test 1'],
+            {'test 2': {'test 3': {'test_obs_1' :{}, 'test_obs_2':{}}}}
+        )
+        # remove test from taxonomy
+        Observable.taxonomy.pop('test 1', None)
+        # removing dummy instances
+        Observable.del_instance('test_obs_1')
+        Observable.del_instance('test_obs_2')
