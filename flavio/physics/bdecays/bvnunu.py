@@ -93,23 +93,29 @@ _hadr = {
 
 for M in _hadr.keys():
 
+    _process_tex = _hadr[M]['tex'] + r"\nu\bar\nu"
+    _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\nu\bar\nu$ :: $'
+
     # binned branching ratio
     _obs_name = "<dBR/dq2>("+M+"nunu)"
     _obs = flavio.classes.Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-    _obs.set_description(r"Binned differential branching ratio of $" + _hadr[M]['tex'] + r"\nu\bar\nu$")
-    _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(" + _hadr[M]['tex'] + r"\nu\bar\nu)$"
+    _obs.set_description(r"Binned differential branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
     flavio.classes.Prediction(_obs_name, dbrdq2_int_summed(_hadr[M]['B'], _hadr[M]['V']))
 
     # differential branching ratio
     _obs_name = "dBR/dq2("+M+"nunu)"
     _obs = flavio.classes.Observable(name=_obs_name, arguments=['q2'])
-    _obs.set_description(r"Differential branching ratio of $" + _hadr[M]['tex'] + r"\nu\bar\nu$")
-    _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _hadr[M]['tex'] + r"\nu\bar\nu)$"
+    _obs.set_description(r"Differential branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
     flavio.classes.Prediction(_obs_name, dbrdq2_summed(_hadr[M]['B'], _hadr[M]['V']))
 
     # total branching ratio
     _obs_name = "BR("+M+"nunu)"
     _obs = flavio.classes.Observable(name=_obs_name)
-    _obs.set_description(r"Branching ratio of $" + _hadr[M]['tex'] + r"\nu\bar\nu$")
-    _obs.tex = r"$\text{BR}(" + _hadr[M]['tex'] + r"\nu\bar\nu)$"
+    _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
     flavio.classes.Prediction(_obs_name, BRtot_summed(_hadr[M]['B'], _hadr[M]['V']))

@@ -33,8 +33,12 @@ _had = {'D+': r'D^+', 'Ds': r'D_s',}
 
 for D in _had:
   for l in _lep:
+    _process_tex = _had[D]+r"\to "+_lep[l]+r"^+\nu_"+_lep[l]
+    _process_taxonomy = r'Process :: $c$ hadron decays :: Leptonic tree-level decays :: $D\to \ell\nu$ :: $'
+
     _obs_name = "BR("+D+"->"+l+"nu)"
     _obs = flavio.classes.Observable(_obs_name)
-    _obs.set_description(r"Branching ratio of $"+_had[D]+r"\to "+_lep[l]+r"^+\nu_"+_lep[l]+r"$")
-    _obs.tex = r"$\text{BR}("+_had[D]+r"\to "+_lep[l]+r"^+\nu_"+_lep[l]+r")$"
+    _obs.set_description(r"Branching ratio of $"+_process_tex+r"$")
+    _obs.tex = r"$\text{BR}("+_process_tex+r")$"
+    _obs.add_taxonomy(_process_taxonomy + _process_tex + r'$')
     flavio.classes.Prediction(_obs_name, br_Dlnu_fct(D, l))

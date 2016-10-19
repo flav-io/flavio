@@ -229,31 +229,39 @@ _observables = {
 'AFBlh': {'func_num': AFBlh_num, 'tex': r'A_\text{FB}^{\ell h}', 'desc': 'lepton-hadron forward-backward asymmetry'},
 }
 for l in ['e', 'mu', ]: # tau requires lepton mass dependence!
+
+    _process_tex = r"\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+r"^-"
+    _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $\Lambda_b\to \Lambda\ell^+\ell^-$ :: $' + _process_tex + r"$"
+
     # binned branching ratio
     _obs_name = "<dBR/dq2>(Lambdab->Lambda"+l+l+")"
     _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-    _obs.set_description(r"Binned differential branching ratio of $\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-$")
-    _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
+    _obs.set_description(r"Binned differential branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy)
     Prediction(_obs_name, dbrdq2_int_func(l))
 
     # differential branching ratio
     _obs_name = "dBR/dq2(Lambdab->Lambda"+l+l+")"
     _obs = Observable(name=_obs_name, arguments=['q2'])
-    _obs.set_description(r"Differential branching ratio of $\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-$")
-    _obs.tex = r"$\frac{d\text{BR}}{dq^2}(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
+    _obs.set_description(r"Differential branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy)
     Prediction(_obs_name, dbrdq2_func(l))
 
     for obs in _observables:
         # binned angular observables
         _obs_name = "<" + obs + ">(Lambdab->Lambda"+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-        _obs.set_description("Binned " + _observables[obs]['desc'] + r" in $\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-$")
-        _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        _obs.set_description("Binned " + _observables[obs]['desc'] + r" in $" + _process_tex + r"$")
+        _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _process_tex + r")$"
+        _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, obs_int_ratio_func(_observables[obs]['func_num'], dGdq2, l))
 
         # differential angular observables
         _obs_name = obs + "(Lambdab->Lambda"+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2'])
-        _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-$")
-        _obs.tex = r"$" + _observables[obs]['tex'] + r"(\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _process_tex + r"$")
+        _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _process_tex + r")$"
+        _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, obs_ratio_func(_observables[obs]['func_num'], dGdq2, l))

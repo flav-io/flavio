@@ -73,44 +73,55 @@ def S_Bspsiphi(wc_obj, par):
 o = Observable('DeltaM_s')
 o.set_description(r"Mass difference in the $B_s$-$\bar B_s$ system")
 o.tex = r"$\Delta M_s$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B_s$-$\bar B_s$ mixing')
 Prediction('DeltaM_s', lambda wc_obj, par: DeltaM(wc_obj, par, 'Bs'))
 
 o = Observable('DeltaM_d')
 o.set_description(r"Mass difference in the $B^0$-$\bar B^0$ system")
 o.tex = r"$\Delta M_d$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B^0$-$\bar B^0$ mixing')
 Prediction('DeltaM_d', lambda wc_obj, par: DeltaM(wc_obj, par, 'B0'))
 
 o = Observable('a_fs_s')
 o.set_description(r"CP asymmetry in flavour-specific $B_s$ decays")
 o.tex = r"$a_\text{fs}^s$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B_s$-$\bar B_s$ mixing')
 Prediction('a_fs_s', lambda wc_obj, par: a_fs(wc_obj, par, 'Bs'))
 
 o = Observable('a_fs_d')
 o.set_description(r"CP asymmetry in flavour-specific $B^0$ decays")
 o.tex = r"$a_\text{fs}^d$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B^0$-$\bar B^0$ mixing')
 Prediction('a_fs_d', lambda wc_obj, par: a_fs(wc_obj, par, 'B0'))
 
 o = Observable('DeltaGamma_s')
 o.set_description(r"Decay width difference in the $B_s$-$\bar B_s$ system")
 o.tex = r"$\Delta\Gamma_s$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B_s$-$\bar B_s$ mixing')
 Prediction('DeltaGamma_s', lambda wc_obj, par: DeltaGamma(wc_obj, par, 'Bs'))
 
 o = Observable('DeltaGamma_d')
 o.set_description(r"Decay width difference in the $B^0$-$\bar B^0$ system")
 o.tex = r"$\Delta\Gamma_d$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B^0$-$\bar B^0$ mixing')
 Prediction('DeltaGamma_d', lambda wc_obj, par: DeltaGamma(wc_obj, par, 'B0'))
 
 o = Observable('eps_K')
 o.set_description(r"Direct CP violation parameter in the $K^0$-$\bar K^0$ system")
 o.tex = r"$\vert\epsilon_K\vert$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $K^0$-$\bar K^0$ mixing')
 Prediction('eps_K', epsK)
 
 o = Observable('S_psiK')
 o.set_description(r"Mixing induced CP asymmetry in $B^0\to J/\psi K_S$")
 o.tex = r"$S_{\psi K_S}$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B^0$-$\bar B^0$ mixing')
+o.add_taxonomy(r'Process :: $b$ hadron decays :: Non-leptonic decays :: $B\to VP$')
 Prediction('S_psiK', S_BJpsiK)
 
 o = Observable('S_psiphi')
 o.set_description(r"Mixing induced CP asymmetry in $B_s\to J/\psi \phi$")
 o.tex = r"$S_{\psi\phi}$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B_s$-$\bar B_s$ mixing')
+o.add_taxonomy(r'Process :: $b$ hadron decays :: Non-leptonic decays :: $B\to VV$')
 Prediction('S_psiphi', S_Bspsiphi)

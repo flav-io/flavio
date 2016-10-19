@@ -157,31 +157,40 @@ def tau_ll_func(wc_obj, par, B, lep):
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 for l in ['e', 'mu', 'tau']:
+    _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to\ell^+\ell^-$ :: $'
+
     # For the B^0 decay, we take the time-integrated branching ratio
     _obs_name = "BR(Bs->"+l+l+")"
     _obs = Observable(_obs_name)
-    _obs.set_description(r"Time-integrated branching ratio of $B_s\to "+_tex[l]+"^+"+_tex[l]+"^-$.")
-    _obs.tex = r"$\overline{\text{BR}}(B_s\to "+_tex[l]+"^+"+_tex[l]+"^-)$."
+    _process_tex = r"B_s\to "+_tex[l]+r"^+"+_tex[l]+r"^-"
+    _obs.set_description(r"Time-integrated branching ratio of $" + _process_tex + r"$.")
+    _obs.tex = r"$\overline{\text{BR}}(" + _process_tex + r")$."
+    _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
     Prediction(_obs_name, bqll_obs_function(br_timeint, 'Bs', l, l))
 
-    # For the B^0 decay, we take the prompt branching ratio since DeltaGamma is negligible
-    _obs_name = "BR(Bd->"+l+l+")"
-    _obs = Observable(_obs_name)
-    _obs.set_description(r"Branching ratio of $B^0\to "+_tex[l]+"^+"+_tex[l]+"^-$.")
-    _obs.tex = r"$\text{BR}(B^0\to "+_tex[l]+"^+"+_tex[l]+"^-)$."
-    Prediction(_obs_name, bqll_obs_function(br_inst, 'B0', l, l))
 
     # Add the effective lifetimes for Bs
     _obs_name = 'tau_'+l+l
     _obs = Observable(_obs_name)
-    _obs.set_description(r"Effective lifetime for $B_s \to "+_tex[l]+"^+"+_tex[l]+"^-$.")
+    _obs.set_description(r"Effective lifetime for $"+ _process_tex + r"$.")
     _obs.tex = r"$\tau_{B_s \to " +_tex[l] +_tex[l] + "}$."
+    _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
     if l=='e':
         Prediction(_obs_name, lambda wc_obj, par: tau_ll_func(wc_obj, par, 'Bs', 'e'))
     if l=='mu':
         Prediction(_obs_name, lambda wc_obj, par: tau_ll_func(wc_obj, par, 'Bs', 'mu'))
     if l=='tau':
         Prediction(_obs_name, lambda wc_obj, par: tau_ll_func(wc_obj, par, 'Bs', 'tau'))
+
+    # For the B^0 decay, we take the prompt branching ratio since DeltaGamma is negligible
+    _obs_name = "BR(Bd->"+l+l+")"
+    _obs = Observable(_obs_name)
+    _process_tex = r"B^0\to "+_tex[l]+r"^+"+_tex[l]+r"^-"
+    _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\text{BR}(" + _process_tex + r")$."
+    _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
+    Prediction(_obs_name, bqll_obs_function(br_inst, 'B0', l, l))
+
 
 _tex_B = {'B0': r'\bar B^0', 'Bs': r'\bar B_s'}
 _tex_lfv = {'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
@@ -191,6 +200,8 @@ for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau
     for B in ['Bs', 'B0']:
         _obs_name = "BR("+B+"->"+''.join(ll)+")"
         _obs = Observable(_obs_name)
-        _obs.set_description(r"Branching ratio of $"+_tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]+r"$")
-        _obs.tex = r"$\text{BR}("+_tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]+r"$)"
+        _process_tex = _tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]
+        _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
+        _obs.tex = r"$\text{BR}(" + _process_tex + r"$)"
+        _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to\ell^+\ell^-$ :: $'  + _process_tex + r'$')
         Prediction(_obs_name, bqll_obs_function(br_inst, B, ll[0], ll[1]))

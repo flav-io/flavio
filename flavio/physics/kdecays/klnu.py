@@ -72,8 +72,11 @@ for l in ['e', 'mu']:
     # Individual (e and mu) modes
     _obs_name = "BR(K+->"+l+"nu)"
     _obs = flavio.classes.Observable(_obs_name)
-    _obs.set_description(r"Branching ratio of $K^+\to "+_tex[l]+r"^+\nu_"+_tex[l]+r"(\gamma)$")
-    _obs.tex = r"$\text{BR}(K^+\to "+_tex[l]+r"^+\nu_"+_tex[l]+r")$"
+    _process_tex = r"K^+\to "+_tex[l]+r"^+\nu_"+_tex[l]
+    _process_taxonomy = r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $' + _process_tex + r'$'
+    _obs.add_taxonomy(_process_taxonomy)
+    _obs.set_description(r"Branching ratio of $" + _process_tex +r"(\gamma)$")
+    _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
     flavio.classes.Prediction(_obs_name, br_plnu_fct('K+', l))
 
 # e/mu ratios
@@ -81,12 +84,17 @@ _obs_name = "Remu(K+->lnu)"
 _obs = flavio.classes.Observable(_obs_name)
 _obs.set_description(r"Ratio of branching ratios of $K^+\to e^+\nu_e$ and $K^+\to \mu^+\nu_\mu$")
 _obs.tex = r"$R_{e\mu}(K^+\to \ell^+\nu)$"
+_obs.add_taxonomy(r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $K^+\to e^+\nu_e$')
+_obs.add_taxonomy(r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $K^+\to \mu^+\nu_\mu$')
 flavio.classes.Prediction(_obs_name, r_plnu_fct('K+'))
 
 # for the pion decay, we only need the branching ratio of pi->enu, as
 # pi->munu is 100%!
 _obs_name = "BR(pi+->enu)"
 _obs = flavio.classes.Observable(_obs_name)
-_obs.set_description(r"Branching ratio of $\pi^+\to e^+\nu_e(\gamma)$")
-_obs.tex = r"$\text{BR}(\pi^+\to e^+\nu)$"
+_process_tex = r"\pi^+\to e^+\nu"
+_obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
+_obs.tex = r"$\text{BR}(" + _process_tex + r")$"
+_process_taxonomy = r'Process :: Unflavoured meson decays :: Leptonic tree-level decays :: $\pi\to \ell\nu$ :: $' + _process_tex + r'$'
+_obs.add_taxonomy(_process_taxonomy)
 flavio.classes.Prediction(_obs_name, r_plnu_fct('pi+'))

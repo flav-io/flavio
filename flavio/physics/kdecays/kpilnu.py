@@ -80,8 +80,12 @@ _hadr = {
 
 for l in ['e', 'mu', 'l']:
     for M in _hadr.keys():
+        _process_tex = _hadr[M]['tex']+_tex[l]+r"^+\nu_"+_tex[l]
+        _process_taxonomy = r'Process :: $s$ hadron decays :: Semi-leptonic tree-level decays :: $K\to P\ell\nu$ :: $' + _process_tex + r"$"
+
         _obs_name = "BR("+M+l+"nu)"
         _obs = Observable(_obs_name)
-        _obs.set_description(r"Total branching ratio of $"+_hadr[M]['tex']+_tex[l]+r"^+\nu_"+_tex[l]+"$")
-        _obs.tex = r"$\text{BR}("+_hadr[M]['tex']+_tex[l]+r"^+\nu_"+_tex[l]+")$"
+        _obs.set_description(r"Total branching ratio of $" + _process_tex + r"$")
+        _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
+        _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, BR_tot_function(_hadr[M]['K'], _hadr[M]['P'], l))

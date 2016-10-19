@@ -91,10 +91,15 @@ _hadr = {
 
 for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
     for M in _hadr.keys():
+
+        _process_tex = _hadr[M]['tex']+' '+_tex[''.join(ll)]
+        _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _process_tex + r"$"
+
         for br in ['BR',]:
             _obs_name = br + "("+M+''.join(ll)+")"
             _obs = Observable(_obs_name)
-            _obs.set_description(_desc[br] + r" branching ratio of $"+_hadr[M]['tex']+' '+_tex[''.join(ll)]+r"$")
-            _obs.tex = r'$' + _tex_br[br] + "(" + _hadr[M]['tex']+' '+_tex[''.join(ll)]+r")$"
+            _obs.set_description(_desc[br] + r" branching ratio of $"+_process_tex+r"$")
+            _obs.tex = r'$' + _tex_br[br] + "(" + _process_tex+r")$"
             _obs.arguments = _args[br]
+            _obs.add_taxonomy(_process_taxonomy)
             Prediction(_obs_name, _func[br](_hadr[M]['B'], _hadr[M]['V'], ll[0], ll[1]))

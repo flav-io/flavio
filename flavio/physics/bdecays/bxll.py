@@ -125,16 +125,22 @@ def bxll_dbrdq2_func(q, lep):
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau', 'l': r'\ell'}
 for l in ['e', 'mu', 'tau', 'l']:
     for q in ['s', 'd']:
+
+        _process_tex =  r"B\to X_" + q +_tex[l]+r"^+"+_tex[l]+r"^-"
+        _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to X\ell^+\ell^-$ :: $' + _process_tex + r"$"
+
         # binned branching ratio
         _obs_name = "<BR>(B->X"+q+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-        _obs.set_description(r"Binned branching ratio of $B\to X_" + q +_tex[l]+r"^+"+_tex[l]+"^-$")
-        _obs.tex = r"$\langle \text{BR} \rangle(B\to X_" + q +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        _obs.set_description(r"Binned branching ratio of $" + _process_tex + r"$")
+        _obs.tex = r"$\langle \text{BR} \rangle(" + _process_tex + r")$"
+        _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, bxll_br_int_func(q, l))
 
         # differential branching ratio
         _obs_name = "dBR/dq2(B->X"+q+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2'])
-        _obs.set_description(r"Differential branching ratio of $B\to X_" + q +_tex[l]+r"^+"+_tex[l]+"^-$")
-        _obs.tex = r"$\frac{d\text{BR}}{dq^2}(B\to X_" + q +_tex[l]+r"^+"+_tex[l]+"^-)$"
+        _obs.set_description(r"Differential branching ratio of $" + _process_tex + r"$")
+        _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _process_tex + r")$"
+        _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, bxll_dbrdq2_func(q, l))

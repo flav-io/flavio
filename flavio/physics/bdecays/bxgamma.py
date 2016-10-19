@@ -116,20 +116,25 @@ def ACPBXgamma(wc_obj, par, E0):
     # return (as_s)/(br_s + br_d)
     return (as_s + as_d)/(br_s + br_d)
 
+_process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to X\gamma$ :: '
+
 _obs_name = "BR(B->Xsgamma)"
 _obs = Observable(_obs_name)
 _obs.set_description(r"CP-averaged branching ratio of $B\to X_s\gamma$ for $E_\gamma>1.6$ GeV")
 _obs.tex = r"$\text{BR}(B\to X_s\gamma)$"
+_obs.add_taxonomy(_process_taxonomy + r"$B\to X_s\gamma$")
 Prediction(_obs_name, lambda wc_obj, par: BRBXgamma(wc_obj, par, 's', 1.6))
 
 _obs_name = "BR(B->Xdgamma)"
 _obs = Observable(_obs_name)
 _obs.set_description(r"CP-averaged branching ratio of $B\to X_d\gamma$ for $E_\gamma>1.6$ GeV")
 _obs.tex = r"$\text{BR}(B\to X_d\gamma)$"
+_obs.add_taxonomy(_process_taxonomy + r"$B\to X_d\gamma$")
 Prediction(_obs_name, lambda wc_obj, par: BRBXgamma(wc_obj, par, 'd', 1.6))
 
 _obs_name = "ACP(B->Xgamma)"
 _obs = Observable(_obs_name)
 _obs.set_description(r"Direct CP asymmetry in $B\to X_{s+d}\gamma$ for $E_\gamma>1.6$ GeV")
 _obs.tex = r"$A_\text{CP}(B\to X_{s+d}\gamma)$"
+_obs.add_taxonomy(_process_taxonomy + r"$B\to X_{s+d}\gamma$")
 Prediction(_obs_name, lambda wc_obj, par: ACPBXgamma(wc_obj, par, 1.6))

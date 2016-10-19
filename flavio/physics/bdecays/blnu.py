@@ -42,8 +42,12 @@ def br_blnu_fct(lep):
 # Observable and Prediction instances
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 for l in ['e', 'mu', 'tau']:
+    _process_tex = r"B^+\to "+_tex[l]+r"^+\nu_"+_tex[l]
+    _process_taxonomy = r'Process :: $b$ hadron decays :: Leptonic tree-level decays :: $B\to \ell\nu$ :: $' + _process_tex + r"$"
+
     _obs_name = "BR(B+->"+l+"nu)"
     _obs = flavio.classes.Observable(_obs_name)
-    _obs.set_description(r"Branching ratio of $B^+\to "+_tex[l]+r"^+\nu_"+_tex[l]+r"$")
-    _obs.tex = r"$\text{BR}(B^+\to "+_tex[l]+r"^+\nu_"+_tex[l]+r")$"
+    _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy)
     flavio.classes.Prediction(_obs_name, br_blnu_fct(l))
