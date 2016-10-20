@@ -175,14 +175,12 @@ for l in ['e', 'mu', 'tau']:
 for l in [('mu','e'), ('tau','mu'),]:
     for M in _hadr.keys():
 
-        for li in l:
-            # add taxonomy for both processes (e.g. B-s>Vee and Bs->Vmumu)
-            _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$"
-
         # binned ratio of BRs
         _obs_name = "<R"+l[0]+l[1]+">("+M+"ll)"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
         _obs.set_description(r"Ratio of partial branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
         _obs.tex = r"$\langle R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} \rangle(" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
-        _obs.add_taxonomy(_process_taxonomy)
+        for li in l:
+            # add taxonomy for both processes (e.g. Bs->Vee and Bs->Vmumu)
+            _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
         Prediction(_obs_name, bsvll_obs_int_ratio_leptonflavour(dGdq2_ave_Bs, _hadr[M]['B'], _hadr[M]['V'], *l))
