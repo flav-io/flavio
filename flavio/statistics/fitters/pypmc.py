@@ -17,9 +17,16 @@ class pypmcScan(object):
         # start value is a random vector
         self.start = fit.get_random
         self.dimension = len(self.start)
-        # generate another random vector to guess an initial step size
-        _initial_sigma = np.absolute(self.start - fit.get_random)
-        self._initial_proposal = pypmc.density.gauss.LocalGauss(_initial_sigma * np.eye(self.dimension))
+        # for the initial proposal distribution, generate N random samples
+        # and compute the covariance
+        N = max(50, 2*self.dimension)
+        _initial_covariance = np.cov(np.array([fit.get_random for i in range(N)]).T)
+        try:
+            self._initial_proposal = pypmc.density.gauss.LocalGauss(_initial_covariance)
+        except:
+            # if this fails for some reason, discard the correlation
+            self._initial_proposal = pypmc.density.gauss.LocalGauss(
+                            np.eye(self.dimension)*np.diag(_initial_covariance))
 
         self.mc = pypmc.sampler.markov_chain.AdaptiveMarkovChain(target=self.fit.log_target,
                                                                  proposal=self._initial_proposal,
