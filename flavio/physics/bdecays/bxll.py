@@ -7,6 +7,24 @@ from flavio.math.functions import li2
 from flavio.classes import Observable, Prediction
 import warnings
 
+def bxll_parameters(par, lep):
+    ml = par['m_'+lep]
+    scale = flavio.config['renormalization scale']['bxll']
+    mb = flavio.physics.running.running.get_mb(par, scale)
+    alpha = flavio.physics.running.running.get_alpha(par, scale)
+    alpha_s = alpha['alpha_s']
+    alpha_e = alpha['alpha_e']
+    return ml, mb, alpha_s, alpha_e
+
+def bxll_br_prefactor(par, q, lep):
+    ml, mb, alpha_s, alpha_e = bxll_parameters(par, lep)
+    bq = 'b' + q
+    xi_t = flavio.physics.ckm.xi('t',bq)(par)
+    Vcb = flavio.physics.ckm.get_ckm(par)[1,2]
+    C = par['C_BXlnu']
+    BRSL = par['BR(B->Xcenu)_exp']
+    return alpha_e**2/4./pi**2 / mb**2 * BRSL/C * abs(xi_t)**2/abs(Vcb)**2
+
 def inclusive_wc(q2, wc_obj, par, q, lep, mb):
     r"""Returns a dictionary of "inclusive" Wilson coefficients where
     universal bremsstrahlung and virtual corrections have been absorbed."""
@@ -27,6 +45,22 @@ def inclusive_wc(q2, wc_obj, par, q, lep, mb):
     wc_eff['ap'] = wc_eff['ap'] * brems_9
     return wc_eff
 
+def _bxll_dbrdq2(q2, wc_obj, par, q, lep):
+    ml, mb, alpha_s, alpha_e = bxll_parameters(par, lep)
+    if q2 < 4*ml**2 or q2 > mb**2:
+        return 0
+    N = bxll_br_prefactor(par, q, lep)
+    # alphaem = 1/137.035999139 # this is alpha_e(0), a constant for our purposes
+    wc_dict = inclusive_wc(q2, wc_obj, par, q, lep, mb)
+    sh = q2/mb**2
+    mlh = ml/mb
+    # for ms=0, rate is simply the sum of C_i and C_i' contributions
+    Phi_ll  = ( f_incl(sh, mlh, alpha_s, wc_dict['7'], wc_dict['v'], wc_dict['a'], wc_dict['s'], wc_dict['p'])
+         + f_incl(sh, mlh, alpha_s, wc_dict['7p'], wc_dict['vp'], wc_dict['ap'], wc_dict['sp'], wc_dict['pp']) )
+    Phi_u = f_sl(alpha_e, alpha_s, par['alpha_s'], mb)
+    unc = 1 + par['delta_BX'+q+'ll'] # fudge factor to account for remaining uncertainty
+    return N * Phi_ll / Phi_u * unc
+
 def bxll_dbrdq2(q2, wc_obj, par, q, lep):
     r"""Inclusive $B\to  X_q\ell^+\ell^-$ differential branching ratio
     normalized to $B\to X_c\ell\nu$ taken from experiment."""
@@ -37,33 +71,6 @@ def bxll_dbrdq2(q2, wc_obj, par, q, lep):
         return (_bxll_dbrdq2(q2, wc_obj, par, q, 'e') + _bxll_dbrdq2(q2, wc_obj, par, q, 'mu'))/2.
     else:
         return _bxll_dbrdq2(q2, wc_obj, par, q, lep)
-
-def _bxll_dbrdq2(q2, wc_obj, par, q, lep):
-    ml = par['m_'+lep]
-    scale = flavio.config['renormalization scale']['bxll']
-    mb = flavio.physics.running.running.get_mb(par, scale)
-    if q2 < 4*ml**2 or q2 > mb**2:
-        return 0
-    alpha = flavio.physics.running.running.get_alpha(par, scale)
-    alpha_s = alpha['alpha_s']
-    alpha_e = alpha['alpha_e']
-    # alphaem = 1/137.035999139 # this is alpha_e(0), a constant for our purposes
-    bq = 'b' + q
-    xi_t = flavio.physics.ckm.xi('t',bq)(par)
-    Vcb = flavio.physics.ckm.get_ckm(par)[1,2]
-    C = par['C_BXlnu']
-    BRSL = par['BR(B->Xcenu)_exp']
-    wc_dict = inclusive_wc(q2, wc_obj, par, q, lep, mb)
-    sh = q2/mb**2
-    mlh = ml/mb
-    GF = par['GF']
-    tauB = par['tau_B0']
-    # for ms=0, rate is simply the sum of C_i and C_i' contributions
-    Phi_ll  = ( f_incl(sh, mlh, alpha_s, wc_dict['7'], wc_dict['v'], wc_dict['a'], wc_dict['s'], wc_dict['p'])
-         + f_incl(sh, mlh, alpha_s, wc_dict['7p'], wc_dict['vp'], wc_dict['ap'], wc_dict['sp'], wc_dict['pp']) )
-    Phi_u = f_sl(alpha_e, alpha_s, par['alpha_s'], mb)
-    unc = 1 + par['delta_BX'+q+'ll'] # fudge factor to account for remaining uncertainty
-    return alpha_e**2/4./pi**2 / mb**2 * BRSL/C * abs(xi_t)**2/abs(Vcb)**2 * Phi_ll / Phi_u * unc
 
 def f_incl(sh, mlh, alpha_s, C7t, C9t, C10t, CS, CP):
     # The function of Wilson coefficients and kinematical quantities entering
@@ -79,6 +86,7 @@ def f_incl(sh, mlh, alpha_s, C7t, C9t, C10t, CS, CP):
         # O(m_l) terms
         + 6*mlh**2 * (abs(C9t)**2 - abs(C10t)**2)
         + 6 * mlh * (CP * C10t.conj()).real )
+
 
 # Functions needed for bremsstrahlung corrections to rate
 def sigma9(s):
