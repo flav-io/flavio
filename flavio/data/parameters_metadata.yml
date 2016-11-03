@@ -542,6 +542,9 @@ bag_Bs_1:
 bag_K0_1:
   tex: $B_1^{(K)}$
   description: $K^0$ bag parameter of $O_1$ in the $\overline{\text{MS}}$ scheme at 2 GeV
+bag_D0_1:
+  tex: $B_1^{(D)}$
+  description: $D^0$ bag parameter of $O_1$ in the $\overline{\text{MS}}$ scheme at 2 GeV
 
 # BSM operators
 bag_B0_2:
@@ -581,6 +584,19 @@ bag_K0_4:
 bag_K0_5:
   tex: $B_5^{(K)}$
   description: $K^0$ bag parameter of $O_5$ in the $\overline{\text{MS}}$ scheme at 2 GeV
+
+bag_D0_2:
+  tex: $B_2^{(D)}$
+  description: $D^0$ bag parameter of $O_2$ in the $\overline{\text{MS}}$ scheme at 2 GeV
+bag_D0_3:
+  tex: $B_3^{(D)}$
+  description: $D^0$ bag parameter of $O_3$ in the $\overline{\text{MS}}$ scheme at 2 GeV
+bag_D0_4:
+  tex: $B_4^{(D)}$
+  description: $D^0$ bag parameter of $O_4$ in the $\overline{\text{MS}}$ scheme at 2 GeV
+bag_D0_5:
+  tex: $B_5^{(D)}$
+  description: $D^0$ bag parameter of $O_5$ in the $\overline{\text{MS}}$ scheme at 2 GeV
 
 
 
@@ -1022,3 +1038,17 @@ B->D* CLN deltac_hT1:
 B->D CLN deltac_h+:
   tex: $\delta_{\epsilon_c^2}^{h_+}$
   description: Power correction to $B\to D$ HQET form factor $h_+$
+
+# Parameters for D-Dbar mixing
+M12_D a_bb:
+  description:
+M12_D a_bs:
+  description:
+M12_D a_ss:
+  description:
+Gamma12_D a_bb:
+  description:
+Gamma12_D a_bs:
+  description:
+Gamma12_D a_ss:
+  description:

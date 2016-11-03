@@ -79,6 +79,11 @@ bag_K0_3: 0.76(5)(1)  # 1505.06639 table 1; converted from 3->2 GeV by multpying
 bag_K0_4: 0.75(4)(3)   # 1505.06639 table 1; converted from 3->2 GeV by multpying with 0.96
 bag_K0_5: 0.47(4)(1)  # 1505.06639 table 1; converted from 3->2 GeV by multpying with 0.96
 
+bag_D0_1: 0.727(26)(4)  # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_2: 0.62(3)(2)   # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_3: 0.92(8)(2)  # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_4: 0.87(5)(4)   # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_5: 0.93(7)(1)  # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
 
 # DeltaF=2 QCD correction factors
 
@@ -205,3 +210,11 @@ Lambdab->Lambda deltaC9 c_para1 Im: 0 ± 0.3
 
 # Parameters for HQET form factors
 B->D* CLN deltac_hT1: 0 ± 3
+
+# Parameters for D-Dbar mixing
+M12_D a_bb: 0
+M12_D a_bs: 0 ± 0.1
+M12_D a_ss: -0.1 ± 0.1
+Gamma12_D a_bb: 0
+Gamma12_D a_bs: 0 ± 0.35
+Gamma12_D a_ss: -0.35 ± 0.1
