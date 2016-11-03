@@ -783,12 +783,26 @@ delta_BXdgamma:
   tex: $\delta_{bd\gamma}$
   description: Quantity parametrizing the remaining theory uncertainty due to higher orders, interpolation, and non-perturbative effects in $B\to X_d\gamma$. The relative uncertainty is $1+\delta$.
 # B->Xqll uncertainty parameters
-delta_BXsll:
-  tex: $\delta_{bsll}$
-  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\ell^+\ell^-$. The relative uncertainty is $1+\delta$.
-delta_BXdll:
-  tex: $\delta_{bdll}$
-  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\ell^+\ell^-$. The relative uncertainty is $1+\delta$.
+delta_BXsll low:
+  tex: $\delta_{bsll}^\text{low}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\ell^+\ell^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdll low:
+  tex: $\delta_{bdll}^\text{low}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\ell^+\ell^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXsll high:
+  tex: $\delta_{bsll}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\ell^+\ell^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdll high:
+  tex: $\delta_{bdll}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\ell^+\ell^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+
+# parameters needed for power corrections to B->Xqll
+lambda_1:
+  tex: $\lambda_1$
+  description: Matrix element of $B$ meson kinetic energy operator
+lambda_2:
+  tex: $\lambda_2$
+  description: Matrix element of $B$ meson magnetic moment operator
 
 # charm quark mass entering alpha_s corrections to B->Vgamma.
 m_c BVgamma:
