@@ -6,6 +6,7 @@ from flavio.physics.mesonmixing import common
 from flavio.physics import ckm
 from flavio.config import config
 from math import sqrt
+from cmath import phase
 from flavio.physics.common import conjugate_par
 from flavio.classes import Observable, Prediction
 
@@ -13,11 +14,13 @@ from flavio.classes import Observable, Prediction
 def get_M12_G12(wc_obj, par, meson):
     scale = config['renormalization scale'][meson + ' mixing']
     wc = wc_obj.get_wc(2*common.meson_quark[meson], scale, par)
-    M12 = amplitude.M12_d(par, wc, meson)
+    M12 = amplitude.M12(par, wc, meson)
     # TODO temporary fix: we don't have a prediction for Gamma12 in the kaon sector
     if meson == 'K0':
         G12 = 0.
-    else:
+    elif meson == 'D0':
+        G12 = amplitude.G12_u(par, wc)
+    else: # B0 and Bs
         G12 = amplitude.G12_d(par, wc, meson)
     return M12, G12
 
@@ -59,6 +62,14 @@ def DeltaGamma_12(wc_obj, par, meson):
     mass eigenstate 1 is CP-even in the absence of CP violation."""
     M12, G12 = get_M12_G12(wc_obj, par, meson)
     return common.DeltaGamma(M12, G12)
+
+def x(wc_obj, par, meson):
+    r"""$x=(M_1 - M_2)/\Gamma$ where 1 is CP-even in the CPC limit."""
+    return DeltaM_12(wc_obj, par, meson)*par['tau_'+meson]
+
+def y(wc_obj, par, meson):
+    r"""$y=(\Gamma_1 - \Gamma_2)/2\Gamma$ where 1 is CP-even in the CPC limit."""
+    return DeltaGamma_12(wc_obj, par, meson)*par['tau_'+meson]/2.
 
 
 def epsK(wc_obj, par):
@@ -150,3 +161,27 @@ o.tex = r"$S_{\psi\phi}$"
 o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B_s$-$\bar B_s$ mixing')
 o.add_taxonomy(r'Process :: $b$ hadron decays :: Non-leptonic decays :: $B\to VV$')
 Prediction('S_psiphi', S_Bspsiphi)
+
+o = Observable('x_D')
+o.set_description(r"Normalized mass difference in the $D^0$-$\bar D^0$ system")
+o.tex = r"$x_D$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $D^0$-$\bar D^0$ mixing')
+Prediction('x_D', lambda wc_obj, par: x(wc_obj, par, 'D0'))
+
+o = Observable('y_D')
+o.set_description(r"Normalized width difference in the $D^0$-$\bar D^0$ system")
+o.tex = r"$y_D$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $D^0$-$\bar D^0$ mixing')
+Prediction('y_D', lambda wc_obj, par: y(wc_obj, par, 'D0'))
+
+o = Observable('phi_D')
+o.set_description(r"Phase of $q/p$ in the $D^0$-$\bar D^0$ system")
+o.tex = r"$\phi_D$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $D^0$-$\bar D^0$ mixing')
+Prediction('phi_D', lambda wc_obj, par: phase(-q_over_p(wc_obj, par, 'D0')))
+
+o = Observable('q/p_D')
+o.set_description(r"Absolute value of $q/p$ in the $D^0$-$\bar D^0$ system")
+o.tex = r"$|q/p|_D$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $D^0$-$\bar D^0$ mixing')
+Prediction('q/p_D', lambda wc_obj, par: abs(q_over_p(wc_obj, par, 'D0')))

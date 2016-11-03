@@ -100,6 +100,7 @@ sectors_flavio2wcxf = {
  'sdnutaunumu': 'sdnunu',
  'sdnutaunutau': 'sdnunu',
  'sdsd': 'sdsd',
+ 'ucuc': 'cucu',
  'suenue': 'usenu',
  'suenumu': 'usenu',
  'suenutau': 'usenu',

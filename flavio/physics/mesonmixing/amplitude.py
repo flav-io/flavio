@@ -1,4 +1,8 @@
 """Functions for the dispersive and absorptive  parts of the meson-antimeson mixing amplitude"""
+# Note that the 12-amplitudes are defined as antimeson->meson.
+# Thus, for Bq and K, the relevant quark-level transition is
+# b-qbar->q-bbar and s-dbar->d-sbar, but for D it is u-cbar->c-ubar
+# (and not c-ubar->u-cbar!)
 
 from math import log,pi,sqrt
 from flavio.physics.mesonmixing.wilsoncoefficient import cvll_d
@@ -13,9 +17,9 @@ def matrixelements(par, meson):
     mM = par['m_'+meson]
     fM = par['f_'+meson]
     BM = lambda i: par['bag_' + meson + '_' + str(i)]
-    di_dj = meson_quark[meson]
-    mq1 = par['m_'+di_dj[0]]
-    mq2 = par['m_'+di_dj[1]]
+    qi_qj = meson_quark[meson]
+    mq1 = par['m_'+qi_qj[0]]
+    mq2 = par['m_'+qi_qj[1]]
     r = (mM/(mq1+mq2))**2
     me = {}
     me['CVLL'] =  mM*fM**2*(1/3.)*BM(1)
@@ -52,7 +56,7 @@ def M12_d_SM(par, meson):
     return M12
 
 
-def M12_d(par, wc, meson):
+def M12(par, wc, meson):
     r"""Mixing amplitude $M_{12}$ of meson $K^0$, $B^0$, or $B_s$.
 
     Defined as
@@ -65,7 +69,10 @@ def M12_d(par, wc, meson):
     # the minus sign below stems from the fact that H_eff = -C_i O_i
     contributions_np = [ -wc_value * me[wc_name.split('_')[0]] for wc_name, wc_value in wc.items() ]
     # SM contribution
-    contribution_sm = M12_d_SM(par, meson)
+    if meson == 'D0':
+        contribution_sm = M12_u_SM(par)
+    else: # for B0, Bs, K0
+        contribution_sm = M12_d_SM(par, meson)
     # new physics + SM
     return sum(contributions_np) + contribution_sm
 
@@ -81,3 +88,25 @@ def G12_d_SM(par, meson):
 def G12_d(par, wc, meson):
     #TODO at the moment NP contributions to Gamma_12 are ignored!
     return G12_d_SM(par, meson)
+
+_ps = 1.519267515435317e+12 # picosecond in 1/GeV
+
+def G12_u_SM(par):
+    xi_b = ckm.xi('b', 'uc')(par)
+    xi_s = ckm.xi('s', 'uc')(par)
+    a_bb = par['Gamma12_D a_bb']
+    a_bs = par['Gamma12_D a_bs']
+    a_ss = par['Gamma12_D a_ss']
+    return (a_ss * xi_s**2 + a_bs * xi_b*xi_s + a_bb * xi_b**2)/_ps
+
+def M12_u_SM(par):
+    xi_b = ckm.xi('b', 'uc')(par)
+    xi_s = ckm.xi('s', 'uc')(par)
+    a_bb = par['M12_D a_bb']
+    a_bs = par['M12_D a_bs']
+    a_ss = par['M12_D a_ss']
+    return (a_ss * xi_s**2 + a_bs * xi_b*xi_s + a_bb * xi_b**2)/_ps
+
+def G12_u(par, wc):
+    #TODO at the moment NP contributions to Gamma_12 are ignored!
+    return G12_u_SM(par)

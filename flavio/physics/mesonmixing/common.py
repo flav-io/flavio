@@ -2,7 +2,7 @@ from math import pi, sqrt, cos, sin
 from cmath import phase
 import cmath
 
-meson_quark = { 'B0': 'bd', 'Bs': 'bs', 'K0': 'sd', 'D0': 'cu' }
+meson_quark = { 'B0': 'bd', 'Bs': 'bs', 'K0': 'sd', 'D0': 'uc' }
 
 def bag_msbar2rgi(alpha_s, meson):
     """Conversion factor between renormalization group invariant (RGI) defintion
@@ -34,6 +34,8 @@ def DeltaGamma(M12, G12):
 def q_over_p(M12, G12):
     r"""Ratio $q/p$ as a function of $M_{12}$ and $\Gamma_{12}$.
     The sign is chosen such that $\Delta M$ is positive in the $B$ system."""
+    if 2*M12-1j*G12 == 0:
+        return -1
     return -cmath.sqrt((2*M12.conjugate()-1j*G12.conjugate())/(2*M12-1j*G12))
 
 def a_fs(M12, G12):

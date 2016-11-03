@@ -52,8 +52,8 @@ U_mb = U_mb.reshape((10,10))[[0,4,8,1,5,9,2,6],:][:,[0,4,8,1,5,9,2,6]]
 class TestMesonMixing(unittest.TestCase):
     def test_bmixing(self):
         # just some trivial tests to see if calling the functions raises an error
-        m12d = amplitude.M12_d(par, wc_B0, 'B0')
-        m12s = amplitude.M12_d(par, wc_Bs, 'Bs')
+        m12d = amplitude.M12(par, wc_B0, 'B0')
+        m12s = amplitude.M12(par, wc_Bs, 'Bs')
         # check whether order of magnitudes of SM predictions are right
         ps = 1e-12*s
         self.assertAlmostEqual(observables.DeltaM_positive(wc_obj, par, 'B0')*ps, 0.55, places=0)
@@ -82,8 +82,23 @@ class TestMesonMixing(unittest.TestCase):
         w_par['bag_Bs_1'] = BBsh/1.5173
         M12 = (GF**2 * mW**2/12/pi**2 * etaB * mBs * fBs**2 * BBsh
                * S0 * (V[2,2] * V[2,1].conj())**2)
-        self.assertAlmostEqual(amplitude.M12_d(w_par, wc_Bs, 'Bs')/M12, 1, delta=0.01)
+        self.assertAlmostEqual(amplitude.M12(w_par, wc_Bs, 'Bs')/M12, 1, delta=0.01)
         self.assertAlmostEqual(observables.DeltaM_positive(wc_obj, w_par, 'Bs')*ps, 18.3, delta=0.2)
+
+    def test_dmixing(self):
+        par_D = par.copy()
+        wc_obj = flavio.WilsonCoefficients()
+        # check correct limiting cases for vanishing mixing
+        par_D['M12_D a_bb'] = 0
+        par_D['M12_D a_bs'] = 0
+        par_D['M12_D a_ss'] = 0
+        par_D['Gamma12_D a_bb'] = 0
+        par_D['Gamma12_D a_bs'] = 0
+        par_D['Gamma12_D a_ss'] = 0
+        self.assertEqual(flavio.Observable['x_D'].prediction_par(par_D, wc_obj), 0)
+        self.assertEqual(flavio.Observable['y_D'].prediction_par(par_D, wc_obj), 0)
+        self.assertEqual(flavio.Observable['phi_D'].prediction_par(par_D, wc_obj), 0)
+        self.assertEqual(flavio.Observable['q/p_D'].prediction_par(par_D, wc_obj), 1)
 
     def test_bmixing_classes(self):
         ps = 1e-12*s
