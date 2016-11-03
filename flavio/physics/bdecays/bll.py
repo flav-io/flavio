@@ -47,10 +47,17 @@ def amplitudes(par, wc, B, l1, l2):
     - $P = \frac{2m_\ell}{m_{B_q}} (C_{10}-C_{10}') + m_{B_q} (C_P-C_P')$
     - $S = m_{B_q} (C_S-C_S')$
     """
+    scale = config['renormalization scale']['bll']
     # masses
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
     mB = par['m_'+B]
+    mb = running.get_mb(par, scale, nf_out=5)
+    #   get the mass of the spectator quark
+    if B=='Bs':
+        mspec = running.get_ms(par, scale, nf_out=5)
+    elif B=='B0':
+        mspec = running.get_md(par, scale, nf_out=5)
     # Wilson coefficients
     qqll = meson_quark[B] + l1 + l2
     # For LFV expressions see arXiv:1602.00881 eq. (5)
@@ -58,8 +65,8 @@ def amplitudes(par, wc, B, l1, l2):
     C10m = wc['C10_'+qqll] - wc['C10p_'+qqll]
     CPm = wc['CP_'+qqll] - wc['CPp_'+qqll]
     CSm = wc['CS_'+qqll] - wc['CSp_'+qqll]
-    P = (ml2 + ml1)/mB * C10m + mB * CPm
-    S = (ml2 - ml1)/mB * C9m + mB * CSm
+    P = (ml2 + ml1)/mB * C10m + mB * mb/(mb + mspec) * CPm
+    S = (ml2 - ml1)/mB * C9m  + mB * mb/(mb + mspec) * CSm
     return P, S
 
 def ADeltaGamma(par, wc, B, lep):
