@@ -31,21 +31,6 @@ def gamma_qcd(mq, als, mu, f):
     g3 = gamma3_qcd(f)*(als/pi)**4
     return -2*mq/mu*(g0 + g1 + g2 + g3)
 
-def mq(mu, mu0, m0, par, nf=5):
-    r"""Returns $m^{(nf)}$ at the scale $\mu$ using 3-loop QCD RGEs"""
-    # x[0] is m_q
-    # x[1] is alpha_s
-    ale_mz = par['alphae_MZ']
-    def deriv(x, mu):
-        deriv_m = gamma_qcd(x[0], x[1], mu, nf)
-        deriv_as = beta_qcd(x[1], ale_mz , mu, nf)
-        return np.array([deriv_m, deriv_as])
-    as0 = alphas(mu0, par)
-    x_0 = np.array([m0,as0])
-    sol = odeint(deriv, x_0, [mu0,mu])
-    return sol[1,0]
-
-
 # OS to MSbar conversion according to RunDec
 
 cf=4/3.
