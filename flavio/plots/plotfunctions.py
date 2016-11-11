@@ -145,6 +145,7 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
         obs_err_dict = {bin_: flavio.sm_uncertainty(obs_name, *bin_, N=N) for bin_ in bin_list}
     else:
         obs_dict = {bin_:flavio.np_prediction(obs_name, wc, *bin_) for bin_ in bin_list}
+        obs_err_dict = {bin_: flavio.np_uncertainty(obs_name, wc, *bin_, N=N) for bin_ in bin_list}
     ax = plt.gca()
     for _i, (bin_, central_) in enumerate(obs_dict.items()):
         q2min, q2max = bin_
