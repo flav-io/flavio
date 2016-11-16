@@ -1,12 +1,13 @@
 import unittest
 import numpy as np
 from . import amplitude, rge, observables
-from math import sin, asin
+from math import sin, asin, cos
 from flavio.physics.eft import WilsonCoefficients
 from flavio import Observable
 from flavio.parameters import default_parameters
 import copy
 import flavio
+import cmath
 
 s = 1.519267515435317e+24
 
@@ -80,3 +81,20 @@ class TestMesonMixing(unittest.TestCase):
         par_bju['m_b'] = 4.4
         c_out_bju = rge.run_wc_df2(par_bju, c_in, 166., 2)
         self.assertAlmostEqual(c_out_bju[0]/c_in[0], 0.788, places=2)
+
+    def test_common(self):
+        # random values
+        M12 = 0.12716600+0.08765385j
+        G12 = -0.34399429-0.1490931j
+        aM12 = abs(M12)
+        aG12 = abs(G12)
+        phi12 = cmath.phase(-M12/G12)
+        qp = flavio.physics.mesonmixing.common.q_over_p(M12, G12)
+        DM = flavio.physics.mesonmixing.common.DeltaM(M12, G12)
+        DG = flavio.physics.mesonmixing.common.DeltaGamma(M12, G12)
+        # arXiv:0904.1869
+        self.assertAlmostEqual(DM**2-1/4.*DG**2, 4*aM12**2-aG12**2, places=10) # (35)
+        self.assertAlmostEqual(qp, -(DM+1j*DG/2)/(2*M12-1j*G12), places=10) # (37)
+        self.assertAlmostEqual(qp, -(2*M12.conjugate()-1j*G12.conjugate())/(DM+1j*DG/2), places=10) # (37)
+        self.assertAlmostEqual(DM*DG, -4*(M12*G12.conjugate()).real, places=10) # (36)
+        self.assertAlmostEqual(DM*DG, 4*aM12*aG12*cos(phi12), places=10) # (39)
