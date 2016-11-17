@@ -71,6 +71,11 @@ def y(wc_obj, par, meson):
     r"""$y=(\Gamma_1 - \Gamma_2)/2\Gamma$ where 1 is CP-even in the CPC limit."""
     return DeltaGamma_12(wc_obj, par, meson)*par['tau_'+meson]/2.
 
+def phi12(wc_obj, par, meson):
+    r"""$\phi_{12}=\text{arg}(-M_{12}/\Gamma_{12})"""
+    M12, G12 = get_M12_G12(wc_obj, par, meson)
+    return phase(-M12/G12)
+
 
 def epsK(wc_obj, par):
     M12, G12 = get_M12_G12(wc_obj, par, 'K0')
