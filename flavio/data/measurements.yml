@@ -1894,7 +1894,6 @@ PiENu pi->enu 2015:
   values:
     BR(pi+->enu): (1.2344±0.0023±0.0019)1e-4
 
-
 LHCb Lambdab->Lambdamumu 2015:
   experiment: LHCb
   inspire:
@@ -2011,3 +2010,165 @@ LHCb Lambdab->Lambdamumu 2015:
       q2min: 15
       q2max: 20
       value: -0.05 + 0.09 - 0.09 ± 0.03
+
+LHCb B+->Kmumu FH 2014:
+  experiment: LHCb
+  inspire: Aaij:2014tfa
+  values:
+    - name: <FH>(B+->Kmumu)
+      q2min: 0.1
+      q2max: 0.98
+      value: 0.115 ± 0.095 ± 0.03
+    - name: <FH>(B+->Kmumu)
+      q2min: 1.1
+      q2max: 2
+      value: 0.115 ± 0.115 ± 0.03
+    - name: <FH>(B+->Kmumu)
+      q2min: 2
+      q2max: 3
+      value: 0.175 ± 0.125 ± 0.03
+    - name: <FH>(B+->Kmumu)
+      q2min: 3
+      q2max: 4
+      value: 0.02 ± 0.02 ± 0.02
+    - name: <FH>(B+->Kmumu)
+      q2min: 4
+      q2max: 5
+      value: 0.045 ± 0.045 ± 0.03
+    - name: <FH>(B+->Kmumu)
+      q2min: 5
+      q2max: 6
+      value: 0.07 ± 0.07 ± 0.02
+    - name: <FH>(B+->Kmumu)
+      q2min: 6
+      q2max: 7
+      value: 0.04 ± 0.04 ± 0.02
+    - name: <FH>(B+->Kmumu)
+      q2min: 7
+      q2max: 8
+      value: 0.015 ± 0.015 ± 0.03
+    - name: <FH>(B+->Kmumu)
+      q2min: 11
+      q2max: 11.75
+      value: 0.145 ± 0.085 ± 0.03
+    - name: <FH>(B+->Kmumu)
+      q2min: 11.75
+      q2max: 12.5
+      value: 0.05 ± 0.05 ± 0.02
+    - name: <FH>(B+->Kmumu)
+      q2min: 15
+      q2max: 16
+      value: 0.13 ± 0.07 ± 0.02
+    - name: <FH>(B+->Kmumu)
+      q2min: 16
+      q2max: 17
+      value: 0.06 ± 0.06 ± 0.02
+    - name: <FH>(B+->Kmumu)
+      q2min: 17
+      q2max: 18
+      value: 0.085 ± 0.075 ± 0.02
+    - name: <FH>(B+->Kmumu)
+      q2min: 18
+      q2max: 19
+      value: 0.14 ± 0.09 ± 0.02
+    - name: <FH>(B+->Kmumu)
+      q2min: 19
+      q2max: 20
+      value: 0.05 ± 0.05 ± 0.04
+    - name: <FH>(B+->Kmumu)
+      q2min: 20
+      q2max: 21
+      value: 0.07 ± 0.07 ± 0.04
+    - name: <FH>(B+->Kmumu)
+      q2min: 21
+      q2max: 22
+      value: 0.225 ± 0.185 ± 0.05
+    - name: <FH>(B+->Kmumu)
+      q2min: 1.1
+      q2max: 6
+      value: 0.03 ± 0.03 ± 0.02
+    - name: <FH>(B+->Kmumu)
+      q2min: 15
+      q2max: 22
+      value: 0.035 ± 0.035 ± 0.02
+
+LHCb B+->Kmumu AFB 2014:
+  experiment: LHCb
+  inspire: Aaij:2014tfa
+  values:
+    - name: <AFB>(B+->Kmumu)
+      q2min: 0.1
+      q2max: 0.98
+      value: -0.05 ± 0.04 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 1.1
+      q2max: 2
+      value: 0.05 ± 0.05 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 2
+      q2max: 3
+      value: 0.06 ± 0.05 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 3
+      q2max: 4
+      value: -0.005 ± 0.015 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 4
+      q2max: 5
+      value: 0.02 ± 0.05 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 5
+      q2max: 6
+      value: 0.00 ± 0.04 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 6
+      q2max: 7
+      value: 0.015 ± 0.025 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 7
+      q2max: 8
+      value: 0.00 ± 0.02 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 11
+      q2max: 11.75
+      value: 0.075 ± 0.045 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 11.75
+      q2max: 12.5
+      value: 0.025 ± 0.025 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 15
+      q2max: 16
+      value: -0.065 ± 0.035 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 16
+      q2max: 17
+      value: -0.025 ± 0.025 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 17
+      q2max: 18
+      value: -0.03 ± 0.03 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 18
+      q2max: 19
+      value: 0.01 ± 0.04 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 19
+      q2max: 20
+      value: 0.015 ± 0.035 ± 0.02
+    - name: <AFB>(B+->Kmumu)
+      q2min: 20
+      q2max: 21
+      value: 0.03 ± 0.04 ± 0.02
+    - name: <AFB>(B+->Kmumu)
+      q2min: 21
+      q2max: 22
+      value: 0.11 ± 0.08 ± 0.02
+    - name: <AFB>(B+->Kmumu)
+      q2min: 1.1
+      q2max: 6
+      value: 0.005 ± 0.015 ± 0.01
+    - name: <AFB>(B+->Kmumu)
+      q2min: 15
+      q2max: 22
+      value: -0.015 ± 0.015 ± 0.01
