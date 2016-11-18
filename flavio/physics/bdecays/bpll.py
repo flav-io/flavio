@@ -122,11 +122,6 @@ def AFB_cpaverage_num(J, J_bar):
 def FH_cpaverage_num(J, J_bar):
     return (FH_num(J) + FH_num(J_bar))/2.
 
-
-# denominator of normalized observables
-def denominator(J, J_bar):
-    return 2*dGdq2_cpaverage(J, J_bar)
-
 def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, l1, l2):
     def obs(q2):
         return bpll_obs(function, q2, wc_obj, par, B, P, l1, l2)
@@ -228,14 +223,14 @@ for l in ['e', 'mu', 'tau']:
             _obs.set_description('Binned ' + _observables[obs]['desc'] + r" in $" + _process_tex + r"$")
             _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _process_tex + r")$"
             _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bpll_obs_int_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['P'], l, l))
+            Prediction(_obs_name, bpll_obs_int_ratio_func(_observables[obs]['func_num'], dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], l, l))
 
             _obs_name = obs + "("+M+l+l+")"
             _obs = Observable(name=_obs_name, arguments=['q2'])
             _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _process_tex + r"$")
             _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _process_tex + r")$"
             _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bpll_obs_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['P'], l, l))
+            Prediction(_obs_name, bpll_obs_ratio_func(_observables[obs]['func_num'], dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], l, l))
 
         # binned branching ratio
         _obs_name = "<dBR/dq2>("+M+l+l+")"
