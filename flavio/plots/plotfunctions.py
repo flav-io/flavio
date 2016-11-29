@@ -165,7 +165,9 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
             kwargs.pop('label', None)
         ax.add_patch(patches.Rectangle((q2min, central-err), q2max-q2min, 2*err,**kwargs))
 
-def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurements=None, **kwargs):
+def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurements=None,
+                include_bins=None, exclude_bins=None,
+                **kwargs):
     r"""Plot all existing experimental measurements of a $q^2$-dependent
     observable as a function of $q^2$  (in the form of coloured crosses).
 
@@ -182,6 +184,14 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
     - `include_measurements` (optional): a list of strings with measurement
       names (see measurements.yml) to include in the plot. By default, all
       existing measurements will be included.
+    - `include_bins` (optional): a list of bins (as tuples of the bin
+      boundaries) to include in the plot. By default, all measured bins
+      will be included. Should not be specified simultaneously with
+      `exclude_bins`.
+    - `exclude_bins` (optional): a list of bins (as tuples of the bin
+      boundaries) not to include in the plot. By default, all measured bins
+      will be included. Should not be specified simultaneously with
+      `include_bins`.
 
     Additional keyword arguments are passed to the matplotlib errorbar function,
     e.g. 'c' for colour.
@@ -189,6 +199,7 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
     obs = flavio.classes.Observable.get_instance(obs_name)
     if obs.arguments != ['q2min', 'q2max']:
         raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
+    _experiment_labels = [] # list of experiments appearing in the plot legend
     for m_name, m_obj in flavio.Measurement.instances.items():
         if include_measurements is not None and m_name not in include_measurements:
             continue
@@ -203,6 +214,14 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
         dx = []
         dy = []
         for _, q2min, q2max in obs_name_list_binned:
+            if include_bins is not None:
+                if exclude_bins is not None:
+                    raise ValueError("Please only specify include_bins or exclude_bins, not both")
+                elif (q2min, q2max) not in include_bins:
+                    continue
+            elif exclude_bins is not None:
+                if (q2min, q2max) in exclude_bins:
+                    continue
             c = central[(obs_name, q2min, q2max)]
             e = err[(obs_name, q2min, q2max)]
             if divide_binwidth:
@@ -213,11 +232,21 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
             dx.append((q2max-q2min)/2)
             y.append(c)
             dy.append(e)
-        if col_dict is not None:
-            if m_obj.experiment in col_dict:
-                col = col_dict[m_obj.experiment]
-                kwargs['c'] = col
-        ax.errorbar(x, y, yerr=dy, xerr=dx, label=m_obj.experiment, fmt='.', **kwargs)
+        kwargs_m = kwargs.copy() # copy valid for this measurement only
+        if x or y: # only if a data point exists
+            if col_dict is not None:
+                if m_obj.experiment in col_dict:
+                    col = col_dict[m_obj.experiment]
+                    kwargs_m['c'] = col
+            if 'label' not in kwargs_m:
+                if m_obj.experiment not in _experiment_labels:
+                    # if there is no plot legend entry for the experiment yet,
+                    # add it and add the experiment to the list keeping track
+                    # of existing labels (we don't want an experiment to appear
+                    # twice in the legend)
+                    kwargs_m['label'] = m_obj.experiment
+                    _experiment_labels.append(m_obj.experiment)
+            ax.errorbar(x, y, yerr=dy, xerr=dx, fmt='.', **kwargs_m)
 
 
 def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
