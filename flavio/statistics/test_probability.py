@@ -88,3 +88,43 @@ class TestProbability(unittest.TestCase):
         x = np.linspace(2, 20, 10)
         npt.assert_array_almost_equal(conv_p_12.logpdf(x), comb_p_12.logpdf(x), decimal=1)
         npt.assert_array_almost_equal(conv_p_123.logpdf(x), comb_p_123.logpdf(x), decimal=1)
+
+    def test_1d_errors(self):
+        p = NormalDistribution(3, 0.2)
+        q = NumericalDistribution.from_pd(p)
+        self.assertEqual(p.error_left, 0.2)
+        self.assertEqual(p.error_right, 0.2)
+        self.assertAlmostEqual(q.error_left, 0.2, places=2)
+        self.assertAlmostEqual(q.error_right, 0.2, places=2)
+
+        p = AsymmetricNormalDistribution(3, 0.2, 0.5)
+        q = NumericalDistribution.from_pd(p)
+        self.assertEqual(p.error_left, 0.5)
+        self.assertEqual(p.error_right, 0.2)
+        self.assertAlmostEqual(q.error_left, 0.5, places=2)
+        self.assertAlmostEqual(q.error_right, 0.2, places=2)
+
+        p = DeltaDistribution(3)
+        self.assertEqual(p.error_left, 0)
+        self.assertEqual(p.error_right, 0)
+
+        p = UniformDistribution(3, 0.4)
+        q = NumericalDistribution.from_pd(p)
+        self.assertAlmostEqual(p.error_left, 0.4*0.68, places=2)
+        self.assertAlmostEqual(p.error_right, 0.4*0.68, places=2)
+        self.assertAlmostEqual(q.error_left, 0.4*0.68, places=2)
+        self.assertAlmostEqual(q.error_right, 0.4*0.68, places=2)
+
+        p = HalfNormalDistribution(3, +0.5)
+        q = NumericalDistribution.from_pd(p)
+        self.assertEqual(p.error_left, 0)
+        self.assertEqual(p.error_right, 0.5)
+        self.assertAlmostEqual(q.error_left, 0, places=2)
+        self.assertAlmostEqual(q.error_right, 0.5, places=2)
+
+        p = HalfNormalDistribution(3, -0.5)
+        q = NumericalDistribution.from_pd(p)
+        self.assertEqual(p.error_left, 0.5)
+        self.assertEqual(p.error_right, 0)
+        self.assertAlmostEqual(q.error_left, 0.5, places=2)
+        self.assertAlmostEqual(q.error_right, 0, places=2)

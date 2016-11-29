@@ -12,6 +12,7 @@ class ProbabilityDistribution(object):
    def __init__(self, central_value, support):
       self.central_value = central_value
       self.support = support
+      self._x68 = 0.6826894921370859 # 68.2... %
 
    def get_central(self):
       return self.central_value
@@ -38,6 +39,16 @@ class UniformDistribution(ProbabilityDistribution):
         _lpvect = np.vectorize(self._logpdf)
         return _lpvect(x)
 
+   @property
+   def error_left(self):
+       """Return the lower error"""
+       return self._x68 * self.half_range
+
+   @property
+   def error_right(self):
+       """Return the upper error"""
+       return self._x68 * self.half_range
+
 class DeltaDistribution(ProbabilityDistribution):
    def __init__(self, central_value):
       super().__init__(central_value, support=(central_value, central_value))
@@ -54,6 +65,14 @@ class DeltaDistribution(ProbabilityDistribution):
        else:
            return -np.inf
 
+   @property
+   def error_left(self):
+       return 0
+
+   @property
+   def error_right(self):
+       return 0
+
 class NormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, standard_deviation):
@@ -69,6 +88,17 @@ class NormalDistribution(ProbabilityDistribution):
 
    def logpdf(self, x):
        return normal_logpdf(x, self.central_value, self.standard_deviation)
+
+   @property
+   def error_left(self):
+       """Return the lower error"""
+       return self.standard_deviation
+
+   @property
+   def error_right(self):
+       """Return the upper error"""
+       return self.standard_deviation
+
 
 class AsymmetricNormalDistribution(ProbabilityDistribution):
 
@@ -108,6 +138,16 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
         _lpvect = np.vectorize(self._logpdf)
         return _lpvect(x)
 
+   @property
+   def error_left(self):
+       """Return the lower error"""
+       return self.left_deviation
+
+   @property
+   def error_right(self):
+       """Return the upper error"""
+       return self.right_deviation
+
 class HalfNormalDistribution(ProbabilityDistribution):
 
    def __init__(self, central_value, standard_deviation):
@@ -130,6 +170,22 @@ class HalfNormalDistribution(ProbabilityDistribution):
    def logpdf(self, x):
         _lpvect = np.vectorize(self._logpdf)
         return _lpvect(x)
+
+   @property
+   def error_left(self):
+       """Return the lower error"""
+       if self.standard_deviation >= 0:
+           return 0
+       else:
+           return -self.standard_deviation # return a positive value!
+
+   @property
+   def error_right(self):
+       """Return the upper error"""
+       if self.standard_deviation <= 0:
+           return 0
+       else:
+           return self.standard_deviation
 
 class GaussianUpperLimit(HalfNormalDistribution):
    def __init__(self, limit, confidence_level):
@@ -167,6 +223,7 @@ class NumericalDistribution(ProbabilityDistribution):
       _cdf[0] = 0.
       _cdf[-1] = 1.
       self.ppf_interp = scipy.interpolate.interp1d(_cdf, x)
+      self.cdf_interp = scipy.interpolate.interp1d(x, _cdf)
 
    def get_random(self, size=None):
       r = np.random.uniform(size=size)
@@ -174,6 +231,20 @@ class NumericalDistribution(ProbabilityDistribution):
 
    def logpdf(self, x):
        return self.logpdf_interp(x)
+
+   @property
+   def error_left(self):
+       """Return the lower error defined such that it contains 68% of the
+       probability below the central value"""
+       cdf_central = self.cdf_interp(self.central_value)
+       return self.central_value - self.ppf_interp(cdf_central * (1-self._x68))
+
+   @property
+   def error_right(self):
+       """Return the upper error defined such that it contains 68% of the
+       probability above the central value"""
+       cdf_central = self.cdf_interp(self.central_value)
+       return self.ppf_interp(cdf_central + (1-cdf_central) * self._x68) - self.central_value
 
    @classmethod
    def from_pd(cls, pd, nsteps=1000):
@@ -201,7 +272,15 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
        sign, logdet =  np.linalg.slogdet(self.covariance)
        return pdf_scaled + (np.linalg.slogdet(self.scaled_covariance)[1] - np.linalg.slogdet(self.covariance)[1])/2.
 
+   @property
+   def error_left(self):
+       """Return the lower errors"""
+       return self.err
 
+   @property
+   def error_right(self):
+       """Return the upper errors"""
+       return self.err
 
 
 # Auxiliary functions
