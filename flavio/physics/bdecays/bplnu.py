@@ -85,6 +85,17 @@ def BR_binned(q2min, q2max, wc_obj, par, B, P, lep):
 def BR_binned_function(B, P, lep):
     return lambda wc_obj, par, q2min, q2max: BR_binned(q2min, q2max, wc_obj, par, B, P, lep)
 
+def BR_binned_leptonflavour(q2min, q2max, wc_obj, par, B, P, lnum, lden):
+    num = BR_binned(q2min, q2max, wc_obj, par, B, P, lnum)
+    if num == 0:
+        return 0
+    den = BR_binned(q2min, q2max, wc_obj, par, B, P, lden)
+    return num/den
+
+def BR_binned_leptonflavour_function(B, P, lnum, lden):
+    return lambda wc_obj, par, q2min, q2max: BR_binned_leptonflavour(q2min, q2max, wc_obj, par, B, P, lnum, lden)
+
+
 def _BR_tot(wc_obj, par, B, P, lep):
     mB = par['m_'+B]
     mP = par['m_'+P]
@@ -100,10 +111,19 @@ def BR_tot(wc_obj, par, B, P, lep):
     else:
         return _BR_tot(wc_obj, par, B, P, lep)
 
-
 def BR_tot_function(B, P, lep):
     return lambda wc_obj, par: BR_tot(wc_obj, par, B, P, lep)
 
+
+def BR_tot_leptonflavour(wc_obj, par, B, P, lnum, lden):
+    num = _BR_tot(wc_obj, par, B, P, lnum)
+    if num == 0:
+        return 0
+    den = _BR_tot(wc_obj, par, B, P, lden)
+    return num/den
+
+def BR_tot_leptonflavour_function(B, P, lnum, lden):
+    return lambda wc_obj, par: BR_tot_leptonflavour(wc_obj, par, B, P, lnum, lden)
 
 # Observable and Prediction instances
 
@@ -113,42 +133,56 @@ _desc = {'dBR/dq2': 'Differential', 'BR': 'Total', '<BR>': 'Binned'}
 _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'\langle\text{BR}\rangle'}
 _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max']}
 
+_hadr = {
+'B+->D': {'tex': r"B^+\to D^0", 'B': 'B+', 'P': 'D0', },
+'B0->D': {'tex': r"B^0\to D^- ", 'B': 'B0', 'P': 'D+', },
+'B+->pi': {'tex': r"B^+\to \pi^0", 'B': 'B+', 'P': 'pi0', },
+'B0->pi': {'tex': r"B^0\to \pi^- ", 'B': 'B0', 'P': 'pi+', },
+}
+
+# for LF ratios we don't distinguish B+ and B0 (but take B0 because we have to choose sth)
+_hadr_l = {
+'B->D': {'tex': r"B\to D", 'B': 'B0', 'P': 'D+', 'decays': ['B+->D', 'B0->D'],},
+'B->pi': {'tex': r"B\to \pi ", 'B': 'B0', 'P': 'pi+', 'decays': ['B+->pi', 'B0->pi'],},
+}
+
+
+_process_taxonomy = r'Process :: $b$ hadron decays :: Semi-leptonic tree-level decays :: $B\to P\ell\nu$ :: $'
+
 for l in ['e', 'mu', 'tau', 'l']:
-    _process_taxonomy = r'Process :: $b$ hadron decays :: Semi-leptonic tree-level decays :: $B\to P\ell\nu$ :: $'
+    for M in _hadr.keys():
+        for br in ['dBR/dq2', 'BR', '<BR>']:
+            _obs_name = br + "("+M+l+"nu)"
+            _process_tex = _hadr[M]['tex']+_tex[l]+r"^+\nu_"+_tex[l]
+            _obs = Observable(_obs_name)
+            _obs.set_description(_desc[br] + r" branching ratio of $" + _process_tex + r"$")
+            _obs.tex = r'$' + _tex_br[br] + r"(" + _process_tex + r")$"
+            _obs.arguments = _args[br]
+            _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
+            Prediction(_obs_name, _func[br](_hadr[M]['B'], _hadr[M]['P'], l))
 
-    for br in ['dBR/dq2', 'BR', '<BR>']:
-        _obs_name = br + "(B+->D"+l+"nu)"
-        _process_tex = r"B^+\to D^{0}"+_tex[l]+r"^+\nu_"+_tex[l]
-        _obs = Observable(_obs_name)
-        _obs.set_description(_desc[br] + r" branching ratio of $" + _process_tex + r"$")
-        _obs.tex = r'$' + _tex_br[br] + r"(" + _process_tex + r")$"
-        _obs.arguments = _args[br]
-        _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
-        Prediction(_obs_name, _func[br]('B+', 'D0', l))
+# Lepton flavour ratios
+for l in [('mu','e'), ('tau','mu'),]:
+    for M in _hadr_l.keys():
 
-        _obs_name = br + "(B0->D"+l+"nu)"
-        _process_tex = r"B^0\to D^{-}"+_tex[l]+r"^+\nu_"+_tex[l]
-        _obs = Observable(_obs_name)
-        _obs.set_description(_desc[br] + r" branching ratio of $" + _process_tex + r"$")
-        _obs.tex = r'$' + _tex_br[br] + r"(" + _process_tex + r")$"
-        _obs.arguments = _args[br]
-        _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
-        Prediction(_obs_name, _func[br]('B0', 'D+', l))
+        # binned ratio of BRs
+        _obs_name = "<R"+l[0]+l[1]+">("+M+"lnu)"
+        _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+        _obs.set_description(r"Ratio of partial branching ratios of $" + _hadr_l[M]['tex'] +_tex[l[0]]+r"^+ \nu_"+_tex[l[0]]+r"$" + " and " + r"$" + _hadr_l[M]['tex'] +_tex[l[1]]+r"^+ \nu_"+_tex[l[1]]+r"$")
+        _obs.tex = r"$\langle R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} \rangle(" + _hadr_l[M]['tex'] + r"\ell^+\nu)$"
+        for li in l:
+            for N in _hadr_l[M]['decays']:
+                # add taxonomy for both processes (e.g. B->Penu and B->Pmunu) and for charged and neutral
+                _obs.add_taxonomy(_process_taxonomy + _hadr[N]['tex'] + _tex[li]+r"^+\nu_"+_tex[li]+r"$")
+        Prediction(_obs_name, BR_binned_leptonflavour_function(_hadr_l[M]['B'], _hadr_l[M]['P'], l[0], l[1]))
 
-        _obs_name = br + "(B+->pi"+l+"nu)"
-        _process_tex = r"B^+\to \pi^0"+_tex[l]+r"^+\nu_"+_tex[l]
-        _obs = Observable(_obs_name)
-        _obs.set_description(_desc[br] + r" branching ratio of $" + _process_tex + r"$")
-        _obs.tex = r'$' + _tex_br[br] + r"(" + _process_tex + r")$"
-        _obs.arguments = _args[br]
-        _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
-        Prediction(_obs_name, _func[br]('B+', 'pi0', l))
-
-        _obs_name = br + "(B0->pi"+l+"nu)"
-        _process_tex = r"B^0\to \pi^-"+_tex[l]+r"^+\nu_"+_tex[l]
-        _obs = Observable(_obs_name)
-        _obs.set_description(_desc[br] + r" branching ratio of $" + _process_tex + r"$")
-        _obs.tex = r'$' + _tex_br[br] + r"(" + _process_tex + r")$"
-        _obs.arguments = _args[br]
-        _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
-        Prediction(_obs_name, _func[br]('B0', 'pi+', l))
+        # ratio of total BRs
+        _obs_name = "R"+l[0]+l[1]+"("+M+"lnu)"
+        _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+        _obs.set_description(r"Ratio of total branching ratios of $" + _hadr_l[M]['tex'] +_tex[l[0]]+r"^+ \nu_"+_tex[l[0]]+r"$" + " and " + r"$" + _hadr_l[M]['tex'] +_tex[l[1]]+r"^+ \nu_"+_tex[l[1]]+r"$")
+        _obs.tex = r"$\langle R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} \rangle(" + _hadr_l[M]['tex'] + r"\ell^+\nu)$"
+        for li in l:
+            for N in _hadr_l[M]['decays']:
+                # add taxonomy for both processes (e.g. B->Penu and B->Pmunu) and for charged and neutral
+                _obs.add_taxonomy(_process_taxonomy + _hadr[N]['tex'] +_tex[li]+r"^+\nu_"+_tex[li]+r"$")
+        Prediction(_obs_name, BR_tot_leptonflavour_function(_hadr_l[M]['B'], _hadr_l[M]['P'], l[0], l[1]))
