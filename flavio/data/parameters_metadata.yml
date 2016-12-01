@@ -783,18 +783,36 @@ delta_BXdgamma:
   tex: $\delta_{bd\gamma}$
   description: Quantity parametrizing the remaining theory uncertainty due to higher orders, interpolation, and non-perturbative effects in $B\to X_d\gamma$. The relative uncertainty is $1+\delta$.
 # B->Xqll uncertainty parameters
-delta_BXsll low:
-  tex: $\delta_{bsll}^\text{low}$
-  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\ell^+\ell^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
-delta_BXdll low:
-  tex: $\delta_{bdll}^\text{low}$
-  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\ell^+\ell^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
-delta_BXsll high:
-  tex: $\delta_{bsll}^\text{high}$
-  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\ell^+\ell^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
-delta_BXdll high:
-  tex: $\delta_{bdll}^\text{high}$
-  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\ell^+\ell^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXsee low:
+  tex: $\delta_{bsee}^\text{low}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_se^+e^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdee low:
+  tex: $\delta_{bdee}^\text{low}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_de^+e^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXsee high:
+  tex: $\delta_{bsee}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_se^+e^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdee high:
+  tex: $\delta_{bdee}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_de^+e^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXsmumu low:
+  tex: $\delta_{bs\mu\mu}^\text{low}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\mu^+\mu^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdmumu low:
+  tex: $\delta_{bd\mu\mu}^\text{low}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\mu^+\mu^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXsmumu high:
+  tex: $\delta_{bs\mu\mu}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\mu^+\mu^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdmumu high:
+  tex: $\delta_{bd\mu\mu}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\mu^+\mu^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXstautau high:
+  tex: $\delta_{bs\tau\tau}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\tau^+\tau^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdtautau high:
+  tex: $\delta_{bd\tau\tau}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\tau^+\tau^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
 
 # parameters needed for power corrections to B->Xqll
 lambda_1:

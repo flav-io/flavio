@@ -91,9 +91,12 @@ def _bxll_dbrdq2(q2, wc_obj, par, q, lep, include_qed=True, include_pc=True):
     Phi_u = f_u(alpha_e, alpha_s, par['alpha_s'], mb, par['lambda_1'], par['lambda_2'])
     # fudge factor to account for remaining uncertainty
     if q2 < 12:
-        unc = 1 + par['delta_BX'+q+'ll low']
+        if lep == 'tau':
+            unc = 1 # for the tau, there is now low q^2 anyway
+        else:
+            unc = 1 + par['delta_BX'+q+lep+lep+' low']
     else:
-        unc = 1 + par['delta_BX'+q+'ll high']
+        unc = 1 + par['delta_BX'+q+lep+lep+' high']
     return N * Phi_ll / Phi_u * unc
 
 def bxll_dbrdq2(q2, wc_obj, par, q, lep):

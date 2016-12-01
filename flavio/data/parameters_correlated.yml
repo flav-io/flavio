@@ -351,6 +351,31 @@
     - BR(B->Xcenu)_exp: 0.1067(16)
   correlation: -0.10
 
+# B->Xqll uncertainty parameters
+-
+  values:
+    - delta_BXsee low: 0 ± 0.10
+    - delta_BXsmumu low: 0 ± 0.10
+  correlation: 0.95 # 95% correlation
+-
+  values:
+    - delta_BXsee high: 0 ± 0.10
+    - delta_BXsmumu high: 0 ± 0.10
+    - delta_BXstautau high: 0 ± 0.10
+  correlation: [[1, 0.9, 0.9], [1, 0.98], [1]] # assuming 90% corr. for e/mu, 98% for tau/mu
+-
+  values:
+    - delta_BXdee low: 0 ± 0.10
+    - delta_BXdmumu low: 0 ± 0.10
+  correlation: 0.95 # 95% correlation
+-
+  values:
+    - delta_BXdee high: 0 ± 0.10
+    - delta_BXdmumu high: 0 ± 0.10
+    - delta_BXdtautau high: 0 ± 0.10
+  correlation: [[1, 0.9, 0.9], [1, 0.98], [1]] # assuming 90% corr. for e/mu, 98% for tau/mu
+
+
 # Electromagnetic corrections in Kl3 decays
 # 1005.2323 table 1 & eq. 18
 -

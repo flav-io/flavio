@@ -123,11 +123,6 @@ B->D IW a_T: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
 # B->Xqgamma uncertainty parameters
 delta_BXsgamma: 0 ± 0.06557 # 5% + 3% + 3%
 delta_BXdgamma: 0 ± 0.06557 # 5% + 3% + 3%
-# B->Xqll uncertainty parameters
-delta_BXsll low: 0 ± 0.10
-delta_BXdll low: 0 ± 0.10
-delta_BXsll high: 0 ± 0.20
-delta_BXdll high: 0 ± 0.20
 
 # charm quark mass entering alpha_s corrections to B->Vgamma.
 # Its uncertainty is due to the scheme ambiguity.
