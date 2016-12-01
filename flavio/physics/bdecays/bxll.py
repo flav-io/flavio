@@ -271,6 +271,15 @@ def bxll_br_int_func(q, lep):
         return bxll_br_int(q2min, q2max, wc_obj, par, q, lep)
     return fct
 
+def bxll_br_int_ratio_func(q, lnum, lden):
+    def fct(wc_obj, par, q2min, q2max):
+        num = bxll_br_int(q2min, q2max, wc_obj, par, q, lnum)
+        if num == 0:
+            return 0
+        den = bxll_br_int(q2min, q2max, wc_obj, par, q, lden)
+        return num/den
+    return fct
+
 def bxll_dbrdq2_func(q, lep):
     def fct(wc_obj, par, q2):
         return bxll_dbrdq2(q2, wc_obj, par, q, lep)
@@ -300,3 +309,17 @@ for l in ['e', 'mu', 'tau', 'l']:
         _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, bxll_dbrdq2_func(q, l))
+
+for l in [('mu','e'), ('tau','mu'),]:
+    for q in ['s', 'd']:
+        _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to X\ell^+\ell^-$ :: $'
+
+        # binned branching ratio
+        _obs_name = "<R"+l[0]+l[1]+">(B->X"+q+"ll)"
+        _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+        _obs.set_description(r"Ratio of partial branching ratios of $B\to X_" + q +_tex[l[0]]+r"^+"+_tex[l[0]]+r"^-$" + " and " + r"$B\to X_" + q +_tex[l[1]]+r"^+"+_tex[l[1]]+r"^-$")
+        _obs.tex = r"$\langle R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} \rangle(B\to X_" + q + r"\ell^+\ell^-)$"
+        for  li in l:
+            # add taxonomy for both lepton flavours
+            _obs.add_taxonomy(_process_taxonomy + r"B\to X_" + q +_tex[li]+r"^+"+_tex[li]+r"^-$")
+        Prediction(_obs_name, bxll_br_int_ratio_func(q, l[0], l[1]))

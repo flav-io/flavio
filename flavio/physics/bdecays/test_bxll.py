@@ -19,7 +19,7 @@ class TestBXll(unittest.TestCase):
         self.assertAlmostEqual((br_1_qed+br_6_qed)/(br_1_noqedpc+br_6_noqedpc),
                                 1.02, delta=0.01) # should lead to a 2% enhancement
         self.assertAlmostEqual((br_15_qed+br_21_qed)/(br_15_noqedpc+br_21_noqedpc),
-                                0.92, delta=0.03) # should lead to a 2% enhancement
+                                0.92, delta=0.03) # should lead to a 8% suppression
 
 
         # compare SM predictions to arXiv:1503.04849
@@ -39,3 +39,12 @@ class TestBXll(unittest.TestCase):
                                0.744, delta=0.01)
         self.assertAlmostEqual(1e7*flavio.sm_prediction('<BR>(B->Xsee)', 14.4, 25)/r,
                                2.20, delta=0.6) # larger difference due to Krüger-Sehgal
+
+    def test_bxll_lratio(self):
+        # compare to arXiv:1503.04849
+        self.assertAlmostEqual(flavio.sm_prediction('<Rmue>(B->Xsll)', 1, 3.5),
+                               0.96, delta=0.02)
+        self.assertAlmostEqual(flavio.sm_prediction('<Rmue>(B->Xsll)', 14.4, 25),
+                               1.15, delta=0.02)
+        # for tau, just check this doesn't raise an error
+        flavio.sm_prediction('<Rtaumu>(B->Xsll)', 14.4, 25)
