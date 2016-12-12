@@ -184,7 +184,7 @@ def read_pdg(year, constraints):
         try:
             # if parameter already exists, remove existing constraints on it
             m = Parameter.get_instance(parameter_name)
-            constraints.remove_constraints(parameter_name)
+            constraints.remove_constraint(parameter_name)
         except KeyError:
             # otherwise, create it
             m = Parameter(parameter_name)
@@ -216,7 +216,7 @@ def read_pdg(year, constraints):
         try:
             # if parameter already exists, remove existing constraints on it
             tau = Parameter.get_instance(parameter_name)
-            constraints.remove_constraints(parameter_name)
+            constraints.remove_constraint(parameter_name)
         except KeyError:
             # otherwise, create it
             tau = Parameter(parameter_name)

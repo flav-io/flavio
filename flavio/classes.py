@@ -8,6 +8,7 @@ import copy
 import math
 from flavio._parse_errors import constraints_from_string, convolve_distributions, errors_from_string
 import scipy.stats
+import warnings
 
 def _is_number(s):
     try:
@@ -85,7 +86,7 @@ class Parameter(NamedInstanceClass):
 ########## Constraints Class ##########
 class Constraints(object):
     """Constraints are collections of probability distributions associated
-    to objects like parameters or measurement. This is the base class of
+    to objects like parameters or measurements. This is the base class of
     ParameterConstraints (that holds the numerical values and uncertainties
     of all the parameters) and Measurements (that holds the numerical values
     and uncertainties of all the experimental measurements.)
@@ -99,11 +100,14 @@ class Constraints(object):
             # [ (<constraint1>, [parameter1, parameter2, ...]), (<constraint2>, ...) ]
             # where the <constraint>s are instances of ProbabilityDistribution
             # and the parameters string names, while _parameters has the form
-            # { parameter1: [(num1, <constraint1>)]} where num1 is 0 for a
-            # univariate constraints and otherwise gives the position of
+            # { parameter1: (num1, <constraint1>)} where num1 is 0 for a
+            # univariate constraint and otherwise gives the position of
             # parameter1 in the multivariate vector.
             # In summary, having this list and dictionary allow a bijective mapping between
-            # constraints (that might apply to multiple parameters) and parameters.
+            # constraints and parameters.
+            # Note that one constraint can apply to multiple parameters (e.g.
+            # in case of correlated uncertainties), but a parameter can only
+            # have a single constraint (changed in v0.16!).
         self._constraints = []
         self._parameters = OrderedDict()
 
@@ -113,17 +117,17 @@ class Constraints(object):
         return list(self._parameters.keys())
 
     def add_constraint(self, parameters, constraint):
-        """Add a constraint to the parameter/observable.
+        """Set the constraint on one or several parameters/observables.
 
         `constraint` must be an instance of a child of ProbabilityDistribution.
 
         Note that if there already exists a constraint, it will be removed."""
         for num, parameter in enumerate(parameters):
-            # remove constraints if there are any
+            # remove constraint if there is one
             if parameter in self._parameters:
-                self.remove_constraints(parameter)
+                self.remove_constraint(parameter)
         # populate the dictionaries defined in __init__
-            self._parameters[parameter] = [(num, constraint)]
+            self._parameters[parameter] = (num, constraint)
         self._constraints.append((constraint, parameters))
 
     def set_constraint(self, parameter, constraint_string):
@@ -134,16 +138,22 @@ class Constraints(object):
         combined_pd = convolve_distributions(pds)
         self.add_constraint([parameter], combined_pd)
 
-    def remove_constraints(self, parameter):
-        """Remove all constraints on a parameter."""
+    def remove_constraint(self, parameter):
+        """Remove existing constraint on a parameter."""
         self._parameters.pop(parameter, None)
+
+    def remove_constraints(self, parameter):
+        warnings.warn("This function was renamed to `remove_constraint` "
+                      "in v0.16 and will be removed in the future.",
+                      DeprecationWarning)
+        self.remove_constraint(parameter)
 
     def get_central(self, parameter):
         """Get the central value of a parameter"""
         if parameter not in self._parameters.keys():
             raise ValueError('No constraints applied to parameter/observable ' + parameter)
         else:
-            num, constraint = self._parameters[parameter][0]
+            num, constraint = self._parameters[parameter]
             # return the num-th entry of the central value vector
             return np.ravel([constraint.central_value])[num]
 
@@ -153,22 +163,15 @@ class Constraints(object):
 
     def get_random_all(self):
         """Get random values for all constrained parameters where they are
-        distributed according to the probability distributions applied."""
+        distributed according to the probability distribution applied."""
         # first, generate random values for every single one of the constraints
         random_constraints = [constraint.get_random() for constraint, _ in self._constraints]
         random_dict = {}
         # now, iterate over the parameters
         for parameter, constraints in self._parameters.items():
-            # here, the idea is the following. Assume there is a parameter
-            # p with central value c and N probability distributions that have
-            # random values r_1, ..., r_N (obtained above). The final random
-            # value for p is then given by p_r = c + \sum_i^N (r_i - c).
-            central_value =  self.get_central(parameter)
-            random_dict[parameter] = central_value  # step 1: p_r = c
-            for num, constraint in constraints:
-                idx = ([constraint for constraint, _ in self._constraints]).index(constraint)
-                # step 1+i: p_r += r_i - c
-                random_dict[parameter] += np.ravel([random_constraints[idx]])[num] - central_value
+            num, constraint = constraints
+            idx = ([constraint for constraint, _ in self._constraints]).index(constraint)
+            random_dict[parameter] = np.ravel([random_constraints[idx]])[num]
         return random_dict
 
     def get_1d_errors(self, N=1000):

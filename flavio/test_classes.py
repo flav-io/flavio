@@ -27,11 +27,16 @@ class TestClasses(unittest.TestCase):
         self.assertEqual( type(d.get_random()), float)
         self.assertEqual( d.get_random(3).shape, (3,))
         self.assertEqual( d.get_random((4,5)).shape, (4,5))
+        test_1derrors = c.get_1d_errors()
+        self.assertAlmostEqual( test_1derrors['test_mb'], 0.2, delta=0.01)
         pc = Parameter( 'test_mc' )
         c.add_constraint( ['test_mc', 'test_mb'], MultivariateNormalDistribution([1.2,4.2],[[0.01,0],[0,0.04]]) )
         c.get_logprobability_all(c.get_central_all())
+        test_1derrors = c.get_1d_errors()
+        self.assertAlmostEqual( test_1derrors['test_mb'], 0.2, delta=0.01)
+        self.assertAlmostEqual( test_1derrors['test_mc'], 0.1, delta=0.01)
         # removing dummy instances
-        c.remove_constraints('test_mb')
+        c.remove_constraint('test_mb')
         Parameter.del_instance('test_mb')
         Parameter.del_instance('test_mc')
 

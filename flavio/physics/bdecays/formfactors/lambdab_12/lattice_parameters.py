@@ -63,7 +63,7 @@ def load_parameters(file_res, file_cov, process, constraints):
             p.tex = r'$' + _tex_a + r'^{' + _tex_ff + r'}$'
             p.description = r'SSE form factor parametrization coefficient $' + _tex_a + r'$ of $' + _tex_ff + r'$'
         else: # if parameter exists, remove existing constraints
-            constraints.remove_constraints(parameter_name)
+            constraints.remove_constraint(parameter_name)
     constraints.add_constraint(parameter_names,
             MultivariateNormalDistribution(central_value=res, covariance=cov ))
 

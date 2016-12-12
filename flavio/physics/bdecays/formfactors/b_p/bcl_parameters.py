@@ -13,7 +13,7 @@ def load_parameters(filename, constraints):
         except: # otherwise, create a new one
             p = Parameter(parameter_name)
         else: # if parameter exists, remove existing constraints
-            constraints.remove_constraints(parameter_name)
+            constraints.remove_constraint(parameter_name)
     covariance = np.outer(ff_dict['uncertainties'], ff_dict['uncertainties'])*ff_dict['correlation']
     if not np.allclose(covariance, covariance.T):
         # if the covariance is not symmetric, it is assumed that only the values above the diagonal are present.
