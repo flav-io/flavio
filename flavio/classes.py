@@ -6,7 +6,7 @@ from .config import config
 from collections import OrderedDict, defaultdict
 import copy
 import math
-from flavio._parse_errors import constraints_from_string, convolve_distributions, errors_from_string, string_from_constraints
+from flavio._parse_errors import constraints_from_string, convolve_distributions, errors_from_string
 import scipy.stats
 
 def _is_number(s):
@@ -133,12 +133,6 @@ class Constraints(object):
         pds = constraints_from_string(constraint_string)
         combined_pd = convolve_distributions(pds)
         self.add_constraint([parameter], combined_pd)
-
-    def get_constraint_string(self, parameter):
-        """Return a string of the form 4.0±0.1±0.3 for the constraints on
-        the parameter. Correlations are ignored."""
-        pds = self._parameters[parameter]
-        return string_from_constraints(pds)
 
     def remove_constraints(self, parameter):
         """Remove all constraints on a parameter."""

@@ -90,15 +90,6 @@ def errors_from_constraints(probability_distributions):
           errors['symmetric_errors'].append(math.sqrt(pd.covariance[num, num]))
   return errors
 
-def string_from_constraints(probability_distributions):
-    errors = errors_from_constraints(probability_distributions)
-    string = str(errors['central_value'])
-    for err in errors['symmetric_errors']:
-        string += ' ± ' + str(err)
-    for right_err, left_err in errors['asymmetric_errors']:
-        string += r' ^{+' + str(right_err) + r'}_{-' + str(left_err) + r'}'
-    return string
-
 def constraints_from_string(constraint_string):
     """Convert a string like '1.67(3)(5)' or '1.67+-0.03+-0.05' to a list
     of ProbabilityDistribution instances."""
