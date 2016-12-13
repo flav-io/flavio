@@ -190,6 +190,23 @@ class Constraints(object):
             interval_dict[k] = np.std(arr)
         return interval_dict
 
+    def get_1d_errors_rightleft(self):
+        r"""Get the left and right error for every parameter/observable
+        defined such that it contains 68% probability on each side of the
+        central value."""
+        errors_left = [constraint.error_left for constraint, _ in self._constraints]
+        errors_right = [constraint.error_right for constraint, _ in self._constraints]
+        error_dict = {}
+        # now, iterate over the parameters
+        for parameter, constraints in self._parameters.items():
+            num, constraint = constraints
+            idx = ([constraint for constraint, _ in self._constraints]).index(constraint)
+            error_dict[parameter] = (
+                                        np.ravel([errors_right[idx]])[num],
+                                        np.ravel([errors_left[idx]])[num]
+                                    )
+        return error_dict
+
     def get_logprobability_all(self, par_dict, exclude_parameters=[]):
         """Return a dictionary with the logarithm of the probability for each
         constraint/probability distribution.
