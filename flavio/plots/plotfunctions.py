@@ -277,31 +277,36 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
        maplotlib.pyplot.legend()
     - `pre_calculated_z` (optional): z values for a band plot, previously
        calculated. In this case, no likelihood scan is performed and time can
-       be saved.
+       be saved. The arguments `steps` and `log_likelihood` are ignored in this
+       case.
     - `contour_args`: dictionary of additional options that will be passed
        to matplotlib.pyplot.contour() (that draws the contour lines)
     - `contourf_args`: dictionary of additional options that will be passed
        to matplotlib.pyplot.contourf() (that paints the contour filling)
     """
     ax = plt.gca()
-    # coarse grid
-    _x = np.linspace(x_min, x_max, steps)
-    _y = np.linspace(y_min, y_max, steps)
-    x, y = np.meshgrid(_x, _y)
-    @np.vectorize
-    def chi2_vect(x, y): # needed for evaluation on meshgrid
-        return -2*log_likelihood([x,y])
-    if pre_calculated_z is not None:
-        z = pre_calculated_z
-    else:
+    if pre_calculated_z is None:
+        # coarse grid
+        _x = np.linspace(x_min, x_max, steps)
+        _y = np.linspace(y_min, y_max, steps)
+        x, y = np.meshgrid(_x, _y)
+        @np.vectorize
+        def chi2_vect(x, y): # needed for evaluation on meshgrid
+            return -2*log_likelihood([x,y])
         z = chi2_vect(x, y)
+        # number of steps for fine grid
+        steps_fine = steps*interpolation_factor
+    else:
+        z = pre_calculated_z
+        # number of steps for fine grid
+        steps_fine = len(z)*interpolation_factor
     # fine grid
-    _x = np.linspace(x_min, x_max, steps*interpolation_factor)
-    _y = np.linspace(y_min, y_max, steps*interpolation_factor)
+    _x = np.linspace(x_min, x_max, steps_fine)
+    _y = np.linspace(y_min, y_max, steps_fine)
+    x, y = np.meshgrid(_x, _y)
     # interpolate z from coarse to fine grid
     z = scipy.ndimage.zoom(z, zoom=interpolation_factor)
     z = z - np.min(z) # subtract the best fit point (on the grid)
-    x, y = np.meshgrid(_x, _y)
     if col is not None and isinstance(col, int):
         contourf_args['colors'] = [flavio.plots.colors.pastel[col]]
         contour_args['colors'] = [flavio.plots.colors.set1[col]]
