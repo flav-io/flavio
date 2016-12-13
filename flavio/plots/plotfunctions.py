@@ -208,7 +208,7 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
         if not obs_name_list_binned:
             continue
         central = m_obj.get_central_all()
-        err = m_obj.get_1d_errors()
+        err = m_obj.get_1d_errors_random()
         x = []
         y = []
         dx = []

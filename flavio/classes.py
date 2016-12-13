@@ -175,8 +175,14 @@ class Constraints(object):
         return random_dict
 
     def get_1d_errors(self, N=1000):
+        warnings.warn("This function was renamed to `get_1d_errors_random` "
+                      "in v0.16 and will be removed in the future. ",
+                      DeprecationWarning)
+        self.get_1d_errors_random(N)
+
+    def get_1d_errors_random(self, N=1000):
         """Get the Gaussian standard deviation for every parameter/observable
-        obtained by generating N random values.."""
+        obtained by generating N random values."""
         random_dict_list = [self.get_random_all() for i in range(N)]
         interval_dict = {}
         for k in random_dict_list[0].keys():
