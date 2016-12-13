@@ -208,11 +208,12 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
         if not obs_name_list_binned:
             continue
         central = m_obj.get_central_all()
-        err = m_obj.get_1d_errors_random()
+        err = m_obj.get_1d_errors_rightleft()
         x = []
         y = []
         dx = []
-        dy = []
+        dy_lower = []
+        dy_upper = []
         for _, q2min, q2max in obs_name_list_binned:
             if include_bins is not None:
                 if exclude_bins is not None:
@@ -223,15 +224,17 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
                 if (q2min, q2max) in exclude_bins:
                     continue
             c = central[(obs_name, q2min, q2max)]
-            e = err[(obs_name, q2min, q2max)]
+            e_right, e_left = err[(obs_name, q2min, q2max)]
             if divide_binwidth:
                 c = c/(q2max-q2min)
-                e = e/(q2max-q2min)
+                e_left = e_left/(q2max-q2min)
+                e_right = e_right/(q2max-q2min)
             ax=plt.gca()
             x.append((q2max+q2min)/2.)
             dx.append((q2max-q2min)/2)
             y.append(c)
-            dy.append(e)
+            dy_lower.append(e_left)
+            dy_upper.append(e_right)
         kwargs_m = kwargs.copy() # copy valid for this measurement only
         if x or y: # only if a data point exists
             if col_dict is not None:
@@ -246,7 +249,7 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
                     # twice in the legend)
                     kwargs_m['label'] = m_obj.experiment
                     _experiment_labels.append(m_obj.experiment)
-            ax.errorbar(x, y, yerr=dy, xerr=dx, fmt='.', **kwargs_m)
+            ax.errorbar(x, y, yerr=[dy_lower, dy_upper], xerr=dx, fmt='.', **kwargs_m)
 
 
 def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
