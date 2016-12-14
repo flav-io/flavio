@@ -5,6 +5,7 @@ import flavio
 import scipy.stats
 from math import pi, sqrt, exp, log
 from flavio.statistics.probability import *
+import itertools
 
 class TestProbability(unittest.TestCase):
     def test_multiv_normal(self):
@@ -48,6 +49,26 @@ class TestProbability(unittest.TestCase):
         self.assertAlmostEqual(p_num.ppf_interp(0.1), scipy.stats.norm.ppf(0.1, loc=1), delta=0.02)
         self.assertAlmostEqual(p_num.ppf_interp(0.95), scipy.stats.norm.ppf(0.95, loc=1), delta=0.02)
         self.assertEqual(len(p_num.get_random(10)), 10)
+
+    def test_multiv_numerical(self):
+        x0 = np.arange(-5,5,0.01)
+        x1 = np.arange(-4,6,0.02)
+        cov = [[0.2**2, 0.5*0.2*0.4], [0.5*0.2*0.4, 0.4**2]]
+        y = scipy.stats.multivariate_normal.pdf(np.array(list(itertools.product(x0, x1))), mean=[0, 1], cov=cov)
+        y = y.reshape(len(x0), len(x1))
+        y_crazy = 14.7 * y # multiply PDF by crazy number
+        p_num = MultivariateNumericalDistribution((x0, x1), y_crazy)
+        p_norm = MultivariateNormalDistribution([0, 1], cov)
+        self.assertAlmostEqual(p_num.logpdf([0.237, 0.346]), p_norm.logpdf([0.237, 0.346]), delta=0.02)
+        # test exceptions
+        with self.assertRaises(NotImplementedError):
+            p_num.error_left
+        with self.assertRaises(NotImplementedError):
+            p_num.error_right
+        with self.assertRaises(NotImplementedError):
+            p_num.get_random()
+        with self.assertRaises(NotImplementedError):
+            p_num.logpdf([0.237, 0.346], exclude=(0))
 
     def test_numerical_from_analytic(self):
         p_norm = NormalDistribution(1.64, 0.32)

@@ -336,6 +336,37 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
        """Return the upper errors"""
        return self.err
 
+class MultivariateNumericalDistribution(ProbabilityDistribution):
+
+   def __init__(self, xi, y, central_value=None):
+      if central_value is not None:
+          super().__init__(central_value=central_value, support=None)
+      else:
+          mode_index = (slice(None),) + np.unravel_index(y.argmax(), y.shape)
+          mode = np.asarray(np.meshgrid(*xi, indexing='ij'))[mode_index]
+          super().__init__(central_value=mode, support=None)
+          _bin_area = np.prod([x[1]-x[0] for x in xi])
+          _y_norm = y/np.sum(y)/_bin_area # normalize PDF to 1
+      with np.errstate(divide='ignore', invalid='ignore'): # ignore warning from log(0)=-np.inf
+          self.logpdf_interp = scipy.interpolate.RegularGridInterpolator(xi, np.log(_y_norm),
+                                    fill_value=-np.inf, bounds_error=False)
+
+   def get_random(self, size=None):
+      raise NotImplementedError("Random variate not implemented for multivariate numerical distributions")
+
+   def logpdf(self, x, exclude=None):
+      if exclude is not None:
+          raise NotImplementedError("Excluding individual parameters from multivariate numerical distributions not implemented")
+      return self.logpdf_interp(x)[0]
+
+   @property
+   def error_left(self):
+      raise NotImplementedError("1D errors not implemented for multivariate numerical distributions")
+
+   @property
+   def error_right(self):
+      raise NotImplementedError("1D errors not implemented for multivariate numerical distributions")
+
 
 # Auxiliary functions
 
