@@ -28,7 +28,7 @@ class TestClasses(unittest.TestCase):
         self.assertEqual( d.get_random(3).shape, (3,))
         self.assertEqual( d.get_random((4,5)).shape, (4,5))
         test_1derrors_random = c.get_1d_errors_random()
-        self.assertAlmostEqual( test_1derrors_random['test_mb'], 0.2, delta=0.01)
+        self.assertAlmostEqual( test_1derrors_random['test_mb'], 0.2, delta=0.1)
         test_1derrors_rightleft = c.get_1d_errors_rightleft()
         self.assertEqual( test_1derrors_rightleft['test_mb'], (0.2, 0.2))
         d = AsymmetricNormalDistribution(4.2, 0.2, 0.1)
