@@ -86,6 +86,7 @@ class Fit(flavio.NamedInstanceClass):
         self.observables = observables
         self.input_scale = input_scale
         self._warn_meas_corr
+
         # check that observables are constrained
         for m_name in self.get_measurements:
             m_obj = flavio.Measurement[m_name]
@@ -93,6 +94,7 @@ class Fit(flavio.NamedInstanceClass):
         missing_obs = set(observables) - set(_obs_measured).intersection(set(observables))
         assert missing_obs == set(), "No measurement found for the observables: " + str(missing_obs)
 
+        self.dimension = len(self.fit_parameters) + len(self.nuisance_parameters) + len(self.fit_wc_names)
 
     @property
     def get_central_fit_parameters(self):
@@ -186,52 +188,6 @@ class Fit(flavio.NamedInstanceClass):
                                    ).format(count, self.name, obs1, obs2))
         return corr_with
 
-
-class BayesianFit(Fit):
-    """Bayesian fit class. Instances of this class can then be fed to samplers.
-
-    Parameters
-    ----------
-
-    - `name`: a descriptive string name
-    - `par_obj`: an instance of `ParameterConstraints`, e.g. `flavio.default_parameters`
-    - `fit_parameters`: a list of string names of parameters of interest. The existing
-      constraints on the parameter will be taken as prior.
-    - `nuisance_parameters`: a list of string names of nuisance parameters. The existing
-      constraints on the parameter will be taken as prior. Alternatively, it
-      can also be set to 'all', in which case all the parameters constrainted
-      by `par_obj` will be treated as nuisance parameters. (Note that this makes
-      sense for `FastFit`, but not for a MCMC since the number of nuisance
-      parameters will be huge.()
-    - `observables`: a list of observable names to be included in the fit
-    - `exclude_measurements`: optional; a list of measurement names *not* to be included in
-    the fit. By default, all existing measurements are included.
-    - `include_measurements`: optional; a list of measurement names to be included in
-    the fit. By default, all existing measurements are included.
-    - `fit_wc_names`: optional; a list of string names of arguments of the Wilson
-      coefficient function below
-    - `fit_wc_function`: optional; a function that
-      returns a dictionary that can be fed to the `set_initial`
-      method of the Wilson coefficient class. Example: fit the real and imaginary
-      parts of $C_{10}$ in $b\to s\mu^+\mu^-$.
-    ```
-    def fit_wc_function(Re_C10, Im_C10):
-        return {'C10_bsmmumu': Re_C10 + 1j*Im_C10}
-    ```
-    - `input_scale`: input scale for the Wilson coeffficients. Defaults to 160.
-    - `fit_wc_priors`: optional; an instance of WilsonCoefficientPriors
-      containing prior constraints on the Wilson coefficients
-    - `start_wc_priors`: optional; an instance of WilsonCoefficientPriors
-      that will not be used during a scan, but only for finding starting values
-      for Wilson coefficients in MCMC analyses. This can be useful if no
-      actual priors are used or if they are too loose to provide good starting
-      points.
-    """
-
-    def __init__(self, *args, start_wc_priors=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.dimension = len(self.fit_parameters) + len(self.nuisance_parameters) + len(self.fit_wc_names)
-        self.start_wc_priors = start_wc_priors
 
     def array_to_dict(self, x):
         """Convert a 1D numpy array of floats to a dictionary of fit parameters,
@@ -382,7 +338,7 @@ class BayesianFit(Fit):
         pred = self.get_predictions(x, **kwargs)
         return np.array([pred[obs] for obs in self.observables])
 
-    def log_likelihood(self, x):
+    def log_likelihood_exp(self, x):
         """Return the logarithm of the likelihood function (not including the
         prior)"""
         predictions = self.get_predictions(x)
@@ -395,9 +351,55 @@ class BayesianFit(Fit):
             ll += sum(prob_dict.values())
         return ll
 
+
+class BayesianFit(Fit):
+    """Bayesian fit class. Instances of this class can then be fed to samplers.
+
+    Parameters
+    ----------
+
+    - `name`: a descriptive string name
+    - `par_obj`: an instance of `ParameterConstraints`, e.g. `flavio.default_parameters`
+    - `fit_parameters`: a list of string names of parameters of interest. The existing
+      constraints on the parameter will be taken as prior.
+    - `nuisance_parameters`: a list of string names of nuisance parameters. The existing
+      constraints on the parameter will be taken as prior. Alternatively, it
+      can also be set to 'all', in which case all the parameters constrainted
+      by `par_obj` will be treated as nuisance parameters. (Note that this makes
+      sense for `FastFit`, but not for a MCMC since the number of nuisance
+      parameters will be huge.()
+    - `observables`: a list of observable names to be included in the fit
+    - `exclude_measurements`: optional; a list of measurement names *not* to be included in
+    the fit. By default, all existing measurements are included.
+    - `include_measurements`: optional; a list of measurement names to be included in
+    the fit. By default, all existing measurements are included.
+    - `fit_wc_names`: optional; a list of string names of arguments of the Wilson
+      coefficient function below
+    - `fit_wc_function`: optional; a function that
+      returns a dictionary that can be fed to the `set_initial`
+      method of the Wilson coefficient class. Example: fit the real and imaginary
+      parts of $C_{10}$ in $b\to s\mu^+\mu^-$.
+    ```
+    def fit_wc_function(Re_C10, Im_C10):
+        return {'C10_bsmmumu': Re_C10 + 1j*Im_C10}
+    ```
+    - `input_scale`: input scale for the Wilson coeffficients. Defaults to 160.
+    - `fit_wc_priors`: optional; an instance of WilsonCoefficientPriors
+      containing prior constraints on the Wilson coefficients
+    - `start_wc_priors`: optional; an instance of WilsonCoefficientPriors
+      that will not be used during a scan, but only for finding starting values
+      for Wilson coefficients in MCMC analyses. This can be useful if no
+      actual priors are used or if they are too loose to provide good starting
+      points.
+    """
+
+    def __init__(self, *args, start_wc_priors=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.start_wc_priors = start_wc_priors
+
     def log_target(self, x):
         """Return the logarithm of the likelihood times prior probability"""
-        return self.log_likelihood(x) + self.log_prior_parameters(x) + self.log_prior_wilson_coeffs(x)
+        return self.log_likelihood_exp(x) + self.log_prior_parameters(x) + self.log_prior_wilson_coeffs(x)
 
 
 class FastFit(BayesianFit):
