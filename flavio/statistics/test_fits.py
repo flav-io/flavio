@@ -12,11 +12,14 @@ class TestClasses(unittest.TestCase):
     def test_fit_class(self):
         o = Observable( 'test_obs' )
         d = NormalDistribution(4.2, 0.2)
-        m = Measurement( 'measurement of test_obs' )
-        m.add_constraint(['test_obs'], d)
         par = copy.deepcopy(flavio.parameters.default_parameters)
         par.set_constraint('m_b', '4.2+-0.2')
         par.set_constraint('m_c', '1.2+-0.1')
+        with self.assertRaises(AssertionError):
+            # unconstrained observable
+            Fit('test_fit_1', par, ['m_b'],  ['m_c'], ['test_obs'])
+        m = Measurement( 'measurement of test_obs' )
+        m.add_constraint(['test_obs'], d)
         with self.assertRaises(AssertionError):
             # same parameter as fit and nuisance
             Fit('test_fit_1', par, ['m_b'], ['m_b'], ['test_obs'])
@@ -101,7 +104,7 @@ class TestClasses(unittest.TestCase):
         cov_weighted = [[0.008, 0.012],[0.012,0.0855]]
         mean_weighted = [5.8, 1.7]
         exact_log_likelihood = scipy.stats.multivariate_normal.logpdf([5.9, 2.5], mean_weighted, cov_weighted)
-        self.assertAlmostEqual(fit.log_likelihood([1]), exact_log_likelihood, delta=0.5)
+        self.assertAlmostEqual(fit.log_likelihood([1]), exact_log_likelihood, delta=0.8)
         # removing dummy instances
         FastFit.del_instance('fastfit_test_1')
         Observable.del_instance('test_obs 1')
