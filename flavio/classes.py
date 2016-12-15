@@ -239,7 +239,7 @@ class Constraints(object):
             # construct the vector of values from the par_dict, replaced by central values in the case of excluded_parameters
             x = [par_dict[p]
                 if (p not in exclude_parameters
-                    and (parameters.index(p), constraint) in self._parameters[p])
+                    and (parameters.index(p), constraint) == self._parameters[p])
                 else constraint_central_value(constraint, parameters, p)
                 for p in parameters]
             if len(x) == 1:
