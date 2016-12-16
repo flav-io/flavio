@@ -128,3 +128,17 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(p.error_right, 0)
         self.assertAlmostEqual(q.error_left, 0.5, places=2)
         self.assertAlmostEqual(q.error_right, 0, places=2)
+
+    def test_multivariate_exclude(self):
+        c2 = np.array([1e-3, 2])
+        c3 = np.array([1e-3, 2, 0.4])
+        cov22 = np.array([[(0.2e-3)**2, 0.2e-3*0.5*0.3],[0.2e-3*0.5*0.3, 0.5**2]])
+        cov33 = np.array([[(0.2e-3)**2, 0.2e-3*0.5*0.3 , 0],[0.2e-3*0.5*0.3, 0.5**2, 0.01], [0, 0.01, 0.1**2]])
+        pdf1 = NormalDistribution(2, 0.5)
+        pdf2 = MultivariateNormalDistribution(c2, cov22)
+        pdf3 = MultivariateNormalDistribution(c3, cov33)
+        self.assertEqual(pdf2.logpdf([1.1e-3, 2.4]), pdf3.logpdf([1.1e-3, 2.4], exclude=2))
+        self.assertEqual(pdf1.logpdf(2.4), pdf3.logpdf([2.4], exclude=(0,2)))
+        with self.assertRaises(ValueError):
+            # dimensions don't match
+            self.assertEqual(pdf2.logpdf([1.1e-3, 2.4]), pdf3.logpdf([1.1e-3, 2.4, 0.2], exclude=2))

@@ -218,34 +218,34 @@ class Constraints(object):
           is a string and value a float.
         - exclude_parameters (optional)
           An iterable of strings (default: empty) that specifies parameters
-          that should be ignored. In practice, this is done by setting these
-          parameters equal to their central values. This way, they contribute
-          a constant shift to the log probability, but their values in
-          par_dict play no role.
+          that should be ignored. Univariate constraints on this parameter
+          will be skipped, while for multivariate normally distributed
+          constraints, the parameter will be removed from the covariance.
         """
         prob_dict = {}
         for constraint, parameters in self._constraints:
-            def constraint_central_value(constraint, parameters, parameter):
-                # this function is required to get the central value for the
-                # excluded_parameters, consistently for univariate and multivariate
-                # distributions.
-                if len(parameters) == 1:
-                    # for univariate, it's trivial
-                    return constraint.central_value
-                else:
-                    # for multivariate, need to find the position of the parameter
-                    # in the vector and return the appropriate entry
-                    return constraint.central_value[parameters.index(parameter)]
-            # construct the vector of values from the par_dict, replaced by central values in the case of excluded_parameters
+            # list of constrained parameters except the excluded ones
             x = [par_dict[p]
+                for p in parameters
                 if (p not in exclude_parameters
-                    and (parameters.index(p), constraint) == self._parameters[p])
-                else constraint_central_value(constraint, parameters, p)
-                for p in parameters]
-            if len(x) == 1:
+                    and (parameters.index(p), constraint) == self._parameters[p])]
+            if not x:
+                # nothing to constrain
+                continue
+            if len(parameters) == 1:
                 # 1D constraints should have a scalar, not a length-1 array
-                x = x[0]
-            prob_dict[constraint] = constraint.logpdf(x)
+                prob_dict[constraint] = constraint.logpdf(x[0])
+            else:
+                # for multivariate distributions
+                if len(x) == len(parameters):
+                    # no parameter has been excluded
+                    exclude = None
+                else:
+                    exclude = tuple(i
+                        for i, p in enumerate(parameters)
+                        if (p in exclude_parameters
+                            or (parameters.index(p), constraint) != self._parameters[p]))
+                prob_dict[constraint] = constraint.logpdf(x, exclude=exclude)
         return prob_dict
 
     def copy(self):

@@ -253,8 +253,29 @@ class NumericalDistribution(ProbabilityDistribution):
        return cls(central_value=pd.central_value, x=_x, y=_y)
 
 class MultivariateNormalDistribution(ProbabilityDistribution):
+   """A multivariate normal distribution.
+
+   Methods:
+
+   - get_random(size=None): get `size` random numbers (default: a single one)
+   - logpdf(x, exclude=None): get the logarithm of the probability density
+     function. If an iterable of integers is given for `exclude`, the parameters
+     at these positions will be removed from the covariance before evaluating
+     the PDF, effectively ignoring certain dimensions.
+
+   Properties:
+
+   - error_left, error_right: both return the vector of standard deviations
+   """
 
    def __init__(self, central_value, covariance):
+      """Initialize PDF instance.
+
+      Parameters:
+
+      - central_value: vector of means, shape (n)
+      - covariance: covariance matrix, shape (n,n)
+      """
       super().__init__(central_value, support=None)
       self.covariance = covariance
       # to avoid ill-conditioned covariance matrices, all data are rescaled
@@ -264,9 +285,36 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
       assert np.all(np.linalg.eigvals(self.scaled_covariance) > 0), "The covariance matrix is not positive definite!" + str(covariance)
 
    def get_random(self, size=None):
+      """Get `size` random numbers (default: a single one)"""
       return np.random.multivariate_normal(self.central_value, self.covariance, size)
 
-   def logpdf(self, x):
+   def logpdf(self, x, exclude=None):
+       """Get the logarithm of the probability density function.
+
+       Parameters:
+
+       - x: vector; position at which PDF should be evaluated
+       - exclude: optional; if an iterable of integers is given, the parameters
+         at these positions will be removed from the covariance before
+         evaluating the PDF, effectively ignoring certain dimensions.
+       """
+       if exclude is not None:
+           # if n of N parameters are to be exluded, x should have length N-n
+           if not len(x) + np.asarray(exclude).size == len(self.central_value):
+               raise ValueError("Dimensions do not match")
+           # if parameters are to be excluded, construct a temporary
+           # distribution with reduced mean vector and covariance matrix
+           # and call its logpdf method
+           _cent_ex = np.delete(self.central_value, exclude)
+           _cov_ex = np.delete(np.delete(self.covariance, exclude, axis=0), exclude, axis=1)
+           if len(_cent_ex) == 1:
+               # if only 1 dimension remains, can use a univariate Gaussian
+               _dist_ex = NormalDistribution(central_value=_cent_ex[0], standard_deviation=np.sqrt(_cov_ex[0,0]))
+               return _dist_ex.logpdf(x[0])
+           else:
+               # if more than 1 dimension remains, use a (smaller) multivariate Gaussian
+               _dist_ex = MultivariateNormalDistribution(central_value=_cent_ex, covariance=_cov_ex)
+               return _dist_ex.logpdf(x, exclude=None)
        # undoing the rescaling of the covariance
        pdf_scaled = scipy.stats.multivariate_normal.logpdf(x/self.err, self.central_value/self.err, self.scaled_covariance)
        sign, logdet =  np.linalg.slogdet(self.covariance)

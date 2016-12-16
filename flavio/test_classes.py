@@ -28,7 +28,7 @@ class TestClasses(unittest.TestCase):
         self.assertEqual( d.get_random(3).shape, (3,))
         self.assertEqual( d.get_random((4,5)).shape, (4,5))
         test_1derrors_random = c.get_1d_errors_random()
-        self.assertAlmostEqual( test_1derrors_random['test_mb'], 0.2, delta=0.1)
+        self.assertAlmostEqual( test_1derrors_random['test_mb'], 0.2, delta=0.5)
         test_1derrors_rightleft = c.get_1d_errors_rightleft()
         self.assertEqual( test_1derrors_rightleft['test_mb'], (0.2, 0.2))
         d = AsymmetricNormalDistribution(4.2, 0.2, 0.1)
@@ -39,8 +39,8 @@ class TestClasses(unittest.TestCase):
         c.add_constraint( ['test_mc', 'test_mb'], MultivariateNormalDistribution([1.2,4.2],[[0.01,0],[0,0.04]]) )
         c.get_logprobability_all(c.get_central_all())
         test_1derrors_random = c.get_1d_errors_random()
-        self.assertAlmostEqual( test_1derrors_random['test_mb'], 0.2, delta=0.01)
-        self.assertAlmostEqual( test_1derrors_random['test_mc'], 0.1, delta=0.01)
+        self.assertAlmostEqual( test_1derrors_random['test_mb'], 0.2, delta=0.05)
+        self.assertAlmostEqual( test_1derrors_random['test_mc'], 0.1, delta=0.05)
         test_1derrors_rightleft = c.get_1d_errors_rightleft()
         self.assertEqual( test_1derrors_rightleft['test_mb'], (0.2, 0.2))
         self.assertEqual( test_1derrors_rightleft['test_mc'], (0.1, 0.1))
@@ -99,6 +99,42 @@ class TestClasses(unittest.TestCase):
         Parameter.del_instance('test_parameter')
         Implementation.del_instance('test_imp')
         del config['implementation']['test_aux']
+
+    def test_constraints_class_exclude(self):
+        Parameter( 'test_ma' )
+        Parameter( 'test_mb' )
+        Parameter( 'test_mc' )
+        c2 = np.array([1e-3, 2])
+        c3 = np.array([1e-3, 2, 0.4])
+        cov22 = np.array([[(0.2e-3)**2, 0.2e-3*0.5*0.3],[0.2e-3*0.5*0.3, 0.5**2]])
+        cov33 = np.array([[(0.2e-3)**2, 0.2e-3*0.5*0.3 , 0],[0.2e-3*0.5*0.3, 0.5**2, 0.01], [0, 0.01, 0.1**2]])
+        pdf1 = NormalDistribution(2, 0.5)
+        pdf2 = MultivariateNormalDistribution(c2, cov22)
+        pdf3 = MultivariateNormalDistribution(c3, cov33)
+        c1 = ParameterConstraints()
+        c2 = ParameterConstraints()
+        c3 = ParameterConstraints()
+        c1.add_constraint(['test_mb'], pdf1)
+        c2.add_constraint(['test_ma', 'test_mb'], pdf2)
+        c3.add_constraint(['test_ma', 'test_mb', 'test_mc'], pdf3)
+        par_dict = {'test_ma': 1.2e-3, 'test_mb': 2.4, 'test_mc': 0.33}
+        self.assertEqual(
+            c1.get_logprobability_all(par_dict)[pdf1],
+            c2.get_logprobability_all(par_dict, exclude_parameters=['test_ma', 'test_mc'])[pdf2],
+        )
+        self.assertEqual(
+            c1.get_logprobability_all(par_dict)[pdf1],
+            c3.get_logprobability_all(par_dict, exclude_parameters=['test_ma', 'test_mc'])[pdf3],
+        )
+        self.assertEqual(
+            c2.get_logprobability_all(par_dict)[pdf2],
+            c3.get_logprobability_all(par_dict, exclude_parameters=['test_mc'])[pdf3],
+        )
+        # remove dummy instances
+        Parameter.del_instance('test_ma')
+        Parameter.del_instance('test_mb')
+        Parameter.del_instance('test_mc')
+
 
     def test_pdf(self):
         # for the normal dist's, just check that no error is raised
