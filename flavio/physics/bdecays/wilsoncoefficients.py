@@ -179,3 +179,18 @@ def get_wceff_fccc(wc_obj, par, qiqj, lep, mqi, scale, nf=5):
     c['t']  = wc['CT_'+qqlnu]
     c['tp'] = 0
     return c
+
+def get_wceff_fccc_std(wc_obj, par, qiqj, lep, mqi, scale, nf=5):
+    r"""Get a dictionary with the $d_i\to d_j$ Wilson coefficients
+    in the flavio default convention.
+    """
+    qqlnu = qiqj + lep + 'nu'
+    wc = wc_obj.get_wc(qqlnu, scale, par)
+    c_sm = get_CVSM(par, scale, nf)
+    c = {}
+    c['V']  = c_sm + wc['CV_'+qqlnu]
+    c['Vp'] = wc['CVp_'+qqlnu]
+    c['S']  = wc['CS_'+qqlnu]
+    c['Sp'] = wc['CSp_'+qqlnu]
+    c['T']  = wc['CT_'+qqlnu]
+    return c
