@@ -9,7 +9,7 @@ CMS+LHCb Bq->mumu 2014:
 
 HFAG rad 2014:
   experiment: HFAG
-  inspire: Amhis:2012bh
+  inspire: Amhis:2014hma
   url: http://www.slac.stanford.edu/xorg/hfag/rare/2014/radll/OUTPUT/TABLES/radll.pdf
   values:
     BR(B+->K*gamma): 42.1 ± 1.8 e-6
@@ -17,7 +17,7 @@ HFAG rad 2014:
 
 HFAG rad 2016:
   experiment: HFAG
-  inspire: Amhis:2012bh
+  inspire: Amhis:2014hma
   url: http://www.slac.stanford.edu/xorg/hfag/rare/July2016/radll/index.html
   values:
     BR(B->Xsgamma): 349 ± 19 e-6
@@ -32,11 +32,20 @@ HFAG rad 2016:
 
 HFAG acp 2016:
   experiment: HFAG
-  inspire: Amhis:2012bh
+  inspire: Amhis:2014hma
   url: http://www.slac.stanford.edu/xorg/hfag/rare/July2016/acp/OUTPUT/TABLES/acp.pdf
   values:
     ACP(B->Xgamma): 0.032 ± 0.034
     ACP(B0->K*gamma): -0.002 ± 0.015
+
+HFAG semileptonic 2016:
+  experiment: HFAG
+  inspire: Amhis:2014hma
+  url: http://www.slac.stanford.edu/xorg/hfag/semi/summer16/main.shtml
+  values:
+    BR(B0->Dlnu): 2.20 ± 0.04 ± 0.09 e-2
+    BR(B+->Dlnu): 2.33 ± 0.04 ± 0.09 e-2
+    BR(B0->D*lnu): 4.88 ± 0.01 ± 0.10 e-2
 
 Belle phigamma 2014:
   experiment: Belle
@@ -57,7 +66,7 @@ LHCb phigamma 2016:
 
 HFAG osc summer 2015:
   experiment: HFAG
-  inspire: Amhis:2012bh
+  inspire: Amhis:2014hma
   url: http://www.slac.stanford.edu/xorg/hfag/osc/summer_2015/
   values:
     # to convert numbers from inverse picoseconds to GeV, divide by
@@ -69,7 +78,7 @@ HFAG osc summer 2015:
 
 HFAG UT summer 2015:
   experiment: HFAG
-  inspire: Amhis:2012bh
+  inspire: Amhis:2014hma
   url: http://www.slac.stanford.edu/xorg/hfag/triangle/summer2015/index.shtml
   values:
     S_psiphi: 0.033 ± 0.033 # NB this is actually -phi_s^ccbars
@@ -77,7 +86,7 @@ HFAG UT summer 2015:
 
 HFAG K*gamma summer 2015:
   experiment: HFAG
-  inspire: Amhis:2012bh
+  inspire: Amhis:2014hma
   url: http://www.slac.stanford.edu/xorg/hfag/triangle/summer2015/index.shtml
   values:
     S_K*gamma: -0.16 ± 0.22
@@ -2631,3 +2640,9 @@ LHCb B+->Kmumu AFB 2014:
       q2min: 15
       q2max: 22
       value: -0.015 ± 0.015 ± 0.01
+
+B->Xcenu global fit 2015:
+  inspire: Alberti:2014yda
+  # this is a numerical update mentioned in arXiv:1503.01791
+  values:
+    BR(B->Xcenu): 0.1067(16)
