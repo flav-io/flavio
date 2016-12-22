@@ -361,26 +361,96 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
 
 
 class MultivariateNumericalDistribution(ProbabilityDistribution):
+    """A multivariate distribution with PDF specified numerically."""
 
     def __init__(self, xi, y, central_value=None):
+        """Initialize a multivariate numerical distribution.
+
+        Parameters:
+
+        - `xi`: for an N-dimensional distribution, a list of N 1D arrays
+          specifiying the grid in N dimensions. The 1D arrays must contain
+          real, evenly spaced values in strictly ascending order (but the
+          spacing can be different for different dimensions).
+        - `y`: PDF values on the grid defined by the `xi`. If the N `xi` have
+          length M1, ..., MN, `y` has dimension (M1, ..., MN). This is the same
+          shape as the grid obtained from `numpy.meshgrid(*xi, indexing='ij')`.
+        - central_value: if None (default), will be set to the mode of the
+          distribution, i.e. the N-dimensional xi-vector where y is largest
+          (by looking up the input arrays, i.e. without interpolation!)
+        """
+        for x in xi:
+            # check that grid spacings are even up to per mille precision
+            d = np.diff(x)
+            if abs(np.min(d)/np.max(d)-1) > 1e-3:
+                raise ValueError("Grid must be evenly spaced per dimension")
+        self.xi = xi
+        self.y = y
         if central_value is not None:
             super().__init__(central_value=central_value, support=None)
         else:
+            # if no central value is specified, set it to the mode
             mode_index = (slice(None),) + np.unravel_index(y.argmax(), y.shape)
             mode = np.asarray(np.meshgrid(*xi, indexing='ij'))[mode_index]
             super().__init__(central_value=mode, support=None)
-            _bin_area = np.prod([x[1] - x[0] for x in xi])
-            _y_norm = y / np.sum(y) / _bin_area  # normalize PDF to 1
+            _bin_volume = np.prod([x[1] - x[0] for x in xi])
+            _y_norm = y / np.sum(y) / _bin_volume  # normalize PDF to 1
         # ignore warning from log(0)=-np.inf
         with np.errstate(divide='ignore', invalid='ignore'):
             self.logpdf_interp = scipy.interpolate.RegularGridInterpolator(xi, np.log(_y_norm),
                                                                            fill_value=-np.inf, bounds_error=False)
+        # the following is needed for get_random: intialize to None
+        self._y_flat = None
+        self._cdf_flat = None
+
 
     def get_random(self, size=None):
-        raise NotImplementedError(
-            "Random variate not implemented for multivariate numerical distributions")
+        """Draw a random number from the distribution.
+
+        If size is not None but an integer N, return an array of N numbers.
+
+        For the MultivariateNumericalDistribution, the PDF from which the
+        random numbers are drawn is approximated to be piecewise constant in
+        hypercubes around the points of the lattice spanned by the `xi`. A finer
+        lattice spacing will lead to a smoother distribution of random numbers
+        (but will also be slower).
+        """
+
+        if size is None:
+            return self._get_random()
+        else:
+            return np.array([self._get_random() for i in range(size)])
+
+    def _get_random(self):
+        # if these have not been initialized, do it (once)
+        if self._y_flat is None:
+            # get a flattened array of the PDF
+            self._y_flat = self.y.flatten()
+        if self._cdf_flat is None:
+            # get the (discrete) 1D CDF
+            _cdf_flat =  np.cumsum(self._y_flat)
+            # normalize to 1
+            self._cdf_flat = _cdf_flat/_cdf_flat[-1]
+        # draw a number between 0 and 1
+        r = np.random.uniform()
+        # find the index of the CDF-value closest to r
+        i_r = np.argmin(np.abs(self._cdf_flat-r))
+        indices = np.where(self.y == self._y_flat[i_r])
+        i_bla = np.random.choice(len(indices[0]))
+        index = tuple([a[i_bla] for a in indices])
+        xi_r = [ self.xi[i][index[i]] for i in range(len(self.xi)) ]
+        xi_diff = np.array([ X[1]-X[0] for X in self.xi ])
+        return xi_r + np.random.uniform(low=-0.5, high=0.5, size=len(self.xi)) * xi_diff
 
     def logpdf(self, x, exclude=None):
+        """Get the logarithm of the probability density function.
+
+        Parameters:
+
+        - x: vector; position at which PDF should be evaluated
+
+        Note: the exclude parameter is not implemented yet.
+        """
         if exclude is not None:
             raise NotImplementedError(
                 "Excluding individual parameters from multivariate numerical distributions not implemented")

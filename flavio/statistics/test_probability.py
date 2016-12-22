@@ -66,9 +66,8 @@ class TestProbability(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             p_num.error_right
         with self.assertRaises(NotImplementedError):
-            p_num.get_random()
-        with self.assertRaises(NotImplementedError):
             p_num.logpdf([0.237, 0.346], exclude=(0))
+        self.assertEqual(len(p_num.get_random(10)), 10)
 
     def test_numerical_from_analytic(self):
         p_norm = NormalDistribution(1.64, 0.32)
