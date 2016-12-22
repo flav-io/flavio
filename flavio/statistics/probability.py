@@ -114,6 +114,12 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
       self.p_left = normal_pdf(self.central_value, self.central_value, self.left_deviation)
 
    def get_random(self, size=None):
+       if size is None:
+           return self._get_random()
+       else:
+           return np.array([self._get_random() for i in range(size)])
+
+   def _get_random(self):
         r = np.random.uniform()
         a = abs(self.left_deviation/(self.right_deviation+self.left_deviation))
         if  r > a:

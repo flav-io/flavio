@@ -17,6 +17,7 @@ class TestProbability(unittest.TestCase):
         num_lpdf = pdf.logpdf(x)
         ana_lpdf = log(1/sqrt(4*pi**2*np.linalg.det(cov))*exp(-np.dot(np.dot(x-c,np.linalg.inv(cov)),x-c)/2))
         self.assertAlmostEqual(num_lpdf, ana_lpdf, delta=1e-6)
+        self.assertEqual(len(pdf.get_random(10)), 10)
 
     def test_halfnormal(self):
         pdf_p_1 = HalfNormalDistribution(1.7, 0.3)
@@ -27,6 +28,8 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(pdf_p_1.logpdf(1.55), -np.inf)
         self.assertAlmostEqual(pdf_n_1.logpdf(1.55), pdf_n_2.logpdf(1.55), delta=0.001)
         self.assertEqual(pdf_n_1.logpdf(1.99), -np.inf)
+        self.assertEqual(len(pdf_p_1.get_random(10)), 10)
+        self.assertEqual(len(pdf_p_2.get_random(10)), 10)
 
     def test_limit(self):
         p1 = GaussianUpperLimit(1.78, 0.68268949)
@@ -44,8 +47,7 @@ class TestProbability(unittest.TestCase):
         self.assertAlmostEqual(p_num.logpdf(-2.61), p_norm.logpdf(-2.61), delta=0.02)
         self.assertAlmostEqual(p_num.ppf_interp(0.1), scipy.stats.norm.ppf(0.1, loc=1), delta=0.02)
         self.assertAlmostEqual(p_num.ppf_interp(0.95), scipy.stats.norm.ppf(0.95, loc=1), delta=0.02)
-        # just check if this raises an error
-        p_num.get_random(100)
+        self.assertEqual(len(p_num.get_random(10)), 10)
 
     def test_numerical_from_analytic(self):
         p_norm = NormalDistribution(1.64, 0.32)
