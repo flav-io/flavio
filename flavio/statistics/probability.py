@@ -224,6 +224,18 @@ class GaussianUpperLimit(HalfNormalDistribution):
 class NumericalDistribution(ProbabilityDistribution):
 
     def __init__(self, x, y, central_value=None):
+        """Initialize a 1D numerical distribution.
+
+        Parameters:
+
+        - `x`: x-axis values. Must be a 1D array of real values in strictly
+          ascending order (but not necessarily evenly spaced)
+        - `y`: PDF values. Must be a 1D array of real positive values with the
+          same length as `x`
+        - central_value: if None (default), will be set to the mode of the
+          distribution, i.e. the x-value where y is largest (by looking up
+          the input arrays, i.e. without interpolation!)
+        """
         if central_value is not None:
             if x[0] <= central_value <= x[-1]:
                 super().__init__(central_value=central_value,
@@ -233,21 +245,21 @@ class NumericalDistribution(ProbabilityDistribution):
         else:
             mode = x[np.argmax(y)]
             super().__init__(central_value=mode, support=(x[0], x[-1]))
-        _x_range = (x[-1] - x[0])
-        _bin_width = _x_range / len(x)
-        _y_norm = y / sum(y) / _bin_width  # normalize PDF to 1
+        _y_norm = y /  np.trapz(y, x=x)  # normalize PDF to 1
         # ignore warning from log(0)=-np.inf
         with np.errstate(divide='ignore', invalid='ignore'):
             self.logpdf_interp = scipy.interpolate.interp1d(x, np.log(_y_norm),
                                                             fill_value=-np.inf, bounds_error=False)
-        _cdf = np.cumsum(_y_norm) * _bin_width
-        # adapt the borders of the PPF to be 0 and 1
-        _cdf[0] = 0.
-        _cdf[-1] = 1.
+        _cdf = np.zeros(len(x))
+        _cdf[1:] = np.cumsum(_y_norm[:-1] * np.diff(x))
+        _cdf = _cdf/_cdf[-1] # normalize CDF to 1
         self.ppf_interp = scipy.interpolate.interp1d(_cdf, x)
         self.cdf_interp = scipy.interpolate.interp1d(x, _cdf)
 
     def get_random(self, size=None):
+        """Draw a random number from the distribution.
+
+        If size is not None but an integer N, return an array of N numbers."""
         r = np.random.uniform(size=size)
         return self.ppf_interp(r)
 
