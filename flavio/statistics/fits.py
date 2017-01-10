@@ -48,8 +48,8 @@ class Fit(flavio.NamedInstanceClass):
             "as of flavio v0.19 and might be removed in the future.",
             FutureWarning)
         # some checks to make sure the input is sane
-        for p in self.fit_parameters + self.nuisance_parameters:
-            # check that fit and nuisance parameters exist
+        for p in self.nuisance_parameters:
+            # check that nuisance parameters are constrained
             assert p in par_obj._parameters.keys(), "Parameter " + p + " not found in Constraints"
         for obs in observables:
             # check that observables exist
@@ -338,6 +338,22 @@ class Fit(flavio.NamedInstanceClass):
         pred = self.get_predictions(x, **kwargs)
         return np.array([pred[obs] for obs in self.observables])
 
+    def log_prior_parameters(self, x):
+        """Return the prior probability (or frequentist likelihood) for all
+        fit and (!) nuisance parameters given an input array"""
+        par_dict = self.get_par_dict(x)
+        exclude_parameters = list(set(par_dict.keys())-set(self.fit_parameters)-set(self.nuisance_parameters))
+        prob_dict = self.par_obj.get_logprobability_all(par_dict, exclude_parameters=exclude_parameters)
+        return sum([p for obj, p in prob_dict.items()])
+
+    def log_prior_nuisance_parameters(self, x):
+        """Return the prior probability (or frequentist likelihood) for all
+        nuisance parameters given an input array"""
+        par_dict = self.get_par_dict(x)
+        exclude_parameters = list(set(par_dict.keys())-set(self.fit_parameters)-set(self.nuisance_parameters))
+        prob_dict = self.par_obj.get_logprobability_all(par_dict, exclude_parameters=exclude_parameters)
+        return sum([p for obj, p in prob_dict.items()])
+
     def log_likelihood_exp(self, x):
         """Return the logarithm of the likelihood function (not including the
         prior)"""
@@ -396,6 +412,31 @@ class BayesianFit(Fit):
     def __init__(self, *args, start_wc_priors=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.start_wc_priors = start_wc_priors
+
+        for p in self.fit_parameters:
+            # check that fit parameters are constrained
+            assert p in self.par_obj._parameters.keys(), "Parameter " + p + " not found in Constraints"
+
+    @property
+    def get_random(self):
+        """Get an array with random values for all the fit and nuisance
+        parameters"""
+        arr = np.zeros(self.dimension)
+        n_fit_p = len(self.fit_parameters)
+        n_nui_p = len(self.nuisance_parameters)
+        arr[:n_fit_p] = self.get_random_fit_parameters
+        arr[n_fit_p:n_fit_p+n_nui_p] = self.get_random_nuisance_parameters
+        arr[n_fit_p+n_nui_p:] = self.get_random_wilson_coeffs
+        return arr
+
+    def log_prior_wilson_coeffs(self, x):
+        """Return the prior probability for all Wilson coefficients
+        given an input array"""
+        if self.fit_wc_priors is None:
+            return 0
+        wc_dict = self.array_to_dict(x)['fit_wc']
+        prob_dict = self.fit_wc_priors.get_logprobability_all(wc_dict)
+        return sum([p for obj, p in prob_dict.items()])
 
     def log_target(self, x):
         """Return the logarithm of the likelihood times prior probability"""
@@ -671,3 +712,17 @@ class FastFit(BayesianFit):
             raise ValueError("Optimization failed.")
         else:
             return {'x': opt.x, 'log_likelihood': -opt.fun}
+
+
+class FrequentistFit(Fit):
+    """Frequentist fit class. Instances of this class can then be fed to samplers.
+
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def log_likelihood(self, x):
+        """Return the logarithm of the likelihood function (including the
+        lihelihoods of parameters and nuisance parameters!)"""
+        return self.log_likelihood_exp(x) + self.log_prior_nuisance_parameters(x)

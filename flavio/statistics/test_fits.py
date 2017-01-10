@@ -27,9 +27,6 @@ class TestClasses(unittest.TestCase):
             # same parameter as fit and nuisance
             Fit('test_fit_1', par, ['m_b'], ['m_b'], ['test_obs'])
         with self.assertRaises(AssertionError):
-            # non-existent fit parameter
-            Fit('test_fit_1', par, ['blabla'],  [], ['test_obs'])
-        with self.assertRaises(AssertionError):
             # non-existent nuisance parameter
             Fit('test_fit_1', par, [],  ['blabla'], ['test_obs'])
         def wc_fct(C):
@@ -150,3 +147,36 @@ class TestClasses(unittest.TestCase):
         Observable.del_instance('test_obs 2')
         Measurement.del_instance('measurement 1 of test_obs 1')
         Measurement.del_instance('measurement 2 of test_obs 1 and test_obs 2')
+
+    def test_frequentist_fit_class(self):
+        o = Observable( 'test_obs 2' )
+        o.arguments = ['q2']
+        def f(wc_obj, par_dict, q2):
+            return par_dict['m_b']*2 *q2
+        pr  = Prediction( 'test_obs 2', f )
+        d = NormalDistribution(4.2, 0.2)
+        m = Measurement( 'measurement of test_obs 2' )
+        m.add_constraint([('test_obs 2', 3)], d)
+        par = copy.deepcopy(flavio.parameters.default_parameters)
+        par.set_constraint('m_b', '4.2+-0.2')
+        par.set_constraint('m_c', '1.2+-0.1')
+        par.set_constraint('m_s', '0.10(5)')
+        wc = flavio.physics.eft.WilsonCoefficients()
+        def wc_fct(CL, CR):
+            return {'CVLL_bsbs': CL, 'CVRR_bsbs': CR}
+        fit = FrequentistFit('frequentist_test_fit_1', par, ['m_b','m_c'],  ['m_s'], [('test_obs 2',3)], fit_wc_function=wc_fct)
+        self.assertEqual(fit.get_measurements, ['measurement of test_obs 2'])
+        self.assertEqual(fit.dimension, 5)
+        # test from array to dict ...
+        d = fit.array_to_dict(np.array([1.,2.,3.,4.,5.]))
+        self.assertEqual(d, {'nuisance_parameters': {'m_s': 3.0}, 'fit_parameters': {'m_c': 2.0, 'm_b': 1.0}, 'fit_wc': {'CL': 4.0, 'CR': 5.0}})
+        # ... and back
+        np.testing.assert_array_equal(fit.dict_to_array(d), np.array([1.,2.,3.,4.,5.]))
+        fit.log_prior_parameters(np.array([4.5,1.0,0.08,4.,5.]))
+        fit.get_predictions(np.array([4.5,1.0,0.08,4.,5.]))
+        fit.log_likelihood_exp(np.array([4.5,1.0,0.08,4.,5.]))
+        fit.log_likelihood(np.array([4.5,1.0,0.08,4.,5.]))
+        # removing dummy instances
+        FrequentistFit.del_instance('frequentist_test_fit_1')
+        Observable.del_instance('test_obs 2')
+        Measurement.del_instance('measurement of test_obs 2')
