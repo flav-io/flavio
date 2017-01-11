@@ -23,3 +23,5 @@ class TestBlnu(unittest.TestCase):
             )/(par['m_e']**2/par['m_mu']**2),
             1,
             delta=0.001) # there are corrections of order mmu**2/mB**2
+        # check that Bc->taunu works without errors
+        flavio.sm_prediction('BR(Bc->taunu)')
