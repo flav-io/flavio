@@ -116,10 +116,10 @@ def BR_tot_function(B, P, lep):
 
 
 def BR_tot_leptonflavour(wc_obj, par, B, P, lnum, lden):
-    num = _BR_tot(wc_obj, par, B, P, lnum)
+    num = BR_tot(wc_obj, par, B, P, lnum)
     if num == 0:
         return 0
-    den = _BR_tot(wc_obj, par, B, P, lden)
+    den = BR_tot(wc_obj, par, B, P, lden)
     return num/den
 
 def BR_tot_leptonflavour_function(B, P, lnum, lden):
@@ -162,7 +162,7 @@ for l in ['e', 'mu', 'tau', 'l']:
             Prediction(_obs_name, _func[br](_hadr[M]['B'], _hadr[M]['P'], l))
 
 # Lepton flavour ratios
-for l in [('mu','e'), ('tau','mu'),]:
+for l in [('mu','e'), ('tau','mu'), ('tau', 'l')]:
     for M in _hadr_l.keys():
 
         # binned ratio of BRs
@@ -180,7 +180,7 @@ for l in [('mu','e'), ('tau','mu'),]:
         _obs_name = "R"+l[0]+l[1]+"("+M+"lnu)"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
         _obs.set_description(r"Ratio of total branching ratios of $" + _hadr_l[M]['tex'] +_tex[l[0]]+r"^+ \nu_"+_tex[l[0]]+r"$" + " and " + r"$" + _hadr_l[M]['tex'] +_tex[l[1]]+r"^+ \nu_"+_tex[l[1]]+r"$")
-        _obs.tex = r"$\langle R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} \rangle(" + _hadr_l[M]['tex'] + r"\ell^+\nu)$"
+        _obs.tex = r"$R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"}(" + _hadr_l[M]['tex'] + r"\ell^+\nu)$"
         for li in l:
             for N in _hadr_l[M]['decays']:
                 # add taxonomy for both processes (e.g. B->Penu and B->Pmunu) and for charged and neutral
