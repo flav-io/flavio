@@ -2646,3 +2646,37 @@ B->Xcenu global fit 2015:
   # this is a numerical update mentioned in arXiv:1503.01791
   values:
     BR(B->Xcenu): 0.1067(16)
+
+BaBar RD 2012:
+  experiment: BaBar
+  inspire: Lees:2013uzd
+  values:
+    Rtaul(B->Dlnu): 0.440 ± 0.058 ± 0.042
+    Rtaul(B->D*lnu): 0.332 ± 0.024 ± 0.018
+  correlation: -0.27 # HFAG
+
+Belle RD had 2015:
+  experiment: Belle
+  inspire: Huschle:2015rga
+  values:
+    Rtaul(B->Dlnu): 0.375 ± 0.064 ± 0.026
+    Rtaul(B->D*lnu): 0.293 ± 0.038 ± 0.015
+  correlation: -0.49 # HFAG
+
+Belle RD* sl 2016:
+  experiment: Belle
+  inspire: Sato:2016svk
+  values:
+    Rtaul(B->D*lnu): 0.302 ± 0.030 ± 0.011
+
+Belle RD* had 2016:
+  experiment: Belle
+  inspire: Abdesselam:2016xqt
+  values:
+    Rtaul(B->D*lnu): 0.276 ± 0.034 +0.029 -0.026
+
+LHCb RD* 2015:
+  experiment: LHCb
+  inspire: Aaij:2015yra
+  values:
+    Rtaumu(B->D*lnu): 0.336 ± 0.027 ± 0.030
