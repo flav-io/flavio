@@ -50,6 +50,7 @@ meson_quark = {
 'Bs': 'bs',
 'B0': 'bd',
 'B+': 'bu',
+'Bc': 'bc',
 'K+': 'su',
 'pi+': 'du',
 }

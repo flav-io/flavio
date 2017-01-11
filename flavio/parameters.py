@@ -71,15 +71,16 @@ def read_file_values_correlated(filename, constraints):
         _read_yaml_object_values_correlated(f, constraints)
 
 # particles from the PDG data file whose mass we're interested in)
-pdg_include = ['B(s)', 'B(s)*', 'B*+', 'B*0', 'B+', 'B0', 'D(s)', 'D(s)*', 'D+', 'D0',
+pdg_include = ['B(s)', 'B(c)', 'B(s)*', 'B*+', 'B*0', 'B+', 'B0', 'D(s)', 'D(s)*', 'D+', 'D0',
                'H', 'J/psi(1S)', 'K(L)', 'K(S)', 'K*(892)+', 'K*(892)0', 'K+', 'K0',
-               'Lambda', 'Lambda(b)', 'omega(782)', 'D*(2007)', 'D*(2010)',
+               'Lambda', 'Lambda(b)', 'Lambda(c)', 'omega(782)', 'D*(2007)', 'D*(2010)',
                'W', 'Z',  'b',  'c', 'd', 'e', 'eta', 'f(0)(980)',
                'mu',  'phi(1020)', 'pi+', 'pi0', 'psi(2S)', 'rho(770)+', 'rho(770)0',
                's', 't', 'tau', 'u']
 # dictionary translating PDG particle names to the ones in the code.
 pdg_translate = {
     'B(s)': 'Bs',
+    'B(c)': 'Bc',
     'D(s)': 'Ds',
     'B(s)*': 'Bs*',
     'D(s)*': 'Ds*',
@@ -97,6 +98,7 @@ pdg_translate = {
     "eta'(958)": "eta'",
     'omega(782)': 'omega',
     'Lambda(b)' : 'Lambdab',
+    'Lambda(c)' : 'Lambdac',
     'Higgs' : 'h', # this is necessary for the 2013 data file
     'H' : 'h',
     }

@@ -54,6 +54,9 @@ f_B0:
 f_B+:
   tex: $f_{B^\pm}$
   description: $B^\pm$ decay constant
+f_Bc:
+  tex: $f_{B_c}$
+  description: $B_c$ decay constant
 f_D0:
   tex: $f_{D^0}$
   description: $D^0$ decay constant

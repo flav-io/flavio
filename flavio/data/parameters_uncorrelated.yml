@@ -42,6 +42,7 @@ gamma: 1.27(12)
 f_rho0: 0.212(4)  # 1501.06569 table 1
 f_omega: 0.185(5)  # 1501.06569 table 1
 f_phi: 0.231(5)  # 1501.06569 table 1
+f_Bc: 0.434(15) # 1503.05762v2 eq. (20)
 
 # Parameters needed for meson light-cone distribution amplitudes
 
