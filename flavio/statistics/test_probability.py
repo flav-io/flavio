@@ -38,6 +38,27 @@ class TestProbability(unittest.TestCase):
         self.assertAlmostEqual(p1.logpdf(0.237), p2.logpdf(0.237), delta=0.0001)
         self.assertEqual(p2.logpdf(-1), -np.inf)
 
+    def test_gamma(self):
+        # check for loc above and below a-1
+        for  loc in (-5, -15):
+            p = GammaDistributionPositive(a=11, loc=loc, scale=1)
+            self.assertEqual(p.central_value, max(loc + 10, 0))
+            r = p.get_random(10)
+            self.assertEqual(len(r), 10)
+            self.assertTrue(np.min(r) >= 0)
+            self.assertEqual(p.logpdf(-0.1), -np.inf)
+            self.assertEqual(p.cdf(0), 0)
+            self.assertAlmostEqual(p.cdf(p.support[1]), 1-2e-9, delta=0.1e-9)
+            self.assertEqual(p.ppf(0), 0)
+            self.assertAlmostEqual(p.ppf(1-2e-9), p.support[1], delta=0.0001)
+        p = GammaDistributionPositive(a=11, loc=-9, scale=1)
+        self.assertEqual(p.central_value, 1)
+        self.assertEqual(p.error_left, 1)
+        # nearly normal distribution
+        p = GammaDistributionPositive(a=10001, loc=0, scale=1)
+        self.assertAlmostEqual(p.error_left, sqrt(10000), delta=1)
+        self.assertAlmostEqual(p.error_right, sqrt(10000), delta=1)
+
     def test_numerical(self):
         x = np.arange(-5,7,0.01)
         y = scipy.stats.norm.pdf(x, loc=1)

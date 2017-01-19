@@ -220,6 +220,99 @@ class GaussianUpperLimit(HalfNormalDistribution):
         """Convert the confidence level into a Gaussian standard deviation"""
         return limit * scipy.stats.norm.ppf(0.5 + confidence_level / 2.)
 
+class GammaDistributionPositive(ProbabilityDistribution):
+    r"""A Gamma distribution defined like the `gamma` distribution in
+    `scipy.stats` (with parameters `a`, `loc`, `scale`), but restricted to
+    positive values for x and correspondingly rescaled PDF.
+
+    The `central_value` attribute returns the location of the mode.
+    """
+
+    def __init__(self, a, loc, scale):
+        if loc > 0:
+            raise ValueError("loc must be negative or zero")
+        # "frozen" scipy distribution object (without restricting x>0!)
+        self.scipy_dist = scipy.stats.gamma(a=a, loc=loc, scale=scale)
+        mode = loc + (a-1)*scale
+        if mode < 0:
+            mode = 0
+        # support extends until the CDF is roughly "6 sigma", assuming x>0
+        support_limit = self.scipy_dist.ppf(1-2e-9*(1-self.scipy_dist.cdf(0)))
+        super().__init__(central_value=mode, # the mode
+                         support=(0, support_limit))
+        self.a = a
+        self.loc = loc
+        self.scale = scale
+        # scale factor for PDF to account for x>0
+        self._pdf_scale = 1/(1 - self.scipy_dist.cdf(0))
+
+    def get_random(self, size=None):
+        if size is None:
+            return self._get_random()
+        else:
+            # some iteration necessary as discarding negative values
+            # might lead to too small size
+            r = np.array([], dtype=float)
+            while len(r) < size:
+                r = np.concatenate((r, self._get_random(size=2*size)))
+            return r[:size]
+
+    def _get_random(self, size):
+        r = self.scipy_dist.rvs(size=size)
+        return r[(r >= 0)]
+
+    def cdf(self, x):
+        cdf0 = self.scipy_dist.cdf(0)
+        return (self.scipy_dist.cdf(x) - cdf0)/(1-cdf0)
+
+    def ppf(self, x):
+        cdf0 = self.scipy_dist.cdf(0)
+        return self.scipy_dist.ppf((1-cdf0)*x +  cdf0)
+
+    def logpdf(self, x):
+        # return -inf for negative x values
+        inf0 = np.piecewise(np.asarray(x, dtype=float), [x<0, x>=0], [-np.inf, 0.])
+        return inf0 + self.scipy_dist.logpdf(x) + np.log(self._pdf_scale)
+
+    def _find_error_cdf(self, confidence_level):
+        # find the value of the CDF at the position of the left boundary
+        # of the `confidence_level`% CL range by demanding that the value
+        # of the PDF is the same at the two boundaries
+        def x_left(a):
+            return self.ppf(a)
+        def x_right(a):
+            return self.ppf(a + confidence_level)
+        def diff_logpdf(a):
+            logpdf_x_left = self.logpdf(x_left(a))
+            logpdf_x_right = self.logpdf(x_right(a))
+            return logpdf_x_left - logpdf_x_right
+        return scipy.optimize.brentq(diff_logpdf, 0,  1 - confidence_level-1e-6)
+
+    @property
+    def error_left(self):
+        """Return the lower error"""
+        if self.logpdf(0) > self.logpdf(self.ppf(self._x68)):
+            # look at a one-sided 1 sigma range. If the PDF at 0
+            # is smaller than the PDF at the boundary of this range, it means
+            # that the left-hand error is not meaningful to define.
+            return self.central_value
+        else:
+            a = self._find_error_cdf(self._x68)
+            return self.central_value - self.ppf(a)
+
+    @property
+    def error_right(self):
+        """Return the upper error"""
+        one_sided_error = self.ppf(self._x68)
+        if self.logpdf(0) > self.logpdf(one_sided_error):
+            # look at a one-sided 1 sigma range. If the PDF at 0
+            # is smaller than the PDF at the boundary of this range, return the
+            # boundary of the range as the right-hand error
+            return one_sided_error
+        else:
+            a = self._find_error_cdf(self._x68)
+            return self.ppf(a + self._x68) - self.central_value
+
 
 class NumericalDistribution(ProbabilityDistribution):
 
