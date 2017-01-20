@@ -19,8 +19,20 @@ class ProbabilityDistribution(object):
 
 
 class UniformDistribution(ProbabilityDistribution):
+    """Distribution with constant PDF in a range and zero otherwise."""
 
     def __init__(self, central_value, half_range):
+        """Initialize the distribution.
+
+        Parameters:
+
+        - central_value: arithmetic mean of the upper and lower range boundaries
+        - half_range: half the difference of upper and lower range boundaries
+
+        Example:
+
+        central_value = 5 and half_range = 3 leads to the range [2, 8].
+        """
         self.half_range = half_range
         self.range = (central_value - half_range,
                       central_value + half_range)
@@ -51,8 +63,15 @@ class UniformDistribution(ProbabilityDistribution):
 
 
 class DeltaDistribution(ProbabilityDistribution):
+    """Delta Distrubution that is non-vanishing only at a single point."""
 
     def __init__(self, central_value):
+        """Initialize the distribution.
+
+        Parameters:
+
+        - central_value: point where the PDF does not vanish.
+        """
         super().__init__(central_value, support=(central_value, central_value))
 
     def get_random(self, size=None):
@@ -77,8 +96,16 @@ class DeltaDistribution(ProbabilityDistribution):
 
 
 class NormalDistribution(ProbabilityDistribution):
+    """Univariate normal or Gaussian distribution."""
 
     def __init__(self, central_value, standard_deviation):
+        """Initialize the distribution.
+
+        Parameters:
+
+        - central_value: location (mode and mean)
+        - standard_deviation: standard deviation
+        """
         super().__init__(central_value,
                          support=(central_value - 6 * standard_deviation,
                                   central_value + 6 * standard_deviation))
@@ -104,8 +131,18 @@ class NormalDistribution(ProbabilityDistribution):
 
 
 class AsymmetricNormalDistribution(ProbabilityDistribution):
+    """An asymmetric normal distribution obtained by gluing together two
+    half-Gaussians and demanding the PDF to be continuous."""
 
     def __init__(self, central_value, right_deviation, left_deviation):
+        """Initialize the distribution.
+
+        Parameters:
+
+        - central_value: mode of the distribution (not equal to its mean!)
+        - right_deviation: standard deviation of the upper half-Gaussian
+        - left_deviation: standard deviation of the lower half-Gaussian
+        """
         super().__init__(central_value,
                          support=(central_value - 6 * left_deviation,
                                   central_value + 6 * right_deviation))
@@ -163,8 +200,22 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
 
 
 class HalfNormalDistribution(ProbabilityDistribution):
+    """Half-normal distribution with zero PDF above or below the mode."""
 
     def __init__(self, central_value, standard_deviation):
+        """Initialize the distribution.
+
+        Parameters:
+
+        - central_value: mode of the distribution.
+        - standard_deviation:
+          If positive, the PDF is zero below central_value and (twice) that of
+          a Gaussian with this standard deviation above.
+          If negative, the PDF is zero above central_value and (twice) that of
+          a Gaussian with standard deviation equal to abs(standard_deviation)
+          below.
+        """
+
         super().__init__(central_value,
                          support=sorted((central_value,
                                          central_value + 6 * standard_deviation)))
@@ -215,8 +266,17 @@ class HalfNormalDistribution(ProbabilityDistribution):
 
 
 class GaussianUpperLimit(HalfNormalDistribution):
+    """Upper limit defined as a half-normal distribution."""
 
     def __init__(self, limit, confidence_level):
+        """Initialize the distribution.
+
+        Parameters:
+
+        - limit: value of the upper limit
+        - confidence_level: confidence_level of the upper limit. Float between
+          0 and 1.
+        """
         if confidence_level > 1 or confidence_level < 0:
             raise ValueError("Confidence level should be between 0 und 1")
         if limit <= 0:
@@ -374,6 +434,8 @@ class GammaUpperLimit(GammaDistributionPositive):
         return a, loc, scale
 
 class NumericalDistribution(ProbabilityDistribution):
+    """Univariate distribution defined in terms of numerical values for the
+    PDF."""
 
     def __init__(self, x, y, central_value=None):
         """Initialize a 1D numerical distribution.
@@ -563,7 +625,7 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
         with np.errstate(divide='ignore', invalid='ignore'):
             self.logpdf_interp = scipy.interpolate.RegularGridInterpolator(xi, np.log(_y_norm),
                                                                            fill_value=-np.inf, bounds_error=False)
-        # the following is needed for get_random: intialize to None
+        # the following is needed for get_random: initialize to None
         self._y_flat = None
         self._cdf_flat = None
 
