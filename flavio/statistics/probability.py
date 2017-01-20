@@ -187,6 +187,18 @@ class HalfNormalDistribution(ProbabilityDistribution):
         _lpvect = np.vectorize(self._logpdf)
         return _lpvect(x)
 
+    def cdf(self, x):
+        norm = scipy.stats.norm(loc=self.central_value,
+                                scale=self.standard_deviation)
+        cdf_0 = norm.cdf(0)
+        cdf_x = norm.cdf(x)
+        cdf = (cdf_x - cdf_0)/(1 - cdf_0)
+        return np.piecewise(
+                    np.asarray(x, dtype=float),
+                    [x<0, x>=0],
+                    [0., cdf]) # return 0 for negative x
+
+
     @property
     def error_left(self):
         """Return the lower error"""
@@ -218,7 +230,7 @@ class GaussianUpperLimit(HalfNormalDistribution):
 
     def get_standard_deviation(self, limit, confidence_level):
         """Convert the confidence level into a Gaussian standard deviation"""
-        return limit * scipy.stats.norm.ppf(0.5 + confidence_level / 2.)
+        return limit / scipy.stats.norm.ppf(0.5 + confidence_level / 2.)
 
 class GammaDistributionPositive(ProbabilityDistribution):
     r"""A Gamma distribution defined like the `gamma` distribution in
@@ -263,7 +275,11 @@ class GammaDistributionPositive(ProbabilityDistribution):
 
     def cdf(self, x):
         cdf0 = self.scipy_dist.cdf(0)
-        return (self.scipy_dist.cdf(x) - cdf0)/(1-cdf0)
+        cdf = (self.scipy_dist.cdf(x) - cdf0)/(1-cdf0)
+        return np.piecewise(
+                    np.asarray(x, dtype=float),
+                    [x<0, x>=0],
+                    [0., cdf]) # return 0 for negative x
 
     def ppf(self, x):
         cdf0 = self.scipy_dist.cdf(0)

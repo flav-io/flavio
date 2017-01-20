@@ -33,10 +33,11 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(len(pdf_p_2.get_random(10)), 10)
 
     def test_limit(self):
-        p1 = GaussianUpperLimit(1.78, 0.68268949)
+        p1 = GaussianUpperLimit(2*1.78, 0.9544997)
         p2 = HalfNormalDistribution(0, 1.78)
         self.assertAlmostEqual(p1.logpdf(0.237), p2.logpdf(0.237), delta=0.0001)
         self.assertEqual(p2.logpdf(-1), -np.inf)
+        self.assertAlmostEqual(p1.cdf(2*1.78), 0.9544997, delta=0.0001)
 
     def test_gamma(self):
         # check for loc above and below a-1
@@ -51,6 +52,7 @@ class TestProbability(unittest.TestCase):
             self.assertAlmostEqual(p.cdf(p.support[1]), 1-2e-9, delta=0.1e-9)
             self.assertEqual(p.ppf(0), 0)
             self.assertAlmostEqual(p.ppf(1-2e-9), p.support[1], delta=0.0001)
+            self.assertEqual(p.cdf(-1), 0)
         p = GammaDistributionPositive(a=11, loc=-9, scale=1)
         self.assertEqual(p.central_value, 1)
         self.assertEqual(p.error_left, 1)
