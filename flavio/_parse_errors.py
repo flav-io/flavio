@@ -4,9 +4,11 @@ from flavio.statistics.probability import *
 # for strings of the form '< 5.3e-8 @ 95% CL'
 _pattern_upperlimit = re.compile(r"^\s*<\s*([-+]?\d+\.?\d*)([eE][-+]?\d+)?\s*@\s*(\d+\.?\d*)\s*\%\s*C[\.\s]*L[\.\s]*$")
 # for strings of the form '1.67(3)(5) 1e-3'
-_pattern_brackets = re.compile(r"^\(?\s*(-?\d+\.?\d*)\s*((?:\(\s*\d+\.?\d*\s*\)\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
+_pattern_brackets = re.compile(r"^\s*\(?\s*(-?\d+\.?\d*)\s*((?:\(\s*\d+\.?\d*\s*\)\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
 # for strings of the form '(1.67 +- 0.3 +- 0.5) * 1e-3'
-_pattern_plusminus = re.compile(r"^\(?\s*(-?\d+\.?\d*)\s*((?:[+\-±\\pm]+\s*\d+\.?\d*\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
+_pattern_plusminus = re.compile(r"^\s*\(?\s*(-?\d+\.?\d*)\s*((?:[+\-±\\pm]+\s*\d+\.?\d*\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
+# for strings of the form '[1, 5] 1e-3'
+_pattern_range = re.compile(r"^\s*\[\s*(-?\d+\.?\d*)\s*([eE][-+]?\d+)?\s*\,\s*(-?\d+\.?\d*)\s*([eE][-+]?\d+)?\s*\]\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
 
 
 def errors_from_string(constraint_string):
@@ -70,6 +72,31 @@ def limit_from_string(constraint_string):
     cl = float(cl_pc)/100.
     return limit, cl
 
+def range_from_string(constraint_string):
+    m = _pattern_range.match(constraint_string)
+    if m is None:
+        raise ValueError("Constraint " + constraint_string + " not understood")
+    lo, ex_lo, hi, ex_hi, ex_ov = m.groups()
+    if ex_lo is None:
+        lo = float(lo)
+    else:
+        lo = float(lo + ex_lo)
+    if ex_hi is None:
+        hi = float(hi)
+    else:
+        hi = float(hi + ex_hi)
+    if hi < lo:
+        raise ValueError("Uniform constraint must be specified as [a,b] with b>a")
+    if ex_ov is None:
+        overall = 1
+    else:
+        overall =  10**float(ex_ov)
+    lo = overall * lo
+    hi = overall * hi
+    central_value = (hi + lo)/2.
+    half_range = (hi - lo)/2.
+    return central_value, half_range
+
 def errors_from_constraints(probability_distributions):
   """Return a string of the form 4.0±0.1±0.3 for the constraints on
   the parameter. Correlations are ignored."""
@@ -110,6 +137,9 @@ def constraints_from_string(constraint_string):
     if _pattern_upperlimit.match(constraint_string):
         limit, cl = limit_from_string(constraint_string)
         return [GaussianUpperLimit(limit, cl)]
+    elif _pattern_range.match(constraint_string):
+        central_value, half_range = range_from_string(constraint_string)
+        return [UniformDistribution(central_value, half_range)]
     elif _pattern_brackets.match(constraint_string) or _pattern_plusminus.match(constraint_string):
         errors = errors_from_string(constraint_string)
         if 'symmetric_errors' not in errors and 'asymmetric_errors' not in errors:

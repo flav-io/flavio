@@ -23,3 +23,18 @@ class TestParseErrors(unittest.TestCase):
         # make sure a negative limit raises an error:
         with self.assertRaises(ValueError):
             flavio._parse_errors.constraints_from_string('< -3.6e-9 @90% CL')
+
+    def test_parse_range(self):
+        pds = flavio._parse_errors.constraints_from_string('[-1,5]')
+        self.assertEqual(len(pds), 1)
+        self.assertEqual(pds[0].central_value, 2)
+        self.assertEqual(pds[0].half_range, 3)
+        pds = flavio._parse_errors.constraints_from_string('[-1 ,5 ] * 1e15')
+        self.assertEqual(pds[0].central_value, 2e15)
+        self.assertEqual(pds[0].half_range, 3e15)
+        with self.assertRaises(ValueError):
+            # max < min
+            flavio._parse_errors.constraints_from_string('[1, -5]')
+        pds = flavio._parse_errors.constraints_from_string('[ -1e-2,5e-2]e15')
+        self.assertEqual(pds[0].central_value, 2e13)
+        self.assertEqual(pds[0].half_range, 3e13)
