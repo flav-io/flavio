@@ -329,6 +329,51 @@ class GammaDistributionPositive(ProbabilityDistribution):
             a = self._find_error_cdf(self._x68)
             return self.ppf(a + self._x68) - self.central_value
 
+class GammaUpperLimit(GammaDistributionPositive):
+    r"""Gamma distribution with x restricted to be positive appropriate for
+    a positive quantitity obtained from a low-statistics counting experiment,
+    e.g. a rare decay rate, given an upper limit on x."""
+
+    def __init__(self, counts_total, counts_background, limit, confidence_level):
+        r"""Initialize the distribution.
+
+        Parameters:
+
+        - counts_total: observed total number (signal and background) of counts.
+        - counts_background: number of expected background counts, assumed to be
+          known.
+        - limit: upper limit on x, which is proportional (with a positive
+          proportionality factor) to the number of signal events.
+        - confidence_level: confidence level of the upper limit, i.e. the value
+          of the CDF at the limit. Float between 0 and 1. Frequently used values
+          are 0.90 and 0.95.        
+        """
+        if confidence_level > 1 or confidence_level < 0:
+            raise ValueError("Confidence level should be between 0 und 1")
+        if limit <= 0:
+            raise ValueError("The upper limit should be a positive number")
+        if counts_total <= 0:
+            raise ValueError("counts_total should be a positive number")
+        if counts_background <= 0:
+            raise ValueError("counts_background should be a positive number")
+        self.limit = limit
+        self.confidence_level = confidence_level
+        self.counts_total = counts_total
+        self.counts_background = counts_background
+        a, loc, scale = self._get_a_loc_scale()
+        super().__init__(a=a, loc=loc, scale=scale)
+
+    def _get_a_loc_scale(self):
+        """Convert the counts and limit to the input parameters needed for
+        GammaDistributionPositive"""
+        a = self.counts_total + 1
+        loc_unscaled = -self.counts_background
+        dist_unscaled = GammaDistributionPositive(a=a, loc=loc_unscaled, scale=1)
+        limit_unscaled = dist_unscaled.ppf(self.confidence_level)
+        # rescale
+        scale = self.limit/limit_unscaled
+        loc = -self.counts_background*scale
+        return a, loc, scale
 
 class NumericalDistribution(ProbabilityDistribution):
 

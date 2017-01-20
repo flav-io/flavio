@@ -61,6 +61,22 @@ class TestProbability(unittest.TestCase):
         self.assertAlmostEqual(p.error_left, sqrt(10000), delta=1)
         self.assertAlmostEqual(p.error_right, sqrt(10000), delta=1)
 
+    def test_gamma_limit(self):
+        p = GammaUpperLimit(counts_total=30, counts_background=10,
+                            limit=2e-5, confidence_level=0.68)
+        self.assertAlmostEqual(p.cdf(2e-5), 0.68, delta=0.0001)
+        # background excess
+        p = GammaUpperLimit(counts_total=30, counts_background=50,
+                            limit=2e5, confidence_level=0.68)
+        self.assertAlmostEqual(p.cdf(2e5), 0.68, delta=0.0001)
+        p = GammaUpperLimit(counts_total=10000, counts_background=10000,
+                            limit=3., confidence_level=0.95)
+        p_norm = GaussianUpperLimit(limit=3., confidence_level=0.95)
+        # check that large-statistics Gamma and Gauss give nearly same PDF
+        for x in [0, 1, 2, 3, 4]:
+            self.assertAlmostEqual(p.logpdf(x), p_norm.logpdf(x), delta=0.1)
+
+
     def test_numerical(self):
         x = np.arange(-5,7,0.01)
         y = scipy.stats.norm.pdf(x, loc=1)
