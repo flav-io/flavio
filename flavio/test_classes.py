@@ -49,6 +49,42 @@ class TestClasses(unittest.TestCase):
         Parameter.del_instance('test_mb')
         Parameter.del_instance('test_mc')
 
+    def test_set_constraint(self):
+        p = Parameter( 'test_mb' )
+        c = ParameterConstraints()
+        c.set_constraint('test_mb', '4.2 +- 0.1 +- 0.2')
+        cons = c._parameters['test_mb'][1]
+        self.assertIsInstance(cons, NormalDistribution)
+        self.assertEqual(cons.central_value, 4.2)
+        self.assertEqual(cons.standard_deviation, math.sqrt(0.1**2+0.2**2))
+        c.set_constraint('test_mb', '4.3 + 0.3 - 0.4')
+        cons = c._parameters['test_mb'][1]
+        self.assertIsInstance(cons, AsymmetricNormalDistribution)
+        self.assertEqual(cons.central_value, 4.3)
+        self.assertEqual(cons.right_deviation, 0.3)
+        self.assertEqual(cons.left_deviation, 0.4)
+        c.set_constraint('test_mb', 4.4)
+        cons = c._parameters['test_mb'][1]
+        self.assertIsInstance(cons, DeltaDistribution)
+        self.assertEqual(cons.central_value, 4.4)
+        cons_dict_1 = {'distribution': 'normal',
+                     'central_value': '4.5',
+                     'standard_deviation': '0.1'}
+        cons_dict_2 = {'distribution': 'normal',
+                     'central_value': 4.5,
+                     'standard_deviation': 0.2}
+        c.set_constraint('test_mb', constraint_dict=cons_dict_1)
+        cons = c._parameters['test_mb'][1]
+        self.assertIsInstance(cons, NormalDistribution)
+        self.assertEqual(cons.central_value, 4.5)
+        self.assertEqual(cons.standard_deviation, 0.1)
+        c.set_constraint('test_mb', constraint_dict=[cons_dict_1, cons_dict_2])
+        cons = c._parameters['test_mb'][1]
+        self.assertIsInstance(cons, NormalDistribution)
+        self.assertEqual(cons.central_value, 4.5)
+        self.assertEqual(cons.standard_deviation, math.sqrt(0.1**2+0.2**2))
+        Parameter.del_instance('test_mb')
+
     def test_observable_class(self):
         o = Observable( 'test_obs' )
         self.assertEqual( o, Observable.get_instance('test_obs') )

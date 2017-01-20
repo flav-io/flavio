@@ -7,6 +7,7 @@ from collections import OrderedDict, defaultdict
 import copy
 import math
 from flavio._parse_errors import constraints_from_string, convolve_distributions, errors_from_string
+from flavio.statistics.probability import class_from_string
 import scipy.stats
 import warnings
 
@@ -130,11 +131,46 @@ class Constraints(object):
             self._parameters[parameter] = (num, constraint)
         self._constraints.append((constraint, parameters))
 
-    def set_constraint(self, parameter, constraint_string):
-        """Set the constraints on a parameter/observable by specifying a string
-        that can be e.g. of the form 1.55(3)(1) or 4.0±0.1. Existing
-        constraints will be removed."""
-        pds = constraints_from_string(constraint_string)
+    def set_constraint(self, parameter, constraint_string=None,
+                                        constraint_dict=None):
+        r"""Set the constraint on a parameter/observable by specifying a string
+        or a dictionary. If several constraints (e.g. several types of
+        unceretainty) are given, the total constraint will be the convolution
+        of the individual distributions. Existing constraints will be removed.
+
+        Arguments:
+
+        - parameter: parameter string (or tuple)
+        - constraint_string: string specifying the constraint that can be e.g.
+          of the form `'1.55(3)(1)'` or `'4.0±0.1'`.
+        - constraint_dict: dictionary or list of several dictionaries of the
+          form `{'distribution': 'distribution_name', 'arg1': val1, ...}`, where
+          'distribution_name' is a string name associated to each probability
+          distribution (see `flavio.statistics.probability.class_from_string`)
+          and `'arg1'`, `val1` are argument/value pairs of the arguments of
+          the distribution class's constructor (e.g.`central_value`,
+          `standard_deviation` for a normal distribution).
+
+        `constraint_string` and `constraint_dict` must not be present
+        simultaneously.
+        """
+        if constraint_string is not None and constraint_dict is not None:
+            raise ValueError("constraint_string and constraint_dict cannot"
+                             " be used at the same time.")
+        if constraint_string is not None:
+            pds = constraints_from_string(constraint_string)
+        elif constraint_dict is not None:
+            if isinstance(constraint_dict, dict):
+                dict_list = [constraint_dict]
+            else:
+                dict_list = constraint_dict
+            pds = []
+            for d in dict_list:
+                dist = class_from_string[d['distribution']]
+                pds.append(dist(**{k: float(v) for k, v in d.items() if k!='distribution'}))
+        else:
+            raise TypeError("Either constraint_string or constraint_dict have"
+                             " to be specified.")
         combined_pd = convolve_distributions(pds)
         self.add_constraint([parameter], combined_pd)
 

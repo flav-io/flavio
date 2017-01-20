@@ -5,8 +5,6 @@ import scipy.signal
 import math
 from flavio.math.functions import normal_logpdf, normal_pdf
 
-########## ProbabilityDistribution Class ##########
-
 
 class ProbabilityDistribution(object):
     """Common base class for all probability distributions"""
@@ -346,7 +344,7 @@ class GammaUpperLimit(GammaDistributionPositive):
           proportionality factor) to the number of signal events.
         - confidence_level: confidence level of the upper limit, i.e. the value
           of the CDF at the limit. Float between 0 and 1. Frequently used values
-          are 0.90 and 0.95.        
+          are 0.90 and 0.95.
         """
         if confidence_level > 1 or confidence_level < 0:
             raise ValueError("Confidence level should be between 0 und 1")
@@ -726,3 +724,19 @@ def _convolve_numerical(probability_distributions, nsteps=1000):
             # cut out the convolved signal at the right place
             y = y[n_x_central:nsteps + n_x_central]
     return NumericalDistribution(central_value=central_value, x=x, y=y)
+
+# this dictionary is used for parsing low-level distribution definitions
+# in YAML files. A string name is associated to every (relevant) distribution.
+class_from_string = {
+ 'delta': DeltaDistribution,
+ 'uniform': UniformDistribution,
+ 'normal': NormalDistribution,
+ 'asymmetric_normal': AsymmetricNormalDistribution,
+ 'half_normal': HalfNormalDistribution,
+ 'gaussian_upper_limit': GaussianUpperLimit,
+ 'gamma_positive': GammaDistributionPositive,
+ 'gamma_upper_limit': GammaUpperLimit,
+ 'numerical': NumericalDistribution,
+ 'multivariate_normal': MultivariateNormalDistribution,
+ 'multivariate_numerical': MultivariateNumericalDistribution,
+}
