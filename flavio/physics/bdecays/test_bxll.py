@@ -36,7 +36,7 @@ class TestBXll(unittest.TestCase):
         self.assertAlmostEqual(1e6*flavio.sm_prediction('<BR>(B->Xsee)', 1, 3.5)/r,
                                0.926, delta=0.04)
         self.assertAlmostEqual(1e6*flavio.sm_prediction('<BR>(B->Xsee)', 3.5, 6)/r,
-                               0.744, delta=0.01)
+                               0.744, delta=0.015)
         self.assertAlmostEqual(1e7*flavio.sm_prediction('<BR>(B->Xsee)', 14.4, 25)/r,
                                2.20, delta=0.6) # larger difference due to Krüger-Sehgal
 

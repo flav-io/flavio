@@ -181,23 +181,26 @@ def Phill_logqed(I, sh, mb, ml, alpha_s, alpha_e, wc, q, lep):
     wc1_10 = np.array([0] + [wc[name] for name in coeffs]) # first entry 0 to shift index by 1
     scale = flavio.config['renormalization scale']['bxll']
     # (4.19) of 1503.04849
+    # Note the different powers of ast (\tilde\alpha_s) and k (\kappa) due to
+    # the different normalisation of 1) C9 and C10 and 2) the overall
+    # normalisation of phi_ll
     e = np.zeros((11, 11)) # from 0 to 10
     if I == 'T' or I == 'L' or I == 'BR':
-        e[7,7] = 8 * ast**3 * k**3 * sigmaij_I(I, 7, 7, sh)*wem(I, 7, 7, sh, mb, ml, scale)
-        e[7,9] = 8 * ast**2 * k**2 * sigmaij_I(I, 7, 9, sh)*wem(I, 7, 9, sh, mb, ml, scale)
+        e[7,7] = 8 * ast    * k    * sigmaij_I(I, 7, 7, sh)*wem(I, 7, 7, sh, mb, ml, scale)
+        e[7,9] = 8 * ast    * k    * sigmaij_I(I, 7, 9, sh)*wem(I, 7, 9, sh, mb, ml, scale)
         e[9,9] = 8 * ast    * k    * sigmaij_I(I, 9, 9, sh)*wem(I, 9, 9, sh, mb, ml, scale)
-        e[2,9] = 8 * ast**2 * k**2 * sigmaij_I(I, 9, 9, sh)*wem(I, 2, 9, sh, mb, ml, scale)
-        e[2,2] = 8 * ast**3 * k**3 * sigmaij_I(I, 9, 9, sh)*wem(I, 2, 2, sh, mb, ml, scale)
+        e[2,9] = 8 * ast    * k    * sigmaij_I(I, 9, 9, sh)*wem(I, 2, 9, sh, mb, ml, scale)
+        e[2,2] = 8 * ast    * k    * sigmaij_I(I, 9, 9, sh)*wem(I, 2, 2, sh, mb, ml, scale)
         e[1,1] = 16/9. * e[2,2]
         e[10,10] = e[9,9]
         e[1,2] = 8/3. * e[2,2]
         e[1,7] = 4/3. * e[2,7]
         e[1,9] = 4/3. * e[2,9]
-        e[2,7] = 8 * ast**3 * k**3 * sigmaij_I(I, 7, 9, sh)*wem(I, 2, 7, sh, mb, ml, scale)
+        e[2,7] = 8 * ast    * k    * sigmaij_I(I, 7, 9, sh)*wem(I, 2, 7, sh, mb, ml, scale)
     elif I == 'A':
-        e[7,10] = 8 * ast**2 * k**2 * sigmaij_I(I, 7, 10, sh)*wem(I, 7, 10, sh, mb, ml, scale)
+        e[7,10] = 8 * ast    * k    * sigmaij_I(I, 7, 10, sh)*wem(I, 7, 10, sh, mb, ml, scale)
         e[9,10] = 8 * ast    * k    * sigmaij_I(I, 9, 10, sh)*wem(I, 9, 10, sh, mb, ml, scale)
-        e[2,10] = 8 * ast**2 * k**2 * sigmaij_I(I, 9, 10, sh)*wem(I, 2, 10, sh, mb, ml, scale)
+        e[2,10] = 8 * ast    * k    * sigmaij_I(I, 9, 10, sh)*wem(I, 2, 10, sh, mb, ml, scale)
         e[1,10] = 4/3. *  e[2,10]
     else:
         raise ValueError("I should be 'T', 'L', 'BR', or 'A'")
