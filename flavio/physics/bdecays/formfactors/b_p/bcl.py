@@ -37,7 +37,7 @@ def param_fplusT(mB, mP, a_i, q2, t0=None):
     Z = z(mB, mP, q2, t0)
     n = len(a_i)
     k = np.arange(n)
-    return ( a_i * (Z**k - (-1)**(k - n) * k/n * Z**n) ).sum()
+    return ( a_i * (Z**k - (-1.)**(k - n) * k/n * Z**n) ).sum()
 
 def param_f0(mB, mP, a_i, q2, t0=None):
     Z = z(mB, mP, q2, t0)
