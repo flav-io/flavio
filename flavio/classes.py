@@ -264,7 +264,7 @@ class Constraints(object):
             x = [par_dict[p]
                 for p in parameters
                 if (p not in exclude_parameters
-                    and (parameters.index(p), constraint) == self._parameters[p])]
+                    and (parameters.index(p), constraint) == self._parameters.get(p, None))]
             if not x:
                 # nothing to constrain
                 continue
@@ -280,7 +280,7 @@ class Constraints(object):
                     exclude = tuple(i
                         for i, p in enumerate(parameters)
                         if (p in exclude_parameters
-                            or (parameters.index(p), constraint) != self._parameters[p]))
+                            or (parameters.index(p), constraint) != self._parameters.get(p, None)))
                 prob_dict[constraint] = constraint.logpdf(x, exclude=exclude)
         return prob_dict
 
