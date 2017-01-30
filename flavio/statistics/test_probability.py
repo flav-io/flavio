@@ -180,6 +180,27 @@ class TestProbability(unittest.TestCase):
         npt.assert_array_almost_equal(conv_p_12.logpdf(x-970), comb_p_12.logpdf(x-970), decimal=1)
         npt.assert_array_almost_equal(conv_p_123.logpdf(x-863), comb_p_123.logpdf(x-863), decimal=1)
 
+    def test_convolve_multivariate_gaussian(self):
+        from flavio.statistics.probability import _convolve_multivariate_gaussians
+        cov1 = [[(0.2e-3)**2, 0.2e-3*0.5*0.3],[0.2e-3*0.5*0.3, 0.5**2]]
+        cov2 = [[0.2**2, 0.5*0.2*0.4], [0.5*0.2*0.4, 0.4**2]]
+        cov12 = [[3.757362123647557e-8,9.75589614421325e-6],[9.755896144213236e-6,0.08109424494777555]]
+        c1 = [2, 5]
+        c2 = [-100, -250]
+        p_11 = MultivariateNormalDistribution(c1, cov1)
+        p_12 = MultivariateNormalDistribution(c1, cov2)
+        p_22 = MultivariateNormalDistribution(c2, cov2)
+        conv_11_12 = convolve_distributions([p_11, p_12])
+        self.assertIsInstance(conv_11_12, MultivariateNormalDistribution)
+        npt.assert_array_equal(conv_11_12.central_value, [2, 5])
+        npt.assert_array_almost_equal(conv_11_12.covariance, cov12, decimal=15)
+        with self.assertRaises(AssertionError):
+            convolve_distributions([p_11, p_22])
+        conv_11_22 = convolve_distributions([p_11, p_22], central_values='sum')
+        self.assertIsInstance(conv_11_22, MultivariateNormalDistribution)
+        npt.assert_array_almost_equal(conv_11_22.covariance, cov12, decimal=15)
+        npt.assert_array_equal(conv_11_22.central_value, [-100+2, -250+5])
+
     def test_1d_errors(self):
         p = NormalDistribution(3, 0.2)
         q = NumericalDistribution.from_pd(p)

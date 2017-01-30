@@ -786,8 +786,6 @@ def convolve_distributions(probability_distributions, central_values='same'):
 
     `probability_distributions` must be a list of instances of descendants of
     `ProbabilityDistribution`.
-
-    At present, this function is only implemented for univariate distributions.
     """
     if central_values not in ['same', 'sum']:
         raise ValueError("central_values must be either 'same' or 'sum'")
@@ -804,7 +802,7 @@ def convolve_distributions(probability_distributions, central_values='same'):
     if dims[0] == 1:
         return _convolve_distributions_univariate(probability_distributions, central_values)
     else:
-        raise NotImplementedError("Convolution only implemented for univariate distributions")
+        return _convolve_distributions_multivariate(probability_distributions, central_values)
 
 def _convolve_distributions_univariate(probability_distributions, central_values='same'):
     """Combine a set of univariate probability distributions."""
@@ -855,6 +853,46 @@ def _convolve_distributions_univariate(probability_distributions, central_values
         return _convolve_numerical(numerical, central_values=central_values)
 
 
+def _convolve_distributions_multivariate(probability_distributions, central_values='same'):
+    """Combine a set of multivariate probability distributions."""
+    # if there's just one: return it immediately
+    if len(probability_distributions) == 1:
+        return probability_distributions[0]
+    if central_values == 'same':
+        central_value = probability_distributions[0].central_value
+        assert all(p.central_value[i] == central_value[i] for p in probability_distributions for i in range(len(central_value))), \
+            "Distributions must all have the same central value"
+
+    for p in probability_distributions:
+        if not ( isinstance(p, MultivariateNormalDistribution)
+                 or isinstance(p, MultivariateNumericalDistribution) ):
+            raise ValueError("Multivariate convolution only implemented "
+                             "for normal and numerical distributions")
+
+    # all normal dists
+    gaussians = [p for p in probability_distributions if isinstance(
+        p, MultivariateNormalDistribution)]
+
+    # all numerical dists
+    others = [p for p in probability_distributions if isinstance(
+        p, MultivariateNumericalDistribution)]
+
+    # let's combine the normal distributions into 1
+    if gaussians:
+        gaussian = _convolve_multivariate_gaussians(gaussians,
+                                                  central_values=central_values)
+
+    if gaussians and not others:
+        # if there are only the gaussians, we are done.
+        return gaussian
+    else:
+        # otherwise, we need to combine the (combined) gaussian with the others
+        if gaussians:
+            NotImplementedError("Combining multivariate normal and numerical distributions not implemented")
+        else:
+            NotImplementedError("Combining multivariate numerical distributions not implemented")
+
+
 def _convolve_gaussians(probability_distributions, central_values='same'):
     assert all(isinstance(p, NormalDistribution) for p in probability_distributions), \
         "Distributions should all be instances of NormalDistribution"
@@ -868,6 +906,19 @@ def _convolve_gaussians(probability_distributions, central_values='same'):
         [p.standard_deviation for p in probability_distributions])
     sigma = math.sqrt(np.sum(sigmas**2))
     return NormalDistribution(central_value=central_value, standard_deviation=sigma)
+
+
+def _convolve_multivariate_gaussians(probability_distributions, central_values='same'):
+    assert all(isinstance(p, MultivariateNormalDistribution) for p in probability_distributions), \
+        "Distributions should all be instances of MultivariateNormalDistribution"
+    if central_values == 'same':
+        central_value = probability_distributions[0].central_value  # central value of the first dist
+        assert all(p.central_value == central_value for p in probability_distributions), \
+            "Distrubtions must all have the same central value"
+    elif central_values == 'sum':
+        central_value = np.sum([p.central_value for p in probability_distributions], axis=0)
+    cov =  np.sum([p.covariance for p in probability_distributions], axis=0)
+    return MultivariateNormalDistribution(central_value=central_value, covariance=cov)
 
 
 def _convolve_numerical(probability_distributions, nsteps=1000, central_values='same'):
