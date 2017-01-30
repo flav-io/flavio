@@ -700,44 +700,78 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
 
 # Auxiliary functions
 
-def convolve_distributions(probability_distributions):
-    """Combine a set of univariate probability distributions.
+def convolve_distributions(probability_distributions, central_values='same'):
+    """Combine a set of probability distributions by convoluting the PDFs.
 
-    This function is meant for combining uncertainties on a single parameter/
-    observable. As an argument, it takes a list of probability distributions
-    that all have the same central value. It returns their convolution, but
-    with location equal to the original central value.
+    This function can be used in two different ways:
 
-    At present, this function is only implemented for univariate normal
-    distributions.
+    - for `central_values='same'`, it can be used to combine uncertainties on a
+    single parameter/observable expressed in terms of probability distributions
+    with the same central value.
+    - for `central_values='sum'`, it can be used to determine the probability
+    distribution of a sum of random variables.
+
+    The only difference between the two cases is a shift: for 'same', the
+    central value of the convolution is the same as the original central value,
+    for 'sum', it is the sum of the individual central values.
+
+    `probability_distributions` must be a list of instances of descendants of
+    `ProbabilityDistribution`.
+
+    At present, this function is only implemented for univariate distributions.
     """
+    if central_values not in ['same', 'sum']:
+        raise ValueError("central_values must be either 'same' or 'sum'")
+    def dim(x):
+        # 1 for floats and length for arrays
+        try:
+            float(x)
+        except:
+            return len(x)
+        else:
+            return 1
+    dims = [dim(p.central_value) for p in probability_distributions]
+    assert all([d == dims[0] for d in dims]), "All distributions must have the same number of dimensions"
+    if dims[0] == 1:
+        return _convolve_distributions_univariate(probability_distributions, central_values)
+    else:
+        raise NotImplementedError("Convolution only implemented for univariate distributions")
+
+def _convolve_distributions_univariate(probability_distributions, central_values='same'):
+    """Combine a set of univariate probability distributions."""
     # if there's just one: return it immediately
     if len(probability_distributions) == 1:
         return probability_distributions[0]
-    central_value = probability_distributions[
-        0].central_value  # central value of the first dist
-    try:
-        float(central_value)
-    except:
-        raise AssertionError(
-            "Combination only implemented for univariate distributions")
-    assert all(p.central_value == central_value for p in probability_distributions), \
-        "Distrubtions must all have the same central value"
+    if central_values == 'same':
+        central_value = probability_distributions[0].central_value
+        assert all(p.central_value == central_value for p in probability_distributions), \
+            "Distributions must all have the same central value"
+
+    # all delta dists
+    deltas = [p for p in probability_distributions if isinstance(
+        p, DeltaDistribution)]
+    if central_values == 'sum' and deltas:
+        raise NotImplementedError("Convolution of DeltaDistributions only implemented for equal central values")
+    # central_values is 'same', we can instead just ignore the delta distributions!
+
     # all normal dists
     gaussians = [p for p in probability_distributions if isinstance(
         p, NormalDistribution)]
-    # let's alrady combined the normal distributions into 1
-    if gaussians:
-        gaussian = _convolve_gaussians(gaussians)
-    # all delta dists -  they can be ignored!
-    deltas = [p for p in probability_distributions if isinstance(
-        p, DeltaDistribution)]
+
     # all other univariate dists
-    others = list(set(probability_distributions) -
-                  set(gaussians) - set(deltas))
+    others = list(set(probability_distributions) - set(gaussians) - set(deltas))
+
     if not others and not gaussians:
         # if there is only a delta (or more than one), just return it
-        return deltas[0]
+        if central_values == 'same':
+            return deltas[0]
+        elif central_values == 'same':
+            return DeltaDistribution(sum([p.central_value for p in deltas]))
+
+    # let's combine the normal distributions into 1
+    if gaussians:
+        gaussian = _convolve_gaussians(gaussians, central_values=central_values)
+
     if gaussians and not others:
         # if there are only the gaussians, we are done.
         return gaussian
@@ -749,31 +783,38 @@ def convolve_distributions(probability_distributions):
             to_be_combined = others
         # turn all distributions into numerical distributions!
         numerical = [NumericalDistribution.from_pd(p) for p in to_be_combined]
-        return _convolve_numerical(numerical)
+        return _convolve_numerical(numerical, central_values=central_values)
 
 
-def _convolve_gaussians(probability_distributions):
+def _convolve_gaussians(probability_distributions, central_values='same'):
     assert all(isinstance(p, NormalDistribution) for p in probability_distributions), \
         "Distributions should all be instances of NormalDistribution"
-    central_value = probability_distributions[
-        0].central_value  # central value of the first dist
-    assert all(p.central_value == central_value for p in probability_distributions), \
-        "Distrubtions must all have the same central value"
+    if central_values == 'same':
+        central_value = probability_distributions[0].central_value  # central value of the first dist
+        assert all(p.central_value == central_value for p in probability_distributions), \
+            "Distrubtions must all have the same central value"
+    elif central_values == 'sum':
+        central_value = sum([p.central_value for p in probability_distributions])
     sigmas = np.array(
         [p.standard_deviation for p in probability_distributions])
     sigma = math.sqrt(np.sum(sigmas**2))
     return NormalDistribution(central_value=central_value, standard_deviation=sigma)
 
 
-def _convolve_numerical(probability_distributions, nsteps=1000):
+def _convolve_numerical(probability_distributions, nsteps=1000, central_values='same'):
     assert all(isinstance(p, NumericalDistribution) for p in probability_distributions), \
         "Distributions should all be instances of NumericalDistribution"
-    central_value = probability_distributions[
-        0].central_value  # central value of the first dist
-    assert all(p.central_value == central_value for p in probability_distributions), \
-        "Distrubtions must all have the same central value"
-    # the combined support is the one including all individual supports
-    supports = np.array([p.support for p in probability_distributions])
+    if central_values == 'same':
+        central_value = probability_distributions[0].central_value  # central value of the first dist
+        assert all(p.central_value == central_value for p in probability_distributions), \
+            "Distrubtions must all have the same central value"
+    elif central_values == 'sum':
+        central_value = sum([p.central_value for p in probability_distributions])
+    # differences of individual central values from combined central value
+    central_diffs = [central_value - p.central_value for p in probability_distributions]
+
+    # (shifted appropriately)
+    supports = (np.array([p.support for p in probability_distributions]).T + central_diffs).T
     support = (central_value - (central_value - supports[:, 0]).sum(),
                central_value - (central_value - supports[:, 1]).sum())
     delta = (support[1] - support[0]) / (nsteps - 1)
@@ -781,8 +822,8 @@ def _convolve_numerical(probability_distributions, nsteps=1000):
     # position of the central value
     n_x_central = math.floor((central_value - support[0]) / delta)
     y = None
-    for pd in probability_distributions:
-        y1 = np.exp(pd.logpdf(x)) * delta
+    for i, pd in enumerate(probability_distributions):
+        y1 = np.exp(pd.logpdf(x - central_diffs[i])) * delta
         if y is None:
             # first step
             y = y1

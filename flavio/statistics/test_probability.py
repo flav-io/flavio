@@ -136,6 +136,25 @@ class TestProbability(unittest.TestCase):
         self.assertIsInstance(p_comb, NormalDistribution)
         self.assertEqual(p_comb.central_value, 12.4)
         self.assertEqual(p_comb.standard_deviation, sqrt(0.346**2+2.463**2))
+        # check for addition of central values
+        p_comb = convolve_distributions([p_1, p_x], central_values='sum')
+        self.assertIsInstance(p_comb, NormalDistribution)
+        self.assertAlmostEqual(p_comb.central_value, 24.7)
+        self.assertEqual(p_comb.standard_deviation, sqrt(0.346**2+2.463**2))
+
+    def test_convolve_delta(self):
+        p_1 = DeltaDistribution(12.4)
+        p_2 = NormalDistribution(12.4, 2.463)
+        p_x = DeltaDistribution(12.3)
+        from flavio.statistics.probability import convolve_distributions
+        with self.assertRaises(NotImplementedError):
+            convolve_distributions([p_1, p_x], central_values='sum')
+        with self.assertRaises(AssertionError):
+            convolve_distributions([p_x, p_2])
+        p_comb = convolve_distributions([p_1, p_2])
+        self.assertIsInstance(p_comb, NormalDistribution)
+        self.assertEqual(p_comb.central_value, 12.4)
+        self.assertEqual(p_comb.standard_deviation, 2.463)
 
     def test_convolve_numerical(self):
         from flavio.statistics.probability import _convolve_numerical
@@ -149,6 +168,17 @@ class TestProbability(unittest.TestCase):
         x = np.linspace(2, 20, 10)
         npt.assert_array_almost_equal(conv_p_12.logpdf(x), comb_p_12.logpdf(x), decimal=1)
         npt.assert_array_almost_equal(conv_p_123.logpdf(x), comb_p_123.logpdf(x), decimal=1)
+        # same again for addition
+        p_1 = NumericalDistribution.from_pd(NormalDistribution(-986, 0.346))
+        p_2 = NumericalDistribution.from_pd(NormalDistribution(16, 2.463))
+        p_3 = NumericalDistribution.from_pd(NormalDistribution(107, 1.397))
+        conv_p_12 = _convolve_numerical([p_1, p_2], central_values='sum')
+        comb_p_12 = NormalDistribution(-970, sqrt(0.346**2 + 2.463**2))
+        conv_p_123 = _convolve_numerical([p_1, p_2, p_3], central_values='sum')
+        comb_p_123 = NormalDistribution(-863, sqrt(0.346**2 + 2.463**2 + 1.397**2))
+        x = np.linspace(-10, 10, 10)
+        npt.assert_array_almost_equal(conv_p_12.logpdf(x-970), comb_p_12.logpdf(x-970), decimal=1)
+        npt.assert_array_almost_equal(conv_p_123.logpdf(x-863), comb_p_123.logpdf(x-863), decimal=1)
 
     def test_1d_errors(self):
         p = NormalDistribution(3, 0.2)
