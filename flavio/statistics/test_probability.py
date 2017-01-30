@@ -124,6 +124,14 @@ class TestProbability(unittest.TestCase):
         p_half_num = NumericalDistribution.from_pd(p_half)
         npt.assert_array_almost_equal(p_half.logpdf([0.7, 1.3]), p_half_num.logpdf([0.7, 1.3]), decimal=3)
 
+    def test_numerical_from_analytic_mv(self):
+        p = MultivariateNormalDistribution([2, 5], [[(0.2)**2, 0.2e-3*0.5*0.3],[0.2*0.5*0.3, 0.5**2]])
+        p_num = MultivariateNumericalDistribution.from_pd(p)
+        npt.assert_array_equal(p.central_value, p_num.central_value)
+        npt.assert_array_equal(p.support, p_num.support)
+        npt.assert_array_almost_equal(p.logpdf([1.6, 2.5]), p_num.logpdf([1.6, 2.5]), decimal=2)
+        npt.assert_array_almost_equal(p.logpdf([2.33, 7]), p_num.logpdf([2.33, 7]), decimal=2)
+
     def test_convolve_normal(self):
         p_1 = NormalDistribution(12.4, 0.346)
         p_2 = NormalDistribution(12.4, 2.463)

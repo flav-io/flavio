@@ -586,7 +586,10 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
         - central_value: vector of means, shape (n)
         - covariance: covariance matrix, shape (n,n)
         """
-        super().__init__(central_value, support=None)
+        super().__init__(central_value, support=np.array([
+                    np.asarray(central_value) - 6*np.sqrt(np.diag(covariance)),
+                    np.asarray(central_value) + 6*np.sqrt(np.diag(covariance))
+                    ]))
         self.covariance = covariance
         # to avoid ill-conditioned covariance matrices, all data are rescaled
         # by the inverse variances
@@ -671,7 +674,8 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
         self.xi = xi
         self.y = y
         if central_value is not None:
-            super().__init__(central_value=central_value, support=None)
+            super().__init__(central_value=central_value,
+                             support=(np.asarray(xi).T[0], np.asarray(xi).T[-1]))
         else:
             # if no central value is specified, set it to the mode
             mode_index = (slice(None),) + np.unravel_index(y.argmax(), y.shape)
@@ -765,6 +769,16 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
     def error_right(self):
         raise NotImplementedError(
             "1D errors not implemented for multivariate numerical distributions")
+
+    @classmethod
+    def from_pd(cls, pd, nsteps=100):
+        _xi = np.array([np.linspace(pd.support[0, i], pd.support[-1, i], nsteps)
+                        for i in range(len(pd.central_value))])
+        ndim = len(_xi)
+        _xlist = np.array(np.meshgrid(*_xi, indexing='ij')).reshape(ndim, nsteps**ndim).T
+        _ylist = np.exp(pd.logpdf(_xlist))
+        _y = _ylist.reshape(tuple(nsteps for i in range(ndim)))
+        return cls(central_value=pd.central_value, xi=_xi, y=_y)
 
 
 # Auxiliary functions
