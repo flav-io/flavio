@@ -7,6 +7,7 @@ import scipy.optimize
 import scipy.interpolate
 import scipy.stats
 from numbers import Number
+from math import sqrt
 
 def error_budget_pie(err_dict, other_cutoff=0.03):
     """Pie chart of an observable's error budget.
@@ -50,7 +51,7 @@ def error_budget_pie(err_dict, other_cutoff=0.03):
 def find_confidence_interval(x, pdf, confidence_level):
     return pdf[pdf > x].sum() - confidence_level
 
-def density_contour(x, y, covariance_factor=None):
+def density_contour(x, y, covariance_factor=None, nbins=None):
     r"""A contour plot with 1 and 2 $\sigma$ contours of the density of points
     (useful for MCMC analyses).
 
@@ -59,29 +60,45 @@ def density_contour(x, y, covariance_factor=None):
     - `x`, `y`: lists or numpy arrays with the x and y coordinates of the points
     - `covariance_factor`: optional, numerical factor to tweak the smoothness
     of the contours
+    - nbins: number of bins in the histogram created as in intermediate step.
+      this usually does not have to be changed.
     """
-    xmin = min(x)
-    ymin = min(y)
-    xmax = max(x)
-    ymax = max(y)
-    xx, yy = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
-    positions = np.vstack([xx.ravel(), yy.ravel()])
-    values = np.vstack([x, y])
-    kernel = scipy.stats.gaussian_kde(values)
+    if nbins is None:
+        nbins = min(10*int(sqrt(len(x))), 200)
+    f_binned, x_edges, y_edges = np.histogram2d(x, y, normed=True, bins=nbins)
+    x_centers = (x_edges[:-1] + x_edges[1:])/2.
+    y_centers = (y_edges[:-1] + y_edges[1:])/2.
+    x_mean = np.mean(x_centers)
+    y_mean = np.mean(y_centers)
+    dataset = np.vstack([x, y])
 
-    if covariance_factor is not None:
-        kernel.covariance_factor = lambda: covariance_factor
-        kernel._compute_covariance()
+    d = 2 # no. of dimensions
 
-    f = np.reshape(kernel(positions).T, xx.shape)*(ymax-ymin)*(xmax-xmin)/1e4
+    if covariance_factor is None:
+        # Scott's/Silverman's rule
+        n = len(x) # no. of data points
+        _covariance_factor = n**(-1/6.)
+    else:
+        _covariance_factor = covariance_factor
+
+    cov = np.cov(dataset) * _covariance_factor**2
+    gaussian_kernel = scipy.stats.multivariate_normal(mean=[x_mean, y_mean], cov=cov)
+
+    x_grid, y_grid = np.meshgrid(x_centers, y_centers)
+    xy_grid = np.vstack([x_grid.ravel(), y_grid.ravel()])
+    f_gauss = gaussian_kernel.pdf(xy_grid.T)
+    f_gauss = np.reshape(f_gauss, (len(x_centers), len(y_centers))).T
+
+    f = scipy.signal.fftconvolve(f_binned, f_gauss, mode='same').T
+    f = f/f.sum()
 
     one_sigma = scipy.optimize.brentq(find_confidence_interval, 0., 1., args=(f.T, 0.68))
     two_sigma = scipy.optimize.brentq(find_confidence_interval, 0., 1., args=(f.T, 0.95))
     levels = [two_sigma, one_sigma, np.max(f)]
 
     ax = plt.gca()
-    ax.contourf(xx, yy, f, levels=levels, colors=flavio.plots.colors.reds[3:])
-    ax.contour(xx, yy, f, levels=levels, colors=flavio.plots.colors.reds[::-1], linewidths=0.7)
+    ax.contourf(x_grid, y_grid, f, levels=levels, colors=flavio.plots.colors.reds[3:])
+    ax.contour(x_grid, y_grid, f, levels=levels, colors=flavio.plots.colors.reds[::-1], linewidths=0.7)
 
 
 def q2_plot_th_diff(obs_name, q2min, q2max, wc=None, q2steps=100, **kwargs):
