@@ -769,7 +769,8 @@ def _convolve_numerical(probability_distributions, nsteps=1000):
         "Distrubtions must all have the same central value"
     # the combined support is the one including all individual supports
     supports = np.array([p.support for p in probability_distributions])
-    support = (supports[:, 0].min(), supports[:, 1].max())
+    support = (central_value - (central_value - supports[:, 0]).sum(),
+               central_value - (central_value - supports[:, 1]).sum())
     delta = (support[1] - support[0]) / (nsteps - 1)
     x = np.linspace(support[0], support[1], nsteps)
     # position of the central value
