@@ -3,11 +3,13 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 import flavio
+from flavio.statistics.functions import delta_chi2, confidence_level
 import scipy.optimize
 import scipy.interpolate
 import scipy.stats
 from numbers import Number
 from math import sqrt
+import warnings
 
 def error_budget_pie(err_dict, other_cutoff=0.03):
     """Pie chart of an observable's error budget.
@@ -46,59 +48,6 @@ def error_budget_pie(err_dict, other_cutoff=0.03):
         return r'{p:.1f}\%'.format(p=pct*err_tot)
     plt.axis('equal')
     return plt.pie(fracs, labels=labels, autopct=my_autopct, wedgeprops = {'linewidth':0.5}, colors=flavio.plots.colors.pastel)
-
-
-def find_confidence_interval(x, pdf, confidence_level):
-    return pdf[pdf > x].sum() - confidence_level
-
-def density_contour(x, y, covariance_factor=None, nbins=None):
-    r"""A contour plot with 1 and 2 $\sigma$ contours of the density of points
-    (useful for MCMC analyses).
-
-    Parameters:
-
-    - `x`, `y`: lists or numpy arrays with the x and y coordinates of the points
-    - `covariance_factor`: optional, numerical factor to tweak the smoothness
-    of the contours
-    - nbins: number of bins in the histogram created as in intermediate step.
-      this usually does not have to be changed.
-    """
-    if nbins is None:
-        nbins = min(10*int(sqrt(len(x))), 200)
-    f_binned, x_edges, y_edges = np.histogram2d(x, y, normed=True, bins=nbins)
-    x_centers = (x_edges[:-1] + x_edges[1:])/2.
-    y_centers = (y_edges[:-1] + y_edges[1:])/2.
-    x_mean = np.mean(x_centers)
-    y_mean = np.mean(y_centers)
-    dataset = np.vstack([x, y])
-
-    d = 2 # no. of dimensions
-
-    if covariance_factor is None:
-        # Scott's/Silverman's rule
-        n = len(x) # no. of data points
-        _covariance_factor = n**(-1/6.)
-    else:
-        _covariance_factor = covariance_factor
-
-    cov = np.cov(dataset) * _covariance_factor**2
-    gaussian_kernel = scipy.stats.multivariate_normal(mean=[x_mean, y_mean], cov=cov)
-
-    x_grid, y_grid = np.meshgrid(x_centers, y_centers)
-    xy_grid = np.vstack([x_grid.ravel(), y_grid.ravel()])
-    f_gauss = gaussian_kernel.pdf(xy_grid.T)
-    f_gauss = np.reshape(f_gauss, (len(x_centers), len(y_centers))).T
-
-    f = scipy.signal.fftconvolve(f_binned, f_gauss, mode='same').T
-    f = f/f.sum()
-
-    one_sigma = scipy.optimize.brentq(find_confidence_interval, 0., 1., args=(f.T, 0.68))
-    two_sigma = scipy.optimize.brentq(find_confidence_interval, 0., 1., args=(f.T, 0.95))
-    levels = [two_sigma, one_sigma, np.max(f)]
-
-    ax = plt.gca()
-    ax.contourf(x_grid, y_grid, f, levels=levels, colors=flavio.plots.colors.reds[3:])
-    ax.contour(x_grid, y_grid, f, levels=levels, colors=flavio.plots.colors.reds[::-1], linewidths=0.7)
 
 
 def q2_plot_th_diff(obs_name, q2min, q2max, wc=None, q2steps=100, **kwargs):
@@ -269,11 +218,139 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
             ax.errorbar(x, y, yerr=[dy_lower, dy_upper], xerr=dx, fmt='.', **kwargs_m)
 
 
-def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
-              interpolation_factor=1,
-              col=None, label=None,
-              pre_calculated_z=None,
-              contour_args={}, contourf_args={}):
+def density_contour_data(x, y, covariance_factor=None, n_bins=None, n_sigma=(1, 2)):
+    r"""Generate the data for a plot with confidence contours of the density
+    of points (useful for MCMC analyses).
+
+    Parameters:
+
+    - `x`, `y`: lists or numpy arrays with the x and y coordinates of the points
+    - `covariance_factor`: optional, numerical factor to tweak the smoothness
+    of the contours. If not specified, estimated using Scott's/Silverman's rule.
+    The factor should be between 0 and 1; larger values means more smoothing is
+    applied.
+    - n_bins: number of bins in the histogram created as an intermediate step.
+      this usually does not have to be changed.
+    - n_sigma: integer or iterable of integers specifying the contours
+      corresponding to the number of sigmas to be drawn. For instance, the
+      default (1, 2) draws the contours containing approximately 68 and 95%
+      of the points, respectively.
+    """
+    if n_bins is None:
+        n_bins = min(10*int(sqrt(len(x))), 200)
+    f_binned, x_edges, y_edges = np.histogram2d(x, y, normed=True, bins=n_bins)
+    x_centers = (x_edges[:-1] + x_edges[1:])/2.
+    y_centers = (y_edges[:-1] + y_edges[1:])/2.
+    x_mean = np.mean(x_centers)
+    y_mean = np.mean(y_centers)
+    dataset = np.vstack([x, y])
+
+    d = 2 # no. of dimensions
+
+    if covariance_factor is None:
+        # Scott's/Silverman's rule
+        n = len(x) # no. of data points
+        _covariance_factor = n**(-1/6.)
+    else:
+        _covariance_factor = covariance_factor
+
+    cov = np.cov(dataset) * _covariance_factor**2
+    gaussian_kernel = scipy.stats.multivariate_normal(mean=[x_mean, y_mean], cov=cov)
+
+    x_grid, y_grid = np.meshgrid(x_centers, y_centers)
+    xy_grid = np.vstack([x_grid.ravel(), y_grid.ravel()])
+    f_gauss = gaussian_kernel.pdf(xy_grid.T)
+    f_gauss = np.reshape(f_gauss, (len(x_centers), len(y_centers))).T
+
+    f = scipy.signal.fftconvolve(f_binned, f_gauss, mode='same').T
+    f = f/f.sum()
+
+    def find_confidence_interval(x, pdf, confidence_level):
+        return pdf[pdf > x].sum() - confidence_level
+    def get_level(n):
+        return scipy.optimize.brentq(find_confidence_interval, 0., 1.,
+                                     args=(f.T, confidence_level(n)))
+    if isinstance(n_sigma, Number):
+        levels = [get_level(n_sigma)]
+    else:
+        levels = [get_level(m) for m in sorted(n_sigma)]
+
+    # replace negative or zero values by a tiny number before taking the log
+    f[f <= 0] = 1e-32
+    # convert probability to -2*log(probability), i.e. a chi^2
+    f = -2*np.log(f)
+    # convert levels to chi^2 and make the mode equal chi^2=0
+    levels = list(-2*np.log(levels) - np.min(f))
+    f = f - np.min(f)
+
+    return {'x': x_grid, 'y': y_grid, 'z': f, 'levels': levels}
+
+
+def density_contour(x, y, covariance_factor=None, n_bins=None, n_sigma=(1, 2),
+                    **kwargs):
+    r"""A plot with confidence contours of the density of points
+    (useful for MCMC analyses).
+
+    Parameters:
+
+    - `x`, `y`: lists or numpy arrays with the x and y coordinates of the points
+    - `covariance_factor`: optional, numerical factor to tweak the smoothness
+    of the contours. If not specified, estimated using Scott's/Silverman's rule.
+    The factor should be between 0 and 1; larger values means more smoothing is
+    applied.
+    - n_bins: number of bins in the histogram created as an intermediate step.
+      this usually does not have to be changed.
+    - n_sigma: integer or iterable of integers specifying the contours
+      corresponding to the number of sigmas to be drawn. For instance, the
+      default (1, 2) draws the contours containing approximately 68 and 95%
+      of the points, respectively.
+
+    All remaining keyword arguments are passed to the `contour` function
+    and allow to control the presentation of the plot (see docstring of
+    `flavio.plots.plotfunctions.contour`).
+    """
+    data = density_contour_data(x=x, y=y, covariance_factor=covariance_factor,
+                                n_bins=n_bins, n_sigma=n_sigma)
+    data.update(kwargs) #  since we cannot do **data, **kwargs in Python <3.5
+    return contour(**data)
+
+
+def likelihood_countour_data(log_likelihood, x_min, x_max, y_min, y_max,
+              n_sigma=1, steps=20):
+    r"""Generate data required to plot coloured confidence contours (or bands)
+    given a log likelihood function.
+
+    Parameters:
+
+    - `log_likelihood`: function returning the logarithm of the likelihood.
+      Can e.g. be the method of the same name of a FastFit instance.
+    - `x_min`, `x_max`, `y_min`, `y_max`: data boundaries
+    - `n_sigma`: plot confidence level corresponding to this number of standard
+      deviations. Either a number (defaults to 1) or a tuple to plot several
+      contours.
+    - `steps`: number of grid steps in each dimension (total computing time is
+      this number squared times the computing time of one `log_likelihood` call!)
+     """
+    _x = np.linspace(x_min, x_max, steps)
+    _y = np.linspace(y_min, y_max, steps)
+    x, y = np.meshgrid(_x, _y)
+    @np.vectorize
+    def chi2_vect(x, y): # needed for evaluation on meshgrid
+        return -2*log_likelihood([x,y])
+    z = chi2_vect(x, y)
+    z = z - np.min(z) # subtract the best fit point (on the grid)
+
+    # get the correct values for 2D confidence/credibility contours for n sigma
+    if isinstance(n_sigma, Number):
+        levels = [delta_chi2(n_sigma, dof=2)]
+    else:
+        levels = [delta_chi2(n, dof=2) for n in n_sigma]
+    return {'x': x, 'y': y, 'z': z, 'levels': levels}
+
+
+def likelihood_countour(log_likelihood, x_min, x_max, y_min, y_max,
+              n_sigma=1, steps=20,
+              **kwargs):
     r"""Plot coloured confidence contours (or bands) given a log likelihood
     function.
 
@@ -281,79 +358,112 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max, n_sigma=1, steps=20,
 
     - `log_likelihood`: function returning the logarithm of the likelihood.
       Can e.g. be the method of the same name of a FastFit instance.
-    - `x_min`, `x_max`, `y_min`, `y_max`: plot boundaries
+    - `x_min`, `x_max`, `y_min`, `y_max`: data boundaries
     - `n_sigma`: plot confidence level corresponding to this number of standard
       deviations. Either a number (defaults to 1) or a tuple to plot several
       contours.
     - `steps`: number of grid steps in each dimension (total computing time is
       this number squared times the computing time of one `log_likelihood` call!)
-    - `interpolation factor` (optional): in between the points on the grid
-      set by `steps`, the log likelihood can be interpolated to get smoother contours.
+
+    All remaining keyword arguments are passed to the `contour` function
+    and allow to control the presentation of the plot (see docstring of
+    `flavio.plots.plotfunctions.contour`).
+    """
+    data = likelihood_countour_data(log_likelihood=log_likelihood,
+                                x_min=x_min, x_max=x_max,
+                                y_min=y_min, y_max=y_max,
+                                n_sigma=n_sigma, steps=steps)
+    data.update(kwargs) #  since we cannot do **data, **kwargs in Python <3.5
+    return contour(**data)
+
+# alias for backward compatibility
+def band_plot(log_likelihood, x_min, x_max, y_min, y_max,
+              n_sigma=1, steps=20, **kwargs):
+    r"""This is an alias for `likelihood_countour` which is present for
+    backward compatibility."""
+    warnings.warn("The `band_plot` function has been replaced "
+                  "by `likelihood_contour` (or "
+                  "`likelihood_countour_data` in conjunction with `contour`) "
+                  "and might be removed in the future. "
+                  "Please update your code.", FutureWarning)
+    valid_args = likelihood_countour_data.__code__.co_varnames
+    data_kwargs = {k:v for k,v in kwargs.items() if k in valid_args}
+    if 'pre_calculated_z' not in kwargs:
+        contour_kwargs = likelihood_countour_data(log_likelihood,
+                      x_min, x_max, y_min, y_max,
+                      n_sigma, steps, **data_kwargs)
+    else:
+        contour_kwargs = {}
+        nx, ny = kwargs['pre_calculated_z'].shape
+        _x = np.linspace(x_min, x_max, nx)
+        _y = np.linspace(y_min, y_max, ny)
+        x, y = np.meshgrid(_x, _y)
+        contour_kwargs['x'] = x
+        contour_kwargs['y'] = y
+        contour_kwargs['z'] = kwargs['pre_calculated_z']
+        if isinstance(n_sigma, Number):
+            contour_kwargs['levels'] = [delta_chi2(n_sigma, dof=2)]
+        else:
+            contour_kwargs['levels'] = [delta_chi2(n, dof=2) for n in n_sigma]
+    valid_args = contour.__code__.co_varnames
+    contour_kwargs.update({k:v for k,v in kwargs.items() if k in valid_args})
+    contour(**contour_kwargs)
+    return contour_kwargs['x'], contour_kwargs['y'], contour_kwargs['z']
+
+
+def contour(x, y, z, levels,
+              interpolation_factor=1,
+              interpolation_order=2,
+              col=0, label=None,
+              contour_args={}, contourf_args={}):
+    r"""Plot coloured confidence contours (or bands) given numerical input
+    arrays.
+
+    Parameters:
+
+    - `x`, `y`: 2D arrays containg x and y values as returned by numpy.meshgrid
+    - `z` value of the function to plot. 2D array in the same shape as `x` and
+      `y`. The lowest value of the function should be 0 (i.e. the best fit
+      point).
+    - levels: list of function values where to draw the contours. They should
+      be positive and in ascending order.
+    - `interpolation factor` (optional): in between the points on the grid,
+      the functioncan be interpolated to get smoother contours.
       This parameter sets the number of subdivisions (default: 1, i.e. no
       interpolation). It should be larger than 1.
     - `col` (optional): number between 0 and 9 to choose the color of the plot
       from a predefined palette
     - `label` (optional): label that will be added to a legend created with
        maplotlib.pyplot.legend()
-    - `pre_calculated_z` (optional): z values for a band plot, previously
-       calculated. In this case, no likelihood scan is performed and time can
-       be saved. The arguments `steps` and `log_likelihood` are ignored in this
-       case.
     - `contour_args`: dictionary of additional options that will be passed
        to matplotlib.pyplot.contour() (that draws the contour lines)
     - `contourf_args`: dictionary of additional options that will be passed
        to matplotlib.pyplot.contourf() (that paints the contour filling)
     """
-    ax = plt.gca()
-    if pre_calculated_z is None:
-        # coarse grid
-        _x = np.linspace(x_min, x_max, steps)
-        _y = np.linspace(y_min, y_max, steps)
-        x, y = np.meshgrid(_x, _y)
-        @np.vectorize
-        def chi2_vect(x, y): # needed for evaluation on meshgrid
-            return -2*log_likelihood([x,y])
-        z = chi2_vect(x, y)
-        # number of steps for fine grid
-        steps_fine = steps*interpolation_factor
+    x = scipy.ndimage.zoom(x, zoom=interpolation_factor, order=1)
+    y = scipy.ndimage.zoom(y, zoom=interpolation_factor, order=1)
+    z = scipy.ndimage.zoom(z, zoom=interpolation_factor, order=interpolation_order)
+    if not isinstance(col, int):
+        _col = 0
     else:
-        z = pre_calculated_z
-        # number of steps for fine grid
-        steps_fine = len(z)*interpolation_factor
-    # fine grid
-    _x = np.linspace(x_min, x_max, steps_fine)
-    _y = np.linspace(y_min, y_max, steps_fine)
-    x, y = np.meshgrid(_x, _y)
-    # interpolate z from coarse to fine grid
-    z = scipy.ndimage.zoom(z, zoom=interpolation_factor)
-    z = z - np.min(z) # subtract the best fit point (on the grid)
-    if col is not None and isinstance(col, int):
-        contourf_args['colors'] = [flavio.plots.colors.pastel[col]]
-        contour_args['colors'] = [flavio.plots.colors.set1[col]]
-    else:
-        if 'colors' not in contourf_args:
-            contourf_args['colors'] = [flavio.plots.colors.pastel[0]]
-        if 'colors' not in contour_args:
-            contour_args['colors'] = [flavio.plots.colors.set1[0]]
-    if 'linestyle' not in contour_args:
-        contour_args['linestyles'] = 'solid'
-    # get the correct values for 2D confidence/credibility contours for n sigma
-    chi2_1dof = scipy.stats.chi2(1)
-    chi2_2dof = scipy.stats.chi2(2)
-    def get_y(n):
-        cl_nsigma = chi2_1dof.cdf(n**2) # this is roughly 0.68 for n_sigma=1 etc.
-        return chi2_2dof.ppf(cl_nsigma) # this is roughly 2.3 for n_sigma=1 etc.
-    if isinstance(n_sigma, Number):
-        levels = [get_y(n_sigma)]
-    else:
-        levels = [get_y(n) for n in n_sigma]
+        _col = col
+    _contour_args = {}
+    _contourf_args = {}
+    _contour_args['colors'] = [flavio.plots.colors.set1[_col]]
+    N = len(levels)
+    _contourf_args['colors'] = [flavio.plots.colors.pastel[_col] # RGB
+                                       + (max(1-n/N, 0),) # alpha, decreasing for contours
+                                       for n in range(N)]
+    _contour_args['linestyles'] = 'solid'
+    _contour_args.update(contour_args)
+    _contourf_args.update(contourf_args)
     # for the filling, need to add zero contour
-    levelsf = [0] + levels
-    ax.contourf(x, y, z, levels=levelsf, **contourf_args)
-    CS = ax.contour(x, y, z, levels=levels, **contour_args)
+    levelsf = [np.min(z)] + levels
+    ax = plt.gca()
+    ax.contourf(x, y, z, levels=levelsf, **_contourf_args)
+    CS = ax.contour(x, y, z, levels=levels, **_contour_args)
     if label is not None:
         CS.collections[0].set_label(label)
-    return x, y, z
 
 
 def flavio_branding(x=0.8, y=0.94, version=True):
