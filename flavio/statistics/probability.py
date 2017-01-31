@@ -450,6 +450,8 @@ class NumericalDistribution(ProbabilityDistribution):
           distribution, i.e. the x-value where y is largest (by looking up
           the input arrays, i.e. without interpolation!)
         """
+        self.x = x
+        self.y = y
         if central_value is not None:
             if x[0] <= central_value <= x[-1]:
                 super().__init__(central_value=central_value,
@@ -460,10 +462,8 @@ class NumericalDistribution(ProbabilityDistribution):
             mode = x[np.argmax(y)]
             super().__init__(central_value=mode, support=(x[0], x[-1]))
         _y_norm = y /  np.trapz(y, x=x)  # normalize PDF to 1
-        # ignore warning from log(0)=-np.inf
-        with np.errstate(divide='ignore', invalid='ignore'):
-            self.logpdf_interp = scipy.interpolate.interp1d(x, np.log(_y_norm),
-                                                            fill_value=-np.inf, bounds_error=False)
+        self.pdf_interp = scipy.interpolate.interp1d(x, _y_norm,
+                                        fill_value=0, bounds_error=False)
         _cdf = np.zeros(len(x))
         _cdf[1:] = np.cumsum(_y_norm[:-1] * np.diff(x))
         _cdf = _cdf/_cdf[-1] # normalize CDF to 1
@@ -477,8 +477,13 @@ class NumericalDistribution(ProbabilityDistribution):
         r = np.random.uniform(size=size)
         return self.ppf_interp(r)
 
+    def pdf(self, x):
+        return self.pdf_interp(x)
+
     def logpdf(self, x):
-        return self.logpdf_interp(x)
+    # ignore warning from log(0)=-np.inf
+        with np.errstate(divide='ignore', invalid='ignore'):
+            return np.log(self.pdf_interp(x))
 
     @property
     def error_left(self):
