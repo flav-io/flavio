@@ -900,4 +900,5 @@ class_from_string = {
  'numerical': NumericalDistribution,
  'multivariate_normal': MultivariateNormalDistribution,
  'multivariate_numerical': MultivariateNumericalDistribution,
+ 'gaussian_kde': GaussianKDE,
 }
