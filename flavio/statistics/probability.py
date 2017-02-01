@@ -457,15 +457,16 @@ class NumericalDistribution(ProbabilityDistribution):
                 super().__init__(central_value=central_value,
                                  support=(x[0], x[-1]))
             else:
+                print(central_value)
                 raise ValueError("Central value must be within range provided")
         else:
             mode = x[np.argmax(y)]
             super().__init__(central_value=mode, support=(x[0], x[-1]))
-        _y_norm = y /  np.trapz(y, x=x)  # normalize PDF to 1
-        self.pdf_interp = scipy.interpolate.interp1d(x, _y_norm,
+        self.y_norm = y /  np.trapz(y, x=x)  # normalize PDF to 1
+        self.pdf_interp = scipy.interpolate.interp1d(x, self.y_norm,
                                         fill_value=0, bounds_error=False)
         _cdf = np.zeros(len(x))
-        _cdf[1:] = np.cumsum(_y_norm[:-1] * np.diff(x))
+        _cdf[1:] = np.cumsum(self.y_norm[:-1] * np.diff(x))
         _cdf = _cdf/_cdf[-1] # normalize CDF to 1
         self.ppf_interp = scipy.interpolate.interp1d(_cdf, x)
         self.cdf_interp = scipy.interpolate.interp1d(x, _cdf)
@@ -501,9 +502,60 @@ class NumericalDistribution(ProbabilityDistribution):
 
     @classmethod
     def from_pd(cls, pd, nsteps=1000):
+        if isinstance(pd, NumericalDistribution):
+            return pd
         _x = np.linspace(pd.support[0], pd.support[-1], nsteps)
         _y = np.exp(pd.logpdf(_x))
         return cls(central_value=pd.central_value, x=_x, y=_y)
+
+class KernelDensityEstimate(NumericalDistribution):
+    """Univariate kernel density estimate.
+
+    Parameters:
+
+    - `data`: 1D array
+    - `kernel`: instance of `ProbabilityDistribution` used as smoothing kernel
+    - `n_bins` (optional): number of bins used in the intermediate step. This normally
+      does not have to be changed.
+    """
+
+    def __init__(self, data, kernel, n_bins=None):
+        self.data = data
+        assert kernel.central_value == 0, "Kernel density must have zero central value"
+        self.kernel = kernel
+        self.n = len(data)
+        if n_bins is None:
+            self.n_bins = min(1000, self.n)
+        else:
+            self.n_bins = n_bins
+        y, x_edges = np.histogram(data, bins=self.n_bins, normed=True)
+        x = (x_edges[:-1] + x_edges[1:])/2.
+        self.y_raw = y
+        self.raw_dist = NumericalDistribution(x, y)
+        cdist = convolve_distributions([self.raw_dist, self.kernel], 'sum')
+        super().__init__(cdist.x, cdist.y)
+
+
+class GaussianKDE(KernelDensityEstimate):
+    """Univariate Gaussian kernel density estimate.
+
+    Parameters:
+
+    - `data`: 1D array
+    - `bandwidth` (optional): standard deviation of the Gaussian smoothing kernel.
+       If not provided, Scott's rule is used to estimate it.
+    - `n_bins` (optional): number of bins used in the intermediate step. This normally
+      does not have to be changed.
+    """
+
+    def __init__(self, data, bandwidth=None, n_bins=None):
+        if bandwidth is None:
+            self.bandwidth = len(data)**(-1/5.) * np.std(data)
+        else:
+            self.bandwidth = bandwidth
+        super().__init__(data=data,
+                         kernel = NormalDistribution(0, self.bandwidth),
+                         n_bins=n_bins)
 
 
 class MultivariateNormalDistribution(ProbabilityDistribution):

@@ -233,3 +233,14 @@ class TestProbability(unittest.TestCase):
         with self.assertRaises(ValueError):
             # dimensions don't match
             self.assertEqual(pdf2.logpdf([1.1e-3, 2.4]), pdf3.logpdf([1.1e-3, 2.4, 0.2], exclude=2))
+
+    def test_gaussian_kde(self):
+        # check that a random Gaussian is reproduced correctly
+        np.random.seed(42)
+        dat = np.random.normal(117, 23, size=100)
+        kde = GaussianKDE(dat)
+        norm = scipy.stats.norm(117, 23)
+        x = np.linspace(117-23, 117+23, 10)
+        npt.assert_array_almost_equal(kde.pdf(x)/norm.pdf(x), np.ones(10), decimal=1)
+        # check scott's factor
+        self.assertAlmostEqual(kde.bandwidth, 0.4*23, delta=0.4*23*0.1*2)
