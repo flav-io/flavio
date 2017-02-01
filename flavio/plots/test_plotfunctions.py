@@ -31,7 +31,7 @@ class TestPlots(unittest.TestCase):
         # check that no error is raised and output dimensions match
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            
+
             x, y, z = band_plot(dummy_loglikelihood,
                                              -2, 2, -3, 3, steps=30)
             self.assertEqual(x.shape, (30, 30))
@@ -88,3 +88,9 @@ class TestPlots(unittest.TestCase):
         self.assertEqual(len(data['levels']), 1) # by default, plot 1 sigma contour
         self.assertAlmostEqual(data['levels'][0], 2.3, delta=0.01) #
         self.assertEqual(np.min(data['z']), 0)
+
+    def test_smooth_histogram(self):
+        # just check this doesn't raise and error
+        np.random.seed(42)
+        dat = np.random.normal(117, 23, size=100)
+        smooth_histogram(dat, col=1)
