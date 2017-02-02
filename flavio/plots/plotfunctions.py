@@ -415,6 +415,7 @@ def contour(x, y, z, levels,
               interpolation_factor=1,
               interpolation_order=2,
               col=0, label=None,
+              filled=True,
               contour_args={}, contourf_args={}):
     r"""Plot coloured confidence contours (or bands) given numerical input
     arrays.
@@ -435,10 +436,12 @@ def contour(x, y, z, levels,
       from a predefined palette
     - `label` (optional): label that will be added to a legend created with
        maplotlib.pyplot.legend()
+    - `filled` (optional): if False, contours will be drawn without shading
     - `contour_args`: dictionary of additional options that will be passed
        to matplotlib.pyplot.contour() (that draws the contour lines)
     - `contourf_args`: dictionary of additional options that will be passed
-       to matplotlib.pyplot.contourf() (that paints the contour filling)
+       to matplotlib.pyplot.contourf() (that paints the contour filling).
+       Ignored if `filled` is false.
     """
     x = scipy.ndimage.zoom(x, zoom=interpolation_factor, order=1)
     y = scipy.ndimage.zoom(y, zoom=interpolation_factor, order=1)
@@ -461,7 +464,8 @@ def contour(x, y, z, levels,
     # for the filling, need to add zero contour
     levelsf = [np.min(z)] + levels
     ax = plt.gca()
-    ax.contourf(x, y, z, levels=levelsf, **_contourf_args)
+    if filled:
+        ax.contourf(x, y, z, levels=levelsf, **_contourf_args)
     CS = ax.contour(x, y, z, levels=levels, **_contour_args)
     if label is not None:
         CS.collections[0].set_label(label)
