@@ -294,7 +294,7 @@ class FastFit(BayesianFit):
 
     # a method to get the mean and covariance of all measurements of all
     # observables of interest
-    def _get_central_covariance_experiment(self, N=100):
+    def _get_central_covariance_experiment(self, N=5000):
         means = []
         covariances = []
         for measurement in self.get_measurements:
@@ -333,16 +333,22 @@ class FastFit(BayesianFit):
             return means[0], covariances[0]
         # if there are severeal measurements, perform a weighted average
         else:
-            weights = [np.linalg.inv(c) for c in covariances]
             # covariances: [Sigma_1, Sigma_2, ...]
             # means: [x_1, x_2, ...]
             # weights_ [W_1, W_2, ...] where W_i = (Sigma_i)^(-1)
             # weighted covariance is  (W_1 + W_2 + ...)^(-1) = Sigma
             # weigted mean is  Sigma.(W_1.x_1 + W_2.x_2 + ...) = x
-            weighted_covariance = np.linalg.inv(np.sum(weights, axis=0))
-            weighted_mean = np.dot(weighted_covariance, np.sum(
-                            [np.dot(weights[i], means[i]) for i in range(len(means))],
-                            axis=0))
+            if len(self.observables) == 1:
+                weights = np.array([1/c for c in covariances])
+                weighted_covariance = 1/np.sum(weights, axis=0)
+                weighted_mean = weighted_covariance * np.sum(
+                                [np.dot(weights[i], means[i]) for i in range(len(means))])
+            else:
+                weights = [np.linalg.inv(c) for c in covariances]
+                weighted_covariance = np.linalg.inv(np.sum(weights, axis=0))
+                weighted_mean = np.dot(weighted_covariance, np.sum(
+                                [np.dot(weights[i], means[i]) for i in range(len(means))],
+                                axis=0))
             return weighted_mean, weighted_covariance
 
 
@@ -372,7 +378,7 @@ class FastFit(BayesianFit):
                                         for par in par_random])
         return np.cov(pred_arr)
 
-    def make_measurement(self, N=100, Nexp=1000):
+    def make_measurement(self, N=100, Nexp=5000):
         """Initialize the fit by producing a pseudo-measurement containing both
         experimental uncertainties as well as theory uncertainties stemming
         from nuisance parameters."""
@@ -381,7 +387,7 @@ class FastFit(BayesianFit):
         covariance = cov_exp + cov_sm
         # add the Pseudo-measurement
         m = flavio.classes.Measurement('Pseudo-measurement for FastFit instance: ' + self.name)
-        if len(central_exp) == 1:
+        if np.asarray(central_exp).ndim == 0 or len(central_exp) <= 1: # for a 1D (or 0D) array
             m.add_constraint(self.observables,
                     flavio.statistics.probability.NormalDistribution(central_exp, np.sqrt(covariance)))
         else:
