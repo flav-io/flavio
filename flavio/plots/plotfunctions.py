@@ -484,7 +484,7 @@ def flavio_box(x_min, x_max, y_min, y_max):
     ax = plt.gca()
     ax.add_patch(patches.Rectangle((x_min, y_min), x_max-x_min, y_max-y_min, facecolor='#ffffff', edgecolor='#666666', alpha=0.5, ls=':', lw=0.7))
 
-def smooth_histogram(data, bandwidth=None, col=None, plotargs={}, fillargs={}):
+def smooth_histogram(data, bandwidth=None, col=None, label=None, plotargs={}, fillargs={}):
     """A smooth histogram based on a Gaussian kernel density estimate.
 
     Parameters:
@@ -503,6 +503,9 @@ def smooth_histogram(data, bandwidth=None, col=None, plotargs={}, fillargs={}):
     _plotargs = {}
     _fillargs = {}
     # default values
+    _plotargs['linewidth'] = 0.6
+    if label is not None:
+        _plotargs['label'] = label
     if col is None:
         _plotargs['color'] = flavio.plots.colors.set1[0]
         _fillargs['facecolor'] = flavio.plots.colors.pastel[0]
