@@ -738,7 +738,12 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
         if exclude is not None:
             raise NotImplementedError(
                 "Excluding individual parameters from multivariate numerical distributions not implemented")
-        return self.logpdf_interp(x)[0]
+
+        if np.asarray(x).shape == (len(self.central_value),):
+            # return a scalar
+            return self.logpdf_interp(x)[0]
+        else:
+            return self.logpdf_interp(x)
 
     @property
     def error_left(self):

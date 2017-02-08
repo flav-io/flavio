@@ -275,3 +275,10 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(d.logpdf(xr2, exclude=[0]).shape, (10,))
         self.assertEqual(d.logpdf(xr[0], exclude=[0, 1]).shape, ())
         self.assertEqual(d.logpdf(xr, exclude=[0, 1]).shape, (10,))
+        xi = [np.linspace(-1,1,5), np.linspace(-1,1,6), np.linspace(-1,1,7)]
+        y = np.random.rand(5,6,7)
+        d = MultivariateNumericalDistribution(xi, y)
+        xr3 = np.random.rand(10, 3)
+        xr2 = np.random.rand(10, 2)
+        self.assertEqual(d.logpdf(xr3[0]).shape, ())
+        self.assertEqual(d.logpdf(xr3).shape, (10,))
