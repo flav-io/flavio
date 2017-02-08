@@ -443,9 +443,10 @@ def contour(x, y, z, levels,
        to matplotlib.pyplot.contourf() (that paints the contour filling).
        Ignored if `filled` is false.
     """
-    x = scipy.ndimage.zoom(x, zoom=interpolation_factor, order=1)
-    y = scipy.ndimage.zoom(y, zoom=interpolation_factor, order=1)
-    z = scipy.ndimage.zoom(z, zoom=interpolation_factor, order=interpolation_order)
+    if interpolation_factor > 1:
+        x = scipy.ndimage.zoom(x, zoom=interpolation_factor, order=1)
+        y = scipy.ndimage.zoom(y, zoom=interpolation_factor, order=1)
+        z = scipy.ndimage.zoom(z, zoom=interpolation_factor, order=interpolation_order)
     if not isinstance(col, int):
         _col = 0
     else:
