@@ -244,3 +244,34 @@ class TestProbability(unittest.TestCase):
         npt.assert_array_almost_equal(kde.pdf(x)/norm.pdf(x), np.ones(10), decimal=1)
         # check scott's factor
         self.assertAlmostEqual(kde.bandwidth, 0.4*23, delta=0.4*23*0.1*2)
+
+    def test_vectorize(self):
+        # check that all logpdf methods work on arrays as well
+        np.random.seed(42)
+        xr = np.random.rand(10)
+        d = UniformDistribution(0, 1)
+        self.assertEqual(d.logpdf(xr).shape, (10,))
+        d = DeltaDistribution(1)
+        lpd = d.logpdf([2,3,4,5,1,1,3,6,1,3,5,1])
+        npt.assert_array_equal(lpd, [-np.inf, -np.inf, -np.inf, -np.inf,
+                                     0, 0, -np.inf, -np.inf, 0,
+                                     -np.inf, -np.inf, 0 ])
+        d = NormalDistribution(0, 1)
+        self.assertEqual(d.logpdf(xr).shape, (10,))
+        d = AsymmetricNormalDistribution(0, 1, 0.5)
+        self.assertEqual(d.logpdf(xr).shape, (10,))
+        d = HalfNormalDistribution(0, 1)
+        self.assertEqual(d.logpdf(xr).shape, (10,))
+        d = GammaDistributionPositive(1, 0, 3)
+        self.assertEqual(d.logpdf(xr).shape, (10,))
+        d = NumericalDistribution.from_pd(NormalDistribution(0, 1))
+        self.assertEqual(d.logpdf(xr).shape, (10,))
+        d = MultivariateNormalDistribution([1, 2, 3], np.eye(3))
+        xr3 = np.random.rand(10, 3)
+        xr2 = np.random.rand(10, 2)
+        self.assertEqual(d.logpdf(xr3[0]).shape, ())
+        self.assertEqual(d.logpdf(xr3).shape, (10,))
+        self.assertEqual(d.logpdf(xr2[0], exclude=[0]).shape, ())
+        self.assertEqual(d.logpdf(xr2, exclude=[0]).shape, (10,))
+        self.assertEqual(d.logpdf(xr[0], exclude=[0, 1]).shape, ())
+        self.assertEqual(d.logpdf(xr, exclude=[0, 1]).shape, (10,))

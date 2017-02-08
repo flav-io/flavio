@@ -81,10 +81,14 @@ class DeltaDistribution(ProbabilityDistribution):
             return self.central_value * np.ones(size)
 
     def logpdf(self, x):
-        if x == self.central_value:
-            return 0.
-        else:
-            return -np.inf
+        if np.ndim(x) == 0:
+            if x == self.central_value:
+                return 0.
+            else:
+                return -np.inf
+        y = -np.inf*np.ones(np.asarray(x).shape)
+        y[np.asarray(x) == self.central_value] = 0
+        return y
 
     @property
     def error_left(self):
@@ -606,9 +610,6 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
           evaluating the PDF, effectively ignoring certain dimensions.
         """
         if exclude is not None:
-            # if n of N parameters are to be exluded, x should have length N-n
-            if not len(x) + np.asarray(exclude).size == len(self.central_value):
-                raise ValueError("Dimensions do not match")
             # if parameters are to be excluded, construct a temporary
             # distribution with reduced mean vector and covariance matrix
             # and call its logpdf method
@@ -619,7 +620,7 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
                 # if only 1 dimension remains, can use a univariate Gaussian
                 _dist_ex = NormalDistribution(
                     central_value=_cent_ex[0], standard_deviation=np.sqrt(_cov_ex[0, 0]))
-                return _dist_ex.logpdf(x[0])
+                return _dist_ex.logpdf(x)
             else:
                 # if more than 1 dimension remains, use a (smaller)
                 # multivariate Gaussian
