@@ -48,6 +48,28 @@ class TestClasses(unittest.TestCase):
         Observable.del_instance('test_obs')
         Measurement.del_instance('measurement of test_obs')
 
+    def test_correlation_warning(self):
+        o1 = Observable( 'test_obs 1' )
+        o2 = Observable( 'test_obs 2' )
+        d1 = MultivariateNormalDistribution([1,2],[[1,0],[0,2]])
+        d2 = MultivariateNormalDistribution([1,2],[[1,0],[0,2]])
+        par = flavio.default_parameters
+        m1 = Measurement( '1st measurement of test_obs 1 and 2' )
+        m1.add_constraint(['test_obs 1', 'test_obs 2'], d1)
+        # this should not prompt a warning
+        Fit('test_fit_1', par, [], [], observables=['test_obs 1'])
+        m2 = Measurement( '2nd measurement of test_obs 1 and 2' )
+        m2.add_constraint(['test_obs 1', 'test_obs 2'], d2)
+        # this should now prompt a warning
+        with self.assertWarnsRegex(UserWarning,
+                                   ".*test_fit_1.*test_obs 2.*test_obs 1.*"):
+            Fit('test_fit_1', par, [], [], observables=['test_obs 1'])
+        Fit.del_instance('test_fit_1')
+        Observable.del_instance('test_obs 1')
+        Observable.del_instance('test_obs 2')
+        Measurement.del_instance('1st measurement of test_obs 1 and 2')
+        Measurement.del_instance('2nd measurement of test_obs 1 and 2')
+
     def test_bayesian_fit_class(self):
         o = Observable( 'test_obs 2' )
         o.arguments = ['q2']

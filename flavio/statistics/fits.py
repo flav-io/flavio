@@ -8,6 +8,8 @@ import flavio
 import numpy as np
 import copy
 from flavio.statistics.probability import NormalDistribution, MultivariateNormalDistribution, convolve_distributions
+from collections import Counter
+import warnings
 
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
@@ -68,6 +70,7 @@ class Fit(flavio.NamedInstanceClass):
         self.fit_wc_priors = fit_wc_priors
         self.observables = observables
         self.input_scale = input_scale
+        self._warn_meas_corr
 
     @property
     def get_central_fit_parameters(self):
@@ -119,7 +122,44 @@ class Fit(flavio.NamedInstanceClass):
         elif self.include_measurements is not None:
             return list(set(all_measurements) & set(self.include_measurements))
 
-
+    @property
+    def _warn_meas_corr(self):
+        """Warn the user if the fit contains multiple correlated measurements of
+        an observable that is not included in the fit parameters, as this will
+        lead to inconsistent results."""
+        corr_with = {}
+        # iterate over all measurements constraining at least one fit obs.
+        for name in self.get_measurements:
+            m = flavio.classes.Measurement.get_instance(name)
+            # iterate over all fit obs. constrained by this measurement
+            for obs in set(self.observables) & set(m.all_parameters):
+                # the constraint on this fit obs.
+                constraint = m._parameters[obs][1]
+                # find all the other obs. constrained by this constraint
+                for c, p in m._constraints:
+                    if c == constraint:
+                        par = p
+                        break
+                for p in par:
+                    # if the other obs. are not fit obs., append them to the list
+                    if p not in self.observables:
+                        if p not in corr_with:
+                            corr_with[p] = [obs]
+                        else:
+                            corr_with[p].append(obs)
+        # replace list by a Counter
+        corr_with = {k: Counter(v) for k, v in corr_with.items() if v}
+        # warn for all counts > 1
+        for obs1, counter in corr_with.items():
+            for obs2, count in counter.items():
+                if count > 1:
+                    warnings.warn(("{} of the measurements in the fit '{}' "
+                                   "constrain both '{}' and '{}', but only the "
+                                   "latter is included among the fit "
+                                   "observables. This can lead to inconsistent "
+                                   "results as the former is profiled over."
+                                   ).format(count, self.name, obs1, obs2))
+        return corr_with
 
 
 class BayesianFit(Fit):
