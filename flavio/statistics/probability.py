@@ -676,8 +676,8 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
             mode_index = (slice(None),) + np.unravel_index(y.argmax(), y.shape)
             mode = np.asarray(np.meshgrid(*xi, indexing='ij'))[mode_index]
             super().__init__(central_value=mode, support=None)
-            _bin_volume = np.prod([x[1] - x[0] for x in xi])
-            _y_norm = y / np.sum(y) / _bin_volume  # normalize PDF to 1
+        _bin_volume = np.prod([x[1] - x[0] for x in xi])
+        _y_norm = y / np.sum(y) / _bin_volume  # normalize PDF to 1
         # ignore warning from log(0)=-np.inf
         with np.errstate(divide='ignore', invalid='ignore'):
             self.logpdf_interp = scipy.interpolate.RegularGridInterpolator(xi, np.log(_y_norm),
