@@ -678,10 +678,10 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
             mode = np.asarray(np.meshgrid(*xi, indexing='ij'))[mode_index]
             super().__init__(central_value=mode, support=None)
         _bin_volume = np.prod([x[1] - x[0] for x in xi])
-        _y_norm = y / np.sum(y) / _bin_volume  # normalize PDF to 1
+        self.y_norm = y / np.sum(y) / _bin_volume  # normalize PDF to 1
         # ignore warning from log(0)=-np.inf
         with np.errstate(divide='ignore', invalid='ignore'):
-            self.logpdf_interp = scipy.interpolate.RegularGridInterpolator(xi, np.log(_y_norm),
+            self.logpdf_interp = scipy.interpolate.RegularGridInterpolator(xi, np.log(self.y_norm),
                                                                            fill_value=-np.inf, bounds_error=False)
         # the following is needed for get_random: initialize to None
         self._y_flat = None
@@ -732,13 +732,24 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
         Parameters:
 
         - x: vector; position at which PDF should be evaluated
-
-        Note: the exclude parameter is not implemented yet.
+        - exclude: optional; if an iterable of integers is given, the parameters
+          at these positions will be ignored by maximizing the likelihood
+          along the remaining directions, i.e., they will be "profiled out".
         """
         if exclude is not None:
-            raise NotImplementedError(
-                "Excluding individual parameters from multivariate numerical distributions not implemented")
-
+            try:
+                exclude = tuple(exclude)
+            except TypeError:
+                exclude = (exclude,)
+            xi = np.delete(self.xi, tuple(exclude), axis=0)
+            y = np.amax(self.y_norm, axis=tuple(exclude))
+            cv = np.delete(self.central_value, tuple(exclude))
+            if len(xi) == 1:
+                # if there is just 1 dimension left, use univariate
+                dist = NumericalDistribution(xi[0], y, cv)
+            else:
+                dist = MultivariateNumericalDistribution(xi, y, cv)
+            return dist.logpdf(x)
         if np.asarray(x).shape == (len(self.central_value),):
             # return a scalar
             return self.logpdf_interp(x)[0]

@@ -99,13 +99,13 @@ class TestProbability(unittest.TestCase):
         p_num = MultivariateNumericalDistribution((x0, x1), y_crazy)
         p_norm = MultivariateNormalDistribution([0, 1], cov)
         self.assertAlmostEqual(p_num.logpdf([0.237, 0.346]), p_norm.logpdf([0.237, 0.346]), delta=0.02)
+        self.assertAlmostEqual(p_num.logpdf([0.237], exclude=(1,)),
+                               p_norm.logpdf([0.237], exclude=(1,)), delta=0.02)
         # test exceptions
         with self.assertRaises(NotImplementedError):
             p_num.error_left
         with self.assertRaises(NotImplementedError):
             p_num.error_right
-        with self.assertRaises(NotImplementedError):
-            p_num.logpdf([0.237, 0.346], exclude=(0))
         self.assertEqual(len(p_num.get_random(10)), 10)
 
     def test_numerical_from_analytic(self):
@@ -271,10 +271,10 @@ class TestProbability(unittest.TestCase):
         xr2 = np.random.rand(10, 2)
         self.assertEqual(d.logpdf(xr3[0]).shape, ())
         self.assertEqual(d.logpdf(xr3).shape, (10,))
-        self.assertEqual(d.logpdf(xr2[0], exclude=[0]).shape, ())
-        self.assertEqual(d.logpdf(xr2, exclude=[0]).shape, (10,))
-        self.assertEqual(d.logpdf(xr[0], exclude=[0, 1]).shape, ())
-        self.assertEqual(d.logpdf(xr, exclude=[0, 1]).shape, (10,))
+        self.assertEqual(d.logpdf(xr2[0], exclude=(0)).shape, ())
+        self.assertEqual(d.logpdf(xr2, exclude=(0)).shape, (10,))
+        self.assertEqual(d.logpdf(xr[0], exclude=(0, 1)).shape, ())
+        self.assertEqual(d.logpdf(xr, exclude=(0, 1)).shape, (10,))
         xi = [np.linspace(-1,1,5), np.linspace(-1,1,6), np.linspace(-1,1,7)]
         y = np.random.rand(5,6,7)
         d = MultivariateNumericalDistribution(xi, y)
@@ -282,3 +282,7 @@ class TestProbability(unittest.TestCase):
         xr2 = np.random.rand(10, 2)
         self.assertEqual(d.logpdf(xr3[0]).shape, ())
         self.assertEqual(d.logpdf(xr3).shape, (10,))
+        self.assertEqual(d.logpdf(xr2[0], exclude=(0)).shape, ())
+        self.assertEqual(d.logpdf(xr2, exclude=(0)).shape, (10,))
+        self.assertEqual(d.logpdf(xr[0], exclude=(0, 1)).shape, ())
+        self.assertEqual(d.logpdf(xr, exclude=(0, 1)).shape, (10,))
