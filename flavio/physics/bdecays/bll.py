@@ -171,7 +171,7 @@ for l in ['e', 'mu', 'tau']:
     _obs = Observable(_obs_name)
     _process_tex = r"B_s\to "+_tex[l]+r"^+"+_tex[l]+r"^-"
     _obs.set_description(r"Time-integrated branching ratio of $" + _process_tex + r"$.")
-    _obs.tex = r"$\overline{\text{BR}}(" + _process_tex + r")$."
+    _obs.tex = r"$\overline{\text{BR}}(" + _process_tex + r")$"
     _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
     Prediction(_obs_name, bqll_obs_function(br_timeint, 'Bs', l, l))
 
@@ -180,7 +180,7 @@ for l in ['e', 'mu', 'tau']:
     _obs_name = 'tau_'+l+l
     _obs = Observable(_obs_name)
     _obs.set_description(r"Effective lifetime for $"+ _process_tex + r"$.")
-    _obs.tex = r"$\tau_{B_s \to " +_tex[l] +_tex[l] + "}$."
+    _obs.tex = r"$\tau_{B_s \to " +_tex[l] +_tex[l] + "}$"
     _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
     if l=='e':
         Prediction(_obs_name, lambda wc_obj, par: tau_ll_func(wc_obj, par, 'Bs', 'e'))
@@ -194,7 +194,7 @@ for l in ['e', 'mu', 'tau']:
     _obs = Observable(_obs_name)
     _process_tex = r"B^0\to "+_tex[l]+r"^+"+_tex[l]+r"^-"
     _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
-    _obs.tex = r"$\text{BR}(" + _process_tex + r")$."
+    _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
     _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
     Prediction(_obs_name, bqll_obs_function(br_inst, 'B0', l, l))
 
