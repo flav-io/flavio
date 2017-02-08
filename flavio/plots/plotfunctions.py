@@ -454,7 +454,10 @@ def contour(x, y, z, levels,
     _contour_args = {}
     _contourf_args = {}
     _contour_args['colors'] = [flavio.plots.colors.set1[_col]]
-    _contour_args['linewidths'] = 0.6
+    if filled:
+        _contour_args['linewidths'] = 0.6
+    else:
+        _contour_args['linewidths'] = 0.8
     N = len(levels)
     _contourf_args['colors'] = [flavio.plots.colors.pastel[_col] # RGB
                                        + (max(1-n/N, 0),) # alpha, decreasing for contours
