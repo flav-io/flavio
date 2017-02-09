@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.stats
-import scipy.interpolate
+from scipy.interpolate import interp1d, RegularGridInterpolator
 import scipy.signal
 import math
 from flavio.math.functions import normal_logpdf, normal_pdf
@@ -461,19 +461,18 @@ class NumericalDistribution(ProbabilityDistribution):
                 super().__init__(central_value=central_value,
                                  support=(x[0], x[-1]))
             else:
-                print(central_value)
                 raise ValueError("Central value must be within range provided")
         else:
             mode = x[np.argmax(y)]
             super().__init__(central_value=mode, support=(x[0], x[-1]))
         self.y_norm = y /  np.trapz(y, x=x)  # normalize PDF to 1
-        self.pdf_interp = scipy.interpolate.interp1d(x, self.y_norm,
+        self.pdf_interp = interp1d(x, self.y_norm,
                                         fill_value=0, bounds_error=False)
         _cdf = np.zeros(len(x))
         _cdf[1:] = np.cumsum(self.y_norm[:-1] * np.diff(x))
         _cdf = _cdf/_cdf[-1] # normalize CDF to 1
-        self.ppf_interp = scipy.interpolate.interp1d(_cdf, x)
-        self.cdf_interp = scipy.interpolate.interp1d(x, _cdf)
+        self.ppf_interp = interp1d(_cdf, x)
+        self.cdf_interp = interp1d(x, _cdf)
 
     def get_random(self, size=None):
         """Draw a random number from the distribution.
@@ -486,7 +485,7 @@ class NumericalDistribution(ProbabilityDistribution):
         return self.pdf_interp(x)
 
     def logpdf(self, x):
-    # ignore warning from log(0)=-np.inf
+        # ignore warning from log(0)=-np.inf
         with np.errstate(divide='ignore', invalid='ignore'):
             return np.log(self.pdf_interp(x))
 
@@ -685,8 +684,11 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
         self.y_norm = y / np.sum(y) / _bin_volume  # normalize PDF to 1
         # ignore warning from log(0)=-np.inf
         with np.errstate(divide='ignore', invalid='ignore'):
-            self.logpdf_interp = scipy.interpolate.RegularGridInterpolator(xi, np.log(self.y_norm),
-                                                                           fill_value=-np.inf, bounds_error=False)
+            # logy = np.nan_to_num(np.log(self.y_norm))
+            logy = np.log(self.y_norm)
+            logy[np.isneginf(logy)] = -1e100
+            self.logpdf_interp = RegularGridInterpolator(xi, logy,
+                                        fill_value=-np.inf, bounds_error=False)
         # the following is needed for get_random: initialize to None
         self._y_flat = None
         self._cdf_flat = None
@@ -901,10 +903,12 @@ def _convolve_distributions_multivariate(probability_distributions, central_valu
         return gaussian
     else:
         # otherwise, we need to combine the (combined) gaussian with the others
-        if gaussians:
-            NotImplementedError("Combining multivariate normal and numerical distributions not implemented")
-        else:
+        if len(others) > 1:
             NotImplementedError("Combining multivariate numerical distributions not implemented")
+        else:
+            num = _convolve_multivariate_gaussian_numerical(gaussian, others[0],
+                                                  central_values=central_values)
+            return num
 
 
 def _convolve_gaussians(probability_distributions, central_values='same'):
@@ -967,6 +971,39 @@ def _convolve_numerical(probability_distributions, nsteps=1000, central_values='
             # cut out the convolved signal at the right place
             y = y[n_x_central:nsteps + n_x_central]
     return NumericalDistribution(central_value=central_value, x=x, y=y)
+
+def _convolve_multivariate_gaussian_numerical(mvgaussian,
+                                              mvnumerical,
+                                              central_values='same'):
+    assert isinstance(mvgaussian, MultivariateNormalDistribution), \
+        "mvgaussian must be a single instance of MultivariateNormalDistribution"
+    assert isinstance(mvnumerical, MultivariateNumericalDistribution), \
+        "mvgaussian must be a single instance of MultivariateNumericalDistribution"
+    nsteps = max(200, *[len(x) for x in mvnumerical.xi])
+    xi = np.zeros((len(mvnumerical.xi), nsteps))
+    for i, x in enumerate(mvnumerical.xi):
+        # enlarge the support
+        cvn = mvnumerical.central_value[i]
+        cvg = mvgaussian.central_value[i]
+        supp = [s[i] for s in mvgaussian.support]
+        x_max = cvn + (x[-1] - cvn) + (supp[-1] - cvn) +  np.mean(x) - cvg
+        x_min = cvn + (x[0] - cvn) + (supp[0] - cvn) +  np.mean(x) - cvg
+        xi[i] = np.linspace(x_min, x_max, nsteps)
+    xi_grid = np.array(np.meshgrid(*xi, indexing='ij'))
+    # this will transpose from shape (0, 1, 2, ...) to (1, 2, ..., 0)
+    xi_grid = np.transpose(xi_grid, tuple(range(1, xi_grid.ndim)) + (0,))
+    y_num = np.exp(mvnumerical.logpdf(xi_grid))
+    # shift Gaussian to the mean of the support
+    xi_grid = xi_grid - np.array([np.mean(x) for x in xi]) + np.array(mvgaussian.central_value)
+    y_gauss = np.exp(mvgaussian.logpdf(xi_grid))
+    f = scipy.signal.fftconvolve(y_num, y_gauss, mode='same')
+    f[f < 0] = 0
+    f = f/f.sum()
+    if central_values == 'sum':
+        # shift back
+        xi = (xi.T + np.array(mvgaussian.central_value)).T
+    return MultivariateNumericalDistribution(xi, f)
+
 
 # this dictionary is used for parsing low-level distribution definitions
 # in YAML files. A string name is associated to every (relevant) distribution.
