@@ -468,3 +468,13 @@ class Measurement(Constraints, NamedInstanceClass):
         self.inspire = ''
         self.experiment = ''
         self.url = ''
+
+class PseudoMeasurement(Constraints, NamedInstanceClass):
+    """This class works like Measurement and is used exclusively for fits
+    of type 'FastFit', where theoretical uncertainties are folded on top of
+    the experimental ones.
+    """
+
+    def __init__(self, name):
+        NamedInstanceClass.__init__(self, name)
+        Constraints.__init__(self)
