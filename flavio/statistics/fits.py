@@ -329,64 +329,6 @@ class FastFit(BayesianFit):
         super().__init__(*args, **kwargs)
         self.measurements = None
 
-
-    # a method to get the mean and covariance of all measurements of all
-    # observables of interest
-    def _get_central_covariance_experiment(self, N=5000):
-        means = []
-        covariances = []
-        for measurement in self.get_measurements:
-            m_obj = flavio.Measurement.get_instance(measurement)
-            # obs. included in the fit and constrained by this measurement
-            our_obs = set(m_obj.all_parameters).intersection(self.observables)
-            # construct a dict. containing a vector of N random values for
-            # each of these observables
-            random_dict = {}
-            for obs in our_obs:
-                random_dict[obs] = np.zeros(N)
-            for i in range(N):
-                m_random = m_obj.get_random_all()
-                for obs in our_obs:
-                    random_dict[obs][i] = m_random[obs]
-            # mean = np.zeros(len(self.observables))
-            random_arr = np.zeros((len(self.observables), N))
-            for i, obs in enumerate(self.observables):
-                #     n = len(random_dict[obs])
-                if obs in our_obs:
-                    random_arr[i] = random_dict[obs]
-            mean = np.mean(random_arr, axis=1)
-            covariance = np.cov(random_arr)
-            for i, obs in enumerate(self.observables):
-                if obs not in our_obs:
-                    covariance[:,i] = 0
-                    covariance[i, :] = 0
-                    covariance[i, i] = np.inf
-            means.append(mean)
-            covariances.append(covariance)
-        # if there is only a single measuement
-        if len(means) == 1:
-            return means[0], covariances[0]
-        # if there are severeal measurements, perform a weighted average
-        else:
-            # covariances: [Sigma_1, Sigma_2, ...]
-            # means: [x_1, x_2, ...]
-            # weights_ [W_1, W_2, ...] where W_i = (Sigma_i)^(-1)
-            # weighted covariance is  (W_1 + W_2 + ...)^(-1) = Sigma
-            # weigted mean is  Sigma.(W_1.x_1 + W_2.x_2 + ...) = x
-            if len(self.observables) == 1:
-                weights = np.array([1/c for c in covariances])
-                weighted_covariance = 1/np.sum(weights, axis=0)
-                weighted_mean = weighted_covariance * np.sum(
-                                [np.dot(weights[i], means[i]) for i in range(len(means))])
-            else:
-                weights = [np.linalg.inv(c) for c in covariances]
-                weighted_covariance = np.linalg.inv(np.sum(weights, axis=0))
-                weighted_mean = np.dot(weighted_covariance, np.sum(
-                                [np.dot(weights[i], means[i]) for i in range(len(means))],
-                                axis=0))
-            return weighted_mean, weighted_covariance
-
-
     # a method to get the covariance of the SM prediction of all observables
     # of interest
     def _get_covariance_sm(self, N=100):
