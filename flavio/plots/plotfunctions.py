@@ -315,7 +315,7 @@ def density_contour(x, y, covariance_factor=None, n_bins=None, n_sigma=(1, 2),
     return contour(**data)
 
 
-def likelihood_countour_data(log_likelihood, x_min, x_max, y_min, y_max,
+def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
               n_sigma=1, steps=20):
     r"""Generate data required to plot coloured confidence contours (or bands)
     given a log likelihood function.
@@ -348,7 +348,7 @@ def likelihood_countour_data(log_likelihood, x_min, x_max, y_min, y_max,
     return {'x': x, 'y': y, 'z': z, 'levels': levels}
 
 
-def likelihood_countour(log_likelihood, x_min, x_max, y_min, y_max,
+def likelihood_contour(log_likelihood, x_min, x_max, y_min, y_max,
               n_sigma=1, steps=20,
               **kwargs):
     r"""Plot coloured confidence contours (or bands) given a log likelihood
@@ -369,7 +369,7 @@ def likelihood_countour(log_likelihood, x_min, x_max, y_min, y_max,
     and allow to control the presentation of the plot (see docstring of
     `flavio.plots.plotfunctions.contour`).
     """
-    data = likelihood_countour_data(log_likelihood=log_likelihood,
+    data = likelihood_contour_data(log_likelihood=log_likelihood,
                                 x_min=x_min, x_max=x_max,
                                 y_min=y_min, y_max=y_max,
                                 n_sigma=n_sigma, steps=steps)
@@ -379,17 +379,17 @@ def likelihood_countour(log_likelihood, x_min, x_max, y_min, y_max,
 # alias for backward compatibility
 def band_plot(log_likelihood, x_min, x_max, y_min, y_max,
               n_sigma=1, steps=20, **kwargs):
-    r"""This is an alias for `likelihood_countour` which is present for
+    r"""This is an alias for `likelihood_contour` which is present for
     backward compatibility."""
     warnings.warn("The `band_plot` function has been replaced "
                   "by `likelihood_contour` (or "
-                  "`likelihood_countour_data` in conjunction with `contour`) "
+                  "`likelihood_contour_data` in conjunction with `contour`) "
                   "and might be removed in the future. "
                   "Please update your code.", FutureWarning)
-    valid_args = likelihood_countour_data.__code__.co_varnames
+    valid_args = likelihood_contour_data.__code__.co_varnames
     data_kwargs = {k:v for k,v in kwargs.items() if k in valid_args}
     if 'pre_calculated_z' not in kwargs:
-        contour_kwargs = likelihood_countour_data(log_likelihood,
+        contour_kwargs = likelihood_contour_data(log_likelihood,
                       x_min, x_max, y_min, y_max,
                       n_sigma, steps, **data_kwargs)
     else:
