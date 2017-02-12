@@ -123,8 +123,9 @@ class TestClasses(unittest.TestCase):
         m2.add_constraint(['test_obs 1', 'test_obs 2'], d2)
         fit = FastFit('fastfit_test_1', flavio.default_parameters, ['m_b'],  [], ['test_obs 1', 'test_obs 2'])
         fit.make_measurement()
-        exact_log_likelihood = ( scipy.stats.multivariate_normal.logpdf([5.9, 2.5], [6,2], cov2)
-                                 + scipy.stats.norm.logpdf(5.9, 5, 0.2))
+        cov_weighted = [[0.008, 0.012],[0.012,0.0855]]
+        mean_weighted = [5.8, 1.7]
+        exact_log_likelihood = scipy.stats.multivariate_normal.logpdf([5.9, 2.5], mean_weighted, cov_weighted)
         self.assertAlmostEqual(fit.log_likelihood([1]), exact_log_likelihood, delta=0.8)
         # removing dummy instances
         FastFit.del_instance('fastfit_test_1')
