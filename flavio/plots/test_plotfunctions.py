@@ -80,7 +80,7 @@ class TestPlots(unittest.TestCase):
 
     def test_likelihood_contour(self):
         # just check this works
-        data = likelihood_countour_data(dummy_loglikelihood,
+        data = likelihood_contour_data(dummy_loglikelihood,
                                         -2, 2, -3, 3)
         self.assertEqual(data['x'].shape, (20,20))
         self.assertEqual(data['y'].shape, (20,20))

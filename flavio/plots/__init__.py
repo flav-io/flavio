@@ -9,7 +9,7 @@ Currently, the following types of plots are supported:
 - Plots for two-dimensional contours (e.g. frequentist confidence contours
   or Bayesian credibility contours) that can be used standalone or in
   conjunction with `flavio.statistics.Fit` instances to plot the fit results
-  (`density_contour`, `likelihood_countour`, `contours`)
+  (`density_contour`, `likelihood_contour`, `contours`)
 - Plots for one-dimensional likelihoods and confidence/credibility intervals
   (`smooth_histogram`)
 """
