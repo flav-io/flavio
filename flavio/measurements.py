@@ -26,10 +26,16 @@ def _load(obj):
                     # into a tuple, e.g. ('FL(B0->K*mumu)', 1, 6)
                     args_num.insert(0, value_dict['name'])
                     obs_tuple = tuple(args_num)
-                    m.set_constraint(obs_tuple, value_dict['value'])
+                    if isinstance(value_dict['value'], dict):
+                        m.set_constraint(obs_tuple, constraint_dict=value_dict['value'])
+                    else:
+                        m.set_constraint(obs_tuple, value_dict['value'])
             else: # otherwise, 'values' is a dict just containing name: constraint_string
                 for obs, value in m_data['values'].items():
-                    m.set_constraint(obs, value)
+                    if isinstance(value, dict):
+                        m.set_constraint(obs, constraint_dict=value)
+                    else:
+                        m.set_constraint(obs, value)
         else:
             observables = []
             central_values = []
