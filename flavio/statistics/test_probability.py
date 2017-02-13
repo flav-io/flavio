@@ -101,6 +101,11 @@ class TestProbability(unittest.TestCase):
         self.assertAlmostEqual(p_num.logpdf([0.237, 0.346]), p_norm.logpdf([0.237, 0.346]), delta=0.02)
         self.assertAlmostEqual(p_num.logpdf([0.237], exclude=(1,)),
                                p_norm.logpdf([0.237], exclude=(1,)), delta=0.02)
+        # try again with length-2 xi
+        p_num = MultivariateNumericalDistribution(([-5, 4.99], [-4, 5.98]), y_crazy)
+        self.assertAlmostEqual(p_num.logpdf([0.237, 0.346]), p_norm.logpdf([0.237, 0.346]), delta=0.02)
+        self.assertAlmostEqual(p_num.logpdf([0.237], exclude=(1,)),
+                               p_norm.logpdf([0.237], exclude=(1,)), delta=0.02)
         # test exceptions
         with self.assertRaises(NotImplementedError):
             p_num.error_left

@@ -657,7 +657,10 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
         - `xi`: for an N-dimensional distribution, a list of N 1D arrays
           specifiying the grid in N dimensions. The 1D arrays must contain
           real, evenly spaced values in strictly ascending order (but the
-          spacing can be different for different dimensions).
+          spacing can be different for different dimensions). Any of the 1D
+          arrays can also be given alternatively as a list of two numbers, which
+          will be assumed to be the upper and lower boundaries, while the
+          spacing will be determined from the shape of `y`.
         - `y`: PDF values on the grid defined by the `xi`. If the N `xi` have
           length M1, ..., MN, `y` has dimension (M1, ..., MN). This is the same
           shape as the grid obtained from `numpy.meshgrid(*xi, indexing='ij')`.
@@ -670,24 +673,27 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
             d = np.diff(x)
             if abs(np.min(d)/np.max(d)-1) > 1e-3:
                 raise ValueError("Grid must be evenly spaced per dimension")
-        self.xi = xi
+        self.xi = list(xi)
+        for i, x in enumerate(xi):
+            if len(x) == 2:
+                self.xi[i] = np.linspace(x[0], x[1], y.shape[i])
         self.y = y
         if central_value is not None:
             super().__init__(central_value=central_value,
-                             support=(np.asarray(xi).T[0], np.asarray(xi).T[-1]))
+                             support=(np.asarray(self.xi).T[0], np.asarray(self.xi).T[-1]))
         else:
             # if no central value is specified, set it to the mode
             mode_index = (slice(None),) + np.unravel_index(y.argmax(), y.shape)
-            mode = np.asarray(np.meshgrid(*xi, indexing='ij'))[mode_index]
+            mode = np.asarray(np.meshgrid(*self.xi, indexing='ij'))[mode_index]
             super().__init__(central_value=mode, support=None)
-        _bin_volume = np.prod([x[1] - x[0] for x in xi])
+        _bin_volume = np.prod([x[1] - x[0] for x in self.xi])
         self.y_norm = y / np.sum(y) / _bin_volume  # normalize PDF to 1
         # ignore warning from log(0)=-np.inf
         with np.errstate(divide='ignore', invalid='ignore'):
             # logy = np.nan_to_num(np.log(self.y_norm))
             logy = np.log(self.y_norm)
             logy[np.isneginf(logy)] = -1e100
-            self.logpdf_interp = RegularGridInterpolator(xi, logy,
+            self.logpdf_interp = RegularGridInterpolator(self.xi, logy,
                                         fill_value=-np.inf, bounds_error=False)
         # the following is needed for get_random: initialize to None
         self._y_flat = None
