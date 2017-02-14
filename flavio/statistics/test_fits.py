@@ -33,13 +33,13 @@ class TestClasses(unittest.TestCase):
             return {'CVLL_bsbs': C}
         with self.assertRaises(ValueError):
             # specify include_measurements and exclude_measurements simultaneously
-            Fit('test_fit_1', par, ['m_b'],  ['m_c'], ['test_obs'], ['C'], wc_fct,
+            Fit('test_fit_1', par, ['m_b'],  ['m_c'], ['test_obs'], fit_wc_function=wc_fct,
             include_measurements=['measurement of test_obs'],
             exclude_measurements=['measurement of test_obs'])
-        fit = Fit('test_fit_1', par, ['m_b'],  ['m_c'], ['test_obs'], ['C'], wc_fct)
+        fit = Fit('test_fit_1', par, ['m_b'],  ['m_c'], ['test_obs'], fit_wc_function=wc_fct)
         self.assertEqual(fit.fit_parameters, ['m_b'])
         self.assertEqual(fit.nuisance_parameters, ['m_c'])
-        self.assertEqual(fit.fit_wc_names, ['C'])
+        self.assertEqual(fit.fit_wc_names, ('C',))
         self.assertEqual(fit.get_measurements, ['measurement of test_obs'])
         self.assertEqual(fit.get_central_fit_parameters, [4.2])
         self.assertEqual(fit.get_central_nuisance_parameters, [1.2])
@@ -86,7 +86,7 @@ class TestClasses(unittest.TestCase):
         wc = flavio.physics.eft.WilsonCoefficients()
         def wc_fct(CL, CR):
             return {'CVLL_bsbs': CL, 'CVRR_bsbs': CR}
-        fit = BayesianFit('bayesian_test_fit_1', par, ['m_b','m_c'],  ['m_s'], [('test_obs 2',3)], ['CL','CR'], wc_fct)
+        fit = BayesianFit('bayesian_test_fit_1', par, ['m_b','m_c'],  ['m_s'], [('test_obs 2',3)], fit_wc_function=wc_fct)
         self.assertEqual(fit.get_measurements, ['measurement of test_obs 2'])
         self.assertEqual(fit.dimension, 5)
         # test from array to dict ...

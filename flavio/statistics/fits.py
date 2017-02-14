@@ -16,17 +16,27 @@ class Fit(flavio.NamedInstanceClass):
 
     def __init__(self,
                  name,
-                 par_obj,
-                 fit_parameters,
-                 nuisance_parameters,
-                 observables,
-                 fit_wc_names=[],
+                 par_obj=flavio.default_parameters,
+                 fit_parameters=None,
+                 nuisance_parameters=None,
+                 observables=None,
+                 fit_wc_names=None,
                  fit_wc_function=None,
                  fit_wc_priors=None,
                  input_scale=160.,
                  exclude_measurements=None,
                  include_measurements=None,
                 ):
+        if fit_parameters is None:
+            fit_parameters = []
+        if nuisance_parameters is None:
+            nuisance_parameters = []
+        if observables is None:
+            raise ValueError("'observables' is empty: you must specify at least one fit observable")
+        if fit_wc_names is not None:
+            warnings.warn("The 'fit_wc_names' argument is no longer necessary "
+            "as of flavio v0.19 and might be removed in the future.",
+            FutureWarning)
         # some checks to make sure the input is sane
         for p in fit_parameters + nuisance_parameters:
             # check that fit and nuisance parameters exist
@@ -55,11 +65,14 @@ class Fit(flavio.NamedInstanceClass):
         intersect = set(fit_parameters).intersection(nuisance_parameters)
         assert intersect == set(), "Parameters appearing as fit_parameters and nuisance_parameters: " + str(intersect)
         # check that the Wilson coefficient function works
-        if fit_wc_names: # if list of WC names not empty
+        if fit_wc_function is not None: # if list of WC names not empty
             try:
-                fit_wc_function(**{fit_wc_name: 1e-6 for fit_wc_name in fit_wc_names})
+                self.fit_wc_names = fit_wc_function.__code__.co_varnames
+                fit_wc_function(**{self.fit_wc_name: 1e-6 for self.fit_wc_name in self.fit_wc_names})
             except:
                 raise ValueError("Error in calling the Wilson coefficient function")
+        else:
+            self.fit_wc_names = []
         # now that everything seems fine, we can call the init of the parent class
         super().__init__(name)
         self.par_obj = par_obj
@@ -68,7 +81,6 @@ class Fit(flavio.NamedInstanceClass):
         self.nuisance_parameters = nuisance_parameters
         self.exclude_measurements = exclude_measurements
         self.include_measurements = include_measurements
-        self.fit_wc_names = fit_wc_names
         self.fit_wc_function = fit_wc_function
         self.fit_wc_priors = fit_wc_priors
         self.observables = observables
