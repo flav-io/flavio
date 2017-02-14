@@ -16,7 +16,12 @@ def _load(obj):
         for arg in ['inspire', 'hepdata', 'experiment', 'url']:
             if arg in m_data:
                 setattr(m, arg, m_data[arg])
-        if 'correlation' not in m_data:
+        if 'observables' in m_data:
+            # for multivariate numerical constraints
+            m.add_constraint(m_data['observables'],
+                probability.MultivariateNumericalDistribution(**m_data['values']))
+        elif 'correlation' not in m_data:
+            # for univariate constraints
             if isinstance(m_data['values'], list):
                 for value_dict in m_data['values']:
                     args = Observable.get_instance(value_dict['name']).arguments
@@ -37,6 +42,7 @@ def _load(obj):
                     else:
                         m.set_constraint(obs, value)
         else:
+            # for multivariate normal constraints
             observables = []
             central_values = []
             errors = []

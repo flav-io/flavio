@@ -674,20 +674,20 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
             if abs(np.min(d)/np.max(d)-1) > 1e-3:
                 raise ValueError("Grid must be evenly spaced per dimension")
         self.xi = list(xi)
+        self.y = np.asarray(y)
         for i, x in enumerate(xi):
             if len(x) == 2:
-                self.xi[i] = np.linspace(x[0], x[1], y.shape[i])
-        self.y = y
+                self.xi[i] = np.linspace(x[0], x[1], self.y.shape[i])
         if central_value is not None:
             super().__init__(central_value=central_value,
                              support=(np.asarray(self.xi).T[0], np.asarray(self.xi).T[-1]))
         else:
             # if no central value is specified, set it to the mode
-            mode_index = (slice(None),) + np.unravel_index(y.argmax(), y.shape)
+            mode_index = (slice(None),) + np.unravel_index(self.y.argmax(), self.y.shape)
             mode = np.asarray(np.meshgrid(*self.xi, indexing='ij'))[mode_index]
             super().__init__(central_value=mode, support=None)
         _bin_volume = np.prod([x[1] - x[0] for x in self.xi])
-        self.y_norm = y / np.sum(y) / _bin_volume  # normalize PDF to 1
+        self.y_norm = self.y / np.sum(self.y) / _bin_volume  # normalize PDF to 1
         # ignore warning from log(0)=-np.inf
         with np.errstate(divide='ignore', invalid='ignore'):
             # logy = np.nan_to_num(np.log(self.y_norm))
@@ -918,6 +918,9 @@ def _convolve_distributions_multivariate(probability_distributions, central_valu
 
 
 def _convolve_gaussians(probability_distributions, central_values='same'):
+    # if there's just one: return it immediately
+    if len(probability_distributions) == 1:
+        return probability_distributions[0]
     assert all(isinstance(p, NormalDistribution) for p in probability_distributions), \
         "Distributions should all be instances of NormalDistribution"
     if central_values == 'same':
@@ -933,6 +936,9 @@ def _convolve_gaussians(probability_distributions, central_values='same'):
 
 
 def _convolve_multivariate_gaussians(probability_distributions, central_values='same'):
+    # if there's just one: return it immediately
+    if len(probability_distributions) == 1:
+        return probability_distributions[0]
     assert all(isinstance(p, MultivariateNormalDistribution) for p in probability_distributions), \
         "Distributions should all be instances of MultivariateNormalDistribution"
     if central_values == 'same':
@@ -946,6 +952,9 @@ def _convolve_multivariate_gaussians(probability_distributions, central_values='
 
 
 def _convolve_numerical(probability_distributions, nsteps=1000, central_values='same'):
+    # if there's just one: return it immediately
+    if len(probability_distributions) == 1:
+        return probability_distributions[0]
     assert all(isinstance(p, NumericalDistribution) for p in probability_distributions), \
         "Distributions should all be instances of NumericalDistribution"
     if central_values == 'same':
