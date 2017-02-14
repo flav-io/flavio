@@ -160,6 +160,19 @@ def tau_ll_func(wc_obj, par, B, lep):
     wc = wctot_dict(wc_obj, label, scale, par)
     return tau_ll(wc, par, B, lep)
 
+def ADG_func(wc_obj, par, B, lep):
+    scale = config['renormalization scale']['bll']
+    label = meson_quark[B]+lep+lep
+    wc = wctot_dict(wc_obj, label, scale, par)
+    return ADeltaGamma(par, wc, B, lep)
+
+def ADeltaGamma_func(B, lep):
+    def ADG_func(wc_obj, par):
+        scale = config['renormalization scale']['bll']
+        label = meson_quark[B]+lep+lep
+        wc = wctot_dict(wc_obj, label, scale, par)
+        return ADeltaGamma(par, wc, B, lep)
+    return ADG_func
 # Observable and Prediction instances
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
@@ -188,6 +201,14 @@ for l in ['e', 'mu', 'tau']:
         Prediction(_obs_name, lambda wc_obj, par: tau_ll_func(wc_obj, par, 'Bs', 'mu'))
     if l=='tau':
         Prediction(_obs_name, lambda wc_obj, par: tau_ll_func(wc_obj, par, 'Bs', 'tau'))
+
+    _obs_name = 'ADeltaGamma(Bs->'+l+l+')'
+    _obs = Observable(_obs_name)
+    _process_tex = r"B_s\to "+_tex[l]+r"^+"+_tex[l]+r"^-"
+    _obs.set_description(r"Mass-eigenstate rate asymmetry in $" + _process_tex + r"$.")
+    _obs.tex = r"$A_{\Delta\Gamma}(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
+    Prediction(_obs_name, ADeltaGamma_func('Bs', l))
 
     # For the B^0 decay, we take the prompt branching ratio since DeltaGamma is negligible
     _obs_name = "BR(Bd->"+l+l+")"

@@ -39,6 +39,7 @@ class TestBll(unittest.TestCase):
         self.assertEqual(len(amplitudes(par, wc, 'Bs', 'mu', 'mu')), 2)
         # ADeltaGamma should be +1.0 in the SM
         self.assertEqual(ADeltaGamma(par, wc, 'Bs', 'mu'), 1.0)
+        self.assertEqual(flavio.sm_prediction('ADeltaGamma(Bs->mumu)'), 1.0)
         # BR should be around 3.5e-9
         self.assertAlmostEqual(br_inst(par, wc, 'Bs', 'mu', 'mu')*1e9, 3.5, places=0)
         # correction factor should enhance the BR by roughly 7%
@@ -63,6 +64,7 @@ class TestBll(unittest.TestCase):
         # test for errors
         self.assertEqual(flavio.sm_prediction('BR(B0->emu)'), 0)
         self.assertEqual(flavio.sm_prediction('BR(Bs->taumu)'), 0)
+
 
     def test_EffectiveLifetimes(self):
         # In this test we trivially check that the prefactors in (22) and (28) of arXiv:1204.1737 are the same
