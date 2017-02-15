@@ -488,21 +488,61 @@ def flavio_box(x_min, x_max, y_min, y_max):
     ax = plt.gca()
     ax.add_patch(patches.Rectangle((x_min, y_min), x_max-x_min, y_max-y_min, facecolor='#ffffff', edgecolor='#666666', alpha=0.5, ls=':', lw=0.7))
 
-def smooth_histogram(data, bandwidth=None, col=None, label=None, plotargs={}, fillargs={}):
+def smooth_histogram(data, bandwidth=None, **kwargs):
     """A smooth histogram based on a Gaussian kernel density estimate.
 
     Parameters:
 
     - `data`: input array
     - `bandwidth`: (optional) smoothing bandwidth for the Gaussian kernel
+
+    The remaining parameters will be passed to `pdf_plot`.
+    """
+    kde = flavio.statistics.probability.GaussianKDE(data, bandwidth=bandwidth)
+    pdf_plot(kde, **kwargs)
+
+def pdf_plot(dist, x_min=None, x_max=None, fill=True, steps=200, normed=True, **kwargs):
+    """Plot of a 1D probability density function.
+
+    Parameters:
+
+    - `dist`: an instance of ProbabilityDistribution
+    - `x_min`, `x_max`: plot boundaries
+    - steps: optional, number of points (default: 200)
+
+    The remaining parameters will be passed to `likelihood_plot`.
+    """
+    if x_min is None:
+        _x_min = dist.support[0]
+    if x_max is None:
+        _x_max = dist.support[1]
+    x = np.linspace(_x_min, _x_max, steps)
+    try:
+        y = dist.pdf(x)
+    except:
+        y = np.exp(dist.logpdf(x))
+    if normed == 'max':
+        y = y/np.max(y)
+    if fill:
+        fill_left = dist.central_value - dist.get_error_left('hpd')
+        fill_right = dist.central_value + dist.get_error_right('hpd')
+        fill_x=[fill_left, fill_right]
+    else:
+        fill_x=None
+    likelihood_plot(x, y, fill_x=fill_x, **kwargs)
+
+def likelihood_plot(x, y, fill_x=None, col=None, label=None, plotargs={}, fillargs={}):
+    """Plot of a 1D probability density function.
+
+    Parameters:
+
+    - `x`: x values
+    - `y`: y values
     - `col`: (optional) integer to select one of the colours from the default
       palette
     - `plotargs`: keyword arguments passed to the `plot` function
     - `fillargs`: keyword arguments passed to the `fill_between` function
     """
-    kde = flavio.statistics.probability.GaussianKDE(data, bandwidth=bandwidth)
-    x = kde.x
-    y = kde.y_norm
     ax = plt.gca()
     _plotargs = {}
     _fillargs = {}
@@ -519,4 +559,7 @@ def smooth_histogram(data, bandwidth=None, col=None, label=None, plotargs={}, fi
     _fillargs.update(fillargs)
     _plotargs.update(plotargs)
     ax.plot(x, y, **_plotargs)
-    ax.fill_between(x, 0, y, **_fillargs)
+    if fill_x is not None:
+        ax.fill_between(x, 0, y,
+            where=np.logical_and(fill_x[0] < x, x < fill_x[1]),
+            **_fillargs)
