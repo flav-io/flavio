@@ -234,14 +234,14 @@
     - B+->K+ deltaC9 c Im: 0 ± 0.2
   correlation: 0.99
 
-# B->D* form factors, HFAG 2014
+# B->D* form factors, HFAG 2016
 -
   values:
-    - B->D* CLN rho2: 1.207 ± 0.026
-    - B->D* CLN R_1(1): 1.406 ± 0.033
-    - B->D* CLN R_2(1): 0.853 ± 0.020
+    - B->D* CLN rho2: 1.205 ± 0.015 ± 0.021
+    - B->D* CLN R_1(1): 1.404 ± 0.032
+    - B->D* CLN R_2(1): 0.854 ± 0.020
   correlation:
-    [[1, 0.568, -0.809],
+    [[1, 0.570, -0.810],
      [1, -0.758],
      [1]]
 

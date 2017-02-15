@@ -164,7 +164,7 @@ class TestBll(unittest.TestCase):
 
         # test some values for WC's
         br = BR(-.4,0,0,0,0,0)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., places=2)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.01)
 
         br = BR(-.5*1j,0,0,0,0,0)
         self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., places=2)
