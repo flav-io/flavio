@@ -481,6 +481,12 @@ class NumericalDistribution(ProbabilityDistribution):
         r = np.random.uniform(size=size)
         return self.ppf_interp(r)
 
+    def ppf(self, x):
+        return self.ppf_interp(x)
+
+    def cdf(self, x):
+        return self.cdf_interp(x)
+
     def pdf(self, x):
         return self.pdf_interp(x)
 
@@ -489,19 +495,87 @@ class NumericalDistribution(ProbabilityDistribution):
         with np.errstate(divide='ignore', invalid='ignore'):
             return np.log(self.pdf_interp(x))
 
+    def _find_error_cdf(self, confidence_level):
+        # find the value of the CDF at the position of the left boundary
+        # of the `confidence_level`% CL range by demanding that the value
+        # of the PDF is the same at the two boundaries
+        def x_left(a):
+            return self.ppf(a)
+        def x_right(a):
+            return self.ppf(a + confidence_level)
+        def diff_logpdf(a):
+            logpdf_x_left = self.logpdf(x_left(a))
+            logpdf_x_right = self.logpdf(x_right(a))
+            return logpdf_x_left - logpdf_x_right
+        return scipy.optimize.brentq(diff_logpdf, 0,  1 - confidence_level-1e-6)
+
     @property
     def error_left(self):
-        """Return the lower error defined such that it contains 68% of the
-        probability below the central value"""
-        cdf_central = self.cdf_interp(self.central_value)
-        return self.central_value - self.ppf_interp(cdf_central * (1 - self._x68))
+        """Return the lower error (defined as a central interval).
+
+        Use get_error_left for more options."""
+        return self.get_error_left(method='central')
 
     @property
     def error_right(self):
-        """Return the upper error defined such that it contains 68% of the
-        probability above the central value"""
-        cdf_central = self.cdf_interp(self.central_value)
-        return self.ppf_interp(cdf_central + (1 - cdf_central) * self._x68) - self.central_value
+        """Return the upper error (defined as a central interval).
+
+        Use get_error_right for more options."""
+        return self.get_error_right(method='central')
+
+    def get_error_left(self, method='central'):
+        """Return the lower error.
+
+        'method' should be one of:
+
+        - 'central' for a central interval (same probability on both sides of
+          the central value)
+        - 'hpd' for highest posterior density, i.e. probability is larger inside
+          the interval than outside
+        - 'limit' for a one-sided error, i.e. a lower limit"""
+        if method == 'limit':
+            return self.central_value - self.ppf(1 - self._x68)
+        cdf_central = self.cdf(self.central_value)
+        err_left = self.central_value - self.ppf(cdf_central * (1 - self._x68))
+        if method == 'central':
+            return err_left
+        elif method == 'hpd':
+            if self.pdf(self.central_value + self.get_error_right(method='central')) == self.pdf(self.central_value - err_left):
+                return err_left
+            try:
+                a = self._find_error_cdf(self._x68)
+            except ValueError:
+                return np.nan
+            return self.central_value - self.ppf(a)
+        else:
+            raise ValueError("Method " + str(method) + " unknown")
+
+    def get_error_right(self, method='central'):
+        """Return the upper error
+
+        'method' should be one of:
+
+        - 'central' for a central interval (same probability on both sides of
+          the central value)
+        - 'hpd' for highest posterior density, i.e. probability is larger inside
+          the interval than outside
+        - 'limit' for a one-sided error, i.e. an upper limit"""
+        if method == 'limit':
+            return self.ppf(self._x68) - self.central_value
+        cdf_central = self.cdf(self.central_value)
+        err_right = self.ppf(cdf_central + (1 - cdf_central) * self._x68) - self.central_value
+        if method == 'central':
+            return err_right
+        elif method == 'hpd':
+            if self.pdf(self.central_value - self.get_error_left(method='central')) == self.pdf(self.central_value + err_right):
+                return err_right
+            try:
+                a = self._find_error_cdf(self._x68)
+            except ValueError:
+                return np.nan
+            return self.ppf(a + self._x68) - self.central_value
+        else:
+            raise ValueError("Method " + str(method) + " unknown")
 
     @classmethod
     def from_pd(cls, pd, nsteps=1000):

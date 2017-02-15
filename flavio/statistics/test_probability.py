@@ -256,6 +256,8 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(p.error_right, 0.2)
         self.assertAlmostEqual(q.error_left, 0.2, places=2)
         self.assertAlmostEqual(q.error_right, 0.2, places=2)
+        self.assertAlmostEqual(q.get_error_left('hpd'), 0.2, places=2)
+        self.assertAlmostEqual(q.get_error_right('hpd'), 0.2, places=2)
 
         p = AsymmetricNormalDistribution(3, 0.2, 0.5)
         q = NumericalDistribution.from_pd(p)
@@ -263,6 +265,8 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(p.error_right, 0.2)
         self.assertAlmostEqual(q.error_left, 0.5, places=2)
         self.assertAlmostEqual(q.error_right, 0.2, places=2)
+        self.assertAlmostEqual(q.get_error_left('hpd'), 0.5, places=2)
+        self.assertAlmostEqual(q.get_error_right('hpd'), 0.2, places=2)
 
         p = DeltaDistribution(3)
         self.assertEqual(p.error_left, 0)
@@ -274,6 +278,8 @@ class TestProbability(unittest.TestCase):
         self.assertAlmostEqual(p.error_right, 0.4*0.68, places=2)
         self.assertAlmostEqual(q.error_left, 0.4*0.68, places=2)
         self.assertAlmostEqual(q.error_right, 0.4*0.68, places=2)
+        self.assertAlmostEqual(q.get_error_left('hpd'), 0.4*0.68, places=2)
+        self.assertAlmostEqual(q.get_error_right('hpd'), 0.4*0.68, places=2)
 
         p = HalfNormalDistribution(3, +0.5)
         q = NumericalDistribution.from_pd(p)
@@ -281,6 +287,11 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(p.error_right, 0.5)
         self.assertAlmostEqual(q.error_left, 0, places=2)
         self.assertAlmostEqual(q.error_right, 0.5, places=2)
+        # this does not work (returns nan)
+        self.assertTrue(np.isnan(q.get_error_left('hpd')))
+        self.assertTrue(np.isnan(q.get_error_right('hpd')))
+        # this works
+        self.assertAlmostEqual(q.get_error_right('limit'), 0.5, places=2)
 
         p = HalfNormalDistribution(3, -0.5)
         q = NumericalDistribution.from_pd(p)
@@ -288,6 +299,11 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(p.error_right, 0)
         self.assertAlmostEqual(q.error_left, 0.5, places=2)
         self.assertAlmostEqual(q.error_right, 0, places=2)
+        # this does not work (returns nan)
+        self.assertTrue(np.isnan(q.get_error_left('hpd')))
+        self.assertTrue(np.isnan(q.get_error_right('hpd')))
+        # this works
+        self.assertAlmostEqual(q.get_error_left('limit'), 0.5, places=2)
 
     def test_multivariate_exclude(self):
         c2 = np.array([1e-3, 2])
