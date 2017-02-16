@@ -196,8 +196,8 @@ class BayesianFit(Fit):
     the fit. By default, all existing measurements are included.
     - `fit_wc_names`: optional; a list of string names of arguments of the Wilson
       coefficient function below
-    - `fit_wc_function`: optional; a function that has exactly the arguements listed
-      in `fit_wc_names` and returns a dictionary that can be fed to the `set_initial`
+    - `fit_wc_function`: optional; a function that
+      returns a dictionary that can be fed to the `set_initial`
       method of the Wilson coefficient class. Example: fit the real and imaginary
       parts of $C_{10}$ in $b\to s\mu^+\mu^-$.
     ```
@@ -205,11 +205,19 @@ class BayesianFit(Fit):
         return {'C10_bsmmumu': Re_C10 + 1j*Im_C10}
     ```
     - `input_scale`: input scale for the Wilson coeffficients. Defaults to 160.
+    - `fit_wc_priors`: optional; an instance of WilsonCoefficientPriors
+      containing prior constraints on the Wilson coefficients
+    - `start_wc_priors`: optional; an instance of WilsonCoefficientPriors
+      that will not be used during a scan, but only for finding starting values
+      for Wilson coefficients in MCMC analyses. This can be useful if no
+      actual priors are used or if they are too loose to provide good starting
+      points.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, start_wc_priors=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.dimension = len(self.fit_parameters) + len(self.nuisance_parameters) + len(self.fit_wc_names)
+        self.start_wc_priors = start_wc_priors
 
     def array_to_dict(self, x):
         """Convert a 1D numpy array of floats to a dictionary of fit parameters,
@@ -239,13 +247,34 @@ class BayesianFit(Fit):
     @property
     def get_random(self):
         """Get an array with random values for all the fit and nuisance
-        parameters"""
+        parameters and Wilson coefficients"""
         arr = np.zeros(self.dimension)
         n_fit_p = len(self.fit_parameters)
         n_nui_p = len(self.nuisance_parameters)
         arr[:n_fit_p] = self.get_random_fit_parameters
         arr[n_fit_p:n_fit_p+n_nui_p] = self.get_random_nuisance_parameters
         arr[n_fit_p+n_nui_p:] = self.get_random_wilson_coeffs
+        return arr
+
+    @property
+    def get_random_wilson_coeffs_start(self):
+        """Return a numpy array with random values for all Wilson coefficients
+        sampling the start_wc_priors distribution."""
+        if self.start_wc_priors is None:
+            return None
+        all_random = self.start_wc_priors.get_random_all()
+        return np.asarray([all_random[p] for p in self.fit_wc_names])
+
+    @property
+    def get_random_start(self):
+        """Get an array with random values for all the fit and nuisance
+        parameters with Wilson coefficients set to their SM values"""
+        arr = np.zeros(self.dimension)
+        n_fit_p = len(self.fit_parameters)
+        n_nui_p = len(self.nuisance_parameters)
+        arr[:n_fit_p] = self.get_random_fit_parameters
+        arr[n_fit_p:n_fit_p+n_nui_p] = self.get_random_nuisance_parameters
+        arr[n_fit_p+n_nui_p:] = self.get_random_wilson_coeffs_start
         return arr
 
     def get_par_dict(self, x):

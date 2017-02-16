@@ -15,7 +15,7 @@ class pypmcScan(object):
         assert isinstance(fit, flavio.statistics.fits.BayesianFit), "PyPMC fit object must be an instance of BayesianFit"
         self.fit = fit
         # start value is a random vector
-        self.start = fit.get_random
+        self.start = fit.get_random_start
         self.dimension = len(self.start)
         # for the initial proposal distribution, generate N random samples
         # and compute the covariance

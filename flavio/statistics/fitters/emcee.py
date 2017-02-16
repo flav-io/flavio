@@ -15,12 +15,24 @@ class emceeScan(object):
         assert isinstance(fit, flavio.statistics.fits.BayesianFit), "emcee fit object must be an instance of BayesianFit"
         self.fit = fit
 
-        self.dimension = len(fit.get_random)
+        self.dimension = len(fit.get_random_start)
         if nwalkers is None:
             self.nwalkers = self.dimension * 10
         else:
             self.nwalkers = nwalkers
-        self.start = [fit.get_random for i in range(self.nwalkers)]
+        def get_random_good():
+            # iterate until a random point with finite probability is found
+            good = False
+            i = 0
+            while not good:
+                x = fit.get_random_start
+                good = np.isfinite(fit.log_target(x))
+                i += 1
+                if(i == 1000):
+                    raise ValueError("Could not find enough starting values with finite probability. "
+                                     " Try reducing the starting priors for the Wilson coefficients.")
+            return x
+        self.start = [get_random_good() for i in range(self.nwalkers)]
 
 
         self.mc = emcee.EnsembleSampler(nwalkers=self.nwalkers,
