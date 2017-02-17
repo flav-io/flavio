@@ -28,9 +28,15 @@ class Fit(flavio.NamedInstanceClass):
                  include_measurements=None,
                 ):
         if fit_parameters is None:
-            fit_parameters = []
+            self.fit_parameters = []
+        else:
+            self.fit_parameters = fit_parameters
         if nuisance_parameters is None:
-            nuisance_parameters = []
+            self.nuisance_parameters = []
+        elif nuisance_parameters == 'all':
+            self.nuisance_parameters = par_obj.all_parameters
+        else:
+            self.nuisance_parameters = nuisance_parameters
         if observables is None:
             raise ValueError("'observables' is empty: you must specify at least one fit observable")
         if fit_wc_names is not None:
@@ -38,7 +44,7 @@ class Fit(flavio.NamedInstanceClass):
             "as of flavio v0.19 and might be removed in the future.",
             FutureWarning)
         # some checks to make sure the input is sane
-        for p in fit_parameters + nuisance_parameters:
+        for p in self.fit_parameters + self.nuisance_parameters:
             # check that fit and nuisance parameters exist
             assert p in par_obj._parameters.keys(), "Parameter " + p + " not found in Constraints"
         for obs in observables:
@@ -62,7 +68,7 @@ class Fit(flavio.NamedInstanceClass):
         if exclude_measurements is not None and include_measurements is not None:
             raise ValueError("The options exclude_measurements and include_measurements must not be specified simultaneously")
         # check that no parameter appears as fit *and* nuisance parameter
-        intersect = set(fit_parameters).intersection(nuisance_parameters)
+        intersect = set(self.fit_parameters).intersection(self.nuisance_parameters)
         assert intersect == set(), "Parameters appearing as fit_parameters and nuisance_parameters: " + str(intersect)
         # check that the Wilson coefficient function works
         if fit_wc_function is not None: # if list of WC names not empty
@@ -77,8 +83,6 @@ class Fit(flavio.NamedInstanceClass):
         super().__init__(name)
         self.par_obj = par_obj
         self.parameters_central = self.par_obj.get_central_all()
-        self.fit_parameters = fit_parameters
-        self.nuisance_parameters = nuisance_parameters
         self.exclude_measurements = exclude_measurements
         self.include_measurements = include_measurements
         self.fit_wc_function = fit_wc_function
@@ -188,7 +192,11 @@ class BayesianFit(Fit):
     - `fit_parameters`: a list of string names of parameters of interest. The existing
       constraints on the parameter will be taken as prior.
     - `nuisance_parameters`: a list of string names of nuisance parameters. The existing
-      constraints on the parameter will be taken as prior.
+      constraints on the parameter will be taken as prior. Alternatively, it
+      can also be set to 'all', in which case all the parameters constrainted
+      by `par_obj` will be treated as nuisance parameters. (Note that this makes
+      sense for `FastFit`, but not for a MCMC since the number of nuisance
+      parameters will be huge.()
     - `observables`: a list of observable names to be included in the fit
     - `exclude_measurements`: optional; a list of measurement names *not* to be included in
     the fit. By default, all existing measurements are included.
