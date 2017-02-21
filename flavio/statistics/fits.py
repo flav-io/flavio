@@ -10,6 +10,7 @@ import copy
 from flavio.statistics.probability import NormalDistribution, MultivariateNormalDistribution, convolve_distributions
 from collections import Counter
 import warnings
+import inspect
 
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
@@ -73,7 +74,7 @@ class Fit(flavio.NamedInstanceClass):
         # check that the Wilson coefficient function works
         if fit_wc_function is not None: # if list of WC names not empty
             try:
-                self.fit_wc_names = fit_wc_function.__code__.co_varnames
+                self.fit_wc_names = tuple(inspect.signature(fit_wc_function).parameters.keys())
                 fit_wc_function(**{self.fit_wc_name: 1e-6 for self.fit_wc_name in self.fit_wc_names})
             except:
                 raise ValueError("Error in calling the Wilson coefficient function")

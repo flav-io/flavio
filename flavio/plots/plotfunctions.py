@@ -10,6 +10,7 @@ import scipy.stats
 from numbers import Number
 from math import sqrt
 import warnings
+import inspect
 
 def error_budget_pie(err_dict, other_cutoff=0.03):
     """Pie chart of an observable's error budget.
@@ -386,7 +387,7 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max,
                   "`likelihood_contour_data` in conjunction with `contour`) "
                   "and might be removed in the future. "
                   "Please update your code.", FutureWarning)
-    valid_args = likelihood_contour_data.__code__.co_varnames
+    valid_args = inspect.signature(likelihood_contour_data).parameters.keys()
     data_kwargs = {k:v for k,v in kwargs.items() if k in valid_args}
     if 'pre_calculated_z' not in kwargs:
         contour_kwargs = likelihood_contour_data(log_likelihood,
@@ -405,7 +406,7 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max,
             contour_kwargs['levels'] = [delta_chi2(n_sigma, dof=2)]
         else:
             contour_kwargs['levels'] = [delta_chi2(n, dof=2) for n in n_sigma]
-    valid_args = contour.__code__.co_varnames
+    valid_args = inspect.signature(contour).parameters.keys()
     contour_kwargs.update({k:v for k,v in kwargs.items() if k in valid_args})
     contour(**contour_kwargs)
     return contour_kwargs['x'], contour_kwargs['y'], contour_kwargs['z']
