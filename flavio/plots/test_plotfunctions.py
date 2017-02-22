@@ -77,6 +77,7 @@ class TestPlots(unittest.TestCase):
         np.random.seed(42)
         xy = scipy.stats.multivariate_normal(mean=[2,3], cov=[[1,0.5],[0.5,1]]).rvs(size=100)
         density_contour(*xy.T)
+        density_contour_joint(*xy.T)
 
     def test_likelihood_contour(self):
         # just check this works

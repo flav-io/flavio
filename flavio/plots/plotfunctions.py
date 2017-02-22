@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
@@ -502,14 +503,14 @@ def smooth_histogram(data, bandwidth=None, **kwargs):
     kde = flavio.statistics.probability.GaussianKDE(data, bandwidth=bandwidth)
     pdf_plot(kde, **kwargs)
 
-def pdf_plot(dist, x_min=None, x_max=None, fill=True, steps=200, normed=True, **kwargs):
+def pdf_plot(dist, x_min=None, x_max=None, fill=True, steps=500, normed=True, **kwargs):
     """Plot of a 1D probability density function.
 
     Parameters:
 
     - `dist`: an instance of ProbabilityDistribution
     - `x_min`, `x_max`: plot boundaries
-    - steps: optional, number of points (default: 200)
+    - `steps`: optional, number of points (default: 200)
 
     The remaining parameters will be passed to `likelihood_plot`.
     """
@@ -532,7 +533,8 @@ def pdf_plot(dist, x_min=None, x_max=None, fill=True, steps=200, normed=True, **
         fill_x=None
     likelihood_plot(x, y, fill_x=fill_x, **kwargs)
 
-def likelihood_plot(x, y, fill_x=None, col=None, label=None, plotargs={}, fillargs={}):
+def likelihood_plot(x, y, fill_x=None, col=None, label=None, plotargs={}, fillargs={},
+                    flipped=False):
     """Plot of a 1D probability density function.
 
     Parameters:
@@ -559,8 +561,83 @@ def likelihood_plot(x, y, fill_x=None, col=None, label=None, plotargs={}, fillar
         _fillargs['facecolor'] = flavio.plots.colors.pastel[col]
     _fillargs.update(fillargs)
     _plotargs.update(plotargs)
-    ax.plot(x, y, **_plotargs)
-    if fill_x is not None:
-        ax.fill_between(x, 0, y,
-            where=np.logical_and(fill_x[0] < x, x < fill_x[1]),
-            **_fillargs)
+    if not flipped:
+        ax.plot(x, y, **_plotargs)
+        if fill_x is not None:
+            ax.fill_between(x, 0, y,
+                where=np.logical_and(fill_x[0] < x, x < fill_x[1]),
+                **_fillargs)
+    else:
+        ax.plot(y, x, **_plotargs)
+        if fill_x is not None:
+            ax.fill_betweenx(x, 0, y,
+                where=np.logical_and(fill_x[0] < x, x < fill_x[1]),
+                **_fillargs)
+
+def density_contour_joint(x, y,
+                          col=None,
+                          bandwidth_x=None, bandwidth_y=None,
+                          hist_args=None,
+                          ax_2d=None, ax_x=None, ax_y=None,
+                          **kwargs):
+    r"""A density contour plot that additionally has the 1D marginals for
+    the x and y dsitribution plotted as smooth histograms along the axes.
+
+    Parameters:
+
+    - `x`, `y`: lists or numpy arrays with the x and y coordinates of the points
+    - `covariance_factor`: optional, numerical factor to tweak the smoothness
+       of the 2D contours (see `density_contour_data`)
+    - `col`: optional, integer specifying the colour, will be applied to both
+      contour plot and marginals
+    - `bandwidth_x`: optional, smoothing bandwidth for the Gaussian kernel of the
+      x marginal distribution
+    - `bandwidth_y`: optional, smoothing bandwidth for the Gaussian kernel of the
+      y marginal distribution
+
+    Additional options can be passed as follows:
+
+    - `hist_args`: dictionary with keyword arguments passed to the 1D
+      `smooth_histogram` for both the x and y distribution
+    - Additional keyword arguments will be passed to `density_contour`
+
+    To plot multiple distributions in one figure, the function returns a
+    dictionary with the three axis instances that can then be passed into
+    another call of the function, e.g.
+
+    ```
+    axes1 = density_contour_joint(x1, y1, col=0)
+    axes2 = density_contour_joint(x2, y2, col=1, **axes1)
+    ```
+    """
+    # define the plot grid
+    gs = matplotlib.gridspec.GridSpec(2, 2, width_ratios=[3, 1], height_ratios = [1, 4])
+    gs.update(hspace=0, wspace=0)
+    # set up axes (unless they are already given)
+    if ax_2d is None:
+        ax_2d = plt.subplot(gs[1, 0])
+    # make the 2D density contour plot
+    density_contour(x, y, col=col, **kwargs)
+
+    # x axis histogram
+    if hist_args is None:
+        hist_args = {}
+    if ax_x is None:
+        ax_x = plt.subplot(gs[0, 0], sharex=ax_2d, yticks=[], frameon=False)
+    plt.sca(ax_x)
+    smooth_histogram(x, bandwidth=bandwidth_x, col=col, **hist_args)
+
+    # y axis histogram
+    if ax_y is None:
+        ax_y = plt.subplot(gs[1, 1], sharey=ax_2d, xticks=[], frameon=False)
+    plt.sca(ax_y)
+    smooth_histogram(y, flipped=True, bandwidth=bandwidth_y, col=col, **hist_args)
+
+    # remove x and y histogram tick labels
+    plt.setp(ax_x.get_xticklabels(), visible=False);
+    plt.setp(ax_y.get_yticklabels(), visible=False);
+
+    # set 2D plot as active axis for adding legends etc.
+    plt.sca(ax_2d)
+    plt.tight_layout()
+    return {'ax_2d': ax_2d, 'ax_x': ax_x, 'ax_y': ax_y}
