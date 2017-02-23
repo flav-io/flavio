@@ -270,7 +270,11 @@ class BayesianFit(Fit):
         """Return a numpy array with random values for all Wilson coefficients
         sampling the start_wc_priors distribution."""
         if self.start_wc_priors is None:
-            return None
+            if self.fit_wc_priors is None:
+                raise ValueError("Starting values can only be generated if"
+                        " either fit_wc_priors or start_wc_priors is defined")
+            else:
+                return self.get_random_wilson_coeffs
         all_random = self.start_wc_priors.get_random_all()
         return np.asarray([all_random[p] for p in self.fit_wc_names])
 
