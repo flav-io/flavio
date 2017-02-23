@@ -12,6 +12,8 @@ from numbers import Number
 from math import sqrt
 import warnings
 import inspect
+from multiprocessing import Pool
+from pickle import PicklingError
 
 def error_budget_pie(err_dict, other_cutoff=0.03):
     """Pie chart of an observable's error budget.
@@ -318,7 +320,7 @@ def density_contour(x, y, covariance_factor=None, n_bins=None, n_sigma=(1, 2),
 
 
 def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
-              n_sigma=1, steps=20):
+              n_sigma=1, steps=20, threads=1):
     r"""Generate data required to plot coloured confidence contours (or bands)
     given a log likelihood function.
 
@@ -332,14 +334,26 @@ def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
       contours.
     - `steps`: number of grid steps in each dimension (total computing time is
       this number squared times the computing time of one `log_likelihood` call!)
-     """
+    - `threads`: number of threads, defaults to 1. If greater than one,
+      computation of z values will be done in parallel.
+    """
     _x = np.linspace(x_min, x_max, steps)
     _y = np.linspace(y_min, y_max, steps)
     x, y = np.meshgrid(_x, _y)
-    @np.vectorize
-    def chi2_vect(x, y): # needed for evaluation on meshgrid
-        return -2*log_likelihood([x,y])
-    z = chi2_vect(x, y)
+    if threads == 1:
+        @np.vectorize
+        def chi2_vect(x, y): # needed for evaluation on meshgrid
+            return -2*log_likelihood([x,y])
+        z = chi2_vect(x, y)
+    else:
+        xy = np.array([x, y]).reshape(2, steps**2).T
+        pool = Pool(threads)
+        try:
+            z = -2*np.array(pool.map(log_likelihood, xy )).reshape((steps, steps))
+        except PicklingError:
+            raise PicklingError("When using more than 1 thread, the "
+                                "log_likelihood function must be picklable; "
+                                "in particular, you cannot use lambda expressions.")
     z = z - np.min(z) # subtract the best fit point (on the grid)
 
     # get the correct values for 2D confidence/credibility contours for n sigma
@@ -351,7 +365,7 @@ def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
 
 
 def likelihood_contour(log_likelihood, x_min, x_max, y_min, y_max,
-              n_sigma=1, steps=20,
+              n_sigma=1, steps=20, threads=1,
               **kwargs):
     r"""Plot coloured confidence contours (or bands) given a log likelihood
     function.
@@ -374,7 +388,7 @@ def likelihood_contour(log_likelihood, x_min, x_max, y_min, y_max,
     data = likelihood_contour_data(log_likelihood=log_likelihood,
                                 x_min=x_min, x_max=x_max,
                                 y_min=y_min, y_max=y_max,
-                                n_sigma=n_sigma, steps=steps)
+                                n_sigma=n_sigma, steps=steps, threads=threads)
     data.update(kwargs) #  since we cannot do **data, **kwargs in Python <3.5
     return contour(**data)
 

@@ -1,4 +1,5 @@
 import unittest
+import numpy.testing as npt
 import matplotlib
 # matplotlib.use('Agg')
 import flavio
@@ -89,6 +90,10 @@ class TestPlots(unittest.TestCase):
         self.assertEqual(len(data['levels']), 1) # by default, plot 1 sigma contour
         self.assertAlmostEqual(data['levels'][0], 2.3, delta=0.01) #
         self.assertEqual(np.min(data['z']), 0)
+        # test parallel computation
+        data2 = likelihood_contour_data(dummy_loglikelihood,
+                                        -2, 2, -3, 3, threads=2)
+        npt.assert_array_equal(data2['z'], data['z'])
 
     def test_smooth_histogram(self):
         # just check this doesn't raise and error
