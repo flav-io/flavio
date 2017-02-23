@@ -11,6 +11,7 @@ from flavio.statistics.probability import NormalDistribution, MultivariateNormal
 from collections import Counter
 import warnings
 import inspect
+from multiprocessing import Pool
 
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
@@ -256,13 +257,29 @@ class BayesianFit(Fit):
     @property
     def get_random(self):
         """Get an array with random values for all the fit and nuisance
-        parameters and Wilson coefficients"""
+        parameters and Wilson coefficients."""
+        return self._get_random()
+
+    def _get_random(self, par=True, nuisance=True, wc=True):
+        """Get an array with random values for all the fit and nuisance
+        parameters and Wilson coefficients.
+
+        If par is False, fit parameters are set to their central values.
+        If nuisance is False, nuisance parameters are set to their central values.
+        """
         arr = np.zeros(self.dimension)
         n_fit_p = len(self.fit_parameters)
         n_nui_p = len(self.nuisance_parameters)
-        arr[:n_fit_p] = self.get_random_fit_parameters
-        arr[n_fit_p:n_fit_p+n_nui_p] = self.get_random_nuisance_parameters
-        arr[n_fit_p+n_nui_p:] = self.get_random_wilson_coeffs
+        if par:
+            arr[:n_fit_p] = self.get_random_fit_parameters
+        else:
+            arr[:n_fit_p] = self.get_central_fit_parameters
+        if nuisance:
+            arr[n_fit_p:n_fit_p+n_nui_p] = self.get_random_nuisance_parameters
+        else:
+            arr[n_fit_p:n_fit_p+n_nui_p] = self.get_central_nuisance_parameters
+        if wc:
+            arr[n_fit_p+n_nui_p:] = self.get_random_wilson_coeffs
         return arr
 
     @property
@@ -290,12 +307,18 @@ class BayesianFit(Fit):
         arr[n_fit_p+n_nui_p:] = self.get_random_wilson_coeffs_start
         return arr
 
-    def get_par_dict(self, x):
-        """Get a dictionary of fit and nuisance parameters from an input array"""
+    def get_par_dict(self, x, par=True, nuisance=True):
+        """Get a dictionary of fit and nuisance parameters from an input array
+
+        If par is False, fit parameters are set to their central values.
+        If nuisance is False, nuisance parameters are set to their central values.
+        """
         d = self.array_to_dict(x)
         par_dict = self.parameters_central.copy()
-        par_dict.update(d['fit_parameters'])
-        par_dict.update(d['nuisance_parameters'])
+        if par:
+            par_dict.update(d['fit_parameters'])
+        if nuisance:
+            par_dict.update(d['nuisance_parameters'])
         return par_dict
 
     def get_wc_obj(self, x):
@@ -324,11 +347,19 @@ class BayesianFit(Fit):
         prob_dict = self.fit_wc_priors.get_logprobability_all(wc_dict)
         return sum([p for obj, p in prob_dict.items()])
 
-    def get_predictions(self, x):
+    def get_predictions(self, x, par=True, nuisance=True, wc=True):
         """Get a dictionary with predictions for all observables given an input
-        array"""
-        par_dict = self.get_par_dict(x)
-        wc_obj = self.get_wc_obj(x)
+        array.
+
+        If par is False, fit parameters are set to their central values.
+        If nuisance is False, nuisance parameters are set to their central values.
+        If wc is False, Wilson coefficients are set to their SM values.
+        """
+        par_dict = self.get_par_dict(x, par=par, nuisance=nuisance)
+        if wc:
+            wc_obj = self.get_wc_obj(x)
+        else:
+            wc_obj = flavio.WilsonCoefficients()
         all_predictions = {}
         for observable in self.observables:
             if isinstance(observable, tuple):
@@ -339,6 +370,10 @@ class BayesianFit(Fit):
                 _inst = flavio.classes.Observable.get_instance(observable)
                 all_predictions[observable] = _inst.prediction_par(par_dict, wc_obj)
         return all_predictions
+
+    def get_predictions_array(self, x, **kwargs):
+        pred = self.get_predictions(x, **kwargs)
+        return np.array([pred[obs] for obs in self.observables])
 
     def log_likelihood(self, x):
         """Return the logarithm of the likelihood function (not including the
@@ -447,38 +482,30 @@ class FastFit(BayesianFit):
             return weighted_mean, weighted_covariance
 
 
+    def _get_random_nuisance(self, *args):
+        return self._get_random(par=False, nuisance=True, wc=False)
+
     # a method to get the covariance of the SM prediction of all observables
     # of interest
-    def _get_covariance_sm(self, N=100):
-        par_central = self.par_obj.get_central_all()
-        def random_nuisance_dict():
-            arr = self.get_random_nuisance_parameters
-            nuis_dict = {par: arr[i] for i, par in enumerate(self.nuisance_parameters)}
-            par = par_central.copy()
-            par.update(nuis_dict)
-            return par
-        par_random = [random_nuisance_dict() for i in range(N)]
-
-        pred_arr = np.zeros((len(self.observables), N))
-        wc_sm = flavio.WilsonCoefficients()
-        for i, observable in enumerate(self.observables):
-            if isinstance(observable, tuple):
-                obs_name = observable[0]
-                _inst = flavio.classes.Observable.get_instance(obs_name)
-                pred_arr[i] = np.array([_inst.prediction_par(par, wc_sm, *observable[1:])
-                                        for par in par_random])
-            else:
-                _inst = flavio.classes.Observable.get_instance(observable)
-                pred_arr[i] = np.array([_inst.prediction_par(par, wc_sm)
-                                        for par in par_random])
+    def _get_covariance_sm(self, N=100, threads=1):
+        if threads == 1:
+            pred_arr = np.zeros((len(self.observables), N))
+            for j in range(N):
+                x = self._get_random(par=False, nuisance=True, wc=False)
+                pred_arr[:, j] = self.get_predictions_array(x, par=False, nuisance=True, wc=False)
+        else:
+            # X = [get_random_nuisance_arr() for j in range(N)]
+            pool = Pool(threads)
+            X = np.array(pool.map(self._get_random_nuisance, range(N)))
+            pred_arr = np.array(pool.map(self.get_predictions_array, X)).T
         return np.cov(pred_arr)
 
-    def make_measurement(self, N=100, Nexp=5000):
+    def make_measurement(self, N=100, Nexp=5000, threads=1):
         """Initialize the fit by producing a pseudo-measurement containing both
         experimental uncertainties as well as theory uncertainties stemming
         from nuisance parameters."""
         central_exp, cov_exp = self._get_central_covariance_experiment(Nexp)
-        cov_sm = self._get_covariance_sm(N)
+        cov_sm = self._get_covariance_sm(N, threads=threads)
         covariance = cov_exp + cov_sm
         # add the Pseudo-measurement
         m = flavio.classes.Measurement('Pseudo-measurement for FastFit instance: ' + self.name)
@@ -489,9 +516,9 @@ class FastFit(BayesianFit):
             m.add_constraint(self.observables,
                     MultivariateNormalDistribution(central_exp, covariance))
 
-    def array_to_dict(self, x):
-        """Convert a 1D numpy array of floats to a dictionary of fit parameters,
-        nuisance parameters, and Wilson coefficients."""
+    def shortarray_to_dict(self, x):
+        """Convert a 1D numpy array of floats to a dictionary of fit parameters
+        and Wilson coefficients."""
         d = {}
         n_fit_p = len(self.fit_parameters)
         n_wc = len(self.fit_wc_names)
@@ -499,7 +526,7 @@ class FastFit(BayesianFit):
         d['fit_wc'] = { p: x[i + n_fit_p] for i, p in enumerate(self.fit_wc_names) }
         return d
 
-    def dict_to_array(self, d):
+    def dict_to_shortarray(self, d):
         """Convert a dictionary of fit parameters and Wilson coefficients to a
         1D numpy array of floats."""
         n_fit_p = len(self.fit_parameters)
@@ -509,17 +536,25 @@ class FastFit(BayesianFit):
         arr[n_fit_p:]   = [d['fit_wc'][c] for c in self.fit_wc_names]
         return arr
 
-    def get_par_dict(self, x):
-        d = self.array_to_dict(x)
-        par_dict = self.parameters_central.copy()
-        par_dict.update(d['fit_parameters'])
-        return par_dict
+    def shortarray_to_array(self, x):
+        """Convert an array of fit parameters and Wilson coefficients to an
+        array of fit parameters, nuisance parameters, and Wilson coefficients
+        (setting nuisance parameters to their central values)."""
+        n_fit_p = len(self.fit_parameters)
+        n_nui_p = len(self.nuisance_parameters)
+        n_wc = len(self.fit_wc_names)
+        arr = np.zeros(n_fit_p + n_nui_p + n_wc)
+        arr[:n_fit_p] = x[:n_fit_p]
+        arr[n_fit_p:n_fit_p+n_nui_p] = self.get_central_nuisance_parameters
+        arr[n_fit_p+n_nui_p:] = x[n_fit_p:]
+        return arr
 
     def log_likelihood(self, x):
         """Return the logarithm of the likelihood. Note that there is no prior
         probability for nuisance parameters, which have been integrated out.
         Priors for fit parameters are ignored."""
-        predictions = self.get_predictions(x)
+         # set nuisance parameters to their central values!
+        predictions = self.get_predictions(self.shortarray_to_array(x), nuisance=False)
         m_obj = flavio.Measurement.get_instance('Pseudo-measurement for FastFit instance: ' + self.name)
         m_obs = m_obj.all_parameters
         prob_dict = m_obj.get_logprobability_all(predictions)
