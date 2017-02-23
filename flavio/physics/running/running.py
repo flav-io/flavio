@@ -120,7 +120,7 @@ def get_mc_pole(par, nl=2): # for mc, default to 2-loop conversion only due to r
     return _get_mc_pole(mcmc=mcmc, alpha_s=alpha_s, nl=nl)
 
 # cached version
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=config['settings']['cache size'])
 def _get_mc_pole(mcmc, alpha_s, nl):
     return masses.mMS2mOS(MS=mcmc, Nf=4, asmu=alpha_s, Mu=mcmc, nl=nl)
 
@@ -131,7 +131,7 @@ def get_mc_KS(par, scale):
     return _get_mb_KS(mbmb=mcmc, alpha_s=alpha_s, scale=scale, nl=3)
 
 # cached version
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=config['settings']['cache size'])
 def _get_mc_KS(mcmc, alpha_s, scale, nl):
     return masses.mMS2mKS(MS=mcmc, Nf=3, asM=alpha_s, Mu=scale, nl=nl)
 
@@ -143,7 +143,7 @@ def get_mb_pole(par, nl=2): # for mb, default to 2-loop conversion only due to r
     return _get_mb_pole(mbmb=mbmb, alpha_s=alpha_s, nl=nl)
 
 # cached version
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=config['settings']['cache size'])
 def _get_mb_pole(mbmb, alpha_s, nl):
     return masses.mMS2mOS(MS=mbmb, Nf=5, asmu=alpha_s, Mu=mbmb, nl=nl)
 
@@ -154,7 +154,7 @@ def get_mb_KS(par, scale):
     return _get_mb_KS(mbmb=mbmb, alpha_s=alpha_s, scale=scale, nl=3)
 
 # cached version
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=config['settings']['cache size'])
 def _get_mb_KS(mbmb, alpha_s, scale, nl):
     # see 1107.3100 for why Nf=4
     return masses.mMS2mKS(MS=mbmb, Nf=4, asM=alpha_s, Mu=scale, nl=nl)
