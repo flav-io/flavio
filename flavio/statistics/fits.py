@@ -359,7 +359,7 @@ class BayesianFit(Fit):
         if wc:
             wc_obj = self.get_wc_obj(x)
         else:
-            wc_obj = flavio.WilsonCoefficients()
+            wc_obj = flavio.physics.eft._wc_sm
         all_predictions = {}
         for observable in self.observables:
             if isinstance(observable, tuple):

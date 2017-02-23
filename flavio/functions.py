@@ -32,7 +32,7 @@ def sm_prediction(obs_name, *args, **kwargs):
     depending on the observable (e.g. $q^2$-dependent observables).
     """
     obs = flavio.classes.Observable.get_instance(obs_name)
-    wc_sm = flavio.WilsonCoefficients()
+    wc_sm = flavio.physics.eft._wc_sm
     return obs.prediction_central(flavio.default_parameters, wc_sm, *args, **kwargs)
 
 def np_uncertainty(obs_name, wc_obj, *args, N=100, **kwargs):
@@ -71,7 +71,7 @@ def sm_uncertainty(obs_name, *args, N=100, **kwargs):
     Additional arguments are passed to the observable and are necessary,
     depending on the observable (e.g. $q^2$-dependent observables).
     """
-    wc_sm = flavio.WilsonCoefficients()
+    wc_sm = flavio.physics.eft._wc_sm
     return np_uncertainty(obs_name, wc_sm, *args, N=N, **kwargs)
 
 def sm_error_budget(obs_name, *args, N=50, **kwargs):
@@ -89,7 +89,7 @@ def sm_error_budget(obs_name, *args, N=50, **kwargs):
     depending on the observable (e.g. $q^2$-dependent observables).
     """
     obs = flavio.classes.Observable.get_instance(obs_name)
-    wc_sm = flavio.WilsonCoefficients()
+    wc_sm = flavio.physics.eft._wc_sm
     par_central = flavio.default_parameters.get_central_all()
     par_random = [flavio.default_parameters.get_random_all() for i in range(N)]
 
@@ -140,7 +140,7 @@ def sm_covariance(obs_list, N=100, par_vary='all', **kwargs):
     - `par_vary`: a list of parameters to vary. Defaults to 'all', i.e. all
     parameters are varied according to their probability distributions.
     """
-    wc_sm = flavio.WilsonCoefficients()
+    wc_sm = flavio.physics.eft._wc_sm
     par_central_all = flavio.default_parameters.get_central_all()
     par_random_all = [flavio.default_parameters.get_random_all() for i in range(N)]
     def par_random_some(par_random, par_central):

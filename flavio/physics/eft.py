@@ -138,3 +138,8 @@ class WilsonCoefficients(object):
         # otherwise, run
         values_out = running.get_wilson(par, values_in, self.rge_derivative[sector], scale_in, scale, nf_out=nf_out)
         return dict(zip(self.coefficients[sector],values_out))
+
+# this global variable is simply an instance that is not meant to be modifed -
+# i.e., a Standard Model Wilson coefficient instance. This is useful since it
+# allows caching SM intermediate results where needed.
+_wc_sm = WilsonCoefficients()
