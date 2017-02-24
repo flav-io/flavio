@@ -14,14 +14,6 @@ HFAG rad 2016:
   url: http://www.slac.stanford.edu/xorg/hfag/rare/July2016/radll/index.html
   values:
     BR(B->Xsgamma): 349 ± 19 e-6
-    BR(B+->Knunu): < 16e-6 @ 90% CL
-    BR(B+->pinunu): < 98e-6 @ 90% CL
-    BR(B+->rhonunu): < 213e-6 @ 90% CL
-    BR(B+->K*nunu): < 40e-6 @ 90% CL
-    BR(B0->Knunu): < 49e-6 @ 90% CL
-    BR(B0->pinunu): < 69e-6 @ 90% CL
-    BR(B0->rhonunu): < 208e-6 @ 90% CL
-    BR(B0->K*nunu): < 55e-6 @ 90% CL
 
 HFAG acp 2016:
   experiment: HFAG
@@ -2750,3 +2742,187 @@ LHCb Bs->mumu 2017:
       - [9030764354785.322, 20259469211531.305, 27759334502405.477, 30184464905952.23, 31125548225211.824, 31608640360225.24, 30587016207522.938, 27719426730281.22, 23431514206961.406, 18444656160327.992, 13518406408535.242, 9228477725601.375, 5878448167974.37, 3517114224585.204, 2001684262217.6013, 1100231192670.9226, 590974402735.9188, 312098675015.32806, 162465507100.46393, 83485156236.22922, 42421557906.39922, 21331143729.19807, 10610576444.524868, 5210060428.077923, 2512218487.1906667, 1159986596.1854377, 448236333.9167064, 107469184.5838164, 11762031.994973902, 483918.8075559334]
       - [2225971473962.567, 4526974671467.3125, 5939752487492.755, 6734262189789.041, 7307775739958.6, 7570013940285.656, 7429765869671.206, 6892061118844.427, 6017927681356.265, 4919543429430.737, 3743060333707.8906, 2639678379259.279, 1724799227263.83, 1052693841854.3284, 610490571937.238, 341562826076.4814, 186164017246.34488, 99527827559.23427, 52313764459.44251, 27123027967.98064, 13924569940.84382, 7082559323.262482, 3553318571.564713, 1740665799.004222, 827123774.806738, 376302677.96761674, 144808128.4046667, 34769353.22095525, 3812961.1643205304, 157163.97975874203]
       - [749771708746.2327, 1551751355007.6772, 2086261734484.2913, 2386438583034.5073, 2581451358039.4365, 2673515955868.5747, 2629656066682.672, 2436335384673.965, 2112267662155.2864, 1705317648064.7493, 1275777797452.1775, 882080143713.9324, 569626781956.6674, 349909049930.39636, 206121099167.39597, 116640193239.14624, 63639828093.586395, 33735403238.32553, 17498489829.14268, 8930703303.347229, 4509677255.911201, 2254821578.3033767, 1112927723.5149193, 539606432.3079199, 255383386.28756094, 115796361.6014911, 44536608.51114633, 10736260.579428947, 1182841.9340681517, 48934.19151400881]
+
+
+Belle B->hnunu SL 2017:
+  experiment: Belle
+  inspire: Grygier:2017tzo
+  values:
+    # Tables I and II
+    # counts_total is the square of the statistical error on the signal yield
+    # background_variance is the systematic error on the signal yield
+    BR(B+->Knunu):
+      distribution: general_gamma_upper_limit
+      limit: 1.9e-5
+      confidence_level: 0.9
+      counts_total: 83
+      counts_signal: 17.7
+      background_variance: 3.4
+    BR(B0->Knunu):
+      distribution: general_gamma_upper_limit
+      limit: 1.3e-5
+      confidence_level: 0.9
+      counts_total: 18
+      counts_signal: 0.6
+      background_variance: 1.4
+    BR(B+->K*nunu):
+      distribution: general_gamma_upper_limit
+      limit: 6.1e-5
+      confidence_level: 0.9
+      counts_total: 55
+      counts_signal: 16.2
+      background_variance: 1.8
+    BR(B0->K*nunu):
+      distribution: general_gamma_upper_limit
+      limit: 1.8e-5
+      confidence_level: 0.9
+      counts_total: 13
+      counts_signal: -2.0
+      background_variance: 1.8
+    BR(B+->pinunu):
+      distribution: general_gamma_upper_limit
+      limit: 1.4e-5
+      confidence_level: 0.9
+      counts_total: 228
+      counts_signal: 5.6
+      background_variance: 5.9
+    BR(B0->pinunu):
+      distribution: general_gamma_upper_limit
+      limit: 0.9e-5
+      confidence_level: 0.9
+      counts_total: 31
+      counts_signal: 0.2
+      background_variance: 1.6
+    BR(B+->rhonunu):
+      distribution: general_gamma_upper_limit
+      limit: 3.0e-5
+      confidence_level: 0.9
+      counts_total: 151
+      counts_signal: 6.2
+      background_variance: 2.4
+    BR(B0->rhonunu):
+      distribution: general_gamma_upper_limit
+      limit: 4.0e-5
+      confidence_level: 0.9
+      counts_total: 81
+      counts_signal: 11.9
+      background_variance: 3.6
+
+Belle B->hnunu had 2013:
+  experiment: Belle
+  inspire: Lutz:2013ftz
+  values:
+    # Table I
+    # background_variance is the systematic error on the # of signal events
+    BR(B+->Knunu):
+      distribution: general_gamma_upper_limit
+      limit: 5.5e-5
+      confidence_level: 0.9
+      counts_total: 43
+      counts_signal: 13.3
+      background_variance: 2.3
+    BR(B0->Knunu):
+      distribution: general_gamma_upper_limit
+      limit: 9.7e-5
+      confidence_level: 0.9
+      counts_total: 4
+      counts_signal: 1.8
+      background_variance: 1.0
+    BR(B+->K*nunu):
+      distribution: general_gamma_upper_limit
+      limit: 4.0e-5
+      confidence_level: 0.9
+      counts_total: 21
+      counts_signal: -1.7
+      background_variance: 1.5
+    BR(B0->K*nunu):
+      distribution: general_gamma_upper_limit
+      limit: 5.5e-5
+      confidence_level: 0.9
+      counts_total: 10
+      counts_signal: -2.3
+      background_variance: 0.9
+    BR(B+->pinunu):
+      distribution: general_gamma_upper_limit
+      limit: 9.8e-5
+      confidence_level: 0.9
+      counts_total: 107
+      counts_signal: 15.2
+      background_variance: 1.4
+    BR(B0->pinunu):
+      distribution: general_gamma_upper_limit
+      limit: 6.9e-5
+      confidence_level: 0.9
+      counts_total: 6
+      counts_signal: 3.5
+      background_variance: 0.6
+    BR(B+->rhonunu):
+      distribution: general_gamma_upper_limit
+      limit: 21.3e-5
+      confidence_level: 0.9
+      counts_total: 90
+      counts_signal: 11.3
+      background_variance: 4.1
+    BR(B0->rhonunu):
+      distribution: general_gamma_upper_limit
+      limit: 20.8e-5
+      confidence_level: 0.9
+      counts_total: 31
+      counts_signal: 1.6
+      background_variance: 0.4
+
+BaBar B->Knunu had 2013:
+  experiment: BaBar
+  inspire: Lees:2013kla
+  values:
+    # Tables IV and V
+    # For K*, the number and uncertainty of backround events is combined for the
+    # two channels K+pi0/K0pi+ or K+pi-/K0pi0, respectively
+    BR(B+->Knunu):
+      distribution: general_gamma_upper_limit
+      limit: 3.7e-5
+      confidence_level: 0.9
+      counts_total: 6
+      counts_background: 2.9
+      background_variance: 0.1
+    BR(B0->Knunu):
+      distribution: general_gamma_upper_limit
+      limit: 8.1e-5
+      confidence_level: 0.9
+      counts_total: 3
+      counts_background: 2.9
+      background_variance: 0.2
+    BR(B+->K*nunu):
+      distribution: general_gamma_upper_limit
+      limit: 11.6e-5
+      confidence_level: 0.9
+      counts_total: 6
+      counts_background: 4.3
+      background_variance: 0.14
+    BR(B0->K*nunu):
+      distribution: general_gamma_upper_limit
+      limit: 9.3e-5
+      confidence_level: 0.9
+      counts_total: 9
+      counts_background: 7.7
+      background_variance: 0.5
+
+BaBar B->Knunu SL 2010:
+  experiment: BaBar
+  inspire: delAmoSanchez:2010bk
+  values:
+    # Tables II, III and IV
+    BR(B+->Knunu):
+      distribution: general_gamma_upper_limit
+      limit: 1.3e-5
+      confidence_level: 0.9
+      counts_total: 19.4
+      counts_signal: 1.8
+      background_variance: 0.9
+    BR(B0->Knunu):
+      distribution: general_gamma_upper_limit
+      limit: 5.6e-5
+      confidence_level: 0.9
+      counts_total: 6.1
+      counts_signal: 2.2
+      background_variance: 0.4
