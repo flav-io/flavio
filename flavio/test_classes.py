@@ -10,6 +10,7 @@ class TestClasses(unittest.TestCase):
     def test_parameter_class(self):
         p = Parameter( 'test_mb' )
         self.assertEqual( p, Parameter.get_instance('test_mb') )
+        self.assertEqual( p, Parameter['test_mb'] )
         p.set_description('b quark mass')
         self.assertEqual( p.description, 'b quark mass' )
         # removing dummy instances
@@ -18,6 +19,7 @@ class TestClasses(unittest.TestCase):
     def test_constraints_class(self):
         p = Parameter( 'test_mb' )
         self.assertEqual( p, Parameter.get_instance('test_mb') )
+        self.assertEqual( p, Parameter['test_mb'] )
         c = ParameterConstraints()
         d = NormalDistribution(4.2, 0.2)
         c.add_constraint( ['test_mb'], d )
@@ -45,9 +47,14 @@ class TestClasses(unittest.TestCase):
         self.assertEqual( test_1derrors_rightleft['test_mb'], (0.2, 0.2))
         self.assertEqual( test_1derrors_rightleft['test_mc'], (0.1, 0.1))
         # removing dummy instances
+        # check that they have been removed, using old and new syntax
         c.remove_constraint('test_mb')
         Parameter.del_instance('test_mb')
-        Parameter.del_instance('test_mc')
+        with self.assertRaises(KeyError):
+            Parameter['test_mb']
+        del Parameter['test_mc']
+        with self.assertRaises(KeyError):
+            Parameter.get_instance('test_mc')
 
     def test_set_constraint(self):
         p = Parameter( 'test_mb' )
@@ -88,6 +95,7 @@ class TestClasses(unittest.TestCase):
     def test_observable_class(self):
         o = Observable( 'test_obs' )
         self.assertEqual( o, Observable.get_instance('test_obs') )
+        self.assertEqual( o, Observable['test_obs'] )
         o.set_description('some test observables')
         self.assertEqual( o.description, 'some test observables' )
         # removing dummy instances

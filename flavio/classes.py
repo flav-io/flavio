@@ -18,8 +18,18 @@ def _is_number(s):
     except ValueError:
         return False
 
+class NamedInstanceMetaclass(type):
+    # this is just needed to implement the getitem method on NamedInstanceClass
+    # to allow the syntax MyClass['instancename'] as shorthand for
+    # MyClass.get_instance('instancename'); same for
+    # del MyClass['instancename'] instead of MyClass.del_instance('instancename')
+    def __getitem__(cls, item):
+        return cls.get_instance(item)
 
-class NamedInstanceClass(object):
+    def __delitem__(cls, item):
+        return cls.del_instance(item)
+
+class NamedInstanceClass(object, metaclass=NamedInstanceMetaclass):
     """Base class for classes that have named instances that can be accessed
     by their name.
 
