@@ -1,12 +1,15 @@
 import unittest
 import numpy.testing as npt
 import matplotlib
-# matplotlib.use('Agg')
 import flavio
 from flavio.plots import *
 import numpy as np
 import scipy.stats
 import warnings
+
+from matplotlib import rc
+rc('text', usetex=False)
+# (to avoid tex errors on Travis CI)
 
 def dummy_loglikelihood(x):
     return -x[0]**2-x[1]**2
