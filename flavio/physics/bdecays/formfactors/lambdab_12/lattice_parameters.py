@@ -55,7 +55,7 @@ def load_parameters(file_res, file_cov, process, constraints):
     parameter_names = [implementation_name + ' ' + translate_parameters(coeff_name) for coeff_name in keys_sorted]
     for parameter_name in parameter_names:
         try: # check if parameter object already exists
-            p = Parameter.get_instance(parameter_name)
+            p = Parameter[parameter_name]
         except: # otherwise, create a new one
             p = Parameter(parameter_name)
             _tex_a = tex_a[parameter_name.split(' ')[-1].split('_')[0]]

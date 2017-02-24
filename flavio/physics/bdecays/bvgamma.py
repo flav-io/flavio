@@ -43,7 +43,7 @@ def amps_ff(wc_obj, par_dict, B, V, cp_conjugate):
     N = prefactor(par, B, V)
     bq = meson_quark[(B,V)]
     ff_name = meson_ff[(B,V)] + ' form factor'
-    ff = AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=0.)
+    ff = AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=0.)
     scale = config['renormalization scale']['bvgamma']
     # these are the b->qee Wilson coefficients - they contain the b->qgamma ones as a subset
     wc = wctot_dict(wc_obj, bq+'ee', scale, par)
@@ -59,7 +59,7 @@ def amps_ss(wc_obj, par, B, V, cp_conjugate):
     scale = config['renormalization scale']['bvgamma']
     ss_name = B+'->'+V+'ll spectator scattering'
     q2=0.001 # away from zero to avoid pole
-    amps = AuxiliaryQuantity.get_instance(ss_name).prediction(par_dict=par, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+    amps = AuxiliaryQuantity[ss_name].prediction(par_dict=par, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
     N = prefactor_helicityamps(q2, par, B, V)
     a = {}
     a['L'] = -N * amps[('mi' ,'V')]
@@ -70,7 +70,7 @@ def amps_subleading(wc_obj, par, B, V, cp_conjugate):
     scale = config['renormalization scale']['bvgamma']
     sub_name = B+'->'+V+ 'll subleading effects at low q2'
     q2=0.001 # away from zero to avoid pole
-    amps = AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+    amps = AuxiliaryQuantity[sub_name].prediction(par_dict=par, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
     N = prefactor_helicityamps(q2, par, B, V)
     a = {}
     a['L'] = -N * amps[('mi' ,'V')]

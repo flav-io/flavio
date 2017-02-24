@@ -11,7 +11,7 @@ par_nominal.set_constraint('Vcb', 0.04175)
 par_dict = par_nominal.get_central_all()
 
 def ass_sm(s, name, q2min, q2max, target, delta, scalef=1):
-    obs = flavio.classes.Observable.get_instance(name)
+    obs = flavio.classes.Observable[name]
     c = obs.prediction_central(par_nominal, wc_sm, q2min, q2max)*scalef
     s.assertAlmostEqual(c, target, delta=delta)
 

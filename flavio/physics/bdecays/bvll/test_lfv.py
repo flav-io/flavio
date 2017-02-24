@@ -8,8 +8,8 @@ wc_np.set_initial({'C10_bsemu':4., 'C10_bsmue':2.}, 160.)
 
 class TestLFV(unittest.TestCase):
     def test_lfv(self):
-        obs_1 = flavio.classes.Observable.get_instance("BR(B0->K*emu)")
-        obs_2 = flavio.classes.Observable.get_instance("BR(B0->K*mue)")
+        obs_1 = flavio.classes.Observable["BR(B0->K*emu)"]
+        obs_2 = flavio.classes.Observable["BR(B0->K*mue)"]
         self.assertEqual(obs_1.prediction_central(flavio.default_parameters, wc_sm), 0)
         # BR(B->K*emu) should be 4 times larger as Wilson coeff is 2x the mue one
         self.assertAlmostEqual(

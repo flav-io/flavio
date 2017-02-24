@@ -56,9 +56,9 @@ class TestBll(unittest.TestCase):
 
     def test_bsll_classes(self):
         par_default = default_parameters.get_central_all()
-        self.assertAlmostEqual(br_timeint(par_default, wc_tau, 'Bs', 'tau', 'tau')/Observable.get_instance('BR(Bs->tautau)').prediction_central(default_parameters, wc_obj), 1, places=4)
-        self.assertAlmostEqual(br_timeint(par_default, wc_e, 'Bs', 'e', 'e')/Observable.get_instance('BR(Bs->ee)').prediction_central(default_parameters, wc_obj), 1, places=4)
-        self.assertAlmostEqual(br_timeint(par_default, wc, 'Bs', 'mu', 'mu')/Observable.get_instance('BR(Bs->mumu)').prediction_central(default_parameters, wc_obj), 1, places=4)
+        self.assertAlmostEqual(br_timeint(par_default, wc_tau, 'Bs', 'tau', 'tau')/Observable['BR(Bs->tautau)'].prediction_central(default_parameters, wc_obj), 1, places=4)
+        self.assertAlmostEqual(br_timeint(par_default, wc_e, 'Bs', 'e', 'e')/Observable['BR(Bs->ee)'].prediction_central(default_parameters, wc_obj), 1, places=4)
+        self.assertAlmostEqual(br_timeint(par_default, wc, 'Bs', 'mu', 'mu')/Observable['BR(Bs->mumu)'].prediction_central(default_parameters, wc_obj), 1, places=4)
 
     def test_bsll_lfv(self):
         # test for errors

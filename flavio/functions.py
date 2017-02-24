@@ -17,7 +17,7 @@ def np_prediction(obs_name, wc_obj, *args, **kwargs):
     Additional arguments are passed to the observable and are necessary,
     depending on the observable (e.g. $q^2$-dependent observables).
     """
-    obs = flavio.classes.Observable.get_instance(obs_name)
+    obs = flavio.classes.Observable[obs_name]
     return obs.prediction_central(flavio.default_parameters, wc_obj, *args, **kwargs)
 
 def sm_prediction(obs_name, *args, **kwargs):
@@ -31,7 +31,7 @@ def sm_prediction(obs_name, *args, **kwargs):
     Additional arguments are passed to the observable and are necessary,
     depending on the observable (e.g. $q^2$-dependent observables).
     """
-    obs = flavio.classes.Observable.get_instance(obs_name)
+    obs = flavio.classes.Observable[obs_name]
     wc_sm = flavio.physics.eft._wc_sm
     return obs.prediction_central(flavio.default_parameters, wc_sm, *args, **kwargs)
 
@@ -50,7 +50,7 @@ def np_uncertainty(obs_name, wc_obj, *args, N=100, **kwargs):
     Additional arguments are passed to the observable and are necessary,
     depending on the observable (e.g. $q^2$-dependent observables).
     """
-    obs = flavio.classes.Observable.get_instance(obs_name)
+    obs = flavio.classes.Observable[obs_name]
     par_random = [flavio.default_parameters.get_random_all() for i in range(N)]
     all_pred = np.array([
         obs.prediction_par(par, wc_obj, *args, **kwargs)
@@ -88,7 +88,7 @@ def sm_error_budget(obs_name, *args, N=50, **kwargs):
     Additional arguments are passed to the observable and are necessary,
     depending on the observable (e.g. $q^2$-dependent observables).
     """
-    obs = flavio.classes.Observable.get_instance(obs_name)
+    obs = flavio.classes.Observable[obs_name]
     wc_sm = flavio.physics.eft._wc_sm
     par_central = flavio.default_parameters.get_central_all()
     par_random = [flavio.default_parameters.get_random_all() for i in range(N)]
@@ -156,10 +156,10 @@ def sm_covariance(obs_list, N=100, par_vary='all', **kwargs):
         par_random = [par_random_some(par_random_all[i], par_central_all) for i in range(N)]
     def get_prediction(obs, par):
         if isinstance(obs, str):
-             obs_obj = flavio.classes.Observable.get_instance(obs)
+             obs_obj = flavio.classes.Observable[obs]
              return obs_obj.prediction_par(par, wc_sm, **kwargs)
         elif isinstance(obs, tuple):
-             obs_obj = flavio.classes.Observable.get_instance(obs[0])
+             obs_obj = flavio.classes.Observable[obs[0]]
              return obs_obj.prediction_par(par, wc_sm, *obs[1:], **kwargs)
     all_pred = np.array([
         [get_prediction(obs, par)

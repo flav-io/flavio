@@ -24,7 +24,7 @@ def _load(obj):
             # for univariate constraints
             if isinstance(m_data['values'], list):
                 for value_dict in m_data['values']:
-                    args = Observable.get_instance(value_dict['name']).arguments
+                    args = Observable[value_dict['name']].arguments
                     # numerical values of arguments, e.g. [1, 6]
                     args_num = [value_dict[a] for a in args]
                     # insert string name in front of argument values and turn it
@@ -50,7 +50,7 @@ def _load(obj):
                 for value_dict in m_data['values']:
                     # if "value" is a list, it contains the values of observable
                     # arguments (like q^2)
-                    args = Observable.get_instance(value_dict['name']).arguments
+                    args = Observable[value_dict['name']].arguments
                     args_num = [value_dict[a] for a in args]
                     error_dict = errors_from_string(value_dict['value'])
                     args_num.insert(0, value_dict['name'])

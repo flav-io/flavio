@@ -41,7 +41,7 @@ def error_budget_pie(err_dict, other_cutoff=0.03):
     for key, value in err_dict_sorted.items():
         frac = value/err_tot
         if frac > other_cutoff:
-            labels.append(flavio.Parameter.get_instance(key).tex)
+            labels.append(flavio.Parameter[key].tex)
             fracs.append(frac)
         else:
             small_frac += frac
@@ -69,7 +69,7 @@ def q2_plot_th_diff(obs_name, q2min, q2max, wc=None, q2steps=100, **kwargs):
     Additional keyword arguments are passed to the matplotlib plot function,
     e.g. 'c' for colour.
     """
-    obs = flavio.classes.Observable.get_instance(obs_name)
+    obs = flavio.classes.Observable[obs_name]
     if obs.arguments != ['q2']:
         raise ValueError(r"Only observables that depend on $q^2$ (and nothing else) are allowed")
     q2_arr = np.arange(q2min, q2max, (q2max-q2min)/(q2steps-1))
@@ -106,7 +106,7 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
     Additional keyword arguments are passed to the matplotlib add_patch function,
     e.g. 'fc' for face colour.
     """
-    obs = flavio.classes.Observable.get_instance(obs_name)
+    obs = flavio.classes.Observable[obs_name]
     if obs.arguments != ['q2min', 'q2max']:
         raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
     if wc is None:
@@ -166,7 +166,7 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
     Additional keyword arguments are passed to the matplotlib errorbar function,
     e.g. 'c' for colour.
     """
-    obs = flavio.classes.Observable.get_instance(obs_name)
+    obs = flavio.classes.Observable[obs_name]
     if obs.arguments != ['q2min', 'q2max']:
         raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
     _experiment_labels = [] # list of experiments appearing in the plot legend

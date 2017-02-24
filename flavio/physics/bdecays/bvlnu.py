@@ -15,7 +15,7 @@ from flavio.classes import Observable, Prediction
 
 def get_ff(q2, par, B, V):
     ff_name = meson_ff[(B,V)] + ' form factor'
-    return AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
+    return AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=q2)
 
 def prefactor(q2, par, B, V, lep):
     GF = par['GF']

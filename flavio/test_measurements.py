@@ -6,5 +6,5 @@ from .classes import *
 
 class TestMeasurements(unittest.TestCase):
     def test_measurements(self):
-        m = Measurement.get_instance('Belle phigamma 2014')
+        m = Measurement['Belle phigamma 2014']
         self.assertEqual(m.experiment, 'Belle')

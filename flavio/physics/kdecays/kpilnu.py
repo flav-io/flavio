@@ -7,7 +7,7 @@ from flavio.classes import Observable, Prediction
 
 def get_ff(q2, par, K):
     ff_name = 'K->pi form factor'
-    ff_K0 = flavio.classes.AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
+    ff_K0 = flavio.classes.AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=q2)
     if K == 'KL':
         return ff_K0
     elif K == 'K+':

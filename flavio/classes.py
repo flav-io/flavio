@@ -374,7 +374,7 @@ class AuxiliaryQuantity(NamedInstanceClass):
             implementation_name = config['implementation'][self.name]
         except KeyError:
             raise KeyError("No implementation specified for auxiliary quantity " + self.name)
-        return Implementation.get_instance(implementation_name)
+        return Implementation[implementation_name]
 
     def prediction_central(self, constraints_obj, wc_obj, *args, **kwargs):
         implementation = self.get_implementation()
@@ -392,12 +392,12 @@ class Prediction(object):
 
     def __init__(self, observable, function):
         try:
-            Observable.get_instance(observable)
+            Observable[observable]
         except KeyError:
             raise ValueError("The observable " + observable + " does not exist")
         self.observable = observable
         self.function = function
-        self.observable_obj = Observable.get_instance(observable)
+        self.observable_obj = Observable[observable]
         self.observable_obj.set_prediction(self)
 
     def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
@@ -417,7 +417,7 @@ class Implementation(NamedInstanceClass):
     def show_all(cls):
         all_dict = {}
         for name in cls.instances:
-            inst = cls.get_instance(name)
+            inst = cls[name]
             quant = inst.quantity
             descr = inst.description
             all_dict[quant] = {name: descr}
@@ -426,12 +426,12 @@ class Implementation(NamedInstanceClass):
     def __init__(self, name, quantity, function):
         super().__init__(name)
         try:
-            AuxiliaryQuantity.get_instance(quantity)
+            AuxiliaryQuantity[quantity]
         except KeyError:
             raise ValueError("The quantity " + quantity + " does not exist")
         self.quantity = quantity
         self.function = function
-        self.quantity_obj = AuxiliaryQuantity.get_instance(quantity)
+        self.quantity_obj = AuxiliaryQuantity[quantity]
 
     def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
         par_dict = constraints_obj.get_central_all()

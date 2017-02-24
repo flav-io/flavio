@@ -30,7 +30,7 @@ def prefactor(q2, par, B, P, lep):
 
 def get_ff(q2, par, B, P):
     ff_name = meson_ff[(B,P)] + ' form factor'
-    return AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
+    return AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=q2)
 
 def get_angularcoeff(q2, wc_obj, par, B, P, lep):
     ml = par['m_'+lep]

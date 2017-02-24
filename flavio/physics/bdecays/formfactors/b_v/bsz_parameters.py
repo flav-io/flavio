@@ -36,7 +36,7 @@ def load_parameters(filename, process, constraints):
     parameter_names.remove(implementation_name + ' a0_T2')
     for parameter_name in parameter_names:
         try: # check if parameter object already exists
-            p = Parameter.get_instance(parameter_name)
+            p = Parameter[parameter_name]
         except: # otherwise, create a new one
             p = Parameter(parameter_name)
             # get LaTeX representation of coefficient and form factor names

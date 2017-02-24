@@ -27,7 +27,7 @@ def read_file_metadata(filename, constraints):
 def _read_yaml_object_values(obj, constraints):
     parameters = yaml.load(obj)
     for parameter_name, value in parameters.items():
-        p = Parameter.get_instance(parameter_name) # this will raise an error if the parameter doesn't exist!
+        p = Parameter[parameter_name] # this will raise an error if the parameter doesn't exist!
         constraints.set_constraint(parameter_name, value)
 
 def _read_yaml_object_values_correlated(obj, constraints):
@@ -38,7 +38,7 @@ def _read_yaml_object_values_correlated(obj, constraints):
         errors = []
         for dict_list in parameter_group['values']:
             parameter_name, value = list(dict_list.items())[0]
-            Parameter.get_instance(parameter_name) # this will raise an error if the parameter doesn't exist!
+            Parameter[parameter_name] # this will raise an error if the parameter doesn't exist!
             parameter_names.append(parameter_name)
             error_dict = errors_from_string(value)
             central_values.append(error_dict['central_value'])
@@ -185,7 +185,7 @@ def read_pdg(year, constraints):
         tex_name = _pdg_particle_string_to_tex(particle)
         try:
             # if parameter already exists, remove existing constraints on it
-            m = Parameter.get_instance(parameter_name)
+            m = Parameter[parameter_name]
             constraints.remove_constraint(parameter_name)
         except KeyError:
             # otherwise, create it
@@ -217,7 +217,7 @@ def read_pdg(year, constraints):
         parameter_name = 'tau_' + pdg_translate.get(particle, particle) # translate if necessary
         try:
             # if parameter already exists, remove existing constraints on it
-            tau = Parameter.get_instance(parameter_name)
+            tau = Parameter[parameter_name]
             constraints.remove_constraint(parameter_name)
         except KeyError:
             # otherwise, create it

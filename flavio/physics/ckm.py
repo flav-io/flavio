@@ -135,7 +135,7 @@ i = Implementation(name='Tree', quantity='CKM matrix', function=_func_tree)
 i = Implementation(name='Wolfenstein', quantity='CKM matrix', function=_func_wolfenstein)
 
 def get_ckm(par_dict):
-    return AuxiliaryQuantity.get_instance('CKM matrix').prediction(par_dict=par_dict, wc_obj=None)
+    return AuxiliaryQuantity['CKM matrix'].prediction(par_dict=par_dict, wc_obj=None)
 
 
 def get_ckmangle_beta(par):
