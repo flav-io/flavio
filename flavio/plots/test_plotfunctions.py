@@ -8,8 +8,9 @@ import scipy.stats
 import warnings
 
 from matplotlib import rc
-rc('text', usetex=False)
 # (to avoid tex errors on Travis CI)
+rc('text', usetex=False)
+rc('font',**{'family':'sans-serif'})
 
 def dummy_loglikelihood(x):
     return -x[0]**2-x[1]**2
