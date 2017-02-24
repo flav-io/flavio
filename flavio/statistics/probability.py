@@ -4,7 +4,7 @@ from scipy.interpolate import interp1d, RegularGridInterpolator
 import scipy.signal
 import math
 from flavio.math.functions import normal_logpdf, normal_pdf
-
+import warnings
 
 class ProbabilityDistribution(object):
     """Common base class for all probability distributions"""
@@ -122,6 +122,15 @@ class NormalDistribution(ProbabilityDistribution):
 
     def logpdf(self, x):
         return normal_logpdf(x, self.central_value, self.standard_deviation)
+
+    def pdf(self, x):
+        return normal_pdf(x, self.central_value, self.standard_deviation)
+
+    def cdf(self, x):
+        return scipy.stats.norm.cdf(x, self.central_value, self.standard_deviation)
+
+    def ppf(self, x):
+        return scipy.stats.norm.ppf(x, self.central_value, self.standard_deviation)
 
     @property
     def error_left(self):
@@ -293,6 +302,65 @@ class GaussianUpperLimit(HalfNormalDistribution):
     def get_standard_deviation(self, limit, confidence_level):
         """Convert the confidence level into a Gaussian standard deviation"""
         return limit / scipy.stats.norm.ppf(0.5 + confidence_level / 2.)
+
+class GammaDistribution(ProbabilityDistribution):
+    r"""A Gamma distribution defined like the `gamma` distribution in
+    `scipy.stats` (with parameters `a`, `loc`, `scale`).
+
+    The `central_value` attribute returns the location of the mode.
+    """
+
+    def __init__(self, a, loc, scale):
+        if loc > 0:
+            raise ValueError("loc must be negative or zero")
+        # "frozen" scipy distribution object
+        self.scipy_dist = scipy.stats.gamma(a=a, loc=loc, scale=scale)
+        mode = loc + (a-1)*scale
+        # support extends until the CDF is roughly "6 sigma"
+        support_limit = self.scipy_dist.ppf(1-2e-9)
+        super().__init__(central_value=mode, # the mode
+                         support=(loc, support_limit))
+        self.a = a
+        self.loc = loc
+        self.scale = scale
+
+    def get_random(self, size):
+        return self.scipy_dist.rvs(size=size)
+
+    def cdf(self, x):
+        return self.scipy_dist.cdf(x)
+
+    def ppf(self, x):
+        return self.scipy_dist.ppf(x)
+
+    def logpdf(self, x):
+        return self.scipy_dist.logpdf(x)
+
+    def _find_error_cdf(self, confidence_level):
+        # find the value of the CDF at the position of the left boundary
+        # of the `confidence_level`% CL range by demanding that the value
+        # of the PDF is the same at the two boundaries
+        def x_left(a):
+            return self.ppf(a)
+        def x_right(a):
+            return self.ppf(a + confidence_level)
+        def diff_logpdf(a):
+            logpdf_x_left = self.logpdf(x_left(a))
+            logpdf_x_right = self.logpdf(x_right(a))
+            return logpdf_x_left - logpdf_x_right
+        return scipy.optimize.brentq(diff_logpdf, 0,  1 - confidence_level-1e-6)
+
+    @property
+    def error_left(self):
+        """Return the lower error"""
+        a = self._find_error_cdf(self._x68)
+        return self.central_value - self.ppf(a)
+
+    @property
+    def error_right(self):
+        """Return the upper error"""
+        a = self._find_error_cdf(self._x68)
+        return self.ppf(a + self._x68) - self.central_value
 
 class GammaDistributionPositive(ProbabilityDistribution):
     r"""A Gamma distribution defined like the `gamma` distribution in
@@ -585,6 +653,113 @@ class NumericalDistribution(ProbabilityDistribution):
         _x = np.linspace(pd.support[0], pd.support[-1], nsteps)
         _y = np.exp(pd.logpdf(_x))
         return cls(central_value=pd.central_value, x=_x, y=_y)
+
+class GeneralGammaUpperLimit(NumericalDistribution):
+    r"""Distribution appropriate for
+    a positive quantitity obtained from a low-statistics counting experiment,
+    e.g. a rare decay rate, given an upper limit on x.
+    The difference to `GammaUpperLimit` is that this class also allows to
+    specify an uncertainty on the number of background events. The result
+    is a numerical distribution obtained from the convolution of a normal
+    distribution (for the background uncertainty) and a gamma distribution,
+    restricted to positive values.
+    """
+
+    def __init__(self,
+                 limit, confidence_level,
+                 counts_total=None,
+                 counts_background=None,
+                 counts_signal=None,
+                 background_variance=0):
+        r"""Initialize the distribution.
+
+        Parameters:
+
+        Parameters:
+
+        - `limit`: upper limit on x, which is proportional (with a positive
+          proportionality factor) to the number of signal events.
+        - `confidence_level`: confidence level of the upper limit, i.e. the value
+          of the CDF at the limit. Float between 0 and 1. Frequently used values
+          are 0.90 and 0.95.
+        - `counts_total`: observed total number (signal and background) of counts.
+        - `counts_background`: expected mean number of expected background counts
+        - `counts_signal`: mean obseved number of signal events
+        - `background_variance`: standard deviation of the expected number of
+          background events
+
+        Of the three parameters `counts_total`, `counts_background`, and
+        `counts_signal`, exactly two should be specified. The third one will
+        be determined from the relation
+
+        `counts_total = counts_signal + counts_background`
+
+        Note that if `background_variance=0`, it makes more sense to use
+        `GammaUpperLimit`, which is equivalent but analytical rather than
+        numerical.
+        """
+        if confidence_level > 1 or confidence_level < 0:
+            raise ValueError("Confidence level should be between 0 und 1")
+        if limit <= 0:
+            raise ValueError("The upper limit should be a positive number")
+        if counts_total is not None and counts_total <= 0:
+            raise ValueError("counts_total should be a positive number or None")
+        if counts_background is not None and counts_background <= 0:
+            raise ValueError("counts_background should be a positive number or None")
+        if background_variance < 0:
+            raise ValueError("background_variance should be a positive number")
+        self.limit = limit
+        self.confidence_level = confidence_level
+        if [counts_total, counts_signal, counts_background].count(None) != 1:
+            raise ValueError("You must specify exactly two of counts_total, counts_signal, counts_background")
+        if counts_background is None:
+            self.counts_background = counts_total - counts_signal
+        else:
+            self.counts_background = counts_background
+        if counts_signal is None:
+            self.counts_signal = counts_total - counts_background
+        else:
+            self.counts_signal = counts_signal
+        if counts_total is None:
+            self.counts_total = counts_signal + counts_background
+        else:
+            self.counts_total = counts_total
+        self.background_variance = background_variance
+        x, y = self._get_xy()
+        if self.background_variance/self.counts_total <= 1/100.:
+            warnings.warn("For vanishing or very small background variance, "
+                          "it is safer to use GammaUpperLimit instead of "
+                          "GeneralGammaUpperLimit to avoid numerical "
+                          "instability.")
+        super().__init__(x=x, y=y)
+
+    def _get_xy(self):
+        if self.background_variance == 0:
+            # this is a bit pointless as in this case it makes more
+            # sense to use GammaUpperLimit itself
+            gamma_unscaled = GammaDistributionPositive(a = self.counts_total + 1,
+                                                       loc = -self.counts_background,
+                                                       scale = 1)
+            num_unscaled = NumericalDistribution.from_pd(gamma_unscaled)
+        else:
+            # define a gamma distribution (with x>loc, not x>0!) and convolve
+            # it with a Gaussian
+            gamma_unscaled = GammaDistribution(a = self.counts_total + 1,
+                                               loc = -self.counts_background,
+                                               scale = 1)
+            norm_bg = NormalDistribution(0, self.background_variance)
+            num_unscaled = convolve_distributions([gamma_unscaled, norm_bg], central_values='sum')
+        # now that we have convolved, cut off anything below x=0
+        x = num_unscaled.x
+        y = num_unscaled.y_norm
+        y[x<0] = 0
+        num_unscaled = NumericalDistribution(x, y)
+        limit_unscaled = num_unscaled.ppf(self.confidence_level)
+        # use the value of the limit to determine the scale factor
+        scale_factor = self.limit/limit_unscaled
+        x = x * scale_factor
+        return x, y
+
 
 class KernelDensityEstimate(NumericalDistribution):
     """Univariate kernel density estimate.
@@ -1104,8 +1279,10 @@ class_from_string = {
  'asymmetric_normal': AsymmetricNormalDistribution,
  'half_normal': HalfNormalDistribution,
  'gaussian_upper_limit': GaussianUpperLimit,
+ 'gamma': GammaDistribution,
  'gamma_positive': GammaDistributionPositive,
  'gamma_upper_limit': GammaUpperLimit,
+ 'general_gamma_upper_limit': GeneralGammaUpperLimit,
  'numerical': NumericalDistribution,
  'multivariate_normal': MultivariateNormalDistribution,
  'multivariate_numerical': MultivariateNumericalDistribution,

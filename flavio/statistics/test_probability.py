@@ -20,6 +20,11 @@ class TestProbability(unittest.TestCase):
         self.assertAlmostEqual(num_lpdf, ana_lpdf, delta=1e-6)
         self.assertEqual(len(pdf.get_random(10)), 10)
 
+    def test_normal(self):
+        d = NormalDistribution(2, 0.3)
+        self.assertEqual(d.cdf(2), 0.5)
+        self.assertEqual(d.ppf(0.5), 2)
+
     def test_halfnormal(self):
         pdf_p_1 = HalfNormalDistribution(1.7, 0.3)
         pdf_n_1 = HalfNormalDistribution(1.7, -0.3)
@@ -40,6 +45,21 @@ class TestProbability(unittest.TestCase):
         self.assertAlmostEqual(p1.cdf(2*1.78), 0.9544997, delta=0.0001)
 
     def test_gamma(self):
+        # check for loc above and below a-1
+        for  loc in (-5, -15):
+            p = GammaDistribution(a=11, loc=loc, scale=1)
+            self.assertEqual(p.central_value, loc + 10)
+            r = p.get_random(10)
+            self.assertEqual(len(r), 10)
+            self.assertAlmostEqual(p.cdf(p.support[1]), 1-2e-9, delta=0.1e-9)
+            self.assertAlmostEqual(p.ppf(1-2e-9), p.support[1], delta=0.0001)
+            self.assertEqual(loc, p.support[0])
+        # nearly normal distribution
+        p = GammaDistribution(a=10001, loc=0, scale=1)
+        self.assertAlmostEqual(p.error_left, sqrt(10000), delta=1)
+        self.assertAlmostEqual(p.error_right, sqrt(10000), delta=1)
+
+    def test_gamma_positive(self):
         # check for loc above and below a-1
         for  loc in (-5, -15):
             p = GammaDistributionPositive(a=11, loc=loc, scale=1)
@@ -75,6 +95,29 @@ class TestProbability(unittest.TestCase):
         # check that large-statistics Gamma and Gauss give nearly same PDF
         for x in [0, 1, 2, 3, 4]:
             self.assertAlmostEqual(p.logpdf(x), p_norm.logpdf(x), delta=0.1)
+
+    def test_general_gamma_limit(self):
+        p = GeneralGammaUpperLimit(counts_total=30, counts_background=10,
+                            limit=2e-5, confidence_level=0.68,
+                            background_variance=5)
+        self.assertAlmostEqual(p.cdf(2e-5), 0.68, delta=0.0001)
+        # background excess
+        p = GeneralGammaUpperLimit(counts_total=30, counts_background=50,
+                            limit=2e5, confidence_level=0.68,
+                            background_variance=25)
+        self.assertAlmostEqual(p.cdf(2e5), 0.68, delta=0.0001)
+        p = GeneralGammaUpperLimit(counts_total=10000, counts_background=10000,
+                            limit=3., confidence_level=0.95,
+                            background_variance=1000)
+        p_norm = GaussianUpperLimit(limit=3., confidence_level=0.95)
+        # check that large-statistics Gamma and Gauss give nearly same PDF
+        for x in [1, 2, 3, 4]:
+            self.assertAlmostEqual(p.logpdf(x), p_norm.logpdf(x), delta=0.1)
+        # check that warning is raised for very small background variance
+        with self.assertWarns(Warning):
+            GeneralGammaUpperLimit(counts_total=10000, counts_background=10000,
+                            limit=3., confidence_level=0.95,
+                            background_variance=10)
 
 
     def test_numerical(self):
