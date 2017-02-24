@@ -37,7 +37,7 @@ def _load(obj):
                         m.set_constraint(obs_tuple, value_dict['value'])
             else: # otherwise, 'values' is a dict just containing name: constraint_string
                 for obs, value in m_data['values'].items():
-                    if isinstance(value, dict):
+                    if isinstance(value, dict) or isinstance(value, list):
                         m.set_constraint(obs, constraint_dict=value)
                     else:
                         m.set_constraint(obs, value)
