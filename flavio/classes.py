@@ -11,13 +11,6 @@ from flavio.statistics.probability import class_from_string
 import scipy.stats
 import warnings
 
-def _is_number(s):
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
-
 class NamedInstanceMetaclass(type):
     # this is just needed to implement the getitem method on NamedInstanceClass
     # to allow the syntax MyClass['instancename'] as shorthand for
