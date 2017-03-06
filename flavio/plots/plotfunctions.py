@@ -540,8 +540,8 @@ def pdf_plot(dist, x_min=None, x_max=None, fill=True, steps=500, normed=True, **
     if normed == 'max':
         y = y/np.max(y)
     if fill:
-        fill_left = dist.central_value - dist.get_error_left('hpd')
-        fill_right = dist.central_value + dist.get_error_right('hpd')
+        fill_left = dist.central_value - dist.get_error_left(method='hpd')
+        fill_right = dist.central_value + dist.get_error_right(method='hpd')
         fill_x=[fill_left, fill_right]
     else:
         fill_x=None

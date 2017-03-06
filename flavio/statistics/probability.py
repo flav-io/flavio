@@ -4,6 +4,7 @@ from scipy.interpolate import interp1d, RegularGridInterpolator
 import scipy.signal
 import math
 from flavio.math.functions import normal_logpdf, normal_pdf
+from flavio.statistics.functions import confidence_level
 import warnings
 
 class ProbabilityDistribution(object):
@@ -12,10 +13,19 @@ class ProbabilityDistribution(object):
     def __init__(self, central_value, support):
         self.central_value = central_value
         self.support = support
-        self._x68 = 0.6826894921370859  # 68.2... %
 
     def get_central(self):
         return self.central_value
+
+    @property
+    def error_left(self):
+        """Return the lower error"""
+        return self.get_error_left()
+
+    @property
+    def error_right(self):
+        """Return the upper error"""
+        return self.get_error_right()
 
 
 class UniformDistribution(ProbabilityDistribution):
@@ -51,15 +61,13 @@ class UniformDistribution(ProbabilityDistribution):
         _lpvect = np.vectorize(self._logpdf)
         return _lpvect(x)
 
-    @property
-    def error_left(self):
+    def get_error_left(self, nsigma=1):
         """Return the lower error"""
-        return self._x68 * self.half_range
+        return confidence_level(nsigma) * self.half_range
 
-    @property
-    def error_right(self):
+    def get_error_right(self, nsigma=1):
         """Return the upper error"""
-        return self._x68 * self.half_range
+        return confidence_level(nsigma) * self.half_range
 
 
 class DeltaDistribution(ProbabilityDistribution):
@@ -90,12 +98,10 @@ class DeltaDistribution(ProbabilityDistribution):
         y[np.asarray(x) == self.central_value] = 0
         return y
 
-    @property
-    def error_left(self):
+    def get_error_left(self, *args, **kwargs):
         return 0
 
-    @property
-    def error_right(self):
+    def get_error_right(self, *args, **kwargs):
         return 0
 
 
@@ -132,15 +138,13 @@ class NormalDistribution(ProbabilityDistribution):
     def ppf(self, x):
         return scipy.stats.norm.ppf(x, self.central_value, self.standard_deviation)
 
-    @property
-    def error_left(self):
+    def get_error_left(self, nsigma=1):
         """Return the lower error"""
-        return self.standard_deviation
+        return nsigma * self.standard_deviation
 
-    @property
-    def error_right(self):
+    def get_error_right(self, nsigma=1):
         """Return the upper error"""
-        return self.standard_deviation
+        return nsigma * self.standard_deviation
 
 
 class AsymmetricNormalDistribution(ProbabilityDistribution):
@@ -201,15 +205,13 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
         _lpvect = np.vectorize(self._logpdf)
         return _lpvect(x)
 
-    @property
-    def error_left(self):
+    def get_error_left(self, nsigma=1):
         """Return the lower error"""
-        return self.left_deviation
+        return nsigma * self.left_deviation
 
-    @property
-    def error_right(self):
+    def get_error_right(self, nsigma=1):
         """Return the upper error"""
-        return self.right_deviation
+        return nsigma * self.right_deviation
 
 
 class HalfNormalDistribution(ProbabilityDistribution):
@@ -261,21 +263,19 @@ class HalfNormalDistribution(ProbabilityDistribution):
                     [0., cdf]) # return 0 for negative x
 
 
-    @property
-    def error_left(self):
+    def get_error_left(self, nsigma=1):
         """Return the lower error"""
         if self.standard_deviation >= 0:
             return 0
         else:
-            return -self.standard_deviation  # return a positive value!
+            return nsigma * (-self.standard_deviation)  # return a positive value!
 
-    @property
-    def error_right(self):
+    def get_error_right(self, nsigma=1):
         """Return the upper error"""
         if self.standard_deviation <= 0:
             return 0
         else:
-            return self.standard_deviation
+            return nsigma * self.standard_deviation
 
 
 class GaussianUpperLimit(HalfNormalDistribution):
@@ -350,17 +350,15 @@ class GammaDistribution(ProbabilityDistribution):
             return logpdf_x_left - logpdf_x_right
         return scipy.optimize.brentq(diff_logpdf, 0,  1 - confidence_level-1e-6)
 
-    @property
-    def error_left(self):
+    def get_error_left(self, nsigma=1):
         """Return the lower error"""
-        a = self._find_error_cdf(self._x68)
+        a = self._find_error_cdf(confidence_level(nsigma))
         return self.central_value - self.ppf(a)
 
-    @property
-    def error_right(self):
+    def get_error_right(self, nsigma=1):
         """Return the upper error"""
-        a = self._find_error_cdf(self._x68)
-        return self.ppf(a + self._x68) - self.central_value
+        a = self._find_error_cdf(confidence_level(nsigma))
+        return self.ppf(a + confidence_level(nsigma)) - self.central_value
 
 class GammaDistributionPositive(ProbabilityDistribution):
     r"""A Gamma distribution defined like the `gamma` distribution in
@@ -434,30 +432,28 @@ class GammaDistributionPositive(ProbabilityDistribution):
             return logpdf_x_left - logpdf_x_right
         return scipy.optimize.brentq(diff_logpdf, 0,  1 - confidence_level-1e-6)
 
-    @property
-    def error_left(self):
+    def get_error_left(self, nsigma=1):
         """Return the lower error"""
-        if self.logpdf(0) > self.logpdf(self.ppf(self._x68)):
+        if self.logpdf(0) > self.logpdf(self.ppf(confidence_level(nsigma))):
             # look at a one-sided 1 sigma range. If the PDF at 0
             # is smaller than the PDF at the boundary of this range, it means
             # that the left-hand error is not meaningful to define.
             return self.central_value
         else:
-            a = self._find_error_cdf(self._x68)
+            a = self._find_error_cdf(confidence_level(nsigma))
             return self.central_value - self.ppf(a)
 
-    @property
-    def error_right(self):
+    def get_error_right(self, nsigma=1):
         """Return the upper error"""
-        one_sided_error = self.ppf(self._x68)
+        one_sided_error = self.ppf(confidence_level(nsigma))
         if self.logpdf(0) > self.logpdf(one_sided_error):
             # look at a one-sided 1 sigma range. If the PDF at 0
             # is smaller than the PDF at the boundary of this range, return the
             # boundary of the range as the right-hand error
             return one_sided_error
         else:
-            a = self._find_error_cdf(self._x68)
-            return self.ppf(a + self._x68) - self.central_value
+            a = self._find_error_cdf(confidence_level(nsigma))
+            return self.ppf(a + confidence_level(nsigma)) - self.central_value
 
 class GammaUpperLimit(GammaDistributionPositive):
     r"""Gamma distribution with x restricted to be positive appropriate for
@@ -578,21 +574,7 @@ class NumericalDistribution(ProbabilityDistribution):
             return logpdf_x_left - logpdf_x_right
         return scipy.optimize.brentq(diff_logpdf, 0,  1 - confidence_level-1e-6)
 
-    @property
-    def error_left(self):
-        """Return the lower error (defined as a central interval).
-
-        Use get_error_left for more options."""
-        return self.get_error_left(method='central')
-
-    @property
-    def error_right(self):
-        """Return the upper error (defined as a central interval).
-
-        Use get_error_right for more options."""
-        return self.get_error_right(method='central')
-
-    def get_error_left(self, method='central'):
+    def get_error_left(self, nsigma=1, method='central'):
         """Return the lower error.
 
         'method' should be one of:
@@ -603,23 +585,23 @@ class NumericalDistribution(ProbabilityDistribution):
           the interval than outside
         - 'limit' for a one-sided error, i.e. a lower limit"""
         if method == 'limit':
-            return self.central_value - self.ppf(1 - self._x68)
+            return self.central_value - self.ppf(1 - confidence_level(nsigma))
         cdf_central = self.cdf(self.central_value)
-        err_left = self.central_value - self.ppf(cdf_central * (1 - self._x68))
+        err_left = self.central_value - self.ppf(cdf_central * (1 - confidence_level(nsigma)))
         if method == 'central':
             return err_left
         elif method == 'hpd':
             if self.pdf(self.central_value + self.get_error_right(method='central')) == self.pdf(self.central_value - err_left):
                 return err_left
             try:
-                a = self._find_error_cdf(self._x68)
+                a = self._find_error_cdf(confidence_level(nsigma))
             except ValueError:
                 return np.nan
             return self.central_value - self.ppf(a)
         else:
             raise ValueError("Method " + str(method) + " unknown")
 
-    def get_error_right(self, method='central'):
+    def get_error_right(self, nsigma=1, method='central'):
         """Return the upper error
 
         'method' should be one of:
@@ -630,19 +612,19 @@ class NumericalDistribution(ProbabilityDistribution):
           the interval than outside
         - 'limit' for a one-sided error, i.e. an upper limit"""
         if method == 'limit':
-            return self.ppf(self._x68) - self.central_value
+            return self.ppf(confidence_level(nsigma)) - self.central_value
         cdf_central = self.cdf(self.central_value)
-        err_right = self.ppf(cdf_central + (1 - cdf_central) * self._x68) - self.central_value
+        err_right = self.ppf(cdf_central + (1 - cdf_central) * confidence_level(nsigma)) - self.central_value
         if method == 'central':
             return err_right
         elif method == 'hpd':
             if self.pdf(self.central_value - self.get_error_left(method='central')) == self.pdf(self.central_value + err_right):
                 return err_right
             try:
-                a = self._find_error_cdf(self._x68)
+                a = self._find_error_cdf(confidence_level(nsigma))
             except ValueError:
                 return np.nan
-            return self.ppf(a + self._x68) - self.central_value
+            return self.ppf(a + confidence_level(nsigma)) - self.central_value
         else:
             raise ValueError("Method " + str(method) + " unknown")
 
@@ -885,15 +867,13 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
         sign, logdet = np.linalg.slogdet(self.covariance)
         return pdf_scaled + (np.linalg.slogdet(self.scaled_covariance)[1] - np.linalg.slogdet(self.covariance)[1]) / 2.
 
-    @property
-    def error_left(self):
+    def get_error_left(self, nsigma=1):
         """Return the lower errors"""
-        return self.err
+        return nsigma * self.err
 
-    @property
-    def error_right(self):
+    def get_error_right(self, nsigma=1):
         """Return the upper errors"""
-        return self.err
+        return nsigma * self.err
 
 
 class MultivariateNumericalDistribution(ProbabilityDistribution):
@@ -1018,13 +998,11 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
         else:
             return self.logpdf_interp(x)
 
-    @property
-    def error_left(self):
+    def get_error_left(self, *args, **kwargs):
         raise NotImplementedError(
             "1D errors not implemented for multivariate numerical distributions")
 
-    @property
-    def error_right(self):
+    def get_error_right(self, *args, **kwargs):
         raise NotImplementedError(
             "1D errors not implemented for multivariate numerical distributions")
 
