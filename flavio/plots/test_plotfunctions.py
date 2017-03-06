@@ -31,6 +31,37 @@ class TestPlots(unittest.TestCase):
              'tau_Bs': 0.003286868163723475}
         error_budget_pie(err_budget_bsmumu)
 
+    def test_q2_th_diff(self):
+        # without specifying WCs
+        q2_plot_th_diff('dBR/dq2(B0->pienu)', 0, 25, q2steps=10)
+        # with WCs
+        q2_plot_th_diff('dBR/dq2(B+->pienu)', 0, 25,
+                                   wc=flavio.WilsonCoefficients(), q2steps=10)
+        # check that observable not depending on q2 raises error
+        with self.assertRaises(ValueError):
+            q2_plot_th_diff('eps_K', 0, 25)
+
+    def test_q2_th_bin(self):
+        bins = [(0, 5), (5, 10)]
+        # without specifying WCs
+        q2_plot_th_bin('<BR>(B0->pienu)', bins, N=10)
+        # with WCs
+        q2_plot_th_bin('<BR>(B+->pienu)', bins, divide_binwidth=True,
+                                          wc=flavio.WilsonCoefficients(), N=10)
+        # check that observable not depending on q2 raises error
+        with self.assertRaises(ValueError):
+            q2_plot_th_bin('eps_K', bins)
+
+    def test_q2_plot_exp(self):
+        # vanilla
+        q2_plot_exp('<dBR/dq2>(B0->K*mumu)')
+        # with options
+        q2_plot_exp('<dBR/dq2>(B0->K*mumu)', col_dict={'LHCb': 'r'},
+                                                        exclude_bins=[(1.1, 6)])
+        # check that observable not depending on q2 raises error
+        with self.assertRaises(ValueError):
+            q2_plot_exp('eps_K')
+
     def test_band_plot(self):
         # NB, this test only runs with matplotlib>=1.5.3 due to a matplotlib bug
         # check that no error is raised and output dimensions match
