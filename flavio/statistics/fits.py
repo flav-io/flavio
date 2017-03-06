@@ -12,6 +12,7 @@ from collections import Counter
 import warnings
 import inspect
 from multiprocessing import Pool
+import scipy.optimize
 
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
@@ -560,3 +561,37 @@ class FastFit(BayesianFit):
         prob_dict = m_obj.get_logprobability_all(predictions)
         ll = sum(prob_dict.values())
         return ll
+
+    def best_fit(self, **kwargs):
+        r"""Compute the best fit point in the space of fit parameters and Wilson
+        coefficients.
+
+        Keyword arguments will be passed to `scipy.optimize.minimize_scalar` in
+        the case of a single fit variable and to `scipy.optimize.minimize` in
+        the case of multiple fit variables.
+
+        Returns a dictionary with the following keys:
+
+        - 'x': position of the best fit point
+        - 'log_likelihood': logarithm of the likelihood at the best fit point
+        """
+        n_fit_p = len(self.fit_parameters)
+        n_wc = len(self.fit_wc_names)
+        if n_fit_p + n_wc == 1:
+            def f(x):
+                return -self.log_likelihood([x])
+            opt = scipy.optimize.minimize_scalar(f, **kwargs)
+        else:
+            def f(x):
+                return -self.log_likelihood(x)
+            if 'x0' not in kwargs:
+                x0 = np.zeros(n_fit_p + n_wc)
+                if n_fit_p > 1:
+                    x0[:n_fit_p] = self.get_central_fit_parameters
+                opt = scipy.optimize.minimize(f, x0, **kwargs)
+            else:
+                opt = scipy.optimize.minimize(f, **kwargs)
+        if not opt.success:
+            raise ValueError("Optimization failed.")
+        else:
+            return {'x': opt.x, 'log_likelihood': -opt.fun}
