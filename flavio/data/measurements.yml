@@ -8,12 +8,10 @@ HFAG rad 2014:
     BR(B+->K*gamma): 42.1 ± 1.8 e-6
     BR(B0->K*gamma): 43.3 ± 1.5 e-6
 
-HFAG rad 2016:
-  experiment: HFAG
-  inspire: Amhis:2014hma
-  url: http://www.slac.stanford.edu/xorg/hfag/rare/July2016/radll/index.html
+B->Xgamma WA 2017:
+  inspire: Misiak:2017bgg
   values:
-    BR(B->Xsgamma): 349 ± 19 e-6
+    BR(B->Xsgamma): 327 ± 14 e-6
 
 HFAG acp 2016:
   experiment: HFAG
@@ -128,8 +126,6 @@ LHCb B->K*mumu 2015 S 1.1-6:
                 [1.00]]
 
 
-
-
 LHCb B->K*mumu 2015 S 15-19:
   experiment: LHCb
   inspire: Aaij:2015oid
@@ -176,7 +172,6 @@ LHCb B->K*mumu 2015 S 15-19:
                [1.00]]
 
 
-
 LHCb B->K*mumu 2015 A 1.1-6:
   experiment: LHCb
   inspire: Aaij:2015oid
@@ -218,7 +213,6 @@ LHCb B->K*mumu 2015 A 1.1-6:
                [1.00]]
 
 
-
 LHCb B->K*mumu 2015 A 15-19:
   experiment: LHCb
   inspire: Aaij:2015oid
@@ -258,7 +252,6 @@ LHCb B->K*mumu 2015 A 15-19:
                [1.00, -0.11, 0.13],
                [1.00, 0.05],
                [1.00]]
-
 
 
 LHCb B->K*mumu 2015 S 0.1-0.98:
@@ -353,7 +346,6 @@ LHCb B->K*mumu 2015 S 1.1-2.5:
                [1.00]]
 
 
-
 LHCb B->K*mumu 2015 S 2.5-4:
   experiment: LHCb
   inspire: Aaij:2015oid
@@ -444,7 +436,6 @@ LHCb B->K*mumu 2015 S 4-6:
                [1.00, 0.06, -0.15],
                [1.00, 0.03],
                [1.00]]
-
 
 
 LHCb B->K*mumu 2015 S 6-8:
@@ -539,7 +530,6 @@ LHCb B->K*mumu 2015 S 15-17:
                [1.00]]
 
 
-
 LHCb B->K*mumu 2015 S 17-19:
   experiment: LHCb
   inspire: Aaij:2015oid
@@ -624,7 +614,6 @@ LHCb B->K*mumu 2015 A 0.1-0.98:
                [1.00, 0.00, -0.14],
                [1.00, -0.01],
                [1.00]]
-
 
 
 LHCb B->K*mumu 2015 A 1.1-2.5:
@@ -787,7 +776,6 @@ LHCb B->K*mumu 2015 A 6-8:
                [1.00, -0.11, 0.12],
                [1.00, 0.06],
                [1.00]]
-
 
 
 LHCb B->K*mumu 2015 A 15-17:
@@ -1588,7 +1576,6 @@ Belle B+->rholnu 2013:
                [ 0.003,  0.009,  0.013,  0.018,  0.021,  0.027,  0.018, -0.039, 1.   , -0.038,  0.027],
                [ 0.003,  0.008,  0.011,  0.014,  0.017,  0.023,  0.018,  0.023, -0.038,  1.   , -0.052],
                [ 0.003,  0.008,  0.011,  0.016,  0.018,  0.024,  0.024,  0.025, 0.027, -0.052,  1.   ]]
-
 
 
 BaBar B0->rholnu 2010:
