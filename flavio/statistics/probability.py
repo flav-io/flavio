@@ -792,7 +792,7 @@ class GeneralGammaUpperLimit(NumericalDistribution):
           background events
 
         Of the three parameters `counts_total`, `counts_background`, and
-        `counts_signal`, exactly two should be specified. The third one will
+        `counts_signal`, only two must be specified. The third one will
         be determined from the relation
 
         `counts_total = counts_signal + counts_background`
@@ -813,8 +813,10 @@ class GeneralGammaUpperLimit(NumericalDistribution):
             raise ValueError("background_variance should be a positive number")
         self.limit = limit
         self.confidence_level = confidence_level
-        if [counts_total, counts_signal, counts_background].count(None) != 1:
-            raise ValueError("You must specify exactly two of counts_total, counts_signal, counts_background")
+        if [counts_total, counts_signal, counts_background].count(None) == 0:
+            # if all three are specified, check the relation holds!
+            if counts_background != counts_total - counts_signal:
+                raise ValueError("The relation `counts_total = counts_signal + counts_background` is not satisfied")
         if counts_background is None:
             self.counts_background = counts_total - counts_signal
         else:
@@ -1220,7 +1222,9 @@ def _convolve_distributions_univariate(probability_distributions, central_values
         p, NormalDistribution)]
 
     # all other univariate dists
-    others = list(set(probability_distributions) - set(gaussians) - set(deltas))
+    others = [p for p in probability_distributions
+              if not isinstance(p, NormalDistribution)
+              and not isinstance(p, DeltaDistribution)]
 
     if not others and not gaussians:
         # if there is only a delta (or more than one), just return it

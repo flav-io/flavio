@@ -517,3 +517,30 @@ class TestProbability(unittest.TestCase):
                          'xi': [[1.0, 2.0], [10.0, 20.0]],
                          'y': [[3.0, 4.0], [5.0, 6.0]],
                          'central_value': [2, 3]})
+
+    def test_get_dict(self):
+        ps = [
+            NormalDistribution(1, 2),
+            HalfNormalDistribution(1, -2),
+            AsymmetricNormalDistribution(1, 2, 3.),
+            DeltaDistribution(-3.),
+            UniformDistribution(1, 2),
+            GaussianUpperLimit(1e-9, 0.95),
+            GammaDistribution(5, -2, 1.5),
+            GammaDistributionPositive(5, -2, 1.5),
+            GammaUpperLimit(15, 10, 1e-9, 0.95),
+            GeneralGammaUpperLimit(1e-9, 0.95, counts_total=15, counts_background=10, background_variance=0.2),
+            MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]]),
+            NumericalDistribution([1., 2], [3, 4.]),
+            GaussianKDE([1, 2, 3], 0.1),
+            KernelDensityEstimate([1, 2, 3], NormalDistribution(0, 0.5)),
+            MultivariateNumericalDistribution([[1., 2], [10., 20]], [[3, 4.],[5, 6.]], [2, 3])
+        ]
+        for p in ps:
+            # try instantiating a class by feeding the get_dict to __init__
+            d = p.get_dict()
+            pnew = p.__class__(**d)
+            # check if the new class is the same as the old
+            self.assertEqual(repr(pnew), repr(p))
+            self.assertEqual(pnew.get_yaml(), p.get_yaml())
+            self.assertEqual(pnew.get_dict(), p.get_dict())
