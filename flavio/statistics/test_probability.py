@@ -458,4 +458,28 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(repr(MultivariateNumericalDistribution([[1., 2], [10., 20]], [[3, 4.],[5, 6.]], [2, 3])),
                          fsp + 'MultivariateNumericalDistribution([[1.0, 2.0], [10.0, 20.0]], [[3.0, 4.0], [5.0, 6.0]], [2, 3])')
 
- #
+
+    def test_class_string(self):
+        class_from_string_old = {
+         'delta': DeltaDistribution,
+         'uniform': UniformDistribution,
+         'normal': NormalDistribution,
+         'asymmetric_normal': AsymmetricNormalDistribution,
+         'half_normal': HalfNormalDistribution,
+         'gaussian_upper_limit': GaussianUpperLimit,
+         'gamma': GammaDistribution,
+         'gamma_positive': GammaDistributionPositive,
+         'gamma_upper_limit': GammaUpperLimit,
+         'general_gamma_upper_limit': GeneralGammaUpperLimit,
+         'numerical': NumericalDistribution,
+         'multivariate_normal': MultivariateNormalDistribution,
+         'multivariate_numerical': MultivariateNumericalDistribution,
+         'gaussian_kde': GaussianKDE,
+        }
+        for k, v in class_from_string_old.items():
+            self.assertEqual(v.class_to_string(), k)
+            self.assertEqual(string_to_class(k), v)
+            self.assertEqual(string_to_class(v.__name__), v)
+        self.assertEqual(class_from_string_old,
+                        {k: v for k, v in class_from_string.items()
+                         if v != KernelDensityEstimate})

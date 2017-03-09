@@ -6,6 +6,27 @@ import math
 from flavio.math.functions import normal_logpdf, normal_pdf
 from flavio.statistics.functions import confidence_level
 import warnings
+import inspect
+from collections import OrderedDict
+import yaml
+import re
+
+def _camel_to_underscore(s):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', s)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
+def string_to_class(string):
+    """Get a ProbabilityDistribution subclass from a string. This can
+    either be the class name itself or a string in underscore format
+    as returned from `class_to_string`."""
+    try:
+        return eval(string)
+    except NameError:
+        pass
+    for c in ProbabilityDistribution.get_subclasses():
+        if c.class_to_string() == string:
+            return c
+    raise NameError("Distribution " + string + " not found.")
 
 class ProbabilityDistribution(object):
     """Common base class for all probability distributions"""
@@ -13,6 +34,13 @@ class ProbabilityDistribution(object):
     def __init__(self, central_value, support):
         self.central_value = central_value
         self.support = support
+
+    @classmethod
+    def get_subclasses(cls):
+        """Return all subclasses (including subclasses of subclasses)."""
+        for subclass in cls.__subclasses__():
+            yield from subclass.get_subclasses()
+            yield subclass
 
     def get_central(self):
         return self.central_value
@@ -26,6 +54,19 @@ class ProbabilityDistribution(object):
     def error_right(self):
         """Return the upper error"""
         return self.get_error_right()
+
+    @classmethod
+    def class_to_string(cls):
+        """Get a string name for a given ProbabilityDistribution subclass.
+
+        This converts camel case to underscore and removes the word
+        'distribution'.
+
+        Example: class_to_string(NormalDistribution) returns 'normal'.
+        """
+        name = _camel_to_underscore(cls.__name__)
+        return name.replace('_distribution', '')
+
 
 
 class UniformDistribution(ProbabilityDistribution):
@@ -1320,19 +1361,5 @@ def _convolve_multivariate_gaussian_numerical(mvgaussian,
 
 # this dictionary is used for parsing low-level distribution definitions
 # in YAML files. A string name is associated to every (relevant) distribution.
-class_from_string = {
- 'delta': DeltaDistribution,
- 'uniform': UniformDistribution,
- 'normal': NormalDistribution,
- 'asymmetric_normal': AsymmetricNormalDistribution,
- 'half_normal': HalfNormalDistribution,
- 'gaussian_upper_limit': GaussianUpperLimit,
- 'gamma': GammaDistribution,
- 'gamma_positive': GammaDistributionPositive,
- 'gamma_upper_limit': GammaUpperLimit,
- 'general_gamma_upper_limit': GeneralGammaUpperLimit,
- 'numerical': NumericalDistribution,
- 'multivariate_normal': MultivariateNormalDistribution,
- 'multivariate_numerical': MultivariateNumericalDistribution,
- 'gaussian_kde': GaussianKDE,
-}
+class_from_string = { c.class_to_string(): c
+                      for c in ProbabilityDistribution.get_subclasses() }
