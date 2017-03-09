@@ -422,3 +422,40 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(d.logpdf(xr2, exclude=(0)).shape, (10,))
         self.assertEqual(d.logpdf(xr[0], exclude=(0, 1)).shape, ())
         self.assertEqual(d.logpdf(xr, exclude=(0, 1)).shape, (10,))
+
+    def test_repr(self):
+        """Test the __repr__ method of all PDs"""
+
+        fsp = 'flavio.statistics.probability.'
+        self.assertEqual(repr(NormalDistribution(1, 2)),
+                         fsp + 'NormalDistribution(1, 2)')
+        self.assertEqual(repr(HalfNormalDistribution(1, -2)),
+                         fsp + 'HalfNormalDistribution(1, -2)')
+        self.assertEqual(repr(AsymmetricNormalDistribution(1, 2, 3.)),
+                         fsp + 'AsymmetricNormalDistribution(1, 2, 3.0)')
+        self.assertEqual(repr(DeltaDistribution(-3.)),
+                         fsp + 'DeltaDistribution(-3.0)')
+        self.assertEqual(repr(UniformDistribution(1, 2)),
+                         fsp + 'UniformDistribution(1, 2)')
+        self.assertEqual(repr(GaussianUpperLimit(1e-9, 0.95)),
+                         fsp + 'GaussianUpperLimit(1e-09, 0.95)')
+        self.assertEqual(repr(GammaDistribution(5, -2, 1.5)),
+                         fsp + 'GammaDistribution(5, -2, 1.5)')
+        self.assertEqual(repr(GammaDistributionPositive(5, -2, 1.5)),
+                         fsp + 'GammaDistributionPositive(5, -2, 1.5)')
+        self.assertEqual(repr(GammaUpperLimit(15, 10, 1e-9, 0.95)),
+                         fsp + 'GammaUpperLimit(15, 10, 1e-09, 0.95)')
+        self.assertEqual(repr(GeneralGammaUpperLimit(1e-9, 0.95, counts_total=15, counts_background=10, background_variance=0.2)),
+                         fsp + 'GeneralGammaUpperLimit(1e-09, 0.95, counts_total=15, counts_signal=5, background_variance=0.2)')
+        self.assertEqual(repr(MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]])),
+                         fsp + 'MultivariateNormalDistribution([1.0, 2], [[2, 0.1], [0.1, 2]])')
+        self.assertEqual(repr(NumericalDistribution([1., 2], [3, 4.])),
+                         fsp + 'NumericalDistribution([1.0, 2], [3, 4.0])')
+        self.assertEqual(repr(GaussianKDE([1, 2, 3], 0.1)),
+                         fsp + 'GaussianKDE([1, 2, 3], 0.1, 3)')
+        self.assertEqual(repr(KernelDensityEstimate([1, 2, 3], NormalDistribution(0, 0.5))),
+                         fsp + 'KernelDensityEstimate([1, 2, 3], ' + fsp + 'NormalDistribution(0, 0.5), 3)')
+        self.assertEqual(repr(MultivariateNumericalDistribution([[1., 2], [10., 20]], [[3, 4.],[5, 6.]], [2, 3])),
+                         fsp + 'MultivariateNumericalDistribution([[1.0, 2.0], [10.0, 20.0]], [[3.0, 4.0], [5.0, 6.0]], [2, 3])')
+
+ #

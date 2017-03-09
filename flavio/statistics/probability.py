@@ -48,6 +48,10 @@ class UniformDistribution(ProbabilityDistribution):
                       central_value + half_range)
         super().__init__(central_value, support=self.range)
 
+    def __repr__(self):
+        return 'flavio.statistics.probability.UniformDistribution' + \
+               '({}, {})'.format(self.central_value, self.half_range)
+
     def get_random(self, size=None):
         return np.random.uniform(self.range[0], self.range[1], size)
 
@@ -70,6 +74,7 @@ class UniformDistribution(ProbabilityDistribution):
         return confidence_level(nsigma) * self.half_range
 
 
+
 class DeltaDistribution(ProbabilityDistribution):
     """Delta Distrubution that is non-vanishing only at a single point."""
 
@@ -81,6 +86,10 @@ class DeltaDistribution(ProbabilityDistribution):
         - central_value: point where the PDF does not vanish.
         """
         super().__init__(central_value, support=(central_value, central_value))
+
+    def __repr__(self):
+        return 'flavio.statistics.probability.DeltaDistribution' + \
+               '({})'.format(self.central_value)
 
     def get_random(self, size=None):
         if size is None:
@@ -122,6 +131,10 @@ class NormalDistribution(ProbabilityDistribution):
         if standard_deviation <= 0:
             raise ValueError("Standard deviation must be positive number")
         self.standard_deviation = standard_deviation
+
+    def __repr__(self):
+        return 'flavio.statistics.probability.NormalDistribution' + \
+               '({}, {})'.format(self.central_value, self.standard_deviation)
 
     def get_random(self, size=None):
         return np.random.normal(self.central_value, self.standard_deviation, size)
@@ -172,6 +185,12 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
             self.central_value, self.central_value, self.right_deviation)
         self.p_left = normal_pdf(
             self.central_value, self.central_value, self.left_deviation)
+
+    def __repr__(self):
+        return 'flavio.statistics.probability.AsymmetricNormalDistribution' + \
+               '({}, {}, {})'.format(self.central_value,
+                                 self.right_deviation,
+                                 self.left_deviation)
 
     def get_random(self, size=None):
         if size is None:
@@ -238,6 +257,10 @@ class HalfNormalDistribution(ProbabilityDistribution):
             raise ValueError("Standard deviation must be non-zero number")
         self.standard_deviation = standard_deviation
 
+    def __repr__(self):
+        return 'flavio.statistics.probability.HalfNormalDistribution' + \
+               '({}, {})'.format(self.central_value, self.standard_deviation)
+
     def get_random(self, size=None):
         return self.central_value + np.sign(self.standard_deviation) * abs(np.random.normal(0, abs(self.standard_deviation), size))
 
@@ -299,6 +322,10 @@ class GaussianUpperLimit(HalfNormalDistribution):
         self.limit = limit
         self.confidence_level = confidence_level
 
+    def __repr__(self):
+        return 'flavio.statistics.probability.GaussianUpperLimit' + \
+               '({}, {})'.format(self.limit, self.confidence_level)
+
     def get_standard_deviation(self, limit, confidence_level):
         """Convert the confidence level into a Gaussian standard deviation"""
         return limit / scipy.stats.norm.ppf(0.5 + confidence_level / 2.)
@@ -323,6 +350,10 @@ class GammaDistribution(ProbabilityDistribution):
         self.a = a
         self.loc = loc
         self.scale = scale
+
+    def __repr__(self):
+        return 'flavio.statistics.probability.GammaDistribution' + \
+               '({}, {}, {})'.format(self.a, self.loc, self.scale)
 
     def get_random(self, size):
         return self.scipy_dist.rvs(size=size)
@@ -385,6 +416,10 @@ class GammaDistributionPositive(ProbabilityDistribution):
         self.scale = scale
         # scale factor for PDF to account for x>0
         self._pdf_scale = 1/(1 - self.scipy_dist.cdf(0))
+
+    def __repr__(self):
+        return 'flavio.statistics.probability.GammaDistributionPositive' + \
+               '({}, {}, {})'.format(self.a, self.loc, self.scale)
 
     def get_random(self, size=None):
         if size is None:
@@ -489,6 +524,14 @@ class GammaUpperLimit(GammaDistributionPositive):
         a, loc, scale = self._get_a_loc_scale()
         super().__init__(a=a, loc=loc, scale=scale)
 
+
+    def __repr__(self):
+        return 'flavio.statistics.probability.GammaUpperLimit' + \
+               '({}, {}, {}, {})'.format(self.counts_total,
+                                         self.counts_background,
+                                         self.limit,
+                                         self.confidence_level)
+
     def _get_a_loc_scale(self):
         """Convert the counts and limit to the input parameters needed for
         GammaDistributionPositive"""
@@ -538,6 +581,10 @@ class NumericalDistribution(ProbabilityDistribution):
         _cdf = _cdf/_cdf[-1] # normalize CDF to 1
         self.ppf_interp = interp1d(_cdf, x)
         self.cdf_interp = interp1d(x, _cdf)
+
+    def __repr__(self):
+        return 'flavio.statistics.probability.NumericalDistribution' + \
+               '({}, {})'.format(self.x, self.y)
 
     def get_random(self, size=None):
         """Draw a random number from the distribution.
@@ -715,6 +762,15 @@ class GeneralGammaUpperLimit(NumericalDistribution):
                           "instability.")
         super().__init__(x=x, y=y)
 
+    def __repr__(self):
+        return ('flavio.statistics.probability.GeneralGammaUpperLimit'
+               '({}, {}, counts_total={}, counts_signal={}, '
+               'background_variance={})').format(self.limit,
+                                                self.confidence_level,
+                                                self.counts_total,
+                                                self.counts_signal,
+                                                self.background_variance)
+
     def _get_xy(self):
         if self.background_variance == 0:
             # this is a bit pointless as in this case it makes more
@@ -770,6 +826,9 @@ class KernelDensityEstimate(NumericalDistribution):
         cdist = convolve_distributions([self.raw_dist, self.kernel], 'sum')
         super().__init__(cdist.x, cdist.y)
 
+    def __repr__(self):
+        return 'flavio.statistics.probability.KernelDensityEstimate' + \
+               '({}, {}, {})'.format(self.data, repr(self.kernel), self.n_bins)
 
 class GaussianKDE(KernelDensityEstimate):
     """Univariate Gaussian kernel density estimate.
@@ -791,6 +850,10 @@ class GaussianKDE(KernelDensityEstimate):
         super().__init__(data=data,
                          kernel = NormalDistribution(0, self.bandwidth),
                          n_bins=n_bins)
+
+    def __repr__(self):
+        return 'flavio.statistics.probability.GaussianKDE' + \
+               '({}, {}, {})'.format(self.data, self.bandwidth, self.n_bins)
 
 
 class MultivariateNormalDistribution(ProbabilityDistribution):
@@ -828,6 +891,10 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
         self.scaled_covariance = self.covariance / np.outer(self.err, self.err)
         assert np.all(np.linalg.eigvals(self.scaled_covariance) >
                       0), "The covariance matrix is not positive definite!" + str(covariance)
+
+    def __repr__(self):
+        return 'flavio.statistics.probability.MultivariateNormalDistribution' + \
+               '({}, {})'.format(self.central_value, self.covariance)
 
     def get_random(self, size=None):
         """Get `size` random numbers (default: a single one)"""
@@ -929,6 +996,9 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
         self._y_flat = None
         self._cdf_flat = None
 
+    def __repr__(self):
+        return 'flavio.statistics.probability.MultivariateNumericalDistribution' + \
+               '({}, {}, {})'.format([x.tolist() for x in self.xi], self.y.tolist(), list(self.central_value))
 
     def get_random(self, size=None):
         """Draw a random number from the distribution.
