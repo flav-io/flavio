@@ -6,6 +6,7 @@ import scipy.stats
 from math import pi, sqrt, exp, log
 from flavio.statistics.probability import *
 import itertools
+import yaml
 
 class TestProbability(unittest.TestCase):
     def test_multiv_normal(self):
@@ -483,3 +484,36 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(class_from_string_old,
                         {k: v for k, v in class_from_string.items()
                          if v != KernelDensityEstimate})
+
+    def test_get_yaml(self):
+        """Test the test_get_yaml method of all PDs"""
+
+        self.assertEqual(yaml.load(NormalDistribution(1, 2).get_yaml()),
+                         {'distribution': 'normal',
+                         'central_value': 1,
+                         'standard_deviation': 2})
+        self.assertEqual(yaml.load(HalfNormalDistribution(1, -2).get_yaml()),
+                         {'distribution': 'half_normal',
+                         'central_value': 1,
+                         'standard_deviation': -2})
+        self.assertEqual(yaml.load(AsymmetricNormalDistribution(1, 2, 3.).get_yaml()),
+                         {'distribution': 'asymmetric_normal',
+                         'central_value': 1,
+                         'right_deviation': 2,
+                         'left_deviation': 3.})
+        self.assertEqual(yaml.load(MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]]).get_yaml()),
+                         {'distribution': 'multivariate_normal',
+                         'central_value': [1., 2],
+                         'covariance': [[2, 0.1], [0.1, 2]]})
+        self.assertEqual(yaml.load(KernelDensityEstimate([1, 2, 3], NormalDistribution(0, 0.5)).get_yaml()),
+                         {'distribution': 'kernel_density_estimate',
+                         'data': [1, 2, 3],
+                         'kernel':  {'distribution': 'normal',
+                          'central_value': 0,
+                          'standard_deviation': 0.5},
+                         'n_bins': 3})
+        self.assertEqual(yaml.load(MultivariateNumericalDistribution([[1., 2], [10., 20]], [[3, 4.],[5, 6.]], [2, 3]).get_yaml()),
+                         {'distribution': 'multivariate_numerical',
+                         'xi': [[1.0, 2.0], [10.0, 20.0]],
+                         'y': [[3.0, 4.0], [5.0, 6.0]],
+                         'central_value': [2, 3]})

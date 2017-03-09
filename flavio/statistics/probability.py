@@ -62,12 +62,45 @@ class ProbabilityDistribution(object):
         This converts camel case to underscore and removes the word
         'distribution'.
 
-        Example: class_to_string(NormalDistribution) returns 'normal'.
+        Example: class_to_string(AsymmetricNormalDistribution) returns
+        'asymmetric_normal'.
         """
         name = _camel_to_underscore(cls.__name__)
         return name.replace('_distribution', '')
 
+    def get_dict(self, distribution=False):
+        """Get a dictionary with of arguments and values needed to
+        the instantiate the distribution.
 
+        If the optional `distribution` argument is True (default: False),
+        add a 'distribution' key to the dictionary with the value being the
+        string representation of the distribution's name
+        (e.g. 'asymmetric_normal').
+        """
+        args = inspect.signature(self.__class__).parameters.keys()
+        d = self.__dict__
+        od = OrderedDict()
+        if distribution:
+            od['distribution'] = self.class_to_string()
+        od.update(OrderedDict((a, d[a]) for a in args))
+        return od
+
+    def get_yaml(self):
+        """Get a YAML string representing the dictionary returned by the
+        get_dict method."""
+        represent_dict_order = lambda self, data: self.represent_mapping('tag:yaml.org,2002:map', data.items())
+        yaml.add_representer(OrderedDict, represent_dict_order)
+        od = self.get_dict(distribution=True)
+        for k in od:
+            if isinstance(od[k], ProbabilityDistribution):
+                od[k] = od[k].get_dict(distribution=True)
+            if isinstance(od[k], np.ndarray):
+                od[k] = od[k].tolist()
+            if isinstance(od[k], list):
+                for i, x in enumerate(od[k]):
+                    if isinstance(x, np.ndarray):
+                        od[k][i] = od[k][i].tolist()
+        return yaml.dump(od)
 
 class UniformDistribution(ProbabilityDistribution):
     """Distribution with constant PDF in a range and zero otherwise."""
