@@ -3,6 +3,7 @@ import numpy as np
 from .parameters import *
 from .classes import *
 from .parameters import _read_pdg_masswidth
+import tempfile
 
 s = 1.519267515435317e+24
 ps = 1e-12*s
@@ -78,3 +79,11 @@ class TestParameters(unittest.TestCase):
         self.assertEqual(pds[0].right_deviation, 0.1)
         self.assertEqual(pds[1].left_deviation, 0.5)
         self.assertEqual(pds[1].right_deviation, 0.3)
+
+    def test_yaml_io_new(self):
+        from flavio import default_parameters
+        with tempfile.NamedTemporaryFile('r+') as tf:
+            write_file(tf.name, default_parameters)
+            tf.seek(0) # rewind
+            c = read_file(tf.name)
+        self.assertEqual(c.get_yaml_dict(), default_parameters.get_yaml_dict())
