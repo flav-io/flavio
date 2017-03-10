@@ -2652,7 +2652,7 @@ CMS Bs->mumu 2013:
   inspire: Chatrchyan:2013bka
   observables:
     - BR(Bs->mumu)
-    - BR(Bd->mumu)
+    - BR(B0->mumu)
   values:
     xi:
       - [0, 8.0e-09]
@@ -2693,7 +2693,7 @@ LHCb Bs->mumu 2017:
   experiment: LHCb
   observables:
     - BR(Bs->mumu)
-    - BR(Bd->mumu)
+    - BR(B0->mumu)
   values:
     xi:
       - [0, 7.0e-09]
@@ -2940,7 +2940,7 @@ LHCb B->tautau 2017:
         0.13553356,  0.11443   ,  0.0965759 ,  0.08151966,  0.06885028,
         0.058205  ,  0.04926783,  0.04176699,  0.03547053,  0.0301819 ,
         0.02573558]
-    BR(Bd->tautau):
+    BR(B0->tautau):
       distribution: numerical
       x: [-0.0029  , -0.002784, -0.002668, -0.002552, -0.002436, -0.00232 ,
        -0.002204, -0.002088, -0.001972, -0.001856, -0.00174 , -0.001624,

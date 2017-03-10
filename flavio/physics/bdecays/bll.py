@@ -211,7 +211,7 @@ for l in ['e', 'mu', 'tau']:
     Prediction(_obs_name, ADeltaGamma_func('Bs', l))
 
     # For the B^0 decay, we take the prompt branching ratio since DeltaGamma is negligible
-    _obs_name = "BR(Bd->"+l+l+")"
+    _obs_name = "BR(B0->"+l+l+")"
     _obs = Observable(_obs_name)
     _process_tex = r"B^0\to "+_tex[l]+r"^+"+_tex[l]+r"^-"
     _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
