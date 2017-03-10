@@ -6,7 +6,6 @@ from flavio.statistics.probability import *
 from flavio.config import config
 import scipy.integrate
 import math
-import tempfile
 
 class TestClasses(unittest.TestCase):
     def test_parameter_class(self):
