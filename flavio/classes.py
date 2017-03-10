@@ -335,7 +335,8 @@ class Constraints(object):
             constraints = data['constraints']
             meta = data.get('metadata', {})
             arguments = data['arguments']
-            inst = cls(*args, **arguments, **kwargs)
+            kwargs.update(arguments)
+            inst = cls(*args, **kwargs)
             for m in meta:
                 inst.__dict__[m] = meta[m]
         else:
