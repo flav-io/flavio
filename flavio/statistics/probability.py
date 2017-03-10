@@ -11,6 +11,10 @@ from collections import OrderedDict
 import yaml
 import re
 
+def represent_dict_order(self, data):
+    return self.represent_mapping('tag:yaml.org,2002:map', data.items())
+yaml.add_representer(OrderedDict, represent_dict_order)
+
 def _camel_to_underscore(s):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', s)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
@@ -68,14 +72,19 @@ class ProbabilityDistribution(object):
         name = _camel_to_underscore(cls.__name__)
         return name.replace('_distribution', '')
 
-    def get_dict(self, distribution=False):
-        """Get a dictionary with of arguments and values needed to
+    def get_dict(self, distribution=False, iterate=False, arraytolist=False):
+        """Get an ordered dictionary with arguments and values needed to
         the instantiate the distribution.
 
-        If the optional `distribution` argument is True (default: False),
-        add a 'distribution' key to the dictionary with the value being the
-        string representation of the distribution's name
+        Optional arguments (default to False):
+
+        - `distribution`: add a 'distribution' key to the dictionary with the
+        value being the string representation of the distribution's name
         (e.g. 'asymmetric_normal').
+        - `iterate`: If ProbabilityDistribution instances are among the
+        arguments (e.g. for KernelDensityEstimate), return the instance's
+        get_dict instead of the instance as value.
+        - `arraytolist`: convert numpy arrays to lists
         """
         args = inspect.signature(self.__class__).parameters.keys()
         d = self.__dict__
@@ -83,23 +92,35 @@ class ProbabilityDistribution(object):
         if distribution:
             od['distribution'] = self.class_to_string()
         od.update(OrderedDict((a, d[a]) for a in args))
+        if iterate:
+            for k in od:
+                if isinstance(od[k], ProbabilityDistribution):
+                    od[k] = od[k].get_dict(distribution=True)
+        if arraytolist:
+            for k in od:
+                if isinstance(od[k], np.ndarray):
+                    od[k] = od[k].tolist()
+                if isinstance(od[k], list):
+                    for i, x in enumerate(od[k]):
+                        if isinstance(x, np.ndarray):
+                            od[k][i] = od[k][i].tolist()
+        for k in od:
+            if isinstance(od[k], np.int):
+                od[k] = int(od[k])
+            elif isinstance(od[k], np.float):
+                od[k] = float(od[k])
+            if isinstance(od[k], list):
+                for i, x in enumerate(od[k]):
+                    if isinstance(x, np.float):
+                        od[k][i] = float(od[k][i])
+                    elif isinstance(x, np.int):
+                        od[k][i] = int(od[k][i])
         return od
 
     def get_yaml(self):
         """Get a YAML string representing the dictionary returned by the
         get_dict method."""
-        represent_dict_order = lambda self, data: self.represent_mapping('tag:yaml.org,2002:map', data.items())
-        yaml.add_representer(OrderedDict, represent_dict_order)
-        od = self.get_dict(distribution=True)
-        for k in od:
-            if isinstance(od[k], ProbabilityDistribution):
-                od[k] = od[k].get_dict(distribution=True)
-            if isinstance(od[k], np.ndarray):
-                od[k] = od[k].tolist()
-            if isinstance(od[k], list):
-                for i, x in enumerate(od[k]):
-                    if isinstance(x, np.ndarray):
-                        od[k][i] = od[k][i].tolist()
+        od = self.get_dict(distribution=True, iterate=True, arraytolist=True)
         return yaml.dump(od)
 
 class UniformDistribution(ProbabilityDistribution):

@@ -7,9 +7,11 @@ from collections import OrderedDict, defaultdict
 import copy
 import math
 from flavio._parse_errors import constraints_from_string, convolve_distributions, errors_from_string
-from flavio.statistics.probability import class_from_string
+from flavio.statistics.probability import class_from_string, string_to_class
 import scipy.stats
 import warnings
+import yaml
+import inspect
 
 class NamedInstanceMetaclass(type):
     # this is just needed to implement the getitem method on NamedInstanceClass
@@ -290,6 +292,65 @@ class Constraints(object):
         # this is to have a .copy() method like for a dictionary
         return copy.deepcopy(self)
 
+    def get_yaml(self, *args, **kwargs):
+        return yaml.dump(self.get_yaml_dict(*args, **kwargs))
+
+    def get_yaml_dict(self, pname='parameters'):
+        """Get an ordered dictionary representation of all constraints that can
+        be dumped as YAML string.
+
+        The optional parameter `pname` allows to customize the name of the key
+        containing the parameter list of each constraint (e.g. 'parameters',
+        'observables').
+        """
+        data = []
+        for constraint, parameters in self._constraints:
+            d = OrderedDict()
+            d[pname] = [list(p) if isinstance(p, tuple) else p for p in parameters]
+            d['values'] = constraint.get_dict(distribution=True,
+                                              iterate=True, arraytolist=True)
+            data.append(d)
+        args = inspect.signature(self.__class__).parameters.keys()
+        meta = {k: v for k, v in self.__dict__.items()
+                         if k[0] != '_' and v != '' and k not in args}
+        if not args and not meta:
+            return data
+        else:
+            datameta = OrderedDict()
+            if args:
+                datameta['arguments'] = {arg: self.__dict__[arg] for arg in args}
+            if meta:
+                datameta['metadata'] = meta
+            datameta['constraints'] = data
+            return datameta
+
+    @classmethod
+    def from_yaml(cls, stream, *args, **kwargs):
+        data = yaml.load(stream)
+        return cls.from_yaml_dict(data, *args, **kwargs)
+
+    @classmethod
+    def from_yaml_dict(cls, data, pname='parameters', *args, **kwargs):
+        if isinstance(data, dict):
+            constraints = data['constraints']
+            meta = data.get('metadata', {})
+            arguments = data['arguments']
+            inst = cls(*args, **arguments, **kwargs)
+            for m in meta:
+                inst.__dict__[m] = meta[m]
+        else:
+            constraints = data.copy()
+            inst = cls(*args, **kwargs)
+        for c in constraints:
+            if pname not in c:
+                raise ValueError('Key ' + pname + ' not found. '
+                                 'Please check the `pname` argument.')
+            v = c['values'].copy()
+            distname = v.pop('distribution')
+            dist = string_to_class(distname)
+            parameters = [tuple(p) if isinstance(p, list) else p for p in c[pname]]
+            inst.add_constraint(parameters, dist(**v))
+        return inst
 
 ########## ParameterConstraints Class ##########
 class ParameterConstraints(Constraints):

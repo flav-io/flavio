@@ -1,10 +1,12 @@
 import unittest
 import numpy as np
+import flavio
 from flavio.classes import *
 from flavio.statistics.probability import *
 from flavio.config import config
 import scipy.integrate
 import math
+import tempfile
 
 class TestClasses(unittest.TestCase):
     def test_parameter_class(self):
@@ -208,3 +210,17 @@ class TestClasses(unittest.TestCase):
         # removing dummy instances
         Observable.del_instance('test_obs_1')
         Observable.del_instance('test_obs_2')
+
+    def test_parameter_constraints_yaml(self):
+        yaml = flavio.default_parameters.get_yaml()
+        pnew = ParameterConstraints.from_yaml(yaml)
+        yaml2 = pnew.get_yaml()
+        self.assertEqual(yaml, yaml2)
+
+    def test_measurements_yaml(self):
+        import json
+        for m in Measurement.instances.values():
+            yaml = m.get_yaml_dict()
+            mnew = Measurement.from_yaml_dict(yaml)
+            yaml2 = mnew.get_yaml_dict()
+            self.assertEqual(yaml, yaml2)
