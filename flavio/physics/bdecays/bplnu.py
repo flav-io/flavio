@@ -178,7 +178,7 @@ for l in [('mu','e'), ('tau','mu'), ('tau', 'l')]:
 
         # ratio of total BRs
         _obs_name = "R"+l[0]+l[1]+"("+M+"lnu)"
-        _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+        _obs = Observable(name=_obs_name)
         _obs.set_description(r"Ratio of total branching ratios of $" + _hadr_l[M]['tex'] +_tex[l[0]]+r"^+ \nu_"+_tex[l[0]]+r"$" + " and " + r"$" + _hadr_l[M]['tex'] +_tex[l[1]]+r"^+ \nu_"+_tex[l[1]]+r"$")
         _obs.tex = r"$R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"}(" + _hadr_l[M]['tex'] + r"\ell^+\nu)$"
         for li in l:
