@@ -208,11 +208,11 @@ def BR_tot_function(lep):
 
 _process_taxonomy = r'Process :: $b$ hadron decays :: Semi-leptonic tree-level decays :: $B\to X\ell\nu$ :: $'
 
-_tex = {'e': 'e', 'mu': '\mu', 'l': r'\ell'}
+_lep = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau', 'l': r'\ell'}
 
-for l in ['e', 'mu', 'l']:
+for l in _lep:
         _obs_name = "BR(B->Xc"+l+"nu)"
-        _process_tex = r"B\to X_c"+_tex[l]+r"^+\nu_"+_tex[l]
+        _process_tex = r"B\to X_c"+_lep[l]+r"^+\nu_"+_lep[l]
         _obs = Observable(_obs_name)
         _obs.set_description(r"Total branching ratio of $" + _process_tex + r"$")
         _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
