@@ -30,6 +30,19 @@ class TestBXlnu(unittest.TestCase):
             0.1065,
             delta = 0.001)
 
+    def test_bxclnu_lfu(self):
+        self.assertAlmostEqual(
+            flavio.sm_prediction('Rmue(B->Xclnu)'), 1, delta=0.01)
+        self.assertAlmostEqual(
+            flavio.sm_prediction('Rtaumu(B->Xclnu)'),
+            flavio.sm_prediction('Rtaul(B->Xclnu)'),
+            delta=0.01)
+        self.assertEqual(
+            flavio.physics.bdecays.bxlnu.BR_tot_leptonflavour(wc_obj, par, 'e', 'e'), 1)
+        self.assertAlmostEqual(
+            flavio.physics.bdecays.bxlnu.BR_tot_leptonflavour(wc_obj, par, 'tau', 'e'),
+            1/flavio.physics.bdecays.bxlnu.BR_tot_leptonflavour(wc_obj, par, 'e', 'tau'))
+
     def test_bxclnu_np(self):
         wc_np = flavio.WilsonCoefficients()
         wc_np.set_initial({'CVp_bcenu': 0.1}, scale=4.6)

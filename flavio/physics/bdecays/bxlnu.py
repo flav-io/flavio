@@ -206,6 +206,22 @@ def BR_tot_function(lep):
     else:
         return lambda wc_obj, par: BR_BXclnu(par, wc_obj, lep)
 
+def BR_tot_leptonflavour(wc_obj, par, lnum, lden):
+    if lnum == 'l':
+        num = (BR_BXclnu(par, wc_obj, 'e') + BR_BXclnu(par, wc_obj, 'mu'))/2.
+    else:
+        num = BR_BXclnu(par, wc_obj, lnum)
+    if num == 0:
+        return 0
+    if lden == 'l':
+        den = (BR_BXclnu(par, wc_obj, 'e') + BR_BXclnu(par, wc_obj, 'mu'))/2.
+    else:
+        den = BR_BXclnu(par, wc_obj, lden)
+    return num/den
+
+def BR_tot_leptonflavour_function(lnum, lden):
+    return lambda wc_obj, par: BR_tot_leptonflavour(wc_obj, par, lnum, lden)
+
 _process_taxonomy = r'Process :: $b$ hadron decays :: Semi-leptonic tree-level decays :: $B\to X\ell\nu$ :: $'
 
 _lep = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau', 'l': r'\ell'}
@@ -218,3 +234,16 @@ for l in _lep:
         _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
         Prediction(_obs_name, BR_tot_function(l))
+
+# Lepton flavour ratios
+for l in [('mu','e'), ('tau','mu'), ('tau', 'l')]:
+    _obs_name = "R"+l[0]+l[1]+"(B->Xclnu)"
+    _obs = Observable(name=_obs_name)
+    _process_1 = r"B\to X_c"+_lep[l[0]]+r"^+\nu_"+_lep[l[0]]
+    _process_2 = r"B\to X_c"+_lep[l[1]]+r"^+\nu_"+_lep[l[1]]
+    _obs.set_description(r"Ratio of total branching ratios of $" + _process_1 + r"$" + " and " + r"$" + _process_2 +r"$")
+    _obs.tex = r"$R_{" + _lep[l[0]] + ' ' + _lep[l[1]] + r"}(B\to X_c\ell^+\nu)$"
+        # add taxonomy for both processes (e.g. B->Xcenu and B->Xcmunu)
+    _obs.add_taxonomy(_process_taxonomy + _process_1 + r"$")
+    _obs.add_taxonomy(_process_taxonomy + _process_2 + r"$")
+    Prediction(_obs_name, BR_tot_leptonflavour_function(l[0], l[1]))
