@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
 import flavio
+from flavio.physics.bdecays.bxlnu import g, gLR, gVS, gVSp
 
 par = flavio.default_parameters.get_central_all()
 wc_obj = flavio.WilsonCoefficients()
@@ -36,3 +37,11 @@ class TestBXlnu(unittest.TestCase):
         br_np = flavio.physics.bdecays.bxlnu.BR_BXclnu(par, wc_np, 'e')
         # compare to the unnumbered eq. between (13) and (14) in 1407.1320
         self.assertAlmostEqual(br_np/br_sm, (1-0.34*0.1)**2, delta=0.1)
+
+    def test_bxclnu_functions(self):
+        rho = 1.2**2/4.6**2
+        eps = 1e-12
+        self.assertAlmostEqual(g(rho, xl=eps), g(rho, xl=0), delta=10*eps)
+        self.assertAlmostEqual(gLR(rho, xl=eps), gLR(rho, xl=0), delta=10*eps)
+        self.assertAlmostEqual(gVS(rho, xl=eps), 0, delta=1e-5)
+        self.assertAlmostEqual(gVSp(rho, xl=eps), 0, delta=1e-5)
