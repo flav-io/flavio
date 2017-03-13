@@ -2962,3 +2962,102 @@ LHCb B->tautau 2017:
         0.13553356,  0.11443   ,  0.0965759 ,  0.08151966,  0.06885028,
         0.058205  ,  0.04926783,  0.04176699,  0.03547053,  0.0301819 ,
         0.02573558]
+
+BaBar B->Xll 2013:
+  experiment: BaBar
+  inspire: Lees:2013nxa
+  values:
+    - name: <BR>(B->Xsee)
+      q2min: 1.0
+      q2max: 6.0
+      value: 1.93+0.47 -0.45 +0.21 -0.16 ± 0.18 e-6
+    - name: <BR>(B->Xsee)
+      q2min: 0.1
+      q2max: 2.0
+      value: 3.05+0.52-0.49+0.29-0.21 ± 0.35 e-6
+    - name: <BR>(B->Xsee)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.69+0.31 -0.28 +0.11 -0.07 ± 0.07 e-6
+    - name: <BR>(B->Xsee)
+      q2min: 4.3
+      q2max: 6.8
+      value:  0.69+0.31 -0.29 +0.13 -0.10 ± 0.05 e-6
+    - name: <BR>(B->Xsee)
+      q2min: 14.2
+      q2max: 25.0
+      value: 0.56+0.19 -0.18 +0.03 -0.03 e-6
+    - name: <BR>(B->Xsmumu)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.66+0.82-0.76+0.30-0.24 ± 0.07 e-6
+    - name: <BR>(B->Xsmumu)
+      q2min: 0.1
+      q2max: 2.0
+      value: 1.83+0.90-0.80+0.30-0.24 ± 0.20 e-6
+    - name: <BR>(B->Xsmumu)
+      q2min: 2.0
+      q2max: 4.3
+      value: -0.15+0.50-0.43+0.26-0.14 ± 0.01 e-6
+    - name: <BR>(B->Xsmumu)
+      q2min: 4.3
+      q2max: 6.8
+      value: 0.34+0.54-0.50+0.19-0.15 ± 0.03 e-6
+    - name: <BR>(B->Xsmumu)
+      q2min: 14.2
+      q2max: 25.0
+      value: 0.60+0.31-0.29+0.05-0.04 e-6
+    - name: <BR>(B->Xsll)
+      q2min: 1.0
+      q2max: 6.0
+      value: 1.60+0.41-0.39+0.17-0.13 ± 0.18 e-6
+    - name: <BR>(B->Xsll)
+      q2min: 0.1
+      q2max: 2.0
+      value: 2.70+0.45-0.42+0.21-0.16 ± 0.35 e-6
+    - name: <BR>(B->Xsll)
+      q2min: 2.0
+      q2max: 4.3
+      value: 0.46+0.26-0.23+0.10-0.06 ± 0.07 e-6
+    - name: <BR>(B->Xsll)
+      q2min: 4.3
+      q2max: 6.8
+      value: 0.60+0.27-0.25+0.10-0.08 ± 0.05 e-6
+    - name: <BR>(B->Xsll)
+      q2min: 14.2
+      q2max: 25.0
+      value: 0.57+0.16-0.15+0.03-0.02 e-6
+
+Belle B->Xll 2005:
+  experiment: BaBar
+  inspire: Iwasaki:2005sy
+  values:
+    - name: <BR>(B->Xsll)
+      q2min: 0.04
+      q2max: 1.0
+      value: 11.34 ± 4.83+4.60 -2.71 e-7
+    - name: <BR>(B->Xsll)
+      q2min: 1.0
+      q2max: 6.0
+      value: 14.93 ± 5.04+4.11-3.21 e-7
+    - name: <BR>(B->Xsll)
+      q2min: 14.4
+      q2max: 25.0
+      value: 4.18 ± 1.17+0.61-0.68 e-7
+
+Belle B->Xll 2014:
+  experiment: BaBar
+  inspire: Sato:2014pjr
+  values:
+    - name: <AFB>(B->Xsll)
+      q2min: 0.2
+      q2max: 4.3
+      value: 0.34 ± 0.24 ± 0.03
+    - name: <AFB>(B->Xsll)
+      q2min: 14.3
+      q2max: 25.0
+      value: 0.28 ± 0.15 ± 0.02
+    - name: <AFB>(B->Xsll)
+      q2min: 1.0
+      q2max: 6.0
+      value: 0.30 ± 0.24 ± 0.04
