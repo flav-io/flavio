@@ -172,7 +172,13 @@ class Constraints(object):
             pds = []
             for d in dict_list:
                 dist = class_from_string[d['distribution']]
-                pds.append(dist(**{k: float(v) for k, v in d.items() if k!='distribution'}))
+                def convertv(v):
+                    # convert v to float if possible
+                    try:
+                        return float(v)
+                    except:
+                        return v
+                pds.append(dist(**{k: convertv(v) for k, v in d.items() if k!='distribution'}))
         else:
             raise TypeError("Either constraint_string or constraint_dict have"
                              " to be specified.")
