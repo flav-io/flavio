@@ -528,10 +528,8 @@ def pdf_plot(dist, x_min=None, x_max=None, fill=True, steps=500, normed=True, **
 
     The remaining parameters will be passed to `likelihood_plot`.
     """
-    if x_min is None:
-        _x_min = dist.support[0]
-    if x_max is None:
-        _x_max = dist.support[1]
+    _x_min = x_min or dist.support[0]
+    _x_max = x_max or dist.support[1]
     x = np.linspace(_x_min, _x_max, steps)
     try:
         y = dist.pdf(x)
