@@ -64,7 +64,14 @@ class TestBll(unittest.TestCase):
         # test for errors
         self.assertEqual(flavio.sm_prediction('BR(B0->emu)'), 0)
         self.assertEqual(flavio.sm_prediction('BR(Bs->taumu)'), 0)
-
+        self.assertEqual(flavio.sm_prediction('BR(B0->emu,mue)'), 0)
+        self.assertEqual(flavio.sm_prediction('BR(Bs->mutau,taumu)'), 0)
+        wc = flavio.WilsonCoefficients()
+        wc.set_initial({'C10_bdemu': 1, 'C10_bdmue': 2}, scale=4.8)
+        self.assertEqual(flavio.np_prediction('BR(B0->mue)', wc)
+                        /flavio.np_prediction('BR(B0->emu)', wc), 4)
+        self.assertEqual(flavio.np_prediction('BR(B0->emu,mue)', wc)
+                        /flavio.np_prediction('BR(B0->emu)', wc), 5)
 
     def test_EffectiveLifetimes(self):
         # In this test we trivially check that the prefactors in (22) and (28) of arXiv:1204.1737 are the same

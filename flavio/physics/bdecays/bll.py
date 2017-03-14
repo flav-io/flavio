@@ -126,8 +126,19 @@ def bqll_obs(function, wc_obj, par, B, l1, l2):
         wc = wc_obj.get_wc(label, scale, par)
     return function(par, wc, B, l1, l2)
 
+def bqll_obs_lsum(function, wc_obj, par, B, l1, l2):
+    if l1 == l2:
+        raise ValueError("This function is defined only for LFV decays")
+    scale = config['renormalization scale']['bll']
+    wc12 = wc_obj.get_wc(meson_quark[B]+l1+l2, scale, par)
+    wc21 = wc_obj.get_wc(meson_quark[B]+l2+l1, scale, par)
+    return function(par, wc12, B, l1, l2) + function(par, wc21, B, l2, l1)
+
 def bqll_obs_function(function, B, l1, l2):
     return lambda wc_obj, par: bqll_obs(function, wc_obj, par, B, l1, l2)
+
+def bqll_obs_function_lsum(function, B, l1, l2):
+    return lambda wc_obj, par: bqll_obs_lsum(function, wc_obj, par, B, l1, l2)
 
 
 # Bs -> l+l- effective lifetime
@@ -224,12 +235,27 @@ _tex_B = {'B0': r'\bar B^0', 'Bs': r'\bar B_s'}
 _tex_lfv = {'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
     'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
     'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-'}
-for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
+for ll_1 in [('e','mu'), ('e','tau'), ('mu','tau'),]:
     for B in ['Bs', 'B0']:
-        _obs_name = "BR("+B+"->"+''.join(ll)+")"
+        ll_2 = ll_1[::-1] # now if ll_1 is (e, mu), ll_2 is (mu, e)
+
+        for ll in [ll_1, ll_2]:
+            # the individual BRs
+            _obs_name = "BR("+B+"->"+''.join(ll)+")"
+            _obs = Observable(_obs_name)
+            _process_tex = _tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]
+            _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
+            _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
+            _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to\ell^+\ell^-$ :: $'  + _process_tex + r'$')
+            Prediction(_obs_name, bqll_obs_function(br_inst, B, ll[0], ll[1]))
+
+        # the individual BR where ll' and l'l are added
+        _obs_name = "BR("+B+"->"+''.join(ll_1)+","+''.join(ll_2)+")"
         _obs = Observable(_obs_name)
-        _process_tex = _tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]
+        for ll in [ll_1, ll_1]:
+            _process_tex = _tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]
+            _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to\ell^+\ell^-$ :: $'  + _process_tex + r'$')
+        _process_tex = _tex_B[B]+r"\to "+ll_1[0]+r"^\pm "+ll_1[1]+r"^\mp"
+        _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
         _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
-        _obs.tex = r"$\text{BR}(" + _process_tex + r"$)"
-        _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to\ell^+\ell^-$ :: $'  + _process_tex + r'$')
-        Prediction(_obs_name, bqll_obs_function(br_inst, B, ll[0], ll[1]))
+        Prediction(_obs_name, bqll_obs_function_lsum(br_inst, B, ll_1[0], ll_1[1]))
