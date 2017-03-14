@@ -8,6 +8,36 @@ HFAG rad 2014:
     BR(B+->K*gamma): 42.1 ± 1.8 e-6
     BR(B0->K*gamma): 43.3 ± 1.5 e-6
 
+HFAG rad 2016:
+  experiment: HFAG
+  inspire: Amhis:2016xyh
+  url: http://www.slac.stanford.edu/xorg/hfag/rare/Oct2016/radll/OUTPUT/TABLES/radll.pdf
+  values:
+    BR(B+->enu): < 0.98e-6 @ 90% CL
+    BR(B+->munu): < 1.0e-6 @ 90% CL
+    BR(B+->taunu): (106 ± 19) e-6
+    BR(B0->emu,mue): < 0.0028e-6 @ 90% CL
+    BR(B0->etau,taue): < 28e-6 @ 90% CL
+    BR(B0->mutau,taumu): < 22e-6 @ 90% CL
+
+BaBar Btautau 2005:
+  experiment: BaBar
+  inspire: Aubert:2005qw
+  values:
+    BR(B0->tautau): < 4.1e-3 @ 90% CL
+
+# Here the measured total BR is converted to the binned differential BR
+# by dividing the experimental number by the bin width (12 GeV^2),
+# taken to cover the entire kinematically allowed range.
+BaBar BKtautau 2016:
+  experiment: BaBar
+  inspire: TheBaBar:2016xwe
+  values:
+    - name: <dBR/dq2>(B+->Ktautau)
+      q2min: 12
+      q2max: 24
+      value: (0.109167 +0.055 -0.0508333 +0.0291667 -0.0208333) e-3
+
 B->Xgamma WA 2017:
   inspire: Misiak:2017bgg
   values:
@@ -2309,6 +2339,23 @@ LHCb B->Kee 2014:
       q2min: 1.0
       q2max: 6.0
       value: 0.312 +0.038 -0.030 +0.012 -0.008 e-7 # this is 1.56 +0.19 -0.15 +0.06 -0.04 e-7 for the partial BR
+
+PDG 2014 LFV B decays:
+  experiment: PDG
+  inspire: Agashe:2014kda
+  values:
+    BR(B+->pietau): < 74e-6 @ 90% CL
+    BR(B+->pitaue): < 20e-6 @ 90% CL
+    BR(B+->pimutau): < 62e-6 @ 90% CL
+    BR(B+->pitaumu): < 45e-6 @ 90% CL
+    BR(B+->Kemu): < 0.091e-6 @ 90% CL
+    BR(B+->Kmue): < 0.13e-6 @ 90% CL
+    BR(B+->Ketau): < 43e-6 @ 90% CL
+    BR(B+->Ktaue): < 15e-6 @ 90% CL
+    BR(B+->Kmutau): < 45e-6 @ 90% CL
+    BR(B+->Ktaumu): < 28e-6 @ 90% CL
+    BR(B+->K*emu): < 1.3e-6 @ 90% CL
+    BR(B+->K*mue): < 0.99e-6 @ 90% CL
 
 PDG 2015:
   experiment: PDG
