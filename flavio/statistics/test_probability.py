@@ -544,3 +544,14 @@ class TestProbability(unittest.TestCase):
             self.assertEqual(repr(pnew), repr(p))
             self.assertEqual(pnew.get_yaml(), p.get_yaml())
             self.assertEqual(pnew.get_dict(), p.get_dict())
+
+    def test_dict2dist(self):
+        d = [
+            {'distribution': 'normal', 'central_value': 1, 'standard_deviation': 0.2},
+            {'distribution': 'uniform', 'central_value': 2, 'half_range': 1}
+        ]
+        p = dict2dist(d)
+        self.assertEqual(repr(p[0]), repr(NormalDistribution(1.0, 0.2)))
+        self.assertEqual(repr(p[1]), repr(UniformDistribution(2.0, 1.0)))
+        p = dict2dist(d[0])
+        self.assertEqual(repr(p[0]), repr(NormalDistribution(1.0, 0.2)))

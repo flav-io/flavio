@@ -6,7 +6,9 @@ from .config import config
 from collections import OrderedDict, defaultdict
 import copy
 import math
-from flavio._parse_errors import constraints_from_string, convolve_distributions, errors_from_string
+from flavio._parse_errors import constraints_from_string, \
+                                 convolve_distributions, errors_from_string, \
+                                 dict2dist
 from flavio.statistics.probability import class_from_string, string_to_class
 import scipy.stats
 import warnings
@@ -140,7 +142,7 @@ class Constraints(object):
                                         constraint_dict=None):
         r"""Set the constraint on a parameter/observable by specifying a string
         or a dictionary. If several constraints (e.g. several types of
-        unceretainty) are given, the total constraint will be the convolution
+        uncertainty) are given, the total constraint will be the convolution
         of the individual distributions. Existing constraints will be removed.
 
         Arguments:
@@ -165,20 +167,7 @@ class Constraints(object):
         if constraint_string is not None:
             pds = constraints_from_string(constraint_string)
         elif constraint_dict is not None:
-            if isinstance(constraint_dict, dict):
-                dict_list = [constraint_dict]
-            else:
-                dict_list = constraint_dict
-            pds = []
-            for d in dict_list:
-                dist = class_from_string[d['distribution']]
-                def convertv(v):
-                    # convert v to float if possible
-                    try:
-                        return float(v)
-                    except:
-                        return v
-                pds.append(dist(**{k: convertv(v) for k, v in d.items() if k!='distribution'}))
+            pds =  dict2dist(constraint_dict)
         else:
             raise TypeError("Either constraint_string or constraint_dict have"
                              " to be specified.")

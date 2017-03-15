@@ -1416,6 +1416,36 @@ def _convolve_multivariate_gaussian_numerical(mvgaussian,
         xi = (xi.T + np.array(mvgaussian.central_value)).T
     return MultivariateNumericalDistribution(xi, f)
 
+def dict2dist(constraint_dict):
+    r"""Get a list of probability distributions from a list of dictionaries
+    (or a single dictionary) specifying the distributions.
+
+    Arguments:
+
+    - constraint_dict: dictionary or list of several dictionaries of the
+      form `{'distribution': 'distribution_name', 'arg1': val1, ...}`, where
+      'distribution_name' is a string name associated to each probability
+      distribution (see `class_from_string`)
+      and `'arg1'`, `val1` are argument/value pairs of the arguments of
+      the distribution class's constructor (e.g.`central_value`,
+      `standard_deviation` for a normal distribution).
+    """
+    if isinstance(constraint_dict, dict):
+        dict_list = [constraint_dict]
+    else:
+        dict_list = constraint_dict
+    pds = []
+    def convertv(v):
+        # convert v to float if possible
+        try:
+            return float(v)
+        except:
+            return v
+    for d in dict_list:
+        dist = class_from_string[d['distribution']]
+        pds.append(dist(**{k: convertv(v) for k, v in d.items() if k!='distribution'}))
+    return pds
+
 
 # this dictionary is used for parsing low-level distribution definitions
 # in YAML files. A string name is associated to every (relevant) distribution.
