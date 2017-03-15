@@ -501,10 +501,13 @@ class TestProbability(unittest.TestCase):
                          'central_value': 1,
                          'right_deviation': 2,
                          'left_deviation': 3.})
-        self.assertEqual(yaml.load(MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]]).get_yaml()),
+        self.assertEqual(yaml.load(MultivariateNormalDistribution([1., 2], [[4, 0.2], [0.2, 4]]).get_yaml()),
                          {'distribution': 'multivariate_normal',
                          'central_value': [1., 2],
-                         'covariance': [[2, 0.1], [0.1, 2]]})
+                         'covariance': [[4, 0.2], [0.2, 4]],
+                         'standard_deviation': [2, 2],
+                         'correlation': [[1, 0.05], [0.05, 1]],
+                         })
         self.assertEqual(yaml.load(KernelDensityEstimate([1, 2, 3], NormalDistribution(0, 0.5)).get_yaml()),
                          {'distribution': 'kernel_density_estimate',
                          'data': [1, 2, 3],
@@ -543,7 +546,6 @@ class TestProbability(unittest.TestCase):
             # check if the new class is the same as the old
             self.assertEqual(repr(pnew), repr(p))
             self.assertEqual(pnew.get_yaml(), p.get_yaml())
-            self.assertEqual(pnew.get_dict(), p.get_dict())
 
     def test_dict2dist(self):
         d = [
@@ -555,3 +557,15 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(repr(p[1]), repr(UniformDistribution(2.0, 1.0)))
         p = dict2dist(d[0])
         self.assertEqual(repr(p[0]), repr(NormalDistribution(1.0, 0.2)))
+
+    def test_mvnormal_correlation(self):
+        p1 = MultivariateNormalDistribution([0, 0], [[1, 1.5], [1.5, 4]])
+        p2 = MultivariateNormalDistribution([0, 0],
+                                        standard_deviation=[1, 2],
+                                        correlation=[[1, 0.75], [0.75, 1]])
+        for p in [p1, p2]:
+            npt.assert_array_equal(p.covariance, np.array([[1, 1.5], [1.5, 4]]))
+            npt.assert_array_equal(p.standard_deviation, np.array([1, 2]))
+            npt.assert_array_equal(p.correlation, np.array([[1, 0.75], [0.75, 1]]))
+        with self.assertRaises(ValueError):
+            MultivariateNormalDistribution([0, 0], correlation=[[1, 0.75], [0.75, 1]])

@@ -956,6 +956,16 @@ class GaussianKDE(KernelDensityEstimate):
 class MultivariateNormalDistribution(ProbabilityDistribution):
     """A multivariate normal distribution.
 
+    Parameters:
+
+    - central_value: the location vector
+    - covariance: the covariance matrix
+    - standard_deviation: the square root of the variance vector
+    - correlation: the correlation matrix
+
+    If the covariance matrix is not specified, standard_deviation and the
+    correlation matrix have to be specified.
+
     Methods:
 
     - get_random(size=None): get `size` random numbers (default: a single one)
@@ -969,7 +979,9 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
     - error_left, error_right: both return the vector of standard deviations
     """
 
-    def __init__(self, central_value, covariance):
+
+    def __init__(self, central_value, covariance=None,
+                       standard_deviation=None, correlation=None):
         """Initialize PDF instance.
 
         Parameters:
@@ -977,11 +989,26 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
         - central_value: vector of means, shape (n)
         - covariance: covariance matrix, shape (n,n)
         """
+        if covariance is not None:
+            self.covariance = covariance
+            self.standard_deviation = np.sqrt(np.diag(self.covariance))
+            self.correlation = self.covariance/np.outer(self.standard_deviation,
+                                                        self.standard_deviation)
+            np.fill_diagonal(self.correlation, 1.)
+        else:
+            if standard_deviation is None:
+                raise ValueError("You must specify either covariance or standard_deviation")
+            self.standard_deviation = np.array(standard_deviation)
+            if correlation is None:
+                self.correlation = np.eye(len(self.standard_deviation))
+            else:
+                self.correlation = np.array(correlation)
+            self.covariance = np.outer(self.standard_deviation,
+                                       self.standard_deviation)*self.correlation
         super().__init__(central_value, support=np.array([
-                    np.asarray(central_value) - 6*np.sqrt(np.diag(covariance)),
-                    np.asarray(central_value) + 6*np.sqrt(np.diag(covariance))
+                    np.asarray(central_value) - 6*self.standard_deviation,
+                    np.asarray(central_value) + 6*self.standard_deviation
                     ]))
-        self.covariance = covariance
         # to avoid ill-conditioned covariance matrices, all data are rescaled
         # by the inverse variances
         self.err = np.sqrt(np.diag(self.covariance))
