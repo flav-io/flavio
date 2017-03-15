@@ -18,9 +18,19 @@ def _load(obj):
             if arg in m_data:
                 setattr(m, arg, m_data[arg])
         if 'observables' in m_data:
-            # for multivariate numerical constraints
-            m.add_constraint(m_data['observables'],
-                probability.MultivariateNumericalDistribution(**m_data['values']))
+            # for multivariate constraints
+            pd = probability.dict2dist(m_data['values'])
+            pd = probability.convolve_distributions(pd)
+            # for observables without arguments (i.e. strings), this is trivial;
+            obs_list = [obs if isinstance(obs, str)
+            # for obs. with arguments, need to convert dict of the form
+            # {'name': myname, 'arg1': v1, ...} to a tuple of the form
+            # (myname, v1, ...)
+                        else tuple(
+                                [obs['name']]
+                              + [obs[arg] for arg in Observable[obs['name']].arguments])
+                        for obs in m_data['observables']]
+            m.add_constraint(obs_list, pd)
         elif 'correlation' not in m_data:
             # for univariate constraints
             if isinstance(m_data['values'], list):

@@ -2701,6 +2701,7 @@ CMS Bs->mumu 2013:
     - BR(Bs->mumu)
     - BR(B0->mumu)
   values:
+    distribution: multivariate_numerical
     xi:
       - [0, 8.0e-09]
       - [0, 1.5e-09]
@@ -2742,6 +2743,7 @@ LHCb Bs->mumu 2017:
     - BR(Bs->mumu)
     - BR(B0->mumu)
   values:
+    distribution: multivariate_numerical
     xi:
       - [0, 7.0e-09]
       - [0, 1.0e-09]
