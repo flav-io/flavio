@@ -1,6 +1,6 @@
 r"""Functions for exclusive $B\to V\ell\nu$ decays."""
 
-from math import sqrt,pi
+from math import sqrt, pi, cos, sin
 import flavio
 from flavio.physics.bdecays.common import lambda_K, meson_quark, meson_ff
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
@@ -12,12 +12,13 @@ from flavio.physics.bdecays import angular
 from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc
 from flavio.classes import Observable, Prediction
 
-
 def get_ff(q2, par, B, V):
+    """Return the form factors"""
     ff_name = meson_ff[(B,V)] + ' form factor'
     return AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=q2)
 
 def prefactor(q2, par, B, V, lep):
+    """Return the prefactor including constants and CKM elements"""
     GF = par['GF']
     scale = config['renormalization scale']['bvll']
     ml = par['m_'+lep]
@@ -78,22 +79,192 @@ def _get_angularcoeff(q2, wc_obj, par, B, V, lep, nu):
     return J
 
 def dGdq2(J):
+    r"""$q^2$-differential branching ratio in terms of angular coefficients."""
     return 3/4. * (2 * J['1s'] + J['1c']) - 1/4. * (2 * J['2s'] + J['2c'])
 
-def dBRdq2_lep(q2, wc_obj, par, B, V, lep):
+# For the angle-differential and binned distributions, the main idea is this:
+# while the q2-integration has to be done numerically, the angle integration is
+# trivial to do analytically as the angular dependence is given in terms of
+# trigonometric functions. So the differential distributions are given as
+# dictionaries with (q2-dependent) coefficients of these angular functions.
+# Integration (i.e. binning) in angles then merely amounts to replacing the
+# angular functions by their respective integrals.
+
+def dG_dq2_dcosthl(J):
+    r"""$\cos\theta_\ell$-differential branching ratio in terms of angular
+    coefficients, as dictionary of coefficients of trigonometric functions
+    of $\theta_\ell$."""
+    return {'1': 3/8. * (J['1c'] + 2*J['1s']),
+            'c': 3/8. * (J['6c'] + 2*J['6s']),
+            'c2': 3/8. * (J['2c'] + 2*J['2s']) }
+
+def dG_dq2_dcosthV(J):
+    r"""$\cos\theta_V$-differential branching ratio in terms of angular
+    coefficients, as dictionary of coefficients of trigonometric functions
+    of $\theta_V$."""
+    return {'c^2': -3/8. * (-3*J['1c'] + J['2c']),
+            's^2': -3/8. * (-3*J['1s'] + J['2s']) }
+
+def dG_dq2_dphi(J):
+    r"""$\phi$-differential branching ratio in terms of angular
+    coefficients, as dictionary of coefficients of trigonometric functions
+    of $\phi$."""
+    return {'1': 1/(8*pi) * (3*J['1c'] + 6*J['1s'] - J['2c'] - 2*J['2s']),
+            'c2': 1/(2*pi) * J[3],
+            's2': 1/(2*pi) * J[9] }
+
+def _cos_angle_diff(costh):
+    r"""Trigonometric functions for differential distributions in terms of
+    $\cos\theta_{\ell,V}$"""
+    return {'1': 1, 'c': costh, 'c2': 2*costh**2-1, 'c^2': costh**2,
+            's^2': 1 - costh**2, 's2': 2*costh*sqrt(1-costh**2)}
+
+def _cos_angle_int(costh):
+    r"""Integrated trigonometric functions for binned distributions in terms of
+    $\cos\theta_{\ell,V}$"""
+    return {'1': costh, 'c': costh**2/2., 'c2': 2*costh**3/3.-costh,
+            'c^2': costh**3/3., 's^2': costh - costh**3/3.,
+            's2': -2/3.*(1-costh**2)**(3/2.)}
+
+def _angle_diff(phi):
+    r"""Trigonometric functions for differential distributions in terms of
+    $\phi$"""
+    return {'1': 1, 'c2': cos(2*phi), 's2': sin(2*phi)}
+
+def _angle_int(phi):
+    r"""Integrated trigonometric functions for binned distributions in terms of
+    $\phi$"""
+    return {'1': phi, 'c2': sin(2*phi)/2., 's2': -cos(2*phi)/2.}
+
+def obs_q2int(fct, wc_obj, par, B, V, lep):
+    """q2-integrated observable"""
+    mB = par['m_'+B]
+    mV = par['m_'+V]
+    ml = par['m_'+lep]
+    q2max = (mB-mV)**2
+    q2min = ml**2
+    def integrand(q2):
+        return fct(q2)
+    return flavio.math.integrate.nintegrate(integrand, q2min, q2max)
+
+def kinem_allowed(q2, par, B, V, lep):
+    """True if q2 is in the kinematically allowed region"""
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mV = par['m_'+V]
     if q2 < ml**2 or q2 > (mB-mV)**2:
+        return False
+    else:
+        return True
+
+def dBR_dq2_dcosthl_binned(q2, clmin, clmax, wc_obj, par, B, V, lep):
+    if not kinem_allowed(q2, par, B, V, lep):
         return 0
     tauB = par['tau_'+B]
     J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
+    dG = dG_dq2_dcosthl(J)
+    ang_min = _cos_angle_int(clmin)
+    ang_max = _cos_angle_int(clmax)
+    return BRfac(V) * tauB * sum(
+                        [y * (ang_max[a] - ang_min[a]) for a, y in dG.items()])
+
+def BR_binned_costhl(clmin, clmax, wc_obj, par, B, V, lep):
+    def fct(q2):
+        return dBR_dq2_dcosthl_binned(q2, clmin, clmax, wc_obj, par, B, V, lep)
+    return obs_q2int(fct, wc_obj, par, B, V, lep)
+
+def dBR_dq2_dcosthl(q2, cl, wc_obj, par, B, V, lep):
+    if not kinem_allowed(q2, par, B, V, lep):
+        return 0
+    tauB = par['tau_'+B]
+    J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
+    dG = dG_dq2_dcosthl(J)
+    ang = _cos_angle_diff(cl)
+    return BRfac(V) * tauB * sum(
+                        [y * ang[a] for a, y in dG.items()])
+
+def dBR_dcosthl(cl, wc_obj, par, B, V, lep):
+    def fct(q2):
+        return dBR_dq2_dcosthl(q2, cl, wc_obj, par, B, V, lep)
+    return obs_q2int(fct, wc_obj, par, B, V, lep)
+
+def dBR_dq2_dcosthV_binned(q2, cVmin, cVmax, wc_obj, par, B, V, lep):
+    if not kinem_allowed(q2, par, B, V, lep):
+        return 0
+    tauB = par['tau_'+B]
+    J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
+    dG = dG_dq2_dcosthV(J)
+    ang_min = _cos_angle_int(cVmin)
+    ang_max = _cos_angle_int(cVmax)
+    return BRfac(V) * tauB * sum(
+                        [y * (ang_max[a] - ang_min[a]) for a, y in dG.items()])
+
+def BR_binned_costhV(cVmin, cVmax, wc_obj, par, B, V, lep):
+    def fct(q2):
+        return dBR_dq2_dcosthV_binned(q2, cVmin, cVmax, wc_obj, par, B, V, lep)
+    return obs_q2int(fct, wc_obj, par, B, V, lep)
+
+def dBR_dq2_dcosthV(q2, cV, wc_obj, par, B, V, lep):
+    if not kinem_allowed(q2, par, B, V, lep):
+        return 0
+    tauB = par['tau_'+B]
+    J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
+    dG = dG_dq2_dcosthV(J)
+    ang = _cos_angle_diff(cV)
+    return BRfac(V) * tauB * sum(
+                        [y * ang[a] for a, y in dG.items()])
+
+def dBR_dcosthV(cV, wc_obj, par, B, V, lep):
+    def fct(q2):
+        return dBR_dq2_dcosthV(q2, cV, wc_obj, par, B, V, lep)
+    return obs_q2int(fct, wc_obj, par, B, V, lep)
+
+def dBR_dq2_dphi_binned(q2, phimin, phimax, wc_obj, par, B, V, lep):
+    if not kinem_allowed(q2, par, B, V, lep):
+        return 0
+    tauB = par['tau_'+B]
+    J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
+    dG = dG_dq2_dphi(J)
+    ang_min = _angle_int(phimin)
+    ang_max = _angle_int(phimax)
+    return BRfac(V) * tauB * sum(
+                        [y * (ang_max[a] - ang_min[a]) for a, y in dG.items()])
+
+def BR_binned_phi(phimin, phimax, wc_obj, par, B, V, lep):
+    def fct(q2):
+        return dBR_dq2_dphi_binned(q2, phimin, phimax, wc_obj, par, B, V, lep)
+    return obs_q2int(fct, wc_obj, par, B, V, lep)
+
+
+def dBR_dq2_dphi(q2, phi, wc_obj, par, B, V, lep):
+    if not kinem_allowed(q2, par, B, V, lep):
+        return 0
+    tauB = par['tau_'+B]
+    J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
+    dG = dG_dq2_dphi(J)
+    ang = _angle_diff(phi)
+    return BRfac(V) * tauB * sum(
+                        [y * ang[a] for a, y in dG.items()])
+
+def dBR_dphi(phi, wc_obj, par, B, V, lep):
+    def fct(q2):
+        return dBR_dq2_dphi(q2, phi, wc_obj, par, B, V, lep)
+    return obs_q2int(fct, wc_obj, par, B, V, lep)
+
+def BRfac(V):
     if V == 'rho0' or V == 'omega':
         # factor of 1/2 for neutral rho due to rho = (uubar-ddbar)/sqrt(2)
         # and also for omega = (uubar+ddbar)/sqrt(2)
-        return tauB * dGdq2(J) / 2.
-    return tauB * dGdq2(J)
+        return 1/2.
+    else:
+        return 1
 
+def dBRdq2_lep(q2, wc_obj, par, B, V, lep):
+    if not kinem_allowed(q2, par, B, V, lep):
+        return 0
+    tauB = par['tau_'+B]
+    J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
+    return tauB * dGdq2(J) * BRfac(V)
 
 def dBRdq2(q2, wc_obj, par, B, V, lep):
     if lep == 'l':
@@ -101,8 +272,6 @@ def dBRdq2(q2, wc_obj, par, B, V, lep):
         return (dBRdq2_lep(q2, wc_obj, par, B, V, 'e') + dBRdq2_lep(q2, wc_obj, par, B, V, 'mu'))/2
     else:
         return dBRdq2_lep(q2, wc_obj, par, B, V, lep)
-
-
 
 def dBRdq2_function(B, V, lep):
     return lambda wc_obj, par, q2: dBRdq2(q2, wc_obj, par, B, V, lep)
@@ -114,6 +283,48 @@ def BR_binned(q2min, q2max, wc_obj, par, B, V, lep):
 
 def BR_binned_function(B, V, lep):
     return lambda wc_obj, par, q2min, q2max: BR_binned(q2min, q2max, wc_obj, par, B, V, lep)
+
+def BR_binned_costhl_function(B, V, lep):
+    if lep == 'l':
+        return lambda wc_obj, par, clmin, clmax: (
+          BR_binned_costhl(clmin, clmax, wc_obj, par, B, V, 'e')
+        + BR_binned_costhl(clmin, clmax, wc_obj, par, B, V, 'mu'))/2.
+    return lambda wc_obj, par, clmin, clmax: BR_binned_costhl(clmin, clmax, wc_obj, par, B, V, lep)
+
+def BR_binned_costhV_function(B, V, lep):
+    if lep == 'l':
+        return lambda wc_obj, par, cVmin, cVmax: (
+          BR_binned_costhV(cVmin, cVmax, wc_obj, par, B, V, 'e')
+        + BR_binned_costhV(cVmin, cVmax, wc_obj, par, B, V, 'mu'))/2.
+    return lambda wc_obj, par, cVmin, cVmax: BR_binned_costhV(cVmin, cVmax, wc_obj, par, B, V, lep)
+
+def BR_binned_phi_function(B, V, lep):
+    if lep == 'l':
+        return lambda wc_obj, par, phimin, phimax: (
+          BR_binned_phi(phimin, phimax, wc_obj, par, B, V, 'e')
+        + BR_binned_phi(phimin, phimax, wc_obj, par, B, V, 'mu'))/2.
+    return lambda wc_obj, par, phimin, phimax: BR_binned_phi(phimin, phimax, wc_obj, par, B, V, lep)
+
+def dBR_dcosthl_function(B, V, lep):
+    if lep == 'l':
+        return lambda wc_obj, par, cl: (
+          dBR_dcosthl(cl, wc_obj, par, B, V, 'e')
+        + dBR_dcosthl(cl, wc_obj, par, B, V, 'mu'))/2.
+    return lambda wc_obj, par, cl: dBR_dcosthl(cl, wc_obj, par, B, V, lep)
+
+def dBR_dcosthV_function(B, V, lep):
+    if lep == 'l':
+        return lambda wc_obj, par, cV: (
+          dBR_dcosthV(cV, wc_obj, par, B, V, 'e')
+        + dBR_dcosthV(cV, wc_obj, par, B, V, 'mu'))/2.
+    return lambda wc_obj, par, cV: dBR_dcosthV(cV, wc_obj, par, B, V, lep)
+
+def dBR_dphi_function(B, V, lep):
+    if lep == 'l':
+        return lambda wc_obj, par, phi: (
+          dBR_dphi(phi, wc_obj, par, B, V, 'e')
+        + dBR_dphi(phi, wc_obj, par, B, V, 'mu'))/2.
+    return lambda wc_obj, par, phi: dBR_dphi(phi, wc_obj, par, B, V, lep)
 
 def _BR_tot(wc_obj, par, B, V, lep):
     mB = par['m_'+B]
@@ -157,10 +368,38 @@ def BR_binned_leptonflavour_function(B, V, lnum, lden):
 # Observable and Prediction instances
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau', 'l': r'\ell'}
-_func = {'dBR/dq2': dBRdq2_function, 'BR': BR_tot_function, '<BR>': BR_binned_function}
-_desc = {'dBR/dq2': 'Differential', 'BR': 'Total', '<BR>': 'Binned'}
-_tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'\langle\text{BR}\rangle'}
-_args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max']}
+_func = {'dBR/dq2': dBRdq2_function, 'BR': BR_tot_function, '<BR>': BR_binned_function,
+         '<BR>/<cl>': BR_binned_costhl_function,
+         '<BR>/<cV>': BR_binned_costhV_function,
+         '<BR>/<phi>': BR_binned_phi_function,
+         'dBR/dcl': dBR_dcosthl_function,
+         'dBR/dcV': dBR_dcosthV_function,
+         'dBR/dphi': dBR_dphi_function,
+         }
+_desc = {'dBR/dq2': r'$q^2$-differential', 'BR': 'Total', '<BR>': '$q^2$-binned',
+         '<BR>/<cl>': r'$\cos\theta_l$-binned',
+         '<BR>/<cV>': r'$\cos\theta_V$-binned',
+         '<BR>/<phi>': r'$\phi$-binned',
+         'dBR/dcl': r'$\cos\theta_l$-differential',
+         'dBR/dcV':r'$\cos\theta_V$-differential ',
+         'dBR/dphi': r'$\phi$-differential',
+         }
+_tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'\langle\text{BR}\rangle',
+           '<BR>/<cl>': r'\langle\text{BR}\rangle/\Delta\cos\theta_l',
+           '<BR>/<cV>': r'\langle\text{BR}\rangle/\Delta\cos\theta_V',
+           '<BR>/<phi>': r'\langle\text{BR}\rangle/\Delta\phi',
+           'dBR/dcl': r'\frac{d\text{BR}}{d\cos\theta_l}',
+           'dBR/dcV': r'\frac{d\text{BR}}{d\cos\theta_V}',
+           'dBR/dphi': r'\frac{d\text{BR}}{d\phi}',
+            }
+_args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max'],
+         '<BR>/<cl>': ['clmin', 'clmax'],
+         '<BR>/<cV>': ['cVmin', 'cVmax'],
+         '<BR>/<phi>': ['phimin', 'phimax'],
+         'dBR/dcl': ['cl'],
+         'dBR/dcV': ['cV'],
+         'dBR/dphi': ['phi'],
+         }
 _hadr = {
 'B0->D*': {'tex': r"B^0\to D^{\ast -}", 'B': 'B0', 'V': 'D*+', },
 'B+->D*': {'tex': r"B^+\to D^{\ast 0}", 'B': 'B+', 'V': 'D*0', },
@@ -180,7 +419,9 @@ _hadr_l = {
 _process_taxonomy = r'Process :: $b$ hadron decays :: Semi-leptonic tree-level decays :: $B\to V\ell\nu$ :: $'
 
 for l in ['e', 'mu', 'tau', 'l']:
-    for br in ['dBR/dq2', 'BR', '<BR>']:
+    for br in ['dBR/dq2', 'BR', '<BR>',
+               '<BR>/<cl>', '<BR>/<cV>', '<BR>/<phi>',
+               'dBR/dcl', 'dBR/dcV', 'dBR/dphi']:
         for M in _hadr.keys():
             _process_tex = _hadr[M]['tex']+_tex[l]+r"^+\nu_"+_tex[l]
             _obs_name = br + "("+M+l+"nu)"
