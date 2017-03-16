@@ -5,6 +5,7 @@ from flavio.physics.bdecays.formfactors.b_v import bsz_parameters
 from flavio.physics.eft import WilsonCoefficients
 from flavio.parameters import default_parameters
 import flavio
+from math import pi
 
 constraints = default_parameters
 wc_obj = WilsonCoefficients()
@@ -25,6 +26,42 @@ class TestBVll(unittest.TestCase):
         flavio.Observable["dBR/dq2(B+->D*enu)"].prediction_central(constraints, wc_obj, q2=3)
         flavio.Observable["dBR/dq2(B+->omegaenu)"].prediction_central(constraints, wc_obj, q2=3)
         flavio.Observable["dBR/dq2(Bs->K*enu)"].prediction_central(constraints, wc_obj, q2=3)
+        flavio.Observable["dBR/dcl(B0->rhoenu)"].prediction_central(constraints, wc_obj, cl=0.5)
+        flavio.Observable["dBR/dcl(B+->rhoenu)"].prediction_central(constraints, wc_obj, cl=0.5)
+        flavio.Observable["dBR/dcl(B0->D*enu)"].prediction_central(constraints, wc_obj, cl=0.5)
+        flavio.Observable["dBR/dcl(B+->D*enu)"].prediction_central(constraints, wc_obj, cl=0.5)
+        flavio.Observable["dBR/dcl(B+->omegaenu)"].prediction_central(constraints, wc_obj, cl=0.5)
+        flavio.Observable["dBR/dcl(Bs->K*enu)"].prediction_central(constraints, wc_obj, cl=0.5)
+        flavio.Observable["dBR/dcV(B0->rhoenu)"].prediction_central(constraints, wc_obj, cV=0.5)
+        flavio.Observable["dBR/dcV(B+->rhoenu)"].prediction_central(constraints, wc_obj, cV=0.5)
+        flavio.Observable["dBR/dcV(B0->D*enu)"].prediction_central(constraints, wc_obj, cV=0.5)
+        flavio.Observable["dBR/dcV(B+->D*enu)"].prediction_central(constraints, wc_obj, cV=0.5)
+        flavio.Observable["dBR/dcV(B+->omegaenu)"].prediction_central(constraints, wc_obj, cV=0.5)
+        flavio.Observable["dBR/dcV(Bs->K*enu)"].prediction_central(constraints, wc_obj, cV=0.5)
+        flavio.Observable["dBR/dphi(B0->rhoenu)"].prediction_central(constraints, wc_obj, phi=1.5)
+        flavio.Observable["dBR/dphi(B+->rhoenu)"].prediction_central(constraints, wc_obj, phi=1.5)
+        flavio.Observable["dBR/dphi(B0->D*enu)"].prediction_central(constraints, wc_obj, phi=1.5)
+        flavio.Observable["dBR/dphi(B+->D*enu)"].prediction_central(constraints, wc_obj, phi=1.5)
+        flavio.Observable["dBR/dphi(B+->omegaenu)"].prediction_central(constraints, wc_obj, phi=1.5)
+        flavio.Observable["dBR/dphi(Bs->K*enu)"].prediction_central(constraints, wc_obj, phi=1.5)
+
+    def test_binned(self):
+        # this is all the total BR, calulated in 4 different ways
+        self.assertAlmostEqual(
+        flavio.Observable["BR(B0->D*enu)"].prediction_central(
+                                constraints, wc_obj),
+        flavio.Observable["<BR>/<cl>(B0->D*enu)"].prediction_central(
+                                constraints, wc_obj, clmin=-1, clmax=1))
+        self.assertAlmostEqual(
+        flavio.Observable["BR(B0->D*enu)"].prediction_central(
+                                constraints, wc_obj),
+        flavio.Observable["<BR>/<cV>(B0->D*enu)"].prediction_central(
+                                constraints, wc_obj, cVmin=-1, cVmax=1))
+        self.assertAlmostEqual(
+        flavio.Observable["BR(B0->D*enu)"].prediction_central(
+                                constraints, wc_obj),
+        flavio.Observable["<BR>/<phi>(B0->D*enu)"].prediction_central(
+                                constraints, wc_obj, phimin=-pi, phimax=pi))
 
     def test_bvlnu_nu(self):
         wc_sm = flavio.WilsonCoefficients()
