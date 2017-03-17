@@ -3078,7 +3078,7 @@ BaBar B->Xll 2013:
       value: 0.57+0.16-0.15+0.03-0.02 e-6
 
 Belle B->Xll 2005:
-  experiment: BaBar
+  experiment: Belle
   inspire: Iwasaki:2005sy
   values:
     - name: <BR>(B->Xsll)
@@ -3095,7 +3095,7 @@ Belle B->Xll 2005:
       value: 4.18 ± 1.17+0.61-0.68 e-7
 
 Belle B->Xll 2014:
-  experiment: BaBar
+  experiment: Belle
   inspire: Sato:2014pjr
   values:
     - name: <AFB>(B->Xsll)
