@@ -68,50 +68,51 @@ def error_budget_pie(err_dict, other_cutoff=0.03):
     return plt.pie(fracs, labels=labels, autopct=my_autopct, wedgeprops = {'linewidth':0.5}, colors=flavio.plots.colors.pastel)
 
 
-def q2_plot_th_diff(obs_name, q2min, q2max, wc=None, q2steps=100, **kwargs):
-    r"""Plot the central theory prediction of a $q^2$-dependent observable
-    as a function of $q^2$.
+def diff_plot_th(obs_name, x_min, x_max, wc=None, steps=100, **kwargs):
+    r"""Plot the central theory prediction of an observable dependending on
+    a continuous parameter, e.g. $q^2$.
 
     Parameters:
 
-    - `q2min`, `q2max`: minimum and maximum $q^2$ values in GeV^2
+    - `x_min`, `x_max`: minimum and maximum values of the parameter
     - `wc` (optional): `WilsonCoefficient` instance to define beyond-the-SM
       Wilson coefficients
-    - `q2steps` (optional): number of $q^2$ steps. Defaults to 100. Less is
+    - `steps` (optional): number of steps in x. Defaults to 100. Less is
       faster but less precise.
 
     Additional keyword arguments are passed to the matplotlib plot function,
     e.g. 'c' for colour.
     """
     obs = flavio.classes.Observable[obs_name]
-    if obs.arguments != ['q2']:
-        raise ValueError(r"Only observables that depend on $q^2$ (and nothing else) are allowed")
-    q2_arr = np.arange(q2min, q2max, (q2max-q2min)/(q2steps-1))
+    if not obs.arguments or len(obs.arguments) != 1:
+        raise ValueError(r"Only observables that depend on a single parameter are allowed")
+    x_arr = np.arange(x_min, x_max, (x_max-x_min)/(steps-1))
     if wc is None:
         wc = flavio.physics.eft._wc_sm # SM Wilson coefficients
-        obs_arr = [flavio.sm_prediction(obs_name, q2) for q2 in q2_arr]
+        obs_arr = [flavio.sm_prediction(obs_name, x) for x in x_arr]
     else:
-        obs_arr = [flavio.np_prediction(obs_name, wc, q2) for q2 in q2_arr]
+        obs_arr = [flavio.np_prediction(obs_name, wc, x) for x in x_arr]
     ax = plt.gca()
     if 'c' not in kwargs and 'color' not in kwargs:
         kwargs['c'] = 'k'
-    ax.plot(q2_arr, obs_arr, **kwargs)
+    ax.plot(x_arr, obs_arr, **kwargs)
 
 
-def q2_plot_th_diff_err(obs_name, q2min, q2max, wc=None, q2steps=100,
-                        q2steps_err=5, N=100, threads=1,
+def diff_plot_th_err(obs_name, x_min, x_max, wc=None, steps=100,
+                        steps_err=5, N=100, threads=1,
                         plot_args=None, fill_args=None):
-    r"""Plot the theory prediction of a $q^2$-dependent observable
-    with uncertainties as a function of $q^2$.
+    r"""Plot the theory prediction of an observable dependending on
+    a continuous parameter, e.g. $q^2$,
+    with uncertainties as a function of this parameter.
 
     Parameters:
 
-    - `q2min`, `q2max`: minimum and maximum $q^2$ values in GeV^2
+    - `x_min`, `x_max`: minimum and maximum values of the parameter
     - `wc` (optional): `WilsonCoefficient` instance to define beyond-the-SM
       Wilson coefficients
-    - `q2steps` (optional): number of $q^2$ steps for the computation of the
+    - `steps` (optional): number of steps for the computation of the
       central value. Defaults to 100. Less is faster but less precise.
-    - `q2steps_err` (optional): number of $q^2$ steps for the computation of the
+    - `steps_err` (optional): number of steps for the computation of the
       uncertainty. Defaults to 5 and should be at least 3. Larger is slower
       but more precise. See caveat below.
     - `N` (optional): number of random evaluations to determine the uncertainty.
@@ -123,47 +124,47 @@ def q2_plot_th_diff_err(obs_name, q2min, q2max, wc=None, q2steps=100,
     - `fill_args` (optional): dictionary with keyword arguments to be passed
       to the matplotlib fill_between function, e.g. 'facecolor'
 
-    A word of caution regarding the `q2steps_err` option. By default, the
-    uncertainty is only computed at 10 steps in $q^2$ and is interpolated in
+    A word of caution regarding the `steps_err` option. By default, the
+    uncertainty is only computed at 10 steps and is interpolated in
     between. This can be enough if the uncertainty does not vary strongly
-    with $q^2$. However, when the starting point or end point of the plot range
+    with the parameter. However, when the starting point or end point of the plot range
     is outside the physical phase space, the uncertainty will vanish at that
     point and the interpolation might be inaccurate.
     """
     obs = flavio.classes.Observable[obs_name]
-    if obs.arguments != ['q2']:
-        raise ValueError(r"Only observables that depend on $q^2$ (and nothing else) are allowed")
-    step = (q2max-q2min)/(q2steps-1)
-    q2_arr = np.arange(q2min, q2max+step, step)
-    step = (q2max-q2min)/(q2steps_err-1)
-    q2_err_arr = np.arange(q2min, q2max+step, step)
+    if not obs.arguments or len(obs.arguments) != 1:
+        raise ValueError(r"Only observables that depend on a single parameter are allowed")
+    step = (x_max-x_min)/(steps-1)
+    x_arr = np.arange(x_min, x_max+step, step)
+    step = (x_max-x_min)/(steps_err-1)
+    x_err_arr = np.arange(x_min, x_max+step, step)
     # fix to avoid bounds_error in interp1d due to lack of numerical precision
-    q2_err_arr[-1] = q2_arr[-1]
+    x_err_arr[-1] = x_arr[-1]
     if wc is None:
         wc = flavio.physics.eft._wc_sm # SM Wilson coefficients
-        obs_err_arr = [flavio.sm_uncertainty(obs_name, q2, threads=threads) for q2 in q2_err_arr]
-        obs_arr = [flavio.sm_prediction(obs_name, q2) for q2 in q2_arr]
+        obs_err_arr = [flavio.sm_uncertainty(obs_name, x, threads=threads) for x in x_err_arr]
+        obs_arr = [flavio.sm_prediction(obs_name, x) for x in x_arr]
     else:
-        obs_err_arr = [flavio.np_uncertainty(obs_name, wc_obj=wc, q2=q2, threads=threads) for q2 in q2_err_arr]
-        obs_arr = [flavio.np_prediction(obs_name, wc, q2) for q2 in q2_arr]
+        obs_err_arr = [flavio.np_uncertainty(obs_name, wc, x, threads=threads) for x in x_err_arr]
+        obs_arr = [flavio.np_prediction(obs_name, wc, x) for x in x_arr]
     ax = plt.gca()
     plot_args = plot_args or {}
     fill_args = fill_args or {}
     if 'alpha' not in fill_args:
         fill_args['alpha'] = 0.5
-    ax.plot(q2_arr, obs_arr, **plot_args)
-    interp_err = scipy.interpolate.interp1d(q2_err_arr, obs_err_arr,
+    ax.plot(x_arr, obs_arr, **plot_args)
+    interp_err = scipy.interpolate.interp1d(x_err_arr, obs_err_arr,
                                             kind='quadratic')
-    obs_err_arr_int = interp_err(q2_arr)
-    ax.fill_between(q2_arr,
+    obs_err_arr_int = interp_err(x_arr)
+    ax.fill_between(x_arr,
                     obs_arr - obs_err_arr_int,
                     obs_arr + obs_err_arr_int,
                     **fill_args)
 
 
-def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **kwargs):
-    r"""Plot the binned theory prediction with uncertainties of a
-    $q^2$-dependent observable as a function of $q^2$  (in the form of coloured
+def bin_plot_th(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **kwargs):
+    r"""Plot the binned theory prediction with uncertainties of an observable
+    dependending on a continuous parameter, e.g. $q^2$ (in the form of coloured
     boxes).
 
     Parameters:
@@ -175,7 +176,7 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
       integrated branching ratios from experiments with different bin widths
       or to theory predictions for a differential branching ratio. It will
       divide all values and uncertainties by the bin width (i.e. dimensionless
-      integrated BRs will be converted to integrated differential BRs with
+      integrated BRs will be converted to $q^2$-integrated differential BRs with
       dimensions of GeV$^{-2}$). Defaults to False.
     - `N` (optional): number of random draws to determine the uncertainty.
       Defaults to 50. Larger is slower but more precise. The relative
@@ -185,8 +186,8 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
     e.g. 'fc' for face colour.
     """
     obs = flavio.classes.Observable[obs_name]
-    if obs.arguments != ['q2min', 'q2max']:
-        raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
+    if not obs.arguments or len(obs.arguments) != 2:
+        raise ValueError(r"Only observables that depend on the two bin boundaries (and nothing else) are allowed")
     if wc is None:
         wc = flavio.physics.eft._wc_sm # SM Wilson coefficients
         obs_dict = {bin_: flavio.sm_prediction(obs_name, *bin_) for bin_ in bin_list}
@@ -196,11 +197,11 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
         obs_err_dict = {bin_: flavio.np_uncertainty(obs_name, wc, *bin_, N=N) for bin_ in bin_list}
     ax = plt.gca()
     for _i, (bin_, central_) in enumerate(obs_dict.items()):
-        q2min, q2max = bin_
+        xmin, xmax = bin_
         err = obs_err_dict[bin_]
         if divide_binwidth:
-            err = err/(q2max-q2min)
-            central = central_/(q2max-q2min)
+            err = err/(xmax-xmin)
+            central = central_/(xmax-xmin)
         else:
             central = central_
         if 'fc' not in kwargs and 'facecolor' not in kwargs:
@@ -211,13 +212,14 @@ def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **k
             # the label should only be set for one (i.e. the first)
             # of the boxes, otherwise it will appear multiply in the legend
             kwargs.pop('label', None)
-        ax.add_patch(patches.Rectangle((q2min, central-err), q2max-q2min, 2*err,**kwargs))
+        ax.add_patch(patches.Rectangle((xmin, central-err), xmax-xmin, 2*err,**kwargs))
 
-def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurements=None,
+def bin_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurements=None,
                 include_bins=None, exclude_bins=None,
                 **kwargs):
-    r"""Plot all existing experimental measurements of a $q^2$-dependent
-    observable as a function of $q^2$  (in the form of coloured crosses).
+    r"""Plot all existing binned experimental measurements of an observable
+    dependending on a continuous parameter, e.g. $q^2$ (in the form of
+    coloured crosses).
 
     Parameters:
 
@@ -227,7 +229,7 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
       integrated branching ratios from experiments with different bin widths
       or to theory predictions for a differential branching ratio. It will
       divide all values and uncertainties by the bin width (i.e. dimensionless
-      integrated BRs will be converted to integrated differential BRs with
+      integrated BRs will be converted to $q^2$-integrated differential BRs with
       dimensions of GeV$^{-2}$). Defaults to False.
     - `include_measurements` (optional): a list of strings with measurement
       names (see measurements.yml) to include in the plot. By default, all
@@ -245,8 +247,8 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
     e.g. 'c' for colour.
     """
     obs = flavio.classes.Observable[obs_name]
-    if obs.arguments != ['q2min', 'q2max']:
-        raise ValueError(r"Only observables that depend on q2min and q2max (and nothing else) are allowed")
+    if not obs.arguments or len(obs.arguments) != 2:
+        raise ValueError(r"Only observables that depend on the two bin boundaries (and nothing else) are allowed")
     _experiment_labels = [] # list of experiments appearing in the plot legend
     for m_name, m_obj in flavio.Measurement.instances.items():
         if include_measurements is not None and m_name not in include_measurements:
@@ -262,24 +264,24 @@ def q2_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measurem
         dx = []
         dy_lower = []
         dy_upper = []
-        for _, q2min, q2max in obs_name_list_binned:
+        for _, xmin, xmax in obs_name_list_binned:
             if include_bins is not None:
                 if exclude_bins is not None:
                     raise ValueError("Please only specify include_bins or exclude_bins, not both")
-                elif (q2min, q2max) not in include_bins:
+                elif (xmin, xmax) not in include_bins:
                     continue
             elif exclude_bins is not None:
-                if (q2min, q2max) in exclude_bins:
+                if (xmin, xmax) in exclude_bins:
                     continue
-            c = central[(obs_name, q2min, q2max)]
-            e_right, e_left = err[(obs_name, q2min, q2max)]
+            c = central[(obs_name, xmin, xmax)]
+            e_right, e_left = err[(obs_name, xmin, xmax)]
             if divide_binwidth:
-                c = c/(q2max-q2min)
-                e_left = e_left/(q2max-q2min)
-                e_right = e_right/(q2max-q2min)
+                c = c/(xmax-xmin)
+                e_left = e_left/(xmax-xmin)
+                e_right = e_right/(xmax-xmin)
             ax=plt.gca()
-            x.append((q2max+q2min)/2.)
-            dx.append((q2max-q2min)/2)
+            x.append((xmax+xmin)/2.)
+            dx.append((xmax-xmin)/2)
             y.append(c)
             dy_lower.append(e_left)
             dy_upper.append(e_right)
