@@ -288,6 +288,12 @@ class Constraints(object):
         return copy.deepcopy(self)
 
     def get_yaml(self, *args, **kwargs):
+        """Get a YAML string representation of all constraints.
+
+        The optional parameter `pname` allows to customize the name of the key
+        containing the parameter list of each constraint (e.g. 'parameters',
+        'observables').
+        """
         return yaml.dump(self.get_yaml_dict(*args, **kwargs))
 
     def get_yaml_dict(self, pname='parameters'):
