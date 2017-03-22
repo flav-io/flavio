@@ -185,7 +185,7 @@ def B0(s, mq):
     # to select the right branch of the complex arctangent, need to
     # interpret m^2 as m^2-i\epsilon
     iepsilon = 1e-8j
-    return -2*sqrt(4*mq**2/s - 1) * atan(1/sqrt(4*(mq**2-iepsilon)/s - 1))
+    return -2*sqrt(4*(mq**2-iepsilon)/s - 1) * atan(1/sqrt(4*(mq**2-iepsilon)/s - 1))
 
 # (30), (31) of hep-ph/0106067v2
 def i1_bfs(q2, u, mq, mB):
