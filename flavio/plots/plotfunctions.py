@@ -482,7 +482,7 @@ def contour(x, y, z, levels,
     _contour_args.update(contour_args)
     _contourf_args.update(contourf_args)
     # for the filling, need to add zero contour
-    levelsf = [np.min(z)] + levels
+    levelsf = [np.min(z)] + list(levels)
     ax = plt.gca()
     if filled:
         ax.contourf(x, y, z, levels=levelsf, **_contourf_args)
