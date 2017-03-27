@@ -1,5 +1,6 @@
 import scipy.stats
 from functools import lru_cache
+from math import sqrt
 
 @lru_cache(maxsize=10)
 def confidence_level(nsigma):
@@ -21,3 +22,17 @@ def delta_chi2(nsigma, dof):
     chi2_ndof = scipy.stats.chi2(dof)
     cl_nsigma = confidence_level(nsigma)
     return chi2_ndof.ppf(cl_nsigma)
+
+def pull(delta_chi2, dof):
+    r"""Compute the pull in Gaussian standard deviations correspondsing to
+    a $\Delta\chi^2$ with `dof` degrees of freedom.
+
+    Example: For `dof=2` and `delta_chi2=2.3`, the result is roughly 1.0.
+
+    This function is the inverse of the function `delta_chi2()`"""
+    if dof == 1:
+        # that's trivial
+        return sqrt(abs(delta_chi2))
+    chi2_ndof = scipy.stats.chi2(dof)
+    cl_delta_chi2 = chi2_ndof.cdf(delta_chi2)
+    return scipy.stats.norm.ppf(0.5+cl_delta_chi2/2)
