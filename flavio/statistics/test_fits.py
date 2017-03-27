@@ -8,6 +8,8 @@ from flavio.statistics.probability import *
 from flavio.config import config
 import scipy.stats
 import copy
+import os
+import tempfile
 
 class TestClasses(unittest.TestCase):
     def test_fit_class(self):
@@ -124,6 +126,19 @@ class TestClasses(unittest.TestCase):
         m2.add_constraint(['test_obs 1', 'test_obs 2'], d2)
         fit = FastFit('fastfit_test_1', flavio.default_parameters, ['m_b'],  [], ['test_obs 1', 'test_obs 2'])
         fit.make_measurement()
+        cov_before = fit._sm_covariance
+        filename = os.path.join(tempfile.gettempdir(), 'tmp-no-p')
+        fit.save_sm_covariance(filename)
+        fit.load_sm_covariance(filename)
+        cov_after = fit._sm_covariance
+        npt.assert_array_equal(cov_before, cov_after)
+        os.remove(filename)
+        filename = os.path.join(tempfile.gettempdir(), 'tmp.p')
+        fit.save_sm_covariance(filename)
+        fit.load_sm_covariance(filename)
+        cov_after = fit._sm_covariance
+        npt.assert_array_equal(cov_before, cov_after)
+        os.remove(filename)
         cov_weighted = [[0.008, 0.012],[0.012,0.0855]]
         mean_weighted = [5.8, 1.7]
         exact_log_likelihood = scipy.stats.multivariate_normal.logpdf([5.9, 2.5], mean_weighted, cov_weighted)

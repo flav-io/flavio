@@ -13,6 +13,7 @@ import warnings
 import inspect
 from multiprocessing import Pool
 import scipy.optimize
+import pickle
 
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
@@ -421,6 +422,7 @@ class FastFit(BayesianFit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.measurements = None
+        self._sm_covariance = None
 
 
     # a method to get the mean and covariance of all measurements of all
@@ -482,7 +484,6 @@ class FastFit(BayesianFit):
                                 axis=0))
             return weighted_mean, weighted_covariance
 
-
     def _get_random_nuisance(self, *args):
         return self._get_random(par=False, nuisance=True, wc=False)
 
@@ -501,12 +502,81 @@ class FastFit(BayesianFit):
             pred_arr = np.array(pool.map(self.get_predictions_array, X)).T
         return np.cov(pred_arr)
 
-    def make_measurement(self, N=100, Nexp=5000, threads=1):
+    def get_sm_covariance(self, N=100, threads=1, force=True):
+        """Return the covriance matrix of the SM predictions of all observables
+        under variation of all nuisance parameters.
+
+        Parameters:
+
+        - `N`: number of random computations (computing time is proportional
+          to it; more means less random fluctuations.)
+        - `threads`: optional; number of parallel threads. Defaults to 1 (no
+          parallelization)
+        - `force`: optional; if True (default), will recompute covariance even
+          if it already has been computed.
+        """
+        if self._sm_covariance is None or force:
+            self._sm_covariance = self._get_covariance_sm(N=N, threads=threads)
+        elif N != 100:
+            warnings.warn("Argument N={} ignored ".format(N) + \
+                          "as SM covariance has already " + \
+                          "been computed. Recompute with get_sm_covariance.")
+        return self._sm_covariance
+
+    def save_sm_covariance(self, filename):
+        """Save the SM covariance to a pickle file.
+
+        The covariance must have been computed before using
+        `get_sm_covariance`."""
+        if self._sm_covariance is None:
+            raise ValueError("Call get_sm_covariance or make_measurement first.")
+        with open(filename, 'wb') as f:
+            data = dict(covariance=self._sm_covariance,
+                        observables=self.observables)
+            pickle.dump(data, f)
+
+    def load_sm_covariance(self, filename):
+        """Load the SM covariance from a pickle file."""
+        with open(filename, 'rb') as f:
+            data = pickle.load(f)
+        self.load_sm_covariance_dict(d=data)
+
+    def load_sm_covariance_dict(self, d):
+        """Load the SM covariance from a dictionary.
+
+        It must have the form {'observables': [...], 'covariance': [[...]]}
+        where 'covariance' is a covariance matrix in the basis of observables
+        given by 'observables' which must at least contain all the observables
+        involved in the fit. Additional observables will be ignored; the
+        ordering is arbitrary."""
+        obs = d['observables']
+        try:
+            permutation = [obs.index(o) for o in self.observables]
+        except ValueError:
+            "Covariance matrix does not contain all necessary entries"
+        assert len(permutation) == len(self.observables), \
+            "Covariance matrix does not contain all necessary entries"
+        self._sm_covariance = d['covariance'][permutation][:,permutation]
+
+    def make_measurement(self, N=100, Nexp=5000, threads=1, force=False):
         """Initialize the fit by producing a pseudo-measurement containing both
         experimental uncertainties as well as theory uncertainties stemming
-        from nuisance parameters."""
+        from nuisance parameters.
+
+        Optional parameters:
+
+        - `N`: number of random computations for the SM covariance (computing
+          time is proportional to it; more means less random fluctuations.)
+        - `Nexp`: number of random computations for the experimental covariance.
+          This is much less expensive than the theory covariance, so a large
+          number can be afforded (default: 5000).
+        - `threads`: number of parallel threads for the SM
+          covariance computation. Defaults to 1 (no parallelization).
+        - `force`: if True, will recompute SM covariance even if it
+          already has been computed. Defaults to False.
+        """
         central_exp, cov_exp = self._get_central_covariance_experiment(Nexp)
-        cov_sm = self._get_covariance_sm(N, threads=threads)
+        cov_sm = self.get_sm_covariance(N, force=force, threads=threads)
         covariance = cov_exp + cov_sm
         # add the Pseudo-measurement
         m = flavio.classes.Measurement('Pseudo-measurement for FastFit instance: ' + self.name)
