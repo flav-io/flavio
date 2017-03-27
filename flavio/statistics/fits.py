@@ -68,7 +68,7 @@ class Fit(flavio.NamedInstanceClass):
                 continue
             _obs_measured.update(m_obj.all_parameters)
         missing_obs = set(observables) - set(_obs_measured).intersection(set(observables))
-        assert missing_obs == set(), "No measurement found for the observables: " + ', '.join(missing_obs)
+        assert missing_obs == set(), "No measurement found for the observables: " + str(missing_obs)
         if exclude_measurements is not None and include_measurements is not None:
             raise ValueError("The options exclude_measurements and include_measurements must not be specified simultaneously")
         # check that no parameter appears as fit *and* nuisance parameter
