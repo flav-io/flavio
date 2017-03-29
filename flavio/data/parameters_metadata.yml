@@ -432,13 +432,13 @@ B0->K0 deltaC9 c Im:
   tex: $\text{Im}\,c^{\Delta_9}$
   description: Parameter for subleading hadronic effects in $B^0\to K^0\ell^+\ell^-$ at high $q^2$
 B+->K+ deltaC9 a Re:
-  tex: $\text{Im}\,a^{\Delta_9}$
+  tex: $\text{Re}\,a^{\Delta_9}$
   description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at low $q^2$
 B+->K+ deltaC9 b Re:
-  tex: $\text{Im}\,b^{\Delta_9}$
+  tex: $\text{Re}\,b^{\Delta_9}$
   description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at low $q^2$
 B+->K+ deltaC9 c Re:
-  tex: $\text{Im}\,c^{\Delta_9}$
+  tex: $\text{Re}\,c^{\Delta_9}$
   description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at high $q^2$
 B+->K+ deltaC9 a Im:
   tex: $\text{Im}\,a^{\Delta_9}$
