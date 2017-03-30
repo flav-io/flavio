@@ -505,6 +505,8 @@ class FastFit(BayesianFit):
             pool = Pool(threads)
             X = np.array(pool.map(self._get_random_nuisance, range(N)))
             pred_arr = np.array(pool.map(self.get_predictions_array, X)).T
+            pool.close()
+            pool.join()
         return np.cov(pred_arr)
 
     def get_sm_covariance(self, N=100, threads=1, force=True):

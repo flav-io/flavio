@@ -351,9 +351,12 @@ def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
         try:
             z = -2*np.array(pool.map(log_likelihood, xy )).reshape((steps, steps))
         except PicklingError:
+            pool.close()
             raise PicklingError("When using more than 1 thread, the "
                                 "log_likelihood function must be picklable; "
                                 "in particular, you cannot use lambda expressions.")
+        pool.close()
+        pool.join()
     z = z - np.min(z) # subtract the best fit point (on the grid)
 
     # get the correct values for 2D confidence/credibility contours for n sigma
