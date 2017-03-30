@@ -117,11 +117,13 @@ class ProbabilityDistribution(object):
                         od[k][i] = int(od[k][i])
         return od
 
-    def get_yaml(self):
+    def get_yaml(self, *args, **kwargs):
         """Get a YAML string representing the dictionary returned by the
-        get_dict method."""
+        get_dict method.
+
+        Arguments will be passed to `yaml.dump`."""
         od = self.get_dict(distribution=True, iterate=True, arraytolist=True)
-        return yaml.dump(od)
+        return yaml.dump(od, *args, **kwargs)
 
 class UniformDistribution(ProbabilityDistribution):
     """Distribution with constant PDF in a range and zero otherwise."""
@@ -1094,7 +1096,7 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
             d = np.diff(x)
             if abs(np.min(d)/np.max(d)-1) > 1e-3:
                 raise ValueError("Grid must be evenly spaced per dimension")
-        self.xi = list(xi)
+        self.xi = [np.asarray(x) for x in xi]
         self.y = np.asarray(y)
         for i, x in enumerate(xi):
             if len(x) == 2:
