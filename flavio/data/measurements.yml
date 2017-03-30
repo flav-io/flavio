@@ -893,6 +893,30 @@ CMS B->K*mumu 2015:
   experiment: CMS
   inspire: Khachatryan:2015isa
   values:
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 1
+      q2max: 2
+      value: 4.6 ± 0.7 ± 0.3 1e-8
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 2
+      q2max: 4.3
+      value: 3.3 ± 0.5 ± 0.2 1e-8
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 6
+      value: 3.4 ± 0.5 ± 0.3 1e-8
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 6
+      q2max: 8.68
+      value: 4.7 ± 0.4 ± 0.3 1e-8
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16
+      value: 6.7 ± 0.6 ± 0.5 1e-8
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 16
+      q2max: 19
+      value: 4.2 ± 0.3 ± 0.3 1e-8
     - name: <FL>(B0->K*mumu)
       q2min: 1
       q2max: 2
@@ -900,7 +924,7 @@ CMS B->K*mumu 2015:
     - name: <FL>(B0->K*mumu)
       q2min: 2
       q2max: 4.3
-      value:  0.80 ± 0.08 ± 0.06
+      value: 0.80 ± 0.08 ± 0.06
     - name: <FL>(B0->K*mumu)
       q2min: 4.3
       q2max: 6
@@ -908,7 +932,7 @@ CMS B->K*mumu 2015:
     - name: <FL>(B0->K*mumu)
       q2min: 6
       q2max: 8.68
-      value:  0.50 ± 0.06 ± 0.06
+      value: 0.50 ± 0.06 ± 0.06
     - name: <FL>(B0->K*mumu)
       q2min: 14.18
       q2max: 16
@@ -916,7 +940,31 @@ CMS B->K*mumu 2015:
     - name: <FL>(B0->K*mumu)
       q2min: 16
       q2max: 19
-      value:  0.38 + 0.05 - 0.06 ± 0.04
+      value: 0.38 + 0.05 - 0.06 ± 0.04
+    - name: <AFB>(B0->K*mumu)
+      q2min: 1
+      q2max: 2
+      value: -0.27 + 0.17 - 0.40 ± 0.07
+    - name: <AFB>(B0->K*mumu)
+      q2min: 2
+      q2max: 4.3
+      value: -0.12 + 0.15 - 0.17 ± 0.05
+    - name: <AFB>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 6
+      value: 0.01 ± 0.15 ± 0.03
+    - name: <AFB>(B0->K*mumu)
+      q2min: 6
+      q2max: 8.68
+      value: 0.03 ± 0.10 ± 0.02
+    - name: <AFB>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16
+      value: 0.39 + 0.04 - 0.06 ± 0.01
+    - name: <AFB>(B0->K*mumu)
+      q2min: 16
+      q2max: 19
+      value: 0.35 ± 0.07 ± 0.01
 
 LHCb B->K*mumu 2015 P 0.1-0.98:
   experiment: LHCb
