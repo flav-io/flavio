@@ -51,6 +51,9 @@ class TestBVll(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction("P3(B0->K*mumu)", q2=3), 0, delta=delta)
         delta = 0.02
         self.assertAlmostEqual(flavio.sm_prediction("P3(B0->K*mumu)", q2=17), 0, delta=delta)
+        # LFU ratio = 1
+        self.assertAlmostEqual(flavio.sm_prediction("Rmue(B0->K*ll)", q2=6), 1, delta=1e-2)
+        self.assertAlmostEqual(flavio.sm_prediction("Rmue(B+->K*ll)", q2=6), 1, delta=1e-2)
 
     def test_unphysical(self):
         # check BR calculation yields zero outside kinematical limits

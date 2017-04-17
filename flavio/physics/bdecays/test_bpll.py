@@ -44,6 +44,9 @@ class TestBPll(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->Kmumu)", q2=1), 0, delta=0.01)
         self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->Kmumu)", q2=6), 0, delta=0.01)
         self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->Kmumu)", q2=17), 0, delta=0.01)
+        # LFU ratio = 1
+        self.assertAlmostEqual(flavio.sm_prediction("Rmue(B+->Kll)", q2=6), 1, delta=1e-3)
+        self.assertAlmostEqual(flavio.sm_prediction("Rmue(B0->Kll)", q2=6), 1, delta=1e-3)
 
     def test_bpll_lfv(self):
         # rough numerical test for branching ratio at high q^2 to old code

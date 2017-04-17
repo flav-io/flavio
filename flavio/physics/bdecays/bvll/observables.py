@@ -185,6 +185,15 @@ def bvll_obs_int_ratio_leptonflavour(func, B, V, l1, l2):
         return num/denom
     return fct
 
+def bvll_obs_ratio_leptonflavour(func, B, V, l1, l2):
+    def fct(wc_obj, par, q2):
+        num = bvll_obs(func, q2, wc_obj, par, B, V, l1)
+        if num == 0:
+            return 0
+        denom = bvll_obs(func, q2, wc_obj, par, B, V, l2)
+        return num/denom
+    return fct
+
 def bvll_obs_ratio_func(func_num, func_den, B, V, lep):
     def fct(wc_obj, par, q2):
         num = bvll_obs(func_num, q2, wc_obj, par, B, V, lep)
@@ -350,3 +359,13 @@ for l in [('mu','e'), ('tau','mu'),]:
             # add taxonomy for both processes (e.g. B->Vee and B->Vmumu)
             _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
         Prediction(_obs_name, bvll_obs_int_ratio_leptonflavour(dGdq2_ave, _hadr[M]['B'], _hadr[M]['V'], *l))
+
+        # differential ratio of BRs
+        _obs_name = "R"+l[0]+l[1]+"("+M+"ll)"
+        _obs = Observable(name=_obs_name, arguments=['q2'])
+        _obs.set_description(r"Ratio of differential branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
+        _obs.tex = r"$R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} (" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
+        for li in l:
+            # add taxonomy for both processes (e.g. B->Vee and B->Vmumu)
+            _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
+        Prediction(_obs_name, bvll_obs_ratio_leptonflavour(dGdq2_ave, _hadr[M]['B'], _hadr[M]['V'], *l))

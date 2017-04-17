@@ -179,6 +179,14 @@ def bpll_obs_int_ratio_leptonflavour(func, B, P, lnum, lden):
         return num/denom
     return fct
 
+def bpll_obs_ratio_leptonflavour(func, B, P, lnum, lden):
+    def fct(wc_obj, par, q2):
+        num = bpll_obs(func, q2, wc_obj, par, B, P, lnum, lnum)
+        if num == 0:
+            return 0
+        denom = bpll_obs(func, q2, wc_obj, par, B, P, lden, lden)
+        return num/denom
+    return fct
 
 def bpll_obs_ratio_func(func_num, func_den, B, P, l1, l2):
     def fct(wc_obj, par, q2):
@@ -252,7 +260,6 @@ for l in ['e', 'mu', 'tau']:
 for l in [('mu','e'), ('tau','mu'),]:
     for M in _hadr.keys():
 
-
         # binned ratio of BRs
         _obs_name = "<R"+l[0]+l[1]+">("+M+"ll)"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
@@ -262,6 +269,16 @@ for l in [('mu','e'), ('tau','mu'),]:
             # add taxonomy for both processes (e.g. B->Pee and B->Pmumu)
             _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to P\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
         Prediction(_obs_name, bpll_obs_int_ratio_leptonflavour(dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], *l))
+
+        # differential ratio of BRs
+        _obs_name = "R"+l[0]+l[1]+"("+M+"ll)"
+        _obs = Observable(name=_obs_name, arguments=['q2'])
+        _obs.set_description(r"Ratio of differential branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
+        _obs.tex = r"$R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"}(" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
+        for li in l:
+            # add taxonomy for both processes (e.g. B->Pee and B->Pmumu)
+            _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to P\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
+        Prediction(_obs_name, bpll_obs_ratio_leptonflavour(dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], *l))
 
 # Lepton flavour violating decays
 for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
