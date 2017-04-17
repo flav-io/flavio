@@ -1032,6 +1032,84 @@ CMS B->K*mumu 2015:
       q2max: 19
       value: 0.35 ± 0.07 ± 0.01
 
+# Note that this combination supersedes *both* 'CMS B->K*mumu 2013' *and* 'CMS B->K*mumu 2015'
+CMS B->K*mumu 2013 combined with 2015:
+  experiment: CMS
+  inspire: Khachatryan:2015isa
+  values:
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 1
+      q2max: 2
+      value: 4.7 ± 0.7 1e-8
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 2
+      q2max: 4.3
+      value: 3.4 ± 0.5 1e-8
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 4.0 ± 0.5 1e-8
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 6.0 ± 0.6 1e-8
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16
+      value: 6.2 ± 0.7 1e-8
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 16
+      q2max: 19
+      value: 4.3 ± 0.4 1e-8
+    - name: <FL>(B0->K*mumu)
+      q2min: 1
+      q2max: 2
+      value: 0.63 ± 0.10
+    - name: <FL>(B0->K*mumu)
+      q2min: 2
+      q2max: 4.3
+      value: 0.77 ± 0.09
+    - name: <FL>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 0.59 ± 0.08
+    - name: <FL>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 0.40 ± 0.06
+    - name: <FL>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16
+      value: 0.49 ± 0.06
+    - name: <FL>(B0->K*mumu)
+      q2min: 16
+      q2max: 19
+      value: 0.40 ± 0.06
+    - name: <AFB>(B0->K*mumu)
+      q2min: 1
+      q2max: 2
+      value: -0.28 ± 0.17
+    - name: <AFB>(B0->K*mumu)
+      q2min: 2
+      q2max: 4.3
+      value: -0.10 ± 0.13
+    - name: <AFB>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 8.68
+      value: 0.01 ± 0.07
+    - name: <AFB>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: 0.24 ± 0.05
+    - name: <AFB>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16
+      value: 0.37 + 0.06 - 0.05
+    - name: <AFB>(B0->K*mumu)
+      q2min: 16
+      q2max: 19
+      value: 0.39 ± 0.04
+
 LHCb B->K*mumu 2015 P 0.1-0.98:
   experiment: LHCb
   inspire: Aaij:2015oid
