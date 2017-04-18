@@ -4,6 +4,7 @@ top-level namespace."""
 import flavio
 import numpy as np
 from collections import OrderedDict
+from multiprocessing import Pool
 
 def np_prediction(obs_name, wc_obj, *args, **kwargs):
     """Get the central value of the new physics prediction of an observable.
@@ -35,7 +36,13 @@ def sm_prediction(obs_name, *args, **kwargs):
     wc_sm = flavio.physics.eft._wc_sm
     return obs.prediction_central(flavio.default_parameters, wc_sm, *args, **kwargs)
 
-def np_uncertainty(obs_name, wc_obj, *args, N=100, **kwargs):
+def _obs_prediction_par(par, obs_name, wc_obj, *args, **kwargs):
+    obs = flavio.classes.Observable.get_instance(obs_name)
+    return obs.prediction_par(par, wc_obj, *args, **kwargs)
+
+from functools import partial
+
+def np_uncertainty(obs_name, wc_obj, *args, N=100, threads=1, **kwargs):
     """Get the uncertainty of the prediction of an observable in the presence
     of new physics.
 
@@ -46,19 +53,34 @@ def np_uncertainty(obs_name, wc_obj, *args, N=100, **kwargs):
     - `wc_obj`: an instance of `flavio.WilsonCoefficients`
     - `N` (optional): number of random evaluations of the observable.
     The relative accuracy of the uncertainty returned is given by $1/\sqrt{2N}$.
+    - `threads` (optional): if bigger than one, number of threads for parallel
+    computation of the uncertainty.
 
     Additional arguments are passed to the observable and are necessary,
     depending on the observable (e.g. $q^2$-dependent observables).
     """
-    obs = flavio.classes.Observable[obs_name]
     par_random = [flavio.default_parameters.get_random_all() for i in range(N)]
-    all_pred = np.array([
-        obs.prediction_par(par, wc_obj, *args, **kwargs)
-        for par in par_random
-    ])
+    if threads == 1:
+        # not parallel
+        all_pred = np.array([_obs_prediction_par(par, obs_name, wc_obj, *args, **kwargs) for par in par_random])
+    else:
+        # parallel
+        pool = Pool(threads)
+        # convert args to kwargs
+        _kwargs = kwargs.copy()
+        obs_args = flavio.Observable[obs_name].arguments
+        for i, a in enumerate(args):
+            _kwargs[obs_args[i]] = a
+        all_pred = np.array(
+                    pool.map(
+                        partial(_obs_prediction_par,
+                        obs_name=obs_name, wc_obj=wc_obj, **_kwargs),
+                        par_random))
+        pool.close()
+        pool.join()
     return np.std(all_pred)
 
-def sm_uncertainty(obs_name, *args, N=100, **kwargs):
+def sm_uncertainty(obs_name, *args, N=100, threads=1, **kwargs):
     """Get the uncertainty of the Standard Model prediction of an observable.
 
     Parameters
@@ -67,12 +89,14 @@ def sm_uncertainty(obs_name, *args, N=100, **kwargs):
     - `obs_name`: name of the observable as a string
     - `N` (optional): number of random evaluations of the observable.
     The relative accuracy of the uncertainty returned is given by $1/\sqrt{2N}$.
+    - `threads` (optional): if bigger than one, number of threads for parallel
+    computation of the uncertainty.
 
     Additional arguments are passed to the observable and are necessary,
     depending on the observable (e.g. $q^2$-dependent observables).
     """
     wc_sm = flavio.physics.eft._wc_sm
-    return np_uncertainty(obs_name, wc_sm, *args, N=N, **kwargs)
+    return np_uncertainty(obs_name, wc_sm, *args, N=N, threads=threads, **kwargs)
 
 def sm_error_budget(obs_name, *args, N=50, **kwargs):
     """Get the *relative* uncertainty of the Standard Model prediction due to
