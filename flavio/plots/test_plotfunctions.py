@@ -41,6 +41,14 @@ class TestPlots(unittest.TestCase):
         with self.assertRaises(ValueError):
             q2_plot_th_diff('eps_K', 0, 25)
 
+    def test_q2_th_diff_err(self):
+        # without parallelization
+        q2_plot_th_diff_err('dBR/dq2(B0->pienu)', 1, 24, q2steps=5,
+                                                q2steps_err=3, N=10)
+        # with parallelization
+        q2_plot_th_diff_err('dBR/dq2(B0->pienu)', 1, 24, q2steps=5,
+                                                 q2steps_err=3, N=10, threads=2)
+
     def test_q2_th_bin(self):
         bins = [(0, 5), (5, 10)]
         # without specifying WCs

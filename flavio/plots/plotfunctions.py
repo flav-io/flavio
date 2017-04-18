@@ -83,6 +83,70 @@ def q2_plot_th_diff(obs_name, q2min, q2max, wc=None, q2steps=100, **kwargs):
         kwargs['c'] = 'k'
     ax.plot(q2_arr, obs_arr, **kwargs)
 
+
+def q2_plot_th_diff_err(obs_name, q2min, q2max, wc=None, q2steps=100,
+                        q2steps_err=5, N=100, threads=1,
+                        plot_args=None, fill_args=None):
+    r"""Plot the theory prediction of a $q^2$-dependent observable
+    with uncertainties as a function of $q^2$.
+
+    Parameters:
+
+    - `q2min`, `q2max`: minimum and maximum $q^2$ values in GeV^2
+    - `wc` (optional): `WilsonCoefficient` instance to define beyond-the-SM
+      Wilson coefficients
+    - `q2steps` (optional): number of $q^2$ steps for the computation of the
+      central value. Defaults to 100. Less is faster but less precise.
+    - `q2steps_err` (optional): number of $q^2$ steps for the computation of the
+      uncertainty. Defaults to 5 and should be at least 3. Larger is slower
+      but more precise. See caveat below.
+    - `N` (optional): number of random evaluations to determine the uncertainty.
+      Defaults to 100. Less is faster but less precise.
+    - `threads` (optional): if bigger than 1, number of threads to use for
+      parallel computation of uncertainties
+    - `plot_args` (optional): dictionary with keyword arguments to be passed
+      to the matplotlib plot function, e.g. 'c' for colour.
+    - `fill_args` (optional): dictionary with keyword arguments to be passed
+      to the matplotlib fill_between function, e.g. 'facecolor'
+
+    A word of caution regarding the `q2steps_err` option. By default, the
+    uncertainty is only computed at 10 steps in $q^2$ and is interpolated in
+    between. This can be enough if the uncertainty does not vary strongly
+    with $q^2$. However, when the starting point or end point of the plot range
+    is outside the physical phase space, the uncertainty will vanish at that
+    point and the interpolation might be inaccurate.
+    """
+    obs = flavio.classes.Observable[obs_name]
+    if obs.arguments != ['q2']:
+        raise ValueError(r"Only observables that depend on $q^2$ (and nothing else) are allowed")
+    step = (q2max-q2min)/(q2steps-1)
+    q2_arr = np.arange(q2min, q2max+step, step)
+    step = (q2max-q2min)/(q2steps_err-1)
+    q2_err_arr = np.arange(q2min, q2max+step, step)
+    # fix to avoid bounds_error in interp1d due to lack of numerical precision
+    q2_err_arr[-1] = q2_arr[-1]
+    if wc is None:
+        wc = flavio.physics.eft._wc_sm # SM Wilson coefficients
+        obs_err_arr = [flavio.sm_uncertainty(obs_name, q2, threads=threads) for q2 in q2_err_arr]
+        obs_arr = [flavio.sm_prediction(obs_name, q2) for q2 in q2_arr]
+    else:
+        obs_err_arr = [flavio.np_uncertainty(obs_name, wc_obj=wc, q2=q2, threads=threads) for q2 in q2_err_arr]
+        obs_arr = [flavio.np_prediction(obs_name, wc, q2) for q2 in q2_arr]
+    ax = plt.gca()
+    plot_args = plot_args or {}
+    fill_args = fill_args or {}
+    if 'alpha' not in fill_args:
+        fill_args['alpha'] = 0.5
+    ax.plot(q2_arr, obs_arr, **plot_args)
+    interp_err = scipy.interpolate.interp1d(q2_err_arr, obs_err_arr,
+                                            kind='quadratic')
+    obs_err_arr_int = interp_err(q2_arr)
+    ax.fill_between(q2_arr,
+                    obs_arr - obs_err_arr_int,
+                    obs_arr + obs_err_arr_int,
+                    **fill_args)
+
+
 def q2_plot_th_bin(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **kwargs):
     r"""Plot the binned theory prediction with uncertainties of a
     $q^2$-dependent observable as a function of $q^2$  (in the form of coloured
