@@ -195,6 +195,39 @@ class TestClasses(unittest.TestCase):
         # check that the PDF is properly normalized
         self.assertEqual( scipy.integrate.quad(lambda x: math.exp(pd.logpdf(x)), -np.inf, +np.inf)[0], 1)
 
+    def test_observable_from_function(self):
+        o1 = Observable('test_obs_1', arguments=['a1'])
+        o2 = Observable('test_obs_2', arguments=['a2'])
+        with self.assertRaises(ValueError):
+            # non-existent obs
+            Observable.from_function('test_obs_12',
+                                     ['test_obs_x', 'test_obs_2'],
+                                     lambda x, y: x-y)
+        with self.assertRaises(AssertionError):
+            # depend on different arguments
+            Observable.from_function('test_obs_12',
+                                     ['test_obs_1', 'test_obs_2'],
+                                     lambda x, y: x-y)
+        o2 = Observable('test_obs_2', arguments=['a1'])
+        with self.assertRaises(AssertionError):
+            # obs without prediction
+            Observable.from_function('test_obs_12',
+                                     ['test_obs_1', 'test_obs_2'],
+                                     lambda x, y: x-y)
+        Prediction('test_obs_1', lambda wc_obj, par: 3)
+        Prediction('test_obs_2', lambda wc_obj, par: 7)
+        Observable.from_function('test_obs_12',
+                                 ['test_obs_1', 'test_obs_2'],
+                                 lambda x, y: x-y)
+        self.assertEqual(
+            Observable['test_obs_12'].prediction_central(flavio.default_parameters, None),
+            -4)
+        self.assertEqual(Observable['test_obs_12'].arguments, ['a1'])
+        # delete dummy instances
+        Observable.del_instance('test_obs_1')
+        Observable.del_instance('test_obs_2')
+        Observable.del_instance('test_obs_12')
+
     def test_observable_taxonomy(self):
         o1 = Observable( 'test_obs_1' )
         o2 = Observable( 'test_obs_2' )

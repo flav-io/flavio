@@ -420,6 +420,48 @@ class Observable(NamedInstanceClass):
         """Return the hierarchical metadata taxonomy as a nested dictionary."""
         return dicts(cls.taxonomy)
 
+    @classmethod
+    def from_function(cls, name, observables, function):
+        """Instantiate an observable object and the corresponding Prediction
+        object for an observable that is defined as a mathematical function
+        of two or more existing observables with existing predictions.
+
+        Parameters:
+        -----------
+
+        - name: string name of the new observable
+        - observables: list of string names of the observables to be combined
+        - function: function of the observables. The number of arguments must
+          match the number of observables
+
+        Example:
+        --------
+
+        For two existing observables 'my_obs_1' and 'my_obs_2', a new observable
+        that is defined as the difference between the two can be defined as
+
+        ```
+        Observable.from_function('my_obs_1_2_diff',
+                                 ['my_obs_1', 'my_obs_2'],
+                                 lambda x, y: x - y)
+        ```
+        """
+        for observable in observables:
+            try:
+                Observable[observable]
+            except KeyError:
+                raise ValueError("The observable " + observable + " does not exist")
+            assert Observable[observable].arguments == Observable[observables[0]].arguments, \
+                "Only observables depending on the same arguments can be combined"
+            assert Observable[observable].prediction is not None, \
+                "The observable {} does not have a prediction yet".format(observable)
+        obs_obj = cls(name, arguments=Observable[observables[0]].arguments)
+        pfcts = [Observable[observable].prediction.function
+                for observable in observables]
+        def pfct(*args, **kwargs):
+            return function(*[f(*args, **kwargs) for f in pfcts])
+        Prediction(name, pfct)
+        return obs_obj
 
 ########## AuxiliaryQuantity Class ##########
 class AuxiliaryQuantity(NamedInstanceClass):
@@ -462,7 +504,7 @@ class Prediction(object):
         self.observable_obj = Observable[observable]
         self.observable_obj.set_prediction(self)
 
-    def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
+    def get_central(self, constraints_obj, wc_obj, *    args, **kwargs):
         par_dict = constraints_obj.get_central_all()
         return self.function(wc_obj, par_dict, *args, **kwargs)
 
