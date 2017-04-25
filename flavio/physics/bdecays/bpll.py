@@ -122,20 +122,20 @@ def AFB_cpaverage_num(J, J_bar):
 def FH_cpaverage_num(J, J_bar):
     return (FH_num(J) + FH_num(J_bar))/2.
 
-def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, l1, l2):
+def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, l1, l2, epsrel=0.005):
     def obs(q2):
         return bpll_obs(function, q2, wc_obj, par, B, P, l1, l2)
-    return flavio.math.integrate.nintegrate(obs, q2min, q2max)
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max, epsrel=epsrel)
 
 
 def bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2):
     tauB = par['tau_'+B]
     return tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, l1, l2)
 
-def bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2):
+def bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2, epsrel=0.005):
     def obs(q2):
         return bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2)
-    return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max, epsrel=epsrel)/(q2max-q2min)
 
 # Functions returning functions needed for Prediction instances
 
@@ -172,10 +172,10 @@ def bpll_obs_int_ratio_func(func_num, func_den, B, P, l1, l2):
 
 def bpll_obs_int_ratio_leptonflavour(func, B, P, lnum, lden):
     def fct(wc_obj, par, q2min, q2max):
-        num = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lnum, lnum)
+        num = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lnum, lnum, epsrel=0.0005)
         if num == 0:
             return 0
-        denom = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lden, lden)
+        denom = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lden, lden, epsrel=0.0005)
         return num/denom
     return fct
 

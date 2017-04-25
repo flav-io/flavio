@@ -128,7 +128,7 @@ def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):
     tauB = par['tau_'+B]
     return tauB * bvll_obs(dGdq2_ave, q2, wc_obj, par, B, V, lep)
 
-def nintegrate_pole(function, q2min, q2max):
+def nintegrate_pole(function, q2min, q2max, epsrel=0.005):
     # this is a special integration function to treat the presence of the
     # photon pole at low q^2. If q2min is below 0.1 GeV^2, it adds and subtracts
     # the 1/q^2-enhanced pole part to split the integral into a well-behaved part
@@ -137,23 +137,23 @@ def nintegrate_pole(function, q2min, q2max):
     if q2min <= 0.1 and q2min > 0:
         q20 = q2min
         f_q20 = function(q20)
-        int_a = flavio.math.integrate.nintegrate(lambda q2: function(q2)-f_q20*q20/q2, q2min, q2max)
+        int_a = flavio.math.integrate.nintegrate(lambda q2: function(q2)-f_q20*q20/q2, q2min, q2max, epsrel=epsrel)
         int_b = f_q20*q20 * log(q2max/q2min)
         return int_a + int_b
     else:
         return flavio.math.integrate.nintegrate(function, q2min, q2max)
 
-def bvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep):
+def bvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep, epsrel=0.005):
     def obs(q2):
         return bvll_obs(function, q2, wc_obj, par, B, V, lep)
     _q2min = max(q2min, 4*par['m_'+lep]**2) # clip to physical range
-    return nintegrate_pole(obs, _q2min, q2max)
+    return nintegrate_pole(obs, _q2min, q2max, epsrel=epsrel)
 
-def bvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep):
+def bvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep, epsrel=0.005):
     def obs(q2):
         return bvll_dbrdq2(q2, wc_obj, par, B, V, lep)
     _q2min = max(q2min, 4*par['m_'+lep]**2) # clip to physical range
-    return nintegrate_pole(obs, _q2min, q2max)/(q2max-_q2min)
+    return nintegrate_pole(obs, _q2min, q2max, epsrel=epsrel)/(q2max-_q2min)
 
 # Functions returning functions needed for Prediction instances
 
@@ -178,10 +178,10 @@ def bvll_obs_int_ratio_func(func_num, func_den, B, V, lep):
 
 def bvll_obs_int_ratio_leptonflavour(func, B, V, l1, l2):
     def fct(wc_obj, par, q2min, q2max):
-        num = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l1)
+        num = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l1, epsrel=0.0005)
         if num == 0:
             return 0
-        denom = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l2)
+        denom = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l2, epsrel=0.0005)
         return num/denom
     return fct
 
