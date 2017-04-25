@@ -12,7 +12,7 @@ def gamma_df2_dict(f):
     gamma['VLL'] = np.zeros((2))
     gamma['LR'] = np.zeros((2,2,2))
 
-    # TakeN * from hep-ph/0005183v1
+    # Taken from hep-ph/0005183v1
 
     # (2.18)
     gamma['SLL'][0,0,0] = -6 * N +6 +(6/N)

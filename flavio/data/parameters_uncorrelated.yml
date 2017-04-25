@@ -82,7 +82,7 @@ bag_K0_5: 0.47(4)(1)  # 1505.06639 table 1; converted from 3->2 GeV by multpying
 
 # DeltaF=2 QCD correction factors
 
-eta_tt_B0: 0.55
+eta_tt_B0: 0.55        # Buras:1990fn
 eta_tt_Bs: 0.55
 eta_tt_K0: 0.5765(65)  # Buras:1990fn
 eta_cc_K0: 1.87(76)    # 1108.2036
