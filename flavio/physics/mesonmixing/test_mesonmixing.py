@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from . import amplitude, rge, observables
-from math import sin, asin, cos
+from math import sin, asin, cos, pi
 from flavio.physics.eft import WilsonCoefficients
 from flavio import Observable
 from flavio.parameters import default_parameters
@@ -57,6 +57,26 @@ class TestMesonMixing(unittest.TestCase):
         self.assertAlmostEqual(observables.a_fs(wc_obj, par, 'Bs')/2.22e-5, 1, places=0)
         self.assertAlmostEqual(observables.S_BJpsiK(wc_obj, par), 0.73, places=1)
         self.assertAlmostEqual(observables.S_Bspsiphi(wc_obj, par), asin(+0.038), places=2)
+        # test classic formula: numerics of Wolfi's thesis
+        w_par = par.copy()
+        GF = w_par['GF']
+        mW = w_par['m_W']
+        mBs = w_par['m_Bs']
+        fBs = 0.245
+        w_par['f_Bs'] = fBs
+        S0 = 2.31
+        V = flavio.physics.ckm.ckm_wolfenstein(0.2254, 0.808, 0.177, 0.360)
+        w_par['Vub'] = abs(V[0,2])
+        w_par['Vcb'] = abs(V[1,2])
+        w_par['Vus'] = abs(V[0,1])
+        w_par['gamma'] = -cmath.phase(V[0,2])
+        etaB = 0.55
+        BBsh = 1.22 # 0.952 * 1.517
+        w_par['bag_Bs_1'] = BBsh/1.5173
+        M12 = (GF**2 * mW**2/12/pi**2 * etaB * mBs * fBs**2 * BBsh
+               * S0 * (V[2,2] * V[2,1].conj())**2)
+        self.assertAlmostEqual(amplitude.M12_d(w_par, wc_Bs, 'Bs')/M12, 1, delta=0.01)
+        self.assertAlmostEqual(observables.DeltaM(wc_obj, w_par, 'Bs')*ps, 18.3, delta=0.2)
 
     def test_bmixing_classes(self):
         ps = 1e-12*s
