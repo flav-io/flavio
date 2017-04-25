@@ -3,7 +3,7 @@ import numpy as np
 import warnings
 from scipy.integrate.quadrature import AccuracyWarning
 
-def nintegrate(f, a, b, epsrel=0.01, **kwargs):
+def nintegrate(f, a, b, epsrel=0.005, **kwargs):
     with warnings.catch_warnings():
         # ignore AccuracyWarning that is issued when an integral is zero
         warnings.filterwarnings("ignore", category=AccuracyWarning)
@@ -17,7 +17,7 @@ def nintegrate_fast(f, a, b, N=5, **kwargs):
     y_interp = np.array([f_interp(X) for X in x_fine])
     return np.trapz(y_interp, x=x_fine)
 
-def nintegrate_complex(func, a, b, epsrel=0.01, **kwargs):
+def nintegrate_complex(func, a, b, epsrel=0.005, **kwargs):
     def real_func(x):
         return np.real(func(x))
     def imag_func(x):
