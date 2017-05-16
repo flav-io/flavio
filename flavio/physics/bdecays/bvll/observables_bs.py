@@ -70,15 +70,15 @@ def bsvll_dbrdq2(q2, wc_obj, par, B, V, lep):
     tauB = par['tau_'+B]
     return tauB * bsvll_obs(dGdq2_ave_Bs, q2, wc_obj, par, B, V, lep)
 
-def bsvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep):
+def bsvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep, epsrel=0.005):
     def obs(q2):
         return bsvll_obs(function, q2, wc_obj, par, B, V, lep)
-    return flavio.physics.bdecays.bvll.observables.nintegrate_pole(obs, q2min, q2max)
+    return flavio.physics.bdecays.bvll.observables.nintegrate_pole(obs, q2min, q2max, epsrel=epsrel)
 
-def bsvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep):
+def bsvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep, epsrel=0.005):
     def obs(q2):
         return bsvll_dbrdq2(q2, wc_obj, par, B, V, lep)
-    return flavio.physics.bdecays.bvll.observables.nintegrate_pole(obs, q2min, q2max)/(q2max-q2min)
+    return flavio.physics.bdecays.bvll.observables.nintegrate_pole(obs, q2min, q2max, epsrel=epsrel)/(q2max-q2min)
 
 # Functions returning functions needed for Prediction instances
 
@@ -103,10 +103,10 @@ def bsvll_obs_int_ratio_func(func_num, func_den, B, V, lep):
 
 def bsvll_obs_int_ratio_leptonflavour(func, B, V, l1, l2):
     def fct(wc_obj, par, q2min, q2max):
-        num = bsvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l1)
+        num = bsvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l1, epsrel=0.0005)
         if num == 0:
             return 0
-        denom = bsvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l2)
+        denom = bsvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l2, epsrel=0.0005)
         return num/denom
     return fct
 
