@@ -324,15 +324,23 @@ def transversity_amps_qcdf(q2, wc, par, B, V, **kwargs):
     # using the b quark pole mass here!
     mb = running.get_mb_pole(par)
     N = flavio.physics.bdecays.bvll.amplitudes.prefactor(q2, par, B, V)/4
-    T_perp_ = T_perp(q2, par, wc, B, V, scale, **kwargs)
-    T_para_ = T_para(q2, par, wc, B, V, scale, **kwargs)
     ta = {}
-    ta['perp_L'] = N * sqrt(2)*2 * (mB**2-q2) * mb / q2 * T_perp_
+    T_perp_ = T_perp(q2, par, wc, B, V, scale, **kwargs)
+    if q2 == 0.:
+        T_para_ = 0.
+        ta['perp_L'] = N * sqrt(2)*2 * (mB**2-q2) * mb * T_perp_
+    else:
+        T_para_ = T_para(q2, par, wc, B, V, scale, **kwargs)
+        ta['perp_L'] = N * sqrt(2)*2 * (mB**2-q2) * mb / q2 * T_perp_
     ta['perp_R'] =  ta['perp_L']
     ta['para_L'] = -ta['perp_L']
     ta['para_R'] =  ta['para_L']
-    ta['0_L'] = ( N * mb * (mB**2 - q2)**2 )/(mB**2 * mV * sqrt(q2)) * T_para_
-    ta['0_R'] = ta['0_L']
+    if q2 == 0.:
+        ta['0_L'] = 0.
+        ta['0_R'] = 0.
+    else:
+        ta['0_L'] = ( N * mb * (mB**2 - q2)**2 )/(mB**2 * mV * sqrt(q2)) * T_para_
+        ta['0_R'] = ta['0_L']
     ta['t'] = 0
     ta['S'] = 0
     return ta

@@ -33,7 +33,10 @@ def prefactor_helicityamps(q2, par, B, V):
     laB = flavio.physics.bdecays.common.lambda_K(mB**2, mV**2, q2)
     scale = config['renormalization scale']['bvgamma']
     mb = flavio.physics.running.running.get_mb(par, scale)
-    return N/(+1j * mb/q2 * sqrt(laB) * 2)/N_BVll
+    if q2 == 0.:
+        return N/(+1j * mb * sqrt(laB) * 2)/N_BVll
+    else:
+        return N/(+1j * mb/q2 * sqrt(laB) * 2)/N_BVll
 
 
 def amps_ff(wc_obj, par_dict, B, V, cp_conjugate):
@@ -58,7 +61,7 @@ def amps_ff(wc_obj, par_dict, B, V, cp_conjugate):
 def amps_ss(wc_obj, par, B, V, cp_conjugate):
     scale = config['renormalization scale']['bvgamma']
     ss_name = B+'->'+V+'ll spectator scattering'
-    q2=0.001 # away from zero to avoid pole
+    q2=0. # away from zero to avoid pole
     amps = AuxiliaryQuantity[ss_name].prediction(par_dict=par, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
     N = prefactor_helicityamps(q2, par, B, V)
     a = {}
@@ -186,6 +189,14 @@ _obs.set_description(r"Mass-eigenstate rate asymmetry in $" + _process_tex + r"$
 _obs.tex = r"$A_{\Delta\Gamma}(" + _process_tex + r")$"
 _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
 Prediction(_obs_name, BVgamma_function(A_DeltaGamma, 'Bs', 'phi'))
+
+_obs_name = "ADeltaGamma(B0->K*gamma)"
+_obs = Observable(_obs_name)
+_process_tex = r"B^0\to K^{*0}\gamma"
+_obs.set_description(r"Mass-eigenstate rate asymmetry in $" + _process_tex + r"$")
+_obs.tex = r"$A_{\Delta\Gamma}(" + _process_tex + r")$"
+_obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
+Prediction(_obs_name, BVgamma_function(A_DeltaGamma, 'B0', 'K*0'))
 
 _obs_name = "S_K*gamma"
 _obs = Observable(_obs_name)
