@@ -98,6 +98,29 @@ def sm_uncertainty(obs_name, *args, N=100, threads=1, **kwargs):
     wc_sm = flavio.physics.eft._wc_sm
     return np_uncertainty(obs_name, wc_sm, *args, N=N, threads=threads, **kwargs)
 
+class AwareDict(dict):
+    """Generalization of dictionary that adds the key to the previously defined
+    set `pcalled` upon getting an item."""
+
+    def __init__(self, d):
+        """Initialize the instance."""
+        super().__init__(d)
+        self.akeys = set()
+
+    def __getitem__(self, key):
+        """Get an item, adding the key to the `pcalled` set."""
+        self.akeys.add(key)
+        return dict.__getitem__(self, key)
+
+def get_dependent_parameters_sm(obs_name, *args, **kwargs):
+    """Get the set of parameters the SM prediction of the observable depends on."""
+    obs = flavio.classes.Observable[obs_name]
+    wc_sm = flavio.physics.eft._wc_sm
+    par_central = flavio.default_parameters.get_central_all()
+    apar_central = AwareDict(par_central)
+    pred_central = obs.prediction_par(apar_central, wc_sm, *args, **kwargs)
+    return apar_central.akeys
+
 def sm_error_budget(obs_name, *args, N=50, **kwargs):
     """Get the *relative* uncertainty of the Standard Model prediction due to
     variation of individual observables.

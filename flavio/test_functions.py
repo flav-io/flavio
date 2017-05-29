@@ -18,3 +18,18 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual(flavio.np_uncertainty('test_obs', x=7, wc_obj=wc_obj, threads=2), 0)
         # delete dummy instance
         Observable.del_instance('test_obs')
+
+    def test_get_dep_par(self):
+        self.assertEqual(
+            get_dependent_parameters_sm('BR(Bs->mumu)'),
+            {'DeltaGamma/Gamma_Bs', 'GF', 'Vcb', 'Vub', 'Vus', 'alpha_e', 'alpha_s', 'f_Bs', 'gamma', 'm_Bs', 'm_b', 'm_mu', 'm_s', 'tau_Bs'}
+        )
+        self.assertEqual(
+            get_dependent_parameters_sm('BR(B0->ee)'),
+            {'GF', 'Vcb', 'Vub', 'Vus', 'alpha_e', 'alpha_s', 'f_B0', 'gamma', 'm_B0', 'm_b', 'm_e', 'm_s', 'tau_B0'}
+        )
+        # for more complicated cases, just check there is no error
+        get_dependent_parameters_sm('dBR/dq2(B+->Kmumu)', 3)
+        get_dependent_parameters_sm('<dBR/dq2>(B+->Kmumu)', 3, 5)
+        get_dependent_parameters_sm('dBR/dq2(B+->Kmumu)', q2=3)
+        get_dependent_parameters_sm('<dBR/dq2>(B+->Kmumu)', q2min=3, q2max=5)
