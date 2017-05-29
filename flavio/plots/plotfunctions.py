@@ -33,23 +33,37 @@ def error_budget_pie(err_dict, other_cutoff=0.03):
     uncertainty can be larger or smaller than the squared sum of the individual
     uncertainties, so the representation can be misleading.
     """
-    err_tot = sum(err_dict.values())
+    err_tot = sum(err_dict.values()) # linear sum of individual errors
     err_dict_sorted = OrderedDict(sorted(err_dict.items(), key=lambda t: -t[1]))
     labels = []
     fracs = []
-    small_frac = 0
+    small_frac = []
     for key, value in err_dict_sorted.items():
         frac = value/err_tot
         if frac > other_cutoff:
-            labels.append(flavio.Parameter[key].tex)
+            if isinstance(key, str):
+                try:
+                    labels.append(flavio.Parameter[key].tex)
+                except KeyError:
+                    # if 'key' is not actually a parameter (e.g. manually set by the user)
+                    labels.append(key)
+            elif isinstance(key, tuple):
+                key_strings = [flavio.Parameter[k].tex for k in key]
+                labels.append(', '.join(key_strings))
             fracs.append(frac)
         else:
-            small_frac += frac
-    if small_frac > 0:
+            small_frac.append(frac)
+    if small_frac:
         labels.append('other')
-        fracs.append(small_frac)
+        # the fraction for the "other" errors is obtained by adding them in quadrature
+        fracs.append(np.sqrt(np.sum(np.array(small_frac)**2)))
+    # initially, the fractions had been calculated assuming that they add to
+    # one, but adding the "other" errors in quadrature changed that - correct
+    # all the fractions to account for this
+    corr = sum(fracs)
+    fracs = [f/corr for f in fracs]
     def my_autopct(pct):
-        return r'{p:.1f}\%'.format(p=pct*err_tot)
+        return r'{p:.2g}\%'.format(p=pct*err_tot)
     plt.axis('equal')
     return plt.pie(fracs, labels=labels, autopct=my_autopct, wedgeprops = {'linewidth':0.5}, colors=flavio.plots.colors.pastel)
 

@@ -3,7 +3,7 @@ top-level namespace."""
 
 import flavio
 import numpy as np
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from multiprocessing import Pool
 
 def np_prediction(obs_name, wc_obj, *args, **kwargs):
@@ -106,11 +106,20 @@ class AwareDict(dict):
         """Initialize the instance."""
         super().__init__(d)
         self.akeys = set()
+        self.d = d
 
     def __getitem__(self, key):
         """Get an item, adding the key to the `pcalled` set."""
         self.akeys.add(key)
         return dict.__getitem__(self, key)
+
+    def __copy__(self):
+        cp = type(self)(self.d)
+        cp.akeys = self.akeys
+        return cp
+
+    def copy(self):
+        return self.__copy__()
 
 def get_dependent_parameters_sm(obs_name, *args, **kwargs):
     """Get the set of parameters the SM prediction of the observable depends on."""
@@ -119,7 +128,11 @@ def get_dependent_parameters_sm(obs_name, *args, **kwargs):
     par_central = flavio.default_parameters.get_central_all()
     apar_central = AwareDict(par_central)
     pred_central = obs.prediction_par(apar_central, wc_sm, *args, **kwargs)
-    return apar_central.akeys
+    # return all observed keys except the ones that don't actually correspond
+    # to existing parameter names (this might happen by user functions modifying
+    # the dictionaries)
+    return {p for p in apar_central.akeys
+            if p in flavio.Parameter.instances.keys()}
 
 def sm_error_budget(obs_name, *args, N=50, **kwargs):
     """Get the *relative* uncertainty of the Standard Model prediction due to
@@ -139,36 +152,40 @@ def sm_error_budget(obs_name, *args, N=50, **kwargs):
     wc_sm = flavio.physics.eft._wc_sm
     par_central = flavio.default_parameters.get_central_all()
     par_random = [flavio.default_parameters.get_random_all() for i in range(N)]
+    pred_central = obs.prediction_par(par_central, wc_sm, *args, **kwargs)
 
     # Step 1: determine the parameters the observable depends on at all.
-    # to this end, compute the observables once for each parameter with a
-    # random value for this parameter but central values for all other
-    # parameters. If the prediction is equal to the central prediction, the
-    # observable does not depend on the parameter!
-    pred_central = obs.prediction_par(par_central, wc_sm, *args, **kwargs)
-    dependent_par = []
-    for k in par_central.keys():
-        par_tmp = par_central.copy()
-        par_tmp[k] = par_random[0][k]
-        pred_tmp = obs.prediction_par(par_tmp, wc_sm, *args, **kwargs)
-        if pred_tmp != pred_central:
-            dependent_par.append(k)
+    dependent_par = get_dependent_parameters_sm(obs_name, *args, **kwargs)
 
-    # Step 2: for each of the dependent parameters, determine the error
+    # Step 2: group parameters if correlated
+    par_constraint = {p: id(flavio.default_parameters._parameters[p][1]) for p in dependent_par}
+    v = defaultdict(list)
+    for key, value in par_constraint.items():
+        v[value].append(key)
+    dependent_par_lists = list(v.values())
+
+    # Step 3: for each of the (groups of) dependent parameters, determine the error
     # analogous to the sm_uncertainty function. Normalize to the central
     # prediction (so relative errors are returned)
     individual_errors = {}
-    def make_par_random(key, par_random):
+    def make_par_random(keys, par_random):
         par_tmp = par_central.copy()
-        par_tmp[key] = par_random[key]
+        for key in keys:
+            par_tmp[key] = par_random[key]
         return par_tmp
-    for p in dependent_par:
+    for p in dependent_par_lists:
         par_random_p = [make_par_random(p, pr) for pr in par_random]
         all_pred = np.array([
             obs.prediction_par(par, wc_sm, *args, **kwargs)
             for par in par_random_p
         ])
-        individual_errors[p] = np.std(all_pred)/abs(pred_central)
+        # for the dictionary key, use the list element if there is only 1,
+        # otherwise use a tuple (which is hashable)
+        if len(p) == 1:
+            key = p[0]
+        else:
+            key = tuple(p)
+        individual_errors[key] = np.std(all_pred)/abs(pred_central)
     return individual_errors
 
 def sm_covariance(obs_list, N=100, par_vary='all', **kwargs):

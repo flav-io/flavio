@@ -9,7 +9,7 @@ def conjugate_par(par_dict):
     This assumes that the only CP-odd parameters are `gamma` or `delta` (the
     CKM phase in the Wolfenstein or standard parametrization)."""
     cp_odd = ['gamma', 'delta']
-    return {k: -par_dict[k] if k in cp_odd else par_dict[k] for k in par_dict}
+    return {k: -v if k in cp_odd else v for k, v in par_dict.items()}
 
 def conjugate_wc(wc_dict):
     """Given a dictionary of Wilson coefficients, return the dictionary where

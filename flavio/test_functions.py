@@ -1,6 +1,7 @@
 import unittest
 import flavio
 from flavio.classes import Observable, Prediction
+from flavio.functions import get_dependent_parameters_sm
 
 class TestFunctions(unittest.TestCase):
     def test_functions(self):
@@ -26,7 +27,7 @@ class TestFunctions(unittest.TestCase):
         )
         self.assertEqual(
             get_dependent_parameters_sm('BR(B0->ee)'),
-            {'GF', 'Vcb', 'Vub', 'Vus', 'alpha_e', 'alpha_s', 'f_B0', 'gamma', 'm_B0', 'm_b', 'm_e', 'm_s', 'tau_B0'}
+            {'GF', 'Vcb', 'Vub', 'Vus', 'alpha_e', 'alpha_s', 'f_B0', 'gamma', 'm_B0', 'm_b', 'm_e', 'm_d', 'tau_B0'}
         )
         # for more complicated cases, just check there is no error
         get_dependent_parameters_sm('dBR/dq2(B+->Kmumu)', 3)
