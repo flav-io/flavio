@@ -6,10 +6,6 @@ flavio is a Python package to compute observables in flavour physics both in
 the Standard Model and in the presence of new physics encoded in Wilson
 coefficients of dimension-6 operators.
 
-## Project status
-
-The project is currently in beta phase, so should be used with reasonable caution.
-
 ## Project web site
 
 Further information and the package documentation can be found at:
