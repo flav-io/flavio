@@ -39,6 +39,7 @@ Contributors:
 
 - Frederik Beaujean
 - Ece Gürler
+- Jacky Kumar
 - Christoph Niehoff
 - Albert Puig
 - Stefanie Reichert
