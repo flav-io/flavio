@@ -55,6 +55,8 @@ def wctot_dict(wc_obj, sector, scale, par, nf_out=None):
     WilsonCoefficients instance."""
     wc_np_dict = wc_obj.get_wc(sector, scale, par, nf_out=nf_out)
     wcsm_120 = _wcsm_120.copy()
+    # fold in approximate m_t-dependence of C_10 (see eq. 4 of arXiv:1311.0903)
+    wcsm_120[9] = wcsm_120[9] * (par['m_t']/173.1)**1.53
     wc_sm = running.get_wilson(par, wcsm_120, wc_obj.rge_derivative[sector], 120., scale, nf_out=nf_out)
     # now here comes an ugly fix. If we have b->s transitions, we should take
     # into account the fact that C7' = C7*ms/mb, and the same for C8, which is
