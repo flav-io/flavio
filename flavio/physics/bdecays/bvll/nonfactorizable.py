@@ -28,7 +28,7 @@ def ha_qcdf_function(B, V):
         wc = wctot_dict(wc_obj, label, scale, par)
         if cp_conjugate:
             wc = conjugate_wc(wc)
-        return flavio.physics.bdecays.bvll.qcdf.helicity_amps_qcdf(q2, wc, par_dict, B, V)
+        return flavio.physics.bdecays.bvll.qcdf.helicity_amps_qcdf(q2, wc, par, B, V)
     return function
 
 # ... and the same for the interpolated version (see qcdf_interpolate.py)
