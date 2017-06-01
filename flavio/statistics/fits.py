@@ -724,5 +724,5 @@ class FrequentistFit(Fit):
 
     def log_likelihood(self, x):
         """Return the logarithm of the likelihood function (including the
-        lihelihoods of parameters and nuisance parameters!)"""
+        lihelihood of nuisance parameters!)"""
         return self.log_likelihood_exp(x) + self.log_prior_nuisance_parameters(x)
