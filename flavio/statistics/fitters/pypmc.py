@@ -7,10 +7,27 @@ except:
     pass
 
 class pypmcScan(object):
-    """
+    """Interface to adaptive Markov Chain Monte Carlo using the `pypmc` package.
+
+    Methods:
+    - run: run the sampler
+    - find_burnin: attempt to automatically determine the burn-in period by
+      excluding points at the beginning of the chain with much worse likelihood
+      than the end of the chain
+    - result: get a flat array of the sampled points
+    - save_result: save the result to a `.npy` file
     """
 
     def __init__(self, fit, **kwargs):
+        """Initialize the pypmcScan instance.
+
+        Parameters:
+
+        - fit: an instance of `flavio.statistics.fits.BayesianFit`
+
+        Additional keyword argumements will be passed to
+        `markov_chain.AdaptiveMarkovChain`.
+        """
 
         assert isinstance(fit, flavio.statistics.fits.BayesianFit), "PyPMC fit object must be an instance of BayesianFit"
         self.fit = fit
@@ -35,6 +52,16 @@ class pypmcScan(object):
                                                                  **kwargs)
 
     def run(self, steps, burnin=1000, adapt=500):
+        """Run the sampler.
+
+        Parameters:
+
+        - steps: number of steps per walker
+        - burnin (optional): number of steps for burn-in (samples will not be
+          retained); defaults to 1000
+        - adapt (optional): number of steps after which to adapt the proposal
+          distribution. Defaults to 500.
+        """
         done = 0
         self.mc.run( burnin )
         self.mc.clear()
@@ -46,6 +73,9 @@ class pypmcScan(object):
 
     @property
     def find_burnin(self):
+        """Return the index of the first sample that has a log-likelihood
+        bigger than the mean minus three standard deviations of the distribution
+        of log-likelihoods in the last 10% of the chain."""
         target = self.mc.target_values[:] # this contains all log likelihood values of the chain
         target_end = target[-len(target)//10:] # take the last 10% of the chain
         target_end_mn = np.mean(target_end) # mean of the last 10%
@@ -57,8 +87,12 @@ class pypmcScan(object):
 
     @property
     def result(self):
+        """Return an array of the samples obtained, where points with low
+        likelihood at the beginning of the chain have been omitted (using the
+        `find_burnin` method)."""
         return self.mc.samples[:][self.find_burnin:]
 
     def save_result(self, file):
+        """Save the samples obtained to a `.npy` file."""
         res = self.result
         np.save(file, res)
