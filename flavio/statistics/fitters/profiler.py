@@ -4,6 +4,7 @@ import numpy as np
 import flavio
 import scipy.optimize
 from flavio.math.optimize import minimize_robust, maximize_robust
+import warnings
 
 def par_shift_scale(par_obj, parameters):
     """Determine a shift and scale factor that rescales
@@ -49,6 +50,7 @@ def reshuffle_2d(x, ij0):
     return reshuffle_1d(x_flat, i0_1d), i0_1d
 
 def unreshuffle_2d(x, i0, shape):
+    """Undo the reshuffle_2d operation."""
     x_flat = unreshuffle_1d(x, i0)
     return np.reshape(x_flat, shape)
 
@@ -64,6 +66,9 @@ class Profiler(object):
         self.n_fit_p = len(self.fit.fit_parameters)
         self.n_nui_p = len(self.fit.nuisance_parameters)
         self.n_wc = len(self.fit.fit_wc_names)
+        self.bf = None
+        self.log_profile_likelihood = None
+        self.profile_nuisance = None
 
     def f_target(self, x_n, par_wc_fixed):
         """Target function (log likelihood) in terms of rescaled and shifted
@@ -105,6 +110,9 @@ class Profiler1D(Profiler):
     Methods:
 
     - run: profile the likelihood in the 1D interval.
+    - pvalue_prob: return the p-value under the assumption of Wilks' theorem
+    - pvalue_prob_plotdata: return a dictionary suited to be fed into the
+      `flavio.plots.pvalue_plot` plotting function
     """
     def __init__(self, fit, x_min, x_max):
         """Initialize the profiler instance.
@@ -121,6 +129,8 @@ class Profiler1D(Profiler):
         assert x_min < x_max, "x_max must be bigger than x_min"
         self.x_min = x_min
         self.x_max = x_max
+        self.x_bf = None
+        self.x = None
 
     def run(self, steps=20, **kwargs):
         """Maximize the likelihood by varying the nuisance parameters.
@@ -146,13 +156,25 @@ class Profiler1D(Profiler):
         except KeyError:
             # if the fit parameters do not have existing constraints, use center
             bf = self.best_fit(fitpar0=(self.x_max-self.x_min)/2)
+        self.bf = bf
         if self.n_fit_p == 1:
-            x_bf = bf.x[0] # best-fit parameter
+            self.x_bf = bf.x[0] # best-fit parameter
         elif self.n_wc == 1:
-            x_bf = bf.x[-1] # ... or best-fit Wilson coefficient
-        x = np.linspace(self.x_min, self.x_max, steps)
+            self.x_bf = bf.x[-1] # ... or best-fit Wilson coefficient
+        if self.x_bf == self.x_min or self.x_bf == self.x_max:
+            # if the best-fit value is at the border,
+            # just make a linspace
+            x = np.linspace(self.x_min, self.x_max, steps)
+        else:
+            # otherwise, divide the range into x<x_bf and x>x_bf,
+            # with the same number of steps on both sides
+            steps_l = steps//2
+            steps_r = steps - steps_l + 1
+            # [1:] is in order not to double count x_bf
+            x = np.hstack([np.linspace(self.x_min, self.x_bf, steps_l),
+                           np.linspace(self.x_bf, self.x_max, steps_r)[1:]])
         # determine index in x-array where the x is closest to x_bf
-        i0 = (np.abs(x-x_bf)).argmin()
+        i0 = (np.abs(x-self.x_bf)).argmin()
         x = reshuffle_1d(x, i0)
         z = np.zeros(steps)
         n = np.zeros((steps, self.n_nui_p))
@@ -170,7 +192,35 @@ class Profiler1D(Profiler):
         x = unreshuffle_1d(x, i0)
         z = unreshuffle_1d(z, i0)
         n = unreshuffle_1d(n, i0).T
+        self.x = x
+        self.log_profile_likelihood = z
+        self.profile_nuisance = n
         return x, z, n
+
+    def pvalue_prob(self):
+        """Return p-value obtained under the assumption of Wilks' theorem.
+
+        Requires the profiler to be run first using the `run` method."""
+        if self.log_profile_likelihood is None:
+            warnings.warn("You must run the profiler first.")
+            return None
+        chi2_dist = scipy.stats.chi2(1)
+        chi2 = -2*self.log_profile_likelihood
+        chi2_bf = -2*self.bf.fun
+        # normally, the minimal chi2 should of course be the chi2 at the best-fit
+        # point. If for reasons of numerical inaccuracy the chi2 array contains
+        # a smaller value, use that.
+        chi2_min = min(np.min(chi2), chi2_bf)
+        delta_chi2 = chi2 - chi2_min
+        cl = chi2_dist.cdf(delta_chi2)
+        return 1-cl
+
+    def pvalue_prob_plotdata(self):
+        """Return a dictionary that can be fed into `flavio.plots.pvalue_plot`."""
+        return {
+                'x': self.x,
+                'y': self.pvalue_prob(),
+               }
 
 
 class Profiler2D(Profiler):
@@ -180,6 +230,8 @@ class Profiler2D(Profiler):
     Methods:
 
     - run: profile the likelihood in the 2D plane.
+    - contour_plotdata: return a dictionary suited to be fed into the
+      `flavio.plots.contour` plotting function
     """
     def __init__(self, fit, x_min, x_max, y_min, y_max):
         """Initialize the profiler instance.
@@ -223,6 +275,7 @@ class Profiler2D(Profiler):
         except KeyError:
             bf = self.best_fit(fitpar0=[(self.x_max-self.x_min)/2,
                                         (self.y_max-self.y_min)/2])
+        self.bf = bf
         if self.n_wc > 0:
             x_bf, y_bf = np.hstack((bf.x[:self.n_fit_p], bf.x[-self.n_wc:]))
         else:
@@ -255,4 +308,27 @@ class Profiler2D(Profiler):
         y = yy[0]
         z = unreshuffle_2d(z, i0_1d, steps)
         n = np.array([unreshuffle_2d(ni, i0_1d, steps) for ni in n])
+        self.x = x
+        self.y = y
+        self.log_profile_likelihood = z
+        self.profile_nuisance = n
         return x, y, z, n
+
+    def contour_plotdata(self, n_sigma=(1,2)):
+        """Return a dictionary that can be fed into `flavio.plots.contour`.
+
+        Parameters:
+
+        - `n_sigma`: tuple with integer sigma values which should be plotted.
+          Defaults to (1, 2).
+        """
+        deltachi2 = -2*(self.log_profile_likelihood
+                        -np.max(self.log_profile_likelihood))
+        x, y = np.meshgrid(self.x, self.y, indexing='ij')
+        return {
+                'x': x,
+                'y': y,
+                'z': deltachi2,
+                'levels': tuple(flavio.statistics.functions.delta_chi2(n, 2)
+                                for n in n_sigma),
+               }

@@ -41,6 +41,11 @@ class TestProfilers(unittest.TestCase):
         self.assertEqual(x.shape, (4,))
         self.assertEqual(z.shape, (4,))
         self.assertEqual(n.shape, (3, 4))
+        npt.assert_array_equal(x, profiler_1d.x)
+        npt.assert_array_equal(z, profiler_1d.log_profile_likelihood)
+        npt.assert_array_equal(n, profiler_1d.profile_nuisance)
+        pdat = profiler_1d.pvalue_prob_plotdata()
+        npt.assert_array_equal(pdat['x'], x)
         # test 2D profiler
         p.remove_constraint('d')
         fit_2d = FrequentistFit('test profiler 2d',
@@ -51,6 +56,12 @@ class TestProfilers(unittest.TestCase):
         self.assertEqual(y.shape, (4,))
         self.assertEqual(z.shape, (3, 4))
         self.assertEqual(n.shape, (2, 3, 4))
+        npt.assert_array_equal(x, profiler_2d.x)
+        npt.assert_array_equal(y, profiler_2d.y)
+        npt.assert_array_equal(z, profiler_2d.log_profile_likelihood)
+        npt.assert_array_equal(n, profiler_2d.profile_nuisance)
+        pdat = profiler_2d.contour_plotdata()
+        npt.assert_array_almost_equal(pdat['z'], -2*(z-np.max(z)))
         # delete dummy instances
         for p in ['tmp a', 'tmp b', 'tmp c', 'tmp d']:
             Parameter.del_instance(p)

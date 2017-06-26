@@ -634,10 +634,12 @@ def likelihood_plot(x, y, fill_x=None, col=None, label=None, plotargs={}, fillar
 
     - `x`: x values
     - `y`: y values
+    - `fill_x`: 2-tuple of x-values in between which the curve will be filled
     - `col`: (optional) integer to select one of the colours from the default
       palette
     - `plotargs`: keyword arguments passed to the `plot` function
     - `fillargs`: keyword arguments passed to the `fill_between` function
+    - `flipped`: exchange x and y axes (needed for `density_contour_joint`)
     """
     ax = plt.gca()
     _plotargs = {}
@@ -666,6 +668,45 @@ def likelihood_plot(x, y, fill_x=None, col=None, label=None, plotargs={}, fillar
             ax.fill_betweenx(x, 0, y,
                 where=np.logical_and(fill_x[0] < x, x < fill_x[1]),
                 **_fillargs)
+
+def pvalue_plot(x, y, fill_y=None, col=None, label=None,
+                plotargs={}, fillargs={}):
+    """Plot of a 1D confidence level distribution, where the y axis is 1-CL.
+
+    Parameters:
+
+    - `x`: x values
+    - `y`: y values
+    - `fill_y`: for x-values where y is larger than this number, the area
+      between the x-axis and the curve will be filled
+    - `col`: (optional) integer to select one of the colours from the default
+      palette
+    - `plotargs`: keyword arguments passed to the `plot` function
+    - `fillargs`: keyword arguments passed to the `fill_between` function
+    """
+    ax = plt.gca()
+    _plotargs = {}
+    _fillargs = {}
+    # default values
+    _plotargs['linewidth'] = 0.6
+    if label is not None:
+        _plotargs['label'] = label
+    if col is None:
+        _plotargs['color'] = flavio.plots.colors.set1[0]
+        _fillargs['facecolor'] = flavio.plots.colors.pastel[0]
+    else:
+        _plotargs['color'] = flavio.plots.colors.set1[col]
+        _fillargs['facecolor'] = flavio.plots.colors.pastel[col]
+    _fillargs.update(fillargs)
+    _plotargs.update(plotargs)
+    ax.plot(x, y, **_plotargs)
+    if fill_y is not None:
+        x_zoom = scipy.ndimage.zoom(x, zoom=10, order=1)
+        y_zoom = scipy.ndimage.zoom(y, zoom=10, order=1)
+        ax.fill_between(x_zoom, 0, y_zoom,
+            where=y_zoom > fill_y,
+            **_fillargs)
+    ax.set_ylim([0, 1])
 
 def density_contour_joint(x, y,
                           col=None,
