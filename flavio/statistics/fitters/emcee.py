@@ -1,3 +1,9 @@
+"""Interface to the `emcee` ensemble Monte Carlo sampler.
+
+See http://dan.iel.fm./emcee for details on `emcee`.
+"""
+
+
 import numpy as np
 import flavio
 
@@ -7,10 +13,32 @@ except:
     pass
 
 class emceeScan(object):
-    """
+    """Ensemble Monte Carlo sampler using the `emcee` package.
+
+    Methods:
+
+    - run: run the sampler
+    - result: get a flat array of the sampled points of all walkers
+    - save_result: save the result to a `.npy` file
+
+    Important attributes:
+
+    - mc: the `emcee.EnsembleSampler` instance
+
     """
 
     def __init__(self, fit, nwalkers=None, **kwargs):
+        """Initialize the emceeScan.
+
+        Parameters:
+
+        - fit: an instance of `flavio.statistics.fits.BayesianFit`
+        - nwalkers (optional): number of walkers. Defaults to ten times the number
+          of dimensions.
+
+        Additional keyword argumements will be passed to
+        `emcee.EnsembleSampler`.
+        """
 
         assert isinstance(fit, flavio.statistics.fits.BayesianFit), "emcee fit object must be an instance of BayesianFit"
         self.fit = fit
@@ -41,6 +69,16 @@ class emceeScan(object):
                                         **kwargs)
 
     def run(self, steps, burnin=1000):
+        """Run the sampler.
+
+        Parameters:
+
+        - steps: number of steps per walker
+        - burnin (optional): number of steps for burn-in (samples will not be
+          retained); defaults to 1000
+
+        Note that the total number of samples will be `steps * nwalkers`!
+        """
         pos = self.start
         if burnin > 0:
             pos, prob, state = self.mc.run_mcmc(self.start, burnin)
@@ -49,8 +87,10 @@ class emceeScan(object):
 
     @property
     def result(self):
+        """Return a flat array of the samples."""
         return self.mc.flatchain[:]
 
     def save_result(self, file):
+        """Save the samples to a `.npy` file."""
         res = self.result
         np.save(file, res)
