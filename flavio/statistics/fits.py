@@ -434,9 +434,8 @@ class BayesianFit(Fit):
         return self.log_likelihood_exp(x) + self.log_prior_parameters(x) + self.log_prior_wilson_coeffs(x)
 
 
-class FastFit(BayesianFit):
-    """A subclass of `BayesianFit` that is meant to produce fast likelihood
-    contour plots.
+class FastFit(Fit):
+    """A fit class that is meant for producing fast likelihood contour plots.
 
     Calling the method `make_measurement`, a pseudo-measurement is generated
     that combines the actual experimental measurements with the theoretical
