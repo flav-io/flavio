@@ -429,15 +429,6 @@ class BayesianFit(Fit):
         arr[n_fit_p+n_nui_p:] = self.get_random_wilson_coeffs
         return arr
 
-    def log_prior_wilson_coeffs(self, x):
-        """Return the prior probability for all Wilson coefficients
-        given an input array"""
-        if self.fit_wc_priors is None:
-            return 0
-        wc_dict = self.array_to_dict(x)['fit_wc']
-        prob_dict = self.fit_wc_priors.get_logprobability_all(wc_dict)
-        return sum([p for obj, p in prob_dict.items()])
-
     def log_target(self, x):
         """Return the logarithm of the likelihood times prior probability"""
         return self.log_likelihood_exp(x) + self.log_prior_parameters(x) + self.log_prior_wilson_coeffs(x)
