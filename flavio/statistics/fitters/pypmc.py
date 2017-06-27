@@ -1,3 +1,5 @@
+"""Interface to the `pypmc` Markov Chain Monte Carlo package."""
+
 import numpy as np
 import flavio
 

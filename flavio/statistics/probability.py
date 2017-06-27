@@ -1,3 +1,5 @@
+"""Probability distributions and auxiliary functions to deal with them."""
+
 import numpy as np
 import scipy.stats
 from scipy.interpolate import interp1d, RegularGridInterpolator

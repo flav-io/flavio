@@ -1,3 +1,5 @@
+"""Auxiliary functions for statistics."""
+
 import scipy.stats
 from functools import lru_cache
 from math import sqrt

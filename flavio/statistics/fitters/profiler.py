@@ -1,4 +1,4 @@
-"""Likelihood profilers."""
+"""1D and 2D likelihood profilers for frequentist fits."""
 
 import numpy as np
 import flavio

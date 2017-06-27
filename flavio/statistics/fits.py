@@ -369,13 +369,14 @@ class Fit(flavio.NamedInstanceClass):
 
 
 class BayesianFit(Fit):
-    """Bayesian fit class. Instances of this class can then be fed to samplers.
+    r"""Bayesian fit class. Instances of this class can then be fed to samplers.
 
     Parameters
     ----------
 
     - `name`: a descriptive string name
-    - `par_obj`: an instance of `ParameterConstraints`, e.g. `flavio.default_parameters`
+    - `par_obj`: optional; an instance of `ParameterConstraints`.
+      Defaults to `flavio.default_parameters`
     - `fit_parameters`: a list of string names of parameters of interest. The existing
       constraints on the parameter will be taken as prior.
     - `nuisance_parameters`: a list of string names of nuisance parameters. The existing
@@ -435,7 +436,7 @@ class BayesianFit(Fit):
 
 
 class FastFit(Fit):
-    """A fit class that is meant for producing fast likelihood contour plots.
+    r"""A fit class that is meant for producing fast likelihood contour plots.
 
     Calling the method `make_measurement`, a pseudo-measurement is generated
     that combines the actual experimental measurements with the theoretical
@@ -454,7 +455,7 @@ class FastFit(Fit):
 
     - all uncertainties - experimental and theoretical - are treated as Gaussian
     - the theoretical uncertainties in the presence of new physics are assumed
-      to be similar to the ones in the SM
+      to be equal to the ones in the SM
     """
 
     def __init__(self, *args, **kwargs):
@@ -705,8 +706,36 @@ class FastFit(Fit):
 
 
 class FrequentistFit(Fit):
-    """Frequentist fit class. Instances of this class can then be fed to samplers.
+    r"""Frequentist fit class.
 
+
+    Parameters
+    ----------
+
+    - `name`: a descriptive string name
+    - `par_obj`: optional; an instance of `ParameterConstraints`.
+      Defaults to `flavio.default_parameters`
+    - `fit_parameters`: a list of string names of parameters of interest.
+      Existing constraints on the parameter will be ignored.
+    - `nuisance_parameters`: a list of string names of nuisance parameters. The existing
+      constraints on the parameter will be interpreted as pseudo-measurement
+      entering the likelihood.
+    - `observables`: a list of observable names to be included in the fit
+    - `exclude_measurements`: optional; a list of measurement names *not* to be included in
+    the fit. By default, all existing measurements are included.
+    - `include_measurements`: optional; a list of measurement names to be included in
+    the fit. By default, all existing measurements are included.
+    - `fit_wc_names`: optional; a list of string names of arguments of the Wilson
+      coefficient function below
+    - `fit_wc_function`: optional; a function that
+      returns a dictionary that can be fed to the `set_initial`
+      method of the Wilson coefficient class. Example: fit the real and imaginary
+      parts of $C_{10}$ in $b\to s\mu^+\mu^-$.
+    ```
+    def fit_wc_function(Re_C10, Im_C10):
+        return {'C10_bsmmumu': Re_C10 + 1j*Im_C10}
+    ```
+    - `input_scale`: input scale for the Wilson coeffficients. Defaults to 160.
     """
 
     def __init__(self, *args, **kwargs):
