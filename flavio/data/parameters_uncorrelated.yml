@@ -121,8 +121,8 @@ B->D* IW a_T23: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
 # B->D form factors
 B->D IW a_T: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
  # 1505.03925
-B->D BCL m0: 6.420
-B->D BCL m+: 6.330
+B->D BCL m0: 0
+B->D BCL m+: 0
 
 # B->K form factors (1509.06235)
 B->K BCL m0: 5.711 # m_Bs*(0+)

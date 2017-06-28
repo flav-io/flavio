@@ -65,7 +65,7 @@ implementation:
 
   # B->P form factors
   B->K form factor: B->K BCL3
-  B->D form factor: B->D BCL3-IW-t0max
+  B->D form factor: B->D BCL3-IW
   B->pi form factor: B->pi BCL4
 
   # Lambdab form factors
