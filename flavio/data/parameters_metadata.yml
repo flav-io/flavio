@@ -685,6 +685,12 @@ B->D IW a_T:
 
 
 # Parameters for B->D form factors in the BCL parametrization
+B->D BCL m0:
+  tex: $m_{B^*}^{f_0}$
+  description: Resonance mass for the $B\to D$ scalar form factor in BCL parametrization
+B->D BCL m+:
+  tex: $m_{B^*}^{f_+}$
+  description: Resonance mass for the $B\to D$ vector and tensor form factors in BCL parametrization
 B->D BCL a0_f+:
   tex: $a_0^{(+)}$
   description: BCL $B\to D$ form factor parametrization coefficient $a_0$ of $f_+$
@@ -705,6 +711,12 @@ B->D BCL a2_f0:
   description: BCL $B\to D$ form factor parametrization coefficient $a_2$ of $f_0$
 
 # Parameters for B->pi form factors in the BCL parametrization
+B->pi BCL m0:
+  tex: $m_{B^*}^{f_0}$
+  description: Resonance mass for the $B\to \pi$ scalar form factor in BCL parametrization
+B->pi BCL m+:
+  tex: $m_{B^*}^{f_+}$
+  description: Resonance mass for the $B\to \pi$ vector and tensor form factors in BCL parametrization
 B->pi BCL a0_f+:
   tex: $a_0^{(+)}$
   description: BCL $B\to \pi$ form factor parametrization coefficient $a_0$ of $f_+$
@@ -743,6 +755,12 @@ B->pi BCL a3_fT:
   description: BCL $B\to \pi$ form factor parametrization coefficient $a_3$ of $f_T$
 
 # Parameters for B->K form factors in the BCL parametrization
+B->K BCL m0:
+  tex: $m_{B^*}^{f_0}$
+  description: Resonance mass for the $B\to K$ scalar form factor in BCL parametrization
+B->K BCL m+:
+  tex: $m_{B^*}^{f_+}$
+  description: Resonance mass for the $B\to K$ vector and tensor form factors in BCL parametrization
 B->K BCL a0_f+:
   tex: $a_0^{(+)}$
   description: BCL $B\to K$ form factor parametrization coefficient $a_0$ of $f_+$
@@ -770,6 +788,41 @@ B->K BCL a1_fT:
 B->K BCL a2_fT:
   tex: $a_2^{(T)}$
   description: BCL $B\to K$ form factor parametrization coefficient $a_2$ of $f_T$
+
+# Parameters for Bs->K form factors in the BCL parametrization
+Bs->K BCL m0:
+  tex: $m_{B^*}^{f_0}$
+  description: Resonance mass for the $B_s\to K$ scalar form factor in BCL parametrization
+Bs->K BCL m+:
+  tex: $m_{B^*}^{f_+}$
+  description: Resonance mass for the $B_s\to K$ vector and tensor form factors in BCL parametrization
+Bs->K BCL a0_f+:
+  tex: $a_0^{(+)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_0$ of $f_+$
+Bs->K BCL a1_f+:
+  tex: $a_1^{(+)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_1$ of $f_+$
+Bs->K BCL a2_f+:
+  tex: $a_2^{(+)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_2$ of $f_+$
+Bs->K BCL a0_f0:
+  tex: $a_0^{(0)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_0$ of $f_0$
+Bs->K BCL a1_f0:
+  tex: $a_1^{(0)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_1$ of $f_0$
+Bs->K BCL a2_f0:
+  tex: $a_2^{(0)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_2$ of $f_0$
+Bs->K BCL a0_fT:
+  tex: $a_0^{(T)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_0$ of $f_T$
+Bs->K BCL a1_fT:
+  tex: $a_1^{(T)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_1$ of $f_T$
+Bs->K BCL a2_fT:
+  tex: $a_2^{(T)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_2$ of $f_T$
 
 # Experimental data needed for the normalization of BR(B->Xqgamma) and BR(B->Xqll)
 C_BXlnu:
