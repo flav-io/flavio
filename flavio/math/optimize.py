@@ -46,6 +46,8 @@ def maximize_robust(fun, x0, args=(), methods=None, tries=3, disp=False, **kwarg
     """
     def mfun(*args):
         return -fun(*args)
-    return minimize_robust(mfun, x0,
+    res = minimize_robust(mfun, x0,
                            args=args, methods=methods,
                            tries=tries, disp=disp, **kwargs)
+    res.fun = -res.fun # change back sign for function value
+    return res

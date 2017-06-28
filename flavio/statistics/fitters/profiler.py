@@ -183,7 +183,7 @@ class Profiler1D(Profiler):
         for i, X in enumerate(x):
             res = maximize_robust(self.f_target, args=([X],), x0=x0, **kwargs)
             if res.success:
-                z[i] = -res.fun # -f returns + the log likelihood
+                z[i] = res.fun
                 n[i] = res.x/self.nuisance_scale - self.nuisance_shift
                 # reset nuisances start values for next iteration to optimized values
                 x0 = res.x
@@ -296,7 +296,7 @@ class Profiler2D(Profiler):
         for i in range(len(z)):
             res = maximize_robust(self.f_target, args=([xx[i], yy[i]],), x0=x0, **kwargs)
             if res.success:
-                z[i] = -res.fun # -f returns + the log likelihood
+                z[i] = res.fun
                 n[:,i] = res.x/self.nuisance_scale - self.nuisance_shift
                 # reset nuisances start values for next iteration to optimized values
                 x0 = res.x
