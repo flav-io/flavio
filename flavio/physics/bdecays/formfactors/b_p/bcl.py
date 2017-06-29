@@ -42,8 +42,16 @@ def ff(process, q2, par, n=3, t0=None):
     mP = par['m_'+pd['P']]
     ff = {}
     a={}
-    for i in ['f+', 'fT', 'f0']:
+    for i in ['f+', 'fT']:
         a[i] = [ par[process + ' BCL' + ' a' + str(j) + '_' + i] for j in range(n) ]
+    # only the first n-1 parameters for f0 are taken from par
+    # the nth one is chosen to fulfill the kinematic constraint f+(0)=f0(0)
+    a['f0'] = [ par[process + ' BCL' + ' a' + str(j) + '_f0'] for j in range(n-1) ]
+    fplus_q20 = pole('f+', mpl, 0) * param_fplusT(mB, mP, a['f+'], 0, t0)
+    f0_q20 = pole('f0', m0, 0) * param_f0(mB, mP, a['f0'], 0, t0)
+    an_f0 = (f0_q20-fplus_q20)/z(mB, mP, 0, t0)**(n-1)
+    a['f0'].append(an_f0)
+    # evaluate FFs
     ff['f+'] = pole('f+', mpl, q2) * param_fplusT(mB, mP, a['f+'], q2, t0)
     ff['fT'] = pole('fT', mpl, q2) * param_fplusT(mB, mP, a['fT'], q2, t0)
     ff['f0'] = pole('f0', m0, q2) * param_f0(mB, mP, a['f0'], q2, t0)
@@ -61,8 +69,15 @@ def ff_isgurwise(process, q2, par, scale, n=3, t0=None):
     mP = par['m_'+pd['P']]
     ff = {}
     a={}
-    for i in ['f+', 'f0']:
-        a[i] = [ par[process + ' BCL' + ' a' + str(j) + '_' + i] for j in range(n) ]
+    a['f+'] = [ par[process + ' BCL' + ' a' + str(j) + '_f+'] for j in range(n) ]
+    # only the first n-1 parameters for f0 are taken from par
+    # the nth one is chosen to fulfill the kinematic constraint f+(0)=f0(0)
+    a['f0'] = [ par[process + ' BCL' + ' a' + str(j) + '_f0'] for j in range(n-1) ]
+    fplus_q20 = pole('f+', mpl, 0) * param_fplusT(mB, mP, a['f+'], 0, t0)
+    f0_q20 = pole('f0', m0, 0) * param_f0(mB, mP, a['f0'], 0, t0)
+    an_f0 = (fplus_q20-f0_q20)/z(mB, mP, 0, t0)**(n-1)
+    a['f0'].append(an_f0)
+    # evaluate FFs
     ff['f+'] = pole('f+', mpl, q2) * param_fplusT(mB, mP, a['f+'], q2, t0)
     ff['f0'] = pole('f0', m0, q2) * param_f0(mB, mP, a['f0'], q2, t0)
     ff = improved_isgur_wise(process, q2, ff, par, scale=scale)
