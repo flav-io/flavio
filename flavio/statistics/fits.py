@@ -350,7 +350,7 @@ class Fit(flavio.NamedInstanceClass):
         """Return the prior probability (or frequentist likelihood) for all
         nuisance parameters given an input array"""
         par_dict = self.get_par_dict(x)
-        exclude_parameters = list(set(par_dict.keys())-set(self.fit_parameters)-set(self.nuisance_parameters))
+        exclude_parameters = list(set(par_dict.keys())-set(self.nuisance_parameters))
         prob_dict = self.par_obj.get_logprobability_all(par_dict, exclude_parameters=exclude_parameters)
         return sum([p for obj, p in prob_dict.items()])
 
