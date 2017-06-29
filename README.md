@@ -40,6 +40,7 @@ Contributors:
 - Albert Puig
 - Stefanie Reichert
 - Peter Stangl
+- Zeren Simon Wang
 
 ## License
 
