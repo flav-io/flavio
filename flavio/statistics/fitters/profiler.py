@@ -169,10 +169,9 @@ class Profiler1D(Profiler):
             # otherwise, divide the range into x<x_bf and x>x_bf,
             # with the same number of steps on both sides
             steps_l = steps//2
-            steps_r = steps - steps_l + 1
-            # [1:] is in order not to double count x_bf
+            steps_r = steps - steps_l
             x = np.hstack([np.linspace(self.x_min, self.x_bf, steps_l),
-                           np.linspace(self.x_bf, self.x_max, steps_r)[1:]])
+                           np.linspace(self.x_bf, self.x_max, steps_r)])
         # determine index in x-array where the x is closest to x_bf
         i0 = (np.abs(x-self.x_bf)).argmin()
         x = reshuffle_1d(x, i0)
