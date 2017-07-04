@@ -15,7 +15,7 @@ class TestBVll(unittest.TestCase):
     def test_brhoee(self):
         q2 = 3.5
         self.assertEqual(
-            dBRdq2(q2, wc_obj, par, 'B0', 'rho+', 'e'),
+            dBRdq2(q2, wc_obj, par, 'B0', 'rho+', 'e', A=None),
             flavio.Observable["dBR/dq2(B0->rhoenu)"].prediction_central(constraints, wc_obj, q2=q2) )
 
     def test_decays(self):
@@ -77,3 +77,8 @@ class TestBVll(unittest.TestCase):
         self.assertAlmostEqual(br_tau/br_sm, 4, delta=0.04)
         # without interference: 1 + 1 = 2
         self.assertAlmostEqual(br_e/br_sm, 2, delta=0.02)
+
+    def test_BRLT(self):
+        self.assertEqual(flavio.sm_prediction('dBR/dq2(B0->D*enu)', q2=3),
+                         flavio.sm_prediction('dBR_L/dq2(B0->D*enu)', q2=3) +
+                         flavio.sm_prediction('dBR_T/dq2(B0->D*enu)', q2=3))

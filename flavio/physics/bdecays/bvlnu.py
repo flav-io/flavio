@@ -82,6 +82,16 @@ def dGdq2(J):
     r"""$q^2$-differential branching ratio in terms of angular coefficients."""
     return 3/4. * (2 * J['1s'] + J['1c']) - 1/4. * (2 * J['2s'] + J['2c'])
 
+def dGdq2_L(J):
+    r"""$q^2$-differential branching ratio to longitudinally polarized
+    vector meson in terms of angular coefficients."""
+    return 3/4. * J['1c'] - 1/4. * J['2c']
+
+def dGdq2_T(J):
+    r"""$q^2$-differential branching ratio to transversely polarized
+    vector meson in terms of angular coefficients."""
+    return 3/2. * J['1s'] - 1/2. * J['2s']
+
 # For the angle-differential and binned distributions, the main idea is this:
 # while the q2-integration has to be done numerically, the angle integration is
 # trivial to do analytically as the angular dependence is given in terms of
@@ -259,30 +269,36 @@ def BRfac(V):
     else:
         return 1
 
-def dBRdq2_lep(q2, wc_obj, par, B, V, lep):
+def dBRdq2_lep(q2, wc_obj, par, B, V, lep, A):
     if not kinem_allowed(q2, par, B, V, lep):
         return 0
     tauB = par['tau_'+B]
     J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
-    return tauB * dGdq2(J) * BRfac(V)
+    if A is  None:
+        return tauB * dGdq2(J) * BRfac(V)
+    elif A is 'L':
+        return tauB * dGdq2_L(J) * BRfac(V)
+    elif A is 'T':
+        return tauB * dGdq2_T(J) * BRfac(V)
 
-def dBRdq2(q2, wc_obj, par, B, V, lep):
+
+def dBRdq2(q2, wc_obj, par, B, V, lep, A):
     if lep == 'l':
         # average of e and mu!
-        return (dBRdq2_lep(q2, wc_obj, par, B, V, 'e') + dBRdq2_lep(q2, wc_obj, par, B, V, 'mu'))/2
+        return (dBRdq2_lep(q2, wc_obj, par, B, V, 'e', A) + dBRdq2_lep(q2, wc_obj, par, B, V, 'mu', A))/2
     else:
-        return dBRdq2_lep(q2, wc_obj, par, B, V, lep)
+        return dBRdq2_lep(q2, wc_obj, par, B, V, lep, A)
 
-def dBRdq2_function(B, V, lep):
-    return lambda wc_obj, par, q2: dBRdq2(q2, wc_obj, par, B, V, lep)
+def dBRdq2_function(B, V, lep, A):
+    return lambda wc_obj, par, q2: dBRdq2(q2, wc_obj, par, B, V, lep, A)
 
-def BR_binned(q2min, q2max, wc_obj, par, B, V, lep):
+def BR_binned(q2min, q2max, wc_obj, par, B, V, lep, A):
     def integrand(q2):
-        return dBRdq2(q2, wc_obj, par, B, V, lep)
+        return dBRdq2(q2, wc_obj, par, B, V, lep, A)
     return flavio.math.integrate.nintegrate(integrand, q2min, q2max)
 
-def BR_binned_function(B, V, lep):
-    return lambda wc_obj, par, q2min, q2max: BR_binned(q2min, q2max, wc_obj, par, B, V, lep)
+def BR_binned_function(B, V, lep, A):
+    return lambda wc_obj, par, q2min, q2max: BR_binned(q2min, q2max, wc_obj, par, B, V, lep, A)
 
 def BR_binned_costhl_function(B, V, lep):
     if lep == 'l':
@@ -326,49 +342,56 @@ def dBR_dphi_function(B, V, lep):
         + dBR_dphi(phi, wc_obj, par, B, V, 'mu'))/2.
     return lambda wc_obj, par, phi: dBR_dphi(phi, wc_obj, par, B, V, lep)
 
-def _BR_tot(wc_obj, par, B, V, lep):
+def _BR_tot(wc_obj, par, B, V, lep, A):
     mB = par['m_'+B]
     mV = par['m_'+V]
     ml = par['m_'+lep]
     q2max = (mB-mV)**2
     q2min = ml**2
-    return BR_binned(q2min, q2max, wc_obj, par, B, V, lep)
+    return BR_binned(q2min, q2max, wc_obj, par, B, V, lep, A)
 
-def BR_tot(wc_obj, par, B, V, lep):
+def BR_tot(wc_obj, par, B, V, lep, A):
     if lep == 'l':
         # average of e and mu!
-        return (_BR_tot(wc_obj, par, B, V, 'e')+_BR_tot(wc_obj, par, B, V, 'mu'))/2.
+        return (_BR_tot(wc_obj, par, B, V, 'e', A)+_BR_tot(wc_obj, par, B, V, 'mu', A))/2.
     else:
-        return _BR_tot(wc_obj, par, B, V, lep)
+        return _BR_tot(wc_obj, par, B, V, lep, A)
 
-def BR_tot_function(B, V, lep):
-    return lambda wc_obj, par: BR_tot(wc_obj, par, B, V, lep)
+def BR_tot_function(B, V, lep, A):
+    return lambda wc_obj, par: BR_tot(wc_obj, par, B, V, lep, A)
 
-def BR_binned_leptonflavour(q2min, q2max, wc_obj, par, B, V, lnum, lden):
-    num = BR_binned(q2min, q2max, wc_obj, par, B, V, lnum)
+def BR_binned_leptonflavour(q2min, q2max, wc_obj, par, B, V, lnum, lden, A):
+    num = BR_binned(q2min, q2max, wc_obj, par, B, V, lnum, A)
     if num == 0:
         return 0
-    den = BR_binned(q2min, q2max, wc_obj, par, B, V, lden)
+    den = BR_binned(q2min, q2max, wc_obj, par, B, V, lden, A)
     return num/den
 
-def BR_tot_leptonflavour(wc_obj, par, B, V, lnum, lden):
-    num = BR_tot(wc_obj, par, B, V, lnum)
+def BR_tot_leptonflavour(wc_obj, par, B, V, lnum, lden, A):
+    num = BR_tot(wc_obj, par, B, V, lnum, A)
     if num == 0:
         return 0
-    den = BR_tot(wc_obj, par, B, V, lden)
+    den = BR_tot(wc_obj, par, B, V, lden, A)
     return num/den
 
-def BR_tot_leptonflavour_function(B, V, lnum, lden):
-    return lambda wc_obj, par: BR_tot_leptonflavour(wc_obj, par, B, V, lnum, lden)
+def BR_tot_leptonflavour_function(B, V, lnum, lden, A):
+    return lambda wc_obj, par: BR_tot_leptonflavour(wc_obj, par, B, V, lnum, lden, A)
 
-def BR_binned_leptonflavour_function(B, V, lnum, lden):
-    return lambda wc_obj, par, q2min, q2max: BR_binned_leptonflavour(q2min, q2max, wc_obj, par, B, V, lnum, lden)
+def BR_binned_leptonflavour_function(B, V, lnum, lden, A):
+    return lambda wc_obj, par, q2min, q2max: BR_binned_leptonflavour(q2min, q2max, wc_obj, par, B, V, lnum, lden, A)
 
 
 # Observable and Prediction instances
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau', 'l': r'\ell'}
+
+_A = {'dBR/dq2': None, 'BR': None, '<BR>': None,
+      'dBR_L/dq2': 'L', 'BR_L': 'L', '<BR_L>': 'L',
+      'dBR_T/dq2': 'T', 'BR_T': 'T', '<BR_T>': 'T',
+     }
 _func = {'dBR/dq2': dBRdq2_function, 'BR': BR_tot_function, '<BR>': BR_binned_function,
+         'dBR_L/dq2': dBRdq2_function, 'BR_L': BR_tot_function, '<BR_L>': BR_binned_function,
+         'dBR_T/dq2': dBRdq2_function, 'BR_T': BR_tot_function, '<BR_T>': BR_binned_function,
          '<BR>/<cl>': BR_binned_costhl_function,
          '<BR>/<cV>': BR_binned_costhV_function,
          '<BR>/<phi>': BR_binned_phi_function,
@@ -377,6 +400,8 @@ _func = {'dBR/dq2': dBRdq2_function, 'BR': BR_tot_function, '<BR>': BR_binned_fu
          'dBR/dphi': dBR_dphi_function,
          }
 _desc = {'dBR/dq2': r'$q^2$-differential', 'BR': 'Total', '<BR>': '$q^2$-binned',
+         'dBR_L/dq2': 'Differential longitudinal', 'BR_L': 'Total longitudinal', '<BR_L>': 'Binned longitudinal',
+         'dBR_T/dq2': 'Differential transverse', 'BR_T': 'Total transverse', '<BR_T>': 'Binned transverse',
          '<BR>/<cl>': r'$\cos\theta_l$-binned',
          '<BR>/<cV>': r'$\cos\theta_V$-binned',
          '<BR>/<phi>': r'$\phi$-binned',
@@ -385,6 +410,8 @@ _desc = {'dBR/dq2': r'$q^2$-differential', 'BR': 'Total', '<BR>': '$q^2$-binned'
          'dBR/dphi': r'$\phi$-differential',
          }
 _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'\langle\text{BR}\rangle',
+           'dBR_L/dq2': r'\frac{d\text{BR}_L}{dq^2}', 'BR_L': r'\text{BR}_L', '<BR_L>': r'\langle\text{BR}_L\rangle',
+           'dBR_T/dq2': r'\frac{d\text{BR}_T}{dq^2}', 'BR_T': r'\text{BR}_T', '<BR_T>': r'\langle\text{BR}_T\rangle',
            '<BR>/<cl>': r'\langle\text{BR}\rangle/\Delta\cos\theta_l',
            '<BR>/<cV>': r'\langle\text{BR}\rangle/\Delta\cos\theta_V',
            '<BR>/<phi>': r'\langle\text{BR}\rangle/\Delta\phi',
@@ -393,6 +420,8 @@ _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'
            'dBR/dphi': r'\frac{d\text{BR}}{d\phi}',
             }
 _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max'],
+         'dBR_L/dq2': ['q2'], 'BR_L': None, '<BR_L>': ['q2min', 'q2max'],
+         'dBR_T/dq2': ['q2'], 'BR_T': None, '<BR_T>': ['q2min', 'q2max'],
          '<BR>/<cl>': ['clmin', 'clmax'],
          '<BR>/<cV>': ['cVmin', 'cVmax'],
          '<BR>/<phi>': ['phimin', 'phimax'],
@@ -420,6 +449,8 @@ _process_taxonomy = r'Process :: $b$ hadron decays :: Semi-leptonic tree-level d
 
 for l in ['e', 'mu', 'tau', 'l']:
     for br in ['dBR/dq2', 'BR', '<BR>',
+               'dBR_L/dq2', 'BR_L', '<BR_L>',
+               'dBR_T/dq2', 'BR_T', '<BR_T>',
                '<BR>/<cl>', '<BR>/<cV>', '<BR>/<phi>',
                'dBR/dcl', 'dBR/dcV', 'dBR/dphi']:
         for M in _hadr.keys():
@@ -430,7 +461,12 @@ for l in ['e', 'mu', 'tau', 'l']:
             _obs.tex = r'$' + _tex_br[br] + r"(" +_process_tex + ")$"
             _obs.arguments = _args[br]
             _obs.add_taxonomy(_process_taxonomy + _process_tex +  r'$')
-            Prediction(_obs_name, _func[br](_hadr[M]['B'], _hadr[M]['V'], l))
+            if br in _A:
+                # for dBR/dq2, need to distinguish between total, L, and T
+                Prediction(_obs_name, _func[br](_hadr[M]['B'], _hadr[M]['V'], l, A=_A[br]))
+            else:
+                # for other observables not
+                Prediction(_obs_name, _func[br](_hadr[M]['B'], _hadr[M]['V'], l))
 
 
 # Lepton flavour ratios
@@ -446,7 +482,7 @@ for l in [('mu','e'), ('tau','mu'), ('tau', 'l')]:
             for N in _hadr_l[M]['decays']:
                 # add taxonomy for both processes (e.g. B->Venu and B->Vmunu) and for charged and neutral
                 _obs.add_taxonomy(_process_taxonomy + _hadr[N]['tex'] + _tex[li]+r"^+\nu_"+_tex[li]+r"$")
-        Prediction(_obs_name, BR_binned_leptonflavour_function(_hadr_l[M]['B'], _hadr_l[M]['V'], l[0], l[1]))
+        Prediction(_obs_name, BR_binned_leptonflavour_function(_hadr_l[M]['B'], _hadr_l[M]['V'], l[0], l[1], A=None))
 
         # ratio of total BRs
         _obs_name = "R"+l[0]+l[1]+"("+M+"lnu)"
@@ -457,4 +493,4 @@ for l in [('mu','e'), ('tau','mu'), ('tau', 'l')]:
             for N in _hadr_l[M]['decays']:
                 # add taxonomy for both processes (e.g. B->Venu and B->Vmunu) and for charged and neutral
                 _obs.add_taxonomy(_process_taxonomy + _hadr[N]['tex'] +_tex[li]+r"^+\nu_"+_tex[li]+r"$")
-        Prediction(_obs_name, BR_tot_leptonflavour_function(_hadr_l[M]['B'], _hadr_l[M]['V'], l[0], l[1]))
+        Prediction(_obs_name, BR_tot_leptonflavour_function(_hadr_l[M]['B'], _hadr_l[M]['V'], l[0], l[1], A=None))
