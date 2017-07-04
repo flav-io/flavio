@@ -116,7 +116,7 @@ B->D* CLN R_0(1): 1.14(11) # 1203.2654 appendix B
 B->D* CLN h_A1(1): 0.906(4)(12) # 1403.0635
 B->D* IW a_T1: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
 B->D* IW a_T2: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
-B->D* IW a_T23: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
+B->D* IW a_T23: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
 
 # B->D form factors
 B->D IW a_T: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
@@ -202,3 +202,15 @@ Lambdab->Lambda deltaC9 c_perp1 Re: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_perp1 Im: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_para1 Re: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_para1 Im: 0 ± 0.3
+
+# Parameters for HQET form factors
+chi_2(1): -0.06 ± 0.02
+chi_2p(1): 0 ± 0.02
+chi_3p(1): 0.04 ± 0.02
+eta(1): 0.62 ± 0.2
+etap(1): 0 ± 0.2
+CLN rho2_xi: 1 ± 0.5
+CLN c_xi: 1 ± 0.5
+B->D* CLN deltac_hA1: 0 ± 1
+B->D* CLN deltac_hT1: 0 ± 1
+B->D CLN deltac_h+: 0 ± 1

@@ -79,6 +79,7 @@ class TestBVll(unittest.TestCase):
         self.assertAlmostEqual(br_e/br_sm, 2, delta=0.02)
 
     def test_BRLT(self):
-        self.assertEqual(flavio.sm_prediction('dBR/dq2(B0->D*enu)', q2=3),
-                         flavio.sm_prediction('dBR_L/dq2(B0->D*enu)', q2=3) +
-                         flavio.sm_prediction('dBR_T/dq2(B0->D*enu)', q2=3))
+        self.assertAlmostEqual(flavio.sm_prediction('dBR/dq2(B0->D*enu)', q2=3),
+                               flavio.sm_prediction('dBR_L/dq2(B0->D*enu)', q2=3) +
+                               flavio.sm_prediction('dBR_T/dq2(B0->D*enu)', q2=3),
+                               places=10)

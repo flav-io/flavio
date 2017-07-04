@@ -61,11 +61,11 @@ implementation:
   B->omega form factor: B->omega BSZ3
   Bs->K* form factor: Bs->K* BSZ3
   Bs->phi form factor: Bs->phi BSZ3
-  B->D* form factor: B->D* CLN-IW
+  B->D* form factor: B->D* CLN
 
   # B->P form factors
   B->K form factor: B->K BCL3
-  B->D form factor: B->D BCL3-IW
+  B->D form factor: B->D CLN
   B->pi form factor: B->pi BCL3-IW
 
   # Lambdab form factors
