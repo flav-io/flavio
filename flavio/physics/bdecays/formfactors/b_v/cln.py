@@ -16,7 +16,7 @@ def ff(process, q2, par, scale):
     pd = process_dict[process]
     mB = par['m_'+pd['B']]
     mV = par['m_'+pd['V']]
-    w = (mB**2 + mV*+2 - q2) / (2*mB*mV)
+    w = (mB**2 + mV**2 - q2) / (2*mB*mV)
     z = (sqrt(w+1)-sqrt(2))/(sqrt(w+1)+sqrt(2))
     RV = 2*sqrt(mB*mV)/(mB+mV)
     hA1_1 = par[process + ' CLN h_A1(1)']
