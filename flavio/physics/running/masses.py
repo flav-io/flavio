@@ -2,7 +2,7 @@
 
 This module is based on the formulas in the `RunDec` papers, arXiv:hep-ph/0004189 and arXiv:1201.6149"""
 
-from math import log,pi
+from math import log, pi
 import numpy as np
 from flavio.math.functions import zeta
 from flavio.physics.running.masses import zeta
@@ -134,6 +134,51 @@ def fOsFromMs3(mu, M, nl):
      (ca*cf*tr*zeta(3))/2. + (cf*cf*tr*zeta(3))/4. - (ca*cf*nl*tr*zeta(3))/2. +
      (cf*cf*nl*tr*zeta(3))/4.))
 
+def f1SFromMs1(mu, mMS, asmu, nl):
+     lmm = log(mu*mu/(mMS*mMS))
+     return asmu*mMS*(12. - 2.*asmu*pi + 9.*lmm)/(9.*pi)
+
+def f1SFromMs2(mu, mMS, asmu, nl):
+     lmm = log(mu*mu/(mMS*mMS))
+     log34 = log((3.*mu)/(4.*asmu*mMS))
+     ln2 = log(2)
+     Zeta3 = zeta(3)
+     return (asmu*mMS*(-(2.*asmu)/9. + asmu*asmu*(-291. + 22.*nl - 198.*log34 +
+          12.*nl*log34 - 3.*(8. + 6.*lmm))/(81.*pi) + (4. + 3.*lmm)/(3.*pi) +
+          (asmu*(2763. - 142.*nl + 96.*pi*pi - 16.*nl*pi*pi + 32.*pi*pi*ln2 +
+          2036.*lmm - 104.*nl*lmm + 564.*lmm*lmm - 24.*nl*lmm*lmm - 48.*Zeta3))/(288.*pi*pi)))
+
+def f1SFromMs3(mu, mMS, asmu, nl):
+     lmm = log(mu*mu/(mMS*mMS))
+     log34 = log((3.*mu)/(4.*asmu*mMS))
+     ln2 = log(2)
+     Zeta3 = zeta(3)
+     Zeta5 = zeta(5)
+     return (asmu*mMS*(-(2.*asmu)/9. + asmu*asmu*(-291. + 22.*nl -  198.*log34 +
+          12.*nl*log34)/(81.*pi) + (4. + 3.*lmm)/(3.*pi) - (2.*asmu*asmu*(4. + 3.*lmm))/(27.*pi) +
+          asmu*asmu*asmu*(-372. + 40.*nl - 792.*log34 +
+          48.*nl*log34 - 279.*lmm + 30.*nl*lmm -
+          594.*log34*lmm + 36.*nl*log34*lmm)/(243.*pi*pi)
+          + (asmu*(2763. - 142.*nl + 96.*pi*pi - 16.*nl*pi*pi + 32.*pi*pi*ln2 + 2036.*lmm - 104.*nl*lmm +
+          564.*lmm*lmm - 24.*nl*lmm*lmm - 48.*Zeta3))/(288.*pi*pi) + asmu*asmu*asmu*(-2763.+ 142.*nl -
+          96.*pi*pi + 16.*nl*pi*pi - 32.*pi*pi*ln2 -
+          2036.*lmm + 104.*nl*lmm - 564.*lmm*lmm +
+          24.*nl*lmm*lmm + 48.*Zeta3)/(1296.*pi*pi)
+          + asmu*asmu*asmu*(-129096. + 20316.*nl - 616.*nl*nl -
+          11668.*pi*pi + 528.*nl*pi*pi - 16.*nl*nl*pi*pi + 243.*pi*pi*pi*pi -
+          200232.*log34 + 27792.*nl*log34 - 864.*nl*nl*log34 -
+          78408.*log34*log34 + 9504.*nl*log34*log34 -
+          288.*nl*nl*log34*log34 - 59400.*Zeta3 + 8208.*nl*Zeta3 -
+          192.*nl*nl*Zeta3)/(3888*pi*pi) +
+          (asmu*asmu*(42314585. - 4636940.*nl + 47060.*nl*nl + 7834092.*pi*pi -
+          713520.*nl*pi*pi + 18720.*nl*nl*pi*pi - 41700.*pi*pi*pi*pi + 14640.*nl*pi*pi*pi*pi -
+          1656000.*pi*pi*ln2 - 63360.*nl*pi*pi*ln2 - 126720.*pi*pi*ln2*ln2 +
+          11520.*nl*pi*pi*ln2*ln2 - 158400.*ln2*ln2*ln2*ln2 + 5760.*nl*ln2*ln2*ln2*ln2 +
+          33620760.*lmm - 3723120.*nl*lmm + 64080.*nl*nl*lmm + 1010880.*pi*pi*lmm - 220320.*nl*pi*pi*lmm + 8640.*nl*nl*pi*pi*lmm +
+          336960.*pi*pi*ln2*lmm - 17280.*nl*pi*pi*ln2*lmm + 11726100.*lmm*lmm - 1247400.*nl*lmm*lmm + 28080.*nl*nl*lmm*lmm +
+          2009880.*lmm*lmm*lmm - 185760.*nl*lmm*lmm*lmm + 4320.*nl*nl*lmm*lmm*lmm - 3801600.*A4 + 138240.*nl*A4 + 1002240.*Zeta3 -
+          1561680.*nl*Zeta3 + 60480.*nl*nl*Zeta3 - 1554120.*pi*pi*Zeta3 - 894240.*lmm*Zeta3 - 362880.*nl*lmm*Zeta3 + 4266000.*Zeta5))/
+          (466560.*pi*pi*pi)))
 
 def fZmM(nl):
     return (-9478333./93312. + 55.*log(2)*log(2)*log(2)*log(2)/162. +
@@ -185,6 +230,15 @@ def mMS2mOS(MS, Nf, asmu, Mu, nl):
        erg=s[:nl+1].sum()
     return MS*erg
 
+def mMS2m1S(MS, Nf, asmu, Mu, nl):
+    if nl == 0:
+        return MS
+    elif nl == 1:
+        return MS + f1SFromMs1(Mu, MS, asmu, nl=Nf)
+    elif nl == 2:
+        return MS + f1SFromMs2(Mu, MS, asmu, nl=Nf)
+    elif nl == 3:
+        return MS + f1SFromMs3(Mu, MS, asmu, nl=Nf)
 
 # (19) of arXiv:1107.3100v1
 def fKsFromMs1(Mu, M, Nf):

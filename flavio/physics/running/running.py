@@ -161,6 +161,17 @@ def _get_mb_KS(mbmb, alpha_s, scale, nl):
     # see 1107.3100 for why Nf=4
     return masses.mMS2mKS(MS=mbmb, Nf=4, asM=alpha_s, Mu=scale, nl=nl)
 
+def get_mb_1S(par, scale, nl=3):
+    r"""Get the $b$ quark mass in the 1S scheme."""
+    mbmb = par['m_b']
+    alpha_s = get_alpha(par, mbmb)['alpha_s']
+    return _get_mb_1S(mbmb=mbmb, alpha_s=alpha_s, scale=scale, nl=nl)
+
+# cached version
+@lru_cache(maxsize=config['settings']['cache size'])
+def _get_mb_1S(mbmb, alpha_s, scale, nl):
+    return masses.mMS2m1S(MS=mbmb, Nf=5, asmu=alpha_s, Mu=scale, nl=nl)
+
 def get_mt(par, scale):
     r"""Get the running top quark mass at the specified scale."""
     mt_pole = par['m_t']

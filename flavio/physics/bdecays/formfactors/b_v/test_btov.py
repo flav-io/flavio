@@ -1,7 +1,5 @@
 import unittest
-from math import sqrt,radians,asin
-from flavio.physics.bdecays.formfactors.b_v import btov, bsz_parameters, lattice_parameters, cln
-import numpy as np
+from flavio.physics.bdecays.formfactors.b_v import bsz_parameters, lattice_parameters, cln
 from flavio.classes import Implementation
 from flavio.parameters import default_parameters
 import copy
@@ -13,7 +11,12 @@ class TestBtoV(unittest.TestCase):
         c = copy.deepcopy(default_parameters)
         par = c.get_central_all()
         cln.ff('B->D*', 1, par, 4.8)
-        Implementation['B->D* CLN-IW'].get_central(constraints_obj=c, wc_obj=None, q2=1)
+        Implementation['B->D* CLN'].get_central(constraints_obj=c, wc_obj=None, q2=1)
+        ff0 = Implementation['B->D* CLN'].get_central(constraints_obj=c, wc_obj=None, q2=0)
+        mB = par['m_B0']
+        mV = par['m_D*+']
+        # check that exact kinematic relation at q^2=0 is fulfilled
+        self.assertAlmostEqual(ff0['A0'], 8*mB*mV/(mB**2-mV**2)*ff0['A12'], places=12)
 
     def test_bsz3(self):
         c = copy.deepcopy(default_parameters)
@@ -65,3 +68,35 @@ class TestBtoV(unittest.TestCase):
         self.assertAlmostEqual(fflatt['T1'], 0.605, places=3)
         self.assertAlmostEqual(fflatt['T2'], 0.383, places=3)
         self.assertAlmostEqual(fflatt['T23'], 0.743, places=3)
+
+class TestCLN2(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.c = default_parameters.copy()
+        cls.imp = Implementation['B->D* CLN']
+
+    def test_q2_1(self):
+        ff = self.__class__.imp.get_central(constraints_obj=self.__class__.c, wc_obj=None, q2=1)
+        for k, v in ff.items():
+            self.assertTrue(v > 0, msg="Failed for {}".format(k))
+
+    def test_q2_0_A(self):
+        ff = self.__class__.imp.get_central(constraints_obj=self.__class__.c, wc_obj=None, q2=0)
+        for k, v in ff.items():
+            self.assertTrue(v > 0, msg="Failed for {}".format(k))
+        par = self.__class__.c.get_central_all()
+        mB = par['m_B0']
+        mV = par['m_D*+']
+        # check that exact kinematic relation at q^2=0 is fulfilled
+        self.assertAlmostEqual(ff['A0'], 8*mB*mV/(mB**2-mV**2)*ff['A12'],
+                               places=10)
+
+    def test_q2_0_T(self):
+        ff = self.__class__.imp.get_central(constraints_obj=self.__class__.c, wc_obj=None, q2=0)
+        par = self.__class__.c.get_central_all()
+        mB = par['m_B0']
+        mV = par['m_D*+']
+        # check that exact kinematic relation at q^2=0 is fulfilled
+        self.assertEqual(ff['T1'], ff['T2'])
+        ff = self.__class__.imp.get_central(constraints_obj=self.__class__.c, wc_obj=None, q2=(mB-mV)**2)
