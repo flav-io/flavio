@@ -114,18 +114,18 @@ def _fix_correlation_matrix(corr, n_dim):
     """In the input file, the correlation matrix can be specified as a list
     of lists containing only the upper right of the symmetric correlation
     matrix, e.g. [[1, 0.1, 0.2], [1, 0.3], [1, 0.05]]. This function builds the
-    full matrix."""
-    if n_dim == 2:
-        # if the number of dimensions is just 2, the correlation could just
-        # be given as a number
-        try:
-            float(corr)
-        except ValueError:
-            # if it's not a number, go on below
-            pass
-        else:
-            # if it's a number, return the 2x2 matrix
-            return  [[1, float(corr)], [float(corr), 1]]
+    full matrix.
+
+    Alternatively, if only a number x is given, the correlation matrix is
+    reconstructed as [[1, x, x, ...], ..., [..., x, x, 1]]"""
+    try:
+        float(corr)
+    except TypeError:
+        # if it's not a number, go on below
+        pass
+    else:
+        # if it's a number, return delta_ij + (1-delta_ij)*x
+        return np.eye(n_dim) + (np.ones((n_dim, n_dim))-np.eye(n_dim))*float(corr)
     if not isinstance(corr, list):
         raise TypeError("Correlation matrix must be of type list")
     if len(corr) != n_dim:
