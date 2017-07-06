@@ -1,9 +1,10 @@
 import unittest
 import numpy as np
+import numpy.testing as npt
 from .measurements import *
 from .classes import *
 import tempfile
-from .measurements import _load_new
+from .measurements import _load_new, _fix_correlation_matrix
 
 
 class TestMeasurements(unittest.TestCase):
@@ -37,3 +38,14 @@ class TestMeasurements(unittest.TestCase):
             m2 = [Measurement[m] for m in m2]
         for i in range(2):
             self.assertEqual(m1[i].get_yaml_dict(), m2[i].get_yaml_dict())
+
+    def test_fix_correlation(self):
+        npt.assert_array_equal(
+            _fix_correlation_matrix(0.3, 2),
+            np.array([[1, 0.3], [0.3, 1]]))
+        npt.assert_array_equal(
+            _fix_correlation_matrix(0.3, 3),
+            np.array([[1, 0.3, 0.3], [0.3, 1, 0.3], [0.3, 0.3, 1]]))
+        npt.assert_array_equal(
+            _fix_correlation_matrix([[1, 0.4, 0.3], [1, 0.2], [1]], 3),
+            np.array([[1, 0.4, 0.3], [0.4, 1, 0.2], [0.3, 0.2, 1]]))
