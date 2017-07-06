@@ -161,8 +161,8 @@ class Profiler1D(Profiler):
             self.x_bf = bf.x[0] # best-fit parameter
         elif self.n_wc == 1:
             self.x_bf = bf.x[-1] # ... or best-fit Wilson coefficient
-        if self.x_bf == self.x_min or self.x_bf == self.x_max:
-            # if the best-fit value is at the border,
+        if self.x_bf <= self.x_min or self.x_bf >= self.x_max:
+            # if the best-fit value is at the border or outside,
             # just make a linspace
             x = np.linspace(self.x_min, self.x_max, steps)
         else:
