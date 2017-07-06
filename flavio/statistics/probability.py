@@ -1006,7 +1006,12 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
             if correlation is None:
                 self.correlation = np.eye(len(self.standard_deviation))
             else:
-                self.correlation = np.array(correlation)
+                if isinstance(correlation, (int, float)):
+                    # if it's a number, return delta_ij + (1-delta_ij)*x
+                    n_dim = len(central_value)
+                    self.correlation = np.eye(n_dim) + (np.ones((n_dim, n_dim))-np.eye(n_dim))*float(correlation)
+                else:
+                    self.correlation = np.array(correlation)
             self.covariance = np.outer(self.standard_deviation,
                                        self.standard_deviation)*self.correlation
         super().__init__(central_value, support=np.array([
