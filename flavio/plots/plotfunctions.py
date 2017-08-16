@@ -542,6 +542,7 @@ def contour(x, y, z, levels,
     """
     if interpolation_factor > 1:
         if interpolation_order > 1:
+            # cut off large z values to avoid interpolation artifacts
             z_max = np.max(levels)*2.
             z[z > z_max] = z_max
         x = scipy.ndimage.zoom(x, zoom=interpolation_factor, order=1)
