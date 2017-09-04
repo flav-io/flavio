@@ -73,7 +73,7 @@ def wctot_dict(wc_obj, sector, scale, par, nf_out=None):
         c8p = eps_s * c8
         # go back to the effective WCs
         wc_sm[21] = c7p + np.dot(yi, wc_sm[15:21]) # c7p_eff
-        wc_sm[22] = c7p + np.dot(zi, wc_sm[15:21]) # c8p_eff
+        wc_sm[22] = c8p + np.dot(zi, wc_sm[15:21]) # c8p_eff
     wc_labels = wc_obj.coefficients[sector]
     wc_sm_dict =  dict(zip(wc_labels, wc_sm))
     return add_dict((wc_np_dict, wc_sm_dict))
