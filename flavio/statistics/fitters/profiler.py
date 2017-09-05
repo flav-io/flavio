@@ -44,9 +44,8 @@ def reshuffle_2d(x, ij0):
     """Reshuffle 2D array to make index (ij0) the first index, flatten the
     array, and append the following indices in the end."""
     m, n = np.asarray(x).shape
-    i0, j0 = ij0
     x_flat = np.asarray(x).ravel()
-    i0_1d = n*i0 + j0
+    i0_1d = np.ravel_multi_index(ij0, (m, n))
     return reshuffle_1d(x_flat, i0_1d), i0_1d
 
 def unreshuffle_2d(x, i0, shape):
