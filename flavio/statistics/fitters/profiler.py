@@ -44,14 +44,21 @@ def reshuffle_2d(x, ij0):
     """Reshuffle 2D array to make index (ij0) the first index, flatten the
     array, and append the following indices in the end."""
     m, n = np.asarray(x).shape
-    x_flat = np.asarray(x).ravel()
-    i0_1d = np.ravel_multi_index(ij0, (m, n))
+    x_rev = np.asarray(x)
+    x_rev[1::2, :] = x_rev[1::2, ::-1] # reverse all odd rows
+    i0, j0 = ij0
+    if i0 % 2 != 0: # if row is odd
+        j0 = n - j0 - 1 # flip the column index
+    x_flat = x_rev.ravel()
+    i0_1d = np.ravel_multi_index((i0, j0), (m, n))
     return reshuffle_1d(x_flat, i0_1d), i0_1d
 
 def unreshuffle_2d(x, i0, shape):
     """Undo the reshuffle_2d operation."""
     x_flat = unreshuffle_1d(x, i0)
-    return np.reshape(x_flat, shape)
+    x_rev = np.reshape(x_flat, shape)
+    x_rev[1::2, :] = x_rev[1::2, ::-1] # reverse all odd rows
+    return x_rev
 
 
 class Profiler(object):

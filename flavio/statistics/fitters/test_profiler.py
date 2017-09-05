@@ -13,8 +13,11 @@ class TestProfilers(unittest.TestCase):
         npt.assert_array_equal(profiler.reshuffle_1d([0,1,2,3,4,5,6], 4), [4,5,6,0,1,2,3])
         npt.assert_array_equal(profiler.unreshuffle_1d([4,5,6,0,1,2,3], 4), [0,1,2,3,4,5,6])
         rs, i0 = profiler.reshuffle_2d([[0,1,2],[3,4,5]], (1,2))
-        npt.assert_array_equal(rs, [5,0,1,2,3,4])
-        npt.assert_array_equal(profiler.unreshuffle_2d([5,0,1,2,3,4], i0, (2,3)), [[0,1,2],[3,4,5]])
+        npt.assert_array_equal(rs, [5,4,3,0,1,2])
+        npt.assert_array_equal(profiler.unreshuffle_2d([5,4,3,0,1,2], i0, (2,3)), [[0,1,2],[3,4,5]])
+        rs, i0 = profiler.reshuffle_2d([[0,1,2],[3,4,5]], (0,1))
+        npt.assert_array_equal(rs, [1,2,5,4,3,0])
+        npt.assert_array_equal(profiler.unreshuffle_2d([1,2,5,4,3,0], i0, (2,3)), [[0,1,2],[3,4,5]])
 
     def test_profiler(self):
         # defining some dummy parameters and observables
