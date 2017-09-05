@@ -285,6 +285,21 @@ class Profiler2D(Profiler):
         self.x_max = x_max
         self.y_min = y_min
         self.y_max = y_max
+        self.x_bf = None
+        self.y_bf = None
+
+    def get_best_fit(self):
+        """Determine the position of the best-fit point and save it."""
+        try:
+            bf = self.best_fit(fitpar0=self.fit.get_central_fit_parameters)
+        except KeyError:
+            bf = self.best_fit(fitpar0=[(self.x_max-self.x_min)/2,
+                                        (self.y_max-self.y_min)/2])
+        self.bf = bf
+        if self.n_wc > 0:
+            self.x_bf, self.y_bf = np.hstack((bf.x[:self.n_fit_p], bf.x[-self.n_wc:]))
+        else:
+            self.x_bf, self.y_bf = bf.x[:self.n_fit_p]
 
     def run(self, steps=(10, 10), **kwargs):
         """Maximize the likelihood by varying the nuisance parameters.
@@ -304,20 +319,11 @@ class Profiler2D(Profiler):
           (n_nuisance, steps_x, steps_y)
         """
         # determine x- and y-value at the global best-fit point
-        try:
-            bf = self.best_fit(fitpar0=self.fit.get_central_fit_parameters)
-        except KeyError:
-            bf = self.best_fit(fitpar0=[(self.x_max-self.x_min)/2,
-                                        (self.y_max-self.y_min)/2])
-        self.bf = bf
-        if self.n_wc > 0:
-            x_bf, y_bf = np.hstack((bf.x[:self.n_fit_p], bf.x[-self.n_wc:]))
-        else:
-            x_bf, y_bf = bf.x[:self.n_fit_p]
+        self.get_best_fit()
         x = np.linspace(self.x_min, self.x_max, steps[0])
         y = np.linspace(self.y_min, self.y_max, steps[1])
         # determine index in x and y-arrays where the x/y is closest to x_bf/y_bf
-        ij0 = (np.abs(x-x_bf)).argmin(), (np.abs(x-x_bf)).argmin()
+        ij0 = (np.abs(x-self.x_bf)).argmin(), (np.abs(x-self.x_bf)).argmin()
         z = np.zeros(steps)
         n = np.zeros((self.n_nui_p, steps[0], steps[1]))
         xx, yy = np.meshgrid(x, y, indexing='ij')
@@ -326,22 +332,14 @@ class Profiler2D(Profiler):
         z, i0_1d = reshuffle_2d(z, ij0)
         n = np.array([reshuffle_2d(ni, ij0)[0] for ni in n])
         # start with global best-fit values for nuisance parameters
-        x0 = bf.x[self.n_fit_p:self.n_fit_p+self.n_nui_p]
-        for i in range(len(z)):
-            res = maximize_robust(self.f_target, args=([xx[i], yy[i]],), x0=x0, **kwargs)
-            if res.success:
-                z[i] = res.fun
-                n[:,i] = res.x/self.nuisance_scale - self.nuisance_shift
-                # reset nuisances start values for next iteration to optimized values
-                x0 = res.x
-            else:
-                z[i] = np.nan
+        n0 = self.bf.x[self.n_fit_p:self.n_fit_p+self.n_nui_p]
+        z, n = self.optimize_list(x=np.transpose([xx, yy]), n0=n0, **kwargs)
         xx = unreshuffle_2d(xx, i0_1d, steps)
         yy = unreshuffle_2d(yy, i0_1d, steps)
         x = xx[:,0]
         y = yy[0]
         z = unreshuffle_2d(z, i0_1d, steps)
-        n = np.array([unreshuffle_2d(ni, i0_1d, steps) for ni in n])
+        n = np.array([unreshuffle_2d(ni, i0_1d, steps) for ni in n.T])
         self.x = x
         self.y = y
         self.log_profile_likelihood = z
