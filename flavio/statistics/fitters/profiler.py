@@ -102,6 +102,44 @@ class Profiler(object):
         res = maximize_robust(self.f_target_global, x0=x0, **kwargs)
         return res
 
+    def optimize_point(self, x, n0, **kwargs):
+        """Maximize the nuisance likelihood for a single point x (a number
+        for 1D profile likelihood and a tuple of two numbers for 2D), using
+        n0 as initial values for the nuisance parameters.
+
+        Returns z, n, n_scaled where
+        - z is the optimized log-likelihood
+        - n are the optimized nuisance parameters
+        - n_scaled are the scaled and shifted optimized nuisance parameters
+        """
+        res = maximize_robust(self.f_target, args=(np.ravel([x]),), x0=n0, **kwargs)
+        if res.success:
+            z = res.fun
+            n = res.x/self.nuisance_scale - self.nuisance_shift
+            n_scaled = res.x
+        else:
+            z = np.nan
+            n = np.nan
+            n_scaled = np.nan
+        return z, n, n_scaled
+
+    def optimize_list(self, x, n0, **kwargs):
+        """Maximize the nuisance likelihood for a list of points x, using
+        n0 as initial values for the nuisance parameters at the first point.
+
+        Returns z, n
+        - z are the optimized log-likelihood values
+        - n are the optimized nuisance parameters
+        """
+        z = np.zeros(len(x))
+        n = np.zeros((len(x), self.n_nui_p))
+        n0_i = n0
+        for i, X in enumerate(x):
+            z[i], n[i], n_scaled = self.optimize_point(x=X, n0=n0_i, **kwargs)
+            if not np.any(np.isnan(n_scaled)):
+                n0_i = n_scaled
+        return z, n
+
 
 class Profiler1D(Profiler):
     """1-dimensional likelihood profiler.
@@ -130,7 +168,24 @@ class Profiler1D(Profiler):
         self.x_min = x_min
         self.x_max = x_max
         self.x_bf = None
+        self.n_bf = None
         self.x = None
+
+    def get_best_fit(self):
+        """Determine the x-value of the best-fit point and save it."""
+        try:
+            bf = self.best_fit(fitpar0=self.fit.get_central_fit_parameters)
+        except KeyError:
+            # if the fit parameters do not have existing constraints, use center
+            bf = self.best_fit(fitpar0=(self.x_max-self.x_min)/2)
+        self.bf = bf
+        if self.n_fit_p == 1:
+            self.x_bf = bf.x[0] # best-fit parameter
+            self.n_bf = bf.x[1:]
+        elif self.n_wc == 1:
+            self.x_bf = bf.x[-1] # ... or best-fit Wilson coefficient
+            self.n_bf = bf.x[:-1]
+        return self.x_bf
 
     def run(self, steps=20, **kwargs):
         """Maximize the likelihood by varying the nuisance parameters.
@@ -150,17 +205,8 @@ class Profiler1D(Profiler):
         - n: the values of the nuisance parameters at these points; has shape
             (n_nuisance, steps)
         """
-        # determine x-value at the global best-fit point
-        try:
-            bf = self.best_fit(fitpar0=self.fit.get_central_fit_parameters)
-        except KeyError:
-            # if the fit parameters do not have existing constraints, use center
-            bf = self.best_fit(fitpar0=(self.x_max-self.x_min)/2)
-        self.bf = bf
-        if self.n_fit_p == 1:
-            self.x_bf = bf.x[0] # best-fit parameter
-        elif self.n_wc == 1:
-            self.x_bf = bf.x[-1] # ... or best-fit Wilson coefficient
+        # determine the x-value of the best-fit point
+        self.get_best_fit()
         if self.x_bf <= self.x_min or self.x_bf >= self.x_max:
             # if the best-fit value is at the border or outside,
             # just make a linspace
@@ -175,19 +221,8 @@ class Profiler1D(Profiler):
         # determine index in x-array where the x is closest to x_bf
         i0 = (np.abs(x-self.x_bf)).argmin()
         x = reshuffle_1d(x, i0)
-        z = np.zeros(steps)
-        n = np.zeros((steps, self.n_nui_p))
-        # start with global best-fit values for nuisance parameters
-        x0 = bf.x[self.n_fit_p:self.n_fit_p+self.n_nui_p]
-        for i, X in enumerate(x):
-            res = maximize_robust(self.f_target, args=([X],), x0=x0, **kwargs)
-            if res.success:
-                z[i] = res.fun
-                n[i] = res.x/self.nuisance_scale - self.nuisance_shift
-                # reset nuisances start values for next iteration to optimized values
-                x0 = res.x
-            else:
-                z[i] = np.nan
+        # optimize, starting with global best-fit values for nuisance parameters
+        z, n = self.optimize_list(x=x, n0=self.n_bf, **kwargs)
         x = unreshuffle_1d(x, i0)
         z = unreshuffle_1d(z, i0)
         n = unreshuffle_1d(n, i0).T
