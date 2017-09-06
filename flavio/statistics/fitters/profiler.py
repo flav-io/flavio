@@ -4,6 +4,8 @@ import numpy as np
 import flavio
 import scipy.optimize
 from flavio.math.optimize import minimize_robust, maximize_robust
+from functools import partial
+from multiprocessing import Pool
 import warnings
 
 def par_shift_scale(par_obj, parameters):
@@ -60,6 +62,10 @@ def unreshuffle_2d(x, i0, shape):
     x_rev[1::2, :] = x_rev[1::2, ::-1] # reverse all odd rows
     return x_rev
 
+def optimize_list_worker(x, n0, profiler, **kwargs):
+    """Worker function needed for parallel execution of the likelihood
+    optimization (see the `_optimize_list` method of `Profiler`)."""
+    return profiler._optimize_list(x, n0, **kwargs)
 
 class Profiler(object):
     """Parent class for profilers. Not meant to be used directly."""
@@ -129,14 +135,8 @@ class Profiler(object):
             n_scaled = np.nan
         return z, n, n_scaled
 
-    def optimize_list(self, x, n0, **kwargs):
-        """Maximize the nuisance likelihood for a list of points x, using
-        n0 as initial values for the nuisance parameters at the first point.
-
-        Returns z, n
-        - z are the optimized log-likelihood values
-        - n are the optimized nuisance parameters
-        """
+    def _optimize_list(self, x, n0, **kwargs):
+        """Helper method for `optimize_list`."""
         z = np.zeros(len(x))
         n = np.zeros((len(x), self.n_nui_p))
         n0_i = n0
@@ -145,6 +145,28 @@ class Profiler(object):
             if not np.any(np.isnan(n_scaled)):
                 n0_i = n_scaled
         return z, n
+
+    def optimize_list(self, x, n0, threads=1, **kwargs):
+        """Maximize the nuisance likelihood for a list of points x, using
+        n0 as initial values for the nuisance parameters at the first point.
+
+        Returns z, n
+        - z are the optimized log-likelihood values
+        - n are the optimized nuisance parameters
+        """
+        if threads == 1:
+            return self._optimize_list(x, n0, **kwargs)
+        else:
+            x_split = np.array_split(x, threads)
+            with Pool(threads) as pool:
+                zn = pool.map(partial(optimize_list_worker,
+                              n0=n0,
+                              profiler=self,
+                              **kwargs),
+                              x_split)
+            z = np.concatenate([zi for zi, ni in zn])
+            n = np.concatenate([ni for zi, ni in zn])
+            return z, n
 
 
 class Profiler1D(Profiler):
@@ -193,12 +215,16 @@ class Profiler1D(Profiler):
             self.n_bf = bf.x[:-1]
         return self.x_bf
 
-    def run(self, steps=20, **kwargs):
+    def run(self, steps=20, threads=1, **kwargs):
         """Maximize the likelihood by varying the nuisance parameters.
 
         Arguments:
 
         - steps (defaults to 20): number of steps in the 1D interval of interest
+        - threads (defaults to 1): number of parallel processes
+
+        threads must be smaller than or equal to steps. Optimally, steps
+        should be divisible by threads.
 
         Additional keyword arguments will be passed to
         `flavio.math.optimize.maximize_robust`.
@@ -211,6 +237,8 @@ class Profiler1D(Profiler):
         - n: the values of the nuisance parameters at these points; has shape
             (n_nuisance, steps)
         """
+        if threads > steps:
+            raise ValueError("Number of threads cannot be larger than number of steps!")
         # determine the x-value of the best-fit point
         self.get_best_fit()
         if self.x_bf <= self.x_min or self.x_bf >= self.x_max:
@@ -228,7 +256,7 @@ class Profiler1D(Profiler):
         i0 = (np.abs(x-self.x_bf)).argmin()
         x = reshuffle_1d(x, i0)
         # optimize, starting with global best-fit values for nuisance parameters
-        z, n = self.optimize_list(x=x, n0=self.n_bf, **kwargs)
+        z, n = self.optimize_list(x=x, n0=self.n_bf, threads=threads, **kwargs)
         x = unreshuffle_1d(x, i0)
         z = unreshuffle_1d(z, i0)
         n = unreshuffle_1d(n, i0).T

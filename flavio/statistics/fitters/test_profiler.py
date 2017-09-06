@@ -49,6 +49,14 @@ class TestProfilers(unittest.TestCase):
         npt.assert_array_equal(n, profiler_1d.profile_nuisance)
         pdat = profiler_1d.pvalue_prob_plotdata()
         npt.assert_array_equal(pdat['x'], x)
+        # test multiprocessing
+        for threads in [2, 3, 4]:
+            xt, zt, nt = profiler_1d.run(steps=4, threads=threads)
+            npt.assert_array_almost_equal(x, xt, decimal=4)
+            npt.assert_array_almost_equal(z, zt, decimal=4)
+            npt.assert_array_almost_equal(n, nt, decimal=4)
+        with self.assertRaises(ValueError):
+            profiler_1d.run(steps=4, threads=5)
         # test 2D profiler
         p.remove_constraint('d')
         fit_2d = FrequentistFit('test profiler 2d',
