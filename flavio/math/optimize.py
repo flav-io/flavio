@@ -26,8 +26,11 @@ def minimize_robust(fun, x0, args=(), methods=None, tries=3, disp=False, **kwarg
             if disp:
                 print("Starting try no. {} with method {}".format(i+1, m))
                 print("Current function value: {}".format(_val))
-            opt = minimize(fun, x0, args=args, method=m,
-                           options={'disp': disp}, **kwargs)
+            if 'options' in kwargs:
+                kwargs['options'].update({'disp': disp})
+            else:
+                kwargs['options'] = {'disp': disp}
+            opt = minimize(fun, x0, args=args, method=m, **kwargs)
             if opt.success:
                 return opt
             elif opt.fun < _val:
