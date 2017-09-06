@@ -199,13 +199,13 @@ class Profiler1D(Profiler):
         self.n_bf = None
         self.x = None
 
-    def get_best_fit(self):
+    def get_best_fit(self, **kwargs):
         """Determine the x-value of the best-fit point and save it."""
         try:
-            bf = self.best_fit(fitpar0=self.fit.get_central_fit_parameters)
+            bf = self.best_fit(fitpar0=self.fit.get_central_fit_parameters, **kwargs)
         except KeyError:
             # if the fit parameters do not have existing constraints, use center
-            bf = self.best_fit(fitpar0=(self.x_max-self.x_min)/2)
+            bf = self.best_fit(fitpar0=(self.x_max-self.x_min)/2, **kwargs)
         self.bf = bf
         if self.n_fit_p == 1:
             self.x_bf = bf.x[0] # best-fit parameter
@@ -240,7 +240,7 @@ class Profiler1D(Profiler):
         if threads > steps:
             raise ValueError("Number of threads cannot be larger than number of steps!")
         # determine the x-value of the best-fit point
-        self.get_best_fit()
+        self.get_best_fit(**kwargs)
         if self.x_bf <= self.x_min or self.x_bf >= self.x_max:
             # if the best-fit value is at the border or outside,
             # just make a linspace
@@ -322,13 +322,13 @@ class Profiler2D(Profiler):
         self.x_bf = None
         self.y_bf = None
 
-    def get_best_fit(self):
+    def get_best_fit(self, **kwargs):
         """Determine the position of the best-fit point and save it."""
         try:
-            bf = self.best_fit(fitpar0=self.fit.get_central_fit_parameters)
+            bf = self.best_fit(fitpar0=self.fit.get_central_fit_parameters, **kwargs)
         except KeyError:
             bf = self.best_fit(fitpar0=[(self.x_max-self.x_min)/2,
-                                        (self.y_max-self.y_min)/2])
+                                        (self.y_max-self.y_min)/2], **kwargs)
         self.bf = bf
         if self.n_wc > 0:
             self.x_bf, self.y_bf = np.hstack((bf.x[:self.n_fit_p], bf.x[-self.n_wc:]))
@@ -336,6 +336,7 @@ class Profiler2D(Profiler):
             self.x_bf, self.y_bf = bf.x[:self.n_fit_p]
 
     def run(self, steps=(10, 10), threads=1, **kwargs):
+
         """Maximize the likelihood by varying the nuisance parameters.
 
         Arguments:
@@ -360,7 +361,7 @@ class Profiler2D(Profiler):
         if threads > steps[0]*steps[1]:
             raise ValueError("Number of threads cannot be larger than number of grid points!")
         # determine x- and y-value at the global best-fit point
-        self.get_best_fit()
+        self.get_best_fit(**kwargs)
         x = np.linspace(self.x_min, self.x_max, steps[0])
         y = np.linspace(self.y_min, self.y_max, steps[1])
         # determine index in x and y-arrays where the x/y is closest to x_bf/y_bf
