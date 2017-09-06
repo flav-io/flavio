@@ -48,25 +48,29 @@ class emceeScan(object):
             self.nwalkers = self.dimension * 10
         else:
             self.nwalkers = nwalkers
-        def get_random_good():
-            # iterate until a random point with finite probability is found
-            good = False
-            i = 0
-            while not good:
-                x = fit.get_random_start
-                good = np.isfinite(fit.log_target(x))
-                i += 1
-                if(i == 1000):
-                    raise ValueError("Could not find enough starting values with finite probability. "
-                                     " Try reducing the starting priors for the Wilson coefficients.")
-            return x
-        self.start = [get_random_good() for i in range(self.nwalkers)]
-
-
+        self.start = None
         self.mc = emcee.EnsembleSampler(nwalkers=self.nwalkers,
                                         dim=self.dimension,
                                         lnpostfn=self.fit.log_target,
                                         **kwargs)
+
+    def _get_random_good():
+        """Generate random starting points until a point with finite
+        probability is found."""
+        good = False
+        i = 0
+        while not good:
+            x = fit.get_random_start
+            good = np.isfinite(fit.log_target(x))
+            i += 1
+            if(i == 1000):
+                raise ValueError("Could not find enough starting values with finite probability. "
+                                 " Try reducing the starting priors for the Wilson coefficients.")
+        return x
+
+    def initialize_sampler(self):
+        """Initialize the emcee.EnsembleSampler instance."""
+        self.start = [self._get_random_good() for i in range(self.nwalkers)]
 
     def run(self, steps, burnin=1000):
         """Run the sampler.
@@ -79,6 +83,8 @@ class emceeScan(object):
 
         Note that the total number of samples will be `steps * nwalkers`!
         """
+        if self.start is None:
+            self.initialize_sampler()
         pos = self.start
         if burnin > 0:
             pos, prob, state = self.mc.run_mcmc(self.start, burnin)
