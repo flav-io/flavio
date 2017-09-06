@@ -73,6 +73,15 @@ class TestProfilers(unittest.TestCase):
         npt.assert_array_equal(n, profiler_2d.profile_nuisance)
         pdat = profiler_2d.contour_plotdata()
         npt.assert_array_almost_equal(pdat['z'], -2*(z-np.max(z)))
+        # test multiprocessing
+        for threads in [2, 5, 12]:
+            xt, yt, zt, nt = profiler_2d.run(steps=(3,4))
+            npt.assert_array_almost_equal(x, xt, decimal=4)
+            npt.assert_array_almost_equal(y, yt, decimal=4)
+            npt.assert_array_almost_equal(z, zt, decimal=4)
+            npt.assert_array_almost_equal(n, nt, decimal=4)
+        with self.assertRaises(ValueError):
+            profiler_2d.run(steps=(3,4), threads=13)
         # delete dummy instances
         for p in ['tmp a', 'tmp b', 'tmp c', 'tmp d']:
             Parameter.del_instance(p)

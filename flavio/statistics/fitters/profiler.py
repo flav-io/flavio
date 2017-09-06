@@ -335,14 +335,19 @@ class Profiler2D(Profiler):
         else:
             self.x_bf, self.y_bf = bf.x[:self.n_fit_p]
 
-    def run(self, steps=(10, 10), **kwargs):
+    def run(self, steps=(10, 10), threads=1, **kwargs):
         """Maximize the likelihood by varying the nuisance parameters.
 
         Arguments:
 
         - steps: number of steps in the in the x and y direction.
           Tuple of length 2 that defaults to (10, 10)
+        - threads (defaults to 1): number of parallel processes
         - method: minimization method to be used by scipy.optimize.minimize
+
+        threads must be smaller than or equal to the product of steps in x and
+        y direction (i.e., the number of grid points). Optimally, the number of
+        grid points should be a multiple of the number of threads.
 
         Returns:
 
@@ -352,6 +357,8 @@ class Profiler2D(Profiler):
         - n: the values of the nuisance parameters at these points; has shape
           (n_nuisance, steps_x, steps_y)
         """
+        if threads > steps[0]*steps[1]:
+            raise ValueError("Number of threads cannot be larger than number of grid points!")
         # determine x- and y-value at the global best-fit point
         self.get_best_fit()
         x = np.linspace(self.x_min, self.x_max, steps[0])
@@ -367,7 +374,10 @@ class Profiler2D(Profiler):
         n = np.array([reshuffle_2d(ni, ij0)[0] for ni in n])
         # start with global best-fit values for nuisance parameters
         n0 = self.bf.x[self.n_fit_p:self.n_fit_p+self.n_nui_p]
-        z, n = self.optimize_list(x=np.transpose([xx, yy]), n0=n0, **kwargs)
+        z, n = self.optimize_list(x=np.transpose([xx, yy]),
+                                  n0=n0,
+                                  threads=threads,
+                                  **kwargs)
         xx = unreshuffle_2d(xx, i0_1d, steps)
         yy = unreshuffle_2d(yy, i0_1d, steps)
         x = xx[:,0]
