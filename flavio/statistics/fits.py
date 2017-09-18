@@ -8,6 +8,7 @@ import flavio
 import numpy as np
 import copy
 from flavio.statistics.probability import NormalDistribution, MultivariateNormalDistribution, convolve_distributions
+from flavio.math.optimize import minimize_robust
 from collections import Counter
 import warnings
 import inspect
@@ -675,8 +676,8 @@ class FastFit(Fit):
         coefficients.
 
         Keyword arguments will be passed to `scipy.optimize.minimize_scalar` in
-        the case of a single fit variable and to `scipy.optimize.minimize` in
-        the case of multiple fit variables.
+        the case of a single fit variable and to `flavio.math.optimize.minimize_robust`
+        in the case of multiple fit variables.
 
         Returns a dictionary with the following keys:
 
@@ -696,9 +697,9 @@ class FastFit(Fit):
                 x0 = np.zeros(n_fit_p + n_wc)
                 if n_fit_p > 1:
                     x0[:n_fit_p] = self.get_central_fit_parameters
-                opt = scipy.optimize.minimize(f, x0, **kwargs)
+                opt = minimize_robust(f, x0, **kwargs)
             else:
-                opt = scipy.optimize.minimize(f, **kwargs)
+                opt = minimize_robust(f, **kwargs)
         if not opt.success:
             raise ValueError("Optimization failed.")
         else:
