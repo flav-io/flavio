@@ -128,9 +128,10 @@ B->D BCL m+: 0
 B->K BCL m0: 5.711 # m_Bs*(0+)
 B->K BCL m+: 5.4154 # m_Bs*(1-)
 
-# B->pi form factors (1503.07839v2)
+# B->pi form factors
 B->pi BCL m0: 0
 B->pi BCL m+: 5.319 # m_B*(1-)
+B->pi IW a_T: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
 
 # Bs->K form factors (1501.05373v3)
 Bs->K BCL m0: 5.63 # m_B*(0+)

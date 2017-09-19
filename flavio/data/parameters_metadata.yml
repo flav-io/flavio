@@ -683,6 +683,12 @@ B->D IW a_T:
   tex: $a_T^{B\to D}$
   description: Relative power correction to the $B\to D$ tensor form factor from the improved Isgur-Wise relation
 
+# Parameters for B->pi tensor form factor using Isgur-Wise relations
+
+B->pi IW a_T:
+  tex: $a_T^{B\to \pi}$
+  description: Relative power correction to the $B\to \pi$ tensor form factor from the improved Isgur-Wise relation
+
 
 # Parameters for B->D form factors in the BCL parametrization
 B->D BCL m0:
