@@ -119,7 +119,7 @@ B->D* IW a_T2: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
 B->D* IW a_T23: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
 
 # B->D form factors
-B->D IW a_T: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
+B->D IW a_T: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
  # 1505.03925
 B->D BCL m0: 0
 B->D BCL m+: 0
@@ -131,7 +131,7 @@ B->K BCL m+: 5.4154 # m_Bs*(1-)
 # B->pi form factors
 B->pi BCL m0: 0
 B->pi BCL m+: 5.319 # m_B*(1-)
-B->pi IW a_T: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
+B->pi IW a_T: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
 
 # Bs->K form factors (1501.05373v3)
 Bs->K BCL m0: 5.63 # m_B*(0+)

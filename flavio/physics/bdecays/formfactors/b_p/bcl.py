@@ -1,7 +1,7 @@
 from math import sqrt
 import numpy as np
 from flavio.physics.bdecays.formfactors.common import z
-from flavio.physics.bdecays.formfactors.b_p.isgurwise import improved_isgur_wise
+from flavio.physics.bdecays.formfactors.b_p.isgurwise import isgur_wise
 
 def pole(ff, mres, q2):
     if mres == 0 or mres is None:
@@ -12,10 +12,10 @@ def pole(ff, mres, q2):
 # matter whether the charged or neutral B/K/pi are used here. We don't
 # distinguish between charged and neutral form factors anyway.
 process_dict = {}
-process_dict['B->K'] =    {'B': 'B0', 'P': 'K0',}
-process_dict['Bs->K'] =    {'B': 'Bs', 'P': 'K+',}
-process_dict['B->D'] =    {'B': 'B+', 'P': 'D0',}
-process_dict['B->pi'] =   {'B': 'B+', 'P': 'pi0',}
+process_dict['B->K'] =    {'B': 'B0', 'P': 'K0'}
+process_dict['Bs->K'] =    {'B': 'Bs', 'P': 'K+'}
+process_dict['B->D'] =    {'B': 'B+', 'P': 'D0'}
+process_dict['B->pi'] =   {'B': 'B+', 'P': 'pi0'}
 
 
 def param_fplusT(mB, mP, a_i, q2, t0=None):
@@ -80,5 +80,5 @@ def ff_isgurwise(process, q2, par, scale, n=3, t0=None):
     # evaluate FFs
     ff['f+'] = pole('f+', mpl, q2) * param_fplusT(mB, mP, a['f+'], q2, t0)
     ff['f0'] = pole('f0', m0, q2) * param_f0(mB, mP, a['f0'], q2, t0)
-    ff = improved_isgur_wise(process, q2, ff, par, scale=scale)
+    ff = isgur_wise(process, q2, ff, par, scale=scale)
     return ff
