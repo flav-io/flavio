@@ -5,7 +5,8 @@ See arXiv:1107.3100."""
 
 import flavio
 from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc_std
-from math import pi, log, sqrt
+from math import pi
+from cmath import log, sqrt
 from flavio.classes import Observable, Prediction
 from flavio.config import config
 from functools import lru_cache
@@ -63,7 +64,7 @@ def BR_BXclnu(par, wc_obj, lep):
 @lru_cache(maxsize=config['settings']['cache size'])
 def g(xc, xl):
     if xl == 0:
-        return 1 - 8*xc + 8*xc**3 - xc**4 - 12*xc**2*log(xc)
+        return (1 - 8*xc + 8*xc**3 - xc**4 - 12*xc**2*log(xc)).real
     else:
         return (sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))
         - 7*xc*sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))
@@ -87,12 +88,12 @@ def g(xc, xl):
         - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))))
         - 12*xc**2*xl**2* log(1 + xc**2 - xl
         + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))
-        - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl)))))
+        - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))))).real
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def gLR(xc, xl):
     if xl == 0:
-        return 4*sqrt(xc)*(1 + 9*xc - 9*xc**2 - xc**3 + 6*xc*(1 + xc)*log(xc))
+        return (4*sqrt(xc)*(1 + 9*xc - 9*xc**2 - xc**3 + 6*xc*(1 + xc)*log(xc))).real
     else:
         return (4*sqrt(xc)*(sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))
         + 10*xc*sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))
@@ -114,7 +115,7 @@ def gLR(xc, xl):
         + 6*xl**2*log(1 + xc**2 - xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))
         - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))))
         - 6*xc*xl**2* log(1 + xc**2 - xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))
-        - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))))))
+        - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl)))))).real
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def gVS(xc, xl):
@@ -146,7 +147,7 @@ def gVS(xc, xl):
         - 6*xc**2*xl* log(1 + xc**2 - xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))
         - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))))
         - 6*xl**2*log(1 + xc**2 - xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))
-        - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))))))
+        - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl)))))).real
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def gVSp(xc, xl):
@@ -178,10 +179,10 @@ def gVSp(xc, xl):
         - 6*xc**2*xl* log(1 + xc**2 - xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))
         - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))))
         - 6*xc*xl**2* log(1 + xc**2 - xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))
-        - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl))))))
+        - xc*(2 + xl + sqrt(xc**2 + (-1 + xl)**2 - 2*xc*(1 + xl)))))).real
 
 def d(xc):
-    return 8*log(xc) - 10*xc**4/3. + 32*xc**3/3. - 8*xc**2 - 32*xc/3. + 34/3.
+    return (8*log(xc) - 10*xc**4/3. + 32*xc**3/3. - 8*xc**2 - 32*xc/3. + 34/3.).real
 
 def pc1(r, mb):
     # this is an expansion to 2nd order in mb around 4.6 and in r around 0.05
