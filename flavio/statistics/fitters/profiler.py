@@ -92,7 +92,10 @@ class Profiler(object):
         if self.n_wc > 0:
             x[-self.n_wc:] = par_wc_fixed[-self.n_wc:]
         x[self.n_fit_p:self.n_fit_p+self.n_nui_p] = x_n/self.nuisance_scale - self.nuisance_shift
-        return self.fit.log_likelihood(x)
+        try:
+            return self.fit.log_likelihood(x)
+        except ValueError:
+            return -np.inf
 
     def f_target_global(self, x):
         """Target function (log likelihood) in terms of fit parameters,
@@ -101,7 +104,10 @@ class Profiler(object):
         X = np.array(x)
         if self.n_nui_p > 0:
             X[self.n_fit_p:self.n_fit_p+self.n_nui_p] = x[self.n_fit_p:self.n_fit_p+self.n_nui_p]/self.nuisance_scale - self.nuisance_shift
-        return self.fit.log_likelihood(X)
+        try:
+            return self.fit.log_likelihood(x)
+        except ValueError:
+            return -np.inf
 
     def best_fit(self, fitpar0, **kwargs):
         """Determine the global best-fit point in the space of fit parameters,
@@ -335,7 +341,7 @@ class Profiler2D(Profiler):
         else:
             self.x_bf, self.y_bf = bf.x[:self.n_fit_p]
 
-    def run(self, steps=(10, 10), threads=1, **kwargs):
+    def run(self, steps=(10, 10), usebf=False, threads=1, **kwargs):
 
         """Maximize the likelihood by varying the nuisance parameters.
 
@@ -361,11 +367,16 @@ class Profiler2D(Profiler):
         if threads > steps[0]*steps[1]:
             raise ValueError("Number of threads cannot be larger than number of grid points!")
         # determine x- and y-value at the global best-fit point
-        self.get_best_fit(**kwargs)
+        if usebf:
+            self.get_best_fit(**kwargs)
         x = np.linspace(self.x_min, self.x_max, steps[0])
         y = np.linspace(self.y_min, self.y_max, steps[1])
-        # determine index in x and y-arrays where the x/y is closest to x_bf/y_bf
-        ij0 = (np.abs(x-self.x_bf)).argmin(), (np.abs(x-self.x_bf)).argmin()
+        if usebf:
+            # determine index in x and y-arrays where the x/y is closest to x_bf/y_bf
+            ij0 = (np.abs(x-self.x_bf)).argmin(), (np.abs(x-self.x_bf)).argmin()
+        else:
+            # else, just use the center
+            ij0 = (steps[0]//2, steps[1]//2)
         z = np.zeros(steps)
         n = np.zeros((self.n_nui_p, steps[0], steps[1]))
         xx, yy = np.meshgrid(x, y, indexing='ij')
@@ -374,7 +385,10 @@ class Profiler2D(Profiler):
         z, i0_1d = reshuffle_2d(z, ij0)
         n = np.array([reshuffle_2d(ni, ij0)[0] for ni in n])
         # start with global best-fit values for nuisance parameters
-        n0 = self.bf.x[self.n_fit_p:self.n_fit_p+self.n_nui_p]
+        if usebf:
+            n0 = self.bf.x[self.n_fit_p:self.n_fit_p+self.n_nui_p]
+        else:
+            n0 = self.fit.get_central_nuisance_parameters
         z, n = self.optimize_list(x=np.transpose([xx, yy]),
                                   n0=n0,
                                   threads=threads,
