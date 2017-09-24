@@ -14,6 +14,9 @@ class TestBtoP(unittest.TestCase):
         par = c.get_central_all()
         bcl.ff_isgurwise('B->D', 1, par, 4.8, n=3)
         Implementation['B->D BCL3-IW'].get_central(constraints_obj=c, wc_obj=None, q2=1)
+        # assert f+(0)=f0(0)
+        ffq20 = Implementation['B->D BCL3-IW'].get_central(constraints_obj=c, wc_obj=None, q2=0)
+        self.assertEqual(ffq20['f+'], ffq20['f0'])
 
     def test_lattice(self):
         # compare to digitized fig. 18 of 1509.06235v1

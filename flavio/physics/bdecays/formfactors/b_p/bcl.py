@@ -1,36 +1,21 @@
 from math import sqrt
 import numpy as np
 from flavio.physics.bdecays.formfactors.common import z
-from flavio.physics.bdecays.formfactors.b_p.isgurwise import improved_isgur_wise
+from flavio.physics.bdecays.formfactors.b_p.isgurwise import isgur_wise
 
 def pole(ff, mres, q2):
-    mresdict = {'f0': 0,'f+': 1,'fT': 1}
-    m = mres[mresdict[ff]]
-    if m == 0 or m is None:
+    if mres == 0 or mres is None:
         return 1
-    return 1/(1-q2/m**2)
-
-resonance_masses = {}
-# resonance masses used in 1509.06235
-# this is m_Bs*(0+), m_Bs*(1-)
-resonance_masses['B->K'] = [5.711, 5.4154]
-# resonance masses used in 1505.03925
-resonance_masses['B->D'] = [6.420, 6.330]
-# resonance masses used in 1503.07839v2
-# this is m_B*(1-)
-resonance_masses['B->pi'] = [None, 5.319]
-# resonance masses used in 1501.05373v3
-# this is m_B*(0+), m_B*(1-)
-resonance_masses['Bs->K'] = [5.63, 5.3252]
+    return 1/(1-q2/mres**2)
 
 # the following dict maps transitions to mesons. Note that it doesn't really
 # matter whether the charged or neutral B/K/pi are used here. We don't
 # distinguish between charged and neutral form factors anyway.
 process_dict = {}
-process_dict['B->K'] =    {'B': 'B0', 'P': 'K0',}
-process_dict['Bs->K'] =    {'B': 'Bs', 'P': 'K+',}
-process_dict['B->D'] =    {'B': 'B+', 'P': 'D0',}
-process_dict['B->pi'] =   {'B': 'B+', 'P': 'pi0',}
+process_dict['B->K'] =    {'B': 'B0', 'P': 'K0'}
+process_dict['Bs->K'] =    {'B': 'Bs', 'P': 'K+'}
+process_dict['B->D'] =    {'B': 'B+', 'P': 'D0'}
+process_dict['B->pi'] =   {'B': 'B+', 'P': 'pi0'}
 
 
 def param_fplusT(mB, mP, a_i, q2, t0=None):
@@ -51,16 +36,25 @@ def ff(process, q2, par, n=3, t0=None):
     The standard convention defines the form factors $f_+$, $f_0$, and $f_T$.
     """
     pd = process_dict[process]
-    mres = resonance_masses[process]
+    mpl = par[process + ' BCL m+']
+    m0 = par[process + ' BCL m0']
     mB = par['m_'+pd['B']]
     mP = par['m_'+pd['P']]
     ff = {}
     a={}
-    for i in ['f+', 'fT', 'f0']:
+    for i in ['f+', 'fT']:
         a[i] = [ par[process + ' BCL' + ' a' + str(j) + '_' + i] for j in range(n) ]
-    ff['f+'] = pole('f+', mres, q2) * param_fplusT(mB, mP, a['f+'], q2, t0)
-    ff['fT'] = pole('fT', mres, q2) * param_fplusT(mB, mP, a['fT'], q2, t0)
-    ff['f0'] = pole('f0', mres, q2) * param_f0(mB, mP, a['f0'], q2, t0)
+    # only the first n-1 parameters for f0 are taken from par
+    # the nth one is chosen to fulfill the kinematic constraint f+(0)=f0(0)
+    a['f0'] = [ par[process + ' BCL' + ' a' + str(j) + '_f0'] for j in range(n-1) ]
+    fplus_q20 = pole('f+', mpl, 0) * param_fplusT(mB, mP, a['f+'], 0, t0)
+    f0_q20 = pole('f0', m0, 0) * param_f0(mB, mP, a['f0'], 0, t0)
+    an_f0 = (f0_q20-fplus_q20)/z(mB, mP, 0, t0)**(n-1)
+    a['f0'].append(an_f0)
+    # evaluate FFs
+    ff['f+'] = pole('f+', mpl, q2) * param_fplusT(mB, mP, a['f+'], q2, t0)
+    ff['fT'] = pole('fT', mpl, q2) * param_fplusT(mB, mP, a['fT'], q2, t0)
+    ff['f0'] = pole('f0', m0, q2) * param_f0(mB, mP, a['f0'], q2, t0)
     return ff
 
 def ff_isgurwise(process, q2, par, scale, n=3, t0=None):
@@ -69,14 +63,22 @@ def ff_isgurwise(process, q2, par, scale, n=3, t0=None):
     an improved Isgur-Wise relation in the heavy quark limit for $f_T$.
     """
     pd = process_dict[process]
-    mres = resonance_masses[process]
+    mpl = par[process + ' BCL m+']
+    m0 = par[process + ' BCL m0']
     mB = par['m_'+pd['B']]
     mP = par['m_'+pd['P']]
     ff = {}
     a={}
-    for i in ['f+', 'f0']:
-        a[i] = [ par[process + ' BCL' + ' a' + str(j) + '_' + i] for j in range(n) ]
-    ff['f+'] = pole('f+', mres, q2) * param_fplusT(mB, mP, a['f+'], q2, t0)
-    ff['f0'] = pole('f0', mres, q2) * param_f0(mB, mP, a['f0'], q2, t0)
-    ff = improved_isgur_wise(process, q2, ff, par, scale=scale)
+    a['f+'] = [ par[process + ' BCL' + ' a' + str(j) + '_f+'] for j in range(n) ]
+    # only the first n-1 parameters for f0 are taken from par
+    # the nth one is chosen to fulfill the kinematic constraint f+(0)=f0(0)
+    a['f0'] = [ par[process + ' BCL' + ' a' + str(j) + '_f0'] for j in range(n-1) ]
+    fplus_q20 = pole('f+', mpl, 0) * param_fplusT(mB, mP, a['f+'], 0, t0)
+    f0_q20 = pole('f0', m0, 0) * param_f0(mB, mP, a['f0'], 0, t0)
+    an_f0 = (fplus_q20-f0_q20)/z(mB, mP, 0, t0)**(n-1)
+    a['f0'].append(an_f0)
+    # evaluate FFs
+    ff['f+'] = pole('f+', mpl, q2) * param_fplusT(mB, mP, a['f+'], q2, t0)
+    ff['f0'] = pole('f0', m0, q2) * param_f0(mB, mP, a['f0'], q2, t0)
+    ff = isgur_wise(process, q2, ff, par, scale=scale)
     return ff

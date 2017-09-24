@@ -13,8 +13,11 @@ class TestProfilers(unittest.TestCase):
         npt.assert_array_equal(profiler.reshuffle_1d([0,1,2,3,4,5,6], 4), [4,5,6,0,1,2,3])
         npt.assert_array_equal(profiler.unreshuffle_1d([4,5,6,0,1,2,3], 4), [0,1,2,3,4,5,6])
         rs, i0 = profiler.reshuffle_2d([[0,1,2],[3,4,5]], (1,2))
-        npt.assert_array_equal(rs, [5,0,1,2,3,4])
-        npt.assert_array_equal(profiler.unreshuffle_2d([5,0,1,2,3,4], i0, (2,3)), [[0,1,2],[3,4,5]])
+        npt.assert_array_equal(rs, [5,4,3,0,1,2])
+        npt.assert_array_equal(profiler.unreshuffle_2d([5,4,3,0,1,2], i0, (2,3)), [[0,1,2],[3,4,5]])
+        rs, i0 = profiler.reshuffle_2d([[0,1,2],[3,4,5]], (0,1))
+        npt.assert_array_equal(rs, [1,2,5,4,3,0])
+        npt.assert_array_equal(profiler.unreshuffle_2d([1,2,5,4,3,0], i0, (2,3)), [[0,1,2],[3,4,5]])
 
     def test_profiler(self):
         # defining some dummy parameters and observables
@@ -46,6 +49,14 @@ class TestProfilers(unittest.TestCase):
         npt.assert_array_equal(n, profiler_1d.profile_nuisance)
         pdat = profiler_1d.pvalue_prob_plotdata()
         npt.assert_array_equal(pdat['x'], x)
+        # test multiprocessing
+        for threads in [2, 3, 4]:
+            xt, zt, nt = profiler_1d.run(steps=4, threads=threads)
+            npt.assert_array_almost_equal(x, xt, decimal=4)
+            npt.assert_array_almost_equal(z, zt, decimal=4)
+            npt.assert_array_almost_equal(n, nt, decimal=4)
+        with self.assertRaises(ValueError):
+            profiler_1d.run(steps=4, threads=5)
         # test 2D profiler
         p.remove_constraint('d')
         fit_2d = FrequentistFit('test profiler 2d',
@@ -62,6 +73,15 @@ class TestProfilers(unittest.TestCase):
         npt.assert_array_equal(n, profiler_2d.profile_nuisance)
         pdat = profiler_2d.contour_plotdata()
         npt.assert_array_almost_equal(pdat['z'], -2*(z-np.max(z)))
+        # test multiprocessing
+        for threads in [2, 5, 12]:
+            xt, yt, zt, nt = profiler_2d.run(steps=(3,4))
+            npt.assert_array_almost_equal(x, xt, decimal=4)
+            npt.assert_array_almost_equal(y, yt, decimal=4)
+            npt.assert_array_almost_equal(z, zt, decimal=4)
+            npt.assert_array_almost_equal(n, nt, decimal=4)
+        with self.assertRaises(ValueError):
+            profiler_2d.run(steps=(3,4), threads=13)
         # delete dummy instances
         for p in ['tmp a', 'tmp b', 'tmp c', 'tmp d']:
             Parameter.del_instance(p)
