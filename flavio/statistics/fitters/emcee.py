@@ -54,14 +54,14 @@ class emceeScan(object):
                                         lnpostfn=self.fit.log_target,
                                         **kwargs)
 
-    def _get_random_good():
+    def _get_random_good(self):
         """Generate random starting points until a point with finite
         probability is found."""
         good = False
         i = 0
         while not good:
-            x = fit.get_random_start
-            good = np.isfinite(fit.log_target(x))
+            x = self.fit.get_random_start
+            good = np.isfinite(self.fit.log_target(x))
             i += 1
             if(i == 1000):
                 raise ValueError("Could not find enough starting values with finite probability. "
@@ -72,7 +72,7 @@ class emceeScan(object):
         """Initialize the emcee.EnsembleSampler instance."""
         self.start = [self._get_random_good() for i in range(self.nwalkers)]
 
-    def run(self, steps, burnin=1000):
+    def run(self, steps, burnin=1000, **kwargs):
         """Run the sampler.
 
         Parameters:
@@ -87,9 +87,9 @@ class emceeScan(object):
             self.initialize_sampler()
         pos = self.start
         if burnin > 0:
-            pos, prob, state = self.mc.run_mcmc(self.start, burnin)
+            pos, prob, state = self.mc.run_mcmc(self.start, burnin, **kwargs)
         self.mc.reset()
-        self.mc.run_mcmc(pos, steps)
+        self.mc.run_mcmc(pos, steps, **kwargs)
 
     @property
     def result(self):
