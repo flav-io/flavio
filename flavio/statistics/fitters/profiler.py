@@ -92,6 +92,8 @@ class Profiler(object):
         if self.n_wc > 0:
             x[-self.n_wc:] = par_wc_fixed[-self.n_wc:]
         x[self.n_fit_p:self.n_fit_p+self.n_nui_p] = x_n/self.nuisance_scale - self.nuisance_shift
+        if np.any(np.isnan(x)):
+            return -np.inf
         try:
             return self.fit.log_likelihood(x)
         except ValueError:
@@ -104,6 +106,8 @@ class Profiler(object):
         X = np.array(x)
         if self.n_nui_p > 0:
             X[self.n_fit_p:self.n_fit_p+self.n_nui_p] = x[self.n_fit_p:self.n_fit_p+self.n_nui_p]/self.nuisance_scale - self.nuisance_shift
+        if np.any(np.isnan(x)):
+            return -np.inf
         try:
             return self.fit.log_likelihood(x)
         except ValueError:
