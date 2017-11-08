@@ -28,7 +28,8 @@ setup(name='flavio',
                 'physics/data/qcdf_interpolate/*',
                 ]
       },
-      install_requires=['numpy', 'scipy>=0.14', 'setuptools>=3.3', 'pyyaml', 'mpmath'],
+      install_requires=['numpy', 'scipy>=0.14', 'setuptools>=3.3', 'pyyaml', 'mpmath',
+                        'ckmutil'],
       extras_require={
             'testing': ['nose'],
             'plotting': ['matplotlib>=1.4'],
