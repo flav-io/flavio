@@ -4,7 +4,7 @@ See arXiv:1107.3100."""
 
 
 import flavio
-from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc_std
+from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc_std2
 from math import pi
 from cmath import log, sqrt
 from flavio.classes import Observable, Prediction
@@ -13,6 +13,9 @@ from functools import lru_cache
 
 
 def BR_BXclnu(par, wc_obj, lep):
+    return sum([ _BR_BXclnu(par,wc_obj,lep,nu) for nu in ['e','mu','tau']])
+
+def _BR_BXclnu(par, wc_obj, lep,nu):
     r"""Total branching ratio of $\bar B^0\to X_c \ell^- \bar\nu_\ell$"""
     GF = par['GF']
     scale = flavio.config['renormalization scale']['bxlnu']
@@ -29,7 +32,7 @@ def BR_BXclnu(par, wc_obj, lep):
     # wc: NB this includes the EW correction already
     # the b quark mass is MSbar here as it comes from the definition
     # of the scalar operators
-    wc = get_wceff_fccc_std(wc_obj, par, 'bc', lep, mb_MSbar, scale, nf=5)
+    wc = get_wceff_fccc_std2(wc_obj, par, 'bc', lep, nu, mb_MSbar, scale, nf=5)
     Gamma_LO = GF**2 * mb**5 / 192. / pi**3 * abs(Vcb)**2
     r_WC = (   g(xc, xl)      * (abs(wc['VL'])**2 + abs(wc['VR'])**2)
              - gLR(xc, xl)    * (wc['VL']*wc['VR']).real

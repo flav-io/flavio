@@ -24,6 +24,27 @@ def br_plnu_general(wc, par, Vij, P, qiqj, lep, mq1, mq2, delta=0):
     return N * abs(Vij)**2 * abs(rWC)**2 * (1 + delta)
 
 def br_blnu(wc_obj, par, B, lep):
+    return sum([ br_blnu2(wc_obj,par,B,lep,nu) for nu in ['e','mu','tau']])
+
+def br_blnu2(wc_obj, par, B, lep, nu):
+    if lep==nu:
+        return _br_blnu(wc_obj, par, B, lep)
+    # CKM element
+    Vub = flavio.physics.ckm.get_ckm(par)[0,2]
+    # renormalization scale
+    scale = flavio.config['renormalization scale']['bll']
+    # Wilson coefficients
+    bq = meson_quark[B]
+    wc = wc_obj.get_wc(bq + lep + 'nu' + nu, scale, par)
+    qqlnu = bq + lep + 'nu'
+    wc['CV_'+qqlnu] = wc['CV_'+qqlnu + nu]
+    wc['CVp_'+qqlnu] = wc['CVp_'+qqlnu + nu]
+    wc['CS_'+qqlnu] = wc['CS_'+qqlnu + nu]
+    wc['CSp_'+qqlnu] = wc['CSp_'+qqlnu + nu]
+    return br_plnu_general(wc, par, Vub, B, bq, lep, delta=0)
+
+
+def _br_blnu(wc_obj, par, B, lep):
     r"""Branching ratio of $B_q\to\ell^+\nu_\ell$."""
     # CKM element
     Vub = flavio.physics.ckm.get_ckm(par)[0,2]
