@@ -197,6 +197,32 @@ def get_wceff_fccc(wc_obj, par, qiqj, lep, mqi, scale, nf=5):
     c['tp'] = 0
     return c
 
+def get_wceff_fccc2(wc_obj, par, qiqj, lep, nu,mqi, scale, nf=5):
+    r"""Get a dictionary with the $d_i\to d_j$ Wilson coefficients
+    in the convention appropriate for the generalized angular distributions.
+    """
+    if lep==nu:
+        return get_wceff_fccc(wc_obj, par,qiqj,lep,mqi,scale,nf)
+
+    qqlnu = qiqj + lep + 'nu' + nu
+    wc = wc_obj.get_wc(qqlnu, scale, par)
+    c = {}
+    c['7']  = 0
+    c['7p'] = 0
+    c['v']  = wc['CV_'+qqlnu]/2.
+    c['vp'] = wc['CVp_'+qqlnu]/2.
+    c['a']  = -wc['CV_'+qqlnu]/2.
+    c['ap'] = -wc['CVp_'+qqlnu]/2.
+    c['s']  = 1/2 * mqi * wc['CS_'+qqlnu]/2.
+    c['sp'] = 1/2 * mqi * wc['CSp_'+qqlnu]/2.
+    c['p']  = -1/2 * mqi * wc['CS_'+qqlnu]/2.
+    c['pp'] = -1/2 * mqi * wc['CSp_'+qqlnu]/2.
+    c['t']  = wc['CT_'+qqlnu]
+    c['tp'] = 0
+    return c
+
+
+
 def get_wceff_fccc_std(wc_obj, par, qiqj, lep, mqi, scale, nf=5):
     r"""Get a dictionary with the $d_i\to d_j$ Wilson coefficients
     in the flavio default convention.
