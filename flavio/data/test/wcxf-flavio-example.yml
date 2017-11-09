@@ -1,0 +1,14 @@
+eft: WET
+basis: flavio
+scale: 160
+values:
+  C9_bsee:
+    Re: -1.0
+    Im: 0.01
+  C9p_bsee:
+    Re: 0.1
+  C10_bsee:
+    Im: 0.05
+  C10p_bsee:
+    Re: 0.1
+    Im: -0.3

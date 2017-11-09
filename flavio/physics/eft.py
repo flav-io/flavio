@@ -4,6 +4,7 @@ import numpy as np
 from flavio.physics.running import running
 from flavio.physics.bdecays import rge as rge_db1
 from flavio.physics.mesonmixing import rge as rge_df2
+import wcxf
 
 # Anomalous dimensions for DeltaF=2
 def adm_df2(nf, alpha_s, alpha_e):
@@ -114,6 +115,23 @@ class WilsonCoefficients(object):
             if name not in self.all_wc:
                 raise KeyError("Wilson coefficient " + name + " not known")
             self.initial[name] = (scale, value)
+
+    def set_initial_wcxf(self, wc):
+        """Set initial values of Wilson coefficients from a WCxf WC instance.
+
+        If the instance is given in a basis other than the flavio basis,
+        the translation is performed automatically, if implemented in the
+        `wcxf` package."""
+        if not isinstance(wc, wcxf.WC):
+            raise ValueError("`wc` should be an instance of `wcxf.WC`")
+        if wc.eft != 'WET':
+            raise NotImplementedError("Matching from a different EFT is currently not implemented.")
+        if wc.basis == 'flavio':
+            wc_dict = wc.dict
+        else:
+            wc_trans = wc.translate('flavio')
+            wc_dict = wc_trans.dict
+        self.set_initial(wc_dict, wc.scale)
 
     def get_wc(self, sector, scale, par, nf_out=None):
         # intialize with complex zeros

@@ -1,6 +1,8 @@
 import unittest
 import numpy as np
 from .eft import *
+import pkgutil
+import wcxf
 
 par = {
     'm_Z': 91.1876,
@@ -21,3 +23,22 @@ class TestEFT(unittest.TestCase):
         wc.get_wc('bsbs', 4.8, par)
         wc.get_wc('bsmumu', 4.8, par)
         wc.get_wc('bctaunu', 4.8, par)
+
+    def test_wcxf(self):
+        test_file = pkgutil.get_data('flavio', 'data/test/wcxf-flavio-example.yml')
+        flavio_wc = WilsonCoefficients()
+        wcxf_wc = wcxf.WC.load(test_file.decode('utf-8'))
+        wcxf_wc.validate()
+        flavio_wc.set_initial_wcxf(wcxf_wc)
+        wc_out = flavio_wc.get_wc('bsee', 160, par)
+        self.assertEqual(wc_out['C9_bsee'], -1+0.01j)
+        self.assertEqual(wc_out['C9p_bsee'], 0.1)
+        self.assertEqual(wc_out['C10_bsee'], 0.05j)
+        self.assertEqual(wc_out['C10p_bsee'], 0.1-0.3j)
+        self.assertEqual(wc_out['CS_bsee'], 0)
+        wcxf_wc.basis = 'unknown basis'
+        with self.assertRaises(ValueError):
+            flavio_wc.set_initial_wcxf(wcxf_wc)
+        wcxf_wc.eft = 'SMEFT'
+        with self.assertRaises(NotImplementedError):
+            flavio_wc.set_initial_wcxf(wcxf_wc)
