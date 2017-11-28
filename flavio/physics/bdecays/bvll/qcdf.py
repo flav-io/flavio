@@ -37,10 +37,10 @@ def get_input(par, B, V, scale):
 
 # see eqs. (18), (50), (79) of hep-ph/0106067v2
 # and eqs. (47), (48) of hep-ph/0412400
-def Cq34(q2, par, wc, B, V, scale):
+    def Cq34(q2, par, wc, B, V, scale):
     # this is -C_q^12 (for q=u) or C_q^34 - eps_u * C_q^12 (for q=d,s) of hep-ph/0412400
     mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
-    T_t = -wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 12*wc['C5_'+qiqj] + 16*wc['C6_'+qiqj])
+    T_t = wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 12*wc['C5_'+qiqj] + 16*wc['C6_'+qiqj])
     # the (u) contribution depends on the flavour of the spectator quark:
     if q == 'u':
         T_u = -3*(wc['C2_'+qiqj])
