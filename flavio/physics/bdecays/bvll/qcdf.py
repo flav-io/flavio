@@ -37,7 +37,7 @@ def get_input(par, B, V, scale):
 
 # see eqs. (18), (50), (79) of hep-ph/0106067v2
 # and eqs. (47), (48) of hep-ph/0412400
-    def Cq34(q2, par, wc, B, V, scale):
+def Cq34(q2, par, wc, B, V, scale):
     # this is -C_q^12 (for q=u) or C_q^34 - eps_u * C_q^12 (for q=d,s) of hep-ph/0412400
     mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
     T_t = wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 12*wc['C5_'+qiqj] + 16*wc['C6_'+qiqj])
@@ -106,7 +106,7 @@ def T_perp_plus_QSS(q2, par, wc, B, V, u, scale):
           eu * t_mc * (-wc['C1_'+qiqj]/6. + wc['C2_'+qiqj] + 6*wc['C6_'+qiqj])
         + ed * t_mb * (wc['C3_'+qiqj] - wc['C4_'+qiqj]/6. + 16*wc['C5_'+qiqj] + (10.*wc['C6_'+qiqj])/3.
                         + mb/mB*(-wc['C3_'+qiqj] + wc['C4_'+qiqj]/6 - 4 * wc['C5_'+qiqj] + (2 * wc['C6_'+qiqj])/3))
-        + ed * t_0  * (-wc['C3_'+qiqj] + wc['C4_'+qiqj]/6. - 16*wc['C5_'+qiqj] + 8*wc['C6_'+qiqj]/3.)
+        + ed * t_0  * (wc['C3_'+qiqj] - wc['C4_'+qiqj]/6. + 16*wc['C5_'+qiqj] - 8*wc['C6_'+qiqj]/3.)
         )
     T_u = ( (alpha_s/(3*pi)) * eu * mB/(2*mb) * ( t_mc - t_0 )
                                 * ( wc['C2_'+qiqj] - wc['C1_'+qiqj]/6.) )
@@ -121,7 +121,7 @@ def T_para_plus_QSS(q2, par, wc, B, V, u, scale):
     T_t = (alpha_s/(3*pi)) * mB/mb*(
           eu * t_mc * (-wc['C1_'+qiqj]/6. + wc['C2_'+qiqj] + 6*wc['C6_'+qiqj])
         + ed * t_mb * (wc['C3_'+qiqj] - wc['C4_'+qiqj]/6. + 16*wc['C5_'+qiqj] + 10*wc['C6_'+qiqj]/3.)
-        + ed * t_0 * (-wc['C3_'+qiqj] + wc['C4_'+qiqj]/6. - 16*wc['C5_'+qiqj] + 8*wc['C6_'+qiqj]/3.)
+        + ed * t_0 * (wc['C3_'+qiqj] - wc['C4_'+qiqj]/6. + 16*wc['C5_'+qiqj] - 8*wc['C6_'+qiqj]/3.)
         )
     T_u = ( (alpha_s/(3*pi)) * eu * mB/mb * ( t_mc - t_0 )
                                 * ( wc['C2_'+qiqj] - wc['C1_'+qiqj]/6.) )
