@@ -190,13 +190,15 @@ def B0(s, mq):
 # (30), (31) of hep-ph/0106067v2
 def i1_bfs(q2, u, mq, mB):
     ubar = 1 - u
-    x0 = sqrt(1/4. - mq**2/(ubar * mB**2 + u * q2))
+    iepsilon = 1e-8j
+    mq2 = mq**2 - iepsilon
+    x0 = sqrt(1/4. - mq2/(ubar * mB**2 + u * q2))
     xp = 1/2. + x0
     xm = 1/2. - x0
-    y0 = sqrt(1/4. - mq**2/q2)
+    y0 = sqrt(1/4. - mq2/q2)
     yp = 1/2. + y0
     ym = 1/2. - y0
-    return 1 + (2 * mq**2)/(ubar * (mB**2 - q2)) * (L1(xp) + L1(xm) - L1(yp) - L1(ym))
+    return 1 + (2 * mq2)/(ubar * (mB**2 - q2)) * (L1(xp) + L1(xm) - L1(yp) - L1(ym))
 
 # (32) of hep-ph/0106067v2
 def L1(x):
