@@ -19,15 +19,15 @@ class TestBXlnu(unittest.TestCase):
         self.assertAlmostEqual(
             flavio.sm_prediction('BR(B->Xcenu)'),
             0.1065,
-            delta = 0.0005)
+            delta = 0.001)
         self.assertAlmostEqual(
             flavio.sm_prediction('BR(B->Xcmunu)'),
             0.1065,
-            delta = 0.0005)
+            delta = 0.001)
         self.assertAlmostEqual(
             flavio.sm_prediction('BR(B->Xclnu)'),
             0.1065,
-            delta = 0.0005)
+            delta = 0.001)
 
     def test_bxclnu_np(self):
         wc_np = flavio.WilsonCoefficients()

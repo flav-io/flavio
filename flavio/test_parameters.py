@@ -30,7 +30,7 @@ class TestParameters(unittest.TestCase):
         self.assertEqual(par_dict['Gamma12_Bs_c'],  -48.0)
         # parameters from the PDG file
         self.assertEqual(par_dict['m_W'], 80.385)
-        self.assertEqual(par_dict['tau_phi'], 1/4.266e-3)
+        self.assertEqual(par_dict['tau_phi'], 1/4.247e-3)
         # just check if the random values are numbers
         for par_random in default_parameters.get_random_all().values():
             self.assertIsInstance(par_random, float)
