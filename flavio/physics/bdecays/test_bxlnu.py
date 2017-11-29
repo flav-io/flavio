@@ -24,11 +24,11 @@ class TestBXlnu(unittest.TestCase):
         self.assertAlmostEqual(
             flavio.sm_prediction('BR(B->Xcmunu)'),
             0.1065,
-            delta = 0.001)
+            delta = 0.0015)
         self.assertAlmostEqual(
             flavio.sm_prediction('BR(B->Xclnu)'),
             0.1065,
-            delta = 0.001)
+            delta = 0.0015)
 
     def test_bxclnu_lfu(self):
         self.assertAlmostEqual(
