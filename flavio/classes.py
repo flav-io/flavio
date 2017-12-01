@@ -14,6 +14,7 @@ import scipy.stats
 import warnings
 import yaml
 import inspect
+import urllib.parse
 
 class NamedInstanceMetaclass(type):
     # this is just needed to implement the getitem method on NamedInstanceClass
@@ -394,6 +395,25 @@ class Observable(NamedInstanceClass):
         self.prediction = None
         self.tex = ''
 
+    def __repr__(self):
+        return "Observable('{}', arguments={})".format(self.name, self.arguments)
+
+    def _repr_markdown_(self):
+        md = "### Observable `{}`\n\n".format(self.name)
+        if self.tex:
+            md += "Observable: {}\n\n".format(self.tex)
+        if self.description:
+            md  += "Description: {}\n\n".format(self.description)
+        if self.arguments is not None:
+            md += "Arguments: "
+            md += ','.join(["`{}`".format(a) for a in self.arguments])
+            md += "\n\n"
+        if self.prediction is not None:
+            f = self.prediction.function
+            from IPython.lib import pretty
+            md += "Theory prediction: `{}`".format(pretty.pretty(f))
+        return md
+
     def set_prediction(self, prediction):
         self.prediction = prediction
 
@@ -575,3 +595,32 @@ class Measurement(Constraints, NamedInstanceClass):
         self.inspire = ''
         self.experiment = ''
         self.url = ''
+
+    def __repr__(self):
+        return "Measurement('{}')".format(self.name)
+
+    def _repr_markdown_(self):
+        md = "### Measurement `{}`\n\n".format(self.name)
+        if self.experiment:
+            md += "Experiment: {}\n\n".format(self.experiment)
+        if self.inspire:
+            md += ("[Inspire](http://inspirehep.net/search?&p=texkey+{})\n\n"
+                   .format(urllib.parse.quote(self.inspire)))
+        if self.url:
+            md += "URL: <{}>\n\n".format(self.url)
+        if self.description:
+            md += "Description: {}\n\n".format(self.description)
+        if self.all_parameters:
+            md += "Measured observables:\n\n"
+            for obs in self.all_parameters:
+                if isinstance(obs, tuple):
+                    name = obs[0]
+                    args = obs[1:]
+                    argnames = Observable[name].arguments
+                    md += "- {}".format(Observable[name].tex)
+                    for i, arg in enumerate(args):
+                        md += ", `{}` = {}".format(argnames[i], arg)
+                    md += "\n"
+                else:
+                    md += "- {}\n".format(Observable[obs].tex)
+        return md

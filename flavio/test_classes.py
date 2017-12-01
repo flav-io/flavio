@@ -258,3 +258,28 @@ class TestClasses(unittest.TestCase):
             mnew = Measurement.from_yaml_dict(yaml)
             yaml2 = mnew.get_yaml_dict()
             self.assertEqual(yaml, yaml2)
+
+    def test_repr_meas(self):
+        mtest = Measurement('repr test')
+        self.assertEqual(repr(mtest), "Measurement('repr test')")
+        mtest._repr_markdown_()
+        mtest.description = "bla"
+        self.assertIn("bla", mtest._repr_markdown_())
+        mtest.url = "blo"
+        self.assertIn("blo", mtest._repr_markdown_())
+        del Measurement['repr test']
+
+    def test_repr_obs(self):
+        mtest = Observable('repr test')
+        self.assertEqual(repr(mtest),
+                         "Observable('repr test', arguments=None)")
+        mtest._repr_markdown_()
+        mtest.description = "bla"
+        self.assertIn("bla", mtest._repr_markdown_())
+        mtest.tex = "blo"
+        self.assertIn("blo", mtest._repr_markdown_())
+        mtest.arguments = ["blu"]
+        self.assertIn("blu", mtest._repr_markdown_())
+        self.assertEqual(repr(mtest),
+                         "Observable('repr test', arguments=['blu'])")
+        del Observable['repr test']
