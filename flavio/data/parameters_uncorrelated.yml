@@ -204,13 +204,4 @@ Lambdab->Lambda deltaC9 c_para1 Re: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_para1 Im: 0 ± 0.3
 
 # Parameters for HQET form factors
-chi_2(1): -0.06 ± 0.02
-chi_2p(1): 0 ± 0.02
-chi_3p(1): 0.04 ± 0.02
-eta(1): 0.62 ± 0.2
-etap(1): 0 ± 0.2
-CLN rho2_xi: 1 ± 0.5
-CLN c_xi: 1 ± 0.5
-B->D* CLN deltac_hA1: 0 ± 1
-B->D* CLN deltac_hT1: 0 ± 1
-B->D CLN deltac_h+: 0 ± 1
+B->D* CLN deltac_hT1: 0 ± 3
