@@ -4251,6 +4251,12 @@ Belle B->Dlnu 2015:
       0.1322, 0.14484, 0.18255, 0.21233000000000002, 0.2287, 0.21969, 0.20016, 0.20427,
       0.20767, 0.19201, 1.0]
 
+Belle Rmue(B->D*lnu) 2017:
+  experiment: Belle
+  inspire: Abdesselam:2017kjf
+  values:
+    Rmue(B->D*lnu): 0.96 ± 0.05 ± 0.01
+
 Belle B->D*lnu hadronic tag 2017:
   experiment: Belle
   inspire: Abdesselam:2017kjf
@@ -4544,6 +4550,12 @@ Belle B->D*lnu hadronic tag 2017:
 BaBar B->D(*)lnu 2008:
   experiment: BaBar
   inspire: Aubert:2008yv
+  description: >
+    The branching ratios have been rescaled according to the
+    rescalings in the HLAV summer 2016 average
+    (http://www.slac.stanford.edu/xorg/hflav/semi/summer16/),
+    that account e.g. for changes in $D$ branching ratios used.
+    $B\to D\ell\nu$ is reduced by 3.7%, $B\to D^\ast\ell\nu$ by 0.7%.
   observables:
     - BR(B+->Denu)
     - BR(B+->D*enu)
@@ -4552,7 +4564,7 @@ BaBar B->D(*)lnu 2008:
   values:
     # statistical uncertainty
     - distribution: multivariate_normal
-      central_value: [2.38e-2, 5.45e-2, 2.26e-2, 5.27e-2]
+      central_value: &id004 [2.29e-2, 5.41e-2, 2.18e-2, 5.23e-2]
       standard_deviation: [0.03e-2, 0.03e-2, 0.04e-2, 0.04e-2]
       correlation:
         - [1.0, -0.526, 0.0, 0.0]
@@ -4561,8 +4573,8 @@ BaBar B->D(*)lnu 2008:
         - [0.0, 0.0, -0.519, 1.0]
     # systematic uncertainty
     - distribution: multivariate_normal
-      central_value: [2.38e-2, 5.45e-2, 2.26e-2, 5.27e-2]
-      standard_deviation: [0.14e-2, 0.22e-2, 0.16e-2, 0.37e-2]
+      central_value: *id004
+      standard_deviation: [0.13e-2, 0.22e-2, 0.15e-2, 0.37e-2]
       correlation:
         - [1.0, 0.31, 0.64, 0.12]
         - [0.31, 1.0, 0.17, 0.54]
@@ -4572,21 +4584,37 @@ BaBar B->D(*)lnu 2008:
 BaBar B->D*lnu 2007 hadronic tag:
   experiment: BaBar
   inspire: Aubert:2007qw
+  description: >
+    The branching ratios have been rescaled according to the
+    rescalings in the HLAV summer 2016 average
+    (http://www.slac.stanford.edu/xorg/hflav/semi/summer16/),
+    that accounts e.g. for changes in $D^\ast$ branching ratios used.
+    $B^+\to D^{\ast 0}\ell^+\nu$ is reduced by 6%.
   values:
-    BR(B+->D*lnu): (5.83 ± 0.15 ± 0.30) 1e-2
+    BR(B+->D*lnu): (5.48 ± 0.14 ± 0.28) 1e-2
     BR(B0->D*lnu): (5.49 ± 0.16 ± 0.25) 1e-2
 
 BaBar B0->D*lnu 2007:
   experiment: BaBar
   inspire: Aubert:2007rs
+  description: >
+    The branching ratio has been reduced by 6% according to the
+    rescaling in the HLAV summer 2016 average
+    (http://www.slac.stanford.edu/xorg/hflav/semi/summer16/),
+    that accounts e.g. for changes in $D^\ast$ branching ratios used.
   values:
-    BR(B0->D*lnu): (4.69 ± 0.04 ± 0.34) 1e-2
+    BR(B0->D*lnu): (4.45 ± 0.03 ± 0.32) 1e-2
 
 BaBar B+->D*lnu 2007:
   experiment: BaBar
   inspire: Aubert:2007qs
+  description: >
+    The branching ratio has been reduced by 5% according to the
+    rescaling in the HLAV summer 2016 average
+    (http://www.slac.stanford.edu/xorg/hflav/semi/summer16/),
+    that accounts e.g. for changes in $D^\ast$ branching ratios used.
   values:
-    BR(B+->D*lnu): (5.56 ± 0.08 ± 0.41) 1e-2
+    BR(B+->D*lnu): (5.28 ± 0.08 ± 0.39) 1e-2
 
 Belle B->D*lnu 2010:
   experiment: Belle
