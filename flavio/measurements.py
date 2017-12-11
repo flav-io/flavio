@@ -14,7 +14,7 @@ def _load(obj):
     measurements = yaml.load(obj)
     for m_name, m_data in measurements.items():
         m = Measurement(m_name)
-        for arg in ['inspire', 'hepdata', 'experiment', 'url']:
+        for arg in ['inspire', 'hepdata', 'experiment', 'url', 'description']:
             if arg in m_data:
                 setattr(m, arg, m_data[arg])
         if 'observables' in m_data:
