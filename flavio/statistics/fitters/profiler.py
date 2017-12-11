@@ -109,7 +109,7 @@ class Profiler(object):
         if np.any(np.isnan(x)):
             return -np.inf
         try:
-            return self.fit.log_likelihood(x)
+            return self.fit.log_likelihood(X)
         except ValueError:
             return -np.inf
 
