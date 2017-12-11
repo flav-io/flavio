@@ -99,7 +99,7 @@ def diff_plot_th(obs_name, x_min, x_max, wc=None, steps=100, **kwargs):
 
 
 def diff_plot_th_err(obs_name, x_min, x_max, wc=None, steps=100,
-                        steps_err=5, N=100, threads=1,
+                        steps_err=5, N=100, threads=1, label=None,
                         plot_args=None, fill_args=None):
     r"""Plot the theory prediction of an observable dependending on
     a continuous parameter, e.g. $q^2$,
@@ -150,6 +150,8 @@ def diff_plot_th_err(obs_name, x_min, x_max, wc=None, steps=100,
     ax = plt.gca()
     plot_args = plot_args or {}
     fill_args = fill_args or {}
+    if label is not None:
+        plot_args['label'] = label
     if 'alpha' not in fill_args:
         fill_args['alpha'] = 0.5
     ax.plot(x_arr, obs_arr, **plot_args)
@@ -264,6 +266,7 @@ def bin_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measure
         dx = []
         dy_lower = []
         dy_upper = []
+        bins = []
         for _, xmin, xmax in obs_name_list_binned:
             if include_bins is not None:
                 if exclude_bins is not None:
@@ -273,6 +276,7 @@ def bin_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measure
             elif exclude_bins is not None:
                 if (xmin, xmax) in exclude_bins:
                     continue
+            bins.append((xmin, xmax))
             c = central[(obs_name, xmin, xmax)]
             e_right, e_left = err[(obs_name, xmin, xmax)]
             if divide_binwidth:
@@ -300,7 +304,7 @@ def bin_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measure
                     kwargs_m['label'] = m_obj.experiment
                     _experiment_labels.append(m_obj.experiment)
             ax.errorbar(x, y, yerr=[dy_lower, dy_upper], xerr=dx, fmt='.', **kwargs_m)
-
+    return y, bins
 
 def density_contour_data(x, y, covariance_factor=None, n_bins=None, n_sigma=(1, 2)):
     r"""Generate the data for a plot with confidence contours of the density
