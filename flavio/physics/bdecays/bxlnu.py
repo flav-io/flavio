@@ -31,18 +31,18 @@ def BR_BXclnu(par, wc_obj, lep):
     # of the scalar operators
     wc = get_wceff_fccc_std(wc_obj, par, 'bc', lep, mb_MSbar, scale, nf=5)
     Gamma_LO = GF**2 * mb**5 / 192. / pi**3 * abs(Vcb)**2
-    r_WC = (   g(xc, xl)      * (abs(wc['V'])**2 + abs(wc['Vp'])**2)
-             - gLR(xc, xl)    * (wc['V']*wc['Vp']).real
-             + g(xc, xl)/4.   * mb_MSbar**2 * (abs(wc['S'])**2 + abs(wc['Sp'])**2)
-             + gLR(xc, xl)/2. * mb_MSbar**2 * (wc['S']*wc['Sp']).real
+    r_WC = (   g(xc, xl)      * (abs(wc['VL'])**2 + abs(wc['VR'])**2)
+             - gLR(xc, xl)    * (wc['VL']*wc['VR']).real
+             + g(xc, xl)/4.   * (abs(wc['SR'])**2 + abs(wc['SL'])**2)
+             + gLR(xc, xl)/2. * (wc['SR']*wc['SL']).real
              + 12*g(xc, xl)   * abs(wc['T'])**2
              # the following terms vanish for vanishing lepton mass
-             + gVS(xc, xl)    * mb_MSbar * ((wc['V']*wc['S']).real
-                                       + (wc['Vp']*wc['Sp']).real)
-             + gVSp(xc, xl)   * mb_MSbar * ((wc['V']*wc['Sp']).real
-                                       + (wc['Vp']*wc['S']).real)
-             - 12*gVSp(xc, xl)* (wc['V']*wc['T']).real
-             + 12*gVS(xc, xl) * (wc['Vp']*wc['T']).real
+             + gVS(xc, xl)    * ((wc['VL']*wc['SR']).real
+                                       + (wc['VR']*wc['SL']).real)
+             + gVSp(xc, xl)   * ((wc['VL']*wc['SL']).real
+                                       + (wc['VR']*wc['SR']).real)
+             - 12*gVSp(xc, xl)* (wc['VL']*wc['T']).real
+             + 12*gVS(xc, xl) * (wc['VR']*wc['T']).real
            )
     # eq. (26) of arXiv:1107.3100 + corrections (P. Gambino, private communication)
     r_BLO = ( 1

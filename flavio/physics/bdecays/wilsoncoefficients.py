@@ -150,7 +150,7 @@ def get_wceff_nunu(q2, wc, par, B, M, nu1, nu2, scale):
     c['tp'] = 0
     return c
 
-def get_CVSM(par, scale, nf):
+def get_CVLSM(par, scale, nf):
     r"""Get the Wilson coefficient of the operator $C_V$ in $d_i\to d_j\ell\nu$
     in the SM including EW corrections."""
     if nf >= 4: # for B and D physics
@@ -166,18 +166,18 @@ def get_wceff_fccc(wc_obj, par, qiqj, lep, mqi, scale, nf=5):
     """
     qqlnu = qiqj + lep + 'nu'
     wc = wc_obj.get_wc(qqlnu, scale, par)
-    c_sm = get_CVSM(par, scale, nf)
+    c_sm = get_CVLSM(par, scale, nf)
     c = {}
     c['7']  = 0
     c['7p'] = 0
-    c['v']  = (c_sm + wc['CV_'+qqlnu])/2.
-    c['vp'] = wc['CVp_'+qqlnu]/2.
-    c['a']  = -(c_sm + wc['CV_'+qqlnu])/2.
-    c['ap'] = -wc['CVp_'+qqlnu]/2.
-    c['s']  = 1/2 * mqi * wc['CS_'+qqlnu]/2.
-    c['sp'] = 1/2 * mqi * wc['CSp_'+qqlnu]/2.
-    c['p']  = -1/2 * mqi * wc['CS_'+qqlnu]/2.
-    c['pp'] = -1/2 * mqi * wc['CSp_'+qqlnu]/2.
+    c['v']  = (c_sm + wc['CVL_'+qqlnu])/2.
+    c['vp'] = wc['CVR_'+qqlnu]/2.
+    c['a']  = -(c_sm + wc['CVL_'+qqlnu])/2.
+    c['ap'] = -wc['CVR_'+qqlnu]/2.
+    c['s']  = 1/2 * wc['CSR_'+qqlnu]/2.
+    c['sp'] = 1/2 * wc['CSL_'+qqlnu]/2.
+    c['p']  = -1/2 * wc['CSR_'+qqlnu]/2.
+    c['pp'] = -1/2 * wc['CSL_'+qqlnu]/2.
     c['t']  = wc['CT_'+qqlnu]
     c['tp'] = 0
     return c
@@ -188,11 +188,11 @@ def get_wceff_fccc_std(wc_obj, par, qiqj, lep, mqi, scale, nf=5):
     """
     qqlnu = qiqj + lep + 'nu'
     wc = wc_obj.get_wc(qqlnu, scale, par)
-    c_sm = get_CVSM(par, scale, nf)
+    c_sm = get_CVLSM(par, scale, nf)
     c = {}
-    c['V']  = c_sm + wc['CV_'+qqlnu]
-    c['Vp'] = wc['CVp_'+qqlnu]
-    c['S']  = wc['CS_'+qqlnu]
-    c['Sp'] = wc['CSp_'+qqlnu]
+    c['VL']  = c_sm + wc['CVL_'+qqlnu]
+    c['VR'] = wc['CVR_'+qqlnu]
+    c['SR']  = wc['CSR_'+qqlnu]
+    c['SL'] = wc['CSL_'+qqlnu]
     c['T']  = wc['CT_'+qqlnu]
     return c

@@ -19,7 +19,7 @@ par = {
 class TestEFT(unittest.TestCase):
     def test_eft(self):
         wc =  WilsonCoefficients()
-        wc.set_initial({'CVLL_bsbs': 0.1j, 'C9_bsmumu':-1.5, 'CV_bctaunu': 0.2}, 160.)
+        wc.set_initial({'CVLL_bsbs': 0.1j, 'C9_bsmumu':-1.5, 'CVL_bctaunu': 0.2}, 160.)
         wc.get_wc('bsbs', 4.8, par)
         wc.get_wc('bsmumu', 4.8, par)
         wc.get_wc('bctaunu', 4.8, par)

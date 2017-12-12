@@ -93,8 +93,8 @@ for qq in _fcnc:
     # tree-level weak decays
     for qq in _fccc:
         for ll in _lnu:
-            coefficients[qq + ll] = [ 'CV_'+qq+ll, 'CS_'+qq+ll, 'CT_'+qq+ll,
-                                'CVp_'+qq+ll, 'CSp_'+qq+ll, ]
+            coefficients[qq + ll] = [ 'CVL_'+qq+ll, 'CSR_'+qq+ll, 'CT_'+qq+ll,
+                                'CVR_'+qq+ll, 'CSL_'+qq+ll, ]
             adm[qq + ll] = adm_ddlnu
 
 

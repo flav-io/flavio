@@ -472,10 +472,12 @@ def gamma_fccc(als, ale):
     r"""Returns the ADMs for $d_i\to d_j\ell\nu decays in the basis
 
     ```
-    [ C_V, C_S, C_T, C'_V, C'_S ]
+    [ C_VL, C_SR, C_T, C_VR, C_SL ]
     ```
     """
     g=np.zeros((1,1,5,5), dtype=float)
     a = (als/(4*pi))
+    g[0,0,1,1] = a*( -8 ) # scalar operator
+    g[0,0,4,4] = a*( -8 ) # scalar operator
     g[0,0,2,2] = a*( 8/3 ) # tensor operator
     return g.sum(axis=(0,1))

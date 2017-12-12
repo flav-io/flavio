@@ -17,8 +17,10 @@ def br_Dlnu(wc_obj, par, P, lep):
     # Wilson coefficients
     wc = wc_obj.get_wc(qiqj + lep + 'nu', scale, par, nf_out=4)
     # add SM contribution to Wilson coefficient
-    wc['CV_'+qiqj+lep+'nu'] += flavio.physics.bdecays.wilsoncoefficients.get_CVSM(par, scale, nf=4)
-    return br_plnu_general(wc, par, Vij, P, qiqj, lep, delta=0)
+    wc['CVL_'+qiqj+lep+'nu'] += flavio.physics.bdecays.wilsoncoefficients.get_CVLSM(par, scale, nf=4)
+    mb = flavio.physics.running.running.get_mb(par, scale)
+    mc = flavio.physics.running.running.get_mc(par, scale)
+    return br_plnu_general(wc, par, Vij, P, qiqj, lep, mb, mc, delta=0)
 
 # function returning function needed for prediction instance
 def br_Dlnu_fct(P, lep):

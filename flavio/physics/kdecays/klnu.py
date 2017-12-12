@@ -19,8 +19,10 @@ def br_plnu(wc_obj, par, P, lep):
     # Wilson coefficients
     wc = wc_obj.get_wc(qiqj + lep + 'nu', scale, par)
     # add SM contribution to Wilson coefficient
-    wc['CV_'+qiqj+lep+'nu'] += flavio.physics.bdecays.wilsoncoefficients.get_CVSM(par, scale, nf=3)
-    return br_plnu_general(wc, par, Vij, P, qiqj, lep, delta=delta_Plnu(par, P, lep))
+    wc['CVL_'+qiqj+lep+'nu'] += flavio.physics.bdecays.wilsoncoefficients.get_CVLSM(par, scale, nf=3)
+    ms = flavio.physics.running.running.get_ms(par, scale)
+    mu = flavio.physics.running.running.get_mu(par, scale)
+    return br_plnu_general(wc, par, Vij, P, qiqj, lep, ms, mu, delta=delta_Plnu(par, P, lep))
 
 def r_plnu(wc_obj, par, P):
     # resumming logs according to (111) of 0707.4464
