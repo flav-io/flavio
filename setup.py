@@ -26,6 +26,7 @@ setup(name='flavio',
                 'physics/data/arXiv-1602-01399v1/*',
                 'physics/data/pdg/*',
                 'physics/data/qcdf_interpolate/*',
+                'physics/data/wcsm/*',
                 ]
       },
       install_requires=['numpy', 'scipy>=0.14', 'setuptools>=3.3', 'pyyaml', 'mpmath',

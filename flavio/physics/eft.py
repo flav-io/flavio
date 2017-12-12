@@ -58,13 +58,13 @@ for qq in _fcnc:
     for ll in _ll:
         coefficients[qq + ll] = [ 'C1_'+qq, 'C2_'+qq, # current-current
                             'C3_'+qq, 'C4_'+qq, 'C5_'+qq, 'C6_'+qq, # QCD penguins
-                            'C7eff_'+qq, 'C8eff_'+qq, # dipoles
+                            'C7_'+qq, 'C8_'+qq, # dipoles
                             'C9_'+qq+ll, 'C10_'+qq+ll, # semi-leptonic
                             'C3Q_'+qq, 'C4Q_'+qq, 'C5Q_'+qq, 'C6Q_'+qq, 'Cb_'+qq, # EW penguins
                             # and everything with flipped chirality ...
                             'C1p_'+qq, 'C2p_'+qq,
                             'C3p_'+qq, 'C4p_'+qq, 'C5p_'+qq, 'C6p_'+qq,
-                            'C7effp_'+qq, 'C8effp_'+qq,
+                            'C7p_'+qq, 'C8p_'+qq,
                             'C9p_'+qq+ll, 'C10p_'+qq+ll,
                             'C3Qp_'+qq, 'C4Qp_'+qq, 'C5Qp_'+qq, 'C6Qp_'+qq, 'Cbp_'+qq,
                             # scalar and pseudoscalar

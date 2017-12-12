@@ -49,7 +49,11 @@ class TestBWilson(unittest.TestCase):
         wc_obj = eft.WilsonCoefficients()
         wc_low = wilsoncoefficients.wctot_dict(wc_obj, 'bsmumu', 4.2, par)
         wc_low_array = np.asarray([wc_low[key] for key in wc_obj.coefficients['bsmumu']])
-        np.testing.assert_almost_equal(wc_low_array[:15], wc_low_correct, decimal=8)
+        yi = np.array([0, 0, -1/3., -4/9., -20/3., -80/9.])
+        zi = np.array([0, 0, 1, -1/6., 20, -10/3.])
+        wc_low_array[6] = wc_low_array[6] + np.dot(yi, wc_low_array[:6]) # c7eff
+        wc_low_array[7] = wc_low_array[7] + np.dot(zi, wc_low_array[:6]) # c8eff
+        np.testing.assert_almost_equal(wc_low_array[:15], wc_low_correct, decimal=2)
 
     def test_clnu(self):
         par_dict = flavio.default_parameters.get_central_all()

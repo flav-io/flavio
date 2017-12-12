@@ -1,5 +1,4 @@
 nosetests.json
-*.npy
 .ropeproject
 
 # editor tmp files

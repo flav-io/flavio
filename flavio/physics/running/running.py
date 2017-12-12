@@ -6,6 +6,7 @@ from scipy.integrate import odeint
 import numpy as np
 from functools import lru_cache
 from flavio.config import config
+import copy
 
 def rg_evolve(initial_condition, derivative, scale_in, scale_out):
     sol = odeint(derivative, initial_condition, [scale_in, scale_out])
@@ -14,7 +15,8 @@ def rg_evolve(initial_condition, derivative, scale_in, scale_out):
 def rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out, nf_out=None):
     if scale_in == scale_out:
         # no need to run!
-        return initial_condition
+        # However, return a copy to prevent accidentally changing the initial condition
+        return copy.deepcopy(initial_condition)
     if scale_out < 0.1:
         raise ValueError('RG evolution below the strange threshold not implemented.')
     return _rg_evolve_sm(tuple(initial_condition), derivative_nf, scale_in, scale_out, nf_out)
