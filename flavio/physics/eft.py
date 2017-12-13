@@ -4,7 +4,6 @@ import numpy as np
 from flavio.physics.running import running
 from flavio.physics.bdecays import rge as rge_db1
 from flavio.physics.mesonmixing import rge as rge_df2
-import wcxf
 
 # Anomalous dimensions for DeltaF=2
 def adm_df2(nf, alpha_s, alpha_e):
@@ -122,6 +121,7 @@ class WilsonCoefficients(object):
         If the instance is given in a basis other than the flavio basis,
         the translation is performed automatically, if implemented in the
         `wcxf` package."""
+        import wcxf
         if not isinstance(wc, wcxf.WC):
             raise ValueError("`wc` should be an instance of `wcxf.WC`")
         if wc.eft != 'WET':
