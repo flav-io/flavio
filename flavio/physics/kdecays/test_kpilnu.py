@@ -27,3 +27,19 @@ class TestKpilnu(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction('BR(K+->pienu)')*1e2/5.07, 1, delta=0.04)
         self.assertAlmostEqual(flavio.sm_prediction('BR(KL->pimunu)')*1e2/27.04, 1, delta=0.02)
         self.assertAlmostEqual(flavio.sm_prediction('BR(K+->pimunu)')*1e2/3.352, 1, delta=0.03)
+
+
+    def test_kpilnu_nu(self):
+        wc_sm = flavio.WilsonCoefficients()
+        wc_np_mu = flavio.WilsonCoefficients()
+        wc_np_mu.set_initial({'CVL_sumunumu': 1}, 4.8)
+        wc_np_e = flavio.WilsonCoefficients()
+        wc_np_e.set_initial({'CVL_sumunue': 1}, 4.8)
+        obs = flavio.Observable["BR(K+->pimunu)"]
+        br_sm = obs.prediction_central(constraints, wc_sm)
+        br_mu = obs.prediction_central(constraints, wc_np_mu)
+        br_e = obs.prediction_central(constraints, wc_np_e)
+        # with interference: (1 + 1)^2 = 4
+        self.assertAlmostEqual(br_mu/br_sm, 4, delta=0.06)
+        # without interference: 1 + 1 = 2
+        self.assertAlmostEqual(br_e/br_sm, 2, delta=0.03)

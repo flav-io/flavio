@@ -58,3 +58,19 @@ class TestBXlnu(unittest.TestCase):
         self.assertAlmostEqual(gLR(rho, xl=eps), gLR(rho, xl=0), delta=10*eps)
         self.assertAlmostEqual(gVS(rho, xl=eps), 0, delta=1e-5)
         self.assertAlmostEqual(gVSp(rho, xl=eps), 0, delta=1e-5)
+
+    def test_bxlnu_nu(self):
+        wc_sm = flavio.WilsonCoefficients()
+        wc_np_tau = flavio.WilsonCoefficients()
+        wc_np_tau.set_initial({'CVL_bctaunutau': 1}, 4.8)
+        wc_np_e = flavio.WilsonCoefficients()
+        wc_np_e.set_initial({'CVL_bctaunue': 1}, 4.8)
+        obs = flavio.Observable["BR(B->Xctaunu)"]
+        constraints = flavio.default_parameters
+        br_sm = obs.prediction_central(constraints, wc_sm)
+        br_tau = obs.prediction_central(constraints, wc_np_tau)
+        br_e = obs.prediction_central(constraints, wc_np_e)
+        # with interference: (1 + 1)^2 = 4
+        self.assertAlmostEqual(br_tau/br_sm, 4, delta=0.04)
+        # without interference: 1 + 1 = 2
+        self.assertAlmostEqual(br_e/br_sm, 2, delta=0.02)
