@@ -33,12 +33,14 @@ def get_ff(q2, par, B, P):
     return AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=q2)
 
 def get_angularcoeff(q2, wc_obj, par, B, P, lep):
-    Jlist=[ _get_angularcoeff(q2,wc_obj, par, B, P, lep, nu) for nu in ['e','mu','tau' ]]
-    J={  }
-    J['a']=sum([ JJ['a'] for JJ in Jlist ])
-    J['b']=sum([ JJ['b'] for JJ in Jlist ])
-    J['c']=sum([ JJ['c'] for JJ in Jlist ])
+    Jlist = [_get_angularcoeff(q2, wc_obj, par, B, P, lep, nu)
+             for nu in ['e', 'mu', 'tau']]
+    J = {}
+    J['a'] = sum([JJ['a'] for JJ in Jlist])
+    J['b'] = sum([JJ['b'] for JJ in Jlist])
+    J['c'] = sum([JJ['c'] for JJ in Jlist])
     return J
+
 
 def _get_angularcoeff(q2, wc_obj, par, B, P, lep, nu):
     ml = par['m_'+lep]

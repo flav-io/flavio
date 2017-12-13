@@ -45,7 +45,7 @@ class TestBXlnu(unittest.TestCase):
 
     def test_bxclnu_np(self):
         wc_np = flavio.WilsonCoefficients()
-        wc_np.set_initial({'CVR_bcenu': 0.1}, scale=4.6)
+        wc_np.set_initial({'CVR_bcenue': 0.1}, scale=4.6)
         br_sm = flavio.physics.bdecays.bxlnu.BR_BXclnu(par, wc_obj, 'e')
         br_np = flavio.physics.bdecays.bxlnu.BR_BXclnu(par, wc_np, 'e')
         # compare to the unnumbered eq. between (13) and (14) in 1407.1320

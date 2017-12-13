@@ -181,7 +181,10 @@ def get_wceff_fccc(wc_obj, par, qiqj, lep, nu, mqi, scale, nf=5):
     """
     qqlnu = qiqj + lep + 'nu' + nu
     wc = wc_obj.get_wc(qqlnu, scale, par)
-    c_sm = get_CVLSM(par, scale, nf)
+    if lep == nu:
+        c_sm = get_CVLSM(par, scale, nf)
+    else:
+        c_sm = 0  # SM contribution only for neutrino flavor = lepton flavor
     c = {}
     c['7']  = 0
     c['7p'] = 0
@@ -204,7 +207,10 @@ def get_wceff_fccc_std(wc_obj, par, qiqj, lep, nu, mqi, scale, nf=5):
     """
     qqlnu = qiqj + lep + 'nu' + nu
     wc = wc_obj.get_wc(qqlnu, scale, par)
-    c_sm = get_CVLSM(par, scale, nf)
+    if lep == nu:
+        c_sm = get_CVLSM(par, scale, nf)
+    else:
+        c_sm = 0  # SM contribution only for neutrino flavor = lepton flavor
     c = {}
     c['VL']  = c_sm + wc['CVL_'+qqlnu]
     c['VR'] = wc['CVR_'+qqlnu]

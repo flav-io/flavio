@@ -36,21 +36,23 @@ def prefactor(q2, par, B, V, lep):
     return 4*GF/sqrt(2)*Vij
 
 def get_angularcoeff(q2, wc_obj, par, B, P, lep):
-    Jlist=[ _get_angularcoeff(q2,wc_obj, par, B, P, lep, nu) for nu in ['e','mu','tau' ]]
-    J={  }
-    J['1s']=sum([ JJ['1s'] for JJ in Jlist ])
-    J['1c']=sum([ JJ['1c'] for JJ in Jlist ])
-    J['2s']=sum([ JJ['2s'] for JJ in Jlist ])
-    J['2c']=sum([ JJ['2c'] for JJ in Jlist ])
-    J['6s']=sum([ JJ['6s'] for JJ in Jlist ])
-    J['6c']=sum([ JJ['6c'] for JJ in Jlist ])
-    J[3]=sum([ JJ[3] for JJ in Jlist ])
-    J[4]=sum([ JJ[4] for JJ in Jlist ])
-    J[5]=sum([ JJ[5] for JJ in Jlist ])
-    J[7]=sum([ JJ[7] for JJ in Jlist ])
-    J[8]=sum([ JJ[8] for JJ in Jlist ])
-    J[9]=sum([ JJ[9] for JJ in Jlist ])
+    Jlist = [_get_angularcoeff(q2, wc_obj, par, B, P, lep, nu)
+             for nu in ['e', 'mu', 'tau']]
+    J = {}
+    J['1s'] = sum([JJ['1s'] for JJ in Jlist])
+    J['1c'] = sum([JJ['1c'] for JJ in Jlist])
+    J['2s'] = sum([JJ['2s'] for JJ in Jlist])
+    J['2c'] = sum([JJ['2c'] for JJ in Jlist])
+    J['6s'] = sum([JJ['6s'] for JJ in Jlist])
+    J['6c'] = sum([JJ['6c'] for JJ in Jlist])
+    J[3] = sum([JJ[3] for JJ in Jlist])
+    J[4] = sum([JJ[4] for JJ in Jlist])
+    J[5] = sum([JJ[5] for JJ in Jlist])
+    J[7] = sum([JJ[7] for JJ in Jlist])
+    J[8] = sum([JJ[8] for JJ in Jlist])
+    J[9] = sum([JJ[9] for JJ in Jlist])
     return J
+
 
 
 def _get_angularcoeff(q2, wc_obj, par, B, V, lep, nu):

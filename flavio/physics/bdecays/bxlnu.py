@@ -13,10 +13,10 @@ from functools import lru_cache
 
 
 def BR_BXclnu(par, wc_obj, lep):
-    return sum([ _BR_BXclnu(par,wc_obj,lep,nu) for nu in ['e','mu','tau']])
-
-def _BR_BXclnu(par, wc_obj, lep,nu):
     r"""Total branching ratio of $\bar B^0\to X_c \ell^- \bar\nu_\ell$"""
+    return sum([_BR_BXclnu(par, wc_obj, lep, nu) for nu in ['e','mu','tau']])
+
+def _BR_BXclnu(par, wc_obj, lep, nu):
     GF = par['GF']
     scale = flavio.config['renormalization scale']['bxlnu']
     kinetic_cutoff = 1. # cutoff related to the kinetic definition of mb in GeV

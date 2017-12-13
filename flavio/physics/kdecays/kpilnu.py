@@ -15,6 +15,15 @@ def get_ff(q2, par, K):
         return {k: (par['K->pi delta_K+pi0'] + 1)*v for k,v in ff_K0.items()}
 
 def get_angularcoeff(q2, wc_obj, par, K, P, lep):
+    Jlist = [_get_angularcoeff(q2, wc_obj, par, K, P, lep, nu)
+             for nu in ['e', 'mu', 'tau']]
+    J = {}
+    J['a'] = sum([JJ['a'] for JJ in Jlist])
+    J['b'] = sum([JJ['b'] for JJ in Jlist])
+    J['c'] = sum([JJ['c'] for JJ in Jlist])
+    return J
+
+def _get_angularcoeff(q2, wc_obj, par, K, P, lep, nu):
     GF = par['GF']
     ml = par['m_'+lep]
     mK = par['m_'+K]
@@ -23,7 +32,7 @@ def get_angularcoeff(q2, wc_obj, par, K, P, lep):
     # renormalization scale is m_rho
     scale = par['m_rho0']
     ms = flavio.physics.running.running.get_ms(par, scale)
-    wc = flavio.physics.bdecays.wilsoncoefficients.get_wceff_fccc(wc_obj, par, 'su', lep, ms, scale, nf=3)
+    wc = flavio.physics.bdecays.wilsoncoefficients.get_wceff_fccc(wc_obj, par, 'su', lep, nu, ms, scale, nf=3)
     N = 4*GF/sqrt(2)*Vus
     ff = get_ff(q2, par, K)
     h = flavio.physics.bdecays.angular.helicity_amps_p(q2, mK, mP, ms, 0, ml, 0, ff, wc, N)

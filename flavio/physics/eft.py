@@ -40,8 +40,8 @@ rge_derivative = {}
 _fcnc = ['bs', 'bd', 'sd', ]
 _ll = ['ee', 'mumu', 'tautau']
 _lilj = ['emu', 'mue', 'etau', 'taue', 'mutau', 'taumu']
-_lnu = ['enu', 'munu', 'taunu']
-_lnup = [ 'enumu', 'enutau', 'munue', 'munutau', 'taunue', 'taunumu']
+_lnu = ['enue', 'munumu', 'taunutau',
+        'enumu', 'enutau', 'munue', 'munutau', 'taunue', 'taunumu']
 _fccc = ['bc', 'bu', 'su', 'du', 'dc', 'sc', ]
 _nunu = ['nuenue', 'numunumu', 'nutaunutau']
 _nuinuj = ['nuenumu', 'numunue', 'nuenutau', 'nutaunue', 'numunutau', 'nutaunumu']
@@ -95,13 +95,6 @@ for qq in _fcnc:
         for ll in _lnu:
             coefficients[qq + ll] = [ 'CVL_'+qq+ll, 'CSR_'+qq+ll, 'CT_'+qq+ll,
                                 'CVR_'+qq+ll, 'CSL_'+qq+ll, ]
-            adm[qq + ll] = adm_ddlnu
-
-    # tree-level weak decays with different charged lepton and neutrino flavour
-    for qq in _fccc:
-        for ll in _lnup:
-            coefficients[qq + ll] = [ 'CV_'+qq+ll, 'CS_'+qq+ll, 'CT_'+qq+ll,
-                                'CVp_'+qq+ll, 'CSp_'+qq+ll, ]
             adm[qq + ll] = adm_ddlnu
 
 

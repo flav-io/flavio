@@ -4,7 +4,7 @@ import flavio
 from math import pi
 from flavio.physics.bdecays.common import meson_quark
 
-def br_plnu_general(wc, par, Vij, P, qiqj, lep, mq1, mq2, delta=0):
+def br_plnu_general(wc, par, Vij, P, qiqj, lep, nu, mq1, mq2, delta=0):
     r"""Branching ratio of general $P^+\to\ell^+\nu_\ell$ decay.
 
     `Vij` is the appropriate CKM matrix element.
@@ -18,33 +18,17 @@ def br_plnu_general(wc, par, Vij, P, qiqj, lep, mq1, mq2, delta=0):
     tau = par['tau_'+P]
     f = par['f_'+P]
     # Wilson coefficient dependence
-    qqlnu = qiqj + lep + 'nu'
+    qqlnu = qiqj + lep + 'nu' + nu
     rWC = (wc['CVL_'+qqlnu] - wc['CVR_'+qqlnu]) + mP**2/ml/(mq1 + mq2) * (wc['CSR_'+qqlnu] - wc['CSL_'+qqlnu])
     N = tau * GF**2 * f**2 / (8*pi) * mP * ml**2  * (1 - ml**2/mP**2)**2
     return N * abs(Vij)**2 * abs(rWC)**2 * (1 + delta)
 
+
 def br_blnu(wc_obj, par, B, lep):
-    return sum([ br_blnu2(wc_obj,par,B,lep,nu) for nu in ['e','mu','tau']])
-
-def br_blnu2(wc_obj, par, B, lep, nu):
-    if lep==nu:
-        return _br_blnu(wc_obj, par, B, lep)
-    # CKM element
-    Vub = flavio.physics.ckm.get_ckm(par)[0,2]
-    # renormalization scale
-    scale = flavio.config['renormalization scale']['bll']
-    # Wilson coefficients
-    bq = meson_quark[B]
-    wc = wc_obj.get_wc(bq + lep + 'nu' + nu, scale, par)
-    qqlnu = bq + lep + 'nu'
-    wc['CV_'+qqlnu] = wc['CV_'+qqlnu + nu]
-    wc['CVp_'+qqlnu] = wc['CVp_'+qqlnu + nu]
-    wc['CS_'+qqlnu] = wc['CS_'+qqlnu + nu]
-    wc['CSp_'+qqlnu] = wc['CSp_'+qqlnu + nu]
-    return br_plnu_general(wc, par, Vub, B, bq, lep, delta=0)
+    return sum([_br_blnu(wc_obj,par,B,lep,nu) for nu in ['e', 'mu', 'tau']])
 
 
-def _br_blnu(wc_obj, par, B, lep):
+def _br_blnu(wc_obj, par, B, lep, nu):
     r"""Branching ratio of $B_q\to\ell^+\nu_\ell$."""
     # CKM element
     Vub = flavio.physics.ckm.get_ckm(par)[0,2]
@@ -52,12 +36,13 @@ def _br_blnu(wc_obj, par, B, lep):
     scale = flavio.config['renormalization scale']['bll']
     # Wilson coefficients
     bq = meson_quark[B]
-    wc = wc_obj.get_wc(bq + lep + 'nu', scale, par)
+    wc = wc_obj.get_wc(bq + lep + 'nu' + nu, scale, par)
     # add SM contribution to Wilson coefficient
-    wc['CVL_'+bq+lep+'nu'] += flavio.physics.bdecays.wilsoncoefficients.get_CVLSM(par, scale, nf=5)
+    if lep == nu:
+        wc['CVL_'+bq+lep+'nu'+nu] += flavio.physics.bdecays.wilsoncoefficients.get_CVLSM(par, scale, nf=5)
     mb = flavio.physics.running.running.get_mb(par, scale)
     mu = 0  # neglecting up quark mass
-    return br_plnu_general(wc, par, Vub, B, bq, lep, mb, mu, delta=0)
+    return br_plnu_general(wc, par, Vub, B, bq, lep, nu, mb, mu, delta=0)
 
 # function returning function needed for prediction instance
 def br_blnu_fct(B, lep):
