@@ -19,20 +19,22 @@ def BR_BXclnu(par, wc_obj, lep):
 def _BR_BXclnu(par, wc_obj, lep, nu):
     GF = par['GF']
     scale = flavio.config['renormalization scale']['bxlnu']
+    mb_MSbar = flavio.physics.running.running.get_mb(par, scale)
+    wc = get_wceff_fccc_std(wc_obj, par, 'bc', lep, nu, mb_MSbar, scale, nf=5)
+    if lep != nu and all(C == 0 for C in wc.values()):
+        return 0  # if all WCs vanish, so does the BR!
     kinetic_cutoff = 1. # cutoff related to the kinetic definition of mb in GeV
     # mb in the kinetic scheme
     mb = flavio.physics.running.running.get_mb_KS(par, kinetic_cutoff)
     xl = par['m_'+lep]**2/mb**2
     # mc in MSbar at 3 GeV
     mc = flavio.physics.running.running.get_mc(par, 3)
-    mb_MSbar = flavio.physics.running.running.get_mb(par, scale)
     xc = mc**2/mb**2
     Vcb = flavio.physics.ckm.get_ckm(par)[1, 2]
     alpha_s = flavio.physics.running.running.get_alpha(par, scale, nf_out=5)['alpha_s']
     # wc: NB this includes the EW correction already
     # the b quark mass is MSbar here as it comes from the definition
     # of the scalar operators
-    wc = get_wceff_fccc_std(wc_obj, par, 'bc', lep, nu, mb_MSbar, scale, nf=5)
     Gamma_LO = GF**2 * mb**5 / 192. / pi**3 * abs(Vcb)**2
     r_WC = (   g(xc, xl)      * (abs(wc['VL'])**2 + abs(wc['VR'])**2)
              - gLR(xc, xl)    * (wc['VL']*wc['VR']).real

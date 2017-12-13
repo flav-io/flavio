@@ -43,12 +43,14 @@ def get_angularcoeff(q2, wc_obj, par, B, P, lep):
 
 
 def _get_angularcoeff(q2, wc_obj, par, B, P, lep, nu):
-    ml = par['m_'+lep]
-    mB = par['m_'+B]
-    mP = par['m_'+P]
     scale = config['renormalization scale']['bpll']
     mb = running.get_mb(par, scale)
     wc = get_wceff_fccc(wc_obj, par, meson_quark[(B,P)], lep, nu, mb, scale, nf=5)
+    if lep != nu and all(C == 0 for C in wc.values()):
+        return {'a': 0, 'b': 0, 'c': 0}  # if all WCs vanish, so does the AC!
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    mP = par['m_'+P]
     N = prefactor(q2, par, B, P, lep)
     ff = get_ff(q2, par, B, P)
     qi_qj = meson_quark[(B, P)]
