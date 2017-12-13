@@ -4,7 +4,7 @@ See arXiv:1107.3100."""
 
 
 import flavio
-from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc_std2
+from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc_std
 from math import pi
 from cmath import log, sqrt
 from flavio.classes import Observable, Prediction
@@ -32,7 +32,7 @@ def _BR_BXclnu(par, wc_obj, lep,nu):
     # wc: NB this includes the EW correction already
     # the b quark mass is MSbar here as it comes from the definition
     # of the scalar operators
-    wc = get_wceff_fccc_std2(wc_obj, par, 'bc', lep, nu, mb_MSbar, scale, nf=5)
+    wc = get_wceff_fccc_std(wc_obj, par, 'bc', lep, nu, mb_MSbar, scale, nf=5)
     Gamma_LO = GF**2 * mb**5 / 192. / pi**3 * abs(Vcb)**2
     r_WC = (   g(xc, xl)      * (abs(wc['VL'])**2 + abs(wc['VR'])**2)
              - gLR(xc, xl)    * (wc['VL']*wc['VR']).real

@@ -9,7 +9,7 @@ from flavio.classes import AuxiliaryQuantity
 from flavio.config import config
 from flavio.physics.running import running
 from flavio.physics.bdecays import angular
-from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc2
+from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc
 from flavio.classes import Observable, Prediction
 
 
@@ -56,7 +56,7 @@ def get_angularcoeff(q2, wc_obj, par, B, P, lep):
 def _get_angularcoeff(q2, wc_obj, par, B, V, lep, nu):
     scale = config['renormalization scale']['bvll']
     mb = running.get_mb(par, scale)
-    wc = get_wceff_fccc2(wc_obj, par, meson_quark[(B,V)], lep, nu, mb, scale, nf=5)
+    wc = get_wceff_fccc(wc_obj, par, meson_quark[(B,V)], lep, nu, mb, scale, nf=5)
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mV = par['m_'+V]
