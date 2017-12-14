@@ -42,3 +42,16 @@ class TestEFT(unittest.TestCase):
         wcxf_wc.eft = 'SMEFT'
         with self.assertRaises(NotImplementedError):
             flavio_wc.set_initial_wcxf(wcxf_wc)
+
+    def test_deprecations(self):
+        """Check that deprecated or renamed Wilson coefficients raise/warn"""
+        wc = WilsonCoefficients()
+        wc.set_initial({'C9_bsmumu': 1.2}, 5)  # this should work
+        with self.assertRaises(KeyError):
+            wc.set_initial({'C9_bsmumu': 1.2, 'C7effp_bs': 3}, 5)
+        with self.assertRaises(KeyError):
+            wc.set_initial({'C9_bsmumu': 1.2, 'C8eff_sd': 3}, 5)
+        with self.assertRaises(KeyError):
+            wc.set_initial({'C9_bsmumu': 1.2, 'CV_bcenu': 3}, 5)
+        with self.assertWarns(Warning):
+            wc.set_initial({'C3Qp_bs': 1.2, 'C1_bs': 3}, 5)

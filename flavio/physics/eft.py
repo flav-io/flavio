@@ -4,6 +4,8 @@ import numpy as np
 from flavio.physics.running import running
 from flavio.physics.bdecays import rge as rge_db1
 from flavio.physics.mesonmixing import rge as rge_df2
+import warnings
+
 
 # Anomalous dimensions for DeltaF=2
 def adm_df2(nf, alpha_s, alpha_e):
@@ -130,8 +132,24 @@ class WilsonCoefficients(object):
         - scale: $\overline{\text{MS}}$ renormalization scale
         """
         for name, value in dict.items():
-            if name not in self.all_wc:
+            if name.split('_')[0] in ['C7eff', 'C7effp', 'C8eff', 'C8effp']:
+                raise KeyError("The dipole Wilson coefficients like " + name
+                               + "have been renamed in v0.25.")
+            elif (name.split('_')[0] in ['CV', 'CVp', 'CS', 'CSp', 'CT']
+                  and name[-2:] == 'nu'):
+                raise KeyError("The semileptonic Wilson coefficients " + name
+                               + " have been redefined in v0.25.")
+            elif name not in self.all_wc:
                 raise KeyError("Wilson coefficient " + name + " not known")
+            # warn for four-quark operators that will be changed soon
+            elif name.split('_')[0] in ['C1', 'C2', 'C3', 'C4', 'C5', 'C6',
+                                        'C1p', 'C2p', 'C3p', 'C4p', 'C5p', 'C6p',
+                                        'C3Q', 'C4Q', 'C5Q', 'C6Q',
+                                        'C3Qp', 'C4Qp', 'C5Qp', 'C6Qp',
+                                        ]:
+                warnings.warn("New physics in four-quark operators "
+                              "has been deprecated in v0.25. It will be "
+                              "reimplemented at a later stage")
             self.initial[name] = (scale, value)
 
     def set_initial_wcxf(self, wc):
