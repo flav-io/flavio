@@ -99,7 +99,17 @@ for qq in _fcnc:
 
 
 class WilsonCoefficients(object):
-    """
+    """Class representing a point in the EFT parameter space and giving
+    access to RG evolution.
+
+    Note that all Wilson coefficient values refer to new physics contributions
+    only, i.e. they vanish in the SM.
+
+    Methods:
+
+    - set_initial: set the initial values of Wilson coefficients at some scale
+    - set_initial_wcxf: set the initial values from a wcxf.WC instance
+    - get_wc: get the values of the Wilson coefficients at some scale
     """
     def __init__(self):
         self.initial = {}
@@ -111,6 +121,14 @@ class WilsonCoefficients(object):
         rge_derivative[sector] = running.make_wilson_rge_derivative(adm[sector])
 
     def set_initial(self, dict, scale):
+        """Set initial values of Wilson coefficients.
+
+        Parameters:
+
+        - dict: dictionary where keys are Wilson coefficient name strings and
+          values are Wilson coefficient NP contribution values
+        - scale: $\overline{\text{MS}}$ renormalization scale
+        """
         for name, value in dict.items():
             if name not in self.all_wc:
                 raise KeyError("Wilson coefficient " + name + " not known")
@@ -135,6 +153,18 @@ class WilsonCoefficients(object):
         self.set_initial(wc_dict, wc.scale)
 
     def get_wc(self, sector, scale, par, nf_out=None):
+        """Get the values of the Wilson coefficients belonging to a specific
+        sector (e.g. `bsmumu`) at a given scale.
+
+        Returns a dictionary of WC values.
+
+        Parameters:
+
+        - sector: string name of the sector
+        - scale: $\overline{\text{MS}}$ renormalization scale
+        - par: dictionary of parameters
+        - nf_out: number of quark flavours at the output scale
+        """
         # intialize with complex zeros
         values_in = np.zeros(len(self.coefficients[sector]), dtype=complex)
         # see if an initial value exists
