@@ -418,7 +418,7 @@ class Profiler2D(Profiler):
           Defaults to (1, 2).
         """
         deltachi2 = -2*(self.log_profile_likelihood
-                        -np.max(self.log_profile_likelihood))
+                        -np.nanmax(self.log_profile_likelihood))
         x, y = np.meshgrid(self.x, self.y, indexing='ij')
         return {
                 'x': x,
