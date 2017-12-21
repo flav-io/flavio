@@ -3121,11 +3121,18 @@ LHCb B+->Kmumu AFB 2014:
       q2max: 22
       value: -0.015 ± 0.015 ± 0.01
 
-B->Xcenu global fit 2015:
-  inspire: Alberti:2014yda
-  # this is a numerical update mentioned in arXiv:1503.01791
+Belle B->Xcenu 2006:
+  inspire: Urquijo:2006wd
+  description: >
+    Measurements of the charged and neutral B decays with an electron energy
+    threshold of 0.6 GeV averaged and rescaled to the total branching ratio.
   values:
-    BR(B->Xcenu): 0.1067(16)
+    BR(B->Xcenu): 0.1088(27)
+
+BaBar B->Xcenu 2009:
+  inspire: Aubert:2009qda
+  values:
+    BR(B->Xcenu): 0.1064(17)(6)
 
 BaBar RD 2012:
   experiment: BaBar
