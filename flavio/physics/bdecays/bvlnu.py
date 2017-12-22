@@ -36,8 +36,8 @@ def prefactor(q2, par, B, V, lep):
         return 0
     return 4*GF/sqrt(2)*Vij
 
-def get_angularcoeff(q2, wc_obj, par, B, P, lep):
-    Jlist = [_get_angularcoeff(q2, wc_obj, par, B, P, lep, nu)
+def get_angularcoeff(q2, wc_obj, par, B, V, lep):
+    Jlist = [_get_angularcoeff(q2, wc_obj, par, B, V, lep, nu)
              for nu in ['e', 'mu', 'tau']]
     J = {}
     J['1s'] = sum([JJ['1s'] for JJ in Jlist])
