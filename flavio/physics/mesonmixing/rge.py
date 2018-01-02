@@ -53,8 +53,8 @@ def gamma_df2_array(f, alpha_s, *args, **kwargs):
     gamma[0,0] = gamma_dict_nlo['VLL']
     gamma[1,1] = gamma_dict_nlo['SLL'][0,0] # SLL
     gamma[2,2] = gamma_dict_nlo['SLL'][1,1] # TLL
-    gamma[1,2] = gamma_dict_nlo['SLL'][0,1] # SLL-TLL
-    gamma[2,1] = gamma_dict_nlo['SLL'][1,0] # TLL-SLL
+    gamma[1,2] = -gamma_dict_nlo['SLL'][0,1] # SLL-TLL
+    gamma[2,1] = -gamma_dict_nlo['SLL'][1,0] # TLL-SLL
     gamma[6,6] = gamma_dict_nlo['LR'][0,0] # VLR
     gamma[7,7] = gamma_dict_nlo['LR'][1,1] # SLR
     gamma[6,7] = gamma_dict_nlo['LR'][0,1] # VLR-SLR
