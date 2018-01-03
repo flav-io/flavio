@@ -40,7 +40,14 @@ U_mb = np.array([[ 0.83693251,  0.        ,  0.        ,  0.        ,  0.       
        [ 0.        ,  0.        ,  0.        ,  0.        , -0.00686759,
          0.        ,  0.        ,  0.        ,  0.53745488,  0.        ],
        [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
-        -0.00686759,  0.        ,  0.        ,  0.        ,  0.53745488]]).reshape((10,10))[[0,4,8,1,5,9,2,6],:][:,[0,4,8,1,5,9,2,6]]
+        -0.00686759,  0.        ,  0.        ,  0.        ,  0.53745488]])
+# fixing a sign error in the above matrix
+U_mb[4, 8] = -U_mb[4, 8]
+U_mb[8, 4] = -U_mb[8, 4]
+U_mb[5, 9] = -U_mb[5, 9]
+U_mb[9, 5] = -U_mb[9, 5]
+# reshaping
+U_mb = U_mb.reshape((10,10))[[0,4,8,1,5,9,2,6],:][:,[0,4,8,1,5,9,2,6]]
 
 class TestMesonMixing(unittest.TestCase):
     def test_bmixing(self):
@@ -94,7 +101,7 @@ class TestMesonMixing(unittest.TestCase):
         0.95717777,  0.62733321,  0.87053086])
         c_out = flavio.physics.running.running.get_wilson(par, c_in, wc_obj.rge_derivative['bsbs'], 173.3, 4.2)
         c_out_U = np.dot(U_mb, c_in)
-        np.testing.assert_almost_equal(c_out/c_out_U, np.ones(8), decimal=2)
+        np.testing.assert_almost_equal(c_out/c_out_U, np.ones(8), decimal=1)
         # compare eta at 2 GeV to the values in table 2 of hep-ph/0102316
         par_bju = par.copy()
         par_bju['alpha_s'] = 0.118
