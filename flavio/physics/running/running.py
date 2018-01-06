@@ -7,6 +7,9 @@ import numpy as np
 from functools import lru_cache
 from flavio.config import config
 import copy
+from math import log, pi
+from wcxf.util import qcd
+
 
 def rg_evolve(initial_condition, derivative, scale_in, scale_out):
     sol = odeint(derivative, initial_condition, [scale_in, scale_out])
@@ -63,6 +66,48 @@ def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out, nf_out)
             initial_nf = sol
             scale_in_nf = thresholds[nf+1]
     return sol
+
+    thresholds = {
+        3: 0.1,
+        4: config['RGE thresholds']['mc'],
+        5: config['RGE thresholds']['mb'],
+        6: config['RGE thresholds']['mt'],
+        7: np.inf,
+        }
+
+def run_alpha_e(alpha_e_in, scale_in, scale_out, n_u, n_d, n_e):
+    """Get the electromagnetic fine structure constant at the scale `scale_out`,
+    given its value at the scale `scale_in` and running with `n_u` dynamical
+    up quark flavours, `n_d` dynamical down quark flavours, and `n_e` dynamical
+    charged lepton flavours."""
+    if scale_out == scale_in:
+        # nothing to do
+        return alpha_e_in
+    beta0 = -4/3 * (4 * n_u / 3 + n_d / 3 + n_e)  # -4/3 * sum Q_f^2 N_f
+    return alpha_e_in / (1 + alpha_e_in * beta0 * log(scale_out/scale_in) / (2 * pi))
+
+
+def get_alpha_e(par, scale, nf_out=None):
+    aeMZ = par['alpha_e']
+    MZ = 91.1876  # m_Z treated as a constant here
+    mt = config['RGE thresholds']['mt']
+    mb = config['RGE thresholds']['mb']
+    mc = config['RGE thresholds']['mc']
+    if nf_out == 5 or (nf_out is None and mb <= scale < mt):
+        return run_alpha_e(aeMZ, MZ, scale, n_u=2, n_d=3, n_e=3)
+    elif nf_out == 6 or (nf_out is None and scale >= mt):
+        aemt = run_alpha_e(aeMZ, MZ, mt, n_u=2, n_d=3, n_e=3)
+        return run_alpha_e(aemt, mt, scale, n_u=3, n_d=3, n_e=3)
+    elif nf_out == 4 or (nf_out is None and mc <= scale < mb):
+            aemb = run_alpha_e(aeMZ, MZ, mb, n_u=2, n_d=3, n_e=3)
+            return run_alpha_e(aemb, mb, scale, n_u=2, n_d=2, n_e=3)
+    elif nf_out == 3 or (nf_out is None and scale < mc):
+        aemb = run_alpha_e(aeMZ, MZ, mb, n_u=2, n_d=3, n_e=3)
+        aemc = run_alpha_e(aemb, mb, mc, n_u=2, n_d=2, n_e=3)
+        return run_alpha_e(aemc, mc, scale, n_u=1, n_d=2, n_e=2)
+    else:
+        raise ValueError("Invalid value: nf_out={}".format(nf_out))
+
 
 def get_alpha(par, scale, nf_out=None):
     r"""Get the running $\overline{\mathrm{MS}}$ $\alpha_s$ and $\alpha_e$

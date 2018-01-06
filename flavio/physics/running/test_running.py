@@ -2,6 +2,7 @@ import unittest
 from .running import *
 import numpy as np
 import flavio
+from flavio.config import config
 
 par = {}
 par['alpha_s'] = 0.1185
@@ -30,6 +31,28 @@ par_ks['m_c'] = 1.329
 par_ks['m_b'] = 4.183
 
 class TestRunning(unittest.TestCase):
+
+    def test_alphae(self):
+        # compare to PDG
+        alpha_tau = get_alpha_e(par_pdg, 1.777)
+        self.assertAlmostEqual(1/alpha_tau/133.465,1.,places=3)
+        # check at thresholds
+        mc = config['RGE thresholds']['mc']
+        self.assertEqual(get_alpha_e(par_pdg, mc),
+                         get_alpha_e(par_pdg, mc, nf_out=4))
+        self.assertEqual(get_alpha_e(par_pdg, mc, nf_out=3),
+                         get_alpha_e(par_pdg, mc, nf_out=4))
+        mb = config['RGE thresholds']['mb']
+        self.assertEqual(get_alpha_e(par_pdg, mb),
+                         get_alpha_e(par_pdg, mb, nf_out=5))
+        self.assertEqual(get_alpha_e(par_pdg, mb, nf_out=4),
+                         get_alpha_e(par_pdg, mb, nf_out=5))
+        mt = config['RGE thresholds']['mt']
+        self.assertEqual(get_alpha_e(par_pdg, mt),
+                         get_alpha_e(par_pdg, mt, nf_out=6))
+        self.assertEqual(get_alpha_e(par_pdg, mt, nf_out=5),
+                         get_alpha_e(par_pdg, mt, nf_out=6))
+
 
     def test_runningcouplings(self):
         alpha_b = get_alpha(par_noqed, 4.2)
