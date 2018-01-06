@@ -1,10 +1,7 @@
 import unittest
 import numpy as np
-from . import rge
-from . import common
 from . import wilsoncoefficients
 from .. import eft
-from ..running import running
 import flavio
 
 s = 1.519267515435317e+24
@@ -34,12 +31,6 @@ par = {
 }
 
 class TestBWilson(unittest.TestCase):
-    def test_running(self):
-        c_in = np.array([ 0.85143759,  0.31944853,  0.30029457,  0.82914154,  0.11154786,
-        0.80629828,  0.32082766,  0.1300508 ,  0.69393572,  0.98427495,
-        0.76415058,  0.90545245,  0.03290275,  0.89359186,  0.46273251])
-        c_out = rge.run_wc_df1(par, c_in, 173.1, 4.2)
-
     def test_wctot(self):
         wc_low_correct = np.array([ -2.93671059e-01,   1.01676402e+00,  -5.87762813e-03,
         -8.70666812e-02,   4.11098919e-04,   1.10641294e-03,

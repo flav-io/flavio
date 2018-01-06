@@ -4,71 +4,9 @@ from flavio.config import config
 import wcxf
 import wetrunner
 
-# List of all Wilson coefficients in the Standard basis
-
-# A "sector" is a set of WCs relevant for a particular class of processes
-# (e.g. b->sll) that closes under renormalization.
-# Individual WCs can appear in more than one set.
-
-coefficients = {}
-
-_fcnc = ['bs', 'bd', 'sd', ]
-_ll = ['ee', 'mumu', 'tautau']
-_lilj = ['emu', 'mue', 'etau', 'taue', 'mutau', 'taumu']
-_lnu = ['enue', 'munumu', 'taunutau',
-        'enumu', 'enutau', 'munue', 'munutau', 'taunue', 'taunumu']
-_fccc = ['bc', 'bu', 'su', 'du', 'dc', 'sc', ]
-_nunu = ['nuenue', 'numunumu', 'nutaunutau']
-_nuinuj = ['nuenumu', 'numunue', 'nuenutau', 'nutaunue', 'numunutau', 'nutaunumu']
-
-# DeltaF=2 operators
-for qq in _fcnc:
-    # DeltaF=2 operators
-    coefficients[qq + qq] = [ 'CVLL_'+qq+qq, 'CSLL_'+qq+qq, 'CTLL_'+qq+qq,
-                        'CVRR_'+qq+qq, 'CSRR_'+qq+qq, 'CTRR_'+qq+qq,
-                        'CVLR_'+qq+qq, 'CSLR_'+qq+qq, ]
-
-    # DeltaF=1 operators
-    for ll in _ll:
-        coefficients[qq + ll] = [ 'C1_'+qq, 'C2_'+qq, # current-current
-                            'C3_'+qq, 'C4_'+qq, 'C5_'+qq, 'C6_'+qq, # QCD penguins
-                            'C7_'+qq, 'C8_'+qq, # dipoles
-                            'C9_'+qq+ll, 'C10_'+qq+ll, # semi-leptonic
-                            'C3Q_'+qq, 'C4Q_'+qq, 'C5Q_'+qq, 'C6Q_'+qq, 'Cb_'+qq, # EW penguins
-                            # and everything with flipped chirality ...
-                            'C1p_'+qq, 'C2p_'+qq,
-                            'C3p_'+qq, 'C4p_'+qq, 'C5p_'+qq, 'C6p_'+qq,
-                            'C7p_'+qq, 'C8p_'+qq,
-                            'C9p_'+qq+ll, 'C10p_'+qq+ll,
-                            'C3Qp_'+qq, 'C4Qp_'+qq, 'C5Qp_'+qq, 'C6Qp_'+qq, 'Cbp_'+qq,
-                            # scalar and pseudoscalar
-                            'CS_'+qq+ll, 'CP_'+qq+ll,
-                            'CSp_'+qq+ll, 'CPp_'+qq+ll, ]
-
-    # DeltaF=1 decays with same-flavour neutrinos in the final state
-    for ll in _nunu:
-        coefficients[qq + ll] = [ 'CL_'+qq+ll, 'CR_'+qq+ll, ]
-
-    # DeltaF=1 decays with differently flavoured neutrinos in the final state
-    for ll in _nuinuj:
-        coefficients[qq + ll] = [ 'CL_'+qq+ll, 'CR_'+qq+ll, ]
-
-    # DeltaF=1 LFV decays
-    for ll in _lilj:
-        coefficients[qq + ll] = [ 'C9_'+qq+ll, 'C10_'+qq+ll, # semi-leptonic
-                            'C9p_'+qq+ll, 'C10p_'+qq+ll,
-                            'CS_'+qq+ll, 'CP_'+qq+ll, # scalar and pseudoscalar
-                            'CSp_'+qq+ll, 'CPp_'+qq+ll, ]
-
-    # tree-level weak decays
-    for qq in _fccc:
-        for ll in _lnu:
-            coefficients[qq + ll] = [ 'CVL_'+qq+ll, 'CSR_'+qq+ll, 'CT_'+qq+ll,
-                                'CVR_'+qq+ll, 'CSL_'+qq+ll, ]
-
 
 # sector names prior to v0.27 translated to WCxf sector names
-sectors_flavio2wcxf ={
+sectors_flavio2wcxf = {
  'bcenue': 'cbenu',
  'bcenumu': 'cbenu',
  'bcenutau': 'cbenu',
@@ -192,9 +130,6 @@ class WilsonCoefficients(object):
         self._initial = {}
         self._initial_wcxf = None
         self._cache = {}
-        self.coefficients = coefficients
-        self.all_wc = [c for v in self.coefficients.values() for c in v] # list of all coeffs
-
 
     def set_initial(self, wc_dict, scale, eft='WET', basis='flavio'):
         """Set initial values of Wilson coefficients.

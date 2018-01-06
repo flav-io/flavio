@@ -23,7 +23,7 @@ class TestLambdabLambdall(unittest.TestCase):
         # compare to table VII of 1602.01399
         ass_sm(self, '<dBR/dq2>(Lambdab->Lambdamumu)', 0.1, 2, 0.25, 0.01, 1e7)
         ass_sm(self, '<dBR/dq2>(Lambdab->Lambdamumu)', 2, 4, 0.18, 0.005, 1e7)
-        ass_sm(self, '<dBR/dq2>(Lambdab->Lambdamumu)', 15, 20, 0.756, 0.002, 1e7)
+        ass_sm(self, '<dBR/dq2>(Lambdab->Lambdamumu)', 15, 20, 0.756, 0.003, 1e7)
         ass_sm(self, '<dBR/dq2>(Lambdab->Lambdamumu)', 18, 20, 0.665, 0.002, 1e7)
         ass_sm(self, '<FL>(Lambdab->Lambdamumu)', 4, 6, 0.808, 0.007)
         ass_sm(self, '<FL>(Lambdab->Lambdamumu)', 15, 20, 0.409, 0.002)

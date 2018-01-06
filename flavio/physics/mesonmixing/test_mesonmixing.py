@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from . import amplitude, rge, observables
+from . import amplitude, observables
 from math import sin, asin, cos, pi
 from flavio.physics.eft import WilsonCoefficients
 from flavio import Observable
@@ -104,7 +104,7 @@ class TestMesonMixing(unittest.TestCase):
                     for i in ['VLL', 'SLL', 'TLL', 'VRR', 'SRR', 'TRR', 'VLR', 'SLR']]
         wc_dict = dict(zip(wc_names, c_in))
         wc.set_initial(wc_dict, 173.3)
-        c_out_dict = wc.get_wc('sbsb', 4.2, flavio.default_parameters.get_central_all())
+        c_out_dict = wc.get_wc('sbsb', 4.2, par)
         c_out = np.array([c_out_dict[k] for k in wc_names])
         c_out_U = np.dot(U_mb, c_in)
         for i, r in enumerate(c_out/c_out_U):
@@ -118,8 +118,9 @@ class TestMesonMixing(unittest.TestCase):
         par_bju = par.copy()
         par_bju['alpha_s'] = 0.118
         par_bju['m_b'] = 4.4
-        c_out_bju = rge.run_wc_df2(par_bju, c_in, 166., 2)
-        self.assertAlmostEqual(c_out_bju[0]/c_in[0], 0.788, places=2)
+        c_out_bju_dict = wc.get_wc('sbsb', 2, par_bju, nf_out=5)
+        c_out_bju = np.array([c_out_bju_dict[k] for k in wc_names])
+        self.assertAlmostEqual(c_out_bju[0]/c_in[0], 0.788, delta=0.02)
 
     def test_common(self):
         # random values
