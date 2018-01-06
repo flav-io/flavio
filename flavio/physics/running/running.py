@@ -260,7 +260,8 @@ def get_mb_1S(par, scale, nl=3):
 # cached version
 @lru_cache(maxsize=config['settings']['cache size'])
 def _get_mb_1S(mbmb, alpha_s, scale, nl):
-    return masses.mMS2m1S(MS=mbmb, Nf=5, asmu=alpha_s, Mu=scale, nl=nl)
+    crd = rundec.CRunDec()
+    return crd.mMS2m1S(mbmb, None, alpha_s, scale, 5, nl)
 
 
 def get_mt(par, scale):
