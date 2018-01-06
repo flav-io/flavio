@@ -53,5 +53,5 @@ class TestEFT(unittest.TestCase):
             wc.set_initial({'C9_bsmumu': 1.2, 'C8eff_sd': 3}, 5)
         with self.assertRaises(KeyError):
             wc.set_initial({'C9_bsmumu': 1.2, 'CV_bcenu': 3}, 5)
-        with self.assertWarns(Warning):
+        with self.assertRaises(KeyError):
             wc.set_initial({'C3Qp_bs': 1.2, 'C1_bs': 3}, 5)

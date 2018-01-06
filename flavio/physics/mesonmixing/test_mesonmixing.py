@@ -99,9 +99,21 @@ class TestMesonMixing(unittest.TestCase):
     def test_running(self):
         c_in = np.array([ 0.20910694,  0.77740198,  0.54696337,  0.46407456,  0.42482153,
         0.95717777,  0.62733321,  0.87053086])
-        c_out = flavio.physics.running.running.get_wilson(par, c_in, wc_obj.rge_derivative['bsbs'], 173.3, 4.2)
+        wc = flavio.WilsonCoefficients()
+        wc_names = ['C{}_bsbs'.format(i)
+                    for i in ['VLL', 'SLL', 'TLL', 'VRR', 'SRR', 'TRR', 'VLR', 'SLR']]
+        wc_dict = dict(zip(wc_names, c_in))
+        wc.set_initial(wc_dict, 173.3)
+        c_out_dict = wc.get_wc('sbsb', 4.2, flavio.default_parameters.get_central_all())
+        c_out = np.array([c_out_dict[k] for k in wc_names])
         c_out_U = np.dot(U_mb, c_in)
-        np.testing.assert_almost_equal(c_out/c_out_U, np.ones(8), decimal=1)
+        for i, r in enumerate(c_out/c_out_U):
+            if 'S' in wc_names[i] or 'T' in wc_names[i]:
+                self.assertAlmostEqual(r, 1, delta=0.2,
+                                       msg="Failed for {}".format(wc_names[i]))
+            else:  # more precise
+                self.assertAlmostEqual(r, 1, delta=0.1,
+                                       msg="Failed for {}".format(wc_names[i]))
         # compare eta at 2 GeV to the values in table 2 of hep-ph/0102316
         par_bju = par.copy()
         par_bju['alpha_s'] = 0.118

@@ -20,7 +20,7 @@ def _br_klnu(wc_obj, par, P, lep, nu):
     # renormalization scale is m_rho
     scale = par['m_rho0']
     # Wilson coefficients
-    wc = wc_obj.get_wc(qiqj + lep + 'nu' + nu, scale, par)
+    wc = wc_obj.get_wc(qiqj + lep + 'nu' + nu, scale, par, nf_out=3)
     # add SM contribution to Wilson coefficient
     if lep == nu:
         wc['CVL_'+qiqj+lep+'nu'+nu] += flavio.physics.bdecays.wilsoncoefficients.get_CVLSM(par, scale, nf=3)

@@ -13,7 +13,7 @@ def kpinunu_amplitude(wc_obj, par, nu1, nu2):
     label = 'sd' + nu1 + nu2 # e.g. sdnuenue, sdnutaunumu
     scale = flavio.config['renormalization scale']['kdecays']
     # Wilson coefficients
-    wc = wc_obj.get_wc(label, scale, par)
+    wc = wc_obj.get_wc(label, scale, par, nf_out=3)
     if nu1 == nu2: # add the SM contribution only if neutrino flavours coincide
         wc['CL_'+label] += flavio.physics.bdecays.wilsoncoefficients.CL_SM(par)
     s2w = par['s2w']

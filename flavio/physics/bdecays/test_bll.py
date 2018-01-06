@@ -180,16 +180,16 @@ class TestBll(unittest.TestCase):
         self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., places=2)
 
         br = BR(0,0,0,-0.01*1j,0,0)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., places=2)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=2)
 
         br = BR(0,0,0,0,0.01,0)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., places=2)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.03)
 
         br = BR(0,0,0,0,0,-0.02*1j)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., places=2)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.03)
 
         br = BR(-.5*1j,0,0.01,0,0,0)
         self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., places=2)
 
         br = BR(-.5*1j,0,0,0,-0.03,0)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., places=2)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.03)

@@ -180,7 +180,7 @@ def get_wceff_fccc(wc_obj, par, qiqj, lep, nu, mqi, scale, nf=5):
     in the convention appropriate for the generalized angular distributions.
     """
     qqlnu = qiqj + lep + 'nu' + nu
-    wc = wc_obj.get_wc(qqlnu, scale, par)
+    wc = wc_obj.get_wc(qqlnu, scale, par, nf_out=nf)
     if lep == nu:
         c_sm = get_CVLSM(par, scale, nf)
     else:
@@ -206,7 +206,7 @@ def get_wceff_fccc_std(wc_obj, par, qiqj, lep, nu, mqi, scale, nf=5):
     in the flavio default convention.
     """
     qqlnu = qiqj + lep + 'nu' + nu
-    wc = wc_obj.get_wc(qqlnu, scale, par)
+    wc = wc_obj.get_wc(qqlnu, scale, par, nf_out=nf)
     if lep == nu:
         c_sm = get_CVLSM(par, scale, nf)
     else:
