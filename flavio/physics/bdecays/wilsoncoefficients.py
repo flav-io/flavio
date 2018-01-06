@@ -48,6 +48,28 @@ def CL_SM(par):
     return -Xt/s2w
 
 
+# names of SM DeltaF=1 Wilson coefficients needed for wctot_dict
+fcnclabels = {}
+_fcnc = ['bs', 'bd', 'sd', ]
+_ll = ['ee', 'mumu', 'tautau']
+for qq in _fcnc:
+    for ll in _ll:
+        fcnclabels[qq + ll] = ['C1_'+qq, 'C2_'+qq, # current-current
+                               'C3_'+qq, 'C4_'+qq, 'C5_'+qq, 'C6_'+qq, # QCD penguins
+                               'C7_'+qq, 'C8_'+qq, # dipoles
+                               'C9_'+qq+ll, 'C10_'+qq+ll, # semi-leptonic
+                               'C3Q_'+qq, 'C4Q_'+qq, 'C5Q_'+qq, 'C6Q_'+qq, 'Cb_'+qq, # EW penguins
+                                # and everything with flipped chirality ...
+                               'C1p_'+qq, 'C2p_'+qq,
+                               'C3p_'+qq, 'C4p_'+qq, 'C5p_'+qq, 'C6p_'+qq,
+                               'C7p_'+qq, 'C8p_'+qq,
+                               'C9p_'+qq+ll, 'C10p_'+qq+ll,
+                               'C3Qp_'+qq, 'C4Qp_'+qq, 'C5Qp_'+qq, 'C6Qp_'+qq, 'Cbp_'+qq,
+                                # scalar and pseudoscalar
+                               'CS_'+qq+ll, 'CP_'+qq+ll,
+                               'CSp_'+qq+ll, 'CPp_'+qq+ll, ]
+
+
 def wctot_dict(wc_obj, sector, scale, par, nf_out=5):
     r"""Get a dictionary with the total (SM + new physics) values  of the
     $\Delta F=1$ Wilson coefficients at a given scale, given a
@@ -64,16 +86,16 @@ def wctot_dict(wc_obj, sector, scale, par, nf_out=5):
     zi = np.array([0, 0, 1, -1/6., 20, -10/3.])
     wc_sm[6] = wc_sm[6] - np.dot(yi, wc_sm[:6]) # c7 (not effective!)
     wc_sm[7] = wc_sm[7] - np.dot(zi, wc_sm[:6]) # c8 (not effective!)
+    wc_labels = fcnclabels[sector]
+    wc_sm_dict = dict(zip(wc_labels, wc_sm))
     # now here comes an ugly fix. If we have b->s transitions, we should take
     # into account the fact that C7' = C7*ms/mb, and the same for C8, which is
     # not completely negligible. To find out whether we have b->s, we look at
     # the "sector" string.
-    # if sector[:2] == 'bs':
-    #     eps_s = running.get_ms(par, scale)/running.get_mb(par, scale)
-    #     wc_sm[21] = eps_s * wc_sm[6]
-    #     wc_sm[22] = eps_s * wc_sm[7]
-    wc_labels = wc_obj.coefficients[sector]
-    wc_sm_dict =  dict(zip(wc_labels, wc_sm))
+    if sector[:2] == 'bs':
+        eps_s = running.get_ms(par, scale)/running.get_mb(par, scale)
+        wc_sm_dict['C7p_bs'] = eps_s * wc_sm_dict['C7_bs']
+        wc_sm_dict['C8p_bs'] = eps_s * wc_sm_dict['C8_bs']
     tot_dict = add_dict((wc_np_dict, wc_sm_dict))
     # add C7eff(p) and C8eff(p)
     tot_dict.update(get_C78eff(tot_dict, sector[:2]))
