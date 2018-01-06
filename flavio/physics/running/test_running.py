@@ -65,9 +65,13 @@ class TestRunning(unittest.TestCase):
         # compare to RunDec
         np.testing.assert_almost_equal(get_mb(par, 120.)/2.79211, 1,decimal=2)
         np.testing.assert_almost_equal(get_mt(par, 120.)/167.225, 1,decimal=2)
+
+    def test_polemasses(self):
         np.testing.assert_almost_equal(get_mb_pole(par, nl=2)/4.78248, 1,decimal=2)
         np.testing.assert_almost_equal(get_mc_pole(par, nl=2)/1.68375, 1,decimal=2)
         np.testing.assert_almost_equal(get_mb_pole(par, nl=3)/4.92987, 1,decimal=2)
+
+    def test_ksmass(self):
         # compare to 1107.3100
         # KS -> MSbar conversion
         self.assertAlmostEqual(

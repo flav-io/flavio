@@ -9,6 +9,7 @@ from flavio.config import config
 import copy
 from math import log, pi
 from wcxf.util import qcd
+import rundec
 
 
 def rg_evolve(initial_condition, derivative, scale_in, scale_out):
@@ -110,10 +111,7 @@ def get_nf(scale):
 def get_alpha_e(par, scale, nf_out=None):
     r"""Get the running $\overline{\mathrm{MS}}$ fine-structure constant
     $\alpha_e$ at the specified scale."""
-    if nf_out is not None:
-        nf = nf_out
-    else:
-        nf = get_nf(scale)
+    nf = nf_out or get_nf(scale)
     aeMZ = par['alpha_e']
     MZ = 91.1876  # m_Z treated as a constant here
     mt = config['RGE thresholds']['mt']
@@ -138,10 +136,7 @@ def get_alpha_e(par, scale, nf_out=None):
 def get_alpha_s(par, scale, nf_out=None):
     r"""Get the running $\overline{\mathrm{MS}}$ QCD coupling constant
     $\alpha_s$ at the specified scale."""
-    if nf_out is not None:
-        nf = nf_out
-    else:
-        nf = get_nf(scale)
+    nf = nf_out or get_nf(scale)
     return qcd.alpha_s(scale=scale, f=nf, alphasMZ=par['alpha_s'])
 
 
@@ -170,28 +165,33 @@ def get_mq(par, m_in, scale_in, scale_out, nf_out=None):
 
 def get_mb(par, scale, nf_out=None):
     r"""Get the running $b$ quark mass at the specified scale."""
-    m = par['m_b']
-    return get_mq(par=par, m_in=m, scale_in=m, scale_out=scale, nf_out=nf_out)
+    nf = nf_out or get_nf(scale)
+    return qcd.m_b(mbmb=par['m_b'], scale=scale, f=nf, alphasMZ=par['alpha_s'])
+
 
 def get_mc(par, scale, nf_out=None):
     r"""Get the running $c$ quark mass at the specified scale."""
-    m = par['m_c']
-    return get_mq(par=par, m_in=m, scale_in=m, scale_out=scale, nf_out=nf_out)
+    nf = nf_out or get_nf(scale)
+    return qcd.m_c(mcmc=par['m_c'], scale=scale, f=nf, alphasMZ=par['alpha_s'])
+
 
 def get_mu(par, scale, nf_out=None):
     r"""Get the running $u$ quark mass at the specified scale."""
-    m = par['m_u']
-    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale, nf_out=nf_out)
+    nf = nf_out or get_nf(scale)
+    return qcd.m_s(ms2=par['m_u'], scale=scale, f=nf, alphasMZ=par['alpha_s'])
+
 
 def get_md(par, scale, nf_out=None):
     r"""Get the running $d$ quark mass at the specified scale."""
-    m = par['m_d']
-    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale, nf_out=nf_out)
+    nf = nf_out or get_nf(scale)
+    return qcd.m_s(ms2=par['m_d'], scale=scale, f=nf, alphasMZ=par['alpha_s'])
+
 
 def get_ms(par, scale, nf_out=None):
     r"""Get the running $s$ quark mass at the specified scale."""
-    m = par['m_s']
-    return get_mq(par=par, m_in=m, scale_in=2.0, scale_out=scale, nf_out=nf_out)
+    nf = nf_out or get_nf(scale)
+    return qcd.m_s(ms2=par['m_s'], scale=scale, f=nf, alphasMZ=par['alpha_s'])
+
 
 def get_mc_pole(par, nl=2): # for mc, default to 2-loop conversion only due to renormalon ambiguity!
     r"""Get the $c$ quark pole mass, using the 2-loop conversion
@@ -200,10 +200,13 @@ def get_mc_pole(par, nl=2): # for mc, default to 2-loop conversion only due to r
     alpha_s = get_alpha(par, mcmc)['alpha_s']
     return _get_mc_pole(mcmc=mcmc, alpha_s=alpha_s, nl=nl)
 
+
 # cached version
 @lru_cache(maxsize=config['settings']['cache size'])
 def _get_mc_pole(mcmc, alpha_s, nl):
-    return masses.mMS2mOS(MS=mcmc, Nf=4, asmu=alpha_s, Mu=mcmc, nl=nl)
+    crd = rundec.CRunDec()
+    return crd.mMS2mOS(mcmc, None, alpha_s, mcmc, 4, nl)
+
 
 def get_mc_KS(par, scale):
     r"""Get the $c$ quark mass in the kinetic scheme."""
@@ -211,22 +214,27 @@ def get_mc_KS(par, scale):
     alpha_s = get_alpha(par, mcmc)['alpha_s']
     return _get_mb_KS(mbmb=mcmc, alpha_s=alpha_s, scale=scale, nl=3)
 
+
 # cached version
 @lru_cache(maxsize=config['settings']['cache size'])
 def _get_mc_KS(mcmc, alpha_s, scale, nl):
     return masses.mMS2mKS(MS=mcmc, Nf=3, asM=alpha_s, Mu=scale, nl=nl)
 
-def get_mb_pole(par, nl=2): # for mb, default to 2-loop conversion only due to renormalon ambiguity!
+
+def get_mb_pole(par, nl=2):  # for mb, default to 2-loop conversion only due to renormalon ambiguity!
     r"""Get the $b$ quark pole mass, using the 2-loop conversion
     formula from the $\overline{\mathrm{MS}}$ mass."""
     mbmb = par['m_b']
     alpha_s = get_alpha(par, mbmb)['alpha_s']
     return _get_mb_pole(mbmb=mbmb, alpha_s=alpha_s, nl=nl)
 
+
 # cached version
 @lru_cache(maxsize=config['settings']['cache size'])
 def _get_mb_pole(mbmb, alpha_s, nl):
-    return masses.mMS2mOS(MS=mbmb, Nf=5, asmu=alpha_s, Mu=mbmb, nl=nl)
+    crd = rundec.CRunDec()
+    return crd.mMS2mOS(mbmb, None, alpha_s, mbmb, 5, nl)
+
 
 def get_mb_KS(par, scale):
     r"""Get the $b$ quark mass in the kinetic scheme."""
@@ -234,11 +242,13 @@ def get_mb_KS(par, scale):
     alpha_s = get_alpha(par, mbmb)['alpha_s']
     return _get_mb_KS(mbmb=mbmb, alpha_s=alpha_s, scale=scale, nl=3)
 
+
 # cached version
 @lru_cache(maxsize=config['settings']['cache size'])
 def _get_mb_KS(mbmb, alpha_s, scale, nl):
     # see 1107.3100 for why Nf=4
     return masses.mMS2mKS(MS=mbmb, Nf=4, asM=alpha_s, Mu=scale, nl=nl)
+
 
 def get_mb_1S(par, scale, nl=3):
     r"""Get the $b$ quark mass in the 1S scheme."""
@@ -246,16 +256,27 @@ def get_mb_1S(par, scale, nl=3):
     alpha_s = get_alpha(par, mbmb)['alpha_s']
     return _get_mb_1S(mbmb=mbmb, alpha_s=alpha_s, scale=scale, nl=nl)
 
+
 # cached version
 @lru_cache(maxsize=config['settings']['cache size'])
 def _get_mb_1S(mbmb, alpha_s, scale, nl):
     return masses.mMS2m1S(MS=mbmb, Nf=5, asmu=alpha_s, Mu=scale, nl=nl)
 
+
 def get_mt(par, scale):
     r"""Get the running top quark mass at the specified scale."""
-    mt_pole = par['m_t']
-    alpha_s = get_alpha(par, scale)['alpha_s']
-    return masses.mOS2mMS(mOS=mt_pole, Nf=6, asmu=alpha_s, Mu=scale, nl=3)
+    return _get_mt(mt_pole=par['m_t'],
+                   alpha_s=get_alpha_s(par, scale),
+                   scale=scale)
+
+
+# cached version
+@lru_cache(maxsize=config['settings']['cache size'])
+def _get_mt(mt_pole, alpha_s, scale):
+    r"""Get the running top quark mass at the specified scale."""
+    crd = rundec.CRunDec()
+    return crd.mOS2mMS(mt_pole, None, alpha_s, scale, 6, 3)
+
 
 def make_wilson_rge_derivative(adm):
     if adm is None:
