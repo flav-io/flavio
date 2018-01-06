@@ -108,6 +108,8 @@ def get_nf(scale):
 
 
 def get_alpha_e(par, scale, nf_out=None):
+    r"""Get the running $\overline{\mathrm{MS}}$ fine-structure constant
+    $\alpha_e$ at the specified scale."""
     if nf_out is not None:
         nf = nf_out
     else:
@@ -132,12 +134,16 @@ def get_alpha_e(par, scale, nf_out=None):
     else:
         raise ValueError("Invalid value: nf_out={}".format(nf_out))
 
+
 def get_alpha_s(par, scale, nf_out=None):
+    r"""Get the running $\overline{\mathrm{MS}}$ QCD coupling constant
+    $\alpha_s$ at the specified scale."""
     if nf_out is not None:
         nf = nf_out
     else:
         nf = get_nf(scale)
     return qcd.alpha_s(scale=scale, f=nf, alphasMZ=par['alpha_s'])
+
 
 def get_alpha(par, scale, nf_out=None):
     r"""Get the running $\overline{\mathrm{MS}}$ $\alpha_s$ and $\alpha_e$
