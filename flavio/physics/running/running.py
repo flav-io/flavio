@@ -75,6 +75,8 @@ def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out, nf_out)
         7: np.inf,
         }
 
+
+@lru_cache(maxsize=config['settings']['cache size'])
 def run_alpha_e(alpha_e_in, scale_in, scale_out, n_u, n_d, n_e):
     """Get the electromagnetic fine structure constant at the scale `scale_out`,
     given its value at the scale `scale_in` and running with `n_u` dynamical
@@ -87,36 +89,62 @@ def run_alpha_e(alpha_e_in, scale_in, scale_out, n_u, n_d, n_e):
     return alpha_e_in / (1 + alpha_e_in * beta0 * log(scale_out/scale_in) / (2 * pi))
 
 
+def get_nf(scale):
+    """Guess the number of quark flavours based on the scale, if not
+    specified manually."""
+    mt = config['RGE thresholds']['mt']
+    mb = config['RGE thresholds']['mb']
+    mc = config['RGE thresholds']['mc']
+    if scale >= mt:
+        return 6
+    elif mb <= scale < mt:
+        return 5
+    elif mc <= scale < mb:
+        return 4
+    elif scale < mc:
+        return 3
+    else:
+        raise ValueError("Unexpected value: scale={}".format(scale))
+
+
 def get_alpha_e(par, scale, nf_out=None):
+    if nf_out is not None:
+        nf = nf_out
+    else:
+        nf = get_nf(scale)
     aeMZ = par['alpha_e']
     MZ = 91.1876  # m_Z treated as a constant here
     mt = config['RGE thresholds']['mt']
     mb = config['RGE thresholds']['mb']
     mc = config['RGE thresholds']['mc']
-    if nf_out == 5 or (nf_out is None and mb <= scale < mt):
+    if nf == 5:
         return run_alpha_e(aeMZ, MZ, scale, n_u=2, n_d=3, n_e=3)
-    elif nf_out == 6 or (nf_out is None and scale >= mt):
+    elif nf == 6:
         aemt = run_alpha_e(aeMZ, MZ, mt, n_u=2, n_d=3, n_e=3)
         return run_alpha_e(aemt, mt, scale, n_u=3, n_d=3, n_e=3)
-    elif nf_out == 4 or (nf_out is None and mc <= scale < mb):
+    elif nf == 4:
             aemb = run_alpha_e(aeMZ, MZ, mb, n_u=2, n_d=3, n_e=3)
             return run_alpha_e(aemb, mb, scale, n_u=2, n_d=2, n_e=3)
-    elif nf_out == 3 or (nf_out is None and scale < mc):
+    elif nf == 3:
         aemb = run_alpha_e(aeMZ, MZ, mb, n_u=2, n_d=3, n_e=3)
         aemc = run_alpha_e(aemb, mb, mc, n_u=2, n_d=2, n_e=3)
         return run_alpha_e(aemc, mc, scale, n_u=1, n_d=2, n_e=2)
     else:
         raise ValueError("Invalid value: nf_out={}".format(nf_out))
 
+def get_alpha_s(par, scale, nf_out=None):
+    if nf_out is not None:
+        nf = nf_out
+    else:
+        nf = get_nf(scale)
+    return qcd.alpha_s(scale=scale, f=nf, alphasMZ=par['alpha_s'])
 
 def get_alpha(par, scale, nf_out=None):
     r"""Get the running $\overline{\mathrm{MS}}$ $\alpha_s$ and $\alpha_e$
     at the specified scale.
     """
-    alpha_in = [par[('alpha_s')], par[('alpha_e')]]
-    scale_in = 91.1876 # m_Z treated as a constant here
-    alpha_out = rg_evolve_sm(alpha_in, betafunctions.betafunctions_qcd_qed_nf, scale_in, scale, nf_out=nf_out)
-    return dict(zip(('alpha_s','alpha_e'),alpha_out))
+    return {'alpha_e' : get_alpha_e(par, scale, nf_out=nf_out),
+            'alpha_s' : get_alpha_s(par, scale, nf_out=nf_out)}
 
 
 def _derivative_mq(x, mu, nf):
