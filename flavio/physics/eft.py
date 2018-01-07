@@ -143,11 +143,12 @@ class WilsonCoefficients(object):
         if basis != 'flavio':
             wc = wcxf.WC(eft, basis, scale, wcxf.WC.dict2values(wc_dict))
             self.set_initial_wcxf(wc)
-        all_wcs = wcxf.Basis[eft, basis].all_wcs
-        for name in wc_dict:
-            if name not in all_wcs:
-                raise KeyError("Wilson coefficient {} not known in basis ({}, {})".format(name, eft, basis))
-        self._initial = {'scale': scale, 'eft': eft, 'values': wc_dict}
+        else:
+            all_wcs = wcxf.Basis[eft, basis].all_wcs
+            for name in wc_dict:
+                if name not in all_wcs:
+                    raise KeyError("Wilson coefficient {} not known in basis ({}, {})".format(name, eft, basis))
+            self._initial = {'scale': scale, 'eft': eft, 'values': wc_dict}
 
     def set_initial_wcxf(self, wc):
         """Set initial values of Wilson coefficients from a WCxf WC instance.
@@ -157,14 +158,14 @@ class WilsonCoefficients(object):
         `wcxf` package."""
         if not isinstance(wc, wcxf.WC):
             raise ValueError("`wc` should be an instance of `wcxf.WC`")
-        if wc.eft not in ['WET', ]:
+        if wc.eft not in ['WET', 'WET-4', 'WET-3']:
             raise NotImplementedError("Matching from a different EFT is currently not implemented.")
         if wc.basis == 'flavio':
             wc_dict = wc.dict
         else:
             wc_trans = wc.translate('flavio')
             wc_dict = wc_trans.dict
-        self.set_initial(wc_dict, wc.scale)
+        self.set_initial(wc_dict, wc.scale, eft=wc.eft, basis='flavio')
 
     @property
     def get_initial_wcxf(self):
@@ -179,35 +180,37 @@ class WilsonCoefficients(object):
                                          values=wcxf.WC.dict2values(self._initial['values']))
         return self._initial_wcxf
 
-    def run_wcxf(self, wc, eft, scale, sectors=None):
+    def run_wcxf(self, wc, eft, scale, sectors='all'):
         """Run a set of Wilson coefficients (in the form of a `wcxf.WC`
         instance) to a different scale (and possibly different EFT)
         and return them as `wcxf.WC` instance in the flavio basis."""
         if wc.basis == 'flavio' and wc.eft == eft and scale == wc.scale:
             return wc  # nothing to do
-        wr = wetrunner.WET(wc.translate('Bern'))
+        elif wc.eft == eft and scale == wc.scale:
+            return wc.translate('flavio')
+        wr = wetrunner.WETrunner(wc.translate('Bern'))
         if eft == wc.eft:  # just run
             return wr.run(scale, sectors=sectors).translate('flavio')
         elif eft == 'WET-4' and wc.eft == 'WET':  # match at mb
             mb = config['RGE thresholds']['mb']
             wc_mb = wr.run(mb, sectors=sectors).match('WET-4', 'Bern')
-            wr4 = wetrunner.WET(wc_mb)
+            wr4 = wetrunner.WETrunner(wc_mb)
             return wr4.run(scale, sectors=sectors).translate('flavio')
         elif eft == 'WET-3' and wc.eft == 'WET-4':  # match at mc
             mc = config['RGE thresholds']['mc']
             wc_mc = wr.run(mc, sectors=sectors).match('WET-3', 'Bern')
-            wr3 = wetrunner.WET(wc_mc)
+            wr3 = wetrunner.WETrunner(wc_mc)
             return wr3.run(scale, sectors=sectors).translate('flavio')
         elif eft == 'WET-3' and wc.eft == 'WET':  # match at mb and mc
             mb = config['RGE thresholds']['mb']
             mc = config['RGE thresholds']['mc']
             wc_mb = wr.run(mb, sectors=sectors).match('WET-4', 'Bern')
-            wr4 = wetrunner.WET(wc_mb)
+            wr4 = wetrunner.WETrunner(wc_mb)
             wc_mc = wr4.run(scale, sectors=sectors).match('WET-3', 'Bern')
-            wr3 = wetrunner.WET(wc_mc)
+            wr3 = wetrunner.WETrunner(wc_mc)
             return wr3.run(scale, sectors=sectors).translate('flavio')
         else:
-            raise ValueError("Invalid input")
+            raise ValueError("Running from {} to {} not implemented".format(wc.eft, eft))
 
     def get_wc(self, sector, scale, par, eft='WET', basis='flavio', nf_out=None):
         """Get the values of the Wilson coefficients belonging to a specific
