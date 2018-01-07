@@ -148,21 +148,6 @@ def get_alpha(par, scale, nf_out=None):
             'alpha_s' : get_alpha_s(par, scale, nf_out=nf_out)}
 
 
-def _derivative_mq(x, mu, nf):
-    d_alphas = betafunctions.beta_qcd_qed([x[0],0], mu, nf)[0] # only alpha_s
-    d_m = masses.gamma_qcd(x[1], x[0], mu, nf)
-    return [ d_alphas, d_m ]
-def _derivative_mq_nf(nf):
-    return lambda x, mu: _derivative_mq(x, mu, nf)
-
-
-def get_mq(par, m_in, scale_in, scale_out, nf_out=None):
-    alphas_in = get_alpha(par, scale_in, nf_out=nf_out)['alpha_s']
-    x_in = [alphas_in, m_in]
-    sol = rg_evolve_sm(x_in, _derivative_mq_nf, scale_in, scale_out, nf_out=nf_out)
-    return sol[1]
-
-
 def get_mb(par, scale, nf_out=None):
     r"""Get the running $b$ quark mass at the specified scale."""
     nf = nf_out or get_nf(scale)
