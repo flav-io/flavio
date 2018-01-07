@@ -5,16 +5,14 @@ import numpy as np
 from .config import config
 from collections import OrderedDict, defaultdict
 import copy
-import math
 from flavio._parse_errors import constraints_from_string, \
-                                 convolve_distributions, errors_from_string, \
-                                 dict2dist
-from flavio.statistics.probability import class_from_string, string_to_class
-import scipy.stats
+    convolve_distributions, dict2dist
+from flavio.statistics.probability import string_to_class
 import warnings
 import yaml
 import inspect
 import urllib.parse
+
 
 class NamedInstanceMetaclass(type):
     # this is just needed to implement the getitem method on NamedInstanceClass
@@ -26,6 +24,7 @@ class NamedInstanceMetaclass(type):
 
     def __delitem__(cls, item):
         return cls.del_instance(item)
+
 
 class NamedInstanceClass(object, metaclass=NamedInstanceMetaclass):
     """Base class for classes that have named instances that can be accessed
@@ -69,8 +68,6 @@ class NamedInstanceClass(object, metaclass=NamedInstanceMetaclass):
         self.description = description
 
 
-
-########## Parameter Class ##########
 class Parameter(NamedInstanceClass):
     """This class holds parameters (e.g. masses and lifetimes). It requires a
     name string and also allows to set a LaTeX name and description as
@@ -92,7 +89,6 @@ class Parameter(NamedInstanceClass):
         self.tex = ''
 
 
-########## Constraints Class ##########
 class Constraints(object):
     """Constraints are collections of probability distributions associated
     to objects like parameters or measurements. This is the base class of
@@ -168,10 +164,10 @@ class Constraints(object):
         if constraint_string is not None:
             pds = constraints_from_string(constraint_string)
         elif constraint_dict is not None:
-            pds =  dict2dist(constraint_dict)
+            pds = dict2dist(constraint_dict)
         else:
             raise TypeError("Either constraint_string or constraint_dict have"
-                             " to be specified.")
+                            " to be specified.")
         combined_pd = convolve_distributions(pds)
         self.add_constraint([parameter], combined_pd)
 
@@ -238,10 +234,8 @@ class Constraints(object):
         for parameter, constraints in self._parameters.items():
             num, constraint = constraints
             idx = ([constraint for constraint, _ in self._constraints]).index(constraint)
-            error_dict[parameter] = (
-                                        np.ravel([errors_right[idx]])[num],
-                                        np.ravel([errors_left[idx]])[num]
-                                    )
+            error_dict[parameter] = (np.ravel([errors_right[idx]])[num],
+                                     np.ravel([errors_left[idx]])[num])
         return error_dict
 
     def get_logprobability_all(self, par_dict, exclude_parameters=[]):
@@ -278,9 +272,8 @@ class Constraints(object):
                     # no parameter has been excluded
                     exclude = None
                 else:
-                    exclude = tuple(i
-                        for i, p in enumerate(parameters)
-                        if p not in p_cons)
+                    exclude = tuple(i for i, p in enumerate(parameters)
+                                    if p not in p_cons)
                 prob_dict[constraint] = constraint.logpdf(x, exclude=exclude)
         return prob_dict
 
@@ -314,7 +307,7 @@ class Constraints(object):
             data.append(d)
         args = inspect.signature(self.__class__).parameters.keys()
         meta = {k: v for k, v in self.__dict__.items()
-                         if k[0] != '_' and v != '' and k not in args}
+                if k[0] != '_' and v != '' and k not in args}
         if not args and not meta:
             return data
         else:
@@ -355,7 +348,7 @@ class Constraints(object):
             inst.add_constraint(parameters, dist(**v))
         return inst
 
-########## ParameterConstraints Class ##########
+
 class ParameterConstraints(Constraints):
     """
     """
@@ -363,7 +356,7 @@ class ParameterConstraints(Constraints):
     def __init__(self):
         super().__init__()
 
-########## WilsonCoefficientPriors Class ##########
+
 class WilsonCoefficientPriors(Constraints):
     """
     """
@@ -378,11 +371,12 @@ def tree():
     See https://gist.github.com/hrldcpr/2012250"""
     return defaultdict(tree)
 
+
 def dicts(t):
     """Turn tree into nested dict"""
     return {k: dicts(t[k]) for k in t}
 
-########## Observable Class ##########
+
 class Observable(NamedInstanceClass):
     """An Observable is something that can be measured experimentally and
     predicted theoretically."""
@@ -403,7 +397,7 @@ class Observable(NamedInstanceClass):
         if self.tex:
             md += "Observable: {}\n\n".format(self.tex)
         if self.description:
-            md  += "Description: {}\n\n".format(self.description)
+            md += "Description: {}\n\n".format(self.description)
         if self.arguments is not None:
             md += "Arguments: "
             md += ','.join(["`{}`".format(a) for a in self.arguments])
@@ -430,7 +424,7 @@ class Observable(NamedInstanceClass):
         'Category :: Subcategory :: Subsubcategory'
         etc. LaTeX code is allowed. One observable can also have multiple
         taxonomies (e.g. 'Animal :: Cat' and 'Pet :: Favourite Pet')"""
-        taxonomy_list = taxonomy_string.split(' :: ') + [ self.name ]
+        taxonomy_list = taxonomy_string.split(' :: ') + [self.name]
         t = self.__class__.taxonomy
         for node in taxonomy_list:
             t = t[node]
@@ -477,13 +471,13 @@ class Observable(NamedInstanceClass):
                 "The observable {} does not have a prediction yet".format(observable)
         obs_obj = cls(name, arguments=Observable[observables[0]].arguments)
         pfcts = [Observable[observable].prediction.function
-                for observable in observables]
+                 for observable in observables]
         def pfct(*args, **kwargs):
             return function(*[f(*args, **kwargs) for f in pfcts])
         Prediction(name, pfct)
         return obs_obj
 
-########## AuxiliaryQuantity Class ##########
+
 class AuxiliaryQuantity(NamedInstanceClass):
     """An auxiliary quantity is something that can be computed theoretically but
     not measured directly, e.g. some sub-contribution to an amplitude or a form
@@ -509,8 +503,6 @@ class AuxiliaryQuantity(NamedInstanceClass):
         return implementation.get(par_dict, wc_obj, *args, **kwargs)
 
 
-
-########## Prediction Class ##########
 class Prediction(object):
     """A prediction is the theoretical prediction for an observable."""
 
@@ -532,7 +524,6 @@ class Prediction(object):
         return self.function(wc_obj, par_dict, *args, **kwargs)
 
 
-########## Implementation Class ##########
 class Implementation(NamedInstanceClass):
     """An implementation is the theoretical prediction for an auxiliary
     quantity."""
@@ -569,7 +560,6 @@ class Implementation(NamedInstanceClass):
         return self.function(wc_obj, par_dict, *args, **kwargs)
 
 
-########## Measurement Class ##########
 class Measurement(Constraints, NamedInstanceClass):
     """A (experimental) measurement associates one (or several) probability
     distributions to one (or several) observables. If it contains several
@@ -585,8 +575,8 @@ class Measurement(Constraints, NamedInstanceClass):
     where `constraint` is an instance of a descendant of
     ProbabilityDistribution and `observables` is a list of either
      - a string observable name in the case of observables without arguments
-     - or a tuple `(name, x_1, ..., x_n)`, where the `x_i` are float values for the
-       arguments, of an observable with `n` arguments.
+     - or a tuple `(name, x_1, ..., x_n)`, where the `x_i` are float values for
+       the arguments, of an observable with `n` arguments.
     """
 
     def __init__(self, name):

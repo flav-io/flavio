@@ -4,11 +4,12 @@ import yaml
 import pkgutil
 from flavio.classes import *
 from flavio.statistics.probability import *
-import csv
+from flavio._parse_errors import errors_from_string
 import flavio
 import re
 from flavio.measurements import _fix_correlation_matrix
 from math import sqrt
+
 
 def _read_yaml_object_metadata(obj, constraints):
     parameters = yaml.load(obj)
