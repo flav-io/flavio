@@ -58,6 +58,11 @@ class TestEFT(unittest.TestCase):
             fwc.set_initial_wcxf(wc)
             self.assertAlmostEqual(fwc.get_wc('sdsd', 120, par, eft=eft)['CVLL_sdsd'], 1j)
 
+    def tets_repr(self):
+        wc = WilsonCoefficients()
+        wc._repr_markdown_()
+        wc.set_initial({'C7_bs': -0.1}, 5)
+        wc._repr_markdown_()
 
     def test_run_wcxf(self):
         for eft in [('WET', 'WET', 120, 120), ('WET', 'WET-4', 120, 3), ('WET', 'WET-3', 120, 2),

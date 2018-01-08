@@ -131,6 +131,16 @@ class WilsonCoefficients(object):
         self._initial_wcxf = None
         self._cache = {}
 
+    def _repr_markdown_(self):
+        wc_wcxf = self.get_initial_wcxf
+        r_wcxf = wc_wcxf._repr_markdown_()
+        r_wcxf = '\n'.join(r_wcxf.splitlines()[2:])  # remove WCxf heading
+        md = "## flavio Wilson coefficients\n\n"
+        md += "### Initial values:\n\n"
+        md += r_wcxf
+        return md
+
+
     def set_initial(self, wc_dict, scale, eft='WET', basis='flavio'):
         """Set initial values of Wilson coefficients.
 
