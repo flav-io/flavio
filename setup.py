@@ -30,7 +30,7 @@ setup(name='flavio',
                 ]
       },
       install_requires=['numpy', 'scipy>=0.14', 'setuptools>=3.3', 'pyyaml', 'mpmath',
-                        'wcxf>=1.2', 'ckmutil', ],
+                        'wcxf>=1.2.1', 'ckmutil', 'wetrunner'],
       extras_require={
             'testing': ['nose'],
             'plotting': ['matplotlib>=1.4'],
