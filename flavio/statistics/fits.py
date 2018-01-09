@@ -31,6 +31,8 @@ class Fit(flavio.NamedInstanceClass):
                  input_scale=160.,
                  exclude_measurements=None,
                  include_measurements=None,
+                 fit_wc_eft='WET',
+                 fit_wc_basis='flavio',
                 ):
         if fit_parameters is None:
             self.fit_parameters = []
@@ -96,6 +98,8 @@ class Fit(flavio.NamedInstanceClass):
         assert missing_obs == set(), "No measurement found for the observables: " + str(missing_obs)
 
         self.dimension = len(self.fit_parameters) + len(self.nuisance_parameters) + len(self.fit_wc_names)
+        self.eft = fit_wc_eft
+        self.basis = fit_wc_basis
 
     @property
     def get_central_fit_parameters(self):
@@ -291,7 +295,8 @@ class Fit(flavio.NamedInstanceClass):
         if not self.fit_wc_names:
             return wc_obj
         d = self.array_to_dict(x)
-        wc_obj.set_initial(self.fit_wc_function(**d['fit_wc']), self.input_scale)
+        wc_obj.set_initial(self.fit_wc_function(**d['fit_wc']), self.input_scale,
+                           eft=self.eft, basis=self.basis)
         return wc_obj
 
     def log_prior_parameters(self, x):
