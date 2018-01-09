@@ -5,8 +5,7 @@ from flavio.physics.mesonmixing import amplitude
 from flavio.physics.mesonmixing import common
 from flavio.physics import ckm
 from flavio.config import config
-from math import sqrt, sin
-from cmath import phase
+from math import sqrt
 from flavio.physics.common import conjugate_par
 from flavio.classes import Observable, Prediction
 
@@ -74,13 +73,13 @@ o = Observable('DeltaM_s')
 o.set_description(r"Mass difference in the $B_s$-$\bar B_s$ system")
 o.tex = r"$\Delta M_s$"
 o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B_s$-$\bar B_s$ mixing')
-Prediction('DeltaM_s', lambda wc_obj, par: DeltaM(wc_obj, par, 'Bs'))
+Prediction('DeltaM_s', lambda wc_obj, par: abs(DeltaM(wc_obj, par, 'Bs')))
 
 o = Observable('DeltaM_d')
 o.set_description(r"Mass difference in the $B^0$-$\bar B^0$ system")
 o.tex = r"$\Delta M_d$"
 o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B^0$-$\bar B^0$ mixing')
-Prediction('DeltaM_d', lambda wc_obj, par: DeltaM(wc_obj, par, 'B0'))
+Prediction('DeltaM_d', lambda wc_obj, par: abs(DeltaM(wc_obj, par, 'B0')))
 
 o = Observable('a_fs_s')
 o.set_description(r"CP asymmetry in flavour-specific $B_s$ decays")
