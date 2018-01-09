@@ -164,7 +164,7 @@ def diff_plot_th_err(obs_name, x_min, x_max, wc=None, steps=100,
                     **fill_args)
 
 
-def bin_plot_th(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **kwargs):
+def bin_plot_th(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, threads=1, **kwargs):
     r"""Plot the binned theory prediction with uncertainties of an observable
     dependending on a continuous parameter, e.g. $q^2$ (in the form of coloured
     boxes).
@@ -193,10 +193,10 @@ def bin_plot_th(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, **kwar
     if wc is None:
         wc = flavio.physics.eft._wc_sm # SM Wilson coefficients
         obs_dict = {bin_: flavio.sm_prediction(obs_name, *bin_) for bin_ in bin_list}
-        obs_err_dict = {bin_: flavio.sm_uncertainty(obs_name, *bin_, N=N) for bin_ in bin_list}
+        obs_err_dict = {bin_: flavio.sm_uncertainty(obs_name, *bin_, N=N, threads=threads) for bin_ in bin_list}
     else:
         obs_dict = {bin_:flavio.np_prediction(obs_name, wc, *bin_) for bin_ in bin_list}
-        obs_err_dict = {bin_: flavio.np_uncertainty(obs_name, wc, *bin_, N=N) for bin_ in bin_list}
+        obs_err_dict = {bin_: flavio.np_uncertainty(obs_name, wc, *bin_, N=N, threads=threads) for bin_ in bin_list}
     ax = plt.gca()
     for _i, (bin_, central_) in enumerate(obs_dict.items()):
         xmin, xmax = bin_
@@ -252,6 +252,7 @@ def bin_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measure
     if not obs.arguments or len(obs.arguments) != 2:
         raise ValueError(r"Only observables that depend on the two bin boundaries (and nothing else) are allowed")
     _experiment_labels = [] # list of experiments appearing in the plot legend
+    bins = []
     for m_name, m_obj in flavio.Measurement.instances.items():
         if include_measurements is not None and m_name not in include_measurements:
             continue
@@ -266,7 +267,6 @@ def bin_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measure
         dx = []
         dy_lower = []
         dy_upper = []
-        bins = []
         for _, xmin, xmax in obs_name_list_binned:
             if include_bins is not None:
                 if exclude_bins is not None:
