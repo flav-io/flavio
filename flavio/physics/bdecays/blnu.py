@@ -30,19 +30,22 @@ def br_blnu(wc_obj, par, B, lep):
 
 def _br_blnu(wc_obj, par, B, lep, nu):
     r"""Branching ratio of $B_q\to\ell^+\nu_\ell$."""
+    bq = meson_quark[B]
     # CKM element
-    Vub = flavio.physics.ckm.get_ckm(par)[0,2]
+    if bq == 'bc':
+        Vxb = flavio.physics.ckm.get_ckm(par)[1,2]
+    elif bq == 'bu':
+        Vxb = flavio.physics.ckm.get_ckm(par)[0,2]
     # renormalization scale
     scale = flavio.config['renormalization scale']['bll']
     # Wilson coefficients
-    bq = meson_quark[B]
     wc = wc_obj.get_wc(bq + lep + 'nu' + nu, scale, par)
     # add SM contribution to Wilson coefficient
     if lep == nu:
         wc['CVL_'+bq+lep+'nu'+nu] += flavio.physics.bdecays.wilsoncoefficients.get_CVLSM(par, scale, nf=5)
     mb = flavio.physics.running.running.get_mb(par, scale)
     mu = 0  # neglecting up quark mass
-    return br_plnu_general(wc, par, Vub, B, bq, lep, nu, mb, mu, delta=0)
+    return br_plnu_general(wc, par, Vxb, B, bq, lep, nu, mb, mu, delta=0)
 
 # function returning function needed for prediction instance
 def br_blnu_fct(B, lep):

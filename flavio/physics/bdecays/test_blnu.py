@@ -23,8 +23,14 @@ class TestBlnu(unittest.TestCase):
             )/(par['m_e']**2/par['m_mu']**2),
             1,
             delta=0.001) # there are corrections of order mmu**2/mB**2
-        # check that Bc->taunu works without errors
-        flavio.sm_prediction('BR(Bc->taunu)')
+        # check that Bc->taunu is larger by Vcb^2/Vub^2 (and more due to decay constant)
+        self.assertAlmostEqual(
+            (flavio.Observable["BR(Bc->taunu)"].prediction_central(constraints, wc_obj) / 0.04**2)
+            /
+            (flavio.Observable["BR(B+->taunu)"].prediction_central(constraints, wc_obj) / 0.0036**2),
+            3,
+            delta=1.5  # very rough
+            )
 
     def test_blnu_nu(self):
         wc_sm = flavio.WilsonCoefficients()
