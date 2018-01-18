@@ -3168,6 +3168,12 @@ LHCb RD* 2015:
   values:
     Rtaumu(B->D*lnu): 0.336 ± 0.027 ± 0.030
 
+LHCb RD* 2017:
+  experiment: LHCb
+  inspire: Aaij:2017uff
+  values:
+    Rtaumu(B->D*lnu): 0.286 ± 0.019 ± 0.025 ± 0.021
+
 CMS Bs->mumu 2013:
   experiment: CMS
   inspire: Chatrchyan:2013bka
