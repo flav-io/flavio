@@ -218,8 +218,8 @@ def get_wceff_fccc(wc_obj, par, qiqj, lep, nu, mqi, scale, nf=5):
     c['sp'] = 1/2 * wc['CSL_'+qqlnu]/2.
     c['p']  = -1/2 * wc['CSR_'+qqlnu]/2.
     c['pp'] = -1/2 * wc['CSL_'+qqlnu]/2.
-    c['t']  = wc['CT_'+qqlnu]
-    c['tp'] = 0
+    c['t']  = 0
+    c['tp'] = wc['CT_'+qqlnu]
     return c
 
 
