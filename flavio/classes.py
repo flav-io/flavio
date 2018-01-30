@@ -187,8 +187,15 @@ class Constraints(object):
             raise ValueError('No constraints applied to parameter/observable ' + parameter)
         else:
             num, constraint = self._parameters[parameter]
-            # return the num-th entry of the central value vector
-            return np.ravel([constraint.central_value])[num]
+            cv = constraint.central_value
+            if np.isscalar(cv):
+                if num == 0:
+                    return cv
+                else:
+                    raise ValueError("Something went wrong when getting the central value of {}".format(parameter))
+            else:
+                # return the num-th entry of the central value vector
+                return cv[num]
 
     def get_central_all(self):
         """Get central values of all constrained parameters."""
