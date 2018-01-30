@@ -106,7 +106,7 @@ o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B^0$-$\bar B^0$ mixing')
 Prediction('DeltaGamma_d', lambda wc_obj, par: DeltaGamma(wc_obj, par, 'B0'))
 
 o = Observable('eps_K')
-o.set_description(r"Direct CP violation parameter in the $K^0$-$\bar K^0$ system")
+o.set_description(r"Indirect CP violation parameter in the $K^0$-$\bar K^0$ system")
 o.tex = r"$\vert\epsilon_K\vert$"
 o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $K^0$-$\bar K^0$ mixing')
 Prediction('eps_K', epsK)
