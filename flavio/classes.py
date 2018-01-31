@@ -205,13 +205,12 @@ class Constraints(object):
         """Get random values for all constrained parameters where they are
         distributed according to the probability distribution applied."""
         # first, generate random values for every single one of the constraints
-        random_constraints = [constraint.get_random() for constraint, _ in self._constraints]
+        random_constraints = {constraint: constraint.get_random() for constraint, _ in self._constraints}
         random_dict = {}
         # now, iterate over the parameters
         for parameter, constraints in self._parameters.items():
             num, constraint = constraints
-            idx = ([constraint for constraint, _ in self._constraints]).index(constraint)
-            random_dict[parameter] = np.ravel([random_constraints[idx]])[num]
+            random_dict[parameter] = np.ravel([random_constraints[constraint]])[num]
         return random_dict
 
     def get_1d_errors(self, N=1000):
