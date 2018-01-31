@@ -38,3 +38,13 @@ class TestParseErrors(unittest.TestCase):
         pds = flavio._parse_errors.constraints_from_string('[ -1e-2,5e-2]e15')
         self.assertEqual(pds[0].central_value, 2e13)
         self.assertEqual(pds[0].half_range, 3e13)
+
+    def test_parse_lognormal(self):
+        for s in ['1 */ 1.5', ' 1.0 /* 1.5', '1e0*/1.5']:
+            pds = flavio._parse_errors.constraints_from_string(s)
+            self.assertEqual(pds[0].central_value, 1)
+            self.assertEqual(pds[0].factor, 1.5)
+        for s in ['1e-3 */ 1.5', ' 1.0E-03 /* 1.5', '0.001 */1.5']:
+            pds = flavio._parse_errors.constraints_from_string(s)
+            self.assertEqual(pds[0].central_value, 1e-3)
+            self.assertEqual(pds[0].factor, 1.5)

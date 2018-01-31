@@ -38,6 +38,21 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(len(pdf_p_1.get_random(10)), 10)
         self.assertEqual(len(pdf_p_2.get_random(10)), 10)
 
+    def test_lognormal(self):
+        with self.assertRaises(ValueError):
+            LogNormalDistribution(1, 0.8)
+        with self.assertRaises(ValueError):
+            LogNormalDistribution(1, -1.2)
+        pdf = LogNormalDistribution(3, 2)
+        self.assertAlmostEqual(pdf.get_error_left(), 1.5)
+        self.assertAlmostEqual(pdf.get_error_right(), 3)
+        pdf2 = LogNormalDistribution(-3, 2)
+        self.assertAlmostEqual(pdf2.get_error_right(), 1.5)
+        self.assertAlmostEqual(pdf2.get_error_left(), 3)
+        self.assertEqual(pdf2.pdf(-2.7), pdf.pdf(2.7))
+        self.assertEqual(pdf2.cdf(-2.7), 1 - pdf.cdf(2.7))
+        self.assertEqual(pdf2.ppf(0.25), -pdf.ppf(0.75))
+
     def test_limit(self):
         p1 = GaussianUpperLimit(2*1.78, 0.9544997)
         p2 = HalfNormalDistribution(0, 1.78)
@@ -483,7 +498,9 @@ class TestProbability(unittest.TestCase):
             self.assertEqual(string_to_class(v.__name__), v)
         self.assertEqual(class_from_string_old,
                         {k: v for k, v in class_from_string.items()
-                         if v != KernelDensityEstimate})
+                         if v != KernelDensityEstimate
+                         and v != LogNormalDistribution},
+                         msg="Failed for {}".format(k))
 
     def test_get_yaml(self):
         """Test the test_get_yaml method of all PDs"""

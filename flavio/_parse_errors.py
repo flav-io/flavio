@@ -7,6 +7,8 @@ _pattern_upperlimit = re.compile(r"^\s*<\s*([-+]?\d+\.?\d*)([eE][-+]?\d+)?\s*@\s
 _pattern_brackets = re.compile(r"^\s*\(?\s*(-?\d+\.?\d*)\s*((?:\(\s*\d+\.?\d*\s*\)\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
 # for strings of the form '(1.67 +- 0.3 +- 0.5) * 1e-3'
 _pattern_plusminus = re.compile(r"^\s*\(?\s*(-?\d+\.?\d*)\s*((?:[+\-±\\pm]+\s*\d+\.?\d*\s*)+)\)?\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
+# for strings of the form '(1.67 */ 1.5) * 1e-3'
+_pattern_timesby = re.compile(r"^\s*([-+]?\d+\.?\d*)([eE][-+]?\d+)?\s*(?:\*/|/\*)\s*(\d+\.?\d*)$")
 # for strings of the form '[1, 5] 1e-3'
 _pattern_range = re.compile(r"^\s*\[\s*(-?\d+\.?\d*)\s*([eE][-+]?\d+)?\s*\,\s*(-?\d+\.?\d*)\s*([eE][-+]?\d+)?\s*\]\s*\*?\s*(?:(?:e|E|1e|1E|10\^)\(?([+-]?\d+)\)?)?$")
 
@@ -71,6 +73,19 @@ def limit_from_string(constraint_string):
         limit = float(sg + ex)
     cl = float(cl_pc)/100.
     return limit, cl
+
+
+def lognormal_from_string(constraint_string):
+    m = _pattern_timesby.match(constraint_string)
+    if m is None:
+        raise ValueError("Constraint " + constraint_string + " not understood")
+    cv, ex, fac = m.groups()
+    if ex is None:
+        cv = float(cv)
+    else:
+        cv = float(cv + ex)
+    return cv, float(fac)
+
 
 def range_from_string(constraint_string):
     m = _pattern_range.match(constraint_string)
@@ -140,6 +155,9 @@ def constraints_from_string(constraint_string):
     elif _pattern_range.match(constraint_string):
         central_value, half_range = range_from_string(constraint_string)
         return [UniformDistribution(central_value, half_range)]
+    elif _pattern_timesby.match(constraint_string):
+        central_value, factor = lognormal_from_string(constraint_string)
+        return [LogNormalDistribution(central_value, factor)]
     elif _pattern_brackets.match(constraint_string) or _pattern_plusminus.match(constraint_string):
         errors = errors_from_string(constraint_string)
         if 'symmetric_errors' not in errors and 'asymmetric_errors' not in errors:

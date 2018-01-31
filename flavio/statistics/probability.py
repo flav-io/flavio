@@ -259,6 +259,89 @@ class NormalDistribution(ProbabilityDistribution):
         return nsigma * self.standard_deviation
 
 
+class LogNormalDistribution(ProbabilityDistribution):
+    """Univariate log-normal distribution."""
+
+    def __init__(self, central_value, factor):
+        r"""Initialize the distribution.
+
+        Parameters:
+
+        - central_value: median of the distribution (neither mode nor mean!).
+          Can be positive or negative, but must be nonzero.
+        - factor: must be larger than 1. 68% of the probability will be between
+          `central_value * factor` and `central_value / factor`.
+
+        The mean and standard deviation of the underlying normal distribution
+        correspond to `log(abs(central_value))` and `log(factor)`, respectively.
+
+        Example:
+
+        `LogNormalDistribution(central_value=3, factor=2)`
+
+        corresponds to the distribution of the exponential of a normally
+        distributed variable with mean ln(3) and standard deviation ln(2).
+        68% of the probability is within 6=3*2 and 1.5=4/2.
+        """
+        if central_value == 0:
+            raise ValueError("Central value must not be zero")
+        if factor <= 1:
+            raise ValueError("Factor must be bigger than 1")
+        self.factor = factor
+        self.log_standard_deviation = np.log(factor)
+        self.log_central_value = math.log(abs(central_value))
+        if central_value < 0:
+            self.central_sign = -1
+            slim = math.exp(math.log(abs(central_value))
+                            - 6 * self.log_standard_deviation)
+            super().__init__(central_value,
+                             support=(slim, 0))
+        else:
+            self.central_sign = +1
+            slim = math.exp(math.log(abs(central_value))
+                            + 6 * self.log_standard_deviation)
+            super().__init__(central_value,
+                             support=(0, slim))
+
+    def __repr__(self):
+        return 'flavio.statistics.probability.LogNormalDistribution' + \
+               '({}, {})'.format(self.central_value, self.factor)
+
+    def get_random(self, size=None):
+        s = self.central_sign
+        return s * np.random.lognormal(self.log_central_value, self.log_standard_deviation, size)
+
+    def logpdf(self, x):
+        s = self.central_sign
+        return scipy.stats.lognorm.logpdf(s * x, scale=np.exp(self.log_central_value), s=self.log_standard_deviation)
+
+    def pdf(self, x):
+        s = self.central_sign
+        return scipy.stats.lognorm.pdf(s * x, scale=np.exp(self.log_central_value), s=self.log_standard_deviation)
+
+    def cdf(self, x):
+        if self.central_sign == -1:
+            return 1 - scipy.stats.lognorm.cdf(-x, scale=np.exp(self.log_central_value), s=self.log_standard_deviation)
+        else:
+            return scipy.stats.lognorm.cdf(x, scale=np.exp(self.log_central_value), s=self.log_standard_deviation)
+
+    def ppf(self, x):
+        if self.central_sign == -1:
+            return -scipy.stats.lognorm.ppf(1 - x, scale=np.exp(self.log_central_value), s=self.log_standard_deviation)
+        else:
+            return scipy.stats.lognorm.ppf(x, scale=np.exp(self.log_central_value), s=self.log_standard_deviation)
+
+    def get_error_left(self, nsigma=1):
+        """Return the lower error"""
+        cl = confidence_level(nsigma)
+        return self.central_value - self.ppf(0.5 - cl/2.)
+
+    def get_error_right(self, nsigma=1):
+        """Return the upper error"""
+        cl = confidence_level(nsigma)
+        return self.ppf(0.5 + cl/2.) - self.central_value
+
+
 class AsymmetricNormalDistribution(ProbabilityDistribution):
     """An asymmetric normal distribution obtained by gluing together two
     half-Gaussians and demanding the PDF to be continuous."""
