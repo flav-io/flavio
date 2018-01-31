@@ -23,16 +23,17 @@ def bag_msbar2rgi(alpha_s, meson):
 
 def DeltaM(M12, G12):
     r"""Meson mixing mass difference $\Delta M$ as a function of $M_{12}$ and
-    $\Gamma_{12}$."""
+    $\Gamma_{12}$, defined as $M_2-M_1$."""
     return -2*(q_over_p(M12, G12)*(M12-1j/2.*G12)).real
 
 def DeltaGamma(M12, G12):
     r"""Meson mixing decay width difference $\Delta\Gamma$ as a function of
-    $M_{12}$ and $\Gamma_{12}$."""
+    $M_{12}$ and $\Gamma_{12}$, defined as $\Gamma_1-\Gamma_2$."""
     return -4*(q_over_p(M12, G12)*(M12-1j/2.*G12)).imag
 
 def q_over_p(M12, G12):
-    r"""Ratio $q/p$ as a function of $M_{12}$ and $\Gamma_{12}$."""
+    r"""Ratio $q/p$ as a function of $M_{12}$ and $\Gamma_{12}$.
+    The sign is chosen such that $\Delta M$ is positive in the $B$ system."""
     return -cmath.sqrt((2*M12.conjugate()-1j*G12.conjugate())/(2*M12-1j*G12))
 
 def a_fs(M12, G12):

@@ -56,10 +56,10 @@ class TestMesonMixing(unittest.TestCase):
         m12s = amplitude.M12_d(par, wc_Bs, 'Bs')
         # check whether order of magnitudes of SM predictions are right
         ps = 1e-12*s
-        self.assertAlmostEqual(observables.DeltaM(wc_obj, par, 'B0')*ps, 0.55, places=0)
-        self.assertAlmostEqual(observables.DeltaM(wc_obj, par, 'Bs')*ps, 18, places=-1)
-        self.assertAlmostEqual(observables.DeltaGamma(wc_obj, par, 'B0')/0.00261*ps, 1, places=0)
-        self.assertAlmostEqual(observables.DeltaGamma(wc_obj, par, 'Bs')/0.088*ps, 1, places=0)
+        self.assertAlmostEqual(observables.DeltaM_positive(wc_obj, par, 'B0')*ps, 0.55, places=0)
+        self.assertAlmostEqual(observables.DeltaM_positive(wc_obj, par, 'Bs')*ps, 18, places=-1)
+        self.assertAlmostEqual(observables.DeltaGamma_B(wc_obj, par, 'B0')/0.00261*ps, 1, places=0)
+        self.assertAlmostEqual(observables.DeltaGamma_B(wc_obj, par, 'Bs')/0.088*ps, 1, places=0)
         self.assertAlmostEqual(observables.a_fs(wc_obj, par, 'B0')/-4.7e-4, 1, places=0)
         self.assertAlmostEqual(observables.a_fs(wc_obj, par, 'Bs')/2.22e-5, 1, places=0)
         self.assertAlmostEqual(observables.S_BJpsiK(wc_obj, par), 0.73, places=1)
@@ -83,7 +83,7 @@ class TestMesonMixing(unittest.TestCase):
         M12 = (GF**2 * mW**2/12/pi**2 * etaB * mBs * fBs**2 * BBsh
                * S0 * (V[2,2] * V[2,1].conj())**2)
         self.assertAlmostEqual(amplitude.M12_d(w_par, wc_Bs, 'Bs')/M12, 1, delta=0.01)
-        self.assertAlmostEqual(observables.DeltaM(wc_obj, w_par, 'Bs')*ps, 18.3, delta=0.2)
+        self.assertAlmostEqual(observables.DeltaM_positive(wc_obj, w_par, 'Bs')*ps, 18.3, delta=0.2)
 
     def test_bmixing_classes(self):
         ps = 1e-12*s
