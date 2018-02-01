@@ -44,8 +44,11 @@ def _br_blnu(wc_obj, par, B, lep, nu):
     if lep == nu:
         wc['CVL_'+bq+lep+'nu'+nu] += flavio.physics.bdecays.wilsoncoefficients.get_CVLSM(par, scale, nf=5)
     mb = flavio.physics.running.running.get_mb(par, scale)
-    mu = 0  # neglecting up quark mass
-    return br_plnu_general(wc, par, Vxb, B, bq, lep, nu, mb, mu, delta=0)
+    if B == 'B+':
+        mq = 0  # neglecting up quark mass
+    elif B == 'Bc':
+        mq = flavio.physics.running.running.get_mc(par, scale)
+    return br_plnu_general(wc, par, Vxb, B, bq, lep, nu, mb, mq, delta=0)
 
 # function returning function needed for prediction instance
 def br_blnu_fct(B, lep):
