@@ -71,11 +71,20 @@ def y(wc_obj, par, meson):
     r"""$y=(\Gamma_1 - \Gamma_2)/2\Gamma$ where 1 is CP-even in the CPC limit."""
     return DeltaGamma_12(wc_obj, par, meson)*par['tau_'+meson]/2.
 
+def x12(wc_obj, par, meson):
+    r"""$x_{12}=2|M_{12}|/\Gamma$."""
+    M12, G12 = get_M12_G12(wc_obj, par, meson)
+    return 2 * abs(M12) * par['tau_'+meson]
+
+def y12(wc_obj, par, meson):
+    r"""$y_{12}=|\Gamma_{12}|/\Gamma$."""
+    M12, G12 = get_M12_G12(wc_obj, par, meson)
+    return abs(G12) * par['tau_'+meson]
+
 def phi12(wc_obj, par, meson):
     r"""$\phi_{12}=\text{arg}(-M_{12}/\Gamma_{12})"""
     M12, G12 = get_M12_G12(wc_obj, par, meson)
-    return phase(-M12/G12)
-
+    return phase(M12 / G12)
 
 def epsK(wc_obj, par):
     M12, G12 = get_M12_G12(wc_obj, par, 'K0')
@@ -190,3 +199,21 @@ o.set_description(r"Absolute value of $q/p$ in the $D^0$-$\bar D^0$ system")
 o.tex = r"$|q/p|_D$"
 o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $D^0$-$\bar D^0$ mixing')
 Prediction('q/p_D', lambda wc_obj, par: abs(q_over_p(wc_obj, par, 'D0')))
+
+o = Observable('x12_D')
+o.set_description(r"Normalized absolute value of the dispersive mixing amplitude in the $D^0$-$\bar D^0$ system")
+o.tex = r"$x_{12}^D$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $D^0$-$\bar D^0$ mixing')
+Prediction('x12_D', lambda wc_obj, par: x12(wc_obj, par, 'D0'))
+
+o = Observable('y12_D')
+o.set_description(r"Normalized absolute value of the absorptive mixing amplitude in the $D^0$-$\bar D^0$ system")
+o.tex = r"$y_{12}^D$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $D^0$-$\bar D^0$ mixing')
+Prediction('y12_D', lambda wc_obj, par: y12(wc_obj, par, 'D0'))
+
+o = Observable('phi12_D')
+o.set_description(r"$D^0$-$\bar D^0$ mixing phase")
+o.tex = r"$\phi_{12}^D$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $D^0$-$\bar D^0$ mixing')
+Prediction('phi12_D', lambda wc_obj, par: phi12(wc_obj, par, 'D0'))
