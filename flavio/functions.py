@@ -59,7 +59,8 @@ def np_uncertainty(obs_name, wc_obj, *args, N=100, threads=1, **kwargs):
     Additional arguments are passed to the observable and are necessary,
     depending on the observable (e.g. $q^2$-dependent observables).
     """
-    par_random = [flavio.default_parameters.get_random_all() for i in range(N)]
+    par_random = flavio.default_parameters.get_random_all(size=N)
+    par_random = [{k: v[i] for k, v in par_random.items()} for i in range(N)]
     if threads == 1:
         # not parallel
         all_pred = np.array([_obs_prediction_par(par, obs_name, wc_obj, *args, **kwargs) for par in par_random])
@@ -206,7 +207,8 @@ def sm_covariance(obs_list, N=100, par_vary='all', **kwargs):
     """
     wc_sm = flavio.physics.eft._wc_sm
     par_central_all = flavio.default_parameters.get_central_all()
-    par_random_all = [flavio.default_parameters.get_random_all() for i in range(N)]
+    # par_random_all = [flavio.default_parameters.get_random_all() for i in range(N)]
+    par_random_all = flavio.default_parameters.get_random_all(size=N)
     def par_random_some(par_random, par_central):
         # take the central values for the parameters not to be varied
         par1 = {k: v for k, v in par_central.items() if k not in par_vary}
@@ -216,8 +218,10 @@ def sm_covariance(obs_list, N=100, par_vary='all', **kwargs):
         return par1
     if par_vary == 'all':
         par_random = par_random_all
+        par_random = [{k: v[i] for k, v in par_random.items()} for i in range(N)]
     else:
-        par_random = [par_random_some(par_random_all[i], par_central_all) for i in range(N)]
+        par_random = par_random_some(par_random_all, par_central_all)
+        par_random = [{k: v[i] for k, v in par_random.items()} for i in range(N)]
     def get_prediction(obs, par):
         if isinstance(obs, str):
              obs_obj = flavio.classes.Observable[obs]

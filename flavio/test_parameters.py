@@ -34,6 +34,8 @@ class TestParameters(unittest.TestCase):
         # just check if the random values are numbers
         for par_random in default_parameters.get_random_all().values():
             self.assertIsInstance(par_random, float)
+        for par_random in default_parameters.get_random_all(size=2).values():
+            self.assertEqual(par_random.shape, (2,))
 
     def test_constraints_from_string(self):
         pds = constraints_from_string('1.36(34)(3) 1e-3')

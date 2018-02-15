@@ -204,16 +204,30 @@ class Constraints(object):
         """Get central values of all constrained parameters."""
         return {parameter: self.get_central(parameter) for parameter in self._parameters.keys()}
 
-    def get_random_all(self):
+    def get_random_all(self, size=None):
         """Get random values for all constrained parameters where they are
-        distributed according to the probability distribution applied."""
+        distributed according to the probability distribution applied.
+
+        If `size` is not None, the dictionary values will be arrays with length
+        `size` rather than numbers."""
         # first, generate random values for every single one of the constraints
-        random_constraints = {constraint: constraint.get_random() for constraint, _ in self._constraints}
+        random_constraints = {constraint: constraint.get_random(size=size)
+                              for constraint, _ in self._constraints}
         random_dict = {}
         # now, iterate over the parameters
         for parameter, constraints in self._parameters.items():
             num, constraint = constraints
-            random_dict[parameter] = np.ravel([random_constraints[constraint]])[num]
+            carr = random_constraints[constraint]
+            if size is None and num == 0 and np.isscalar(carr):
+                random_dict[parameter] = carr
+            elif size is None:
+                random_dict[parameter] = carr[num]
+            elif carr.shape == (size,) and num == 0:
+                random_dict[parameter] = carr
+            elif carr.ndim == 2 and carr.shape[0] == size:
+                random_dict[parameter] = carr[:, num]
+            else:
+                raise ValueError("Unexpected error in get_random_all")
         return random_dict
 
     def get_1d_errors(self, N=1000):
