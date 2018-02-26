@@ -26,3 +26,14 @@ class TestMath(unittest.TestCase):
             flavio.math.functions.normal_pdf(x_arr, mu, sigma),
             scipy.stats.norm.pdf(x_arr, mu, sigma),
             decimal=10)
+
+    def test_dilog(self):
+        # check that mpmath result for complex dilog is reproduced
+        self.assertAlmostEqual(flavio.math.functions.li2(1 + 1j),
+                         0.6168502750680851+1.4603621167531196j)
+        self.assertAlmostEqual(flavio.math.functions.li2(1 - 2j),
+                         -0.05947479867380914-2.072647971774756j)
+        self.assertAlmostEqual(flavio.math.functions.li2(1),
+                         1.6449340668482264)
+        self.assertAlmostEqual(flavio.math.functions.li2(-1),
+                         -0.8224670334241132)

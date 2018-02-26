@@ -12,10 +12,7 @@ def zeta(x):
 
 def li2(x):
     r"""Complex Dilogarithm"""
-    # for real x<=1: use the special scipy function which is 20x faster
-    if x.imag==0. and x.real <= 1:
-        return scipy.special.spence(1-x.real)
-    return mpmath.fp.polylog(2,x)
+    return scipy.special.spence(1-x)
 
 def ei(x):
     """Exponential integral function"""
