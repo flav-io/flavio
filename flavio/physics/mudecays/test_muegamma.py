@@ -2,7 +2,6 @@ import unittest
 import flavio
 
 
-class TestTauLGamma(unittest.TestCase):
-    def test_taulgamma(self):
-        # compare to the experimental values
+class TestMuEGamma(unittest.TestCase):
+    def test_muegamma(self):
         self.assertEqual(flavio.sm_prediction('BR(mu->egamma)'), 0)
