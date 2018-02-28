@@ -16,8 +16,8 @@ def BR_llgamma(wc_obj, par, scale, l1, l2):
     ll = wcxf_sector_names[l1, l2]
     wc = wc_obj.get_wc(ll, scale, par, nf_out=4)
     alpha = flavio.physics.running.running.get_alpha_e(par, scale, nf_out=4)
-    # (18) of hep-ph/0404211, with 4*GF/sqrt(2)/(16*pi**2) C7(') = DL,R
-    pre = 3 * alpha / (2 * pi)
+    # cf. (18) of hep-ph/0404211
+    pre = 6 * alpha / pi
     C7 = wc['C7_' + ll]
     C7p = wc['C7p_' + ll]
     if l1 == 'tau':
