@@ -218,3 +218,13 @@ M12_D a_ss: -0.1 ± 0.1
 Gamma12_D a_bb: 0
 Gamma12_D a_bs: 0 ± 0.35
 Gamma12_D a_ss: -0.35 ± 0.1
+
+# Parameters for neutron EDM
+# taken from 1506.06411, eq. (32)
+nEDM gT_d: 0.774(66)
+nEDM gT_u: -0.233(28)
+# taken from 1308.6493, eq. (22)
+nEDM ~rho_d: 0.6 */ 2  # 0.3..1.2
+nEDM ~rho_u: 0.3 */ 2  # 0.15..0.6
+# corresponding to e 20 MeV w in eq. (4) of hep-ph/0208257
+nEDM beta_G: 6e-7 */ 3  # 2e-7..18e-7

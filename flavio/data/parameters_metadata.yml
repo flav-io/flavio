@@ -1039,6 +1039,18 @@ B->D CLN deltac_h+:
   tex: $\delta_{\epsilon_c^2}^{h_+}$
   description: Power correction to $B\to D$ HQET form factor $h_+$
 
+# Parameters for neutron EDM
+nEDM gT_d:
+  description:
+nEDM gT_u:
+  description:
+nEDM ~rho_d:
+  description:
+nEDM ~rho_u:
+  description:
+nEDM beta_G:
+  description:
+
 # Parameters for D-Dbar mixing
 M12_D a_bb:
   description:

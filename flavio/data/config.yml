@@ -43,6 +43,9 @@ renormalization scale:
     K0 mixing: 2.   # K0-K0bar mixing
     D0 mixing: 2.   # D0-D0bar mixing
 
+    # EDMs
+    nEDM: 2.  # neutron EDM
+
 # these are the thresholds where quark flavours are decoupled in the RG
 # evolution to low energies.
 RGE thresholds:
