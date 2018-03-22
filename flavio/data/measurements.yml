@@ -4710,3 +4710,15 @@ Belle B->D*lnu 2010:
       9.535301241854728e-05, 0.00012661819957517746, 0.00015271904464287756, 0.00017207923427777172,
       0.00018254172382246365, 0.00018242715397420015, 0.00016014242714020596, 9.828332309734976e-05]
     correlation: 0.99
+
+HFLAV D mixing 2016:
+  experiment: HFLAV
+  inspire: Amhis:2016xyh
+  url: http://www.slac.stanford.edu/xorg/hflav/charm/CKM16/results_mix_cpv.html
+  description: >
+    Under the "no direct CPV" hypothesis, HFLAV performs a fit in the plane
+    $x_{12}$ vs. $\phi_{12}$, which essentially results in an uncorrelated
+    constraint on $x_{12}\cos\phi_{12}$ vs.
+    $x_{12}\sin\phi_{12}\equiv x_{12}^\text{Im}$
+  values:
+    Imx12_D: 0 ± 0.0236 e-2
