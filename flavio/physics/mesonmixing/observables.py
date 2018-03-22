@@ -5,7 +5,7 @@ from flavio.physics.mesonmixing import amplitude
 from flavio.physics.mesonmixing import common
 from flavio.physics import ckm
 from flavio.config import config
-from math import sqrt
+from math import sqrt, sin
 from cmath import phase
 from flavio.physics.common import conjugate_par
 from flavio.classes import Observable, Prediction
@@ -80,6 +80,10 @@ def y12(wc_obj, par, meson):
     r"""$y_{12}=|\Gamma_{12}|/\Gamma$."""
     M12, G12 = get_M12_G12(wc_obj, par, meson)
     return abs(G12) * par['tau_'+meson]
+
+def x12Im(wc_obj, par, meson):
+    r"""$x_{12}^\text{Im}=\sin\phi_{12}$."""
+    return x12(wc_obj, par, meson) * sin(phi12(wc_obj, par, meson))
 
 def phi12(wc_obj, par, meson):
     r"""$\phi_{12}=\text{arg}(-M_{12}/\Gamma_{12})"""
@@ -217,3 +221,9 @@ o.set_description(r"$D^0$-$\bar D^0$ mixing phase")
 o.tex = r"$\phi_{12}^D$"
 o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $D^0$-$\bar D^0$ mixing')
 Prediction('phi12_D', lambda wc_obj, par: phi12(wc_obj, par, 'D0'))
+
+o = Observable('x12Im_D')
+o.set_description(r"Normalized imaginary part of the dispersive mixing amplitude in the $D^0$-$\bar D^0$ system")
+o.tex = r"$x_{12}^{\text{Im},D}$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $D^0$-$\bar D^0$ mixing')
+Prediction('x12Im_D', lambda wc_obj, par: x12Im(wc_obj, par, 'D0'))
