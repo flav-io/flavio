@@ -1041,17 +1041,22 @@ B->D CLN deltac_h+:
 
 # Parameters for neutron EDM
 nEDM gT_d:
-  description:
+  tex: $g_T^d$
+  description: Neutron down quark tensor charge
 nEDM gT_u:
-  description:
+  tex: $g_T^u$
+  description: Neutron up quark tensor charge
 nEDM ~rho_d:
-  description:
+  tex: $\tilde \rho_d$
+  description: coefficient of the down quark CEDM contribution to the neutron EDM
 nEDM ~rho_u:
-  description:
+  tex: $\tilde \rho_u$
+  description: coefficient of the up quark CEDM contribution to the neutron EDM
 nEDM beta_G:
-  description:
+  tex: $\beta_G$
+  description: coefficient of the three-gluon Weinberg operator contribution to the neutron EDM
 
-# Parameters for D-Dbar mixing
+# Parameters for SM contribution to D-Dbar mixing
 M12_D a_bb:
   description:
 M12_D a_bs:
