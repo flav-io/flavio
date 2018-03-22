@@ -1058,14 +1058,20 @@ nEDM beta_G:
 
 # Parameters for SM contribution to D-Dbar mixing
 M12_D a_bb:
-  description:
+  tex: $a_{bb}$
+  description: SM contribution to the dispersive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{ub}V_{cb}^\ast$ in inverse picoseconds
 M12_D a_bs:
-  description:
+  tex: $a_{bb}$
+  description: SM contribution to the dispersive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{ub}V_{cs}^\ast$ in inverse picoseconds
 M12_D a_ss:
-  description:
+  tex: $a_{bb}$
+  description: SM contribution to the dispersive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{us}V_{cs}^\ast$ in inverse picoseconds
 Gamma12_D a_bb:
-  description:
+  tex: $a_{bb}$
+  description: SM contribution to the absorptive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{ub}V_{cb}^\ast$ in inverse picoseconds
 Gamma12_D a_bs:
-  description:
+  tex: $a_{bb}$
+  description: SM contribution to the absorptive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{ub}V_{cs}^\ast$ in inverse picoseconds
 Gamma12_D a_ss:
-  description:
+  tex: $a_{bb}$
+  description: SM contribution to the absorptive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{us}V_{cs}^\ast$ in inverse picoseconds
