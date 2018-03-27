@@ -234,3 +234,4 @@ nEDM beta_G: 6e-7 */ 3  # 2e-7..18e-7
 # Parameters for LFV decays
 BR(tau->mununu): 17.39(4)e-2
 BR(tau->enunu): 17.82(4)e-2
+BR(tau->rhonu): 25.2(3)e-2

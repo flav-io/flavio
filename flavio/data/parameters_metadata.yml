@@ -1083,3 +1083,6 @@ BR(tau->mununu):
 BR(tau->enunu):
   tex:
   description:
+BR(tau->rhonu):
+  tex:
+  description:
