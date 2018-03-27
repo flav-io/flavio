@@ -10,24 +10,24 @@ wcxf_sector_names = {('tau', 'mu'): 'mutau',
                      ('mu', 'e'): 'mue', }
 
 
-def _BR_taumuee(mtau, me, FLL, FLR, FRL, FRR, DLg, DRg, SRR, SLL, TRR, TLL):
+def _BR_taumuee(mtau, me, FLL, FLR, FRL, FRR, e2DLg, e2DRg, SRR, SLL):
     # (22) of hep-ph/0404211
-    # FIXME scalar & tensor contributions missing!
+    # FIXME scalar contributions missing!
     return (abs(FLL)**2 + abs(FLR)**2 + abs(FRL)**2 + abs(FRR)**2
-            + 4 * e**2 * (DLg * (FLL + FLR).conjugate()
-                          + DRg * (FRL + FRR).conjugate()).real
-            + 8 * e**4 * (abs(DLg)**2 + abs(DRg)**2)
+            + 4 * (e2DLg * (FLL + FLR).conjugate()
+                          + e2DRg * (FRL + FRR).conjugate()).real
+            + 8 * (abs(e2DLg)**2 + abs(e2DRg)**2)
             * (log(mtau**2 / me**2) - 3))
 
 
-def _BR_tau3mu(mtau, mmu, FLL, FLR, FRL, FRR, DLg, DRg, SRR, SLL):
+def _BR_tau3mu(mtau, mmu, FLL, FLR, FRL, FRR, e2DLg, e2DRg, SRR, SLL):
     # (23) of hep-ph/0404211
     # (117) of hep-ph/9909265
     return (2 * abs(FLL)**2 + abs(FLR)**2 + abs(FRL)**2 + 2 * abs(FRR)**2
             + 1 / 8 * (abs(SLL)**2 + abs(SRR)**2)
-            + 4 * e**2 * (DLg * (2 * FLL + FLR).conjugate()
-                          + DRg * (FRL + 2 * FRR).conjugate()).real
-            + 8 * e**4 * (abs(DLg)**2 + abs(DRg)**2)
+            + 4 * (e2DLg * (2 * FLL + FLR).conjugate()
+                          + e2DRg * (FRL + 2 * FRR).conjugate()).real
+            + 8 * (abs(e2DLg)**2 + abs(e2DRg)**2)
             * (log(mtau**2 / mmu**2) - 11 / 4))
 
 
@@ -40,26 +40,23 @@ def BR_taumull(wc_obj, par, lep):
     e = sqrt(4 * pi * alpha)
     # cf. (22, 23) of hep-ph/0404211
     pre_br = par['BR(tau->mununu)'] / (8 * par['GF']**2)
-    pre_wc_1 = 4 * GF / sqrt(2) / (16 * pi**2)
-    pre_wc_2 = 4 * GF / sqrt(2) * e**2 / (16 * pi**2)
-    DLg = pre_wc_1 * wc['C7_taumu']
-    DRg = pre_wc_1 * wc['C7p_taumu']
-    FLL = pre_wc_2 * wc['CVLL_taumu' + 2 * lep]
-    FLR = pre_wc_2 * wc['CVLR_taumu' + 2 * lep]
-    FRL = pre_wc_2 * wc['CVRL_taumu' + 2 * lep]
-    FRR = pre_wc_2 * wc['CVRR_taumu' + 2 * lep]
-    SRR = pre_wc_2 * wc['CSRR_taumu' + 2 * lep]
-    SLL = pre_wc_2 * wc['CSLL_taumu' + 2 * lep]
-    if lep == 'e':
-        TRR = pre_wc_2 * wc['CTRR_taumu' + 2 * lep]
-        TLL = pre_wc_2 * wc['CTLL_taumu' + 2 * lep]
     mtau = par['m_tau']
+    pre_wc_1 = 1 / e / mtau
+    pre_wc_2 = 1
+    e2DLg = e**2 * pre_wc_1 * wc['Cgamma_taumu']
+    e2DRg = e**2 * pre_wc_1 * wc['Cgamma_mutau'].conjugate()
+    FLL = pre_wc_2 * wc['CVLL_{}taumu'.format(2 * lep)]
+    FLR = pre_wc_2 * wc['CVLR_{}taumu'.format(2 * lep)]
+    FRL = pre_wc_2 * wc['CVLR_taumu{}'.format(2 * lep)]
+    FRR = pre_wc_2 * wc['CVRR_{}taumu'.format(2 * lep)]
+    SRR = pre_wc_2 * wc['CSRR_{}taumu'.format(2 * lep)]
+    SLL = pre_wc_2 * wc['CSRR_{}mutau'.format(2 * lep)].conjugate()
     if lep == 'e':
-        mmu = par['m_e']
-        br_wc = _BR_taumuee(mtau, me, FLL, FLR, FRL, FRR, DLg, DRg, SRR, SLL, TRR, TLL)
+        me = par['m_e']
+        br_wc = _BR_taumuee(mtau, me, FLL, FLR, FRL, FRR, e2DLg, e2DRg, SRR, SLL)
     elif lep == 'mu':
         mmu = par['m_mu']
-        br_wc = _BR_tau3mu(mtau, mmu, FLL, FLR, FRL, FRR, DLg, DRg, SRR, SLL)
+        br_wc = _BR_tau3mu(mtau, mmu, FLL, FLR, FRL, FRR, e2DLg, e2DRg, SRR, SLL)
     return pre_br * br_wc
 
 

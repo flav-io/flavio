@@ -18,8 +18,8 @@ def BR_llgamma(wc_obj, par, scale, l1, l2):
     alpha = flavio.physics.running.running.get_alpha_e(par, scale, nf_out=4)
     # cf. (18) of hep-ph/0404211
     pre = 6 * alpha / pi
-    C7 = wc['C7_' + ll]
-    C7p = wc['C7p_' + ll]
+    C7 = wc['Cgamma_' + l1 + l2]
+    C7p = wc['Cgamma_' + l2 + l1].conjugate()
     if l1 == 'tau':
         BR_SL = par['BR(tau->{}nunu)'.format(l2)]
     else:

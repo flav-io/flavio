@@ -1075,3 +1075,11 @@ Gamma12_D a_bs:
 Gamma12_D a_ss:
   tex: $a_{bb}$
   description: SM contribution to the absorptive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{us}V_{cs}^\ast$ in inverse picoseconds
+
+# Parameters for LFV decays
+BR(tau->mununu):
+  tex:
+  description:
+BR(tau->enunu):
+  tex:
+  description:
