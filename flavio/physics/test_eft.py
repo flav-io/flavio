@@ -3,6 +3,7 @@ import numpy as np
 from .eft import *
 import pkgutil
 import wcxf
+import wilson
 
 par = {
     'm_Z': 91.1876,

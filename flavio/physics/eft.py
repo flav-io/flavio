@@ -138,7 +138,7 @@ class WilsonCoefficients(object):
         md += r_wcxf
         return md
 
-    def set_initial(self, wc_dict, scale, eft='WET', basis='flavio', validate=True):
+    def set_initial(self, wc_dict, scale, eft='WET', basis='flavio'):
         """Set initial values of Wilson coefficients.
 
         Parameters:
@@ -147,18 +147,15 @@ class WilsonCoefficients(object):
           values are Wilson coefficient NP contribution values
         - scale: $\overline{\text{MS}}$ renormalization scale
         """
-        wc = wcxf.WC(eft, basis, scale, wcxf.WC.dict2values(wc_dict))
-        self.set_initial_wcxf(wc, validate=validate)
+        self.wilson = wilson.Wilson(wcdict=wc_dict, scale=scale, eft=eft, basis=basis)
 
-    def set_initial_wcxf(self, wc, validate=True):
+    def set_initial_wcxf(self, wc):
         """Set initial values of Wilson coefficients from a WCxf WC instance.
 
         If the instance is given in a basis other than the flavio basis,
         the translation is performed automatically, if implemented in the
         `wcxf` package."""
-        if validate:
-            wc.validate()
-        self.wilson = wilson.Wilson(wc)
+        self.wilson = wilson.Wilson.from_wc(wc)
 
     @property
     def get_initial_wcxf(self):
