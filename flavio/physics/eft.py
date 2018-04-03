@@ -111,7 +111,7 @@ sectors_flavio2wcxf = {
  'sutaunutau': 'ustaunu'}
 
 
-class WilsonCoefficients(object):
+class WilsonCoefficients(wilson.Wilson):
     """Class representing a point in the EFT parameter space and giving
     access to RG evolution.
 
@@ -127,16 +127,7 @@ class WilsonCoefficients(object):
       as a wcxf.WC instance
     """
     def __init__(self):
-        self.wilson = None
-
-    def _repr_markdown_(self):
-        wc_wcxf = self.get_initial_wcxf
-        r_wcxf = wc_wcxf._repr_markdown_()
-        r_wcxf = '\n'.join(r_wcxf.splitlines()[2:])  # remove WCxf heading
-        md = "## flavio Wilson coefficients\n\n"
-        md += "### Initial values:\n\n"
-        md += r_wcxf
-        return md
+        self.wc = None
 
     def set_initial(self, wc_dict, scale, eft='WET', basis='flavio'):
         """Set initial values of Wilson coefficients.
@@ -147,7 +138,7 @@ class WilsonCoefficients(object):
           values are Wilson coefficient NP contribution values
         - scale: $\overline{\text{MS}}$ renormalization scale
         """
-        self.wilson = wilson.Wilson(wcdict=wc_dict, scale=scale, eft=eft, basis=basis)
+        super().__init__(wcdict=wc_dict, scale=scale, eft=eft, basis=basis)
 
     def set_initial_wcxf(self, wc):
         """Set initial values of Wilson coefficients from a WCxf WC instance.
@@ -155,15 +146,15 @@ class WilsonCoefficients(object):
         If the instance is given in a basis other than the flavio basis,
         the translation is performed automatically, if implemented in the
         `wcxf` package."""
-        self.wilson = wilson.Wilson.from_wc(wc)
+        super().__init__(wcdict=wc.dict, scale=wc.scale, eft=wc.eft, basis=wc.basis)
 
     @property
     def get_initial_wcxf(self):
         """Return a wcxf.WC instance in the flavio basis containing the initial
         values of the Wilson coefficients."""
-        if self.wilson is None:
+        if self.wc is None:
             raise ValueError("Need to set initial values first.")
-        return self.wilson.wc
+        return self.wc
 
     def run_wcxf(*args, **kwargs):
         raise ValueError("The method run_wcxf has been removed. Please use the match_run method of wilson.Wilson instead.")
@@ -196,9 +187,9 @@ class WilsonCoefficients(object):
         wcxf_basis = wcxf.Basis[eft, basis]
         coeffs = wcxf_basis.sectors[wcxf_sector].keys()
         wc_sm = {k: 0 for k in coeffs}
-        if not self.wilson:
+        if not self.wc:
             return wc_sm
-        wc_out = self.wilson.match_run(eft, basis, scale, sectors=(wcxf_sector,))
+        wc_out = self.match_run(eft, basis, scale, sectors=(wcxf_sector,))
         wc_out_dict = wc_sm  # initialize with zeros
         wc_out_dict.update(wc_out.dict)  # overwrite non-zero entries
         return wc_out_dict
