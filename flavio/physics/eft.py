@@ -156,6 +156,17 @@ class WilsonCoefficients(wilson.Wilson):
             raise ValueError("Need to set initial values first.")
         return self.wc
 
+    @classmethod
+    def from_wilson(cls, w):
+        if w is None:
+            return None
+        if isinstance(w, cls):
+            return w
+        fwc = cls()
+        fwc.set_initial_wcxf(w.wc)
+        fwc._cache = w._cache
+        return fwc
+
     def run_wcxf(*args, **kwargs):
         raise ValueError("The method run_wcxf has been removed. Please use the match_run method of wilson.Wilson instead.")
 

@@ -5,6 +5,7 @@ import numpy as np
 from .config import config
 from collections import OrderedDict, defaultdict
 import copy
+import flavio
 from flavio._parse_errors import constraints_from_string, \
     convolve_distributions, dict2dist
 from flavio.statistics.probability import string_to_class
@@ -524,10 +525,12 @@ class Prediction(object):
 
     def get_central(self, constraints_obj, wc_obj, *    args, **kwargs):
         par_dict = constraints_obj.get_central_all()
-        return self.function(wc_obj, par_dict, *args, **kwargs)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        return self.function(fwc_obj, par_dict, *args, **kwargs)
 
     def get_par(self, par_dict, wc_obj, *args, **kwargs):
-        return self.function(wc_obj, par_dict, *args, **kwargs)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        return self.function(fwc_obj, par_dict, *args, **kwargs)
 
 
 class Implementation(NamedInstanceClass):
@@ -556,14 +559,17 @@ class Implementation(NamedInstanceClass):
 
     def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
         par_dict = constraints_obj.get_central_all()
-        return self.function(wc_obj, par_dict, *args, **kwargs)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        return self.function(fwc_obj, par_dict, *args, **kwargs)
 
     def get_random(self, constraints_obj, wc_obj, *args, **kwargs):
         par_dict = constraints_obj.get_random_all()
-        return self.function(wc_obj, par_dict, *args, **kwargs)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        return self.function(fwc_obj, par_dict, *args, **kwargs)
 
     def get(self, par_dict, wc_obj, *args, **kwargs):
-        return self.function(wc_obj, par_dict, *args, **kwargs)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        return self.function(fwc_obj, par_dict, *args, **kwargs)
 
 
 class Measurement(Constraints, NamedInstanceClass):

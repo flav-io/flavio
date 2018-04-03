@@ -3,7 +3,7 @@ top-level namespace."""
 
 import flavio
 import numpy as np
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 from multiprocessing import Pool
 
 def np_prediction(obs_name, wc_obj, *args, **kwargs):
@@ -127,7 +127,7 @@ def get_dependent_parameters_sm(obs_name, *args, **kwargs):
     wc_sm = flavio.physics.eft._wc_sm
     par_central = flavio.default_parameters.get_central_all()
     apar_central = AwareDict(par_central)
-    pred_central = obs.prediction_par(apar_central, wc_sm, *args, **kwargs)
+    obs.prediction_par(apar_central, wc_sm, *args, **kwargs)
     # return all observed keys except the ones that don't actually correspond
     # to existing parameter names (this might happen by user functions modifying
     # the dictionaries)
