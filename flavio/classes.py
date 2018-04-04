@@ -189,14 +189,16 @@ class Constraints(object):
         else:
             num, constraint = self._parameters[parameter]
             cv = constraint.central_value
-            if np.isscalar(cv):
+            try:
+                cv = float(cv)
+            except (TypeError, ValueError):
+                # return the num-th entry of the central value vector
+                return cv[num]
+            else:
                 if num == 0:
                     return cv
                 else:
                     raise ValueError("Something went wrong when getting the central value of {}".format(parameter))
-            else:
-                # return the num-th entry of the central value vector
-                return cv[num]
 
     def get_central_all(self):
         """Get central values of all constrained parameters."""
