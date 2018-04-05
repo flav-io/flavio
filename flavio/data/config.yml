@@ -38,7 +38,7 @@ renormalization scale:
     dll: 2.      # D->l nu
 
     #  muon decays
-    mudecays: 0.1
+    mudecays: 1.0
 
     #  tau decays
     taudecays: 1.8
