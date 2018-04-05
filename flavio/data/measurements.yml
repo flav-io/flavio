@@ -4722,3 +4722,10 @@ HFLAV D mixing 2016:
     $x_{12}\sin\phi_{12}\equiv x_{12}^\text{Im}$
   values:
     Imx12_D: 0 ± 0.0236 e-2
+
+PDG 2017 tau:
+  experiment: PDG
+  inspire: Patrignani:2016xqp
+  values:
+    BR(tau->mununu): 17.39(4)e-2
+    BR(tau->enunu): 17.82(4)e-2
