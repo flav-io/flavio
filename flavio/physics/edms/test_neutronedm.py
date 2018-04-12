@@ -16,14 +16,14 @@ class TestNeutronEDM(unittest.TestCase):
         wcf.set_initial_wcxf(wc)
         wcd = wcf.get_wc('dF=0', scale=2, par=par, eft='WET-3', basis='flavio')
         self.assertEqual(wcd['CG'], 0)
-        self.assertAlmostEqual(wcd['CGtilde'], 0.014, delta=0.01)
+        self.assertAlmostEqual(wcd['CGtilde'], 0.007, delta=0.001)
         par_G = par.copy()
         par_G['nEDM gT_d'] = 0
         par_G['nEDM ~rho_d'] = 0
         par_G['nEDM gT_u'] = 0
         par_G['nEDM ~rho_u'] = 0
         p = flavio.Observable['d_n'].prediction_par(par_G, wcf)
-        self.assertAlmostEqual(p, 9e-9, delta=1e-9)
+        self.assertAlmostEqual(p, 4.5e-9, delta=1e-9)
 
     def test_nedm_jms_CEDM(self):
         wc = wcxf.WC('WET', 'JMS', 160, {'dG_11': {'Im': 1e-10}})
