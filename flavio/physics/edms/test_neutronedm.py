@@ -16,7 +16,7 @@ class TestNeutronEDM(unittest.TestCase):
         wcf.set_initial_wcxf(wc)
         wcd = wcf.get_wc('dF=0', scale=2, par=par, eft='WET-3', basis='flavio')
         self.assertEqual(wcd['CG'], 0)
-        self.assertAlmostEqual(wcd['CGtilde'], 0.014, delta=0.001)
+        self.assertAlmostEqual(wcd['CGtilde'], 0.014, delta=0.01)
         par_G = par.copy()
         par_G['nEDM gT_d'] = 0
         par_G['nEDM ~rho_d'] = 0
