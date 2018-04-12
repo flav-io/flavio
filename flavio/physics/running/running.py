@@ -8,7 +8,7 @@ from functools import lru_cache
 from flavio.config import config
 import copy
 from math import log, pi
-from wcxf.util import qcd
+from wilson.util import qcd
 import rundec
 
 
