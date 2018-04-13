@@ -200,7 +200,7 @@ class WilsonCoefficients(wilson.Wilson):
         wc_sm = {k: 0 for k in coeffs}
         if not self.wc:
             return wc_sm
-        wc_out = self.match_run(eft, basis, scale, sectors=(wcxf_sector,))
+        wc_out = self.match_run(scale=scale, eft=eft, basis=basis, sectors=(wcxf_sector,))
         wc_out_dict = wc_sm  # initialize with zeros
         wc_out_dict.update(wc_out.dict)  # overwrite non-zero entries
         return wc_out_dict
