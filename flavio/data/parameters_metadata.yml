@@ -1178,6 +1178,28 @@ Kpipi M2 SLL2_d:
   tex: $\langle Q_2^{\text{SLL},d} \rangle_2$
   description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_2^{\text{SLL},d}$
 
+# Parameters for Z decays
+delta_Gammae,mu:
+  tex: $\delta_{\Gamma_{e,\mu}}$
+  description: Uncertainty in the SM $Z$ partial width to light leptons in GeV
+delta_Gammatau:
+  tex: $\delta_{\Gamma_\tau}$
+  description: Uncertainty in the SM $Z$ partial width to tau leptons in GeV
+delta_Gammau:
+  tex: $\delta_{\Gamma_u}$
+  description: Uncertainty in the SM $Z$ partial width to up quarks in GeV
+delta_Gammac:
+  tex: $\delta_{\Gamma_c}$
+  description: Uncertainty in the SM $Z$ partial width to charm quarks in GeV
+delta_Gammad,s:
+  tex: $\delta_{\Gamma_s}$
+  description: Uncertainty in the SM $Z$ partial width to strange quarks in GeV
+delta_Gammab:
+  tex: $\delta_{\Gamma_b} $
+  description: Uncertainty in the SM $Z$ partial width to bottom quarks in GeV
+delta_Gammanu:
+  tex: $\delta_{\Gamma_\nu}$
+  description: Uncertainty in the SM $Z$ partial width to neutrinos in GeV
 # anomalous magnet moment of the muon
 a_mu SM:
   tex: $a_\mu^\text{SM}$

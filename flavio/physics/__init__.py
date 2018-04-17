@@ -7,6 +7,7 @@ from . import mudecays
 from . import taudecays
 from . import mesonmixing
 from . import edms
+from . import zdecays
 from . import mdms
 from . import neutrinos
 from . import running

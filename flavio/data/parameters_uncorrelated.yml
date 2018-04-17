@@ -277,6 +277,16 @@ Kpipi M2 SLL1_d: -0.0020(4)
 Kpipi M0 SLL2_d: -0.088(18)
 Kpipi M2 SLL2_d:  0.031(6)
 
+# Parameters for Z decays
+# table 6 of arXiv:1401.2447
+delta_Gammae,mu: 0 ± 0.012e-3
+delta_Gammatau: 0 ± 0.012e-3
+delta_Gammau: 0 ± 0.12e-3
+delta_Gammac: 0 ± 0.12e-3
+delta_Gammad,s: 0 ± 0.09e-3
+delta_Gammab: 0 ± 0.21e-3
+delta_Gammanu: 0 ± 0.014e-3
+
 # anomalous magnet moment of the muon
 # arXiv:1706.09436 eq. (2)
 a_mu SM: 11659182.3 ± 4.3 e-10
