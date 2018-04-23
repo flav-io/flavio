@@ -4753,7 +4753,6 @@ CCFR neutrino trident:
     R_trident: 0.82 ± 0.28
 
 
-
 Belle B->Dtaunu shape 2015:
   experiment: Belle
   inspire: Huschle:2015rga
@@ -4889,8 +4888,6 @@ Belle B->D*taunu shape 2015:
     value: 0.089 ± 0.028 ± 0.011
 
 
-
-
 BaBar B->Dtaunu shape 2013:
   experiment: BaBar
   inspire: Lees:2013uzd
@@ -4965,8 +4962,6 @@ BaBar B->Dtaunu shape 2013:
     q2min: 11.5
     q2max: 12.0
     value: 0.017 ± 0.023 ± 0.018
-
-
 
 
 BaBar B->D*taunu shape 2013:
@@ -5047,3 +5042,67 @@ LEP Bc->taunu:
     Gaussian 95% confidence level limit here.
   values:
     BR(Bc->taunu): < 0.1 @ 95% CL
+    BR(tau->enunu): 17.82(4)e-2
+
+
+LEP-SLD:
+  experiment: LEP, SLD
+  inspire: ALEPH:2005ab
+  description: Table 2.13 of arXiv:hep-ex/0509008
+  values:
+    GammaZ: 2.4952 ± 0.0023
+    sigma_had: 1066.85 ± 0.95 e-7 # 41.541 ± 0.037 nb
+    R_e: 20.804 ± 0.050
+    R_mu: 20.785 ± 0.033
+    R_tau: 20.764 ± 0.045
+    AFB(Z->ee): 0.0145 ± 0.0025
+    AFB(Z->mumu): 0.0169 ± 0.0013
+    AFB(Z->tautau): 0.0188 ± 0.0017
+  correlation: [[1.000, -0.297, -0.011, 0.008, 0.006, 0.007, 0.002, 0.001],
+                [1.000, 0.105, 0.131, 0.092, 0.001, 0.003, 0.002],
+                [1.000, 0.069, 0.046, -0.371, 0.020, 0.013],
+                [1.000, 0.069, 0.001, 0.012, -0.003],
+                [1.000, 0.003, 0.001, 0.009],
+                [1.000, -0.024, -0.020],
+                [1.000, 0.046],
+                [1.000]]
+
+LEP-SLD cb:
+  experiment: LEP, SLD
+  inspire: ALEPH:2005ab
+  description: Tables 5.10 and 5.11 of arXiv:hep-ex/0509008
+  values:
+    R_b: 0.21629 ± 0.00066
+    R_c: 0.1721 ± 0.0030
+    AFB(Z->bb): 0.0992 ± 0.0016
+    AFB(Z->cc): 0.0707 ± 0.0035
+    A(Z->bb): 0.923 ± 0.020
+    A(Z->cc): 0.670 ± 0.027
+  correlation: [[1.00, -0.18, -0.10, 0.07, -0.08, 0.04],
+                [1.00, 0.04, -0.06, 0.04, -0.06],
+                [1.00, 0.15, 0.06, 0.01],
+                [1.00, -0.02, 0.04],
+                [1.00, 0.11],
+                [1.00]]
+
+A_l LEP:
+  experiment: LEP
+  inspire: ALEPH:2005ab
+  description: >
+    Leptonic asymmetry parameters extracted from tau polarization measurements.
+    Equations (4.9) and (4.10) of arXiv:hep-ex/0509008
+  values:
+    A(Z->ee): 0.1498±0.0049
+    A(Z->tautau): 0.1439±0.0043
+
+A_l SLD:
+  experiment: SLD
+  inspire: ALEPH:2005ab
+  description: Table 3.6 of arXiv:hep-ex/0509008
+  values:
+    A(Z->ee): 0.1516 ± 0.0021
+    A(Z->mumu): 0.142 ± 0.015
+    A(Z->tautau): 0.136 ± 0.015
+  correlation: [[1.0, 0.038, 0.033],
+                [1.0, 0.007],
+                [1.0]]
