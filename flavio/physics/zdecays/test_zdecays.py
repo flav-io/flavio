@@ -87,9 +87,9 @@ class TestAFBZ(unittest.TestCase):
     def test_afbz_sm(self):
         for l in ['e', 'mu', 'tau']:
             self.assertAlmostEqual(flavio.sm_prediction('A(Z->{}{})'.format(l, l)),
-                                   0.1472, delta=0.0001, msg="Failed for {}".format(l))
+                                   0.1472, delta=0.0002, msg="Failed for {}".format(l))
             self.assertAlmostEqual(flavio.sm_prediction('AFB(Z->{}{})'.format(l, l)),
-                                   0.0163, delta=0.0001, msg="Failed for {}".format(l))
+                                   0.0163, delta=0.0002, msg="Failed for {}".format(l))
         self.assertAlmostEqual(flavio.sm_prediction('A(Z->bb)'),
                                0.935, delta=0.001)
         self.assertAlmostEqual(flavio.sm_prediction('A(Z->cc)'),
@@ -97,6 +97,6 @@ class TestAFBZ(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction('A(Z->ss)'),
                                0.935, delta=0.001)
         self.assertAlmostEqual(flavio.sm_prediction('AFB(Z->bb)'),
-                               0.1032, delta=0.0001)
+                               0.1032, delta=0.0002)
         self.assertAlmostEqual(flavio.sm_prediction('AFB(Z->cc)'),
-                               0.0738, delta=0.0001)
+                               0.0738, delta=0.0002)
