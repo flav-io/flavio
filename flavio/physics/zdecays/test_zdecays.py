@@ -1,6 +1,9 @@
 import unittest
 import flavio
+from math import sqrt, pi
 from flavio.physics.zdecays.gammazsm import Zobs, pb
+from flavio.physics.zdecays.gammaz import GammaZ_NP
+from flavio.physics.zdecays import smeftew
 
 
 par = flavio.default_parameters.get_central_all()
@@ -82,6 +85,39 @@ class TestGammaZ(unittest.TestCase):
                         self.assertEqual(flavio.sm_prediction('BR(Z->{}{})'.format(f1, f2)),
                                          0,
                                          msg="Failed BR(Z->{}{})")
+
+    def test_Gamma_NP(self):
+        # compare NP contributions to A.49-A.52 from 1706.08945
+        GF, mZ, s2w_eff = par['GF'], par['m_Z'], par['s2w']*1.0010
+        d_gV = 0.055
+        d_gA = 0.066
+        # A.49-A.52 from 1706.08945
+        dGamma_Zll = sqrt(2)*GF*mZ**3/(6*pi) * (-d_gA + (-1+4*s2w_eff)*d_gV)
+        dGamma_Znn = sqrt(2)*GF*mZ**3/(6*pi) * (d_gA + d_gV)
+        dGamma_Zuu = sqrt(2)*GF*mZ**3/(pi) * (d_gA -1/3*(-3+8*s2w_eff)*d_gV) /2
+        dGamma_Zdd = sqrt(2)*GF*mZ**3/(pi) * (-3/2*d_gA +1/2*(-3+4*s2w_eff)*d_gV) /3
+        # term squared in d_gV and d_gA not included in 1706.08945
+        d_g_squared = sqrt(2)*GF*mZ**3/(3*pi)*(abs(d_gV)**2+abs(d_gA)**2)
+        self.assertAlmostEqual(
+            dGamma_Zll + d_g_squared,
+            GammaZ_NP(par, 1, smeftew.gV_SM('e', par), d_gV,
+                              smeftew.gA_SM('e', par), d_gA)
+        )
+        self.assertAlmostEqual(
+            dGamma_Znn + d_g_squared,
+            GammaZ_NP(par, 1, smeftew.gV_SM('nue', par), d_gV,
+                              smeftew.gA_SM('nue', par), d_gA)
+        )
+        self.assertAlmostEqual(
+            dGamma_Zuu + 3*d_g_squared,
+            GammaZ_NP(par, 3, smeftew.gV_SM('u', par), d_gV,
+                              smeftew.gA_SM('u', par), d_gA)
+        )
+        self.assertAlmostEqual(
+            dGamma_Zdd + 3*d_g_squared,
+            GammaZ_NP(par, 3, smeftew.gV_SM('d', par), d_gV,
+                              smeftew.gA_SM('d', par), d_gA)
+        )
 
 class TestAFBZ(unittest.TestCase):
     def test_afbz_sm(self):

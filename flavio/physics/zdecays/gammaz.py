@@ -6,23 +6,32 @@ from math import sqrt, pi
 
 
 
-def GammaZ_NP(wc_dict, par, f1, f2):
+def GammaZ_NP(par, Nc, gV_SM, d_gV, gA_SM, d_gA):
     GF, mZ = par['GF'], par['m_Z']
-    Nc = smeftew._QN[f]['Nc']
-    gV = smeftew.d_gV(f1, f2, par, wc_dict)
-    gA = smeftew.d_gA(f1, f2, par, wc_dict)
-    return sqrt(2) * GF * mZ**3 / (3 * pi) * Nc * (abs(gV)**2 + abs(gA)**2)
+    return (
+        sqrt(2) * GF * mZ**3 / (3 * pi) * Nc * (
+            2*(gV_SM*d_gV).real + 2*(gA_SM*d_gA).real
+            + abs(d_gV)**2 + abs(d_gA)**2
+        )
+    )
 
 
 def GammaZ(wc_obj, par, f1, f2):
     scale = flavio.config['renormalization scale']['zdecays']
     wc_dict = wc_obj.get_wc(sector='dB=dL=0', scale=scale, par=par,
                             eft='SMEFT', basis='Warsaw')
+    Nc = smeftew._QN[f1]['Nc']
     if f1 == f2:
+        gV_SM = smeftew.gV_SM(f1, par)
+        gA_SM = smeftew.gA_SM(f1, par)
         GSM = gammazsm.GammaZ_SM(par, f1)
     else:
+        gV_SM = 0
+        gA_SM = 0
         GSM = 0
-    GNP = GammaZ_NP(wc_dict, par, f1, f2)
+    d_gV = smeftew.d_gV(f1, f2, par, wc_dict)
+    d_gA = smeftew.d_gA(f1, f2, par, wc_dict)
+    GNP = GammaZ_NP(par, Nc, gV_SM, d_gV, gA_SM, d_gA)
     return GSM + GNP
 
 
