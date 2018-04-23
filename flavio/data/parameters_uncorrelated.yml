@@ -25,14 +25,14 @@
 
 GF: 1.1663787(6)e-5  # PDG 2014
 alpha_e: 0.00781616(86) # = 1/127.940(14)
-alpha_s: 0.1185(6)    # PDG 2014
-s2w: 0.23126(5)       # PDG 2014
+alpha_s: 0.1185(12)    # PDG 2014 central value, larger error from PDG 2017
+s2w: 0.23129(5)       # PDG 2017
 
 
 # CKM parameters
 
-Vus: 0.2243(10)   # FLAG 2016 Nf=2+1
-Vub: 3.62(14)e-3  # FLAG 2016 Nf=2+1 B->pilnu
+Vus: 0.2248(8)   # FLAG 2017 Nf=2+1+1
+Vub: 3.73(14)e-3  # FLAG 2017 Nf=2+1 B->pilnu
 Vcb: 4.221(78)e-2
 gamma: 1.27(12)
 
