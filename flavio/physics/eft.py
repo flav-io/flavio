@@ -193,14 +193,19 @@ class WilsonCoefficients(wilson.Wilson):
             eft = 'WET-3'
         elif nf_out is not None:
             raise ValueError("Invalid value: nf_out=".format(nf_out))
-        # translate from legacy flavio to wcxf sector if necessary
-        wcxf_sector = sectors_flavio2wcxf.get(sector, sector)
         wcxf_basis = wcxf.Basis[eft, basis]
-        coeffs = wcxf_basis.sectors[wcxf_sector].keys()
+        if sector == 'all':
+            coeffs = wcxf_basis.all_wcs
+            mr_sectors = 'all'
+        else:
+            # translate from legacy flavio to wcxf sector if necessary
+            wcxf_sector = sectors_flavio2wcxf.get(sector, sector)
+            coeffs = wcxf_basis.sectors[wcxf_sector].keys()
+            mr_sectors = (wcxf_sector,)
         wc_sm = {k: 0 for k in coeffs}
         if not self.wc:
             return wc_sm
-        wc_out = self.match_run(scale=scale, eft=eft, basis=basis, sectors=(wcxf_sector,))
+        wc_out = self.match_run(scale=scale, eft=eft, basis=basis, sectors=mr_sectors)
         wc_out_dict = wc_sm  # initialize with zeros
         wc_out_dict.update(wc_out.dict)  # overwrite non-zero entries
         return wc_out_dict
