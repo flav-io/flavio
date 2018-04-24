@@ -202,7 +202,7 @@ class WilsonCoefficients(wilson.Wilson):
             wcxf_sector = sectors_flavio2wcxf.get(sector, sector)
             coeffs = wcxf_basis.sectors[wcxf_sector].keys()
             mr_sectors = (wcxf_sector,)
-        wc_sm = {k: 0 for k in coeffs}
+        wc_sm = dict.fromkeys(coeffs, 0)
         if not self.wc:
             return wc_sm
         wc_out = self.match_run(scale=scale, eft=eft, basis=basis, sectors=mr_sectors)
