@@ -44,8 +44,9 @@ renormalization scale:
     #  tau decays
     taudecays: 1.8
 
-    # Z decays
+    # EW decays
     zdecays: 91.1876
+    wdecays: 91.1876
 
     # meson mixing
     Bs mixing: 4.2  # Bs-Bsbar mixing

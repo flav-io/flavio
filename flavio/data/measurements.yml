@@ -5106,3 +5106,15 @@ A_l SLD:
   correlation: [[1.0, 0.038, 0.033],
                 [1.0, 0.007],
                 [1.0]]
+
+m_W Tevatron:
+  experiment: CDF, D0
+  inspire: Aaltonen:2013iut
+  values:
+    m_W: 80.387 ± 0.016
+
+m_W ATLAS 2017:
+  experiment: CDF, D0
+  inspire: Aaboud:2017svj
+  values:
+    m_W: 80.3695 ± 0.0185
