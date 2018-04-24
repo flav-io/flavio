@@ -46,7 +46,7 @@ def dmW_SMEFT(par, C):
 def mW(wc_obj, par):
     r"""$W$ pole mass."""
     scale = flavio.config['renormalization scale']['wdecays']
-    C = wc_obj.get_wc(sector='dB=dL=0', scale=scale, par=par,
+    C = wc_obj.get_wc(sector='all', scale=scale, par=par,
                       eft='SMEFT', basis='Warsaw')
     dmW = dmW_SMEFT(par, C)
     return mW_SM(par) * (1 - dmW)

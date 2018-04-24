@@ -18,7 +18,7 @@ def GammaZ_NP(par, Nc, gV_SM, d_gV, gA_SM, d_gA):
 
 def GammaZ(wc_obj, par, f1, f2):
     scale = flavio.config['renormalization scale']['zdecays']
-    wc_dict = wc_obj.get_wc(sector='dB=dL=0', scale=scale, par=par,
+    wc_dict = wc_obj.get_wc(sector='all', scale=scale, par=par,
                             eft='SMEFT', basis='Warsaw')
     Nc = smeftew._QN[f1]['Nc']
     if f1 == f2:
