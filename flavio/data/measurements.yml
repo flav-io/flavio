@@ -5118,3 +5118,58 @@ m_W ATLAS 2017:
   inspire: Aaboud:2017svj
   values:
     m_W: 80.3695 ± 0.0185
+
+DELPHI Z LFV:
+  experiment: DELPHI
+  inspire: Abreu:1996mj
+  values:
+    # Low background: assuming zero expected and observed counts for simplicity
+    BR(Z->mutau):
+      distribution: gamma_upper_limit
+      limit: 1.2e-5
+      confidence_level: 0.95
+      counts_total: 0
+      counts_background: 0
+    BR(Z->etau):
+      distribution: gamma_upper_limit
+      limit: 2.2e-5
+      confidence_level: 0.95
+      counts_total: 0
+      counts_background: 0
+    BR(Z->emu):
+      distribution: gamma_upper_limit
+      limit: 0.25e-5
+      confidence_level: 0.95
+      counts_total: 0
+      counts_background: 0
+
+ATLAS Z LFV 2014:
+  experiment: ATLAS
+  inspire: Aad:2014bca
+  values:
+    # High background: assuming half-Gaussian for simplicity
+    BR(Z->emu): < 7.5e-7 @ 95% CL
+
+OPAL Z LFV:
+  experiment: OPAL
+  inspire: Akers:1995gz
+  values:
+  # Low background: assuming zero expected and observed counts for simplicity
+    BR(Z->emu):
+      distribution: gamma_upper_limit
+      limit: 1.7e-6
+      confidence_level: 0.95
+      counts_total: 0
+      counts_background: 0
+    BR(Z->etau):
+      distribution: gamma_upper_limit
+      limit: 9.8e-6
+      confidence_level: 0.95
+      counts_total: 0
+      counts_background: 0
+    BR(Z->mutau):
+      distribution: gamma_upper_limit
+      limit: 17.0e-6
+      confidence_level: 0.95
+      counts_total: 0
+      counts_background: 0
