@@ -18,8 +18,8 @@ def AFBf(gVe, gAe, gVf, gAf):
 
 def get_gV_gA(wc_obj, par, f):
         scale = flavio.config['renormalization scale']['zdecays']
-        C = wc_obj.get_wc(sector='all', scale=scale, par=par,
-                                eft='SMEFT', basis='Warsaw')
+        C = wc_obj.get_wcxf(sector='all', scale=scale, par=par,
+                            eft='SMEFT', basis='Warsaw')
         gV = gV_SM(f, par) + d_gV(f, f, par, C)
         gA = gA_SM(f, par) + d_gA(f, f, par, C)
         return gV, gA

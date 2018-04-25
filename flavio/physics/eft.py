@@ -170,11 +170,11 @@ class WilsonCoefficients(wilson.Wilson):
     def run_wcxf(*args, **kwargs):
         raise ValueError("The method run_wcxf has been removed. Please use the match_run method of wilson.Wilson instead.")
 
-    def get_wc(self, sector, scale, par, eft='WET', basis='flavio', nf_out=None):
+    def get_wcxf(self, sector, scale, par, eft='WET', basis='flavio', nf_out=None):
         """Get the values of the Wilson coefficients belonging to a specific
         sector (e.g. `bsmumu`) at a given scale.
 
-        Returns a dictionary of WC values.
+        Returns a WCxf.WC instance.
 
         Parameters:
 
@@ -193,22 +193,45 @@ class WilsonCoefficients(wilson.Wilson):
             eft = 'WET-3'
         elif nf_out is not None:
             raise ValueError("Invalid value: nf_out=".format(nf_out))
-        wcxf_basis = wcxf.Basis[eft, basis]
         if sector == 'all':
-            coeffs = wcxf_basis.all_wcs
             mr_sectors = 'all'
         else:
             # translate from legacy flavio to wcxf sector if necessary
             wcxf_sector = sectors_flavio2wcxf.get(sector, sector)
-            coeffs = wcxf_basis.sectors[wcxf_sector].keys()
             mr_sectors = (wcxf_sector,)
+        if not self.wc:
+            return wcxf.WC(eft=eft, basis=basis, scale=scale, values={})
+        return self.match_run(scale=scale, eft=eft, basis=basis, sectors=mr_sectors)
+
+    def get_wc(self, sector, scale, par, eft='WET', basis='flavio', nf_out=None):
+        """Get the values of the Wilson coefficients belonging to a specific
+        sector (e.g. `bsmumu`) at a given scale.
+
+        Returns a dictionary of WC values.
+
+        Parameters:
+
+        - sector: string name of the sector as defined in the WCxf EFT instance
+        - scale: $\overline{\text{MS}}$ renormalization scale
+        - par: dictionary of parameters
+        - eft: name of the EFT at the output scale
+        - basis: name of the output basis
+        """
+        wcxf_basis = wcxf.Basis[eft, basis]
+        if sector == 'all':
+            coeffs = wcxf_basis.all_wcs
+        else:
+            # translate from legacy flavio to wcxf sector if necessary
+            wcxf_sector = sectors_flavio2wcxf.get(sector, sector)
+            coeffs = wcxf_basis.sectors[wcxf_sector].keys()
         wc_sm = dict.fromkeys(coeffs, 0)
         if not self.wc or not any(self.wc.values.values()):
             return wc_sm
-        wc_out = self.match_run(scale=scale, eft=eft, basis=basis, sectors=mr_sectors)
+        wc_out = self.get_wcxf(sector, scale, par, eft, basis, nf_out)
         wc_out_dict = wc_sm  # initialize with zeros
         wc_out_dict.update(wc_out.dict)  # overwrite non-zero entries
         return wc_out_dict
+
 
 # this global variable is simply an instance that is not meant to be modifed -
 # i.e., a Standard Model Wilson coefficient instance.
