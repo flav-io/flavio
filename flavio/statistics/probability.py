@@ -695,10 +695,10 @@ class GammaUpperLimit(GammaDistributionPositive):
             raise ValueError("Confidence level should be between 0 und 1")
         if limit <= 0:
             raise ValueError("The upper limit should be a positive number")
-        if counts_total <= 0:
-            raise ValueError("counts_total should be a positive number")
-        if counts_background <= 0:
-            raise ValueError("counts_background should be a positive number")
+        if counts_total < 0:
+            raise ValueError("counts_total should be a positive number or zero")
+        if counts_background < 0:
+            raise ValueError("counts_background should be a positive number or zero")
         self.limit = limit
         self.confidence_level = confidence_level
         self.counts_total = counts_total

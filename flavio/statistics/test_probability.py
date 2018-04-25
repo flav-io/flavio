@@ -105,6 +105,10 @@ class TestProbability(unittest.TestCase):
         p = GammaUpperLimit(counts_total=30, counts_background=10,
                             limit=2e-5, confidence_level=0.68)
         self.assertAlmostEqual(p.cdf(2e-5), 0.68, delta=0.0001)
+        # no counts
+        p = GammaUpperLimit(counts_total=0, counts_background=0,
+                            limit=2e-5, confidence_level=0.68)
+        self.assertAlmostEqual(p.cdf(2e-5), 0.68, delta=0.0001)
         # background excess
         p = GammaUpperLimit(counts_total=30, counts_background=50,
                             limit=2e5, confidence_level=0.68)
