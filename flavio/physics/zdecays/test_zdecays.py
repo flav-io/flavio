@@ -76,15 +76,10 @@ class TestGammaZ(unittest.TestCase):
         self.assertAlmostEqual(Rb, Gb / Ghad, delta=1e-4)
 
     def test_obs_sm_fv(self):
-        # check the SM predictions for FV decays
-        sec = [['u', 'c'], ['d', 's', 'b'], ['e', 'mu', 'tau']]
-        for f in sec:
-            for f1 in f:
-                for f2 in f:
-                    if f1 != f2:
-                        self.assertEqual(flavio.sm_prediction('BR(Z->{}{})'.format(f1, f2)),
-                                         0,
-                                         msg="Failed BR(Z->{}{})")
+        # check the SM predictions for LFV decays
+        self.assertEqual(flavio.sm_prediction('BR(Z->emu)'), 0)
+        self.assertEqual(flavio.sm_prediction('BR(Z->etau)'), 0)
+        self.assertEqual(flavio.sm_prediction('BR(Z->mutau)'), 0)
 
     def test_Gamma_NP(self):
         # compare NP contributions to A.49-A.52 from 1706.08945

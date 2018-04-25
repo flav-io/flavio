@@ -46,6 +46,11 @@ def BRZ_fct(f1, f2):
         return par['tau_Z'] * GammaZ(wc_obj, par, f1, f2)
     return fu
 
+def BRZ_fct_av(f1, f2):
+    def fu(wc_obj, par):
+        return par['tau_Z'] * (GammaZ(wc_obj, par, f1, f2) + GammaZ(wc_obj, par, f2, f1))
+    return fu
+
 
 def GammaZnu(wc_obj, par):
     # sum over all 9 possibilities (they are exp. indistinguishable)
@@ -123,20 +128,17 @@ for _f in (_leptons, _uquarks, _dquarks):
             flavio.classes.Prediction(_obs_name, Rq(f))
 
 
-for _f in (_leptons, _uquarks, _dquarks):
-    for f1, tex1 in _f.items():
-        for f2, tex2 in _f.items():
-            if f1 != f2:
-                _obs_name = "BR(Z->{}{})".format(f1, f2)
-                _obs = flavio.classes.Observable(_obs_name)
-                if f1 in _leptons:
-                    _process_tex = r"Z^0\to {}^+{}^-".format(tex1, tex2)
-                else:
-                    _process_tex = r"Z^0\to {} \bar {}".format(tex1, tex2)
-                _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
-                _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
-                _obs.add_taxonomy(r'Process :: $Z^0$ decays :: FCNC decays :: $' + _process_tex + r"$")
-                flavio.classes.Prediction(_obs_name, BRZ_fct(f1, f2))
+# LFV Z decays
+for (f1, f2) in [('e', 'mu'), ('e', 'tau'), ('mu', 'tau'), ]:
+    tex1 = _leptons[f1]
+    tex2 = _leptons[f2]
+    _obs_name = "BR(Z->{}{})".format(f1, f2)
+    _obs = flavio.classes.Observable(_obs_name)
+    _process_tex = r"Z^0\to {}^\pm{}^\mp".format(tex1, tex2)
+    _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
+    _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
+    _obs.add_taxonomy(r'Process :: $Z^0$ decays :: FCNC decays :: $' + _process_tex + r"$")
+    flavio.classes.Prediction(_obs_name, BRZ_fct_av(f1, f2))
 
 
 _obs_name = "GammaZ"
