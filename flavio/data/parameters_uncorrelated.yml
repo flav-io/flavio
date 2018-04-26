@@ -290,3 +290,7 @@ delta_Gammanu: 0 ± 0.014e-3
 # anomalous magnet moment of the muon
 # arXiv:1706.09436 eq. (2)
 a_mu SM: 11659182.3 ± 4.3 e-10
+
+# Parameters for W decays
+GammaW_had: 1411.40 ± 0.96 ± 0.04 e-3  # arXiv:1603.06501
+GammaW_lep: 0.6803384  # arXiv:hep-ph/0005060

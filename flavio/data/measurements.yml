@@ -5173,3 +5173,16 @@ OPAL Z LFV:
       confidence_level: 0.95
       counts_total: 0
       counts_background: 0
+
+LEP W->leptons:
+  experiment: LEP
+  inspire: Schael:2013ita
+  values:
+    BR(W->enu): 10.71 ± 0.16 e-2
+    BR(W->munu): 10.63 ± 0.15 e-2
+    BR(W->taunu): 11.38 ± 0.21 e-2
+
+PDG W width:
+  inspire: Patrignani:2016xqp
+  values:
+    GammaW: 2.085 ± 0.042

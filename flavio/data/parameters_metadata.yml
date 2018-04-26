@@ -1204,3 +1204,11 @@ delta_Gammanu:
 a_mu SM:
   tex: $a_\mu^\text{SM}$
   description: SM prediction for the anomalous magnetic moment of the muon
+
+# Parameters for W decays
+GammaW_had:
+  tex: $\Gamma_W^\text{had}$
+  description: Hadronic $W$ width in the SM
+GammaW_lep:
+  tex: $\Gamma_W^\text{lep}$
+  description: Leptonic $W$ width in the SM

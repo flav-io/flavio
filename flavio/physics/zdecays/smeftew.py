@@ -163,3 +163,28 @@ def d_gA(f1, f2, par, C):
         return d_gAu(f1, f2, par, C)
     if f1 in _sectors['d']:
         return d_gAd(f1, f2, par, C)
+
+
+def d_gWl(f1, f2, par, C):
+    i, j = sorted((_sectors['l'][f1], _sectors['l'][f2]))
+    sh2 = _sinthetahat2(par)
+    sh = sqrt(sh2)
+    ch = sqrt(1 - sh2)
+    d_g = (C['phil3_{}{}'.format(i, j)] + 1 / 2 * ch / sh * C['phiWB']) / (2 * sqrt(2) * par['GF']) - 1 / 4 * d_sh2(par, C) / sh**2
+    return d_g
+
+
+def d_gWq(f1, f2, par, C):
+    i, j = sorted((_sectors['u'][f1], _sectors['d'][f2]))
+    sh2 = _sinthetahat2(par)
+    sh = sqrt(sh2)
+    ch = sqrt(1 - sh2)
+    d_g = (C['phiq3_{}{}'.format(i, j)] + 1 / 2 * ch / sh * C['phiWB']) / (2 * sqrt(2) * par['GF']) - 1 / 4 * d_sh2(par, C) / sh**2
+    return d_g
+
+
+def d_gW(f1, f2, par, C):
+    if f1 in _sectors['l']:
+        return d_gWl(f1, f2, par, C)
+    if f1 in _sectors['u']:
+        return d_gWq(f1, f2, par, C)
