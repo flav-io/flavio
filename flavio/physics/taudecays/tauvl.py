@@ -30,10 +30,10 @@ def br_tauvl(wc_obj, par, V, lep):
         F['LR' + q] = wc['CVLR_tau{}{}'.format(lep, 2 * q)]
         F['RL' + q] = wc['CVLR_{}tau{}'.format(2 * q, lep)]
     if V == 'rho0':
-        FL = (F['LLu'] + F['LLd']) / 2 + (F['LRu'] + F['LRd']) / 2
-        FR = (F['RLu'] + F['RLd']) / 2 + (F['RRu'] + F['RRd']) / 2
+        FL = (F['LLu'] - F['LLd']) / 2 + (F['LRu'] - F['LRd']) / 2
+        FR = (F['RLu'] - F['RLd']) / 2 + (F['RRu'] - F['RRd']) / 2
         Vud = flavio.physics.ckm.get_ckm(par)[0, 0]
-        norm = 1 / (4 * par['GF']**2 / abs(Vud)**2) * par['BR(tau->rhonu)']
+        norm = 1 / (4 * par['GF']**2 * abs(Vud)**2) * par['BR(tau->rhonu)']
     rWC = (abs(FL)**2 + abs(FR)**2
            - 6 / (1 + 2 * x) * (e2DLg * FL.conjugate() + e2DRg * FR.conjugate()).real
            + (2 + x) / (x * (1 + 2 * x)) * (abs(e2DLg)**2 + abs(e2DRg)**2))
@@ -56,6 +56,9 @@ for V in _had:
     for l in _lep:
         _obs_name = "BR(tau->" + _shortname[V] + l + r")"
         _obs = flavio.classes.Observable(_obs_name)
-        _obs.set_description(r"Branching ratio of $\tau^+\to " + _had[V] + _lep[l] + r"^+$")
-        _obs.tex = r"$\text{BR}(\tau^+\to " + _had[V] + _lep[l] + r"^+$"
+        _process_tex = r"\tau^+\to " + _had[V] + _lep[l] + r"^+"
+        _process_taxonomy = r'Process :: $\tau$ lepton decays :: LFV decays :: $\tau\to V\ell$ :: $' + _process_tex + r"$"
+        _obs.add_taxonomy(_process_taxonomy)
+        _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
+        _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
         flavio.classes.Prediction(_obs_name, br_tauvl_fct(V, l))
