@@ -53,6 +53,9 @@ _shortname = {'pi+': 'pi', 'K+': 'K'}
 for P in _had:
     _obs_name = "BR(tau->" + _shortname[P]+"nu)"
     _obs = flavio.classes.Observable(_obs_name)
-    _obs.set_description(r"Branching ratio of $\tau^+\to " + _had[P] + r"\bar\nu$")
-    _obs.tex = r"$\text{BR}(\tau^+\to " + _had[P] + r"\bar\nu)$"
+    _process_tex = r"\tau^+\to " + _had[P] + r"\bar\nu"
+    _process_taxonomy = r'Process :: $\tau$ lepton decays :: Hadronic tree-level decays :: $\tau\to V\ell$ :: $' + _process_tex + r"$"
+    _obs.add_taxonomy(_process_taxonomy)
+    _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
     flavio.classes.Prediction(_obs_name, br_taupnu_fct(P))

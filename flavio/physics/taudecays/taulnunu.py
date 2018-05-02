@@ -77,7 +77,7 @@ _tex = {'e': 'e', 'mu': r'\mu'}
 
 for lep in _tex:
     _process_tex = r"\tau^-\to " + _tex[lep] + r"^- \nu\bar\nu"
-    _process_taxonomy = r'Process :: $\tau$ lepton decays :: Leptonic decays :: $\tau\to \ell\nu\bar\nu$ :: $' + _process_tex + r"$"
+    _process_taxonomy = r'Process :: $\tau$ lepton decays :: Leptonic tree-level decays :: $\tau\to \ell\nu\bar\nu$ :: $' + _process_tex + r"$"
 
     _obs_name = "BR(tau->" + lep + "nunu)"
     _obs = flavio.classes.Observable(_obs_name)
