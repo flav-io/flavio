@@ -88,7 +88,7 @@ class TestProbability(unittest.TestCase):
             self.assertEqual(p.logpdf(-0.1), -np.inf)
             self.assertEqual(p.cdf(0), 0)
             self.assertAlmostEqual(p.cdf(p.support[1]), 1-2e-9, delta=0.1e-9)
-            self.assertEqual(p.ppf(0), 0)
+            self.assertAlmostEqual(p.ppf(0), 0, places=14)
             self.assertAlmostEqual(p.ppf(1-2e-9), p.support[1], delta=0.0001)
             self.assertEqual(p.cdf(-1), 0)
         p = GammaDistributionPositive(a=11, loc=-9, scale=1)
