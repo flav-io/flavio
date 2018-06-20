@@ -8,6 +8,7 @@ from flavio.parameters import default_parameters
 import copy
 import flavio
 import cmath
+from wilson import Wilson
 
 s = 1.519267515435317e+24
 
@@ -167,3 +168,26 @@ class TestMesonMixing(unittest.TestCase):
         self.assertAlmostEqual(qp, -(2*M12.conjugate()-1j*G12.conjugate())/(DM+1j*DG/2), places=10) # (37)
         self.assertAlmostEqual(DM*DG, -4*(M12*G12.conjugate()).real, places=10) # (36)
         self.assertAlmostEqual(DM*DG, 4*aM12*aG12*cos(phi12), places=10) # (39)
+
+    def test_np(self):
+        # Bd
+        CVSM = flavio.physics.mesonmixing.wilsoncoefficient.cvll_d(par, 'B0', scale=80)[0]
+        w = Wilson({'CVRR_bdbd': CVSM}, 80, 'WET', 'flavio')
+        self.assertAlmostEqual(
+            flavio.np_prediction('DeltaM_d', w) / flavio.sm_prediction('DeltaM_d'),
+            2,
+            delta=0.15)  # difference due to NNLO evolution of SM contribution
+        # Bs
+        CVSM = flavio.physics.mesonmixing.wilsoncoefficient.cvll_d(par, 'Bs', scale=80)[0]
+        w = Wilson({'CVRR_bsbs': CVSM}, 80, 'WET', 'flavio')
+        self.assertAlmostEqual(
+            flavio.np_prediction('DeltaM_s', w) / flavio.sm_prediction('DeltaM_s'),
+            2,
+            delta=0.15)  # difference due to NNLO evolution of SM contribution
+        # K0
+        CVSM = flavio.physics.mesonmixing.wilsoncoefficient.cvll_d(par, 'K0', scale=80)[0]
+        w = Wilson({'CVRR_sdsd': CVSM}, 80, 'WET', 'flavio')
+        self.assertAlmostEqual(
+            flavio.np_prediction('eps_K', w) / flavio.sm_prediction('eps_K'),
+            2,
+            delta=0.15)  # difference due to NNLO evolution of SM contribution + charm contribution

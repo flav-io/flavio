@@ -67,14 +67,18 @@ def M12(par, wc, meson):
     me = matrixelements(par, meson)
     # new physics contributions to the mixing amplitude
     # the minus sign below stems from the fact that H_eff = -C_i O_i
-    contributions_np = [ -wc_value * me[wc_name.split('_')[0]] for wc_name, wc_value in wc.items() ]
+    di_dj = meson_quark[meson]
+    contribution_np = 0
+    for me_name, me_value in me.items():
+        wc_name = '{}_{}'.format(me_name, 2 * di_dj)
+        contribution_np += -wc.get(wc_name, 0) * me_value
     # SM contribution
     if meson == 'D0':
         contribution_sm = M12_u_SM(par)
     else: # for B0, Bs, K0
         contribution_sm = M12_d_SM(par, meson)
     # new physics + SM
-    return sum(contributions_np) + contribution_sm
+    return contribution_np + contribution_sm
 
 def G12_d_SM(par, meson):
     di_dj = meson_quark[meson]
