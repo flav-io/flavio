@@ -1,0 +1,10 @@
+test:
+  image: python:3.6
+  before_script:
+    - pip install nose
+    - pip install coverage
+    - "export DISPLAY=:99.0"
+  script:
+    - pip install .[sampling,plotting,testing]
+    - nosetests --with-coverage --cover-package=flavio
+  coverage: '/TOTAL.*\s+(\d+\%)/'
