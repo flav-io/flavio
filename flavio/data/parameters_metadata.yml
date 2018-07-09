@@ -1,4 +1,3 @@
-
 # Coupling constants
 
 GF:
@@ -1012,16 +1011,16 @@ chi_2(1):
   tex: $\chi_2(1)$
   description: Subleading Isgur-Wise function $\chi_2$ at $w=1$
 chi_2p(1):
-  tex: $\chi_2'(1)$
+  tex: $\chi_2\'(1)$
   description: Derivative of subleading Isgur-Wise function $\chi_2$ at $w=1$
 chi_3p(1):
-  tex: $\chi_3'(1)$
+  tex: $\chi_3\'(1)$
   description: Derivative of subleading Isgur-Wise function $\chi_3$ at $w=1$
 eta(1):
   tex: $\eta(1)$
   description: Subleading Isgur-Wise function $\eta$ at $w=1$
 etap(1):
-  tex: $\eta'(1)$
+  tex: $\eta\'(1)$
   description: Derivative of subleading Isgur-Wise function $\eta$ at $w=1$
 CLN rho2_xi:
   tex: $\rho^2_\xi$
@@ -1086,3 +1085,89 @@ BR(tau->enunu):
 BR(tau->rhonu):
   tex:
   description:
+
+# Parameters for epsilon'/epsilon
+eps_K:
+  tex: $\|\epsilon_K\|$
+  description: Measured value of $\|\epsilon_K\|$
+omega+:
+  tex: $\omega_+$
+  description:
+Omegahat_eff:
+  tex: $\hat \Omega_\text{eff}$
+  description: Parameter for isospin breaking corrections to $\epsilon\'/\epsilon$
+epsp a:
+  tex: $a$
+  description: Parameter for isospin breaking corrections to $\epsilon\'/\epsilon$
+ReA0(K->pipi):
+  tex: $\text{Re}A_0$
+  description: Real part of the $K\to(\pi\pi)_{I=0}$ isospin amplitude from experiment
+ReA2(K->pipi):
+  tex: $\text{Re}A_2$
+  description: Real part of the $K\to(\pi\pi)_{I=2}$ isospin amplitude from experiment
+#  K-> pi pi matrix elements of QCD and QED penguin operators
+Kpipi M0 3:
+  tex: $\langle Q_3 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_3$
+Kpipi M0 4:
+  tex: $\langle Q_4 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_4$
+Kpipi M0 5:
+  tex: $\langle Q_5 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_5$
+Kpipi M0 6:
+  tex: $\langle Q_6 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_6$
+Kpipi M0 7:
+  tex: $\langle Q_7 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_7$
+Kpipi M0 8:
+  tex: $\langle Q_8 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_8$
+Kpipi M0 9:
+  tex: $\langle Q_9 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_9$
+Kpipi M2 7:
+  tex: $\langle Q_7 \rangle_2$
+  description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_7$
+Kpipi M2 8:
+  tex: $\langle Q_8 \rangle_2$
+  description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_8$
+Kpipi M2 9:
+  tex: $\langle Q_9 \rangle_2$
+  description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_9$
+#  K-> pi pi matrix elements of chromo-magnetic dipole operators
+Kpipi M0 g-:
+  tex: $\langle Q_g^- \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_g^-$
+# K-> pi pi  matrix elements for BSM operators in SD basis
+Kpipi M0 SLL1_u:
+  tex: $\langle Q_1^{\text{SLL},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_1^{\text{SLL},u}$
+Kpipi M0 SLL2_u:
+  tex: $\langle Q_2^{\text{SLL},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_2^{\text{SLL},u}$
+Kpipi M0 SLL3_u:
+  tex: $\langle Q_3^{\text{SLL},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_3^{\text{SLL},u}$
+Kpipi M0 SLL4_u:
+  tex: $\langle Q_4^{\text{SLL},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_4^{\text{SLL},u}$
+Kpipi M0 SLR1_u:
+  tex: $\langle Q_1^{\text{SLR},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_1^{\text{SLR},u}$
+Kpipi M0 SLR2_u:
+  tex: $\langle Q_2^{\text{SLR},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_2^{\text{SLR},u}$
+Kpipi M0 SLL1_d:
+  tex: $\langle Q_1^{\text{SLL},d} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_1^{\text{SLL},d}$
+Kpipi M2 SLL1_d:
+  tex: $\langle Q_1^{\text{SLL},d} \rangle_2$
+  description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_1^{\text{SLL},d}$
+Kpipi M0 SLL2_d:
+  tex: $\langle Q_2^{\text{SLL},d} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_2^{\text{SLL},d}$
+Kpipi M2 SLL2_d:
+  tex: $\langle Q_2^{\text{SLL},d} \rangle_2$
+  description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_2^{\text{SLL},d}$

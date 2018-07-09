@@ -33,6 +33,7 @@ renormalization scale:
 
     # K decays
     kdecays: 2.  # K->pinunu
+    kpipi: 1.3  # K->pipi
 
     #  D decays
     dll: 2.      # D->l nu
