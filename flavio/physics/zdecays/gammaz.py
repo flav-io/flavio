@@ -72,8 +72,7 @@ def Gammahad(wc_obj, par):
 
 def sigmahad(wc_obj, par):
     # e+e- hadronic Z production xsec
-    # taking GammaZ = 1 / tauZ here!
-    return 12 * pi / par['m_Z']**2 * par['tau_Z']**2 * GammaZ(wc_obj, par, 'e', 'e') * Gammahad(wc_obj, par)
+    return 12 * pi / par['m_Z']**2 / Gammatot(wc_obj, par)**2 * GammaZ(wc_obj, par, 'e', 'e') * Gammahad(wc_obj, par)
 
 
 def Gammatot(wc_obj, par):
