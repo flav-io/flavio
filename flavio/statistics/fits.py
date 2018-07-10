@@ -15,6 +15,7 @@ import inspect
 from multiprocessing import Pool
 import scipy.optimize
 import pickle
+from functools import partial
 
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
@@ -468,6 +469,9 @@ class FastFit(Fit):
         super().__init__(*args, **kwargs)
         self.measurements = None
         self._sm_covariance = None
+        self._get_predictions_array_sm = partial(self.get_predictions_array,
+                                                 par=False, nuisance=True,
+                                                 wc=False)
 
 
     # a method to get the mean and covariance of all measurements of all
@@ -533,18 +537,18 @@ class FastFit(Fit):
     # of interest
     def _get_covariance_sm(self, N=100, threads=1):
         if threads == 1:
-            pred_arr = np.zeros((len(self.observables), N))
-            for j in range(N):
-                x = self._get_random(par=False, nuisance=True, wc=False)
-                pred_arr[:, j] = self.get_predictions_array(x, par=False, nuisance=True, wc=False)
+            X_map = map(self._get_random_nuisance, range(N))
+            pred_map = map(self._get_predictions_array_sm, X_map)
         else:
-            # X = [get_random_nuisance_arr() for j in range(N)]
             pool = Pool(threads)
-            X = np.array(pool.map(self._get_random_nuisance, range(N)))
-            pred_arr = np.array(pool.map(self.get_predictions_array, X)).T
+            X_map = pool.map(self._get_random_nuisance, range(N))
+            pred_map = pool.map(self._get_predictions_array_sm, X_map)
             pool.close()
             pool.join()
-        return np.cov(pred_arr)
+        pred_arr = np.empty((N, len(self.observables)))
+        for i, pred_i in enumerate(pred_map):
+            pred_arr[i] = pred_i
+        return np.cov(pred_arr.T)
 
     def get_sm_covariance(self, N=100, threads=1, force=True):
         """Return the covriance matrix of the SM predictions of all observables
