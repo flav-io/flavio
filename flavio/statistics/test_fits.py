@@ -11,6 +11,9 @@ import copy
 import os
 import tempfile
 
+def fit_wc_fct_error(X):
+    raise ValueError("Oops ... this should not have happened")
+
 class TestClasses(unittest.TestCase):
     def test_fit_class(self):
         o = Observable( 'test_obs' )
@@ -147,6 +150,35 @@ class TestClasses(unittest.TestCase):
         Observable.del_instance('test_obs 2')
         Measurement.del_instance('measurement 1 of test_obs 1')
         Measurement.del_instance('measurement 2 of test_obs 1 and test_obs 2')
+
+    def test_fastfit_covariance_sm(self):
+        # This test is to assure that calling make_measurement does not
+        # actually call the fit_wc_function
+        # dummy observables
+        o1 = Observable( 'test_obs 1' )
+        # dummy predictions
+        def f1(wc_obj, par_dict):
+            return par_dict['m_b']
+        Prediction( 'test_obs 1', f1 )
+        d1 = NormalDistribution(5, 0.2)
+        m1 = Measurement( 'measurement 1 of test_obs 1' )
+        m1.add_constraint(['test_obs 1'], d1)
+        def fit_wc_fct_tmp(X):
+            pass
+        fit = FastFit('fastfit_test_1', flavio.default_parameters, ['m_b'],  [], ['test_obs 1'],
+                      fit_wc_function=fit_wc_fct_tmp)
+        fit.fit_wc_function = fit_wc_fct_error
+        fit.fit_wc_names = tuple(inspect.signature(fit.fit_wc_function).parameters.keys())
+        fit.make_measurement() # single thread calculation
+        FastFit.del_instance('fastfit_test_1')
+        fit = FastFit('fastfit_test_1', flavio.default_parameters, ['m_b'],  [], ['test_obs 1'],
+                      fit_wc_function=fit_wc_fct_tmp)
+        fit.fit_wc_function = fit_wc_fct_error
+        fit.fit_wc_names = tuple(inspect.signature(fit.fit_wc_function).parameters.keys())
+        fit.make_measurement(threads=2) # multi thread calculation
+        FastFit.del_instance('fastfit_test_1')
+        Observable.del_instance('test_obs 1')
+        Measurement.del_instance('measurement 1 of test_obs 1')
 
     def test_frequentist_fit_class(self):
         o = Observable( 'test_obs 2' )
