@@ -241,19 +241,21 @@ eps_K: 2.228(11)e-3
 omega+: (4.53 ± 0.02) 1e-2
 Omegahat_eff: (14.8 ± 8.0) 1e-2
 epsp a: 1.017
-ReA0(K->pipi): 33.22e-8
-ReA2(K->pipi): 1.479e-8
+# convention h=1!
+ReA0(K->pipi): 27.12e-8
+ReA2(K->pipi): 1.208e-8
 # arXiv:1505.07863 table S II
-Kpipi M0 3: -0.0399(652)(118)
-Kpipi M0 4:  0.267(93)(65)
-Kpipi M0 5: -0.179(48)(46)
-Kpipi M0 6: -0.339(97)(91)
-Kpipi M0 7:  0.155(37)(53)
-Kpipi M0 8:  1.54(6)(41)
-Kpipi M0 9: -0.197(54)(49)
-Kpipi M2 7:  0.1220(52)(71)
-Kpipi M2 8:  0.838(28)(31)
-Kpipi M2 9:  0.0162(3)(6)
+# scaled to mu=1.3, rescaled by 1/h=1/sqrt(3/2)
+Kpipi M0 3: -0.0326(532)(96)
+Kpipi M0 4:  0.218(76)(53)
+Kpipi M0 5: -0.146(39)(38)
+Kpipi M0 6: -0.277(79)(74)
+Kpipi M0 7:  0.127(30)(43)
+Kpipi M0 8:  1.26(5)(33)
+Kpipi M0 9: -0.161(44)(40)
+Kpipi M2 7:  0.0996(42)(58)
+Kpipi M2 8:  0.684(23)(25)
+Kpipi M2 9:  0.0132(2)(5)
 # from arXiv:1803.08052
 # using naive 30% uncertainty
 Kpipi M0 g-: 0.0033(10)
