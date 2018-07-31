@@ -509,7 +509,7 @@ class FastFit(Fit):
             covariances.append(covariance)
         # if there is only a single measuement
         if len(means) == 1:
-            return means[0], covariances[0]
+            return means[0][0], covariances[0]
         # if there are severeal measurements, perform a weighted average
         else:
             # covariances: [Sigma_1, Sigma_2, ...]
@@ -604,7 +604,10 @@ class FastFit(Fit):
             "Covariance matrix does not contain all necessary entries"
         assert len(permutation) == len(self.observables), \
             "Covariance matrix does not contain all necessary entries"
-        self._sm_covariance = d['covariance'][permutation][:,permutation]
+        if len(permutation) == 1:
+            self._sm_covariance = d['covariance']
+        else:
+            self._sm_covariance = d['covariance'][permutation][:,permutation]
 
     def make_measurement(self, N=100, Nexp=5000, threads=1, force=False):
         """Initialize the fit by producing a pseudo-measurement containing both
