@@ -74,10 +74,10 @@ a1_perp_rho+: 0
 bag_K0_1: 0.5237(131)(117) # =0.717(18)(16) for Bhat. FLAG 2016 Nf=2+1+1
 
 # BSM operators
-bag_K0_2: 0.44(3)(1)   # 1505.06639 table 1; converted from 3->2 GeV by multpying with 0.96
-bag_K0_3: 0.76(5)(1)  # 1505.06639 table 1; converted from 3->2 GeV by multpying with 0.96
-bag_K0_4: 0.75(4)(3)   # 1505.06639 table 1; converted from 3->2 GeV by multpying with 0.96
-bag_K0_5: 0.47(4)(1)  # 1505.06639 table 1; converted from 3->2 GeV by multpying with 0.96
+bag_K0_2: 0.468(7)(16)   # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
+bag_K0_3: 0.713(13)(62)  # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
+bag_K0_4: 0.883(12)(15)   # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
+bag_K0_5: 0.679(8)(42)  # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
 
 bag_D0_1: 0.727(26)(4)  # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
 bag_D0_2: 0.62(3)(2)   # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
