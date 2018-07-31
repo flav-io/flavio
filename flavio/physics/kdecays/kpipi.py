@@ -88,7 +88,7 @@ def Kpipi_matrixelements_NP(par, scale):
         M[i]['CVLRt_sduu'] = (MSM[i]['6'] / 3 + 2 * MSM[i]['8'] / 3) / 4
         M[i]['CVLL_sddd'] = (2 * MSM[i]['3'] / 3 - 2 * MSM[i]['9'] / 3) / 4
         M[i]['CVLR_sddd'] = (2 * MSM[i]['5'] / 3 - 2 * MSM[i]['7'] / 3) / 4
-        M[i]['CSRL_sddd'] = (-MSM[i]['6'] / 3 + MSM[i]['8'] / 3) / 4
+        M[i]['CSRL_sddd'] = (MSM[i]['6'] / 3 - MSM[i]['8'] / 3) / 4
         M[i]['CSRR_sddd']  =  par['Kpipi M{} SLL2_d'.format(i)]
         M[i]['CTRR_sddd']  = -8 * par['Kpipi M{} SLL1_d'.format(i)] -4 * par['Kpipi M{} SLL2_d'.format(i)]
     for i in (2, ):
@@ -168,7 +168,7 @@ def Kpipi_amplitudes_NP(wc_obj, par):
     A = {0: 0, 2: 0}
     for i in [0, 2]:
         for j, m in me[i].items():
-            A[i] += pref * m * complex(wc[j]).conjugate()  # conjugate!
+            A[i] += -pref * m * complex(wc[j]).conjugate()  # conjugate!
     return A
 
 def epsprime_SM(par):
