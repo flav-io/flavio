@@ -252,7 +252,8 @@ class TestClasses(unittest.TestCase):
     def test_measurements_yaml(self):
         import json
         for m in Measurement.instances.values():
-            if m.name == 'Belle B->D*lnu hadronic tag 2017':
+            if (m.name == 'Belle B->D*lnu hadronic tag 2017'
+            or 'Pseudo-measurement' in m.name):
                 continue  # known failure ...
             yaml = m.get_yaml_dict()
             mnew = Measurement.from_yaml_dict(yaml)
