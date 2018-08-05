@@ -16,9 +16,29 @@ from multiprocessing import Pool
 import scipy.optimize
 import pickle
 from functools import partial
+import yaml
+import voluptuous as vol
+
+
+def _coerce_observable(value):
+    return flavio.Observable.argument_format(value, format='tuple')
+
 
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
+
+    # voluptuous schema for loading fit from file
+    _schema = vol.Schema({
+        'name': str,
+        'fit_parameters': [str],
+        'nuisance_parameters': [str],
+        'observables':  [_coerce_observable],
+        'exclude_measurements': [str],
+        'include_measurements': [str],
+        'input_scale': vol.Coerce(float),
+        'fit_wc_eft': str,
+        'fit_wc_basis': str,
+    }, extra=vol.ALLOW_EXTRA)
 
     def __init__(self,
                  name,
@@ -60,8 +80,12 @@ class Fit(flavio.NamedInstanceClass):
             try:
                 if isinstance(obs, tuple):
                     flavio.classes.Observable[obs[0]]
-                else:
+                elif isinstance(obs, dict):
+                    flavio.classes.Observable[obs['name']]
+                elif isinstance(obs, str):
                     flavio.classes.Observable[obs]
+                else:
+                    ValueError("Unexpected form of observable: {}".format(obs))
             except:
                 raise ValueError("Observable " + str(obs) + " not found!")
         _obs_measured = set()
@@ -101,6 +125,11 @@ class Fit(flavio.NamedInstanceClass):
         self.dimension = len(self.fit_parameters) + len(self.nuisance_parameters) + len(self.fit_wc_names)
         self.eft = fit_wc_eft
         self.basis = fit_wc_basis
+
+    @classmethod
+    def load(cls, f):
+        """Load the fit definition from a YAML string or stream."""
+        return cls(**cls._schema(yaml.load(f)))
 
     @property
     def get_central_fit_parameters(self):

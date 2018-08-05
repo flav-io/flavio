@@ -218,3 +218,36 @@ class TestClasses(unittest.TestCase):
         FrequentistFit.del_instance('frequentist_test_fit_1')
         Observable.del_instance('test_obs 2')
         Measurement.del_instance('measurement of test_obs 2')
+
+
+    def test_yaml_load(self):
+        # minimal example
+        fit = FastFit.load(r"""
+name: my test fit
+observables:
+    - eps_K
+        """)
+        self.assertEqual(fit.name, 'my test fit')
+        self.assertListEqual(fit.observables, ['eps_K'])
+        # torture example
+        fit = FastFit.load(r"""
+name: my test fit 2
+observables:
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 1.1
+      q2max: 6
+    - [<dBR/dq2>(B0->K*mumu), 15, 19]
+nuisance_parameters:
+    - Vub
+    - Vcb
+fit_parameters:
+    - gamma
+input_scale: 1000
+fit_wc_eft: SMEFT
+fit_wc_basis: Warsaw
+include_measurements:
+    - LHCb B0->K*mumu BR 2016
+        """)
+        self.assertEqual(fit.name, 'my test fit 2')
+        self.assertListEqual(fit.observables, [('<dBR/dq2>(B0->K*mumu)', 1.1, 6),
+                                                ('<dBR/dq2>(B0->K*mumu)', 15, 19)])
