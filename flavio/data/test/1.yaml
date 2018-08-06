@@ -1,0 +1,9 @@
+key: !include 2.yaml
+key3: !include_merge_list
+    - 1
+    - 3.yaml
+    - 4
+    - 5
+    - 4.yaml
+    
+
