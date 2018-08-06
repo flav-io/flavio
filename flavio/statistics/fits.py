@@ -6,8 +6,7 @@ to be used directly)."""
 
 import flavio
 import numpy as np
-import copy
-from flavio.statistics.probability import NormalDistribution, MultivariateNormalDistribution, convolve_distributions
+from flavio.statistics.probability import NormalDistribution, MultivariateNormalDistribution
 from flavio.math.optimize import minimize_robust
 from collections import Counter
 import warnings
@@ -485,7 +484,7 @@ class BayesianFit(Fit):
       can also be set to 'all', in which case all the parameters constrainted
       by `par_obj` will be treated as nuisance parameters. (Note that this makes
       sense for `FastFit`, but not for a MCMC since the number of nuisance
-      parameters will be huge.()
+      parameters will be huge.)
     - `observables`: a list of observable names to be included in the fit
     - `exclude_measurements`: optional; a list of measurement names *not* to be included in
     the fit. By default, all existing measurements are included.
