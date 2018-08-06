@@ -20,25 +20,44 @@ import yaml
 import voluptuous as vol
 
 
-def _coerce_observable(value):
-    return flavio.Observable.argument_format(value, format='tuple')
+def ensurelist(v):
+    """Coerce NoneType to empty list, wrap non-list in list."""
+    if isinstance(v, list):
+        return v
+    elif v is None:
+        return []
+    else:
+        raise ValueError("Unexpected form of list: {}".format(v))
 
 
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
 
     # voluptuous schema for loading fit from file
-    _schema = vol.Schema({
+    _input_schema = vol.Schema({
         'name': str,
-        'fit_parameters': [str],
-        'nuisance_parameters': [str],
-        'observables':  [_coerce_observable],
-        'exclude_measurements': [str],
-        'include_measurements': [str],
+        'fit_parameters': vol.Any(None, [str]),
+        'nuisance_parameters': vol.Any(None, [str]),
+        'observables':  [lambda v: flavio.Observable.argument_format(v, format='tuple')],
+        'exclude_measurements': vol.Any(None, [str]),
+        'include_measurements': vol.Any(None, [str]),
         'input_scale': vol.Coerce(float),
         'fit_wc_eft': str,
         'fit_wc_basis': str,
     }, extra=vol.ALLOW_EXTRA)
+
+    # voluptuous schema for dumping fit to file
+    _output_schema = vol.Schema({
+        'name': str,
+        'fit_parameters': vol.All(ensurelist, [str]),
+        'nuisance_parameters': vol.All(ensurelist, [str]),
+        'observables':  [lambda v: flavio.Observable.argument_format(v, format='dict')],
+        'exclude_measurements': vol.All(ensurelist, [str]),
+        'include_measurements': vol.All(ensurelist, [str]),
+        'input_scale': vol.Coerce(float),
+        'fit_wc_eft': str,
+        'fit_wc_basis': str,
+    }, extra=vol.REMOVE_EXTRA)
 
     def __init__(self,
                  name,
@@ -89,7 +108,7 @@ class Fit(flavio.NamedInstanceClass):
             except:
                 raise ValueError("Observable " + str(obs) + " not found!")
         _obs_measured = set()
-        if exclude_measurements is not None and include_measurements is not None:
+        if exclude_measurements and include_measurements:
             raise ValueError("The options exclude_measurements and include_measurements must not be specified simultaneously")
         # check that no parameter appears as fit *and* nuisance parameter
         intersect = set(self.fit_parameters).intersection(self.nuisance_parameters)
@@ -129,7 +148,16 @@ class Fit(flavio.NamedInstanceClass):
     @classmethod
     def load(cls, f):
         """Load the fit definition from a YAML string or stream."""
-        return cls(**cls._schema(yaml.load(f)))
+        return cls(**cls._input_schema(yaml.load(f)))
+
+    def dump(self, stream=None, **kwargs):
+        """Dump the fit definition to a YAML string or stream.
+
+        Note that this currently does *not* dump any information contained
+        in the `par_obj` argument or `fit_wc_priors`.
+        """
+        d = self._output_schema(self.__dict__)
+        return yaml.dump(d, stream=stream, **kwargs)
 
     @property
     def get_central_fit_parameters(self):

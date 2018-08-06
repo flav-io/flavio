@@ -251,3 +251,8 @@ include_measurements:
         self.assertEqual(fit.name, 'my test fit 2')
         self.assertListEqual(fit.observables, [('<dBR/dq2>(B0->K*mumu)', 1.1, 6),
                                                 ('<dBR/dq2>(B0->K*mumu)', 15, 19)])
+        # dump and load back again
+        fit = FastFit.load(fit.dump())
+        self.assertEqual(fit.name, 'my test fit 2')
+        self.assertListEqual(fit.observables, [('<dBR/dq2>(B0->K*mumu)', 1.1, 6),
+                                                ('<dBR/dq2>(B0->K*mumu)', 15, 19)])
