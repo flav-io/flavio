@@ -124,21 +124,25 @@ class TestClasses(unittest.TestCase):
         m2 = Measurement( 'measurement 2 of test_obs 1 and test_obs 2' )
         m1.add_constraint(['test_obs 1'], d1)
         m2.add_constraint(['test_obs 1', 'test_obs 2'], d2)
-        fit = FastFit('fastfit_test_1', flavio.default_parameters, ['m_b'],  [], ['test_obs 1', 'test_obs 2'])
-        fit.make_measurement()
-        cov_before = fit._sm_covariance
-        filename = os.path.join(tempfile.gettempdir(), 'tmp-no-p')
-        fit.save_sm_covariance(filename)
-        fit.load_sm_covariance(filename)
-        cov_after = fit._sm_covariance
-        npt.assert_array_equal(cov_before, cov_after)
-        os.remove(filename)
-        filename = os.path.join(tempfile.gettempdir(), 'tmp.p')
-        fit.save_sm_covariance(filename)
-        fit.load_sm_covariance(filename)
-        cov_after = fit._sm_covariance
-        npt.assert_array_equal(cov_before, cov_after)
-        os.remove(filename)
+        fit2 = FastFit('fastfit_test_2', flavio.default_parameters, ['m_b'],  [], ['test_obs 1', 'test_obs 2'])
+        # fit with only a single observable and measurement
+        fit1 = FastFit('fastfit_test_1', flavio.default_parameters, ['m_b'],  [], ['test_obs 2',])
+        for fit in (fit2, fit1):
+            fit.make_measurement()
+            cov_before = fit._sm_covariance
+            filename = os.path.join(tempfile.gettempdir(), 'tmp-no-p')
+            fit.save_sm_covariance(filename)
+            fit.load_sm_covariance(filename)
+            cov_after = fit._sm_covariance
+            npt.assert_array_equal(cov_before, cov_after)
+            os.remove(filename)
+            filename = os.path.join(tempfile.gettempdir(), 'tmp.p')
+            fit.save_sm_covariance(filename)
+            fit.load_sm_covariance(filename)
+            cov_after = fit._sm_covariance
+            npt.assert_array_equal(cov_before, cov_after)
+            os.remove(filename)
+        fit = fit2  # the following is only for fit2
         cov_weighted = [[0.008, 0.012],[0.012,0.0855]]
         mean_weighted = [5.8, 1.7]
         exact_log_likelihood = scipy.stats.multivariate_normal.logpdf([5.9, 2.5], mean_weighted, cov_weighted)
@@ -146,10 +150,12 @@ class TestClasses(unittest.TestCase):
         self.assertAlmostEqual(fit.best_fit()['x'], 5.9, delta=0.1)
         # removing dummy instances
         FastFit.del_instance('fastfit_test_1')
+        FastFit.del_instance('fastfit_test_2')
         Observable.del_instance('test_obs 1')
         Observable.del_instance('test_obs 2')
         Measurement.del_instance('measurement 1 of test_obs 1')
         Measurement.del_instance('measurement 2 of test_obs 1 and test_obs 2')
+
 
     def test_fastfit_covariance_sm(self):
         # This test is to assure that calling make_measurement does not
