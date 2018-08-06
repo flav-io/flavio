@@ -13,9 +13,6 @@ from collections import OrderedDict
 import yaml
 import re
 
-def represent_dict_order(self, data):
-    return self.represent_mapping('tag:yaml.org,2002:map', data.items())
-yaml.add_representer(OrderedDict, represent_dict_order)
 
 def _camel_to_underscore(s):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', s)

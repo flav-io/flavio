@@ -4,6 +4,7 @@ from . import statistics
 from . import parameters
 from . import measurements
 from . import classes
+from . import io
 from .classes import Measurement, Parameter, ParameterConstraints, Observable, NamedInstanceClass
 from .config import config
 from flavio.physics.eft import WilsonCoefficients
