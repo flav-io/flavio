@@ -30,6 +30,40 @@ def ensurelist(v):
         raise ValueError("Unexpected form of list: {}".format(v))
 
 
+def wc_function_factory(d):
+    """Return a Wilson coefficient function suitable for the `fit_wc_function`
+    argument starting from a dictionary.
+
+    There are two allowed forms. First form: simply taking the real values
+    of WCxf Wilson coefficients:
+
+    ```{'args': ['C9_bsmumu', 'C10_bsmumu']}```
+
+    which is equivalent to
+
+    ```lambda C9_bsmumu, C10_bsmumu: {'C9_bsmumu': C9_bsmumu, 'C10_bsmumu': C10_bsmumu}```
+
+    Second form: giving executable strings for each return key.
+
+    ```{'args': ['ReC9', 'ImC9'],
+        'return': {'C9_bsmumu': 'ReC9 + 1j * ImC9'}}```
+
+    which is equivalent to
+
+    ```lambda ReC9, ImC9: {'C9_bsmumu': ReC9 + 1j * ImC9}```
+    """
+    if 'args' not in d:
+        raise ValueError("Function dictionary not understood.")
+    if 'return' not in d:
+        s = r"""def f({}):
+    return locals()""".format(', '.join(d['args']))
+    else:
+        s = r"""def f({}):
+    return {{{}}}""".format(', '.join(d['args']), ', '.join(["'{}': {}".format(k, v) for k, v in d['return'].items()]))
+    exec(s, globals())
+    return f
+
+
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
 
@@ -44,6 +78,9 @@ class Fit(flavio.NamedInstanceClass):
         'input_scale': vol.Coerce(float),
         'fit_wc_eft': str,
         'fit_wc_basis': str,
+        'fit_wc_function': vol.All({'args': [vol.Coerce(str)],
+                                    'return': dict},
+                                   wc_function_factory),
     }, extra=vol.ALLOW_EXTRA)
 
     # voluptuous schema for dumping fit to file
@@ -148,13 +185,13 @@ class Fit(flavio.NamedInstanceClass):
     @classmethod
     def load(cls, f):
         """Load the fit definition from a YAML string or stream."""
-        return cls(**cls._input_schema(yaml.load(f)))
+        return cls(**cls._input_schema(flavio.io.yaml.load_include(f)))
 
     def dump(self, stream=None, **kwargs):
         """Dump the fit definition to a YAML string or stream.
 
         Note that this currently does *not* dump any information contained
-        in the `par_obj` argument or `fit_wc_priors`.
+        in the `par_obj` argument, `fit_wc_priors`, or `fit_wc_function`.
         """
         d = self._output_schema(self.__dict__)
         return yaml.dump(d, stream=stream, **kwargs)
