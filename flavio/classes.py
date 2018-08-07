@@ -458,7 +458,7 @@ class Observable(NamedInstanceClass):
         elif isinstance(obs, dict):
             args = cls[obs['name']].arguments
             if args is None:
-                t = (obs['name'],)
+                t = obs['name']
             else:
                 t = tuple([obs['name']] + [obs[a] for a in args])
             d = obs

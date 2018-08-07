@@ -51,16 +51,25 @@ def wc_function_factory(d):
 
     ```lambda ReC9, ImC9: {'C9_bsmumu': ReC9 + 1j * ImC9}```
     """
-    if 'args' not in d:
+    if 'code' in d:
+        s = d['code']
+    elif 'args' not in d:
         raise ValueError("Function dictionary not understood.")
-    if 'return' not in d:
+    elif 'return' not in d:
         s = r"""def f({}):
     return locals()""".format(', '.join(d['args']))
     else:
         s = r"""def f({}):
     return {{{}}}""".format(', '.join(d['args']), ', '.join(["'{}': {}".format(k, v) for k, v in d['return'].items()]))
+    try:
+        del globals()['f']
+    except KeyError:
+        pass
     exec(s, globals())
-    return f
+    try:
+        return f
+    except NameError:
+        return None
 
 
 class Fit(flavio.NamedInstanceClass):
@@ -78,7 +87,8 @@ class Fit(flavio.NamedInstanceClass):
         'fit_wc_eft': str,
         'fit_wc_basis': str,
         'fit_wc_function': vol.All({'args': [vol.Coerce(str)],
-                                    'return': dict},
+                                    'return': dict,
+                                    'code': vol.Coerce(str)},
                                    wc_function_factory),
     }, extra=vol.ALLOW_EXTRA)
 
@@ -157,7 +167,7 @@ class Fit(flavio.NamedInstanceClass):
             except:
                 raise ValueError("Error in calling the Wilson coefficient function")
         else:
-            self.fit_wc_names = []
+            self.fit_wc_names = tuple()
         # now that everything seems fine, we can call the init of the parent class
         super().__init__(name)
         self.par_obj = par_obj
@@ -193,6 +203,8 @@ class Fit(flavio.NamedInstanceClass):
         in the `par_obj` argument, `fit_wc_priors`, or `fit_wc_function`.
         """
         d = self._output_schema(self.__dict__)
+        # remove NoneTypes and empty lists
+        d = {k: v for k, v in d.items() if v is not None and v != []}
         return yaml.dump(d, stream=stream, **kwargs)
 
     @property
