@@ -33,7 +33,7 @@ def wc_function_factory(d):
     """Return a Wilson coefficient function suitable for the `fit_wc_function`
     argument starting from a dictionary.
 
-    There are two allowed forms. First form: simply taking the real values
+    There are three allowed forms. First form: simply taking the real values
     of WCxf Wilson coefficients:
 
     ```{'args': ['C9_bsmumu', 'C10_bsmumu']}```
@@ -50,6 +50,10 @@ def wc_function_factory(d):
     which is equivalent to
 
     ```lambda ReC9, ImC9: {'C9_bsmumu': ReC9 + 1j * ImC9}```
+
+    Third form: explicitly giving the Python code.BayesianFit
+
+    ```{'code': "def f(C9, C10):\n  return {'C9_bsmumu': 10 * C9, 'C10_bsmumu': 30 * C10}"```
     """
     if 'code' in d:
         s = d['code']
