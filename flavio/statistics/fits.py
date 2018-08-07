@@ -76,6 +76,15 @@ def wc_function_factory(d):
         return None
 
 
+def getsource(f):
+    if f is None:
+        return {'code': ''}
+    try:
+        return {'code': inspect.getsource(f)}
+    except OSError:
+        raise ValueError("Unable to get the source code of the fit_wc_function")
+
+
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
 
@@ -107,6 +116,7 @@ class Fit(flavio.NamedInstanceClass):
         'input_scale': vol.Coerce(float),
         'fit_wc_eft': str,
         'fit_wc_basis': str,
+        'fit_wc_function': getsource,
     }, extra=vol.REMOVE_EXTRA)
 
     def __init__(self,
