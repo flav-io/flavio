@@ -17,6 +17,8 @@ import pickle
 from functools import partial
 import yaml
 import voluptuous as vol
+import dill
+import base64
 
 
 def ensurelist(v):
@@ -58,6 +60,8 @@ def wc_function_factory(d):
     """
     if 'code' in d:
         s = d['code']
+    elif 'pickle' in d:
+        return dill.loads(base64.b64decode(d['pickle'].encode('utf-8')))
     elif 'args' not in d:
         raise ValueError("Function dictionary not understood.")
     elif 'return' not in d:
@@ -77,13 +81,10 @@ def wc_function_factory(d):
         return None
 
 
-def getsource(f):
+def fencode(f):
     if f is None:
         return None
-    try:
-        return {'code': inspect.getsource(f)}
-    except OSError:
-        raise ValueError("Unable to get the source code of the fit_wc_function")
+    return base64.b64encode(dill.dumps(f)).decode('utf-8')
 
 
 class Fit(flavio.NamedInstanceClass):
@@ -102,7 +103,8 @@ class Fit(flavio.NamedInstanceClass):
         'fit_wc_basis': str,
         'fit_wc_function': vol.All({'args': [vol.Coerce(str)],
                                     'return': dict,
-                                    'code': vol.Coerce(str)}),
+                                    'code': vol.Coerce(str),
+                                    'pickle': vol.Coerce(str)}),
     }, extra=vol.ALLOW_EXTRA)
 
     # voluptuous schema for dumping fit to file
@@ -118,7 +120,8 @@ class Fit(flavio.NamedInstanceClass):
         'fit_wc_basis': str,
         'fit_wc_function': vol.Any(None, {'args': [vol.Coerce(str)],
                                     'return': dict,
-                                    'code': vol.Coerce(str)}),
+                                    'code': vol.Coerce(str),
+                                    'pickle': vol.Coerce(str)}),
     }, extra=vol.REMOVE_EXTRA)
 
     def __init__(self,
@@ -230,8 +233,8 @@ class Fit(flavio.NamedInstanceClass):
         d = self.__dict__.copy()
         if '_fit_wc_function_string' in d:
             d['fit_wc_function'] = d['_fit_wc_function_string']
-        else:
-            d['fit_wc_function'] = getsource(d['fit_wc_function'])
+        elif d['fit_wc_function'] is not None:
+            d['fit_wc_function'] = {'pickle': fencode(d['fit_wc_function'])}
         d = self._output_schema(d)
         # remove NoneTypes and empty lists
         d = {k: v for k, v in d.items() if v is not None and v != []}
