@@ -17,6 +17,7 @@ import pickle
 from functools import partial
 import yaml
 import voluptuous as vol
+import uuid
 
 
 def ensurelist(v):
@@ -55,30 +56,29 @@ def wc_function_factory(d):
 
     ```{'code': "def f(C9, C10):\n  return {'C9_bsmumu': 10 * C9, 'C10_bsmumu': 30 * C10}"```
     """
+    function_id = uuid.uuid4().hex
     if 'code' in d:
-        # change name of function to 'f'
+        # change name of function to unique name
         try:
-            code_lines = d['code'].splitlines()
+            code_lines = d['code'].strip().splitlines()
             args = code_lines[0].split('(')[1]
-            s = 'def f({}\n{}'.format(args,'\n'.join(code_lines[1:]))
+            s = 'def f_{}({}\n{}'.format(function_id,args,'\n'.join(code_lines[1:]))
         except:
             raise ValueError("Function dictionary does not contain a valid function.")
     elif 'args' not in d:
         raise ValueError("Function dictionary not understood.")
     elif 'return' not in d:
-        s = r"""def f({}):
-    return locals()""".format(', '.join(d['args']))
+        s = r"""def f_{}({}):
+    return locals()""".format(function_id,', '.join(d['args']))
     else:
-        s = r"""def f({}):
-    return {{{}}}""".format(', '.join(d['args']), ', '.join(["'{}': {}".format(k, v) for k, v in d['return'].items()]))
-    try:
-        del globals()['f']
-    except KeyError:
-        pass
+        s = r"""def f_{}({}):
+    return {{{}}}""".format(function_id,', '.join(d['args']), ', '.join(["'{}': {}".format(k, v) for k, v in d['return'].items()]))
     exec(s, globals())
     try:
+        f = globals()['f_{}'.format(function_id)]
+        del globals()['f_{}'.format(function_id)]
         return f
-    except NameError:
+    except KeyError:
         return None
 
 
