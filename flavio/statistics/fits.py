@@ -56,10 +56,13 @@ def wc_function_factory(d):
     ```{'code': "def f(C9, C10):\n  return {'C9_bsmumu': 10 * C9, 'C10_bsmumu': 30 * C10}"```
     """
     if 'code' in d:
-        # change the name of the function to 'f'
-        code_lines = d['code'].splitlines()
-        args = code_lines[0].split('(')[1]
-        s = 'def f({}\n{}'.format(args,'\n'.join(code_lines[1:]))
+        # change name of function to 'f'
+        try:
+            code_lines = d['code'].splitlines()
+            args = code_lines[0].split('(')[1]
+            s = 'def f({}\n{}'.format(args,'\n'.join(code_lines[1:]))
+        except:
+            raise ValueError("Function dictionary does not contain a valid function.")
     elif 'args' not in d:
         raise ValueError("Function dictionary not understood.")
     elif 'return' not in d:
