@@ -51,13 +51,18 @@ def wc_function_factory(d):
 
     ```lambda ReC9, ImC9: {'C9_bsmumu': ReC9 + 1j * ImC9}```
 
-    Third form: explicitly giving the Python code.
-    The function must be named `f`.
+    Third form: explicitly giving the Python code.BayesianFit
 
     ```{'code': "def f(C9, C10):\n  return {'C9_bsmumu': 10 * C9, 'C10_bsmumu': 30 * C10}"```
     """
     if 'code' in d:
-        s = d['code']
+        # change name of function to 'f'
+        try:
+            code_lines = d['code'].splitlines()
+            args = code_lines[0].split('(')[1]
+            s = 'def f({}\n{}'.format(args,'\n'.join(code_lines[1:]))
+        except:
+            raise ValueError("Function dictionary does not contain a valid function.")
     elif 'args' not in d:
         raise ValueError("Function dictionary not understood.")
     elif 'return' not in d:
