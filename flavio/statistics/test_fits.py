@@ -272,27 +272,27 @@ fit_wc_function:
         self.assertTupleEqual(fit.fit_wc_names, ('C9_bsmumu', 'C10_bsmumu'))
         self.assertDictEqual(fit.fit_wc_function(1, 2), {'C9_bsmumu': 1, 'C10_bsmumu': 2})
         # dump and load back again
-#         s = fit.dump().replace('my test fit 3', 'my test fit 3.1')
-#         fit = FastFit.load(s)
-#         self.assertTupleEqual(fit.fit_wc_names, ('C9_bsmumu', 'C10_bsmumu'))
-#         self.assertDictEqual(fit.fit_wc_function(1, 2), {'C9_bsmumu': 1, 'C10_bsmumu': 2})
-#         fit = FastFit.load(r"""
-# name: my test fit 5
-# observables:
-#     - [<dBR/dq2>(B0->K*mumu), 15, 19]
-# input_scale: 1000
-# fit_wc_eft: SMEFT
-# fit_wc_basis: Warsaw
-# fit_wc_function:
-#   args:
-#     - C9
-#     - C10
-#   return:
-#     C9_bsmumu: 10 * C9
-#     C10_bsmumu: 30 * C10
-#   """)
-#         self.assertTupleEqual(fit.fit_wc_names, ('C9', 'C10'))
-#         self.assertDictEqual(fit.fit_wc_function(1, 2), {'C9_bsmumu': 10, 'C10_bsmumu': 60})
+        s = fit.dump().replace('my test fit 3', 'my test fit 3.1')
+        fit = FastFit.load(s)
+        self.assertTupleEqual(fit.fit_wc_names, ('C9_bsmumu', 'C10_bsmumu'))
+        self.assertDictEqual(fit.fit_wc_function(1, 2), {'C9_bsmumu': 1, 'C10_bsmumu': 2})
+        fit = FastFit.load(r"""
+name: my test fit 5
+observables:
+    - [<dBR/dq2>(B0->K*mumu), 15, 19]
+input_scale: 1000
+fit_wc_eft: SMEFT
+fit_wc_basis: Warsaw
+fit_wc_function:
+  args:
+    - C9
+    - C10
+  return:
+    C9_bsmumu: 10 * C9
+    C10_bsmumu: 30 * C10
+""")
+        self.assertTupleEqual(fit.fit_wc_names, ('C9', 'C10'))
+        self.assertDictEqual(fit.fit_wc_function(1, 2), {'C9_bsmumu': 10, 'C10_bsmumu': 60})
         fit = FastFit.load(r"""
 name: my test fit 4
 observables:

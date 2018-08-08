@@ -56,7 +56,13 @@ def wc_function_factory(d):
     ```{'code': "def f(C9, C10):\n  return {'C9_bsmumu': 10 * C9, 'C10_bsmumu': 30 * C10}"```
     """
     if 'code' in d:
-        s = d['code']
+        # change name of function to 'f'
+        try:
+            code_lines = d['code'].splitlines()
+            args = code_lines[0].split('(')[1]
+            s = 'def f({}\n{}'.format(args,'\n'.join(code_lines[1:]))
+        except:
+            raise ValueError("Function dictionary does not contain a valid function.")
     elif 'args' not in d:
         raise ValueError("Function dictionary not understood.")
     elif 'return' not in d:
@@ -78,7 +84,7 @@ def wc_function_factory(d):
 
 def getsource(f):
     if f is None:
-        return {'code': ''}
+        return None
     try:
         return {'code': inspect.getsource(f)}
     except OSError:
@@ -101,8 +107,7 @@ class Fit(flavio.NamedInstanceClass):
         'fit_wc_basis': str,
         'fit_wc_function': vol.All({'args': [vol.Coerce(str)],
                                     'return': dict,
-                                    'code': vol.Coerce(str)},
-                                   wc_function_factory),
+                                    'code': vol.Coerce(str)}),
     }, extra=vol.ALLOW_EXTRA)
 
     # voluptuous schema for dumping fit to file
@@ -116,7 +121,9 @@ class Fit(flavio.NamedInstanceClass):
         'input_scale': vol.Coerce(float),
         'fit_wc_eft': str,
         'fit_wc_basis': str,
-        'fit_wc_function': getsource,
+        'fit_wc_function': vol.Any(None, {'args': [vol.Coerce(str)],
+                                    'return': dict,
+                                    'code': vol.Coerce(str)}),
     }, extra=vol.REMOVE_EXTRA)
 
     def __init__(self,
@@ -208,7 +215,16 @@ class Fit(flavio.NamedInstanceClass):
     @classmethod
     def load(cls, f):
         """Load the fit definition from a YAML string or stream."""
-        return cls(**cls._input_schema(flavio.io.yaml.load_include(f)))
+        kwargs = cls._input_schema(flavio.io.yaml.load_include(f))
+        if 'fit_wc_function' in kwargs:
+            fit_wc_function_string = kwargs['fit_wc_function'].copy()
+            kwargs['fit_wc_function'] = wc_function_factory(fit_wc_function_string)
+        else:
+            fit_wc_function_string = None
+        fit = cls(**kwargs)
+        if fit_wc_function_string is not None:
+            fit._fit_wc_function_string = fit_wc_function_string
+        return fit
 
     def dump(self, stream=None, **kwargs):
         """Dump the fit definition to a YAML string or stream.
@@ -216,7 +232,12 @@ class Fit(flavio.NamedInstanceClass):
         Note that this currently does *not* dump any information contained
         in the `par_obj` argument, `fit_wc_priors`, or `fit_wc_function`.
         """
-        d = self._output_schema(self.__dict__)
+        d = self.__dict__.copy()
+        if '_fit_wc_function_string' in d:
+            d['fit_wc_function'] = d['_fit_wc_function_string']
+        else:
+            d['fit_wc_function'] = getsource(d['fit_wc_function'])
+        d = self._output_schema(d)
         # remove NoneTypes and empty lists
         d = {k: v for k, v in d.items() if v is not None and v != []}
         return yaml.dump(d, stream=stream, **kwargs)
