@@ -72,7 +72,7 @@ def wc_function_factory(d):
         s = r"""def _f({}):
     return {{{}}}""".format(', '.join(d['args']), ', '.join(["'{}': {}".format(k, v) for k, v in d['return'].items()]))
     namespace = OrderedDict()
-    exec(s, namespace)  # execute string in empty namespace
+    exec(s, globals(), namespace)  # execute string in empty namespace
     namespace.pop('__builtins__', None)  # remove builtins key if exists
     if not namespace:
         return None
@@ -85,7 +85,7 @@ def wc_function_factory(d):
 def fencode(f):
     if f is None:
         return None
-    return base64.b64encode(dill.dumps(f)).decode('utf-8')
+    return {'pickle': base64.b64encode(dill.dumps(f)).decode('utf-8')}
 
 
 class Fit(flavio.NamedInstanceClass):
@@ -105,7 +105,8 @@ class Fit(flavio.NamedInstanceClass):
         'fit_wc_function': vol.All({'args': [vol.Coerce(str)],
                                     'return': dict,
                                     'code': vol.Coerce(str),
-                                    'pickle': vol.Coerce(str)}),
+                                    'pickle': vol.Coerce(str)},
+                                    wc_function_factory),
     }, extra=vol.ALLOW_EXTRA)
 
     # voluptuous schema for dumping fit to file
@@ -119,10 +120,7 @@ class Fit(flavio.NamedInstanceClass):
         'input_scale': vol.Coerce(float),
         'fit_wc_eft': str,
         'fit_wc_basis': str,
-        'fit_wc_function': vol.Any(None, {'args': [vol.Coerce(str)],
-                                    'return': dict,
-                                    'code': vol.Coerce(str),
-                                    'pickle': vol.Coerce(str)}),
+        'fit_wc_function': vol.Any(None, fencode),
     }, extra=vol.REMOVE_EXTRA)
 
     def __init__(self,
@@ -214,16 +212,7 @@ class Fit(flavio.NamedInstanceClass):
     @classmethod
     def load(cls, f):
         """Load the fit definition from a YAML string or stream."""
-        kwargs = cls._input_schema(flavio.io.yaml.load_include(f))
-        if 'fit_wc_function' in kwargs:
-            fit_wc_function_string = kwargs['fit_wc_function'].copy()
-            kwargs['fit_wc_function'] = wc_function_factory(fit_wc_function_string)
-        else:
-            fit_wc_function_string = None
-        fit = cls(**kwargs)
-        if fit_wc_function_string is not None:
-            fit._fit_wc_function_string = fit_wc_function_string
-        return fit
+        return cls(**cls._input_schema(flavio.io.yaml.load_include(f)))
 
     def dump(self, stream=None, **kwargs):
         """Dump the fit definition to a YAML string or stream.
@@ -231,12 +220,7 @@ class Fit(flavio.NamedInstanceClass):
         Note that this currently does *not* dump any information contained
         in the `par_obj` argument, `fit_wc_priors`, or `fit_wc_function`.
         """
-        d = self.__dict__.copy()
-        if '_fit_wc_function_string' in d:
-            d['fit_wc_function'] = d['_fit_wc_function_string']
-        elif d['fit_wc_function'] is not None:
-            d['fit_wc_function'] = {'pickle': fencode(d['fit_wc_function'])}
-        d = self._output_schema(d)
+        d = self._output_schema(self.__dict__.copy())
         # remove NoneTypes and empty lists
         d = {k: v for k, v in d.items() if v is not None and v != []}
         return yaml.dump(d, stream=stream, **kwargs)
