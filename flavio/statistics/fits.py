@@ -73,11 +73,11 @@ def wc_function_factory(d):
     return {{{}}}""".format(', '.join(d['args']), ', '.join(["'{}': {}".format(k, v) for k, v in d['return'].items()]))
     namespace = OrderedDict()
     exec(s, globals(), namespace)  # execute string in empty namespace
-    namespace.pop('__builtins__', None)  # remove builtins key if exists
     if not namespace:
+        warnings.warn("Function dictionary provided but no function found.")
         return None
     f = namespace[list(namespace.keys())[-1]]  # assume the last variable is the function
-    if not hasattr(f, '__call__'):
+    if not callable(f):
         raise ValueError("Function code not understood")
     return f
 
