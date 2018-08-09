@@ -592,6 +592,7 @@ class FastFit(Fit):
         super().__init__(*args, **kwargs)
         self.measurements = None
         self._sm_covariance = None
+        self._exp_central_covariance = None
         self._get_predictions_array_sm = partial(self.get_predictions_array,
                                                  par=False, nuisance=True,
                                                  wc=False)
@@ -653,11 +654,80 @@ class FastFit(Fit):
                                 axis=0))
             return weighted_mean, weighted_covariance
 
-    def _get_random_nuisance(self, *args):
-        return self._get_random(par=False, nuisance=True, wc=False)
+    def get_exp_central_covariance(self, N=5000, force=True):
+        """Return the experimental central values and the covriance matrix of
+        all observables.
+
+        Parameters:
+
+        - `N`: number of random computations (computing time is proportional
+          to it; more means less random fluctuations.)
+        - `force`: optional; if True (default), will recompute covariance even
+          if it already has been computed.
+        """
+        if self._exp_central_covariance is None or force:
+            self._exp_central_covariance = self._get_central_covariance_experiment(N=N)
+        elif N != 5000:
+            warnings.warn("Argument N={} ignored ".format(N) + \
+                          "as experimental covariance has already been " + \
+                          "computed. Recompute with get_exp_central_covariance.")
+        return self._exp_central_covariance
+
+    def save_exp_central_covariance(self, filename):
+        """Save the experimental central values and the covriance to a pickle
+        file.
+
+        The central values and the covariance must have been computed before
+        using `get_exp_central_covariance`."""
+        if self._exp_central_covariance is None:
+            raise ValueError("Call get_exp_central_covariance or make_measurement first.")
+        with open(filename, 'wb') as f:
+            data = dict(central=self._exp_central_covariance[0],
+                        covariance=self._exp_central_covariance[1],
+                        observables=self.observables)
+            pickle.dump(data, f)
+
+    def load_exp_central_covariance(self, filename):
+        """Load the experimental central values and the covriance from a pickle
+        file."""
+        with open(filename, 'rb') as f:
+            data = pickle.load(f)
+        self.load_exp_central_covariance_dict(d=data)
+
+    def load_exp_central_covariance_dict(self, d):
+        """Load the the experimental central values and the covriancee from a
+        dictionary.
+
+        It must have the form
+        {'observables': [...], 'central': [...], 'covariance': [[...]]}
+        where 'central' is a vector of central values and 'covariance' is a
+        covariance matrix, both in the basis of observables given by
+        'observables' which must at least contain all the observables
+        involved in the fit. Additional observables will be ignored; the
+        ordering is arbitrary."""
+        obs = d['observables']
+        try:
+            permutation = [obs.index(o) for o in self.observables]
+        except ValueError:
+            "Covariance matrix does not contain all necessary entries"
+        assert len(permutation) == len(self.observables), \
+            "Covariance matrix does not contain all necessary entries"
+        if len(permutation) == 1:
+            self._exp_central_covariance = (
+                d['central'],
+                d['covariance']
+            )
+        else:
+            self._exp_central_covariance = (
+                d['central'][permutation],
+                d['covariance'][permutation][:,permutation],
+            )
 
     # a method to get the covariance of the SM prediction of all observables
     # of interest
+    def _get_random_nuisance(self, *args):
+        return self._get_random(par=False, nuisance=True, wc=False)
+
     def _get_covariance_sm(self, N=100, threads=1):
         if threads == 1:
             X_map = map(self._get_random_nuisance, range(N))
@@ -732,7 +802,7 @@ class FastFit(Fit):
         else:
             self._sm_covariance = d['covariance'][permutation][:,permutation]
 
-    def make_measurement(self, N=100, Nexp=5000, threads=1, force=False):
+    def make_measurement(self, N=100, Nexp=5000, threads=1, force=False, force_exp=False):
         """Initialize the fit by producing a pseudo-measurement containing both
         experimental uncertainties as well as theory uncertainties stemming
         from nuisance parameters.
@@ -748,8 +818,10 @@ class FastFit(Fit):
           covariance computation. Defaults to 1 (no parallelization).
         - `force`: if True, will recompute SM covariance even if it
           already has been computed. Defaults to False.
+        - `force_exp`: if True, will recompute experimental central values and
+          covariance even if they have already been computed. Defaults to False.
         """
-        central_exp, cov_exp = self._get_central_covariance_experiment(Nexp)
+        central_exp, cov_exp = self.get_exp_central_covariance(Nexp, force=force_exp)
         cov_sm = self.get_sm_covariance(N, force=force, threads=threads)
         covariance = cov_exp + cov_sm
         # add the Pseudo-measurement

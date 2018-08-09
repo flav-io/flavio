@@ -129,6 +129,14 @@ class TestClasses(unittest.TestCase):
         fit1 = FastFit('fastfit_test_1', flavio.default_parameters, ['m_b'],  [], ['test_obs 2',])
         for fit in (fit2, fit1):
             fit.make_measurement()
+            centr_cov_exp_before = fit._exp_central_covariance
+            filename = os.path.join(tempfile.gettempdir(), 'tmp.p')
+            fit.save_exp_central_covariance(filename)
+            fit.load_exp_central_covariance(filename)
+            centr_cov_exp_after = fit._exp_central_covariance
+            npt.assert_array_equal(centr_cov_exp_before[0], centr_cov_exp_after[0])
+            npt.assert_array_equal(centr_cov_exp_before[1], centr_cov_exp_after[1])
+            os.remove(filename)
             cov_before = fit._sm_covariance
             filename = os.path.join(tempfile.gettempdir(), 'tmp-no-p')
             fit.save_sm_covariance(filename)
