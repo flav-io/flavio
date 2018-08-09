@@ -6,19 +6,122 @@ to be used directly)."""
 
 import flavio
 import numpy as np
-import copy
-from flavio.statistics.probability import NormalDistribution, MultivariateNormalDistribution, convolve_distributions
+from flavio.statistics.probability import NormalDistribution, MultivariateNormalDistribution
 from flavio.math.optimize import minimize_robust
-from collections import Counter
+from collections import Counter, OrderedDict
 import warnings
 import inspect
 from multiprocessing import Pool
 import scipy.optimize
 import pickle
 from functools import partial
+import yaml
+import voluptuous as vol
+import dill
+import base64
+
+
+def ensurelist(v):
+    """Coerce NoneType to empty list, wrap non-list in list."""
+    if isinstance(v, list):
+        return v
+    elif v is None:
+        return []
+    else:
+        raise ValueError("Unexpected form of list: {}".format(v))
+
+
+def wc_function_factory(d):
+    """Return a Wilson coefficient function suitable for the `fit_wc_function`
+    argument starting from a dictionary.
+
+    There are three allowed forms. First form: simply taking the real values
+    of WCxf Wilson coefficients:
+
+    ```{'args': ['C9_bsmumu', 'C10_bsmumu']}```
+
+    which is equivalent to
+
+    ```lambda C9_bsmumu, C10_bsmumu: {'C9_bsmumu': C9_bsmumu, 'C10_bsmumu': C10_bsmumu}```
+
+    Second form: giving executable strings for each return key.
+
+    ```{'args': ['ReC9', 'ImC9'],
+        'return': {'C9_bsmumu': 'ReC9 + 1j * ImC9'}}```
+
+    which is equivalent to
+
+    ```lambda ReC9, ImC9: {'C9_bsmumu': ReC9 + 1j * ImC9}```
+
+    Third form: explicitly giving the Python code.
+    The function name is arbitrary. When using a lambda function,
+    it must be assigned to a name.
+
+    ```{'code': "def f(C9, C10):\n  return {'C9_bsmumu': 10 * C9, 'C10_bsmumu': 30 * C10}"```
+    """
+    if 'code' in d:
+        s = d['code']
+    elif 'pickle' in d:
+        return dill.loads(base64.b64decode(d['pickle'].encode('utf-8')))
+    elif 'args' not in d:
+        raise ValueError("Function dictionary not understood.")
+    elif 'return' not in d:
+        s = r"""def _f({}):
+    return locals()""".format(', '.join(d['args']))
+    else:
+        s = r"""def _f({}):
+    return {{{}}}""".format(', '.join(d['args']), ', '.join(["'{}': {}".format(k, v) for k, v in d['return'].items()]))
+    namespace = OrderedDict()
+    exec(s, globals(), namespace)  # execute string in empty namespace
+    namespace.pop('__builtins__', None)  # remove builtins key if exists
+    if not namespace:
+        return None
+    f = namespace[list(namespace.keys())[-1]]  # assume the last variable is the function
+    if not hasattr(f, '__call__'):
+        raise ValueError("Function code not understood")
+    return f
+
+
+def fencode(f):
+    if f is None:
+        return None
+    return {'pickle': base64.b64encode(dill.dumps(f)).decode('utf-8')}
+
 
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
+
+    # voluptuous schema for loading fit from file
+    _input_schema = vol.Schema({
+        'name': str,
+        'fit_parameters': vol.Any(None, [str]),
+        'nuisance_parameters': vol.Any(None, [str]),
+        'observables':  [lambda v: flavio.Observable.argument_format(v, format='tuple')],
+        'exclude_measurements': vol.Any(None, [str]),
+        'include_measurements': vol.Any(None, [str]),
+        'input_scale': vol.Coerce(float),
+        'fit_wc_eft': str,
+        'fit_wc_basis': str,
+        'fit_wc_function': vol.All({'args': [vol.Coerce(str)],
+                                    'return': dict,
+                                    'code': vol.Coerce(str),
+                                    'pickle': vol.Coerce(str)},
+                                    wc_function_factory),
+    }, extra=vol.ALLOW_EXTRA)
+
+    # voluptuous schema for dumping fit to file
+    _output_schema = vol.Schema({
+        'name': str,
+        'fit_parameters': vol.All(ensurelist, [str]),
+        'nuisance_parameters': vol.All(ensurelist, [str]),
+        'observables':  [lambda v: flavio.Observable.argument_format(v, format='dict')],
+        'exclude_measurements': vol.All(ensurelist, [str]),
+        'include_measurements': vol.All(ensurelist, [str]),
+        'input_scale': vol.Coerce(float),
+        'fit_wc_eft': str,
+        'fit_wc_basis': str,
+        'fit_wc_function': vol.Any(None, fencode),
+    }, extra=vol.REMOVE_EXTRA)
 
     def __init__(self,
                  name,
@@ -60,12 +163,16 @@ class Fit(flavio.NamedInstanceClass):
             try:
                 if isinstance(obs, tuple):
                     flavio.classes.Observable[obs[0]]
-                else:
+                elif isinstance(obs, dict):
+                    flavio.classes.Observable[obs['name']]
+                elif isinstance(obs, str):
                     flavio.classes.Observable[obs]
+                else:
+                    ValueError("Unexpected form of observable: {}".format(obs))
             except:
                 raise ValueError("Observable " + str(obs) + " not found!")
         _obs_measured = set()
-        if exclude_measurements is not None and include_measurements is not None:
+        if exclude_measurements and include_measurements:
             raise ValueError("The options exclude_measurements and include_measurements must not be specified simultaneously")
         # check that no parameter appears as fit *and* nuisance parameter
         intersect = set(self.fit_parameters).intersection(self.nuisance_parameters)
@@ -78,7 +185,7 @@ class Fit(flavio.NamedInstanceClass):
             except:
                 raise ValueError("Error in calling the Wilson coefficient function")
         else:
-            self.fit_wc_names = []
+            self.fit_wc_names = tuple()
         # now that everything seems fine, we can call the init of the parent class
         super().__init__(name)
         self.par_obj = par_obj
@@ -101,6 +208,22 @@ class Fit(flavio.NamedInstanceClass):
         self.dimension = len(self.fit_parameters) + len(self.nuisance_parameters) + len(self.fit_wc_names)
         self.eft = fit_wc_eft
         self.basis = fit_wc_basis
+
+    @classmethod
+    def load(cls, f):
+        """Load the fit definition from a YAML string or stream."""
+        return cls(**cls._input_schema(flavio.io.yaml.load_include(f)))
+
+    def dump(self, stream=None, **kwargs):
+        """Dump the fit definition to a YAML string or stream.
+
+        Note that this currently does *not* dump any information contained
+        in the `par_obj` argument, `fit_wc_priors`, or `fit_wc_function`.
+        """
+        d = self._output_schema(self.__dict__.copy())
+        # remove NoneTypes and empty lists
+        d = {k: v for k, v in d.items() if v is not None and v != []}
+        return yaml.dump(d, stream=stream, **kwargs)
 
     @property
     def get_central_fit_parameters(self):
@@ -391,7 +514,7 @@ class BayesianFit(Fit):
       can also be set to 'all', in which case all the parameters constrainted
       by `par_obj` will be treated as nuisance parameters. (Note that this makes
       sense for `FastFit`, but not for a MCMC since the number of nuisance
-      parameters will be huge.()
+      parameters will be huge.)
     - `observables`: a list of observable names to be included in the fit
     - `exclude_measurements`: optional; a list of measurement names *not* to be included in
     the fit. By default, all existing measurements are included.

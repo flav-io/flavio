@@ -417,6 +417,58 @@ class Observable(NamedInstanceClass):
             md += "Theory prediction: `{}`".format(pretty.pretty(f))
         return md
 
+    @classmethod
+    def argument_format(cls, obs, format='tuple'):
+        """Class method: takes as input an observable name and numerical values
+        for the arguements (if any) and returns as output the same in a specific
+        form as specified by `format`: 'tuple' (default), 'list', or 'dict'.
+
+        Example inputs:
+        - ('dBR/dq2(B0->Denu)', 1)
+        - {'name': 'dBR/dq2(B0->Denu)', 'q2': 1}
+
+        Output:
+        tuple: ('dBR/dq2(B0->Denu)', 1)
+        list: ('dBR/dq2(B0->Denu)', 1)
+        dict: {'name': 'dBR/dq2(B0->Denu)', 'q2': 1}
+
+        For a string input for observables that don't have arguments:
+        - 'eps_K'
+
+        Output:
+        tuple: 'eps_K'
+        list: 'eps_K'
+        dict: {'name': 'eps_K'}
+        """
+        if isinstance(obs, str):
+            if cls[obs].arguments is not None:
+                raise ValueError("Arguments missing for {}".format(obs))
+            if format == 'dict':
+                return {'name': obs}
+            else:
+                return obs
+        elif isinstance(obs, (tuple, list)):
+            args = cls[obs[0]].arguments
+            if args is None or len(args) != len(obs) - 1:
+                raise ValueError("Wrong number of arguments for {}".format(obs[0]))
+            t = tuple(obs)
+            d = {'name': obs[0]}
+            for i, a in enumerate(args):
+                d[a] = obs[i + 1]
+        elif isinstance(obs, dict):
+            args = cls[obs['name']].arguments
+            if args is None:
+                t = obs['name']
+            else:
+                t = tuple([obs['name']] + [obs[a] for a in args])
+            d = obs
+        if format == 'tuple':
+            return t
+        elif format == 'list':
+            return list(t)
+        elif format == 'dict':
+            return d
+
     def set_prediction(self, prediction):
         self.prediction = prediction
 

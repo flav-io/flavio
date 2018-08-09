@@ -284,3 +284,29 @@ class TestClasses(unittest.TestCase):
         self.assertEqual(repr(mtest),
                          "Observable('repr test', arguments=['blu'])")
         del Observable['repr test']
+
+    def test_argument_format(self):
+        with self.assertRaises(KeyError):
+            Observable.argument_format('dont_exist')
+        with self.assertRaises(KeyError):
+            Observable.argument_format(['dont_exist', 1])
+        with self.assertRaises(ValueError):
+            Observable.argument_format(['eps_K', 1])
+        with self.assertRaises(KeyError):
+            Observable.argument_format({'name': 'dBR/dq2(B0->Denu)', 'bla': 1})
+        with self.assertRaises(ValueError):
+            Observable.argument_format(['dBR/dq2(B0->Denu)'])
+        with self.assertRaises(ValueError):
+            Observable.argument_format('dBR/dq2(B0->Denu)')
+        self.assertTupleEqual(Observable.argument_format({'name': 'dBR/dq2(B0->Denu)', 'q2': 1}, 'tuple'),
+                              ('dBR/dq2(B0->Denu)', 1))
+        self.assertListEqual(Observable.argument_format({'name': 'dBR/dq2(B0->Denu)', 'q2': 1}, 'list'),
+                              ['dBR/dq2(B0->Denu)', 1])
+        self.assertDictEqual(Observable.argument_format({'name': 'dBR/dq2(B0->Denu)', 'q2': 1}, 'dict'),
+                              {'name': 'dBR/dq2(B0->Denu)', 'q2': 1})
+        self.assertEqual(Observable.argument_format('eps_K', 'tuple'),
+                              'eps_K')
+        self.assertEqual(Observable.argument_format('eps_K', 'list'),
+                              'eps_K')
+        self.assertDictEqual(Observable.argument_format('eps_K', 'dict'),
+                              {'name': 'eps_K'})
