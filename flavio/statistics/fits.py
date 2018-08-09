@@ -217,13 +217,20 @@ class Fit(flavio.NamedInstanceClass):
         """Load the fit definition from a YAML string or stream."""
         kwargs = cls._input_schema(flavio.io.yaml.load_include(f))
         if 'fit_wc_function' in kwargs:
+            # Copy string defining the fit_wc_function to local variable.
             fit_wc_function_string = kwargs['fit_wc_function'].copy()
+            # Replace kwargs['fit_wc_function'] by actual function.
             kwargs['fit_wc_function'] = wc_function_factory(fit_wc_function_string)
         else:
             fit_wc_function_string = None
         fit = cls(**kwargs)
         if fit_wc_function_string is not None:
+            # Save string defining the fit_wc_function as private attribute of fit.
             fit._fit_wc_function_string = fit_wc_function_string
+            # Save the fit_wc_function associated to fit_wc_function_string as
+            # private method of fit. This allows comparing it with the public
+            # method fit.fit_wc_function and to infer if fit.fit_wc_function
+            # has been changed since initialization
             fit._fit_wc_function_orig = kwargs['fit_wc_function']
         return fit
 
@@ -234,10 +241,15 @@ class Fit(flavio.NamedInstanceClass):
         in the `par_obj` argument or `fit_wc_priors`.
         """
         d = self.__dict__.copy()
+        # Dump string defining the fit_wc_function if it exists and if
+        # fit_wc_function has not been changed since intialization, i.e. if it
+        # is identical to the original function _fit_wc_function_orig that has
+        # been generated from the string
         if ('_fit_wc_function_string' in d
         and '_fit_wc_function_orig' in d
         and d['fit_wc_function'] ==  d['_fit_wc_function_orig']):
             d['fit_wc_function'] = d['_fit_wc_function_string']
+        # Otherwise, dump the pickled fit_wc_function
         elif d['fit_wc_function'] is not None:
             d['fit_wc_function'] = fencode(d['fit_wc_function'])
         d = self._output_schema(d)
