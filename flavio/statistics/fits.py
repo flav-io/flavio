@@ -8,7 +8,7 @@ import flavio
 import numpy as np
 from flavio.statistics.probability import NormalDistribution, MultivariateNormalDistribution
 from flavio.math.optimize import minimize_robust
-from collections import Counter
+from collections import Counter, OrderedDict
 import warnings
 import inspect
 from multiprocessing import Pool
@@ -54,7 +54,8 @@ def wc_function_factory(d):
     ```lambda ReC9, ImC9: {'C9_bsmumu': ReC9 + 1j * ImC9}```
 
     Third form: explicitly giving the Python code.
-    The function must be named `f`.
+    The function name is arbitrary. When using a lambda function,
+    it must be assigned to a name.
 
     ```{'code': "def f(C9, C10):\n  return {'C9_bsmumu': 10 * C9, 'C10_bsmumu': 30 * C10}"```
     """
@@ -65,20 +66,20 @@ def wc_function_factory(d):
     elif 'args' not in d:
         raise ValueError("Function dictionary not understood.")
     elif 'return' not in d:
-        s = r"""def f({}):
+        s = r"""def _f({}):
     return locals()""".format(', '.join(d['args']))
     else:
-        s = r"""def f({}):
+        s = r"""def _f({}):
     return {{{}}}""".format(', '.join(d['args']), ', '.join(["'{}': {}".format(k, v) for k, v in d['return'].items()]))
-    try:
-        del globals()['f']
-    except KeyError:
-        pass
-    exec(s, globals())
-    try:
-        return f
-    except NameError:
+    namespace = OrderedDict()
+    exec(s, namespace)  # execute string in empty namespace
+    namespace.pop('__builtins__', None)  # remove builtins key if exists
+    if not namespace:
         return None
+    f = namespace[list(namespace.keys())[-1]]  # assume the last variable is the function
+    if not hasattr(f, '__call__'):
+        raise ValueError("Function code not understood")
+    return f
 
 
 def fencode(f):
