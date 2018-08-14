@@ -4728,4 +4728,21 @@ PDG 2017 tau:
   inspire: Patrignani:2016xqp
   values:
     BR(tau->mununu): 17.39(4)e-2
-    BR(tau->enunu): 17.82(4)e-2
+    BR(tau->enunu):  17.82(4)e-2
+    BR(tau->pinu):   10.82(5)e-2
+    BR(tau->Knu):    6.96(10)e-3 
+    BR(tau->egamma):  < 3.3e-8 @ 90% CL
+    BR(tau->mugamma): < 4.4e-8 @ 90% CL
+    BR(tau->rhoe):    < 1.8e-8 @ 90% CL
+    BR(tau->rhomu):   < 1.2e-8 @ 90% CL
+    BR(tau->mumumu):  < 2.1e-8 @ 90% CL
+    BR(tau->muee):    < 1.8e-8 @ 90% CL
+#    BR(tau->phimu):   < 8.4e-8 @ 90% CL
+#    BR(tau->phie):    < 3.1e-8 @ 90% CL
+
+PDG 2017 mu:
+  experiment: PDG
+  inspire: Patrignani:2016xqp
+  values:
+    BR(mu->egamma): < 4.2e-13 @ 90% CL
+    BR(mu->eee):    < 1.0e-12 @ 90% CL
