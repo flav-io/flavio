@@ -101,7 +101,7 @@ def angular_coefficients(ta, alpha):
     return K
 
 def get_ff(q2, par):
-    ff_aux = AuxiliaryQuantity.get_instance('Lambdab->Lambda form factor')
+    ff_aux = AuxiliaryQuantity['Lambdab->Lambda form factor']
     return ff_aux.prediction(par_dict=par, wc_obj=None, q2=q2)
 
 def prefactor(q2, par, scale):
@@ -134,10 +134,10 @@ def get_transverity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
 def get_subleading(q2, wc_obj, par_dict, cp_conjugate):
     if q2 <= 9:
         sub_name = 'Lambdab->Lambdall subleading effects at low q2'
-        return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+        return AuxiliaryQuantity[sub_name].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
     elif q2 > 14:
         sub_name = 'Lambdab->Lambdall subleading effects at high q2'
-        return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+        return AuxiliaryQuantity[sub_name].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
     else:
         return {}
 

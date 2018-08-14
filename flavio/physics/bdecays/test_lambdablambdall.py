@@ -8,10 +8,11 @@ wc_sm = flavio.WilsonCoefficients()
 par_nominal = flavio.default_parameters.copy()
 flavio.physics.bdecays.formfactors.lambdab_12.lattice_parameters.lattice_load_nominal(par_nominal)
 par_nominal.set_constraint('Vcb', 0.04175)
+par_nominal.set_constraint('tau_Lambdab', 1/4.49e-13) # PDG 2016 value
 par_dict = par_nominal.get_central_all()
 
 def ass_sm(s, name, q2min, q2max, target, delta, scalef=1):
-    obs = flavio.classes.Observable.get_instance(name)
+    obs = flavio.classes.Observable[name]
     c = obs.prediction_central(par_nominal, wc_sm, q2min, q2max)*scalef
     s.assertAlmostEqual(c, target, delta=delta)
 
@@ -22,7 +23,7 @@ class TestLambdabLambdall(unittest.TestCase):
         # compare to table VII of 1602.01399
         ass_sm(self, '<dBR/dq2>(Lambdab->Lambdamumu)', 0.1, 2, 0.25, 0.01, 1e7)
         ass_sm(self, '<dBR/dq2>(Lambdab->Lambdamumu)', 2, 4, 0.18, 0.005, 1e7)
-        ass_sm(self, '<dBR/dq2>(Lambdab->Lambdamumu)', 15, 20, 0.756, 0.002, 1e7)
+        ass_sm(self, '<dBR/dq2>(Lambdab->Lambdamumu)', 15, 20, 0.756, 0.003, 1e7)
         ass_sm(self, '<dBR/dq2>(Lambdab->Lambdamumu)', 18, 20, 0.665, 0.002, 1e7)
         ass_sm(self, '<FL>(Lambdab->Lambdamumu)', 4, 6, 0.808, 0.007)
         ass_sm(self, '<FL>(Lambdab->Lambdamumu)', 15, 20, 0.409, 0.002)

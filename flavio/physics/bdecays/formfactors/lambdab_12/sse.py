@@ -49,11 +49,10 @@ def ff(process, q2, par, n=2):
     mX = par['m_'+pd['X']]
     mP = par['m_'+pd['P']]
     ff = {}
-    par_copy = par.copy()
     # implementing the two endpoint relations in (7) and (8) of arXiv:1602.01399
-    par_copy[process+' SSE a0_fAperp'] = par_copy[process+' SSE a0_fA0']
-    par_copy[process+' SSE a0_fT5perp'] = par_copy[process+' SSE a0_fT50']
+    par[process+' SSE a0_fAperp'] = par[process+' SSE a0_fA0']
+    par[process+' SSE a0_fT5perp'] = par[process+' SSE a0_fT50']
     for i in ['fA0', 'fAperp', 'fAt', 'fT0', 'fT50', 'fT5perp', 'fTperp', 'fV0', 'fVperp', 'fVt']:
-        a = [ par_copy[process+' SSE ' + 'a' + str(j) + '_' + i] for j in range(n) ]
+        a = [ par[process+' SSE ' + 'a' + str(j) + '_' + i] for j in range(n) ]
         ff[i] = pole(i, mres, q2)*np.dot(a, zs(mX, mP, par, q2)[:n])
     return ff

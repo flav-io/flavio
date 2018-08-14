@@ -36,7 +36,7 @@ def load_parameters(filename, process, constraints):
     parameter_names.remove(implementation_name + ' a0_T2')
     for parameter_name in parameter_names:
         try: # check if parameter object already exists
-            p = Parameter.get_instance(parameter_name)
+            p = Parameter[parameter_name]
         except: # otherwise, create a new one
             p = Parameter(parameter_name)
             # get LaTeX representation of coefficient and form factor names
@@ -45,7 +45,7 @@ def load_parameters(filename, process, constraints):
             p.tex = r'$' + _tex_a + r'^{' + _tex_ff + r'}$'
             p.description = r'BSZ form factor parametrization coefficient $' + _tex_a + r'$ of $' + _tex_ff + r'$'
         else: # if parameter exists, remove existing constraints
-            constraints.remove_constraints(parameter_name)
+            constraints.remove_constraint(parameter_name)
     [central, unc, corr] = get_ffpar(filename)
     constraints.add_constraint(parameter_names,
             MultivariateNormalDistribution(central_value=central, covariance=np.outer(unc, unc)*corr) )

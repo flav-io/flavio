@@ -17,7 +17,7 @@ class TestKpinunu(unittest.TestCase):
         self.assertAlmostEqual(
             flavio.sm_prediction('BR(KL->pinunu)')/3e-11,
             1, delta=0.2)
-        obs = flavio.classes.Observable.get_instance('BR(K+->pinunu)')
+        obs = flavio.classes.Observable['BR(K+->pinunu)']
         wc_sm = flavio.WilsonCoefficients()
         # confirm that deltaPcu leads to an enhancement of the K+->pinunu BR
         # by 6% as stated in the abstract of hep-ph/0503107

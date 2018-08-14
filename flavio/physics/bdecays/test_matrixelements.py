@@ -1,12 +1,6 @@
 import unittest
 import numpy as np
-from . import rge
 from . import matrixelements
-from . import wilsoncoefficients
-from . import matrixelements
-from .. import eft, ckm
-from ..running import running
-from math import log
 from flavio.physics.eft import WilsonCoefficients
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 

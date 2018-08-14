@@ -5,19 +5,29 @@ import numpy as np
 from .config import config
 from collections import OrderedDict, defaultdict
 import copy
-import math
-from flavio._parse_errors import constraints_from_string, convolve_distributions, errors_from_string, string_from_constraints
-import scipy.stats
-
-def _is_number(s):
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
+import flavio
+from flavio._parse_errors import constraints_from_string, \
+    convolve_distributions, dict2dist
+from flavio.statistics.probability import string_to_class
+import warnings
+import yaml
+import inspect
+import urllib.parse
 
 
-class NamedInstanceClass(object):
+class NamedInstanceMetaclass(type):
+    # this is just needed to implement the getitem method on NamedInstanceClass
+    # to allow the syntax MyClass['instancename'] as shorthand for
+    # MyClass.get_instance('instancename'); same for
+    # del MyClass['instancename'] instead of MyClass.del_instance('instancename')
+    def __getitem__(cls, item):
+        return cls.get_instance(item)
+
+    def __delitem__(cls, item):
+        return cls.del_instance(item)
+
+
+class NamedInstanceClass(object, metaclass=NamedInstanceMetaclass):
     """Base class for classes that have named instances that can be accessed
     by their name.
 
@@ -59,8 +69,6 @@ class NamedInstanceClass(object):
         self.description = description
 
 
-
-########## Parameter Class ##########
 class Parameter(NamedInstanceClass):
     """This class holds parameters (e.g. masses and lifetimes). It requires a
     name string and also allows to set a LaTeX name and description as
@@ -82,10 +90,9 @@ class Parameter(NamedInstanceClass):
         self.tex = ''
 
 
-########## Constraints Class ##########
 class Constraints(object):
     """Constraints are collections of probability distributions associated
-    to objects like parameters or measurement. This is the base class of
+    to objects like parameters or measurements. This is the base class of
     ParameterConstraints (that holds the numerical values and uncertainties
     of all the parameters) and Measurements (that holds the numerical values
     and uncertainties of all the experimental measurements.)
@@ -99,11 +106,14 @@ class Constraints(object):
             # [ (<constraint1>, [parameter1, parameter2, ...]), (<constraint2>, ...) ]
             # where the <constraint>s are instances of ProbabilityDistribution
             # and the parameters string names, while _parameters has the form
-            # { parameter1: [(num1, <constraint1>)]} where num1 is 0 for a
-            # univariate constraints and otherwise gives the position of
+            # { parameter1: (num1, <constraint1>)} where num1 is 0 for a
+            # univariate constraint and otherwise gives the position of
             # parameter1 in the multivariate vector.
             # In summary, having this list and dictionary allow a bijective mapping between
-            # constraints (that might apply to multiple parameters) and parameters.
+            # constraints and parameters.
+            # Note that one constraint can apply to multiple parameters (e.g.
+            # in case of correlated uncertainties), but a parameter can only
+            # have a single constraint (changed in v0.16!).
         self._constraints = []
         self._parameters = OrderedDict()
 
@@ -113,45 +123,82 @@ class Constraints(object):
         return list(self._parameters.keys())
 
     def add_constraint(self, parameters, constraint):
-        """Add a constraint to the parameter/observable.
+        """Set the constraint on one or several parameters/observables.
 
         `constraint` must be an instance of a child of ProbabilityDistribution.
 
         Note that if there already exists a constraint, it will be removed."""
         for num, parameter in enumerate(parameters):
-            # remove constraints if there are any
+            # remove constraint if there is one
             if parameter in self._parameters:
-                self.remove_constraints(parameter)
+                self.remove_constraint(parameter)
         # populate the dictionaries defined in __init__
-            self._parameters[parameter] = [(num, constraint)]
+            self._parameters[parameter] = (num, constraint)
         self._constraints.append((constraint, parameters))
 
-    def set_constraint(self, parameter, constraint_string):
-        """Set the constraints on a parameter/observable by specifying a string
-        that can be e.g. of the form 1.55(3)(1) or 4.0±0.1. Existing
-        constraints will be removed."""
-        pds = constraints_from_string(constraint_string)
+    def set_constraint(self, parameter, constraint_string=None,
+                                        constraint_dict=None):
+        r"""Set the constraint on a parameter/observable by specifying a string
+        or a dictionary. If several constraints (e.g. several types of
+        uncertainty) are given, the total constraint will be the convolution
+        of the individual distributions. Existing constraints will be removed.
+
+        Arguments:
+
+        - parameter: parameter string (or tuple)
+        - constraint_string: string specifying the constraint that can be e.g.
+          of the form `'1.55(3)(1)'` or `'4.0±0.1'`.
+        - constraint_dict: dictionary or list of several dictionaries of the
+          form `{'distribution': 'distribution_name', 'arg1': val1, ...}`, where
+          'distribution_name' is a string name associated to each probability
+          distribution (see `flavio.statistics.probability.class_from_string`)
+          and `'arg1'`, `val1` are argument/value pairs of the arguments of
+          the distribution class's constructor (e.g.`central_value`,
+          `standard_deviation` for a normal distribution).
+
+        `constraint_string` and `constraint_dict` must not be present
+        simultaneously.
+        """
+        if constraint_string is not None and constraint_dict is not None:
+            raise ValueError("constraint_string and constraint_dict cannot"
+                             " be used at the same time.")
+        if constraint_string is not None:
+            pds = constraints_from_string(constraint_string)
+        elif constraint_dict is not None:
+            pds = dict2dist(constraint_dict)
+        else:
+            raise TypeError("Either constraint_string or constraint_dict have"
+                            " to be specified.")
         combined_pd = convolve_distributions(pds)
         self.add_constraint([parameter], combined_pd)
 
-    def get_constraint_string(self, parameter):
-        """Return a string of the form 4.0±0.1±0.3 for the constraints on
-        the parameter. Correlations are ignored."""
-        pds = self._parameters[parameter]
-        return string_from_constraints(pds)
+    def remove_constraint(self, parameter):
+        """Remove existing constraint on a parameter."""
+        self._parameters.pop(parameter, None)
 
     def remove_constraints(self, parameter):
-        """Remove all constraints on a parameter."""
-        self._parameters.pop(parameter, None)
+        warnings.warn("This function was renamed to `remove_constraint` "
+                      "in v0.16 and will be removed in the future.",
+                      DeprecationWarning)
+        self.remove_constraint(parameter)
 
     def get_central(self, parameter):
         """Get the central value of a parameter"""
         if parameter not in self._parameters.keys():
             raise ValueError('No constraints applied to parameter/observable ' + parameter)
         else:
-            num, constraint = self._parameters[parameter][0]
-            # return the num-th entry of the central value vector
-            return np.ravel([constraint.central_value])[num]
+            num, constraint = self._parameters[parameter]
+            cv = constraint.central_value
+            try:
+                cv = float(cv)
+            except (TypeError, ValueError):
+                # return the num-th entry of the central value vector
+                return cv[num]
+            else:
+                if num == 0:
+                    return cv
+                else:
+                    raise ValueError("Something went wrong when getting the central value of {}".format(parameter))
 
     def get_central_all(self):
         """Get central values of all constrained parameters."""
@@ -159,33 +206,46 @@ class Constraints(object):
 
     def get_random_all(self):
         """Get random values for all constrained parameters where they are
-        distributed according to the probability distributions applied."""
+        distributed according to the probability distribution applied."""
         # first, generate random values for every single one of the constraints
-        random_constraints = [constraint.get_random() for constraint, _ in self._constraints]
+        random_constraints = {constraint: constraint.get_random() for constraint, _ in self._constraints}
         random_dict = {}
         # now, iterate over the parameters
         for parameter, constraints in self._parameters.items():
-            # here, the idea is the following. Assume there is a parameter
-            # p with central value c and N probability distributions that have
-            # random values r_1, ..., r_N (obtained above). The final random
-            # value for p is then given by p_r = c + \sum_i^N (r_i - c).
-            central_value =  self.get_central(parameter)
-            random_dict[parameter] = central_value  # step 1: p_r = c
-            for num, constraint in constraints:
-                idx = ([constraint for constraint, _ in self._constraints]).index(constraint)
-                # step 1+i: p_r += r_i - c
-                random_dict[parameter] += np.ravel([random_constraints[idx]])[num] - central_value
+            num, constraint = constraints
+            random_dict[parameter] = np.ravel([random_constraints[constraint]])[num]
         return random_dict
 
     def get_1d_errors(self, N=1000):
+        warnings.warn("This function was renamed to `get_1d_errors_random` "
+                      "in v0.16 and will be removed in the future. ",
+                      DeprecationWarning)
+        self.get_1d_errors_random(N)
+
+    def get_1d_errors_random(self, N=1000):
         """Get the Gaussian standard deviation for every parameter/observable
-        obtained by generating N random values.."""
+        obtained by generating N random values."""
         random_dict_list = [self.get_random_all() for i in range(N)]
         interval_dict = {}
         for k in random_dict_list[0].keys():
             arr = np.array([r[k] for r in random_dict_list])
             interval_dict[k] = np.std(arr)
         return interval_dict
+
+    def get_1d_errors_rightleft(self):
+        r"""Get the left and right error for every parameter/observable
+        defined such that it contains 68% probability on each side of the
+        central value."""
+        errors_left = [constraint.error_left for constraint, _ in self._constraints]
+        errors_right = [constraint.error_right for constraint, _ in self._constraints]
+        error_dict = {}
+        # now, iterate over the parameters
+        for parameter, constraints in self._parameters.items():
+            num, constraint = constraints
+            idx = ([constraint for constraint, _ in self._constraints]).index(constraint)
+            error_dict[parameter] = (np.ravel([errors_right[idx]])[num],
+                                     np.ravel([errors_left[idx]])[num])
+        return error_dict
 
     def get_logprobability_all(self, par_dict, exclude_parameters=[]):
         """Return a dictionary with the logarithm of the probability for each
@@ -198,42 +258,106 @@ class Constraints(object):
           is a string and value a float.
         - exclude_parameters (optional)
           An iterable of strings (default: empty) that specifies parameters
-          that should be ignored. In practice, this is done by setting these
-          parameters equal to their central values. This way, they contribute
-          a constant shift to the log probability, but their values in
-          par_dict play no role.
+          that should be ignored. Univariate constraints on this parameter
+          will be skipped, while for multivariate normally distributed
+          constraints, the parameter will be removed from the covariance.
         """
         prob_dict = {}
         for constraint, parameters in self._constraints:
-            def constraint_central_value(constraint, parameters, parameter):
-                # this function is required to get the central value for the
-                # excluded_parameters, consistently for univariate and multivariate
-                # distributions.
-                if len(parameters) == 1:
-                    # for univariate, it's trivial
-                    return constraint.central_value
-                else:
-                    # for multivariate, need to find the position of the parameter
-                    # in the vector and return the appropriate entry
-                    return constraint.central_value[parameters.index(parameter)]
-            # construct the vector of values from the par_dict, replaced by central values in the case of excluded_parameters
-            x = [par_dict[p]
-                if (p not in exclude_parameters
-                    and (parameters.index(p), constraint) in self._parameters[p])
-                else constraint_central_value(constraint, parameters, p)
-                for p in parameters]
-            if len(x) == 1:
+            # list of constrained parameters except the excluded ones
+            p_cons = [p for p in parameters
+                      if (p not in exclude_parameters
+                      and (parameters.index(p), constraint) == self._parameters.get(p, None))]
+            x = [par_dict[p] for p in p_cons]
+            if not x:
+                # nothing to constrain
+                continue
+            if len(parameters) == 1:
                 # 1D constraints should have a scalar, not a length-1 array
-                x = x[0]
-            prob_dict[constraint] = constraint.logpdf(x)
+                prob_dict[constraint] = constraint.logpdf(x[0])
+            else:
+                # for multivariate distributions
+                if len(x) == len(parameters):
+                    # no parameter has been excluded
+                    exclude = None
+                else:
+                    exclude = tuple(i for i, p in enumerate(parameters)
+                                    if p not in p_cons)
+                prob_dict[constraint] = constraint.logpdf(x, exclude=exclude)
         return prob_dict
 
     def copy(self):
         # this is to have a .copy() method like for a dictionary
         return copy.deepcopy(self)
 
+    def get_yaml(self, *args, **kwargs):
+        """Get a YAML string representation of all constraints.
 
-########## ParameterConstraints Class ##########
+        The optional parameter `pname` allows to customize the name of the key
+        containing the parameter list of each constraint (e.g. 'parameters',
+        'observables').
+        """
+        return yaml.dump(self.get_yaml_dict(*args, **kwargs))
+
+    def get_yaml_dict(self, pname='parameters'):
+        """Get an ordered dictionary representation of all constraints that can
+        be dumped as YAML string.
+
+        The optional parameter `pname` allows to customize the name of the key
+        containing the parameter list of each constraint (e.g. 'parameters',
+        'observables').
+        """
+        data = []
+        for constraint, parameters in self._constraints:
+            d = OrderedDict()
+            d[pname] = [list(p) if isinstance(p, tuple) else p for p in parameters]
+            d['values'] = constraint.get_dict(distribution=True,
+                                              iterate=True, arraytolist=True)
+            data.append(d)
+        args = inspect.signature(self.__class__).parameters.keys()
+        meta = {k: v for k, v in self.__dict__.items()
+                if k[0] != '_' and v != '' and k not in args}
+        if not args and not meta:
+            return data
+        else:
+            datameta = OrderedDict()
+            if args:
+                datameta['arguments'] = {arg: self.__dict__[arg] for arg in args}
+            if meta:
+                datameta['metadata'] = meta
+            datameta['constraints'] = data
+            return datameta
+
+    @classmethod
+    def from_yaml(cls, stream, *args, **kwargs):
+        data = yaml.load(stream)
+        return cls.from_yaml_dict(data, *args, **kwargs)
+
+    @classmethod
+    def from_yaml_dict(cls, data, pname='parameters', *args, **kwargs):
+        if isinstance(data, dict):
+            constraints = data['constraints']
+            meta = data.get('metadata', {})
+            arguments = data['arguments']
+            kwargs.update(arguments)
+            inst = cls(*args, **kwargs)
+            for m in meta:
+                inst.__dict__[m] = meta[m]
+        else:
+            constraints = data.copy()
+            inst = cls(*args, **kwargs)
+        for c in constraints:
+            if pname not in c:
+                raise ValueError('Key ' + pname + ' not found. '
+                                 'Please check the `pname` argument.')
+            v = c['values'].copy()
+            distname = v.pop('distribution')
+            dist = string_to_class(distname)
+            parameters = [tuple(p) if isinstance(p, list) else p for p in c[pname]]
+            inst.add_constraint(parameters, dist(**v))
+        return inst
+
+
 class ParameterConstraints(Constraints):
     """
     """
@@ -241,7 +365,7 @@ class ParameterConstraints(Constraints):
     def __init__(self):
         super().__init__()
 
-########## WilsonCoefficientPriors Class ##########
+
 class WilsonCoefficientPriors(Constraints):
     """
     """
@@ -256,11 +380,12 @@ def tree():
     See https://gist.github.com/hrldcpr/2012250"""
     return defaultdict(tree)
 
+
 def dicts(t):
     """Turn tree into nested dict"""
     return {k: dicts(t[k]) for k in t}
 
-########## Observable Class ##########
+
 class Observable(NamedInstanceClass):
     """An Observable is something that can be measured experimentally and
     predicted theoretically."""
@@ -272,6 +397,77 @@ class Observable(NamedInstanceClass):
         self.arguments = arguments
         self.prediction = None
         self.tex = ''
+
+    def __repr__(self):
+        return "Observable('{}', arguments={})".format(self.name, self.arguments)
+
+    def _repr_markdown_(self):
+        md = "### Observable `{}`\n\n".format(self.name)
+        if self.tex:
+            md += "Observable: {}\n\n".format(self.tex)
+        if self.description:
+            md += "Description: {}\n\n".format(self.description)
+        if self.arguments is not None:
+            md += "Arguments: "
+            md += ','.join(["`{}`".format(a) for a in self.arguments])
+            md += "\n\n"
+        if self.prediction is not None:
+            f = self.prediction.function
+            from IPython.lib import pretty
+            md += "Theory prediction: `{}`".format(pretty.pretty(f))
+        return md
+
+    @classmethod
+    def argument_format(cls, obs, format='tuple'):
+        """Class method: takes as input an observable name and numerical values
+        for the arguements (if any) and returns as output the same in a specific
+        form as specified by `format`: 'tuple' (default), 'list', or 'dict'.
+
+        Example inputs:
+        - ('dBR/dq2(B0->Denu)', 1)
+        - {'name': 'dBR/dq2(B0->Denu)', 'q2': 1}
+
+        Output:
+        tuple: ('dBR/dq2(B0->Denu)', 1)
+        list: ('dBR/dq2(B0->Denu)', 1)
+        dict: {'name': 'dBR/dq2(B0->Denu)', 'q2': 1}
+
+        For a string input for observables that don't have arguments:
+        - 'eps_K'
+
+        Output:
+        tuple: 'eps_K'
+        list: 'eps_K'
+        dict: {'name': 'eps_K'}
+        """
+        if isinstance(obs, str):
+            if cls[obs].arguments is not None:
+                raise ValueError("Arguments missing for {}".format(obs))
+            if format == 'dict':
+                return {'name': obs}
+            else:
+                return obs
+        elif isinstance(obs, (tuple, list)):
+            args = cls[obs[0]].arguments
+            if args is None or len(args) != len(obs) - 1:
+                raise ValueError("Wrong number of arguments for {}".format(obs[0]))
+            t = tuple(obs)
+            d = {'name': obs[0]}
+            for i, a in enumerate(args):
+                d[a] = obs[i + 1]
+        elif isinstance(obs, dict):
+            args = cls[obs['name']].arguments
+            if args is None:
+                t = obs['name']
+            else:
+                t = tuple([obs['name']] + [obs[a] for a in args])
+            d = obs
+        if format == 'tuple':
+            return t
+        elif format == 'list':
+            return list(t)
+        elif format == 'dict':
+            return d
 
     def set_prediction(self, prediction):
         self.prediction = prediction
@@ -289,7 +485,7 @@ class Observable(NamedInstanceClass):
         'Category :: Subcategory :: Subsubcategory'
         etc. LaTeX code is allowed. One observable can also have multiple
         taxonomies (e.g. 'Animal :: Cat' and 'Pet :: Favourite Pet')"""
-        taxonomy_list = taxonomy_string.split(' :: ') + [ self.name ]
+        taxonomy_list = taxonomy_string.split(' :: ') + [self.name]
         t = self.__class__.taxonomy
         for node in taxonomy_list:
             t = t[node]
@@ -299,8 +495,50 @@ class Observable(NamedInstanceClass):
         """Return the hierarchical metadata taxonomy as a nested dictionary."""
         return dicts(cls.taxonomy)
 
+    @classmethod
+    def from_function(cls, name, observables, function):
+        """Instantiate an observable object and the corresponding Prediction
+        object for an observable that is defined as a mathematical function
+        of two or more existing observables with existing predictions.
 
-########## AuxiliaryQuantity Class ##########
+        Parameters:
+        -----------
+
+        - name: string name of the new observable
+        - observables: list of string names of the observables to be combined
+        - function: function of the observables. The number of arguments must
+          match the number of observables
+
+        Example:
+        --------
+
+        For two existing observables 'my_obs_1' and 'my_obs_2', a new observable
+        that is defined as the difference between the two can be defined as
+
+        ```
+        Observable.from_function('my_obs_1_2_diff',
+                                 ['my_obs_1', 'my_obs_2'],
+                                 lambda x, y: x - y)
+        ```
+        """
+        for observable in observables:
+            try:
+                Observable[observable]
+            except KeyError:
+                raise ValueError("The observable " + observable + " does not exist")
+            assert Observable[observable].arguments == Observable[observables[0]].arguments, \
+                "Only observables depending on the same arguments can be combined"
+            assert Observable[observable].prediction is not None, \
+                "The observable {} does not have a prediction yet".format(observable)
+        obs_obj = cls(name, arguments=Observable[observables[0]].arguments)
+        pfcts = [Observable[observable].prediction.function
+                 for observable in observables]
+        def pfct(*args, **kwargs):
+            return function(*[f(*args, **kwargs) for f in pfcts])
+        Prediction(name, pfct)
+        return obs_obj
+
+
 class AuxiliaryQuantity(NamedInstanceClass):
     """An auxiliary quantity is something that can be computed theoretically but
     not measured directly, e.g. some sub-contribution to an amplitude or a form
@@ -315,7 +553,7 @@ class AuxiliaryQuantity(NamedInstanceClass):
             implementation_name = config['implementation'][self.name]
         except KeyError:
             raise KeyError("No implementation specified for auxiliary quantity " + self.name)
-        return Implementation.get_instance(implementation_name)
+        return Implementation[implementation_name]
 
     def prediction_central(self, constraints_obj, wc_obj, *args, **kwargs):
         implementation = self.get_implementation()
@@ -326,30 +564,29 @@ class AuxiliaryQuantity(NamedInstanceClass):
         return implementation.get(par_dict, wc_obj, *args, **kwargs)
 
 
-
-########## Prediction Class ##########
 class Prediction(object):
     """A prediction is the theoretical prediction for an observable."""
 
     def __init__(self, observable, function):
         try:
-            Observable.get_instance(observable)
+            Observable[observable]
         except KeyError:
             raise ValueError("The observable " + observable + " does not exist")
         self.observable = observable
         self.function = function
-        self.observable_obj = Observable.get_instance(observable)
+        self.observable_obj = Observable[observable]
         self.observable_obj.set_prediction(self)
 
-    def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
+    def get_central(self, constraints_obj, wc_obj, *    args, **kwargs):
         par_dict = constraints_obj.get_central_all()
-        return self.function(wc_obj, par_dict, *args, **kwargs)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        return self.function(fwc_obj, par_dict, *args, **kwargs)
 
     def get_par(self, par_dict, wc_obj, *args, **kwargs):
-        return self.function(wc_obj, par_dict, *args, **kwargs)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        return self.function(fwc_obj, par_dict, *args, **kwargs)
 
 
-########## Implementation Class ##########
 class Implementation(NamedInstanceClass):
     """An implementation is the theoretical prediction for an auxiliary
     quantity."""
@@ -358,7 +595,7 @@ class Implementation(NamedInstanceClass):
     def show_all(cls):
         all_dict = {}
         for name in cls.instances:
-            inst = cls.get_instance(name)
+            inst = cls[name]
             quant = inst.quantity
             descr = inst.description
             all_dict[quant] = {name: descr}
@@ -367,26 +604,28 @@ class Implementation(NamedInstanceClass):
     def __init__(self, name, quantity, function):
         super().__init__(name)
         try:
-            AuxiliaryQuantity.get_instance(quantity)
+            AuxiliaryQuantity[quantity]
         except KeyError:
             raise ValueError("The quantity " + quantity + " does not exist")
         self.quantity = quantity
         self.function = function
-        self.quantity_obj = AuxiliaryQuantity.get_instance(quantity)
+        self.quantity_obj = AuxiliaryQuantity[quantity]
 
     def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
         par_dict = constraints_obj.get_central_all()
-        return self.function(wc_obj, par_dict, *args, **kwargs)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        return self.function(fwc_obj, par_dict, *args, **kwargs)
 
     def get_random(self, constraints_obj, wc_obj, *args, **kwargs):
         par_dict = constraints_obj.get_random_all()
-        return self.function(wc_obj, par_dict, *args, **kwargs)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        return self.function(fwc_obj, par_dict, *args, **kwargs)
 
     def get(self, par_dict, wc_obj, *args, **kwargs):
-        return self.function(wc_obj, par_dict, *args, **kwargs)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        return self.function(fwc_obj, par_dict, *args, **kwargs)
 
 
-########## Measurement Class ##########
 class Measurement(Constraints, NamedInstanceClass):
     """A (experimental) measurement associates one (or several) probability
     distributions to one (or several) observables. If it contains several
@@ -402,8 +641,8 @@ class Measurement(Constraints, NamedInstanceClass):
     where `constraint` is an instance of a descendant of
     ProbabilityDistribution and `observables` is a list of either
      - a string observable name in the case of observables without arguments
-     - or a tuple `(name, x_1, ..., x_n)`, where the `x_i` are float values for the
-       arguments, of an observable with `n` arguments.
+     - or a tuple `(name, x_1, ..., x_n)`, where the `x_i` are float values for
+       the arguments, of an observable with `n` arguments.
     """
 
     def __init__(self, name):
@@ -412,3 +651,32 @@ class Measurement(Constraints, NamedInstanceClass):
         self.inspire = ''
         self.experiment = ''
         self.url = ''
+
+    def __repr__(self):
+        return "Measurement('{}')".format(self.name)
+
+    def _repr_markdown_(self):
+        md = "### Measurement `{}`\n\n".format(self.name)
+        if self.experiment:
+            md += "Experiment: {}\n\n".format(self.experiment)
+        if self.inspire:
+            md += ("[Inspire](http://inspirehep.net/search?&p=texkey+{})\n\n"
+                   .format(urllib.parse.quote(self.inspire)))
+        if self.url:
+            md += "URL: <{}>\n\n".format(self.url)
+        if self.description:
+            md += "Description: {}\n\n".format(self.description)
+        if self.all_parameters:
+            md += "Measured observables:\n\n"
+            for obs in self.all_parameters:
+                if isinstance(obs, tuple):
+                    name = obs[0]
+                    args = obs[1:]
+                    argnames = Observable[name].arguments
+                    md += "- {}".format(Observable[name].tex)
+                    for i, arg in enumerate(args):
+                        md += ", `{}` = {}".format(argnames[i], arg)
+                    md += "\n"
+                else:
+                    md += "- {}\n".format(Observable[obs].tex)
+        return md

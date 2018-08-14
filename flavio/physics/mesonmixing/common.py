@@ -2,7 +2,7 @@ from math import pi, sqrt, cos, sin
 from cmath import phase
 import cmath
 
-meson_quark = { 'B0': 'bd', 'Bs': 'bs', 'K0': 'sd', 'D0': 'cu' }
+meson_quark = { 'B0': 'bd', 'Bs': 'bs', 'K0': 'sd', 'D0': 'uc' }
 
 def bag_msbar2rgi(alpha_s, meson):
     """Conversion factor between renormalization group invariant (RGI) defintion
@@ -23,27 +23,19 @@ def bag_msbar2rgi(alpha_s, meson):
 
 def DeltaM(M12, G12):
     r"""Meson mixing mass difference $\Delta M$ as a function of $M_{12}$ and
-    $\Gamma_{12}$."""
-    aM12 = abs(M12)
-    aG12 = abs(G12)
-    phi12 = phase(-M12/G12)
-    return sqrt(4*aM12**2 + aG12**2 + sqrt(16*aM12**4 + 16*aM12**2*aG12**2
-                    + aG12**4 + 8*aM12**2*aG12**2*cos(2*phi12)))/sqrt(2)
+    $\Gamma_{12}$, defined as $M_2-M_1$."""
+    return -2*(q_over_p(M12, G12)*(M12-1j/2.*G12)).real
 
 def DeltaGamma(M12, G12):
     r"""Meson mixing decay width difference $\Delta\Gamma$ as a function of
-    $M_{12}$ and $\Gamma_{12}$."""
-    aM12 = abs(M12)
-    aG12 = abs(G12)
-    phi12 = phase(-M12/G12)
-    return sqrt(2)*cmath.sqrt(-4*aM12**2 - aG12**2 +
-                sqrt(16*aM12**4 + 8*aM12**2*aG12**2 +
-                    aG12**4 + 16*aM12**2*aG12**2*cos(phi12)**2)).real
+    $M_{12}$ and $\Gamma_{12}$, defined as $\Gamma_1-\Gamma_2$."""
+    return -4*(q_over_p(M12, G12)*(M12-1j/2.*G12)).imag
 
 def q_over_p(M12, G12):
-    r"""Ratio $q/p$ as a function of $M_{12}$ and $\Gamma_{12}$."""
-    DM = DeltaM(M12, G12)
-    DG = DeltaGamma(M12, G12)
+    r"""Ratio $q/p$ as a function of $M_{12}$ and $\Gamma_{12}$.
+    The sign is chosen such that $\Delta M$ is positive in the $B$ system."""
+    if 2*M12-1j*G12 == 0:
+        return -1
     return -cmath.sqrt((2*M12.conjugate()-1j*G12.conjugate())/(2*M12-1j*G12))
 
 def a_fs(M12, G12):

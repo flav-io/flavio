@@ -781,9 +781,9 @@ def read(card, set_cplx=True):
 
                 thecard.add_block(theblock)
 
-            elif first_chars=='decay':
+            elif first_chars=='decay' or first_chars=='decay1l':
                 try:
-                    decay_details = re.match(r'\s*decay\s+(.+)',ll,
+                    decay_details = re.match(r'\s*decay[1l]*\s+(.+)',ll,
                                              re.IGNORECASE).group(1)
                 except AttributeError:
                     err = ('Invalid decay format encountered' +

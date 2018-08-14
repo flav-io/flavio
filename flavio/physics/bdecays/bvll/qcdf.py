@@ -3,7 +3,6 @@ r"""QCD factorization corrections to $B\to V\ell^+\ell^-$ at low $q^2$"""
 
 from math import pi,exp
 from cmath import sqrt,atan,log
-import mpmath
 import numpy as np
 from scipy.special import eval_gegenbauer
 from flavio.physics import ckm
@@ -40,7 +39,7 @@ def get_input(par, B, V, scale):
 def Cq34(q2, par, wc, B, V, scale):
     # this is -C_q^12 (for q=u) or C_q^34 - eps_u * C_q^12 (for q=d,s) of hep-ph/0412400
     mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
-    T_t = -wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 12*wc['C5_'+qiqj] + 16*wc['C6_'+qiqj])
+    T_t = wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 12*wc['C5_'+qiqj] + 16*wc['C6_'+qiqj])
     # the (u) contribution depends on the flavour of the spectator quark:
     if q == 'u':
         T_u = -3*(wc['C2_'+qiqj])
@@ -106,7 +105,7 @@ def T_perp_plus_QSS(q2, par, wc, B, V, u, scale):
           eu * t_mc * (-wc['C1_'+qiqj]/6. + wc['C2_'+qiqj] + 6*wc['C6_'+qiqj])
         + ed * t_mb * (wc['C3_'+qiqj] - wc['C4_'+qiqj]/6. + 16*wc['C5_'+qiqj] + (10.*wc['C6_'+qiqj])/3.
                         + mb/mB*(-wc['C3_'+qiqj] + wc['C4_'+qiqj]/6 - 4 * wc['C5_'+qiqj] + (2 * wc['C6_'+qiqj])/3))
-        + ed * t_0  * (-wc['C3_'+qiqj] + wc['C4_'+qiqj]/6. - 16*wc['C5_'+qiqj] + 8*wc['C6_'+qiqj]/3.)
+        + ed * t_0  * (wc['C3_'+qiqj] - wc['C4_'+qiqj]/6. + 16*wc['C5_'+qiqj] - 8*wc['C6_'+qiqj]/3.)
         )
     T_u = ( (alpha_s/(3*pi)) * eu * mB/(2*mb) * ( t_mc - t_0 )
                                 * ( wc['C2_'+qiqj] - wc['C1_'+qiqj]/6.) )
@@ -121,7 +120,7 @@ def T_para_plus_QSS(q2, par, wc, B, V, u, scale):
     T_t = (alpha_s/(3*pi)) * mB/mb*(
           eu * t_mc * (-wc['C1_'+qiqj]/6. + wc['C2_'+qiqj] + 6*wc['C6_'+qiqj])
         + ed * t_mb * (wc['C3_'+qiqj] - wc['C4_'+qiqj]/6. + 16*wc['C5_'+qiqj] + 10*wc['C6_'+qiqj]/3.)
-        + ed * t_0 * (-wc['C3_'+qiqj] + wc['C4_'+qiqj]/6. - 16*wc['C5_'+qiqj] + 8*wc['C6_'+qiqj]/3.)
+        + ed * t_0 * (wc['C3_'+qiqj] - wc['C4_'+qiqj]/6. + 16*wc['C5_'+qiqj] - 8*wc['C6_'+qiqj]/3.)
         )
     T_u = ( (alpha_s/(3*pi)) * eu * mB/mb * ( t_mc - t_0 )
                                 * ( wc['C2_'+qiqj] - wc['C1_'+qiqj]/6.) )
@@ -185,18 +184,20 @@ def B0(s, mq):
     # to select the right branch of the complex arctangent, need to
     # interpret m^2 as m^2-i\epsilon
     iepsilon = 1e-8j
-    return -2*sqrt(4*mq**2/s - 1) * atan(1/sqrt(4*(mq**2-iepsilon)/s - 1))
+    return -2*sqrt(4*(mq**2-iepsilon)/s - 1) * atan(1/sqrt(4*(mq**2-iepsilon)/s - 1))
 
 # (30), (31) of hep-ph/0106067v2
 def i1_bfs(q2, u, mq, mB):
     ubar = 1 - u
-    x0 = sqrt(1/4. - mq**2/(ubar * mB**2 + u * q2))
+    iepsilon = 1e-8j
+    mq2 = mq**2 - iepsilon
+    x0 = sqrt(1/4. - mq2/(ubar * mB**2 + u * q2))
     xp = 1/2. + x0
     xm = 1/2. - x0
-    y0 = sqrt(1/4. - mq**2/q2)
+    y0 = sqrt(1/4. - mq2/q2)
     yp = 1/2. + y0
     ym = 1/2. - y0
-    return 1 + (2 * mq**2)/(ubar * (mB**2 - q2)) * (L1(xp) + L1(xm) - L1(yp) - L1(ym))
+    return 1 + (2 * mq2)/(ubar * (mB**2 - q2)) * (L1(xp) + L1(xm) - L1(yp) - L1(ym))
 
 # (32) of hep-ph/0106067v2
 def L1(x):

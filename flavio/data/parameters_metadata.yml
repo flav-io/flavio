@@ -1,4 +1,3 @@
-
 # Coupling constants
 
 GF:
@@ -54,6 +53,9 @@ f_B0:
 f_B+:
   tex: $f_{B^\pm}$
   description: $B^\pm$ decay constant
+f_Bc:
+  tex: $f_{B_c}$
+  description: $B_c$ decay constant
 f_D0:
   tex: $f_{D^0}$
   description: $D^0$ decay constant
@@ -429,13 +431,13 @@ B0->K0 deltaC9 c Im:
   tex: $\text{Im}\,c^{\Delta_9}$
   description: Parameter for subleading hadronic effects in $B^0\to K^0\ell^+\ell^-$ at high $q^2$
 B+->K+ deltaC9 a Re:
-  tex: $\text{Im}\,a^{\Delta_9}$
+  tex: $\text{Re}\,a^{\Delta_9}$
   description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at low $q^2$
 B+->K+ deltaC9 b Re:
-  tex: $\text{Im}\,b^{\Delta_9}$
+  tex: $\text{Re}\,b^{\Delta_9}$
   description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at low $q^2$
 B+->K+ deltaC9 c Re:
-  tex: $\text{Im}\,c^{\Delta_9}$
+  tex: $\text{Re}\,c^{\Delta_9}$
   description: Parameter for subleading hadronic effects in $B^+\to K^+\ell^+\ell^-$ at high $q^2$
 B+->K+ deltaC9 a Im:
   tex: $\text{Im}\,a^{\Delta_9}$
@@ -539,6 +541,9 @@ bag_Bs_1:
 bag_K0_1:
   tex: $B_1^{(K)}$
   description: $K^0$ bag parameter of $O_1$ in the $\overline{\text{MS}}$ scheme at 2 GeV
+bag_D0_1:
+  tex: $B_1^{(D)}$
+  description: $D^0$ bag parameter of $O_1$ in the $\overline{\text{MS}}$ scheme at 2 GeV
 
 # BSM operators
 bag_B0_2:
@@ -578,6 +583,19 @@ bag_K0_4:
 bag_K0_5:
   tex: $B_5^{(K)}$
   description: $K^0$ bag parameter of $O_5$ in the $\overline{\text{MS}}$ scheme at 2 GeV
+
+bag_D0_2:
+  tex: $B_2^{(D)}$
+  description: $D^0$ bag parameter of $O_2$ in the $\overline{\text{MS}}$ scheme at 2 GeV
+bag_D0_3:
+  tex: $B_3^{(D)}$
+  description: $D^0$ bag parameter of $O_3$ in the $\overline{\text{MS}}$ scheme at 2 GeV
+bag_D0_4:
+  tex: $B_4^{(D)}$
+  description: $D^0$ bag parameter of $O_4$ in the $\overline{\text{MS}}$ scheme at 2 GeV
+bag_D0_5:
+  tex: $B_5^{(D)}$
+  description: $D^0$ bag parameter of $O_5$ in the $\overline{\text{MS}}$ scheme at 2 GeV
 
 
 
@@ -680,8 +698,20 @@ B->D IW a_T:
   tex: $a_T^{B\to D}$
   description: Relative power correction to the $B\to D$ tensor form factor from the improved Isgur-Wise relation
 
+# Parameters for B->pi tensor form factor using Isgur-Wise relations
+
+B->pi IW a_T:
+  tex: $a_T^{B\to \pi}$
+  description: Relative power correction to the $B\to \pi$ tensor form factor from the improved Isgur-Wise relation
+
 
 # Parameters for B->D form factors in the BCL parametrization
+B->D BCL m0:
+  tex: $m_{B^*}^{f_0}$
+  description: Resonance mass for the $B\to D$ scalar form factor in BCL parametrization
+B->D BCL m+:
+  tex: $m_{B^*}^{f_+}$
+  description: Resonance mass for the $B\to D$ vector and tensor form factors in BCL parametrization
 B->D BCL a0_f+:
   tex: $a_0^{(+)}$
   description: BCL $B\to D$ form factor parametrization coefficient $a_0$ of $f_+$
@@ -702,6 +732,12 @@ B->D BCL a2_f0:
   description: BCL $B\to D$ form factor parametrization coefficient $a_2$ of $f_0$
 
 # Parameters for B->pi form factors in the BCL parametrization
+B->pi BCL m0:
+  tex: $m_{B^*}^{f_0}$
+  description: Resonance mass for the $B\to \pi$ scalar form factor in BCL parametrization
+B->pi BCL m+:
+  tex: $m_{B^*}^{f_+}$
+  description: Resonance mass for the $B\to \pi$ vector and tensor form factors in BCL parametrization
 B->pi BCL a0_f+:
   tex: $a_0^{(+)}$
   description: BCL $B\to \pi$ form factor parametrization coefficient $a_0$ of $f_+$
@@ -740,6 +776,12 @@ B->pi BCL a3_fT:
   description: BCL $B\to \pi$ form factor parametrization coefficient $a_3$ of $f_T$
 
 # Parameters for B->K form factors in the BCL parametrization
+B->K BCL m0:
+  tex: $m_{B^*}^{f_0}$
+  description: Resonance mass for the $B\to K$ scalar form factor in BCL parametrization
+B->K BCL m+:
+  tex: $m_{B^*}^{f_+}$
+  description: Resonance mass for the $B\to K$ vector and tensor form factors in BCL parametrization
 B->K BCL a0_f+:
   tex: $a_0^{(+)}$
   description: BCL $B\to K$ form factor parametrization coefficient $a_0$ of $f_+$
@@ -768,6 +810,41 @@ B->K BCL a2_fT:
   tex: $a_2^{(T)}$
   description: BCL $B\to K$ form factor parametrization coefficient $a_2$ of $f_T$
 
+# Parameters for Bs->K form factors in the BCL parametrization
+Bs->K BCL m0:
+  tex: $m_{B^*}^{f_0}$
+  description: Resonance mass for the $B_s\to K$ scalar form factor in BCL parametrization
+Bs->K BCL m+:
+  tex: $m_{B^*}^{f_+}$
+  description: Resonance mass for the $B_s\to K$ vector and tensor form factors in BCL parametrization
+Bs->K BCL a0_f+:
+  tex: $a_0^{(+)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_0$ of $f_+$
+Bs->K BCL a1_f+:
+  tex: $a_1^{(+)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_1$ of $f_+$
+Bs->K BCL a2_f+:
+  tex: $a_2^{(+)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_2$ of $f_+$
+Bs->K BCL a0_f0:
+  tex: $a_0^{(0)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_0$ of $f_0$
+Bs->K BCL a1_f0:
+  tex: $a_1^{(0)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_1$ of $f_0$
+Bs->K BCL a2_f0:
+  tex: $a_2^{(0)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_2$ of $f_0$
+Bs->K BCL a0_fT:
+  tex: $a_0^{(T)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_0$ of $f_T$
+Bs->K BCL a1_fT:
+  tex: $a_1^{(T)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_1$ of $f_T$
+Bs->K BCL a2_fT:
+  tex: $a_2^{(T)}$
+  description: BCL $B_s\to K$ form factor parametrization coefficient $a_2$ of $f_T$
+
 # Experimental data needed for the normalization of BR(B->Xqgamma) and BR(B->Xqll)
 C_BXlnu:
   tex: $C$
@@ -783,12 +860,58 @@ delta_BXdgamma:
   tex: $\delta_{bd\gamma}$
   description: Quantity parametrizing the remaining theory uncertainty due to higher orders, interpolation, and non-perturbative effects in $B\to X_d\gamma$. The relative uncertainty is $1+\delta$.
 # B->Xqll uncertainty parameters
-delta_BXsll:
-  tex: $\delta_{bsll}$
-  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\ell^+\ell^-$. The relative uncertainty is $1+\delta$.
-delta_BXdll:
-  tex: $\delta_{bdll}$
-  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\ell^+\ell^-$. The relative uncertainty is $1+\delta$.
+delta_BXsee low:
+  tex: $\delta_{bsee}^\text{low}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_se^+e^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdee low:
+  tex: $\delta_{bdee}^\text{low}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_de^+e^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXsee high:
+  tex: $\delta_{bsee}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_se^+e^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdee high:
+  tex: $\delta_{bdee}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_de^+e^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXsmumu low:
+  tex: $\delta_{bs\mu\mu}^\text{low}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\mu^+\mu^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdmumu low:
+  tex: $\delta_{bd\mu\mu}^\text{low}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\mu^+\mu^-$ at low $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXsmumu high:
+  tex: $\delta_{bs\mu\mu}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\mu^+\mu^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdmumu high:
+  tex: $\delta_{bd\mu\mu}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\mu^+\mu^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXstautau high:
+  tex: $\delta_{bs\tau\tau}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_s\tau^+\tau^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+delta_BXdtautau high:
+  tex: $\delta_{bd\tau\tau}^\text{high}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders and non-perturbative effects in $B\to X_d\tau^+\tau^-$ at high $q^2$. The relative uncertainty is $1+\delta$.
+
+# parameters needed for power corrections to B->Xqll
+lambda_1:
+  tex: $\lambda_1$
+  description: Matrix element of $B$ meson kinetic energy operator
+lambda_2:
+  tex: $\lambda_2$
+  description: Matrix element of $B$ meson magnetic moment operator
+
+# parameters needed for power corrections to B->Xlnu
+mu_pi^2:
+  tex: $\mu_\pi^2$
+  description:
+mu_G^2:
+  tex: $\mu_G^2$
+  description:
+rho_D^3:
+  tex: $\rho_D^3$
+  description:
+rho_LS^3:
+  tex: $\rho_LS^3$
+  description:
 
 # charm quark mass entering alpha_s corrections to B->Vgamma.
 m_c BVgamma:
@@ -881,3 +1004,170 @@ K+mu3 delta_EM:
 Lambda->ppi alpha_-:
   tex: $\alpha_-$
   description: $\Lambda\to p \pi^-$ decay parameter
+
+
+# Parameters for HQET form factors
+chi_2(1):
+  tex: $\chi_2(1)$
+  description: Subleading Isgur-Wise function $\chi_2$ at $w=1$
+chi_2p(1):
+  tex: $\chi_2\'(1)$
+  description: Derivative of subleading Isgur-Wise function $\chi_2$ at $w=1$
+chi_3p(1):
+  tex: $\chi_3\'(1)$
+  description: Derivative of subleading Isgur-Wise function $\chi_3$ at $w=1$
+eta(1):
+  tex: $\eta(1)$
+  description: Subleading Isgur-Wise function $\eta$ at $w=1$
+etap(1):
+  tex: $\eta\'(1)$
+  description: Derivative of subleading Isgur-Wise function $\eta$ at $w=1$
+CLN rho2_xi:
+  tex: $\rho^2_\xi$
+  description: Slope parameter of leading Isgur-Wise function $\xi(w)=1-\rho^2_\xi(w-1)+c_\xi(w-1)^2$
+CLN c_xi:
+  tex: $c_\xi$
+  description: Parameter of leading Isgur-Wise function $\xi(w)=1-\rho^2_\xi(w-1)+c_\xi(w-1)^2$
+B->D* CLN deltac_hA1:
+  tex: $\delta_{\epsilon_c^2}^{h_{A_1}}$
+  description: Power correction to $B\to D^*$ HQET form factor $h_{A_1}$
+B->D* CLN deltac_hT1:
+  tex: $\delta_{\epsilon_c^2}^{h_{T_1}}$
+  description: Power correction to $B\to D^*$ HQET form factor $h_{T_1}$
+B->D CLN deltac_h+:
+  tex: $\delta_{\epsilon_c^2}^{h_+}$
+  description: Power correction to $B\to D$ HQET form factor $h_+$
+
+# Parameters for neutron EDM
+nEDM gT_d:
+  tex: $g_T^d$
+  description: Neutron down quark tensor charge
+nEDM gT_u:
+  tex: $g_T^u$
+  description: Neutron up quark tensor charge
+nEDM ~rho_d:
+  tex: $\tilde \rho_d$
+  description: coefficient of the down quark CEDM contribution to the neutron EDM
+nEDM ~rho_u:
+  tex: $\tilde \rho_u$
+  description: coefficient of the up quark CEDM contribution to the neutron EDM
+nEDM beta_G:
+  tex: $\beta_G$
+  description: coefficient of the three-gluon Weinberg operator contribution to the neutron EDM
+
+# Parameters for SM contribution to D-Dbar mixing
+M12_D a_bb:
+  tex: $a_{bb}$
+  description: SM contribution to the dispersive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{ub}V_{cb}^\ast$ in inverse picoseconds
+M12_D a_bs:
+  tex: $a_{bb}$
+  description: SM contribution to the dispersive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{ub}V_{cs}^\ast$ in inverse picoseconds
+M12_D a_ss:
+  tex: $a_{bb}$
+  description: SM contribution to the dispersive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{us}V_{cs}^\ast$ in inverse picoseconds
+Gamma12_D a_bb:
+  tex: $a_{bb}$
+  description: SM contribution to the absorptive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{ub}V_{cb}^\ast$ in inverse picoseconds
+Gamma12_D a_bs:
+  tex: $a_{bb}$
+  description: SM contribution to the absorptive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{ub}V_{cs}^\ast$ in inverse picoseconds
+Gamma12_D a_ss:
+  tex: $a_{bb}$
+  description: SM contribution to the absorptive part of the $D^0$-$\bar D^0$ mixing amplitude multiplied by $V_{us}V_{cs}^\ast$ in inverse picoseconds
+
+# Parameters for LFV decays
+BR(tau->mununu):
+  tex:
+  description:
+BR(tau->enunu):
+  tex:
+  description:
+BR(tau->rhonu):
+  tex:
+  description:
+
+# Parameters for epsilon'/epsilon
+eps_K:
+  tex: $\|\epsilon_K\|$
+  description: Measured value of $\|\epsilon_K\|$
+omega+:
+  tex: $\omega_+$
+  description:
+Omegahat_eff:
+  tex: $\hat \Omega_\text{eff}$
+  description: Parameter for isospin breaking corrections to $\epsilon\'/\epsilon$
+epsp a:
+  tex: $a$
+  description: Parameter for isospin breaking corrections to $\epsilon\'/\epsilon$
+ReA0(K->pipi):
+  tex: $\text{Re}A_0$
+  description: Real part of the $K\to(\pi\pi)_{I=0}$ isospin amplitude from experiment
+ReA2(K->pipi):
+  tex: $\text{Re}A_2$
+  description: Real part of the $K\to(\pi\pi)_{I=2}$ isospin amplitude from experiment
+#  K-> pi pi matrix elements of QCD and QED penguin operators
+Kpipi M0 3:
+  tex: $\langle Q_3 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_3$
+Kpipi M0 4:
+  tex: $\langle Q_4 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_4$
+Kpipi M0 5:
+  tex: $\langle Q_5 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_5$
+Kpipi M0 6:
+  tex: $\langle Q_6 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_6$
+Kpipi M0 7:
+  tex: $\langle Q_7 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_7$
+Kpipi M0 8:
+  tex: $\langle Q_8 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_8$
+Kpipi M0 9:
+  tex: $\langle Q_9 \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_9$
+Kpipi M2 7:
+  tex: $\langle Q_7 \rangle_2$
+  description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_7$
+Kpipi M2 8:
+  tex: $\langle Q_8 \rangle_2$
+  description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_8$
+Kpipi M2 9:
+  tex: $\langle Q_9 \rangle_2$
+  description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_9$
+#  K-> pi pi matrix elements of chromo-magnetic dipole operators
+Kpipi M0 g-:
+  tex: $\langle Q_g^- \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_g^-$
+# K-> pi pi  matrix elements for BSM operators in SD basis
+Kpipi M0 SLL1_u:
+  tex: $\langle Q_1^{\text{SLL},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_1^{\text{SLL},u}$
+Kpipi M0 SLL2_u:
+  tex: $\langle Q_2^{\text{SLL},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_2^{\text{SLL},u}$
+Kpipi M0 SLL3_u:
+  tex: $\langle Q_3^{\text{SLL},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_3^{\text{SLL},u}$
+Kpipi M0 SLL4_u:
+  tex: $\langle Q_4^{\text{SLL},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_4^{\text{SLL},u}$
+Kpipi M0 SLR1_u:
+  tex: $\langle Q_1^{\text{SLR},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_1^{\text{SLR},u}$
+Kpipi M0 SLR2_u:
+  tex: $\langle Q_2^{\text{SLR},u} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_2^{\text{SLR},u}$
+Kpipi M0 SLL1_d:
+  tex: $\langle Q_1^{\text{SLL},d} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_1^{\text{SLL},d}$
+Kpipi M2 SLL1_d:
+  tex: $\langle Q_1^{\text{SLL},d} \rangle_2$
+  description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_1^{\text{SLL},d}$
+Kpipi M0 SLL2_d:
+  tex: $\langle Q_2^{\text{SLL},d} \rangle_0$
+  description: $K\to (\pi\pi)_{I=0}$ matrix element of $Q_2^{\text{SLL},d}$
+Kpipi M2 SLL2_d:
+  tex: $\langle Q_2^{\text{SLL},d} \rangle_2$
+  description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_2^{\text{SLL},d}$

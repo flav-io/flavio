@@ -15,7 +15,7 @@ def prefactor(q2, par, B, P):
 
 def get_ff(q2, par, B, P):
     ff_name = flavio.physics.bdecays.common.meson_ff[(B,P)] + ' form factor'
-    return flavio.classes.AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
+    return flavio.classes.AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=q2)
 
 def helicity_amps(q2, wc_obj, par, B, P, nu1, nu2):
     scale = flavio.config['renormalization scale']['bpll']

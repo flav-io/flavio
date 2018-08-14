@@ -6,61 +6,256 @@ to be used directly)."""
 
 import flavio
 import numpy as np
-import copy
+from flavio.statistics.probability import NormalDistribution, MultivariateNormalDistribution
+from flavio.math.optimize import minimize_robust
+from collections import Counter, OrderedDict
+import warnings
+import inspect
+from multiprocessing import Pool
+import scipy.optimize
+import pickle
+from functools import partial
+import yaml
+import voluptuous as vol
+import dill
+import base64
+
+
+def ensurelist(v):
+    """Coerce NoneType to empty list, wrap non-list in list."""
+    if isinstance(v, list):
+        return v
+    elif v is None:
+        return []
+    else:
+        raise ValueError("Unexpected form of list: {}".format(v))
+
+
+def wc_function_factory(d):
+    """Return a Wilson coefficient function suitable for the `fit_wc_function`
+    argument starting from a dictionary.
+
+    There are three allowed forms. First form: simply taking the real values
+    of WCxf Wilson coefficients:
+
+    ```{'args': ['C9_bsmumu', 'C10_bsmumu']}```
+
+    which is equivalent to
+
+    ```lambda C9_bsmumu, C10_bsmumu: {'C9_bsmumu': C9_bsmumu, 'C10_bsmumu': C10_bsmumu}```
+
+    Second form: giving executable strings for each return key.
+
+    ```{'args': ['ReC9', 'ImC9'],
+        'return': {'C9_bsmumu': 'ReC9 + 1j * ImC9'}}```
+
+    which is equivalent to
+
+    ```lambda ReC9, ImC9: {'C9_bsmumu': ReC9 + 1j * ImC9}```
+
+    Third form: explicitly giving the Python code.
+    The function name is arbitrary. When using a lambda function,
+    it must be assigned to a name.
+
+    ```{'code': "def f(C9, C10):\n  return {'C9_bsmumu': 10 * C9, 'C10_bsmumu': 30 * C10}"```
+    """
+    if 'code' in d:
+        s = d['code']
+    elif 'pickle' in d:
+        return dill.loads(base64.b64decode(d['pickle'].encode('utf-8')))
+    elif 'args' not in d:
+        raise ValueError("Function dictionary not understood.")
+    elif 'return' not in d:
+        s = r"""def _f({}):
+    return locals()""".format(', '.join(d['args']))
+    else:
+        s = r"""def _f({}):
+    return {{{}}}""".format(', '.join(d['args']), ', '.join(["'{}': {}".format(k, v) for k, v in d['return'].items()]))
+    namespace = OrderedDict()
+    exec(s, namespace)  # execute string in empty namespace
+    namespace.pop('__builtins__', None)  # remove builtins key if exists
+    if not namespace:
+        warnings.warn("Function dictionary provided but no function found.")
+        return None
+    f = namespace[list(namespace.keys())[-1]]  # assume the last variable is the function
+    if not callable(f):
+        raise ValueError("Function code not understood")
+    return f
+
+
+def fencode(f):
+    if f is None:
+        return None
+    return {'pickle': base64.b64encode(dill.dumps(f)).decode('utf-8')}
+
 
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
 
+    # voluptuous schema for loading fit from file
+    _input_schema = vol.Schema({
+        'name': str,
+        'fit_parameters': vol.Any(None, [str]),
+        'nuisance_parameters': vol.Any(None, [str]),
+        'observables':  [lambda v: flavio.Observable.argument_format(v, format='tuple')],
+        'exclude_measurements': vol.Any(None, [str]),
+        'include_measurements': vol.Any(None, [str]),
+        'input_scale': vol.Coerce(float),
+        'fit_wc_eft': str,
+        'fit_wc_basis': str,
+        'fit_wc_function': vol.All({'args': [vol.Coerce(str)],
+                                    'return': dict,
+                                    'code': vol.Coerce(str),
+                                    'pickle': vol.Coerce(str)}),
+    }, extra=vol.ALLOW_EXTRA)
+
+    # voluptuous schema for dumping fit to file
+    _output_schema = vol.Schema({
+        'name': str,
+        'fit_parameters': vol.All(ensurelist, [str]),
+        'nuisance_parameters': vol.All(ensurelist, [str]),
+        'observables':  [lambda v: flavio.Observable.argument_format(v, format='dict')],
+        'exclude_measurements': vol.All(ensurelist, [str]),
+        'include_measurements': vol.All(ensurelist, [str]),
+        'input_scale': vol.Coerce(float),
+        'fit_wc_eft': str,
+        'fit_wc_basis': str,
+        'fit_wc_function': vol.Any(None, {'args': [vol.Coerce(str)],
+                                          'return': dict,
+                                          'code': vol.Coerce(str),
+                                          'pickle': vol.Coerce(str)}),
+    }, extra=vol.REMOVE_EXTRA)
+
     def __init__(self,
                  name,
-                 par_obj,
-                 fit_parameters,
-                 nuisance_parameters,
-                 observables,
-                 fit_wc_names=[],
+                 par_obj=flavio.default_parameters,
+                 fit_parameters=None,
+                 nuisance_parameters=None,
+                 observables=None,
+                 fit_wc_names=None,
                  fit_wc_function=None,
                  fit_wc_priors=None,
                  input_scale=160.,
                  exclude_measurements=None,
                  include_measurements=None,
+                 fit_wc_eft='WET',
+                 fit_wc_basis='flavio',
                 ):
+        if fit_parameters is None:
+            self.fit_parameters = []
+        else:
+            self.fit_parameters = fit_parameters
+        if nuisance_parameters is None:
+            self.nuisance_parameters = []
+        elif nuisance_parameters == 'all':
+            self.nuisance_parameters = par_obj.all_parameters
+        else:
+            self.nuisance_parameters = nuisance_parameters
+        if observables is None:
+            raise ValueError("'observables' is empty: you must specify at least one fit observable")
+        if fit_wc_names is not None:
+            warnings.warn("The 'fit_wc_names' argument is no longer necessary "
+            "as of flavio v0.19 and might be removed in the future.",
+            FutureWarning)
         # some checks to make sure the input is sane
-        for p in fit_parameters + nuisance_parameters:
-            # check that fit and nuisance parameters exist
+        for p in self.nuisance_parameters:
+            # check that nuisance parameters are constrained
             assert p in par_obj._parameters.keys(), "Parameter " + p + " not found in Constraints"
         for obs in observables:
             # check that observables exist
             try:
                 if isinstance(obs, tuple):
-                    flavio.classes.Observable.get_instance(obs[0])
+                    flavio.classes.Observable[obs[0]]
+                elif isinstance(obs, dict):
+                    flavio.classes.Observable[obs['name']]
+                elif isinstance(obs, str):
+                    flavio.classes.Observable[obs]
                 else:
-                    flavio.classes.Observable.get_instance(obs)
+                    ValueError("Unexpected form of observable: {}".format(obs))
             except:
                 raise ValueError("Observable " + str(obs) + " not found!")
-        if exclude_measurements is not None and include_measurements is not None:
+        _obs_measured = set()
+        if exclude_measurements and include_measurements:
             raise ValueError("The options exclude_measurements and include_measurements must not be specified simultaneously")
         # check that no parameter appears as fit *and* nuisance parameter
-        intersect = set(fit_parameters).intersection(nuisance_parameters)
+        intersect = set(self.fit_parameters).intersection(self.nuisance_parameters)
         assert intersect == set(), "Parameters appearing as fit_parameters and nuisance_parameters: " + str(intersect)
         # check that the Wilson coefficient function works
-        if fit_wc_names: # if list of WC names not empty
+        if fit_wc_function is not None: # if list of WC names not empty
             try:
-                fit_wc_function(**{fit_wc_name: 1e-6 for fit_wc_name in fit_wc_names})
+                self.fit_wc_names = tuple(inspect.signature(fit_wc_function).parameters.keys())
+                fit_wc_function(**{self.fit_wc_name: 1e-6 for self.fit_wc_name in self.fit_wc_names})
             except:
                 raise ValueError("Error in calling the Wilson coefficient function")
+        else:
+            self.fit_wc_names = tuple()
         # now that everything seems fine, we can call the init of the parent class
         super().__init__(name)
         self.par_obj = par_obj
         self.parameters_central = self.par_obj.get_central_all()
-        self.fit_parameters = fit_parameters
-        self.nuisance_parameters = nuisance_parameters
         self.exclude_measurements = exclude_measurements
         self.include_measurements = include_measurements
-        self.fit_wc_names = fit_wc_names
         self.fit_wc_function = fit_wc_function
         self.fit_wc_priors = fit_wc_priors
         self.observables = observables
         self.input_scale = input_scale
+        self._warn_meas_corr
+
+        # check that observables are constrained
+        for m_name in self.get_measurements:
+            m_obj = flavio.Measurement[m_name]
+            _obs_measured.update(m_obj.all_parameters)
+        missing_obs = set(observables) - set(_obs_measured).intersection(set(observables))
+        assert missing_obs == set(), "No measurement found for the observables: " + str(missing_obs)
+
+        self.dimension = len(self.fit_parameters) + len(self.nuisance_parameters) + len(self.fit_wc_names)
+        self.eft = fit_wc_eft
+        self.basis = fit_wc_basis
+
+    @classmethod
+    def load(cls, f):
+        """Load the fit definition from a YAML string or stream."""
+        kwargs = cls._input_schema(flavio.io.yaml.load_include(f))
+        if 'fit_wc_function' in kwargs:
+            # Copy string defining the fit_wc_function to local variable.
+            fit_wc_function_string = kwargs['fit_wc_function'].copy()
+            # Replace kwargs['fit_wc_function'] by actual function.
+            kwargs['fit_wc_function'] = wc_function_factory(fit_wc_function_string)
+        else:
+            fit_wc_function_string = None
+        fit = cls(**kwargs)
+        if fit_wc_function_string is not None:
+            # Save string defining the fit_wc_function as private attribute of fit.
+            fit._fit_wc_function_string = fit_wc_function_string
+            # Save the fit_wc_function associated to fit_wc_function_string as
+            # private method of fit. This allows comparing it with the public
+            # method fit.fit_wc_function and to infer if fit.fit_wc_function
+            # has been changed since initialization
+            fit._fit_wc_function_orig = kwargs['fit_wc_function']
+        return fit
+
+    def dump(self, stream=None, **kwargs):
+        """Dump the fit definition to a YAML string or stream.
+
+        Note that this currently does *not* dump any information contained
+        in the `par_obj` argument or `fit_wc_priors`.
+        """
+        d = self.__dict__.copy()
+        # Dump string defining the fit_wc_function if it exists and if
+        # fit_wc_function has not been changed since intialization, i.e. if it
+        # is identical to the original function _fit_wc_function_orig that has
+        # been generated from the string
+        if ('_fit_wc_function_string' in d
+        and '_fit_wc_function_orig' in d
+        and d['fit_wc_function'] ==  d['_fit_wc_function_orig']):
+            d['fit_wc_function'] = d['_fit_wc_function_string']
+        # Otherwise, dump the pickled fit_wc_function
+        elif d['fit_wc_function'] is not None:
+            d['fit_wc_function'] = fencode(d['fit_wc_function'])
+        d = self._output_schema(d)
+        # remove NoneTypes and empty lists
+        d = {k: v for k, v in d.items() if v is not None and v != []}
+        return yaml.dump(d, stream=stream, **kwargs)
 
     @property
     def get_central_fit_parameters(self):
@@ -98,6 +293,9 @@ class Fit(flavio.NamedInstanceClass):
         constrain any of the fit observables."""
         all_measurements = []
         for m_name, m_obj in flavio.classes.Measurement.instances.items():
+            if m_name.split(' ')[0] == 'Pseudo-measurement':
+                # skip pseudo measurements generated by FastFit instances
+                continue
             if set(m_obj.all_parameters).isdisjoint(self.observables):
                 # if set of all observables constrained by measurement is disjoint
                 # with fit observables, do nothing
@@ -112,41 +310,45 @@ class Fit(flavio.NamedInstanceClass):
         elif self.include_measurements is not None:
             return list(set(all_measurements) & set(self.include_measurements))
 
+    @property
+    def _warn_meas_corr(self):
+        """Warn the user if the fit contains multiple correlated measurements of
+        an observable that is not included in the fit parameters, as this will
+        lead to inconsistent results."""
+        corr_with = {}
+        # iterate over all measurements constraining at least one fit obs.
+        for name in self.get_measurements:
+            m = flavio.classes.Measurement[name]
+            # iterate over all fit obs. constrained by this measurement
+            for obs in set(self.observables) & set(m.all_parameters):
+                # the constraint on this fit obs.
+                constraint = m._parameters[obs][1]
+                # find all the other obs. constrained by this constraint
+                for c, p in m._constraints:
+                    if c == constraint:
+                        par = p
+                        break
+                for p in par:
+                    # if the other obs. are not fit obs., append them to the list
+                    if p not in self.observables:
+                        if p not in corr_with:
+                            corr_with[p] = [obs]
+                        else:
+                            corr_with[p].append(obs)
+        # replace list by a Counter
+        corr_with = {k: Counter(v) for k, v in corr_with.items() if v}
+        # warn for all counts > 1
+        for obs1, counter in corr_with.items():
+            for obs2, count in counter.items():
+                if count > 1:
+                    warnings.warn(("{} of the measurements in the fit '{}' "
+                                   "constrain both '{}' and '{}', but only the "
+                                   "latter is included among the fit "
+                                   "observables. This can lead to inconsistent "
+                                   "results as the former is profiled over."
+                                   ).format(count, self.name, obs1, obs2))
+        return corr_with
 
-
-class BayesianFit(Fit):
-    """Bayesian fit class. Instances of this class can then be fed to samplers.
-
-    Parameters
-    ----------
-
-    - `name`: a descriptive string name
-    - `par_obj`: an instance of `ParameterConstraints`, e.g. `flavio.default_parameters`
-    - `fit_parameters`: a list of string names of parameters of interest. The existing
-      constraints on the parameter will be taken as prior.
-    - `nuisance_parameters`: a list of string names of nuisance parameters. The existing
-      constraints on the parameter will be taken as prior.
-    - `observables`: a list of observable names to be included in the fit
-    - `exclude_measurements`: optional; a list of measurement names *not* to be included in
-    the fit. By default, all existing measurements are included.
-    - `include_measurements`: optional; a list of measurement names to be included in
-    the fit. By default, all existing measurements are included.
-    - `fit_wc_names`: optional; a list of string names of arguments of the Wilson
-      coefficient function below
-    - `fit_wc_function`: optional; a function that has exactly the arguements listed
-      in `fit_wc_names` and returns a dictionary that can be fed to the `set_initial`
-      method of the Wilson coefficient class. Example: fit the real and imaginary
-      parts of $C_{10}$ in $b\to s\mu^+\mu^-$.
-    ```
-    def fit_wc_function(Re_C10, Im_C10):
-        return {'C10_bsmmumu': Re_C10 + 1j*Im_C10}
-    ```
-    - `input_scale`: input scale for the Wilson coeffficients. Defaults to 160.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.dimension = len(self.fit_parameters) + len(self.nuisance_parameters) + len(self.fit_wc_names)
 
     def array_to_dict(self, x):
         """Convert a 1D numpy array of floats to a dictionary of fit parameters,
@@ -176,21 +378,71 @@ class BayesianFit(Fit):
     @property
     def get_random(self):
         """Get an array with random values for all the fit and nuisance
-        parameters"""
+        parameters and Wilson coefficients."""
+        return self._get_random()
+
+    def _get_random(self, par=True, nuisance=True, wc=True):
+        """Get an array with random values for all the fit and nuisance
+        parameters and Wilson coefficients.
+
+        If par is False, fit parameters are set to their central values.
+        If nuisance is False, nuisance parameters are set to their central values.
+        """
+        arr = np.zeros(self.dimension)
+        n_fit_p = len(self.fit_parameters)
+        n_nui_p = len(self.nuisance_parameters)
+        if par:
+            arr[:n_fit_p] = self.get_random_fit_parameters
+        else:
+            arr[:n_fit_p] = self.get_central_fit_parameters
+        if nuisance:
+            arr[n_fit_p:n_fit_p+n_nui_p] = self.get_random_nuisance_parameters
+        else:
+            arr[n_fit_p:n_fit_p+n_nui_p] = self.get_central_nuisance_parameters
+        if wc:
+            arr[n_fit_p+n_nui_p:] = self.get_random_wilson_coeffs
+        return arr
+
+    @property
+    def get_random_wilson_coeffs_start(self):
+        """Return a numpy array with random values for all Wilson coefficients
+        sampling the start_wc_priors distribution."""
+        if self.fit_wc_function is None:
+            # no Wilson coefficients present
+            return None
+        elif self.start_wc_priors is None:
+            if self.fit_wc_priors is None:
+                raise ValueError("Starting values can only be generated if"
+                        " either fit_wc_priors or start_wc_priors is defined")
+            else:
+                return self.get_random_wilson_coeffs
+        all_random = self.start_wc_priors.get_random_all()
+        return np.asarray([all_random[p] for p in self.fit_wc_names])
+
+    @property
+    def get_random_start(self):
+        """Get an array with random values for all the fit and nuisance
+        parameters with Wilson coefficients set to their SM values"""
         arr = np.zeros(self.dimension)
         n_fit_p = len(self.fit_parameters)
         n_nui_p = len(self.nuisance_parameters)
         arr[:n_fit_p] = self.get_random_fit_parameters
         arr[n_fit_p:n_fit_p+n_nui_p] = self.get_random_nuisance_parameters
-        arr[n_fit_p+n_nui_p:] = self.get_random_wilson_coeffs
+        arr[n_fit_p+n_nui_p:] = self.get_random_wilson_coeffs_start
         return arr
 
-    def get_par_dict(self, x):
-        """Get a dictionary of fit and nuisance parameters from an input array"""
+    def get_par_dict(self, x, par=True, nuisance=True):
+        """Get a dictionary of fit and nuisance parameters from an input array
+
+        If par is False, fit parameters are set to their central values.
+        If nuisance is False, nuisance parameters are set to their central values.
+        """
         d = self.array_to_dict(x)
         par_dict = self.parameters_central.copy()
-        par_dict.update(d['fit_parameters'])
-        par_dict.update(d['nuisance_parameters'])
+        if par:
+            par_dict.update(d['fit_parameters'])
+        if nuisance:
+            par_dict.update(d['nuisance_parameters'])
         return par_dict
 
     def get_wc_obj(self, x):
@@ -199,7 +451,8 @@ class BayesianFit(Fit):
         if not self.fit_wc_names:
             return wc_obj
         d = self.array_to_dict(x)
-        wc_obj.set_initial(self.fit_wc_function(**d['fit_wc']), self.input_scale)
+        wc_obj.set_initial(self.fit_wc_function(**d['fit_wc']), self.input_scale,
+                           eft=self.eft, basis=self.basis)
         return wc_obj
 
     def log_prior_parameters(self, x):
@@ -219,43 +472,133 @@ class BayesianFit(Fit):
         prob_dict = self.fit_wc_priors.get_logprobability_all(wc_dict)
         return sum([p for obj, p in prob_dict.items()])
 
-    def get_predictions(self, x):
+    def get_predictions(self, x, par=True, nuisance=True, wc=True):
         """Get a dictionary with predictions for all observables given an input
-        array"""
-        par_dict = self.get_par_dict(x)
-        wc_obj = self.get_wc_obj(x)
+        array.
+
+        If par is False, fit parameters are set to their central values.
+        If nuisance is False, nuisance parameters are set to their central values.
+        If wc is False, Wilson coefficients are set to their SM values.
+        """
+        par_dict = self.get_par_dict(x, par=par, nuisance=nuisance)
+        if wc:
+            wc_obj = self.get_wc_obj(x)
+        else:
+            wc_obj = flavio.physics.eft._wc_sm
         all_predictions = {}
         for observable in self.observables:
             if isinstance(observable, tuple):
                 obs_name = observable[0]
-                _inst = flavio.classes.Observable.get_instance(obs_name)
+                _inst = flavio.classes.Observable[obs_name]
                 all_predictions[observable] = _inst.prediction_par(par_dict, wc_obj, *observable[1:])
             else:
-                _inst = flavio.classes.Observable.get_instance(observable)
+                _inst = flavio.classes.Observable[observable]
                 all_predictions[observable] = _inst.prediction_par(par_dict, wc_obj)
         return all_predictions
 
-    def log_likelihood(self, x):
+    def get_predictions_array(self, x, **kwargs):
+        pred = self.get_predictions(x, **kwargs)
+        return np.array([pred[obs] for obs in self.observables])
+
+    def log_prior_parameters(self, x):
+        """Return the prior probability (or frequentist likelihood) for all
+        fit and (!) nuisance parameters given an input array"""
+        par_dict = self.get_par_dict(x)
+        exclude_parameters = list(set(par_dict.keys())-set(self.fit_parameters)-set(self.nuisance_parameters))
+        prob_dict = self.par_obj.get_logprobability_all(par_dict, exclude_parameters=exclude_parameters)
+        return sum([p for obj, p in prob_dict.items()])
+
+    def log_prior_nuisance_parameters(self, x):
+        """Return the prior probability (or frequentist likelihood) for all
+        nuisance parameters given an input array"""
+        par_dict = self.get_par_dict(x)
+        exclude_parameters = list(set(par_dict.keys())-set(self.nuisance_parameters))
+        prob_dict = self.par_obj.get_logprobability_all(par_dict, exclude_parameters=exclude_parameters)
+        return sum([p for obj, p in prob_dict.items()])
+
+    def log_likelihood_exp(self, x):
         """Return the logarithm of the likelihood function (not including the
         prior)"""
         predictions = self.get_predictions(x)
         ll = 0.
         for measurement in self.get_measurements:
-            m_obj = flavio.Measurement.get_instance(measurement)
+            m_obj = flavio.Measurement[measurement]
             m_obs = m_obj.all_parameters
             exclude_observables = set(m_obs) - set(self.observables)
             prob_dict = m_obj.get_logprobability_all(predictions, exclude_parameters=exclude_observables)
             ll += sum(prob_dict.values())
         return ll
 
+
+class BayesianFit(Fit):
+    r"""Bayesian fit class. Instances of this class can then be fed to samplers.
+
+    Parameters
+    ----------
+
+    - `name`: a descriptive string name
+    - `par_obj`: optional; an instance of `ParameterConstraints`.
+      Defaults to `flavio.default_parameters`
+    - `fit_parameters`: a list of string names of parameters of interest. The existing
+      constraints on the parameter will be taken as prior.
+    - `nuisance_parameters`: a list of string names of nuisance parameters. The existing
+      constraints on the parameter will be taken as prior. Alternatively, it
+      can also be set to 'all', in which case all the parameters constrainted
+      by `par_obj` will be treated as nuisance parameters. (Note that this makes
+      sense for `FastFit`, but not for a MCMC since the number of nuisance
+      parameters will be huge.)
+    - `observables`: a list of observable names to be included in the fit
+    - `exclude_measurements`: optional; a list of measurement names *not* to be included in
+    the fit. By default, all existing measurements are included.
+    - `include_measurements`: optional; a list of measurement names to be included in
+    the fit. By default, all existing measurements are included.
+    - `fit_wc_names`: optional; a list of string names of arguments of the Wilson
+      coefficient function below
+    - `fit_wc_function`: optional; a function that
+      returns a dictionary that can be fed to the `set_initial`
+      method of the Wilson coefficient class. Example: fit the real and imaginary
+      parts of $C_{10}$ in $b\to s\mu^+\mu^-$.
+    ```
+    def fit_wc_function(Re_C10, Im_C10):
+        return {'C10_bsmmumu': Re_C10 + 1j*Im_C10}
+    ```
+    - `input_scale`: input scale for the Wilson coeffficients. Defaults to 160.
+    - `fit_wc_priors`: optional; an instance of WilsonCoefficientPriors
+      containing prior constraints on the Wilson coefficients
+    - `start_wc_priors`: optional; an instance of WilsonCoefficientPriors
+      that will not be used during a scan, but only for finding starting values
+      for Wilson coefficients in MCMC analyses. This can be useful if no
+      actual priors are used or if they are too loose to provide good starting
+      points.
+    """
+
+    def __init__(self, *args, start_wc_priors=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.start_wc_priors = start_wc_priors
+
+        for p in self.fit_parameters:
+            # check that fit parameters are constrained
+            assert p in self.par_obj._parameters.keys(), "Parameter " + p + " not found in Constraints"
+
+    @property
+    def get_random(self):
+        """Get an array with random values for all the fit and nuisance
+        parameters"""
+        arr = np.zeros(self.dimension)
+        n_fit_p = len(self.fit_parameters)
+        n_nui_p = len(self.nuisance_parameters)
+        arr[:n_fit_p] = self.get_random_fit_parameters
+        arr[n_fit_p:n_fit_p+n_nui_p] = self.get_random_nuisance_parameters
+        arr[n_fit_p+n_nui_p:] = self.get_random_wilson_coeffs
+        return arr
+
     def log_target(self, x):
         """Return the logarithm of the likelihood times prior probability"""
-        return self.log_likelihood(x) + self.log_prior_parameters(x) + self.log_prior_wilson_coeffs(x)
+        return self.log_likelihood_exp(x) + self.log_prior_parameters(x) + self.log_prior_wilson_coeffs(x)
 
 
-class FastFit(BayesianFit):
-    """A subclass of `BayesianFit` that is meant to produce fast likelihood
-    contour plots.
+class FastFit(Fit):
+    r"""A fit class that is meant for producing fast likelihood contour plots.
 
     Calling the method `make_measurement`, a pseudo-measurement is generated
     that combines the actual experimental measurements with the theoretical
@@ -274,82 +617,257 @@ class FastFit(BayesianFit):
 
     - all uncertainties - experimental and theoretical - are treated as Gaussian
     - the theoretical uncertainties in the presence of new physics are assumed
-      to be similar to the ones in the SM
+      to be equal to the ones in the SM
     """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.measurements = None
+        self._sm_covariance = None
+        self._exp_central_covariance = None
+        self._get_predictions_array_sm = partial(self.get_predictions_array,
+                                                 par=False, nuisance=True,
+                                                 wc=False)
 
 
     # a method to get the mean and covariance of all measurements of all
     # observables of interest
-    def _get_central_covariance_experiment(self, N=100):
-        random_dict = {}
-        for obs in self.observables:
-            # intialize empty lists
-            random_dict[obs] = []
+    def _get_central_covariance_experiment(self, N=5000):
+        means = []
+        covariances = []
         for measurement in self.get_measurements:
-            if measurement.split(' ')[0] == 'Pseudo-measurement':
-                continue
-            m_obj = flavio.Measurement.get_instance(measurement)
+            m_obj = flavio.Measurement[measurement]
+            # obs. included in the fit and constrained by this measurement
+            our_obs = set(m_obj.all_parameters).intersection(self.observables)
+            # construct a dict. containing a vector of N random values for
+            # each of these observables
+            random_dict = {}
+            for obs in our_obs:
+                random_dict[obs] = np.zeros(N)
             for i in range(N):
                 m_random = m_obj.get_random_all()
-                m_obs = m_obj.all_parameters
-                our_obs = set(m_obs).intersection(self.observables)
                 for obs in our_obs:
-                    random_dict[obs].append(m_random[obs])
-        random_arr = np.zeros((len(self.observables), N))
-        for i, obs in enumerate(self.observables):
-            n = len(random_dict[obs])
-            random_arr[i] = random_dict[obs][::n//N]
-        return np.mean(random_arr, axis=1), np.cov(random_arr)
+                    random_dict[obs][i] = m_random[obs]
+            # mean = np.zeros(len(self.observables))
+            random_arr = np.zeros((len(self.observables), N))
+            for i, obs in enumerate(self.observables):
+                #     n = len(random_dict[obs])
+                if obs in our_obs:
+                    random_arr[i] = random_dict[obs]
+            mean = np.mean(random_arr, axis=1)
+            covariance = np.cov(random_arr)
+            for i, obs in enumerate(self.observables):
+                if obs not in our_obs:
+                    covariance[:,i] = 0
+                    covariance[i, :] = 0
+                    covariance[i, i] = np.inf
+            means.append(mean)
+            covariances.append(covariance)
+        # if there is only a single measuement
+        if len(means) == 1:
+            return means[0][0], covariances[0]
+        # if there are severeal measurements, perform a weighted average
+        else:
+            # covariances: [Sigma_1, Sigma_2, ...]
+            # means: [x_1, x_2, ...]
+            # weights_ [W_1, W_2, ...] where W_i = (Sigma_i)^(-1)
+            # weighted covariance is  (W_1 + W_2 + ...)^(-1) = Sigma
+            # weigted mean is  Sigma.(W_1.x_1 + W_2.x_2 + ...) = x
+            if len(self.observables) == 1:
+                weights = np.array([1/c for c in covariances])
+                weighted_covariance = 1/np.sum(weights, axis=0)
+                weighted_mean = weighted_covariance * np.sum(
+                                [np.dot(weights[i], means[i]) for i in range(len(means))])
+            else:
+                weights = [np.linalg.inv(c) for c in covariances]
+                weighted_covariance = np.linalg.inv(np.sum(weights, axis=0))
+                weighted_mean = np.dot(weighted_covariance, np.sum(
+                                [np.dot(weights[i], means[i]) for i in range(len(means))],
+                                axis=0))
+            return weighted_mean, weighted_covariance
+
+    def get_exp_central_covariance(self, N=5000, force=True):
+        """Return the experimental central values and the covriance matrix of
+        all observables.
+
+        Parameters:
+
+        - `N`: number of random computations (computing time is proportional
+          to it; more means less random fluctuations.)
+        - `force`: optional; if True (default), will recompute covariance even
+          if it already has been computed.
+        """
+        if self._exp_central_covariance is None or force:
+            self._exp_central_covariance = self._get_central_covariance_experiment(N=N)
+        elif N != 5000:
+            warnings.warn("Argument N={} ignored ".format(N) + \
+                          "as experimental covariance has already been " + \
+                          "computed. Recompute with get_exp_central_covariance.")
+        return self._exp_central_covariance
+
+    def save_exp_central_covariance(self, filename):
+        """Save the experimental central values and the covriance to a pickle
+        file.
+
+        The central values and the covariance must have been computed before
+        using `get_exp_central_covariance`."""
+        if self._exp_central_covariance is None:
+            raise ValueError("Call get_exp_central_covariance or make_measurement first.")
+        with open(filename, 'wb') as f:
+            data = dict(central=self._exp_central_covariance[0],
+                        covariance=self._exp_central_covariance[1],
+                        observables=self.observables)
+            pickle.dump(data, f)
+
+    def load_exp_central_covariance(self, filename):
+        """Load the experimental central values and the covriance from a pickle
+        file."""
+        with open(filename, 'rb') as f:
+            data = pickle.load(f)
+        self.load_exp_central_covariance_dict(d=data)
+
+    def load_exp_central_covariance_dict(self, d):
+        """Load the the experimental central values and the covriancee from a
+        dictionary.
+
+        It must have the form
+        {'observables': [...], 'central': [...], 'covariance': [[...]]}
+        where 'central' is a vector of central values and 'covariance' is a
+        covariance matrix, both in the basis of observables given by
+        'observables' which must at least contain all the observables
+        involved in the fit. Additional observables will be ignored; the
+        ordering is arbitrary."""
+        obs = d['observables']
+        try:
+            permutation = [obs.index(o) for o in self.observables]
+        except ValueError:
+            "Covariance matrix does not contain all necessary entries"
+        assert len(permutation) == len(self.observables), \
+            "Covariance matrix does not contain all necessary entries"
+        if len(permutation) == 1:
+            self._exp_central_covariance = (
+                d['central'],
+                d['covariance']
+            )
+        else:
+            self._exp_central_covariance = (
+                d['central'][permutation],
+                d['covariance'][permutation][:,permutation],
+            )
 
     # a method to get the covariance of the SM prediction of all observables
     # of interest
-    def _get_covariance_sm(self, N=100):
-        par_central = self.par_obj.get_central_all()
-        def random_nuisance_dict():
-            arr = self.get_random_nuisance_parameters
-            nuis_dict = {par: arr[i] for i, par in enumerate(self.nuisance_parameters)}
-            par = par_central.copy()
-            par.update(nuis_dict)
-            return par
-        par_random = [random_nuisance_dict() for i in range(N)]
+    def _get_random_nuisance(self, *args):
+        return self._get_random(par=False, nuisance=True, wc=False)
 
-        pred_arr = np.zeros((len(self.observables), N))
-        wc_sm = flavio.WilsonCoefficients()
-        for i, observable in enumerate(self.observables):
-            if isinstance(observable, tuple):
-                obs_name = observable[0]
-                _inst = flavio.classes.Observable.get_instance(obs_name)
-                pred_arr[i] = np.array([_inst.prediction_par(par, wc_sm, *observable[1:])
-                                        for par in par_random])
-            else:
-                _inst = flavio.classes.Observable.get_instance(observable)
-                pred_arr[i] = np.array([_inst.prediction_par(par, wc_sm)
-                                        for par in par_random])
-        return np.cov(pred_arr)
+    def _get_covariance_sm(self, N=100, threads=1):
+        if threads == 1:
+            X_map = map(self._get_random_nuisance, range(N))
+            pred_map = map(self._get_predictions_array_sm, X_map)
+        else:
+            pool = Pool(threads)
+            X_map = pool.map(self._get_random_nuisance, range(N))
+            pred_map = pool.map(self._get_predictions_array_sm, X_map)
+            pool.close()
+            pool.join()
+        pred_arr = np.empty((N, len(self.observables)))
+        for i, pred_i in enumerate(pred_map):
+            pred_arr[i] = pred_i
+        return np.cov(pred_arr.T)
 
-    def make_measurement(self, N=100, Nexp=1000):
+    def get_sm_covariance(self, N=100, threads=1, force=True):
+        """Return the covriance matrix of the SM predictions of all observables
+        under variation of all nuisance parameters.
+
+        Parameters:
+
+        - `N`: number of random computations (computing time is proportional
+          to it; more means less random fluctuations.)
+        - `threads`: optional; number of parallel threads. Defaults to 1 (no
+          parallelization)
+        - `force`: optional; if True (default), will recompute covariance even
+          if it already has been computed.
+        """
+        if self._sm_covariance is None or force:
+            self._sm_covariance = self._get_covariance_sm(N=N, threads=threads)
+        elif N != 100:
+            warnings.warn("Argument N={} ignored ".format(N) + \
+                          "as SM covariance has already " + \
+                          "been computed. Recompute with get_sm_covariance.")
+        return self._sm_covariance
+
+    def save_sm_covariance(self, filename):
+        """Save the SM covariance to a pickle file.
+
+        The covariance must have been computed before using
+        `get_sm_covariance`."""
+        if self._sm_covariance is None:
+            raise ValueError("Call get_sm_covariance or make_measurement first.")
+        with open(filename, 'wb') as f:
+            data = dict(covariance=self._sm_covariance,
+                        observables=self.observables)
+            pickle.dump(data, f)
+
+    def load_sm_covariance(self, filename):
+        """Load the SM covariance from a pickle file."""
+        with open(filename, 'rb') as f:
+            data = pickle.load(f)
+        self.load_sm_covariance_dict(d=data)
+
+    def load_sm_covariance_dict(self, d):
+        """Load the SM covariance from a dictionary.
+
+        It must have the form {'observables': [...], 'covariance': [[...]]}
+        where 'covariance' is a covariance matrix in the basis of observables
+        given by 'observables' which must at least contain all the observables
+        involved in the fit. Additional observables will be ignored; the
+        ordering is arbitrary."""
+        obs = d['observables']
+        try:
+            permutation = [obs.index(o) for o in self.observables]
+        except ValueError:
+            "Covariance matrix does not contain all necessary entries"
+        assert len(permutation) == len(self.observables), \
+            "Covariance matrix does not contain all necessary entries"
+        if len(permutation) == 1:
+            self._sm_covariance = d['covariance']
+        else:
+            self._sm_covariance = d['covariance'][permutation][:,permutation]
+
+    def make_measurement(self, N=100, Nexp=5000, threads=1, force=False, force_exp=False):
         """Initialize the fit by producing a pseudo-measurement containing both
         experimental uncertainties as well as theory uncertainties stemming
-        from nuisance parameters."""
-        central_exp, cov_exp = self._get_central_covariance_experiment(Nexp)
-        cov_sm = self._get_covariance_sm(N)
+        from nuisance parameters.
+
+        Optional parameters:
+
+        - `N`: number of random computations for the SM covariance (computing
+          time is proportional to it; more means less random fluctuations.)
+        - `Nexp`: number of random computations for the experimental covariance.
+          This is much less expensive than the theory covariance, so a large
+          number can be afforded (default: 5000).
+        - `threads`: number of parallel threads for the SM
+          covariance computation. Defaults to 1 (no parallelization).
+        - `force`: if True, will recompute SM covariance even if it
+          already has been computed. Defaults to False.
+        - `force_exp`: if True, will recompute experimental central values and
+          covariance even if they have already been computed. Defaults to False.
+        """
+        central_exp, cov_exp = self.get_exp_central_covariance(Nexp, force=force_exp)
+        cov_sm = self.get_sm_covariance(N, force=force, threads=threads)
         covariance = cov_exp + cov_sm
         # add the Pseudo-measurement
         m = flavio.classes.Measurement('Pseudo-measurement for FastFit instance: ' + self.name)
-        if len(central_exp) == 1:
+        if np.asarray(central_exp).ndim == 0 or len(central_exp) <= 1: # for a 1D (or 0D) array
             m.add_constraint(self.observables,
-                    flavio.statistics.probability.NormalDistribution(central_exp, np.sqrt(covariance)))
+                    NormalDistribution(central_exp, np.sqrt(covariance)))
         else:
             m.add_constraint(self.observables,
-                    flavio.statistics.probability.MultivariateNormalDistribution(central_exp, covariance))
+                    MultivariateNormalDistribution(central_exp, covariance))
 
-    def array_to_dict(self, x):
-        """Convert a 1D numpy array of floats to a dictionary of fit parameters,
-        nuisance parameters, and Wilson coefficients."""
+    def shortarray_to_dict(self, x):
+        """Convert a 1D numpy array of floats to a dictionary of fit parameters
+        and Wilson coefficients."""
         d = {}
         n_fit_p = len(self.fit_parameters)
         n_wc = len(self.fit_wc_names)
@@ -357,7 +875,7 @@ class FastFit(BayesianFit):
         d['fit_wc'] = { p: x[i + n_fit_p] for i, p in enumerate(self.fit_wc_names) }
         return d
 
-    def dict_to_array(self, d):
+    def dict_to_shortarray(self, d):
         """Convert a dictionary of fit parameters and Wilson coefficients to a
         1D numpy array of floats."""
         n_fit_p = len(self.fit_parameters)
@@ -367,19 +885,103 @@ class FastFit(BayesianFit):
         arr[n_fit_p:]   = [d['fit_wc'][c] for c in self.fit_wc_names]
         return arr
 
-    def get_par_dict(self, x):
-        d = self.array_to_dict(x)
-        par_dict = self.parameters_central.copy()
-        par_dict.update(d['fit_parameters'])
-        return par_dict
+    def shortarray_to_array(self, x):
+        """Convert an array of fit parameters and Wilson coefficients to an
+        array of fit parameters, nuisance parameters, and Wilson coefficients
+        (setting nuisance parameters to their central values)."""
+        n_fit_p = len(self.fit_parameters)
+        n_nui_p = len(self.nuisance_parameters)
+        n_wc = len(self.fit_wc_names)
+        arr = np.zeros(n_fit_p + n_nui_p + n_wc)
+        arr[:n_fit_p] = x[:n_fit_p]
+        arr[n_fit_p:n_fit_p+n_nui_p] = self.get_central_nuisance_parameters
+        arr[n_fit_p+n_nui_p:] = x[n_fit_p:]
+        return arr
 
     def log_likelihood(self, x):
         """Return the logarithm of the likelihood. Note that there is no prior
         probability for nuisance parameters, which have been integrated out.
         Priors for fit parameters are ignored."""
-        predictions = self.get_predictions(x)
-        m_obj = flavio.Measurement.get_instance('Pseudo-measurement for FastFit instance: ' + self.name)
+         # set nuisance parameters to their central values!
+        predictions = self.get_predictions(self.shortarray_to_array(x), nuisance=False)
+        m_obj = flavio.Measurement['Pseudo-measurement for FastFit instance: ' + self.name]
         m_obs = m_obj.all_parameters
         prob_dict = m_obj.get_logprobability_all(predictions)
         ll = sum(prob_dict.values())
         return ll
+
+    def best_fit(self, **kwargs):
+        r"""Compute the best fit point in the space of fit parameters and Wilson
+        coefficients.
+
+        Keyword arguments will be passed to `scipy.optimize.minimize_scalar` in
+        the case of a single fit variable and to `flavio.math.optimize.minimize_robust`
+        in the case of multiple fit variables.
+
+        Returns a dictionary with the following keys:
+
+        - 'x': position of the best fit point
+        - 'log_likelihood': logarithm of the likelihood at the best fit point
+        """
+        n_fit_p = len(self.fit_parameters)
+        n_wc = len(self.fit_wc_names)
+        if n_fit_p + n_wc == 1:
+            def f(x):
+                return -self.log_likelihood([x])
+            opt = scipy.optimize.minimize_scalar(f, **kwargs)
+        else:
+            def f(x):
+                return -self.log_likelihood(x)
+            if 'x0' not in kwargs:
+                x0 = np.zeros(n_fit_p + n_wc)
+                if n_fit_p > 1:
+                    x0[:n_fit_p] = self.get_central_fit_parameters
+                opt = minimize_robust(f, x0, **kwargs)
+            else:
+                opt = minimize_robust(f, **kwargs)
+        if not opt.success:
+            raise ValueError("Optimization failed.")
+        else:
+            return {'x': opt.x, 'log_likelihood': -opt.fun}
+
+
+class FrequentistFit(Fit):
+    r"""Frequentist fit class.
+
+
+    Parameters
+    ----------
+
+    - `name`: a descriptive string name
+    - `par_obj`: optional; an instance of `ParameterConstraints`.
+      Defaults to `flavio.default_parameters`
+    - `fit_parameters`: a list of string names of parameters of interest.
+      Existing constraints on the parameter will be ignored.
+    - `nuisance_parameters`: a list of string names of nuisance parameters. The existing
+      constraints on the parameter will be interpreted as pseudo-measurement
+      entering the likelihood.
+    - `observables`: a list of observable names to be included in the fit
+    - `exclude_measurements`: optional; a list of measurement names *not* to be included in
+    the fit. By default, all existing measurements are included.
+    - `include_measurements`: optional; a list of measurement names to be included in
+    the fit. By default, all existing measurements are included.
+    - `fit_wc_names`: optional; a list of string names of arguments of the Wilson
+      coefficient function below
+    - `fit_wc_function`: optional; a function that
+      returns a dictionary that can be fed to the `set_initial`
+      method of the Wilson coefficient class. Example: fit the real and imaginary
+      parts of $C_{10}$ in $b\to s\mu^+\mu^-$.
+    ```
+    def fit_wc_function(Re_C10, Im_C10):
+        return {'C10_bsmmumu': Re_C10 + 1j*Im_C10}
+    ```
+    - `input_scale`: input scale for the Wilson coeffficients. Defaults to 160.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def log_likelihood(self, x):
+        """Return the logarithm of the likelihood function (including the
+        lihelihood of nuisance parameters!)"""
+        return self.log_likelihood_exp(x) + self.log_prior_nuisance_parameters(x)

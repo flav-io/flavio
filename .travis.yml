@@ -1,27 +1,18 @@
 language: python
 python:
-  - "3.4"
   - "3.5"
+  - "3.6"
 
 notifications:
   email: false
 
-# https://gist.github.com/dan-blanchard/7045057
-before_install:
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-  - chmod +x miniconda.sh
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  # The next couple lines fix a crash with multiprocessing on Travis and are not specific to using Miniconda
-  - sudo rm -rf /dev/shm
-  - sudo ln -s /run/shm /dev/shm
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
 
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose pyqt=4
-  - pip install flavio[sampling,plotting]
+  - pip install .[sampling,plotting,testing]
   - pip install coveralls
 
 script: nosetests --with-coverage --cover-package=flavio

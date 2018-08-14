@@ -1,10 +1,7 @@
 import unittest
 import numpy as np
-from . import rge
-from . import common
 from . import wilsoncoefficients
 from .. import eft
-from ..running import running
 import flavio
 
 s = 1.519267515435317e+24
@@ -34,12 +31,6 @@ par = {
 }
 
 class TestBWilson(unittest.TestCase):
-    def test_running(self):
-        c_in = np.array([ 0.85143759,  0.31944853,  0.30029457,  0.82914154,  0.11154786,
-        0.80629828,  0.32082766,  0.1300508 ,  0.69393572,  0.98427495,
-        0.76415058,  0.90545245,  0.03290275,  0.89359186,  0.46273251])
-        c_out = rge.run_wc_df1(par, c_in, 173.1, 4.2)
-
     def test_wctot(self):
         wc_low_correct = np.array([ -2.93671059e-01,   1.01676402e+00,  -5.87762813e-03,
         -8.70666812e-02,   4.11098919e-04,   1.10641294e-03,
@@ -48,8 +39,21 @@ class TestBWilson(unittest.TestCase):
         -1.03192325e-03,  -1.00703396e-04,  -3.17810374e-03])
         wc_obj = eft.WilsonCoefficients()
         wc_low = wilsoncoefficients.wctot_dict(wc_obj, 'bsmumu', 4.2, par)
-        wc_low_array = np.asarray([wc_low[key] for key in wc_obj.coefficients['bsmumu']])
-        np.testing.assert_almost_equal(wc_low_array[:15], wc_low_correct, decimal=8)
+        wc_names = ['C1_bs', 'C2_bs', 'C3_bs', 'C4_bs', 'C5_bs', 'C6_bs', 'C7_bs', 'C8_bs', 'C9_bsmumu', 'C10_bsmumu', 'C3Q_bs', 'C4Q_bs', 'C5Q_bs', 'C6Q_bs', 'Cb_bs', 'C1p_bs', 'C2p_bs', 'C3p_bs', 'C4p_bs', 'C5p_bs', 'C6p_bs', 'C7p_bs', 'C8p_bs', 'C9p_bsmumu', 'C10p_bsmumu', 'C3Qp_bs', 'C4Qp_bs', 'C5Qp_bs', 'C6Qp_bs', 'Cbp_bs', 'CS_bsmumu', 'CP_bsmumu', 'CSp_bsmumu', 'CPp_bsmumu']
+        wc_low_array = np.asarray([wc_low[key] for key in wc_names])
+        yi = np.array([0, 0, -1/3., -4/9., -20/3., -80/9.])
+        zi = np.array([0, 0, 1, -1/6., 20, -10/3.])
+        wc_low_array[6] = wc_low_array[6] + np.dot(yi, wc_low_array[:6]) # c7eff
+        wc_low_array[7] = wc_low_array[7] + np.dot(zi, wc_low_array[:6]) # c8eff
+        np.testing.assert_almost_equal(wc_low_array[:15], wc_low_correct, decimal=2)
+
+    def test_C78p(self):
+        wc_obj = eft.WilsonCoefficients()
+        wc_low = wilsoncoefficients.wctot_dict(wc_obj, 'bsmumu', 4.2, par)
+        ms = flavio.physics.running.running.get_ms(par, 4.2, nf_out=5)
+        mb = flavio.physics.running.running.get_mb(par, 4.2, nf_out=5)
+        self.assertAlmostEqual(wc_low['C7p_bs']/wc_low['C7_bs'], ms/mb)
+        self.assertAlmostEqual(wc_low['C8p_bs']/wc_low['C8_bs'], ms/mb)
 
     def test_clnu(self):
         par_dict = flavio.default_parameters.get_central_all()

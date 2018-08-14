@@ -1,13 +1,16 @@
-from flavio.physics.bdecays.formfactors.b_p import bcl
+from flavio.physics.bdecays.formfactors.b_p import bcl, cln
 from flavio.classes import AuxiliaryQuantity, Implementation
 from flavio.config import config
 
-processes = ['B->K', 'B->D', 'B->pi']
+processes_H2L = ['B->K', 'B->pi']  # heavy to light
+processes_H2H = ['B->D', ]  # heavy to heavy
+
 
 def ff_function(function, process, **kwargs):
     return lambda wc_obj, par_dict, q2: function(process, q2, par_dict, **kwargs)
 
-for p in processes:
+
+for p in processes_H2L + processes_H2H:
     quantity = p + ' form factor'
     a = AuxiliaryQuantity(name=quantity, arguments=['q2'])
     a.set_description('Hadronic form factor for the ' + p + ' transition')
@@ -49,3 +52,10 @@ for p in processes:
                    scale=config['renormalization scale']['bpll'], n=4, t0='tm'))
     i.set_description("4-parameter BCL parametrization using improved Isgur-Wise relation"
                       r" for the tensor form factor and taking $t_0=t_-$ in the $z$ expansion")
+
+for p in processes_H2H:
+    iname = p + ' CLN'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ff_function(cln.ff, p,
+                   scale=config['renormalization scale']['bpll']))
+    i.set_description("CLN parametrization based on HQET")

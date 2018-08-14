@@ -6,6 +6,9 @@ from math import pi, log
 
 def br_Dlnu(wc_obj, par, P, lep):
     r"""Branching ratio of $D^+\to\ell^+\nu_\ell$."""
+    return sum([ _br_Dlnu(wc_obj,par,P,lep,nu) for nu in ['e','mu','tau']])
+
+def _br_Dlnu(wc_obj, par, P, lep, nu):
     # CKM element
     if P=='D+':
         Vij = flavio.physics.ckm.get_ckm(par)[1,0].conj() # Vcd*
@@ -15,10 +18,13 @@ def br_Dlnu(wc_obj, par, P, lep):
         qiqj = 'sc'
     scale = flavio.config['renormalization scale']['dll']
     # Wilson coefficients
-    wc = wc_obj.get_wc(qiqj + lep + 'nu', scale, par, nf_out=4)
+    wc = wc_obj.get_wc(qiqj + lep + 'nu' + nu, scale, par, nf_out=4)
     # add SM contribution to Wilson coefficient
-    wc['CV_'+qiqj+lep+'nu'] += flavio.physics.bdecays.wilsoncoefficients.get_CVSM(par, scale, nf=4)
-    return br_plnu_general(wc, par, Vij, P, qiqj, lep, delta=0)
+    if lep == nu:
+        wc['CVL_'+qiqj+lep+'nu' + nu] += flavio.physics.bdecays.wilsoncoefficients.get_CVLSM(par, scale, nf=4)
+    mb = flavio.physics.running.running.get_mb(par, scale)
+    mc = flavio.physics.running.running.get_mc(par, scale)
+    return br_plnu_general(wc, par, Vij, P, qiqj, lep, nu, mb, mc, delta=0)
 
 # function returning function needed for prediction instance
 def br_Dlnu_fct(P, lep):

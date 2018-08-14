@@ -3,6 +3,7 @@ import numpy as np
 from .parameters import *
 from .classes import *
 from .parameters import _read_pdg_masswidth
+import tempfile
 
 s = 1.519267515435317e+24
 ps = 1e-12*s
@@ -29,7 +30,7 @@ class TestParameters(unittest.TestCase):
         self.assertEqual(par_dict['Gamma12_Bs_c'],  -48.0)
         # parameters from the PDG file
         self.assertEqual(par_dict['m_W'], 80.385)
-        self.assertEqual(par_dict['tau_phi'], 1/4.266e-3)
+        self.assertEqual(par_dict['tau_phi'], 1/4.247e-3)
         # just check if the random values are numbers
         for par_random in default_parameters.get_random_all().values():
             self.assertIsInstance(par_random, float)
@@ -78,3 +79,11 @@ class TestParameters(unittest.TestCase):
         self.assertEqual(pds[0].right_deviation, 0.1)
         self.assertEqual(pds[1].left_deviation, 0.5)
         self.assertEqual(pds[1].right_deviation, 0.3)
+
+    def test_yaml_io_new(self):
+        from flavio import default_parameters
+        with tempfile.NamedTemporaryFile('r+') as tf:
+            write_file(tf.name, default_parameters)
+            tf.seek(0) # rewind
+            c = read_file(tf.name)
+        self.assertEqual(c.get_yaml_dict(), default_parameters.get_yaml_dict())

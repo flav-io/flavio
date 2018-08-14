@@ -3,3 +3,4 @@ etc."""
 
 from . import fitters
 from . import probability
+from . import functions

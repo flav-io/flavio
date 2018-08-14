@@ -47,11 +47,10 @@ def ff(process, q2, par, n=2):
     ff = {}
     # setting a0_A0 and a0_T2 according to the exact kinematical relations,
     # cf. eq. (16) of arXiv:1503.05534
-    par_copy = par.copy()
     par_prefix = process + ' BSZ'
-    par_copy[par_prefix + ' a0_A0'] = 8*mB*mV/(mB**2-mV**2)*par_copy[par_prefix + ' a0_A12']
-    par_copy[par_prefix + ' a0_T2'] = par_copy[par_prefix + ' a0_T1']
+    par[par_prefix + ' a0_A0'] = 8*mB*mV/(mB**2-mV**2)*par[par_prefix + ' a0_A12']
+    par[par_prefix + ' a0_T2'] = par[par_prefix + ' a0_T1']
     for i in ["A0","A1","A12","V","T1","T2","T23"]:
-        a = [ par_copy[par_prefix + ' a' + str(j) + '_' + i] for j in range(n) ]
+        a = [ par[par_prefix + ' a' + str(j) + '_' + i] for j in range(n) ]
         ff[i] = pole(i, mres, q2)*np.dot(a, zs(mB, mV, q2, t0=None)[:n])
     return ff

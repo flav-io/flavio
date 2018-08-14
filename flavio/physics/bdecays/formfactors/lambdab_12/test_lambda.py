@@ -6,7 +6,7 @@ from flavio.classes import Implementation
 class TestLambdabFF(unittest.TestCase):
 
     def test_lambdab_lambda_ff(self):
-        ff_obj = Implementation.get_instance('Lambdab->Lambda SSE2')
+        ff_obj = Implementation['Lambdab->Lambda SSE2']
         par = flavio.default_parameters
         mL = par.get_central('m_Lambda')
         mLb = par.get_central('m_Lambdab')

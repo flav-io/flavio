@@ -24,7 +24,7 @@ def prefactor(q2, par, B, V):
 
 def get_ff(q2, par, B, V):
     ff_name = meson_ff[(B,V)] + ' form factor'
-    return AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
+    return AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=q2)
 
 
 def helicity_amps_ff(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
@@ -52,16 +52,16 @@ def get_ss(q2, wc_obj, par_dict, B, V, cp_conjugate):
     if q2 >= 8.9:
         return {('0' ,'V'): 0, ('pl' ,'V'): 0, ('mi' ,'V'): 0, }
     ss_name = B+'->'+V+'ll spectator scattering'
-    return AuxiliaryQuantity.get_instance(ss_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+    return AuxiliaryQuantity[ss_name].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
 
 # get subleading hadronic contribution at low q2
 def get_subleading(q2, wc_obj, par_dict, B, V, cp_conjugate):
     if q2 <= 9:
         sub_name = B+'->'+V+ 'll subleading effects at low q2'
-        return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+        return AuxiliaryQuantity[sub_name].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
     elif q2 > 14:
         sub_name = B+'->'+V+ 'll subleading effects at high q2'
-        return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+        return AuxiliaryQuantity[sub_name].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
     else:
         return {}
 

@@ -16,7 +16,7 @@ def prefactor(q2, par, B, V):
 
 def get_ff(q2, par, B, V):
     ff_name = flavio.physics.bdecays.common.meson_ff[(B,V)] + ' form factor'
-    return flavio.classes.AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
+    return flavio.classes.AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=q2)
 
 def helicity_amps(q2, wc_obj, par, B, V, nu1, nu2):
     scale = flavio.config['renormalization scale']['bvll']
@@ -54,10 +54,39 @@ def bvnunu_dbrdq2_summed(q2, wc_obj, par, B, V):
     else:
         return dbrdq2
 
+def bvnunu_fl_num_summed(q2, wc_obj, par, B, V):
+    lep =  ['e', 'mu', 'tau']
+    num = sum([ bvnunu_obs(lambda J: -J['2c'], q2, wc_obj, par, B, V, 'nu'+nu1, 'nu'+nu2)
+        for nu1 in lep for nu2 in lep ])
+    return num
+
+def bvnunu_fl_summed(q2, wc_obj, par, B, V):
+    lep =  ['e', 'mu', 'tau']
+    num = bvnunu_fl_num_summed(q2, wc_obj, par, B, V)
+    den = sum([ bvnunu_obs(flavio.physics.bdecays.bvll.observables.dGdq2, q2, wc_obj, par, B, V, 'nu'+nu1, 'nu'+nu2)
+        for nu1 in lep for nu2 in lep ])
+    if den == 0:
+        return 0
+    else:
+        return num/den
+
 def bvnunu_dbrdq2_int_summed(q2min, q2max, wc_obj, par, B, V):
     def obs(q2):
         return bvnunu_dbrdq2_summed(q2, wc_obj, par, B, V)
     return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
+
+def bvnunu_fl_num_int_summed(q2min, q2max, wc_obj, par, B, V):
+    def obs(q2):
+        return bvnunu_fl_num_summed(q2, wc_obj, par, B, V)
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
+
+def bvnunu_fl_int_summed(q2min, q2max, wc_obj, par, B, V):
+    tauB = par['tau_'+B]
+    den = bvnunu_dbrdq2_int_summed(q2min, q2max, wc_obj, par, B, V)/tauB
+    if den == 0:
+        return 0
+    num = bvnunu_fl_num_int_summed(q2min, q2max, wc_obj, par, B, V)
+    return num/den
 
 def bvnunu_BRtot_summed(wc_obj, par, B, V):
     def obs(q2):
@@ -81,6 +110,16 @@ def dbrdq2_int_summed(B, V):
 def dbrdq2_summed(B, V):
     def fct(wc_obj, par, q2):
         return bvnunu_dbrdq2_summed(q2, wc_obj, par, B, V)
+    return fct
+
+def fl_int_summed(B, V):
+    def fct(wc_obj, par, q2min, q2max):
+        return bvnunu_fl_int_summed(q2min, q2max, wc_obj, par, B, V)
+    return fct
+
+def fl_summed(B, V):
+    def fct(wc_obj, par, q2):
+        return bvnunu_fl_summed(q2, wc_obj, par, B, V)
     return fct
 
 
@@ -119,3 +158,21 @@ for M in _hadr.keys():
     _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
     _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
     flavio.classes.Prediction(_obs_name, BRtot_summed(_hadr[M]['B'], _hadr[M]['V']))
+
+    if 'K*' in M: # FL only implemented for K*
+
+        # binned FL
+        _obs_name = "<FL>("+M+"nunu)"
+        _obs = flavio.classes.Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+        _obs.set_description(r"Binned longitudinal polarization fraction of $" + _process_tex + r"$")
+        _obs.tex = r"$\langle F_L \rangle(" + _process_tex + r")$"
+        _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
+        flavio.classes.Prediction(_obs_name, fl_int_summed(_hadr[M]['B'], _hadr[M]['V']))
+
+        # differential FL
+        _obs_name = "FL("+M+"nunu)"
+        _obs = flavio.classes.Observable(name=_obs_name, arguments=['q2'])
+        _obs.set_description(r"Differential longitudinal polarization fraction o f$" + _process_tex + r"$")
+        _obs.tex = r"$F_L(" + _process_tex + r")$"
+        _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
+        flavio.classes.Prediction(_obs_name, fl_summed(_hadr[M]['B'], _hadr[M]['V']))

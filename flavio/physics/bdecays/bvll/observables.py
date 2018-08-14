@@ -128,30 +128,32 @@ def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):
     tauB = par['tau_'+B]
     return tauB * bvll_obs(dGdq2_ave, q2, wc_obj, par, B, V, lep)
 
-def nintegrate_pole(function, q2min, q2max):
+def nintegrate_pole(function, q2min, q2max, epsrel=0.005):
     # this is a special integration function to treat the presence of the
     # photon pole at low q^2. If q2min is below 0.1 GeV^2, it adds and subtracts
     # the 1/q^2-enhanced pole part to split the integral into a well-behaved part
     # and one that is trivially solved analytically.
     # This leads to a huge speed-up.
-    if q2min <= 0.1 and q2min > 0.0001:
+    if q2min <= 0.1 and q2min > 0:
         q20 = q2min
         f_q20 = function(q20)
-        int_a = flavio.math.integrate.nintegrate(lambda q2: function(q2)-f_q20*q20/q2, q2min, q2max)
+        int_a = flavio.math.integrate.nintegrate(lambda q2: function(q2)-f_q20*q20/q2, q2min, q2max, epsrel=epsrel)
         int_b = f_q20*q20 * log(q2max/q2min)
         return int_a + int_b
     else:
         return flavio.math.integrate.nintegrate(function, q2min, q2max)
 
-def bvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep):
+def bvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep, epsrel=0.005):
     def obs(q2):
         return bvll_obs(function, q2, wc_obj, par, B, V, lep)
-    return nintegrate_pole(obs, q2min, q2max)
+    _q2min = max(q2min, 4*par['m_'+lep]**2) # clip to physical range
+    return nintegrate_pole(obs, _q2min, q2max, epsrel=epsrel)
 
-def bvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep):
+def bvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep, epsrel=0.005):
     def obs(q2):
         return bvll_dbrdq2(q2, wc_obj, par, B, V, lep)
-    return nintegrate_pole(obs, q2min, q2max)/(q2max-q2min)
+    _q2min = max(q2min, 4*par['m_'+lep]**2) # clip to physical range
+    return nintegrate_pole(obs, _q2min, q2max, epsrel=epsrel)/(q2max-_q2min)
 
 # Functions returning functions needed for Prediction instances
 
@@ -176,10 +178,19 @@ def bvll_obs_int_ratio_func(func_num, func_den, B, V, lep):
 
 def bvll_obs_int_ratio_leptonflavour(func, B, V, l1, l2):
     def fct(wc_obj, par, q2min, q2max):
-        num = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l1)
+        num = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l1, epsrel=0.0005)
         if num == 0:
             return 0
-        denom = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l2)
+        denom = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l2, epsrel=0.0005)
+        return num/denom
+    return fct
+
+def bvll_obs_ratio_leptonflavour(func, B, V, l1, l2):
+    def fct(wc_obj, par, q2):
+        num = bvll_obs(func, q2, wc_obj, par, B, V, l1)
+        if num == 0:
+            return 0
+        denom = bvll_obs(func, q2, wc_obj, par, B, V, l2)
         return num/denom
     return fct
 
@@ -227,6 +238,7 @@ _observables = {
 'S3': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 3), 'tex': r'S_3', 'desc': 'CP-averaged angular observable'},
 'S4': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 4), 'tex': r'S_4', 'desc': 'CP-averaged angular observable'},
 'S5': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 5), 'tex': r'S_5', 'desc': 'CP-averaged angular observable'},
+'S6c': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, '6c'), 'tex': r'S_6^c', 'desc': 'CP-averaged angular observable'},
 'S7': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 7), 'tex': r'S_7', 'desc': 'CP-averaged angular observable'},
 'S8': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 8), 'tex': r'S_8', 'desc': 'CP-averaged angular observable'},
 'S9': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 9), 'tex': r'S_9', 'desc': 'CP-averaged angular observable'},
@@ -347,3 +359,13 @@ for l in [('mu','e'), ('tau','mu'),]:
             # add taxonomy for both processes (e.g. B->Vee and B->Vmumu)
             _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
         Prediction(_obs_name, bvll_obs_int_ratio_leptonflavour(dGdq2_ave, _hadr[M]['B'], _hadr[M]['V'], *l))
+
+        # differential ratio of BRs
+        _obs_name = "R"+l[0]+l[1]+"("+M+"ll)"
+        _obs = Observable(name=_obs_name, arguments=['q2'])
+        _obs.set_description(r"Ratio of differential branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
+        _obs.tex = r"$R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} (" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
+        for li in l:
+            # add taxonomy for both processes (e.g. B->Vee and B->Vmumu)
+            _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
+        Prediction(_obs_name, bvll_obs_ratio_leptonflavour(dGdq2_ave, _hadr[M]['B'], _hadr[M]['V'], *l))

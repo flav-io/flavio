@@ -16,3 +16,27 @@ class TestBVnunu(unittest.TestCase):
         # just check the other stuff doesn't raise errors
         flavio.sm_prediction('dBR/dq2(B+->K*nunu)', 11)
         flavio.sm_prediction('<dBR/dq2>(B+->K*nunu)', 11, 13)
+
+    def test_fl(self):
+        # compare to 1409.4557 table 2
+        self.assertAlmostEqual(
+            flavio.sm_prediction('<FL>(B0->K*nunu)', 0, 27),
+            0.47,
+            delta=2*0.03)
+        self.assertAlmostEqual(
+            flavio.sm_prediction('<FL>(B0->K*nunu)', 0, 4),
+            0.79,
+            delta=2*0.03)
+        self.assertAlmostEqual(
+            flavio.sm_prediction('<FL>(B0->K*nunu)', 16, 19.25),
+            0.32,
+            delta=2*0.03)
+        # ... and the differential ones
+        self.assertAlmostEqual(
+            flavio.sm_prediction('FL(B0->K*nunu)', 2),
+            0.79,
+            delta=3*0.03)
+        self.assertAlmostEqual(
+            flavio.sm_prediction('FL(B0->K*nunu)', 17.5),
+            0.32,
+            delta=3*0.03)

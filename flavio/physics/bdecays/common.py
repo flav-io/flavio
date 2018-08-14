@@ -7,14 +7,7 @@ from io import StringIO
 import scipy.interpolate
 from flavio.physics.running import running
 from flavio.physics import ckm
-
-
-def lambda_K(a,b,c):
-    r"""Källén function $\lambda$.
-
-    $\lambda(a,b,c) = a^2 + b^2 + c^2 - 2 (ab + bc + ac)$
-    """
-    return a**2 + b**2 + c**2 - 2*(a*b + b*c + a*c)
+from flavio.physics.common import lambda_K
 
 def beta_l(ml, q2):
     if q2 == 0:
@@ -50,6 +43,7 @@ meson_quark = {
 'Bs': 'bs',
 'B0': 'bd',
 'B+': 'bu',
+'Bc': 'bc',
 'K+': 'su',
 'pi+': 'du',
 }

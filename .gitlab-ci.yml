@@ -1,0 +1,15 @@
+test:
+  image: python:3.6
+  before_script:
+    - pip install nose
+    - pip install coverage
+    - apt-get update
+    - apt-get install -y xvfb
+    - "export DISPLAY=:99.0"
+    - "sh -e /etc/init.d/xvfb start"
+    - sleep 3 # give xvfb some time to start
+  script:
+    - pip install .
+    - pip install .[sampling,plotting,testing]
+    - nosetests --with-coverage --cover-package=flavio
+  coverage: '/TOTAL.*\s+(\d+\%)/'

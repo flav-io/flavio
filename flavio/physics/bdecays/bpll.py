@@ -24,16 +24,16 @@ def prefactor(q2, par, B, P):
 # form factors
 def get_ff(q2, par, B, P):
     ff_name = meson_ff[(B,P)] + ' form factor'
-    return AuxiliaryQuantity.get_instance(ff_name).prediction(par_dict=par, wc_obj=None, q2=q2)
+    return AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=q2)
 
 # get subleading hadronic contribution
 def get_subleading(q2, wc_obj, par_dict, B, P, lep, cp_conjugate):
     if q2 <= 9:
         sub_name = B+'->'+P + 'll subleading effects at low q2'
-        return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+        return AuxiliaryQuantity[sub_name].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
     elif q2 > 14:
         sub_name = B+'->'+P + 'll subleading effects at high q2'
-        return AuxiliaryQuantity.get_instance(sub_name).prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+        return AuxiliaryQuantity[sub_name].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
     else:
         return {}
 
@@ -122,25 +122,20 @@ def AFB_cpaverage_num(J, J_bar):
 def FH_cpaverage_num(J, J_bar):
     return (FH_num(J) + FH_num(J_bar))/2.
 
-
-# denominator of normalized observables
-def denominator(J, J_bar):
-    return 2*dGdq2_cpaverage(J, J_bar)
-
-def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, l1, l2):
+def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, l1, l2, epsrel=0.005):
     def obs(q2):
         return bpll_obs(function, q2, wc_obj, par, B, P, l1, l2)
-    return flavio.math.integrate.nintegrate(obs, q2min, q2max)
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max, epsrel=epsrel)
 
 
 def bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2):
     tauB = par['tau_'+B]
     return tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, l1, l2)
 
-def bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2):
+def bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2, epsrel=0.005):
     def obs(q2):
         return bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2)
-    return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max, epsrel=epsrel)/(q2max-q2min)
 
 # Functions returning functions needed for Prediction instances
 
@@ -177,13 +172,21 @@ def bpll_obs_int_ratio_func(func_num, func_den, B, P, l1, l2):
 
 def bpll_obs_int_ratio_leptonflavour(func, B, P, lnum, lden):
     def fct(wc_obj, par, q2min, q2max):
-        num = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lnum, lnum)
+        num = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lnum, lnum, epsrel=0.0005)
         if num == 0:
             return 0
-        denom = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lden, lden)
+        denom = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lden, lden, epsrel=0.0005)
         return num/denom
     return fct
 
+def bpll_obs_ratio_leptonflavour(func, B, P, lnum, lden):
+    def fct(wc_obj, par, q2):
+        num = bpll_obs(func, q2, wc_obj, par, B, P, lnum, lnum)
+        if num == 0:
+            return 0
+        denom = bpll_obs(func, q2, wc_obj, par, B, P, lden, lden)
+        return num/denom
+    return fct
 
 def bpll_obs_ratio_func(func_num, func_den, B, P, l1, l2):
     def fct(wc_obj, par, q2):
@@ -228,14 +231,14 @@ for l in ['e', 'mu', 'tau']:
             _obs.set_description('Binned ' + _observables[obs]['desc'] + r" in $" + _process_tex + r"$")
             _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _process_tex + r")$"
             _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bpll_obs_int_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['P'], l, l))
+            Prediction(_obs_name, bpll_obs_int_ratio_func(_observables[obs]['func_num'], dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], l, l))
 
             _obs_name = obs + "("+M+l+l+")"
             _obs = Observable(name=_obs_name, arguments=['q2'])
             _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _process_tex + r"$")
             _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _process_tex + r")$"
             _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bpll_obs_ratio_func(_observables[obs]['func_num'], denominator, _hadr[M]['B'], _hadr[M]['P'], l, l))
+            Prediction(_obs_name, bpll_obs_ratio_func(_observables[obs]['func_num'], dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], l, l))
 
         # binned branching ratio
         _obs_name = "<dBR/dq2>("+M+l+l+")"
@@ -257,7 +260,6 @@ for l in ['e', 'mu', 'tau']:
 for l in [('mu','e'), ('tau','mu'),]:
     for M in _hadr.keys():
 
-
         # binned ratio of BRs
         _obs_name = "<R"+l[0]+l[1]+">("+M+"ll)"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
@@ -267,6 +269,16 @@ for l in [('mu','e'), ('tau','mu'),]:
             # add taxonomy for both processes (e.g. B->Pee and B->Pmumu)
             _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to P\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
         Prediction(_obs_name, bpll_obs_int_ratio_leptonflavour(dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], *l))
+
+        # differential ratio of BRs
+        _obs_name = "R"+l[0]+l[1]+"("+M+"ll)"
+        _obs = Observable(name=_obs_name, arguments=['q2'])
+        _obs.set_description(r"Ratio of differential branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
+        _obs.tex = r"$R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"}(" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
+        for li in l:
+            # add taxonomy for both processes (e.g. B->Pee and B->Pmumu)
+            _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to P\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
+        Prediction(_obs_name, bpll_obs_ratio_leptonflavour(dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], *l))
 
 # Lepton flavour violating decays
 for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:

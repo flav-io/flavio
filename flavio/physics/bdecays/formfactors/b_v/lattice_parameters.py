@@ -35,11 +35,11 @@ def load_parameters(file_res, file_cov, process, constraints):
     parameter_names = [implementation_name + ' ' + coeff_name for coeff_name in keys_sorted]
     for parameter_name in parameter_names:
         try: # check if parameter object already exists
-            p = Parameter.get_instance(parameter_name)
+            p = Parameter[parameter_name]
         except: # otherwise, create a new one
             p = Parameter(parameter_name)
         else: # if parameter exists, remove existing constraints
-            constraints.remove_constraints(parameter_name)
+            constraints.remove_constraint(parameter_name)
     constraints.add_constraint(parameter_names,
             MultivariateNormalDistribution(central_value=res, covariance=cov ))
 

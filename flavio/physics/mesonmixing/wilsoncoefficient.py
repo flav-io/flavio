@@ -33,7 +33,7 @@ def df2_prefactor(par):
     return -GF**2/(4.*pi**2) * mW**2
 
 
-def cvll_d(par, meson, scale=80):
+def cvll_d(par, meson, scale=160):
     r"""Contributions to the Standard Model Wilson coefficient $C_V^{LL}$
     for $B^0$, $B_s$, and $K$ mixing at the matching scale.
 

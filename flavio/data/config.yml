@@ -25,21 +25,33 @@ renormalization scale:
     bll: 4.8      # B->l+ l-, B->l nu
     bpll: 4.8     # B->P l+ l-, B->P l nu
     bvll: 4.8     # B->V l+ l-, B->V l nu
-    bxll: 2.5     # B->X l+ l-
+    bxll: 5     # B->X l+ l-
     bvgamma: 4.8  # B->V gamma
     bxgamma: 2.  # B->X gamma
+    bxlnu: 4.6  # B->X l nu
     lambdab: 4.8 # Lambdab->Lambda l+ l-
 
     # K decays
     kdecays: 2.  # K->pinunu
+    kpipi: 1.3  # K->pipi
 
     #  D decays
     dll: 2.      # D->l nu
+
+    #  muon decays
+    mudecays: 1.0
+
+    #  tau decays
+    taudecays: 1.8
 
     # meson mixing
     Bs mixing: 4.2  # Bs-Bsbar mixing
     B0 mixing: 4.2  # B0-B0bar mixing
     K0 mixing: 2.   # K0-K0bar mixing
+    D0 mixing: 2.   # D0-D0bar mixing
+
+    # EDMs
+    nEDM: 2.  # neutron EDM
 
 # these are the thresholds where quark flavours are decoupled in the RG
 # evolution to low energies.
@@ -60,12 +72,12 @@ implementation:
   B->omega form factor: B->omega BSZ3
   Bs->K* form factor: Bs->K* BSZ3
   Bs->phi form factor: Bs->phi BSZ3
-  B->D* form factor: B->D* CLN-IW
+  B->D* form factor: B->D* CLN
 
   # B->P form factors
   B->K form factor: B->K BCL3
-  B->D form factor: B->D BCL3-IW-t0max
-  B->pi form factor: B->pi BCL4
+  B->D form factor: B->D CLN
+  B->pi form factor: B->pi BCL3-IW
 
   # Lambdab form factors
   Lambdab->Lambda form factor: Lambdab->Lambda SSE3

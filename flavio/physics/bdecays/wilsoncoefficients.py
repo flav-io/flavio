@@ -1,20 +1,21 @@
 r"""Standard Model Wilson coefficients for $\Delta B=1$ transitions as well
 as tree-level $B$ decays"""
 
-from math import sqrt,pi,log
-import pkgutil
+
+from math import sqrt, log, pi
 import numpy as np
-from io import StringIO
 import scipy.interpolate
 from flavio.physics.running import running
 from flavio.physics import ckm
 from flavio.physics.common import add_dict
-from flavio.config import config
 from flavio.physics.bdecays.common import meson_quark
 from flavio.physics.bdecays import matrixelements
 import flavio
+import copy
+import pkg_resources
 
-# SM Wilson coefficients at 120 GeV in the basis
+
+# SM Wilson coefficients for n_f=5 in the basis
 # [ C_1, C_2, C_3, C_4, C_5, C_6,
 # C_7^eff, C_8^eff,
 # C_9, C_10,
@@ -22,12 +23,10 @@ import flavio
 # Cb ]
 # where all operators are defined as in hep-ph/0512066 *except*
 # C_9,10, which are defined with an additional alpha/4pi prefactor.
-_wcsm_120 = np.zeros(34)
-_wcsm_120[:15] = np.array([  1.99030910e-01,   1.00285703e+00,  -4.17672471e-04,
-         2.00964137e-03,   5.20961618e-05,   9.65703651e-05,
-        -1.98501275e-01,  -1.09453204e-01,   1.52918563e+00,
-        -4.06926405e+00,   6.15944332e-03,   0.00000000e+00,
-        -1.12876870e-03,   0.00000000e+00,  -3.24099235e-03])
+scales = (2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5)
+# data = np.array([C_low(s, 120, get_par(), nf=5) for s in scales]).T
+data = np.load(pkg_resources.resource_filename('flavio.physics', 'data/wcsm/wc_sm_dB1_2_55.npy'))
+wcsm_nf5 = scipy.interpolate.interp1d(scales, data)
 
 # di->djnunu Wilson coefficient
 def CL_SM(par):
@@ -49,32 +48,72 @@ def CL_SM(par):
     return -Xt/s2w
 
 
-def wctot_dict(wc_obj, sector, scale, par, nf_out=None):
+# names of SM DeltaF=1 Wilson coefficients needed for wctot_dict
+fcnclabels = {}
+_fcnc = ['bs', 'bd', 'sd', ]
+_ll = ['ee', 'mumu', 'tautau']
+for qq in _fcnc:
+    for ll in _ll:
+        fcnclabels[qq + ll] = ['C1_'+qq, 'C2_'+qq, # current-current
+                               'C3_'+qq, 'C4_'+qq, 'C5_'+qq, 'C6_'+qq, # QCD penguins
+                               'C7_'+qq, 'C8_'+qq, # dipoles
+                               'C9_'+qq+ll, 'C10_'+qq+ll, # semi-leptonic
+                               'C3Q_'+qq, 'C4Q_'+qq, 'C5Q_'+qq, 'C6Q_'+qq, 'Cb_'+qq, # EW penguins
+                                # and everything with flipped chirality ...
+                               'C1p_'+qq, 'C2p_'+qq,
+                               'C3p_'+qq, 'C4p_'+qq, 'C5p_'+qq, 'C6p_'+qq,
+                               'C7p_'+qq, 'C8p_'+qq,
+                               'C9p_'+qq+ll, 'C10p_'+qq+ll,
+                               'C3Qp_'+qq, 'C4Qp_'+qq, 'C5Qp_'+qq, 'C6Qp_'+qq, 'Cbp_'+qq,
+                                # scalar and pseudoscalar
+                               'CS_'+qq+ll, 'CP_'+qq+ll,
+                               'CSp_'+qq+ll, 'CPp_'+qq+ll, ]
+
+
+def wctot_dict(wc_obj, sector, scale, par, nf_out=5):
     r"""Get a dictionary with the total (SM + new physics) values  of the
     $\Delta F=1$ Wilson coefficients at a given scale, given a
     WilsonCoefficients instance."""
     wc_np_dict = wc_obj.get_wc(sector, scale, par, nf_out=nf_out)
-    wcsm_120 = _wcsm_120.copy()
-    wc_sm = running.get_wilson(par, wcsm_120, wc_obj.rge_derivative[sector], 120., scale, nf_out=nf_out)
+    if nf_out == 5:
+        wc_sm = wcsm_nf5(scale)
+    else:
+        raise NotImplementedError("DeltaF=1 Wilson coefficients only implemented for B physics")
+    # fold in approximate m_t-dependence of C_10 (see eq. 4 of arXiv:1311.0903)
+    wc_sm[9] = wc_sm[9] * (par['m_t']/173.1)**1.53
+    # go from the effective to the "non-effective" WCs for C7 and C8
+    yi = np.array([0, 0, -1/3., -4/9., -20/3., -80/9.])
+    zi = np.array([0, 0, 1, -1/6., 20, -10/3.])
+    wc_sm[6] = wc_sm[6] - np.dot(yi, wc_sm[:6]) # c7 (not effective!)
+    wc_sm[7] = wc_sm[7] - np.dot(zi, wc_sm[:6]) # c8 (not effective!)
+    wc_labels = fcnclabels[sector]
+    wc_sm_dict = dict(zip(wc_labels, wc_sm))
     # now here comes an ugly fix. If we have b->s transitions, we should take
     # into account the fact that C7' = C7*ms/mb, and the same for C8, which is
     # not completely negligible. To find out whether we have b->s, we look at
     # the "sector" string.
     if sector[:2] == 'bs':
-        # go from the effective to the "non-effective" WCs
-        yi = np.array([0, 0, -1/3., -4/9., -20/3., -80/9.])
-        zi = np.array([0, 0, 1, -1/6., 20, -10/3.])
-        c7 = wc_sm[6] - np.dot(yi, wc_sm[:6]) # c7 (not effective!)
-        c8 = wc_sm[7] - np.dot(zi, wc_sm[:6]) # c8 (not effective!)
         eps_s = running.get_ms(par, scale)/running.get_mb(par, scale)
-        c7p = eps_s * c7
-        c8p = eps_s * c8
-        # go back to the effective WCs
-        wc_sm[21] = c7p + np.dot(yi, wc_sm[15:21]) # c7p_eff
-        wc_sm[22] = c7p + np.dot(zi, wc_sm[15:21]) # c8p_eff
-    wc_labels = wc_obj.coefficients[sector]
-    wc_sm_dict =  dict(zip(wc_labels, wc_sm))
-    return add_dict((wc_np_dict, wc_sm_dict))
+        wc_sm_dict['C7p_bs'] = eps_s * wc_sm_dict['C7_bs']
+        wc_sm_dict['C8p_bs'] = eps_s * wc_sm_dict['C8_bs']
+    tot_dict = add_dict((wc_np_dict, wc_sm_dict))
+    # add C7eff(p) and C8eff(p)
+    tot_dict.update(get_C78eff(tot_dict, sector[:2]))
+    return tot_dict
+
+def get_C78eff(wc, qiqj):
+    r"""Return the effective Wilson coefficients $C_{7,8}^\text{eff}$
+    for sector `qiqj` (e.g. 'bs')."""
+    yi = np.array([-1/3., -4/9., -20/3., -80/9.])
+    zi = np.array([1, -1/6., 20, -10/3.])
+    wceff = {}
+    C36 = np.array([wc[k] for k in ['C3_'+qiqj, 'C4_'+qiqj, 'C5_'+qiqj, 'C6_'+qiqj]])
+    C36p = np.array([wc[k] for k in ['C3p_'+qiqj, 'C4p_'+qiqj, 'C5p_'+qiqj, 'C6p_'+qiqj]])
+    wceff['C7eff_' + qiqj] = wc['C7_' + qiqj] + np.dot(yi, C36)
+    wceff['C8eff_' + qiqj] = wc['C8_' + qiqj] + np.dot(zi, C36)
+    wceff['C7effp_' + qiqj] = wc['C7p_' + qiqj] + np.dot(yi, C36p)
+    wceff['C8effp_' + qiqj] = wc['C8p_' + qiqj] + np.dot(zi, C36p)
+    return wceff
 
 def get_wceff(q2, wc, par, B, M, lep, scale):
     r"""Get a dictionary with the effective $\Delta F=1$ Wilson coefficients
@@ -148,7 +187,7 @@ def get_wceff_nunu(q2, wc, par, B, M, nu1, nu2, scale):
     c['tp'] = 0
     return c
 
-def get_CVSM(par, scale, nf):
+def get_CVLSM(par, scale, nf):
     r"""Get the Wilson coefficient of the operator $C_V$ in $d_i\to d_j\ell\nu$
     in the SM including EW corrections."""
     if nf >= 4: # for B and D physics
@@ -158,24 +197,46 @@ def get_CVSM(par, scale, nf):
         # Marciano & Sirlin 1993
         return sqrt(1.0232)
 
-def get_wceff_fccc(wc_obj, par, qiqj, lep, mqi, scale, nf=5):
+def get_wceff_fccc(wc_obj, par, qiqj, lep, nu, mqi, scale, nf=5):
     r"""Get a dictionary with the $d_i\to d_j$ Wilson coefficients
     in the convention appropriate for the generalized angular distributions.
     """
-    qqlnu = qiqj + lep + 'nu'
-    wc = wc_obj.get_wc(qqlnu, scale, par)
-    c_sm = get_CVSM(par, scale, nf)
+    qqlnu = qiqj + lep + 'nu' + nu
+    wc = wc_obj.get_wc(qqlnu, scale, par, nf_out=nf)
+    if lep == nu:
+        c_sm = get_CVLSM(par, scale, nf)
+    else:
+        c_sm = 0  # SM contribution only for neutrino flavor = lepton flavor
     c = {}
     c['7']  = 0
     c['7p'] = 0
-    c['v']  = (c_sm + wc['CV_'+qqlnu])/2.
-    c['vp'] = wc['CVp_'+qqlnu]/2.
-    c['a']  = -(c_sm + wc['CV_'+qqlnu])/2.
-    c['ap'] = -wc['CVp_'+qqlnu]/2.
-    c['s']  = 1/2 * mqi * wc['CS_'+qqlnu]/2.
-    c['sp'] = 1/2 * mqi * wc['CSp_'+qqlnu]/2.
-    c['p']  = -1/2 * mqi * wc['CS_'+qqlnu]/2.
-    c['pp'] = -1/2 * mqi * wc['CSp_'+qqlnu]/2.
-    c['t']  = wc['CT_'+qqlnu]
-    c['tp'] = 0
+    c['v']  = (c_sm + wc['CVL_'+qqlnu])/2.
+    c['vp'] = wc['CVR_'+qqlnu]/2.
+    c['a']  = -(c_sm + wc['CVL_'+qqlnu])/2.
+    c['ap'] = -wc['CVR_'+qqlnu]/2.
+    c['s']  = 1/2 * wc['CSR_'+qqlnu]/2.
+    c['sp'] = 1/2 * wc['CSL_'+qqlnu]/2.
+    c['p']  = -1/2 * wc['CSR_'+qqlnu]/2.
+    c['pp'] = -1/2 * wc['CSL_'+qqlnu]/2.
+    c['t']  = 0
+    c['tp'] = wc['CT_'+qqlnu]
+    return c
+
+
+def get_wceff_fccc_std(wc_obj, par, qiqj, lep, nu, mqi, scale, nf=5):
+    r"""Get a dictionary with the $d_i\to d_j$ Wilson coefficients
+    in the flavio default convention.
+    """
+    qqlnu = qiqj + lep + 'nu' + nu
+    wc = wc_obj.get_wc(qqlnu, scale, par, nf_out=nf)
+    if lep == nu:
+        c_sm = get_CVLSM(par, scale, nf)
+    else:
+        c_sm = 0  # SM contribution only for neutrino flavor = lepton flavor
+    c = {}
+    c['VL']  = c_sm + wc['CVL_'+qqlnu]
+    c['VR'] = wc['CVR_'+qqlnu]
+    c['SR']  = wc['CSR_'+qqlnu]
+    c['SL'] = wc['CSL_'+qqlnu]
+    c['T']  = wc['CT_'+qqlnu]
     return c

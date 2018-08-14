@@ -1,140 +1,215 @@
 """Classes for effective field theory (EFT) Wilson coefficients"""
 
-import numpy as np
-from flavio.physics.running import running
-from flavio.physics.bdecays import rge as rge_db1
-from flavio.physics.mesonmixing import rge as rge_df2
-
-# Anomalous dimensions for DeltaF=2
-def adm_df2(nf, alpha_s, alpha_e):
-    return rge_df2.gamma_df2_array(nf, alpha_s)
-
-# Anomalous dimensions for DeltaB=1
-def adm_db1(nf, alpha_s, alpha_e):
-    # this is the ADM for the SM basis
-    A_L = rge_db1.gamma_all(nf, alpha_s, alpha_e)
-    # initialize with zeros
-    A = np.zeros((34,34))
-    # fill in the SM ADM
-    A[:15,:15] = A_L
-    # the ADM for the primed SM basis is the same as for the SM
-    A[15:30,15:30] = A_L
-    # note that the enties 30-33 remain zero: these are the scalar and
-    # pseudoscalar operators
-    return A
-
-# Anomalous dimensions for d_i->d_jlnu processes
-def adm_ddlnu(nf, alpha_s, alpha_e):
-    return rge_db1.gamma_fccc(alpha_s, alpha_e)
-
-# List of all Wilson coefficients in the Standard basis
-
-# A "sector" is a set of WCs relevant for a particular class of processes
-# (e.g. b->sll) that closes under renormalization.
-# Individual WCs can appear in more than one set.
-
-coefficients = {}
-adm = {}
-rge_derivative = {}
-
-_fcnc = ['bs', 'bd', 'sd', ]
-_ll = ['ee', 'mumu', 'tautau']
-_lilj = ['emu', 'mue', 'etau', 'taue', 'mutau', 'taumu']
-_lnu = ['enu', 'munu', 'taunu']
-_fccc = ['bc', 'bu', 'su', 'du', 'dc', 'sc', ]
-_nunu = ['nuenue', 'numunumu', 'nutaunutau']
-_nuinuj = ['nuenumu', 'numunue', 'nuenutau', 'nutaunue', 'numunutau', 'nutaunumu']
-
-# DeltaF=2 operators
-for qq in _fcnc:
-    # DeltaF=2 operators
-    coefficients[qq + qq] = [ 'CVLL_'+qq+qq, 'CSLL_'+qq+qq, 'CTLL_'+qq+qq,
-                        'CVRR_'+qq+qq, 'CSRR_'+qq+qq, 'CTRR_'+qq+qq,
-                        'CVLR_'+qq+qq, 'CSLR_'+qq+qq, ]
-    adm[qq + qq] = adm_df2
-
-    # DeltaF=1 operators
-    for ll in _ll:
-        coefficients[qq + ll] = [ 'C1_'+qq, 'C2_'+qq, # current-current
-                            'C3_'+qq, 'C4_'+qq, 'C5_'+qq, 'C6_'+qq, # QCD penguins
-                            'C7eff_'+qq, 'C8eff_'+qq, # dipoles
-                            'C9_'+qq+ll, 'C10_'+qq+ll, # semi-leptonic
-                            'C3Q_'+qq, 'C4Q_'+qq, 'C5Q_'+qq, 'C6Q_'+qq, 'Cb_'+qq, # EW penguins
-                            # and everything with flipped chirality ...
-                            'C1p_'+qq, 'C2p_'+qq,
-                            'C3p_'+qq, 'C4p_'+qq, 'C5p_'+qq, 'C6p_'+qq,
-                            'C7effp_'+qq, 'C8effp_'+qq,
-                            'C9p_'+qq+ll, 'C10p_'+qq+ll,
-                            'C3Qp_'+qq, 'C4Qp_'+qq, 'C5Qp_'+qq, 'C6Qp_'+qq, 'Cbp_'+qq,
-                            # scalar and pseudoscalar
-                            'CS_'+qq+ll, 'CP_'+qq+ll,
-                            'CSp_'+qq+ll, 'CPp_'+qq+ll, ]
-        adm[qq + ll] = adm_db1 # FIXME this is not correct yetfor s->dll
-
-    # DeltaF=1 decays with same-flavour neutrinos in the final state
-    for ll in _nunu:
-        coefficients[qq + ll] = [ 'CL_'+qq+ll, 'CR_'+qq+ll, ]
-        adm[qq + ll] = None # they don't run
-
-    # DeltaF=1 decays with differently flavoured neutrinos in the final state
-    for ll in _nuinuj:
-        coefficients[qq + ll] = [ 'CL_'+qq+ll, 'CR_'+qq+ll, ]
-        adm[qq + ll] = None # they don't run
-
-    # DeltaF=1 LFV decays
-    for ll in _lilj:
-        coefficients[qq + ll] = [ 'C9_'+qq+ll, 'C10_'+qq+ll, # semi-leptonic
-                            'C9p_'+qq+ll, 'C10p_'+qq+ll,
-                            'CS_'+qq+ll, 'CP_'+qq+ll, # scalar and pseudoscalar
-                            'CSp_'+qq+ll, 'CPp_'+qq+ll, ]
-        adm[qq + ll] = None
-
-    # tree-level weak decays
-    for qq in _fccc:
-        for ll in _lnu:
-            coefficients[qq + ll] = [ 'CV_'+qq+ll, 'CS_'+qq+ll, 'CT_'+qq+ll,
-                                'CVp_'+qq+ll, 'CSp_'+qq+ll, ]
-            adm[qq + ll] = adm_ddlnu
+import wcxf
+import wilson
 
 
-class WilsonCoefficients(object):
-    """
+# sector names prior to v0.27 translated to WCxf sector names
+sectors_flavio2wcxf = {
+ 'bcenue': 'cbenu',
+ 'bcenumu': 'cbenu',
+ 'bcenutau': 'cbenu',
+ 'bcmunue': 'cbmunu',
+ 'bcmunumu': 'cbmunu',
+ 'bcmunutau': 'cbmunu',
+ 'bctaunue': 'cbtaunu',
+ 'bctaunumu': 'cbtaunu',
+ 'bctaunutau': 'cbtaunu',
+ 'bdbd': 'dbdb',
+ 'bdee': 'db',
+ 'bdemu': 'dbemu',
+ 'bdetau': 'dbetau',
+ 'bdmue': 'dbmue',
+ 'bdmumu': 'db',
+ 'bdmutau': 'dbmutau',
+ 'bdnuenue': 'dbnunu',
+ 'bdnuenumu': 'dbnunu',
+ 'bdnuenutau': 'dbnunu',
+ 'bdnumunue': 'dbnunu',
+ 'bdnumunumu': 'dbnunu',
+ 'bdnumunutau': 'dbnunu',
+ 'bdnutaunue': 'dbnunu',
+ 'bdnutaunumu': 'dbnunu',
+ 'bdnutaunutau': 'dbnunu',
+ 'bdtaue': 'dbtaue',
+ 'bdtaumu': 'dbtaumu',
+ 'bdtautau': 'db',
+ 'bsbs': 'sbsb',
+ 'bsee': 'sb',
+ 'bsemu': 'sbemu',
+ 'bsetau': 'sbetau',
+ 'bsmue': 'sbmue',
+ 'bsmumu': 'sb',
+ 'bsmutau': 'sbmutau',
+ 'bsnuenue': 'sbnunu',
+ 'bsnuenumu': 'sbnunu',
+ 'bsnuenutau': 'sbnunu',
+ 'bsnumunue': 'sbnunu',
+ 'bsnumunumu': 'sbnunu',
+ 'bsnumunutau': 'sbnunu',
+ 'bsnutaunue': 'sbnunu',
+ 'bsnutaunumu': 'sbnunu',
+ 'bsnutaunutau': 'sbnunu',
+ 'bstaue': 'sbtaue',
+ 'bstaumu': 'sbtaumu',
+ 'bstautau': 'sb',
+ 'buenue': 'ubenu',
+ 'buenumu': 'ubenu',
+ 'buenutau': 'ubenu',
+ 'bumunue': 'ubmunu',
+ 'bumunumu': 'ubmunu',
+ 'bumunutau': 'ubmunu',
+ 'butaunue': 'ubtaunu',
+ 'butaunumu': 'ubtaunu',
+ 'butaunutau': 'ubtaunu',
+ 'dcenue': 'cdenu',
+ 'dcenumu': 'cdenu',
+ 'dcenutau': 'cdenu',
+ 'dcmunue': 'cdmunu',
+ 'dcmunumu': 'cdmunu',
+ 'dcmunutau': 'cdmunu',
+ 'dctaunue': 'cdtaunu',
+ 'dctaunumu': 'cdtaunu',
+ 'dctaunutau': 'cdtaunu',
+ 'duenue': 'udenu',
+ 'duenumu': 'udenu',
+ 'duenutau': 'udenu',
+ 'dumunue': 'udmunu',
+ 'dumunumu': 'udmunu',
+ 'dumunutau': 'udmunu',
+ 'dutaunue': 'udtaunu',
+ 'dutaunumu': 'udtaunu',
+ 'dutaunutau': 'udtaunu',
+ 'scenue': 'csenu',
+ 'scenumu': 'csenu',
+ 'scenutau': 'csenu',
+ 'scmunue': 'csmunu',
+ 'scmunumu': 'csmunu',
+ 'scmunutau': 'csmunu',
+ 'sctaunue': 'cstaunu',
+ 'sctaunumu': 'cstaunu',
+ 'sctaunutau': 'cstaunu',
+ 'sdnuenue': 'sdnunu',
+ 'sdnuenumu': 'sdnunu',
+ 'sdnuenutau': 'sdnunu',
+ 'sdnumunue': 'sdnunu',
+ 'sdnumunumu': 'sdnunu',
+ 'sdnumunutau': 'sdnunu',
+ 'sdnutaunue': 'sdnunu',
+ 'sdnutaunumu': 'sdnunu',
+ 'sdnutaunutau': 'sdnunu',
+ 'sdsd': 'sdsd',
+ 'ucuc': 'cucu',
+ 'suenue': 'usenu',
+ 'suenumu': 'usenu',
+ 'suenutau': 'usenu',
+ 'sumunue': 'usmunu',
+ 'sumunumu': 'usmunu',
+ 'sumunutau': 'usmunu',
+ 'sutaunue': 'ustaunu',
+ 'sutaunumu': 'ustaunu',
+ 'sutaunutau': 'ustaunu'}
+
+
+class WilsonCoefficients(wilson.Wilson):
+    """Class representing a point in the EFT parameter space and giving
+    access to RG evolution.
+
+    Note that all Wilson coefficient values refer to new physics contributions
+    only, i.e. they vanish in the SM.
+
+    Methods:
+
+    - set_initial: set the initial values of Wilson coefficients at some scale
+    - get_wc: get the values of the Wilson coefficients at some scale
+    - set_initial_wcxf: set the initial values from a wcxf.WC instance
+    - get_wc_wcxf: get the values of the Wilson coefficients at some scale
+      as a wcxf.WC instance
     """
     def __init__(self):
-        self.initial = {}
-        self.coefficients = coefficients
-        self.all_wc = [c for v in self.coefficients.values() for c in v] # list of all coeffs
+        self.wc = None
 
-    rge_derivative = {}
-    for sector in coefficients.keys():
-        rge_derivative[sector] = running.make_wilson_rge_derivative(adm[sector])
+    def set_initial(self, wc_dict, scale, eft='WET', basis='flavio'):
+        """Set initial values of Wilson coefficients.
 
-    def set_initial(self, dict, scale):
-        for name, value in dict.items():
-            if name not in self.all_wc:
-                raise KeyError("Wilson coefficient " + name + " not known")
-            self.initial[name] = (scale, value)
+        Parameters:
 
-    def get_wc(self, sector, scale, par, nf_out=None):
-        # intialize with complex zeros
-        values_in = np.zeros(len(self.coefficients[sector]), dtype=complex)
-        # see if an initial value exists
-        scale_in = None
-        for idx, name in enumerate(self.coefficients[sector]):
-            if name in self.initial.keys():
-                scale_in_new = self.initial[name][0]
-                # make sure that if there are several initial values, they are at the same scale
-                if scale_in is not None and scale_in_new != scale_in:
-                    raise ValueError("You cannot define initial values at different scales for Wilson coefficients that mix under renormalization")
-                else:
-                    scale_in = scale_in_new
-                values_in[idx] = self.initial[name][1]
-        if scale_in is None:
-            # if no initial values have been given, no need to run anyway!
-            return dict(zip(self.coefficients[sector],values_in)) # these are all zero
-        if self.rge_derivative[sector] is None:
-            # if the sector has vanishing anomalous dimensions, nno need to run!
-            return dict(zip(self.coefficients[sector],values_in)) # these are just the initial values
-        # otherwise, run
-        values_out = running.get_wilson(par, values_in, self.rge_derivative[sector], scale_in, scale, nf_out=nf_out)
-        return dict(zip(self.coefficients[sector],values_out))
+        - wc_dict: dictionary where keys are Wilson coefficient name strings and
+          values are Wilson coefficient NP contribution values
+        - scale: $\overline{\text{MS}}$ renormalization scale
+        """
+        super().__init__(wcdict=wc_dict, scale=scale, eft=eft, basis=basis)
+
+    def set_initial_wcxf(self, wc):
+        """Set initial values of Wilson coefficients from a WCxf WC instance.
+
+        If the instance is given in a basis other than the flavio basis,
+        the translation is performed automatically, if implemented in the
+        `wcxf` package."""
+        super().__init__(wcdict=wc.dict, scale=wc.scale, eft=wc.eft, basis=wc.basis)
+
+    @property
+    def get_initial_wcxf(self):
+        """Return a wcxf.WC instance in the flavio basis containing the initial
+        values of the Wilson coefficients."""
+        if self.wc is None:
+            raise ValueError("Need to set initial values first.")
+        return self.wc
+
+    @classmethod
+    def from_wilson(cls, w):
+        if w is None:
+            return None
+        if isinstance(w, cls):
+            return w
+        fwc = cls()
+        fwc.set_initial_wcxf(w.wc)
+        fwc._cache = w._cache
+        return fwc
+
+    def run_wcxf(*args, **kwargs):
+        raise ValueError("The method run_wcxf has been removed. Please use the match_run method of wilson.Wilson instead.")
+
+    def get_wc(self, sector, scale, par, eft='WET', basis='flavio', nf_out=None):
+        """Get the values of the Wilson coefficients belonging to a specific
+        sector (e.g. `bsmumu`) at a given scale.
+
+        Returns a dictionary of WC values.
+
+        Parameters:
+
+        - sector: string name of the sector as defined in the WCxf EFT instance
+        - scale: $\overline{\text{MS}}$ renormalization scale
+        - par: dictionary of parameters
+        - eft: name of the EFT at the output scale
+        - basis: name of the output basis
+        """
+        # nf_out is only present to preserve backwards compatibility
+        if nf_out == 5:
+            eft = 'WET'
+        elif nf_out == 4:
+            eft = 'WET-4'
+        elif nf_out == 3:
+            eft = 'WET-3'
+        elif nf_out is not None:
+            raise ValueError("Invalid value: nf_out=".format(nf_out))
+        wcxf_basis = wcxf.Basis[eft, basis]
+        if sector == 'all':
+            coeffs = wcxf_basis.all_wcs
+            mr_sectors = 'all'
+        else:
+            # translate from legacy flavio to wcxf sector if necessary
+            wcxf_sector = sectors_flavio2wcxf.get(sector, sector)
+            coeffs = wcxf_basis.sectors[wcxf_sector].keys()
+            mr_sectors = (wcxf_sector,)
+        wc_sm = dict.fromkeys(coeffs, 0)
+        if not self.wc or not any(self.wc.values.values()):
+            return wc_sm
+        wc_out = self.match_run(scale=scale, eft=eft, basis=basis, sectors=mr_sectors)
+        wc_out_dict = wc_sm  # initialize with zeros
+        wc_out_dict.update(wc_out.dict)  # overwrite non-zero entries
+        return wc_out_dict
+
+# this global variable is simply an instance that is not meant to be modifed -
+# i.e., a Standard Model Wilson coefficient instance.
+_wc_sm = WilsonCoefficients()

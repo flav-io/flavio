@@ -23,10 +23,10 @@ def _prefactors_bsll(par, scale):
     pre_8 =   pre_all /(16*pi**2)
     pre_nu =  pre_all * alpha_e/(4*pi)
     return {
-            'C7eff_bs': pre_7,
-            'C7effp_bs': pre_7,
-            'C8eff_bs': pre_8,
-            'C8effp_bs': pre_8,
+            'C7_bs': pre_7,
+            'C7p_bs': pre_7,
+            'C8_bs': pre_8,
+            'C8p_bs': pre_8,
             'C9_bsee': pre_910,
             'C9p_bsee': pre_910,
             'C10_bsee': pre_910,
@@ -45,10 +45,10 @@ def _prefactors_bsll(par, scale):
 
 
 _flha_dict ={
-(305, 4422): 'C7eff_bs',
-(305, 4322): 'C7effp_bs',
-(305, 6421): 'C8eff_bs',
-(305, 6321): 'C8effp_bs',
+(305, 4422): 'C7_bs',
+(305, 4322): 'C7p_bs',
+(305, 6421): 'C8_bs',
+(305, 6321): 'C8p_bs',
 (3051111, 4133): 'C9_bsee',
 (3051111, 4233): 'C9p_bsee',
 (3051111, 4137): 'C10_bsee',

@@ -42,6 +42,7 @@ gamma: 1.27(12)
 f_rho0: 0.212(4)  # 1501.06569 table 1
 f_omega: 0.185(5)  # 1501.06569 table 1
 f_phi: 0.231(5)  # 1501.06569 table 1
+f_Bc: 0.434(15) # 1503.05762v2 eq. (20)
 
 # Parameters needed for meson light-cone distribution amplitudes
 
@@ -73,15 +74,20 @@ a1_perp_rho+: 0
 bag_K0_1: 0.5237(131)(117) # =0.717(18)(16) for Bhat. FLAG 2016 Nf=2+1+1
 
 # BSM operators
-bag_K0_2: 0.44(3)(1)   # 1505.06639 table 1; converted from 3->2 GeV by multpying with 0.96
-bag_K0_3: 0.76(5)(1)  # 1505.06639 table 1; converted from 3->2 GeV by multpying with 0.96
-bag_K0_4: 0.75(4)(3)   # 1505.06639 table 1; converted from 3->2 GeV by multpying with 0.96
-bag_K0_5: 0.47(4)(1)  # 1505.06639 table 1; converted from 3->2 GeV by multpying with 0.96
+bag_K0_2: 0.468(7)(16)   # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
+bag_K0_3: 0.713(13)(62)  # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
+bag_K0_4: 0.883(12)(15)   # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
+bag_K0_5: 0.679(8)(42)  # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
 
+bag_D0_1: 0.727(26)(4)  # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_2: 0.62(3)(2)   # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_3: 0.92(8)(2)  # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_4: 0.87(5)(4)   # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_5: 0.93(7)(1)  # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
 
 # DeltaF=2 QCD correction factors
 
-eta_tt_B0: 0.55
+eta_tt_B0: 0.55        # Buras:1990fn
 eta_tt_Bs: 0.55
 eta_tt_K0: 0.5765(65)  # Buras:1990fn
 eta_cc_K0: 1.87(76)    # 1108.2036
@@ -107,29 +113,46 @@ Gamma12_B0_c: -49.5(8.5)
 Gamma12_B0_a: 11.7(1.3)
 
 # experimental decay width differences
-DeltaGamma/Gamma_B0: 0.001(10) # HFAG Summer 2015
-DeltaGamma/Gamma_Bs: 0.124(9) # HFAG Summer 2015
+DeltaGamma/Gamma_B0: -0.002(10) # HFAG Summer 2016
+DeltaGamma/Gamma_Bs: 0.129(9) # HFAG Summer 2016
 
 # B->D* form factors
 B->D* CLN R_0(1): 1.14(11) # 1203.2654 appendix B
 B->D* CLN h_A1(1): 0.906(4)(12) # 1403.0635
 B->D* IW a_T1: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
 B->D* IW a_T2: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
-B->D* IW a_T23: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
+B->D* IW a_T23: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
 
 # B->D form factors
-B->D IW a_T: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
+B->D IW a_T: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
+ # 1505.03925
+B->D BCL m0: 0
+B->D BCL m+: 0
+
+# B->K form factors (1509.06235)
+B->K BCL m0: 5.711 # m_Bs*(0+)
+B->K BCL m+: 5.4154 # m_Bs*(1-)
+
+# B->pi form factors
+B->pi BCL m0: 0
+B->pi BCL m+: 5.319 # m_B*(1-)
+B->pi IW a_T: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
+
+# Bs->K form factors (1501.05373v3)
+Bs->K BCL m0: 5.63 # m_B*(0+)
+Bs->K BCL m+: 5.3252 # m_B*(1-)
 
 # B->Xqgamma uncertainty parameters
 delta_BXsgamma: 0 ± 0.06557 # 5% + 3% + 3%
 delta_BXdgamma: 0 ± 0.06557 # 5% + 3% + 3%
-# B->Xqll uncertainty parameters
-delta_BXsll: 0 ± 0.1 # 10% since not all known contributions included at present
-delta_BXdll: 0 ± 0.1 # 10% since not all known contributions included at present
 
 # charm quark mass entering alpha_s corrections to B->Vgamma.
 # Its uncertainty is due to the scheme ambiguity.
 m_c BVgamma: 1.5 +- 0.2
+
+# parameters needed for power corrections to B->Xqll
+lambda_1: -0.362 ± 0.067 # 1503.04849
+lambda_2: 0.12 ± 0.02    # 1503.04849
 
 # ChPT parameters needed for P->lnu decays
 c1_K+lnu: -1.98(50) # (116) of 0707.4464
@@ -184,3 +207,70 @@ Lambdab->Lambda deltaC9 c_perp1 Re: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_perp1 Im: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_para1 Re: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_para1 Im: 0 ± 0.3
+
+# Parameters for HQET form factors
+B->D* CLN deltac_hT1: 0 ± 3
+
+# Parameters for SM contribution to D-Dbar mixing
+# As it is poorly known, these are only conservative guesses to
+# accomodate the experimental measurement
+M12_D a_bb: 0
+M12_D a_bs: 0 ± 0.1
+M12_D a_ss: -0.1 ± 0.1
+Gamma12_D a_bb: 0
+Gamma12_D a_bs: 0 ± 0.35
+Gamma12_D a_ss: -0.35 ± 0.1
+
+# Parameters for neutron EDM
+# taken from 1506.06411, eq. (32)
+nEDM gT_d: 0.774(66)
+nEDM gT_u: -0.233(28)
+# taken from 1308.6493, eq. (22)
+nEDM ~rho_d: 0.6 */ 2  # 0.3..1.2
+nEDM ~rho_u: 0.3 */ 2  # 0.15..0.6
+# corresponding to e 20 MeV w in eq. (4) of hep-ph/0208257
+nEDM beta_G: 6e-7 */ 3  # 2e-7..18e-7
+
+# Parameters for LFV decays
+BR(tau->mununu): 17.39(4)e-2
+BR(tau->enunu): 17.82(4)e-2
+BR(tau->rhonu): 25.2(3)e-2
+
+# Parameters needed for eps'/eps
+eps_K: 2.228(11)e-3
+omega+: (4.53 ± 0.02) 1e-2
+Omegahat_eff: (14.8 ± 8.0) 1e-2
+epsp a: 1.017
+# convention h=1!
+ReA0(K->pipi): 27.12e-8
+ReA2(K->pipi): 1.208e-8
+# arXiv:1505.07863 table S II
+# scaled to mu=1.3, rescaled by 1/h=1/sqrt(3/2)
+Kpipi M0 3: -0.0326(532)(96)
+Kpipi M0 4:  0.218(76)(53)
+Kpipi M0 5: -0.146(39)(38)
+Kpipi M0 6: -0.277(79)(74)
+Kpipi M0 7:  0.127(30)(43)
+Kpipi M0 8:  1.26(5)(33)
+Kpipi M0 9: -0.161(44)(40)
+Kpipi M2 7:  0.0996(42)(58)
+Kpipi M2 8:  0.684(23)(25)
+Kpipi M2 9:  0.0132(2)(5)
+# from arXiv:1803.08052
+# using naive 30% uncertainty
+Kpipi M0 g-: 0.0033(10)
+# NP matrix elements from dual QCD Aebischer/Buras/Gerard arXiv:1807.01709
+# for SD basis with mu = 1.3 GeV
+# using naive 20% uncertainty
+# from table 4
+Kpipi M0 SLL1_u: -0.005(1)
+Kpipi M0 SLL2_u: -0.044(9)
+Kpipi M0 SLL3_u: -0.371(74)
+Kpipi M0 SLL4_u: -0.214(43)
+# from table 5
+Kpipi M0 SLR1_u: -0.015(3)
+Kpipi M0 SLR2_u: -0.141(28)
+Kpipi M0 SLL1_d:  0.0070(14)
+Kpipi M2 SLL1_d: -0.0020(4)
+Kpipi M0 SLL2_d: -0.088(18)
+Kpipi M2 SLL2_d:  0.031(6)
