@@ -130,7 +130,12 @@ def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, l1, l2, epsrel=0.005
 
 def bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2):
     tauB = par['tau_'+B]
-    return tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, l1, l2)
+    dBR = tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, l1, l2)
+    if P == 'pi0':
+        # factor of 1/2 for neutral pi due to pi = (uubar-ddbar)/sqrt(2)
+        return dBR / 2.
+    else:
+        return dBR
 
 def bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2, epsrel=0.005):
     def obs(q2):
