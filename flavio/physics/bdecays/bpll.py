@@ -236,7 +236,8 @@ _hadr_lfv = {
 _tex_lfv = {'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
     'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
     'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-',
-    'emu,mue': r'e^\pm\mu^\mp'}
+    'emu,mue': r'e^\pm\mu^\mp', 'etau,taue': r'e^\pm\tau^\mp',
+    'mutau,taumu': r'\mu^\pm\tau^\mp'}
 
 for l in ['e', 'mu', 'tau']:
     for M in _hadr.keys():
@@ -310,14 +311,11 @@ def _define_obs_B_Mll(M, ll):
     _obs.add_taxonomy(_process_taxonomy)
     return _obs_name
 
-for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
-    for M in _hadr_lfv:
+for M in _hadr_lfv:
+    for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
         _obs_name = _define_obs_B_Mll(M, ll)
         Prediction(_obs_name, bpll_dbrdq2_tot_func(_hadr_lfv[M]['B'], _hadr_lfv[M]['P'], ll[0], ll[1]))
-
-# Combined emu+mue lepton flavour violating decays
-_obs_name = _define_obs_B_Mll('B+->pi', ('emu,mue',))
-Prediction(_obs_name, bpll_dbrdq2_tot_lfv_comb_func('B+', 'pi+', 'e', 'mu'))
-
-_obs_name = _define_obs_B_Mll('B0->pi', ('emu,mue',))
-Prediction(_obs_name, bpll_dbrdq2_tot_lfv_comb_func('B0', 'pi0', 'e', 'mu'))
+    for ll in [('e','mu'), ('e','tau'), ('mu','tau')]:
+        # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
+        _obs_name = _define_obs_B_Mll(M, ('{0}{1},{1}{0}'.format(*ll),))
+        Prediction(_obs_name, bpll_dbrdq2_tot_lfv_comb_func(_hadr_lfv[M]['B'], _hadr_lfv[M]['P'], ll[0], ll[1]))
