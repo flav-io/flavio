@@ -160,6 +160,19 @@ def bpll_dbrdq2_tot_func(B, P, l1, l2):
         return bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2)*(q2max-q2min)
     return fct
 
+def bpll_dbrdq2_tot_lfv_comb_func(B, P, l1, l2):
+    def fct(wc_obj, par):
+        mB = par['m_'+B]
+        mP = par['m_'+P]
+        ml1 = par['m_'+l1]
+        ml2 = par['m_'+l2]
+        q2max = (mB-mP)**2
+        q2min = (ml1+ml2)**2
+        return (
+            + bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2)
+            + bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l2, l1)
+        )*(q2max-q2min)
+    return fct
 
 def bpll_dbrdq2_func(B, P, l1, l2):
     def fct(wc_obj, par, q2):
@@ -302,18 +315,9 @@ for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau
         _obs_name = _define_obs_B_Mll(M, ll)
         Prediction(_obs_name, bpll_dbrdq2_tot_func(_hadr_lfv[M]['B'], _hadr_lfv[M]['P'], ll[0], ll[1]))
 
-# Combined emu+mue lepton flavour violating decay B->pi(emu+mue) (hep-ex/0703018)
-# Br(B->pil+l-) = Br(B+->pi+l+l-) = 2 tau_B+/tau_B0 Br(B0->pi0l+l-)
-def _B_pi_emu_mue_fct(wc_obj, par):
-    mB = par['m_B+']
-    mP = par['m_pi+']
-    me = par['m_e']
-    mmu = par['m_mu']
-    q2max = (mB-mP)**2
-    q2min = (me+mmu)**2
-    return (
-        + bpll_dbrdq2_int(q2min, q2max, wc_obj, par, 'B+', 'pi+', 'e', 'mu')
-        + bpll_dbrdq2_int(q2min, q2max, wc_obj, par, 'B+', 'pi+', 'mu', 'e')
-    )*(q2max-q2min)
+# Combined emu+mue lepton flavour violating decays
 _obs_name = _define_obs_B_Mll('B+->pi', ('emu,mue',))
-Prediction(_obs_name, _B_pi_emu_mue_fct)
+Prediction(_obs_name, bpll_dbrdq2_tot_lfv_comb_func('B+', 'pi+', 'e', 'mu'))
+
+_obs_name = _define_obs_B_Mll('B0->pi', ('emu,mue',))
+Prediction(_obs_name, bpll_dbrdq2_tot_lfv_comb_func('B0', 'pi0', 'e', 'mu'))
