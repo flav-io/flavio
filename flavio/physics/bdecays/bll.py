@@ -231,6 +231,7 @@ for l in ['e', 'mu', 'tau']:
     Prediction(_obs_name, bqll_obs_function(br_inst, 'B0', l, l))
 
 
+_tex_l = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau'}
 _tex_B = {'B0': r'\bar B^0', 'Bs': r'\bar B_s'}
 _tex_lfv = {'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
     'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
@@ -255,7 +256,7 @@ for ll_1 in [('e','mu'), ('e','tau'), ('mu','tau'),]:
         for ll in [ll_1, ll_1]:
             _process_tex = _tex_B[B]+r"\to "+_tex_lfv[''.join(ll)]
             _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to\ell^+\ell^-$ :: $'  + _process_tex + r'$')
-        _process_tex = _tex_B[B]+r"\to "+ll_1[0]+r"^\pm "+ll_1[1]+r"^\mp"
+        _process_tex = _tex_B[B]+r"\to "+_tex_l[ll_1[0]]+r"^\pm "+_tex_l[ll_1[1]]+r"^\mp"
         _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
         _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
         Prediction(_obs_name, bqll_obs_function_lsum(br_inst, B, ll_1[0], ll_1[1]))
