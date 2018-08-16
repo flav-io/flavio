@@ -223,7 +223,7 @@ _hadr_lfv = {
 _tex_lfv = {'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
     'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
     'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-',
-    'emu+mue': r'e^\pm\mu^\mp'}
+    'emu,mue': r'e^\pm\mu^\mp'}
 
 for l in ['e', 'mu', 'tau']:
     for M in _hadr.keys():
@@ -315,5 +315,5 @@ def _B_pi_emu_mue_fct(wc_obj, par):
         + bpll_dbrdq2_int(q2min, q2max, wc_obj, par, 'B+', 'pi+', 'e', 'mu')
         + bpll_dbrdq2_int(q2min, q2max, wc_obj, par, 'B+', 'pi+', 'mu', 'e')
     )*(q2max-q2min)
-_obs_name = _define_obs_B_Mll('B+->pi', ('emu+mue',))
+_obs_name = _define_obs_B_Mll('B+->pi', ('emu,mue',))
 Prediction(_obs_name, _B_pi_emu_mue_fct)
