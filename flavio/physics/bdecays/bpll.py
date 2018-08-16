@@ -222,7 +222,8 @@ _hadr_lfv = {
 }
 _tex_lfv = {'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
     'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
-    'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-'}
+    'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-',
+    'emu+mue': r'e^\pm\mu^\mp'}
 
 for l in ['e', 'mu', 'tau']:
     for M in _hadr.keys():
@@ -286,16 +287,33 @@ for l in [('mu','e'), ('tau','mu'),]:
         Prediction(_obs_name, bpll_obs_ratio_leptonflavour(dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], *l))
 
 # Lepton flavour violating decays
+def _define_obs_B_Mll(M, ll):
+    _process_tex = _hadr_lfv[M]['tex']+' '+_tex_lfv[''.join(ll)]
+    _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to P\ell^+\ell^-$ :: $' + _process_tex + r"$"
+    _obs_name = "BR("+M+''.join(ll)+")"
+    _obs = Observable(_obs_name)
+    _obs.set_description(r"Total branching ratio of $"+_process_tex+r"$")
+    _obs.tex = r"$\text{BR}(" + _process_tex+r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    return _obs_name
+
 for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
     for M in _hadr_lfv:
+        _obs_name = _define_obs_B_Mll(M, ll)
+        Prediction(_obs_name, bpll_dbrdq2_tot_func(_hadr_lfv[M]['B'], _hadr_lfv[M]['P'], ll[0], ll[1]))
 
-        _process_tex = _hadr_lfv[M]['tex']+' '+_tex_lfv[''.join(ll)]
-        _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to P\ell^+\ell^-$ :: $' + _process_tex + r"$"
-
-        for br in ['BR',]:
-            _obs_name = br + "("+M+''.join(ll)+")"
-            _obs = Observable(_obs_name)
-            _obs.set_description(r"Total branching ratio of $"+_process_tex+r"$")
-            _obs.tex = r"$\text{BR}(" + _process_tex+r")$"
-            _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bpll_dbrdq2_tot_func(_hadr_lfv[M]['B'], _hadr_lfv[M]['P'], ll[0], ll[1]))
+# Combined emu+mue lepton flavour violating decay B->pi(emu+mue) (hep-ex/0703018)
+# Br(B->pil+l-) = Br(B+->pi+l+l-) = 2 tau_B+/tau_B0 Br(B0->pi0l+l-)
+def _B_pi_emu_mue_fct(wc_obj, par):
+    mB = par['m_B+']
+    mP = par['m_pi+']
+    me = par['m_e']
+    mmu = par['m_mu']
+    q2max = (mB-mP)**2
+    q2min = (me+mmu)**2
+    return (
+        + bpll_dbrdq2_int(q2min, q2max, wc_obj, par, 'B+', 'pi+', 'e', 'mu')
+        + bpll_dbrdq2_int(q2min, q2max, wc_obj, par, 'B+', 'pi+', 'mu', 'e')
+    )*(q2max-q2min)
+_obs_name = _define_obs_B_Mll('B+->pi', ('emu+mue',))
+Prediction(_obs_name, _B_pi_emu_mue_fct)
