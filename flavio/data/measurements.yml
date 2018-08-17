@@ -1898,7 +1898,7 @@ Belle B0->pitaunu 2015 total BR:
   experiment: Belle
   inspire: Hamer:2015jsa
   values:
-  BR(B0->pitaunu): 2.5e-4 @ 90% CL
+  BR(B0->pitaunu): < 2.5e-4 @ 90% CL
 
 Belle B0->rholnu 2013 total BR:
   experiment: Belle
