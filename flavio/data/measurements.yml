@@ -8,17 +8,14 @@ HFAG rad 2014:
     BR(B+->K*gamma): 42.1 ± 1.8 e-6
     BR(B0->K*gamma): 43.3 ± 1.5 e-6
 
-HFAG rad 2016:
-  experiment: HFAG
+HFLAV rad 2018:
+  experiment: HFLAV
   inspire: Amhis:2016xyh
-  url: http://www.slac.stanford.edu/xorg/hfag/rare/Oct2016/radll/OUTPUT/TABLES/radll.pdf
+  url: http://www.slac.stanford.edu/xorg/hflav/rare/May2018/radll/OUTPUT/TABLES/PDF/radll.pdf
   values:
     BR(B+->enu): < 0.98e-6 @ 90% CL
     BR(B+->munu): < 1.0e-6 @ 90% CL
-    BR(B+->taunu): (106 ± 19) e-6
-    BR(B0->emu,mue): < 0.0028e-6 @ 90% CL
-    BR(B0->etau,taue): < 28e-6 @ 90% CL
-    BR(B0->mutau,taumu): < 22e-6 @ 90% CL
+    BR(B+->taunu): (144 ± 31) e-6
 
 BaBar Btautau 2005:
   experiment: BaBar
@@ -4770,6 +4767,20 @@ BaBar B->Kll LFV 2016:
     BR(B0->K*mue): -7 + 22 - 14 ± 7 e-8
     BR(B+->K*emu): 9+ 65 - 44 ± 22 e-8
     BR(B+->K*mue): -32+ 63 - 38 ± 15 e-8
+
+BaBar B->ll' 2008:
+  experiment: BaBar
+  inspire: Aubert:2008cu
+  values:
+    BR(B0->etau,taue): 0 +15 -10 e-6
+    BR(B0->mutau,taumu): 0 +11 -7 e-6
+
+LHCb B->ll' 2017:
+  experiment: LHCb
+  inspire: Aaij:2017cza
+  values:
+    BR(Bs->emu,mue): < 6.3e-9 @ 95% CL
+    BR(B0->emu,mue): < 1.3e-9 @ 95% CL
 
 BaBar B->pill LFV 2007:
   experiment: BaBar
