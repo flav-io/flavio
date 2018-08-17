@@ -1891,6 +1891,12 @@ Belle B+->pilnu 2013 total BR:
   values:
     BR(B+->pilnu):  81.2±7.4 e-6
 
+Belle B0->pitaunu 2015 total BR:
+  experiment: Belle
+  inspire: Hamer:2015jsa
+  values:
+    BR(B0->pitaunu): 1.52 ± 0.72 e-4
+
 Belle B0->rholnu 2013 total BR:
   experiment: Belle
   inspire: Sibidanov:2013rkk
