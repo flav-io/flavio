@@ -77,7 +77,7 @@ def wc_function_factory(d):
     if not namespace:
         warnings.warn("Function dictionary provided but no function found.")
         return None
-    f = namespace[list(namespace.keys())[-1]]  # assume the last variable is the function
+    f = namespace.popitem()[1]  # assume the last variable is the function
     if not callable(f):
         raise ValueError("Function code not understood")
     return f
@@ -184,7 +184,7 @@ class Fit(flavio.NamedInstanceClass):
         if fit_wc_function is not None: # if list of WC names not empty
             try:
                 self.fit_wc_names = tuple(inspect.signature(fit_wc_function).parameters.keys())
-                fit_wc_function(**{self.fit_wc_name: 1e-6 for self.fit_wc_name in self.fit_wc_names})
+                fit_wc_function(**{fit_wc_name: 1e-6 for fit_wc_name in self.fit_wc_names})
             except:
                 raise ValueError("Error in calling the Wilson coefficient function")
         else:

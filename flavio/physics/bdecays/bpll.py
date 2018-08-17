@@ -130,7 +130,12 @@ def bpll_obs_int(function, q2min, q2max, wc_obj, par, B, P, l1, l2, epsrel=0.005
 
 def bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2):
     tauB = par['tau_'+B]
-    return tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, l1, l2)
+    dBR = tauB * bpll_obs(dGdq2_cpaverage, q2, wc_obj, par, B, P, l1, l2)
+    if P == 'pi0':
+        # factor of 1/2 for neutral pi due to pi = (uubar-ddbar)/sqrt(2)
+        return dBR / 2.
+    else:
+        return dBR
 
 def bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2, epsrel=0.005):
     def obs(q2):
@@ -155,6 +160,19 @@ def bpll_dbrdq2_tot_func(B, P, l1, l2):
         return bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2)*(q2max-q2min)
     return fct
 
+def bpll_dbrdq2_tot_lfv_comb_func(B, P, l1, l2):
+    def fct(wc_obj, par):
+        mB = par['m_'+B]
+        mP = par['m_'+P]
+        ml1 = par['m_'+l1]
+        ml2 = par['m_'+l2]
+        q2max = (mB-mP)**2
+        q2min = (ml1+ml2)**2
+        return (
+            + bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2)
+            + bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l2, l1)
+        )*(q2max-q2min)
+    return fct
 
 def bpll_dbrdq2_func(B, P, l1, l2):
     def fct(wc_obj, par, q2):
@@ -217,7 +235,9 @@ _hadr_lfv = {
 }
 _tex_lfv = {'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
     'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
-    'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-'}
+    'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-',
+    'emu,mue': r'e^\pm\mu^\mp', 'etau,taue': r'e^\pm\tau^\mp',
+    'mutau,taumu': r'\mu^\pm\tau^\mp'}
 
 for l in ['e', 'mu', 'tau']:
     for M in _hadr.keys():
@@ -281,16 +301,21 @@ for l in [('mu','e'), ('tau','mu'),]:
         Prediction(_obs_name, bpll_obs_ratio_leptonflavour(dGdq2_cpaverage, _hadr[M]['B'], _hadr[M]['P'], *l))
 
 # Lepton flavour violating decays
-for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
-    for M in _hadr_lfv:
+def _define_obs_B_Mll(M, ll):
+    _process_tex = _hadr_lfv[M]['tex']+' '+_tex_lfv[''.join(ll)]
+    _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to P\ell^+\ell^-$ :: $' + _process_tex + r"$"
+    _obs_name = "BR("+M+''.join(ll)+")"
+    _obs = Observable(_obs_name)
+    _obs.set_description(r"Total branching ratio of $"+_process_tex+r"$")
+    _obs.tex = r"$\text{BR}(" + _process_tex+r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    return _obs_name
 
-        _process_tex = _hadr_lfv[M]['tex']+' '+_tex_lfv[''.join(ll)]
-        _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to P\ell^+\ell^-$ :: $' + _process_tex + r"$"
-
-        for br in ['BR',]:
-            _obs_name = br + "("+M+''.join(ll)+")"
-            _obs = Observable(_obs_name)
-            _obs.set_description(r"Total branching ratio of $"+_process_tex+r"$")
-            _obs.tex = r"$\text{BR}(" + _process_tex+r")$"
-            _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bpll_dbrdq2_tot_func(_hadr_lfv[M]['B'], _hadr_lfv[M]['P'], ll[0], ll[1]))
+for M in _hadr_lfv:
+    for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
+        _obs_name = _define_obs_B_Mll(M, ll)
+        Prediction(_obs_name, bpll_dbrdq2_tot_func(_hadr_lfv[M]['B'], _hadr_lfv[M]['P'], ll[0], ll[1]))
+    for ll in [('e','mu'), ('e','tau'), ('mu','tau')]:
+        # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
+        _obs_name = _define_obs_B_Mll(M, ('{0}{1},{1}{0}'.format(*ll),))
+        Prediction(_obs_name, bpll_dbrdq2_tot_lfv_comb_func(_hadr_lfv[M]['B'], _hadr_lfv[M]['P'], ll[0], ll[1]))

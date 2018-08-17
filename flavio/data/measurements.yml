@@ -4770,3 +4770,10 @@ BaBar B->Kll LFV 2016:
     BR(B0->K*mue): -7 + 22 - 14 ± 7 e-8
     BR(B+->K*emu): 9+ 65 - 44 ± 22 e-8
     BR(B+->K*mue): -32+ 63 - 38 ± 15 e-8
+
+BaBar B->pill LFV 2007:
+  experiment: BaBar
+  inspire: Aubert:2007mm
+  values:
+    BR(B+->piemu,mue): < 1.7e-7 @ 90% CL
+    BR(B0->piemu,mue): < 1.4e-7 @ 90% CL

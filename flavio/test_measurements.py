@@ -49,3 +49,13 @@ class TestMeasurements(unittest.TestCase):
         npt.assert_array_equal(
             _fix_correlation_matrix([[1, 0.4, 0.3], [1, 0.2], [1]], 3),
             np.array([[1, 0.4, 0.3], [0.4, 1, 0.2], [0.3, 0.2, 1]]))
+
+    def test_measurements_yaml(self):
+        # check if all observables in existing measurements exist
+        for name, m in flavio.Measurement.instances.items():
+            for obs in m.all_parameters:
+                if 'test' in obs:
+                    continue  # ignore observables defined in unit tests
+                # this will raise if the observable does not exist
+                obsname = flavio.Observable.argument_format(obs, 'dict')['name']
+                flavio.Observable[obsname]
