@@ -274,3 +274,7 @@ Kpipi M0 SLL1_d:  0.0070(14)
 Kpipi M2 SLL1_d: -0.0020(4)
 Kpipi M0 SLL2_d: -0.088(18)
 Kpipi M2 SLL2_d:  0.031(6)
+
+# anomalous magnet moment of the muon
+# arXiv:1706.09436 eq. (2)
+a_mu SM: 11659182.3 ± 4.3 e-10

@@ -1171,3 +1171,8 @@ Kpipi M0 SLL2_d:
 Kpipi M2 SLL2_d:
   tex: $\langle Q_2^{\text{SLL},d} \rangle_2$
   description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_2^{\text{SLL},d}$
+
+# anomalous magnet moment of the muon
+a_mu SM:
+  tex: $a_\mu^\text{SM}$
+  description: SM prediction for the anomalous magnetic moment of the muon
