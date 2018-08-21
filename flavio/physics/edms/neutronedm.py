@@ -15,11 +15,11 @@ def nedm_wceff(wc_obj, par):
     gs = sqrt(4 * pi * alpha['alpha_s'])
     wc = wc_obj.get_wc('dF=0', scale=2, par=par, eft='WET-3', basis='flavio')
     wceff = {}
-    pre = 4 * par['GF'] / sqrt(2) / (8 * pi**2)
+    pre = -4 * par['GF'] / sqrt(2) / (8 * pi**2)
     wceff['edm_d'] = pre * e * md * wc['C7_dd'].imag
     wceff['edm_u'] = pre * e * mu * wc['C7_uu'].imag
-    wceff['cedm_d'] = pre * gs * md * wc['C8_dd'].imag
-    wceff['cedm_u'] = pre * gs * mu * wc['C8_uu'].imag
+    wceff['cedm_d'] = pre * md * wc['C8_dd'].imag
+    wceff['cedm_u'] = pre * mu * wc['C8_uu'].imag
     wceff['Gtilde'] = wc['CGtilde']
     return wceff
 
@@ -42,5 +42,5 @@ _obs_name = "d_n"
 _obs = flavio.classes.Observable(name=_obs_name)
 _obs.set_description(r"Electric dipole moment of the neutron")
 _obs.tex = r"$d_n$"
-_obs.add_taxonomy(r'Process :: Electric dipole moments :: Nucleons :: $d_n$')
+_obs.add_taxonomy(r'Process :: Dipole moments :: Nucleon electric dipole moments :: $d_n$')
 flavio.classes.Prediction(_obs_name, nedm)
