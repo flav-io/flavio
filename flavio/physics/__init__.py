@@ -7,5 +7,6 @@ from . import mudecays
 from . import taudecays
 from . import mesonmixing
 from . import edms
+from . import neutrinos
 from . import running
 from . import eft
