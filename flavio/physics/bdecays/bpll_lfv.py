@@ -15,11 +15,9 @@ from flavio.physics.bdecays.bpll import prefactor, get_ff
 import warnings
 
 
-def helicity_amps(q2, wc_obj, par_dict, B, P, l1, l2):
+def helicity_amps(q2, wc, par_dict, B, P, l1, l2):
     par = par_dict.copy()
     scale = config['renormalization scale']['bpll']
-    label = meson_quark[(B,P)] + l1 + l2 # e.g. bsmumu, bdtautau
-    wc = wc_obj.get_wc(label, scale, par)
     wc_eff = get_wceff_lfv(q2, wc, par, B, P, l1, l2, scale)
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
@@ -32,7 +30,7 @@ def helicity_amps(q2, wc_obj, par_dict, B, P, l1, l2):
     return h
 
 
-def bpll_obs(function, q2, wc_obj, par, B, P, l1, l2):
+def bpll_obs(function, q2, wc, par, B, P, l1, l2):
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
     mB = par['m_'+B]
@@ -41,16 +39,16 @@ def bpll_obs(function, q2, wc_obj, par, B, P, l1, l2):
         return 0
     scale = config['renormalization scale']['bpll']
     mb = running.get_mb(par, scale)
-    h     = helicity_amps(q2, wc_obj, par, B, P, l1, l2)
+    h     = helicity_amps(q2, wc, par, B, P, l1, l2)
     J     = angular.angularcoeffs_general_p(h, q2, mB, mP, mb, 0, ml1, ml2)
     return function(J)
 
 def dGdq2(J):
     return 2 * (J['a'] + J['c']/3.)
 
-def bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2):
+def bpll_dbrdq2(q2, wc, par, B, P, l1, l2):
     tauB = par['tau_'+B]
-    dBR = tauB * bpll_obs(dGdq2, q2, wc_obj, par, B, P, l1, l2)
+    dBR = tauB * bpll_obs(dGdq2, q2, wc, par, B, P, l1, l2)
     if P == 'pi0':
         # factor of 1/2 for neutral pi due to pi = (uubar-ddbar)/sqrt(2)
         return dBR / 2.
@@ -58,8 +56,14 @@ def bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2):
         return dBR
 
 def bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, l1, l2, epsrel=0.005):
+    scale = config['renormalization scale']['bpll']
+    label = meson_quark[(B,P)] + l1 + l2 # e.g. bsmumu, bdtautau
+    wc = wc_obj.get_wc(label, scale, par)
+    if all([abs(v) < 1e-12 for v in wc.values()]):
+        # if all WCs are essentially zero, return BR=0
+        return 0
     def obs(q2):
-        return bpll_dbrdq2(q2, wc_obj, par, B, P, l1, l2)
+        return bpll_dbrdq2(q2, wc, par, B, P, l1, l2)
     return flavio.math.integrate.nintegrate(obs, q2min, q2max, epsrel=epsrel)/(q2max-q2min)
 
 # Functions returning functions needed for Prediction instances
