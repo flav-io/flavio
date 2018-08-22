@@ -97,9 +97,13 @@ def bpll_obs(function, q2, wc_obj, par, B, P, l1, l2):
     scale = config['renormalization scale']['bpll']
     mb = running.get_mb(par, scale)
     h     = helicity_amps(q2, wc_obj, par, B, P, l1, l2)
-    h_bar = helicity_amps_bar(q2, wc_obj, par, B, P, l1, l2)
     J     = angular.angularcoeffs_general_p(h, q2, mB, mP, mb, 0, ml1, ml2)
-    J_bar = angular.angularcoeffs_general_p(h_bar, q2, mB, mP, mb, 0, ml1, ml2)
+    if l1 == l2:
+        h_bar = helicity_amps_bar(q2, wc_obj, par, B, P, l1, l2)
+        J_bar = angular.angularcoeffs_general_p(h_bar, q2, mB, mP, mb, 0, ml1, ml2)
+    else:
+        # for LFV decays, don't bother about the CP average. There is no strong phase.
+        J_bar = J
     return function(J, J_bar)
 
 def dGdq2(J):
