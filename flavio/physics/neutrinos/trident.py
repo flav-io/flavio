@@ -28,9 +28,9 @@ def R_trident(wc_obj, par):
     # coherent sum for final state nu_mu
     CA_m = CA_SM + CA_NP_m
     CV_m = CV_SM + CV_NP_m
-    sigma_SM = CA_SM**2 + CV_SM**2
+    sigma_SM = abs(CA_SM)**2 + abs(CV_SM)**2
     # SM-NP interfering only for final-state nu_mu
-    sigma_tot = CA_m**2 + CV_m**2 + CA_NP_e**2 + CV_NP_e**2 + CA_NP_t**2 + CV_NP_t**2
+    sigma_tot = abs(CA_m)**2 + abs(CV_m)**2 + abs(CA_NP_e)**2 + abs(CV_NP_e)**2 + abs(CA_NP_t)**2 + abs(CV_NP_t)**2
     return sigma_tot / sigma_SM
 
 
