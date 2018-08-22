@@ -32,7 +32,7 @@ wc_lfv.set_initial({'C10_bsemu':4., 'C10_bsmue':2.}, 160.)
 class TestBPll(unittest.TestCase):
     def test_bkll(self):
         # rough numerical test for branching ratio at high q^2 to old code
-        self.assertAlmostEqual(bpll_dbrdq2(15., wc_obj, par, 'B+', 'K+', 'mu', 'mu')/2.1824401629030333e-8, 1, delta=0.1)
+        self.assertAlmostEqual(bpll_dbrdq2(15., wc_obj, par, 'B+', 'K+', 'mu')/2.1824401629030333e-8, 1, delta=0.1)
         # test for errors
         flavio.sm_prediction('dBR/dq2(B0->Kmumu)', q2=3)
         flavio.sm_prediction('AFB(B0->Kmumu)', q2=15)
@@ -47,20 +47,3 @@ class TestBPll(unittest.TestCase):
         # LFU ratio = 1
         self.assertAlmostEqual(flavio.sm_prediction("Rmue(B+->Kll)", q2=6), 1, delta=1e-3)
         self.assertAlmostEqual(flavio.sm_prediction("Rmue(B0->Kll)", q2=6), 1, delta=1e-3)
-
-    def test_bpll_lfv(self):
-        # rough numerical test for branching ratio at high q^2 to old code
-        self.assertAlmostEqual(bpll_dbrdq2(15., wc_obj, par, 'B+', 'K+', 'mu', 'mu')/2.1824401629030333e-8, 1, delta=0.1)
-        # test for errors
-        self.assertEqual(flavio.sm_prediction('BR(B0->Kemu)'), 0)
-        self.assertEqual(flavio.sm_prediction('BR(B+->Ktaumu)'), 0)
-        self.assertEqual(flavio.sm_prediction('BR(B+->pitaumu)'), 0)
-        self.assertEqual(flavio.sm_prediction('BR(B0->pitaumu)'), 0)
-        obs_1 = flavio.classes.Observable["BR(B0->Kemu)"]
-        obs_2 = flavio.classes.Observable["BR(B0->Kmue)"]
-        self.assertEqual(obs_1.prediction_central(flavio.default_parameters, wc_sm), 0)
-        # BR(B->Kemu) should be 4 times larger as Wilson coeff is 2x the mue one
-        self.assertAlmostEqual(
-            obs_1.prediction_central(flavio.default_parameters, wc_lfv)
-            /obs_2.prediction_central(flavio.default_parameters, wc_lfv),
-            4.,  places=10)
