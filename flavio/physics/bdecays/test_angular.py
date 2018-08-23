@@ -20,7 +20,8 @@ class TestAngular(unittest.TestCase):
         ml = par['m_'+lep]
         scale = 4.8
         mb = flavio.physics.running.running.get_mb(par, scale)
-        H = flavio.physics.bdecays.bvll.amplitudes.helicity_amps_ff(q2, wc_obj, par, B, V, lep, cp_conjugate=False)
+        ff = flavio.physics.bdecays.bvll.amplitudes.get_ff(q2, par, B, V)
+        H = flavio.physics.bdecays.bvll.amplitudes.helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=False)
         # these are the angular coefficients in the "G" basis
         G = flavio.physics.bdecays.angular.angularcoeffs_general_Gbasis_v(H, q2, mB, mV, mb, 0, ml, ml)
         # these are the h coefficients of the time dependent angular distribution

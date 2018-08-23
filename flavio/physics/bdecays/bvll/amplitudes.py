@@ -22,12 +22,13 @@ def prefactor(q2, par, B, V):
     xi_t = ckm.xi('t',di_dj)(par)
     return 4*GF/sqrt(2)*xi_t*alphaem/(4*pi)
 
+
 def get_ff(q2, par, B, V):
     ff_name = meson_ff[(B,V)] + ' form factor'
     return AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=q2)
 
 
-def helicity_amps_ff(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
+def helicity_amps_ff(q2, ff, wc_obj, par_dict, B, V, lep, cp_conjugate):
     par = par_dict.copy()
     if cp_conjugate:
         par = conjugate_par(par)
@@ -42,9 +43,9 @@ def helicity_amps_ff(q2, wc_obj, par_dict, B, V, lep, cp_conjugate):
     mV = par['m_'+V]
     mb = running.get_mb(par, scale)
     N = prefactor(q2, par, B, V)
-    ff = get_ff(q2, par, B, V)
     h = angular.helicity_amps_v(q2, mB, mV, mb, 0, ml, ml, ff, wc_eff, N)
     return h
+
 
 # get spectator scattering contribution
 def get_ss(q2, wc_obj, par_dict, B, V, cp_conjugate):
@@ -65,20 +66,20 @@ def get_subleading(q2, wc_obj, par_dict, B, V, cp_conjugate):
     else:
         return {}
 
-def helicity_amps(q2, wc_obj, par, B, V, lep):
+def helicity_amps(q2, ff, wc_obj, par, B, V, lep):
     if q2 >= 8.7 and q2 < 14:
         warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
     return add_dict((
-        helicity_amps_ff(q2, wc_obj, par, B, V, lep, cp_conjugate=False),
+        helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=False),
         get_ss(q2, wc_obj, par, B, V, cp_conjugate=False),
         get_subleading(q2, wc_obj, par, B, V, cp_conjugate=False)
         ))
 
-def helicity_amps_bar(q2, wc_obj, par, B, V, lep):
+def helicity_amps_bar(q2, ff, wc_obj, par, B, V, lep):
     if q2 >= 8.7 and q2 < 14:
         warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
     return add_dict((
-        helicity_amps_ff(q2, wc_obj, par, B, V, lep, cp_conjugate=True),
+        helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=True),
         get_ss(q2, wc_obj, par, B, V, cp_conjugate=True),
         get_subleading(q2, wc_obj, par, B, V, cp_conjugate=True)
         ))
