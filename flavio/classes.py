@@ -344,31 +344,70 @@ class Constraints(object):
 
     @classmethod
     def from_yaml(cls, stream, *args, **kwargs):
+        """Class method: load constraint from a YAML string or stream."""
         data = yaml.load(stream)
         return cls.from_yaml_dict(data, *args, **kwargs)
 
     @classmethod
-    def from_yaml_dict(cls, data, pname='parameters', *args, **kwargs):
+    def from_yaml_dict(cls, data, pname='parameters', instance=None, *args, **kwargs):
+        """Class method: load constraint from a dictionary or list of dicts.
+
+        If it is a dictionary, it should have the form:
+
+        ```{
+        'metadata': {...},  # optional, do set attributes of the instance
+        'arguments': {...},  # optional, to specify keyword arguments for instantiation,
+        'constraints': [...],  # required, the list of constraints
+        }
+
+        Alternatively, the list of constraints can be directly given.
+        This list should have elements in one of the two possible forms:
+
+        1. Dictionary as returned by `Probability.get_dict`:
+        ```{
+        pname: [...],  # required, list of constrained parameters
+        'values': {
+            'distribution': '...',  # required, string identifying ProbabilityDistribution, e.g. 'normal'
+            '...': '...',  # required, any arguments for the instantiation of the ProbabilityDistribution
+            }
+        }
+        ```
+
+        2. String representing one or several (to be convolved) constraints:
+        ```{
+        'my_parameter': '1.0 ± 0.2 ± 0.1 e-3'
+        }
+        """
         if isinstance(data, dict):
             constraints = data['constraints']
             meta = data.get('metadata', {})
             arguments = data['arguments']
             kwargs.update(arguments)
-            inst = cls(*args, **kwargs)
+            inst = instance or cls(*args, **kwargs)
             for m in meta:
                 inst.__dict__[m] = meta[m]
         else:
+            inst = instance or cls(*args, **kwargs)
             constraints = data.copy()
-            inst = cls(*args, **kwargs)
         for c in constraints:
             if pname not in c:
-                raise ValueError('Key ' + pname + ' not found. '
-                                 'Please check the `pname` argument.')
-            v = c['values'].copy()
-            distname = v.pop('distribution')
-            dist = string_to_class(distname)
-            parameters = [tuple(p) if isinstance(p, list) else p for p in c[pname]]
-            inst.add_constraint(parameters, dist(**v))
+                if 'values' not in c and len(c) == 1:
+                    # this means we probably have a constraint of the
+                    # form parameter: constraint_string
+                    for k, v in c.items():  # this loop runs only once
+                        inst.set_constraint(k, v)
+                        break  # just to be sure
+                    continue
+                else:
+                    # in this case something is clearly wrong. Mabye the
+                    # wrong "pname" was used.
+                    raise ValueError('Key ' + pname + ' not found. '
+                                     'Please check the `pname` argument.')
+            else:
+                parameters = [tuple(p) if isinstance(p, list) else p for p in c[pname]]
+                pds = dict2dist(c['values'])
+                combined_pd = convolve_distributions(pds)
+                inst.add_constraint(parameters, combined_pd)
         return inst
 
 
