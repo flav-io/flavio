@@ -89,6 +89,15 @@ def fencode(f):
     return {'pickle': base64.b64encode(dill.dumps(f)).decode('utf-8')}
 
 
+def get_par_diff(par_obj):
+    """Return a dictionary representation of a ParameterConstraints instance
+    that only contains constraints that are not identical to ones in
+    `default_parameters`."""
+    dict_default = flavio.default_parameters.get_yaml_dict()
+    dict_par = par_obj.get_yaml_dict()
+    return [c for c in dict_par if c not in dict_default]
+
+
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
 
@@ -113,6 +122,7 @@ class Fit(flavio.NamedInstanceClass):
     # voluptuous schema for dumping fit to file
     _output_schema = vol.Schema({
         'name': str,
+        'par_obj': get_par_diff,
         'fit_parameters': vol.All(ensurelist, [str]),
         'nuisance_parameters': vol.All(ensurelist, [str]),
         'observables':  [lambda v: flavio.Observable.argument_format(v, format='dict')],

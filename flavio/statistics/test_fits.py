@@ -387,14 +387,14 @@ fit_wc_function:
         # don't modify parameters
         mb = flavio.default_parameters.get_central('m_b')
         fit = FastFit.load(r"""
-name: my test fit
+name: my test fit 7
 observables:
   - eps_K
         """)
         self.assertEqual(fit.par_obj.get_central('m_b'), mb)
         # modify m_b
         fit = FastFit.load(r"""
-name: my test fit
+name: my test fit 8
 par_obj:
   - m_b: 4 +- 0.2
 observables:
@@ -403,7 +403,7 @@ observables:
         self.assertEqual(fit.par_obj.get_central('m_b'), 4)
         # different way to write the same thing
         fit = FastFit.load(r"""
-name: my test fit
+name: my test fit 9
 par_obj:
 - parameters:
   - m_b
@@ -417,3 +417,20 @@ observables:
         self.assertEqual(fit.par_obj.get_central('m_b'), 4)
         # check that we haven't accidentally modified the default parameters
         self.assertEqual(flavio.default_parameters.get_central('m_b'), mb)
+
+    def test_yaml_dump_par(self):
+        # don't modify parameters
+        par = flavio.default_parameters.copy()
+        par.set_constraint('m_b', '[2,4]')
+        fit_par = FastFit('my test fit 10', observables=['eps_K'], par_obj=par)
+        dumpdict = flavio.io.yaml.load_include(fit_par.dump())
+        self.assertIn('par_obj', dumpdict)
+        self.assertEqual(len(dumpdict['par_obj']), 1)
+        self.assertDictEqual(dumpdict['par_obj'][0], {
+        'parameters': ['m_b'],
+        'values': {'distribution': 'uniform', 'central_value': 3, 'half_range': 1}
+        })
+        # default parameters
+        fit_def = FastFit('my test fit 11', observables=['eps_K'])
+        dumpdict = flavio.io.yaml.load_include(fit_def.dump())
+        self.assertNotIn('par_obj', dumpdict)
