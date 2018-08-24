@@ -95,6 +95,7 @@ class Fit(flavio.NamedInstanceClass):
     # voluptuous schema for loading fit from file
     _input_schema = vol.Schema({
         'name': str,
+        'par_obj': vol.All([dict], lambda v: flavio.ParameterConstraints.from_yaml_dict(v, instance=flavio.default_parameters.copy())),
         'fit_parameters': vol.Any(None, [str]),
         'nuisance_parameters': vol.Any(None, [str]),
         'observables':  [lambda v: flavio.Observable.argument_format(v, format='tuple')],

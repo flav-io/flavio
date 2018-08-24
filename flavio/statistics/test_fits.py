@@ -382,3 +382,38 @@ fit_wc_function:
         fit = FastFit.load(s)
         self.assertTupleEqual(fit.fit_wc_names, ('C9', 'C10'))
         self.assertDictEqual(fit.fit_wc_function(-1, 2), {'C9_bsmumu': 1, 'C10_bsmumu': 60})
+
+    def test_yaml_load_par(self):
+        # don't modify parameters
+        mb = flavio.default_parameters.get_central('m_b')
+        fit = FastFit.load(r"""
+name: my test fit
+observables:
+  - eps_K
+        """)
+        self.assertEqual(fit.par_obj.get_central('m_b'), mb)
+        # modify m_b
+        fit = FastFit.load(r"""
+name: my test fit
+par_obj:
+  - m_b: 4 +- 0.2
+observables:
+  - eps_K
+        """)
+        self.assertEqual(fit.par_obj.get_central('m_b'), 4)
+        # different way to write the same thing
+        fit = FastFit.load(r"""
+name: my test fit
+par_obj:
+- parameters:
+  - m_b
+  values:
+    - distribution: normal
+      central_value: 4
+      standard_deviation: 0.2
+observables:
+    - eps_K
+        """)
+        self.assertEqual(fit.par_obj.get_central('m_b'), 4)
+        # check that we haven't accidentally modified the default parameters
+        self.assertEqual(flavio.default_parameters.get_central('m_b'), mb)
