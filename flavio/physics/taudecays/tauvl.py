@@ -17,6 +17,8 @@ def get_wcs(wc, q, lep):
             wc['CVLR_tau{}{}'.format(lep, 2 * q)],
             wc['CVLR_{}tau{}'.format(2 * q, lep)],
             wc['CVRR_tau{}{}'.format(lep, 2 * q)],
+            wc['CTRR_{}tau{}'.format(lep, 2 * q)],
+            wc['CTRR_tau{}{}'.format(lep, 2 * q)],
         ])
 
 def br_tauvl(wc_obj, par, V, lep):
@@ -24,19 +26,31 @@ def br_tauvl(wc_obj, par, V, lep):
     scale = flavio.config['renormalization scale']['taudecays']
     sec = wcxf_sector_names['tau', lep]
     wc = wc_obj.get_wc(sec, scale, par, nf_out=4)
+    alpha = flavio.physics.running.running.get_alpha_e(par, scale, nf_out=3)
+    e = sqrt(4 * pi * alpha)
     mtau = par['m_tau']
     ml = par['m_' + lep]
     mV = par['m_' + V]
     fV = par['f_' + V]
+    fTV = par['f_perp_' + V]
+    Cgamma_taul = wc['Cgamma_tau{}'.format(lep)]
+    Cgamma_ltau = wc['Cgamma_{}tau'.format(lep)]
     if V == 'rho0':
         g_u = get_wcs(wc, 'u', lep)
         g_d = get_wcs(wc, 'd', lep)
         g = (g_u-g_d)/sqrt(2)
+        KV = 1/sqrt(2)*e
     if V == 'phi':
         g = get_wcs(wc, 's', lep)
+        KV = -1/3*e
     gL = mV*fV/2 * (g[0] + g[1])
     gR = mV*fV/2 * (g[2] + g[3])
-    return par['tau_tau'] * common.GammaFvf(mtau, mV, ml, gL, gR)
+    gTL  =  fTV * g[4].conjugate() - 2*fV*KV/mV * Cgamma_ltau.conjugate()
+    gtTL = -fTV * g[4].conjugate()
+    gTR  =  fTV * g[5] + 2*fV*KV/mV * Cgamma_taul
+    gtTR =  fTV * g[5]
+    return (par['tau_tau']
+            * common.GammaFvf(mtau, mV, ml, gL, gR, gTL, gtTL, gTR, gtTR) )
 
 
 def br_taurhol(wc_obj, par, lep):
