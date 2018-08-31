@@ -64,9 +64,11 @@ def br_taurhol(wc_obj, par, lep):
     mV = par['m_' + V]
     mtau = par['m_tau']
     x = mV**2 / mtau**2
-    pre_wc_1 = 1 / e / mtau
+    # add factor 2 in pre_wc_1 to account for definition of sigma_munu
+    pre_wc_1 = 1 / e / mtau *2
     e2DLg = e**2 * pre_wc_1 * wc['Cgamma_tau{}'.format(lep)]
-    e2DRg = e**2 * pre_wc_1 * wc['Cgamma_{}tau'.format(lep)].conjugate()
+    # add factor (-1) in e2DRg to account for adjoint F_munu
+    e2DRg = e**2 * pre_wc_1 * wc['Cgamma_{}tau'.format(lep)].conjugate() *(-1)
     F = {}
     for q in 'ud':
         F['LL' + q] = wc['CVLL_tau{}{}'.format(lep, 2 * q   )]
