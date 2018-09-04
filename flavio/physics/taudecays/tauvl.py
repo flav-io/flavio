@@ -45,7 +45,7 @@ def br_tauvl(wc_obj, par, V, lep):
         KV = -1/3*e
     gL = mV*fV/2 * (g[0] + g[1])
     gR = mV*fV/2 * (g[2] + g[3])
-    gTL  =  fTV * g[4].conjugate() - 2*fV*KV/mV * Cgamma_ltau.conjugate()
+    gTL  =  fTV * g[4].conjugate() + 2*fV*KV/mV * Cgamma_ltau.conjugate()
     gtTL = -fTV * g[4].conjugate()
     gTR  =  fTV * g[5] + 2*fV*KV/mV * Cgamma_taul
     gtTR =  fTV * g[5]
@@ -67,8 +67,7 @@ def br_taurhol(wc_obj, par, lep):
     # add factor 2 in pre_wc_1 to account for definition of sigma_munu
     pre_wc_1 = 1 / e / mtau *2
     e2DLg = e**2 * pre_wc_1 * wc['Cgamma_tau{}'.format(lep)]
-    # add factor (-1) in e2DRg to account for adjoint F_munu
-    e2DRg = e**2 * pre_wc_1 * wc['Cgamma_{}tau'.format(lep)].conjugate() *(-1)
+    e2DRg = e**2 * pre_wc_1 * wc['Cgamma_{}tau'.format(lep)].conjugate()
     F = {}
     for q in 'ud':
         F['LL' + q] = wc['CVLL_tau{}{}'.format(lep, 2 * q   )]
