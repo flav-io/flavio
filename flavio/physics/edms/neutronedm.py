@@ -10,6 +10,7 @@ def nedm_wceff(wc_obj, par):
     v2 = 1 / (sqrt(2) * par['GF'])
     md = flavio.physics.running.running.get_md(par, scale, nf_out=3)
     mu = flavio.physics.running.running.get_mu(par, scale, nf_out=3)
+    ms = flavio.physics.running.running.get_ms(par, scale, nf_out=3)
     alpha = flavio.physics.running.running.get_alpha(par, scale, nf_out=3)
     e = sqrt(4 * pi * alpha['alpha_e'])
     gs = sqrt(4 * pi * alpha['alpha_s'])
@@ -18,8 +19,10 @@ def nedm_wceff(wc_obj, par):
     pre = -4 * par['GF'] / sqrt(2) / (8 * pi**2)
     wceff['edm_d'] = pre * e * md * wc['C7_dd'].imag
     wceff['edm_u'] = pre * e * mu * wc['C7_uu'].imag
+    wceff['edm_s'] = pre * e * ms * wc['C7_ss'].imag
     wceff['cedm_d'] = pre * md * wc['C8_dd'].imag
     wceff['cedm_u'] = pre * mu * wc['C8_uu'].imag
+    wceff['cedm_s'] = pre * ms * wc['C8_ss'].imag
     wceff['Gtilde'] = wc['CGtilde']
     return wceff
 
@@ -30,8 +33,10 @@ def nedm(wc_obj, par):
     # quark EDM & CEDM contributions
     d += par['nEDM gT_d'] * wceff['edm_d']
     d += par['nEDM gT_u'] * wceff['edm_u']
+    d += par['nEDM gT_s'] * wceff['edm_s']
     d += par['nEDM ~rho_d'] * wceff['cedm_d']
     d += par['nEDM ~rho_u'] * wceff['cedm_u']
+    d += par['nEDM ~rho_s'] * wceff['cedm_s']
     d += par['nEDM beta_G'] * wceff['Gtilde']
     return abs(d)
 
