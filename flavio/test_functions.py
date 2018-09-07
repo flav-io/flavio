@@ -1,7 +1,10 @@
 import unittest
+import numpy.testing as npt
 import flavio
 from flavio.classes import Observable, Prediction
 from flavio.functions import get_dependent_parameters_sm
+import copy
+import numpy as np
 
 class TestFunctions(unittest.TestCase):
     def test_functions(self):
@@ -34,3 +37,40 @@ class TestFunctions(unittest.TestCase):
         get_dependent_parameters_sm('<dBR/dq2>(B+->Kmumu)', 3, 5)
         get_dependent_parameters_sm('dBR/dq2(B+->Kmumu)', q2=3)
         get_dependent_parameters_sm('<dBR/dq2>(B+->Kmumu)', q2min=3, q2max=5)
+
+    def test_sm_covariance(self):
+        o1 = Observable( 'test_obs 1' )
+        o2 = Observable( 'test_obs 2' )
+        def f1(wc_obj, par_dict):
+            return par_dict['m_b']
+        def f2(wc_obj, par_dict):
+            return par_dict['m_c']
+        Prediction('test_obs 1', f1)
+        Prediction('test_obs 2', f2)
+        cov_par = np.array([[0.1**2, 0.1*0.2*0.3], [0.1*0.2*0.3, 0.2**2]])
+        d = flavio.statistics.probability.MultivariateNormalDistribution([4.2, 1.2], covariance=cov_par)
+        par = copy.deepcopy(flavio.parameters.default_parameters)
+        par.add_constraint(['m_b', 'm_c'], d)
+        # test serial
+        np.random.seed(135)
+        cov = flavio.sm_covariance(['test_obs 1', 'test_obs 2'],
+                                   N=1000, par_vary='all', par_obj=par)
+        npt.assert_array_almost_equal(cov, cov_par, decimal=3)
+        # test parallel
+        np.random.seed(135)
+        cov_parallel = flavio.sm_covariance(['test_obs 1', 'test_obs 2'],
+                                   N=1000, par_vary='all', par_obj=par,
+                                   threads=4)
+        npt.assert_array_equal(cov, cov_parallel)
+        np.random.seed(135)
+        cov_1 = flavio.sm_covariance(['test_obs 1'],
+                                   N=1000, par_vary='all', par_obj=par)
+        # test with single observable
+        npt.assert_array_almost_equal(cov_1, cov[0, 0])
+        # test with fixed parameter
+        cov_f = flavio.sm_covariance(['test_obs 1', 'test_obs 2'],
+                                   N=1000, par_vary=['m_b'], par_obj=par)
+        npt.assert_array_almost_equal(cov_f, [[cov_par[0, 0], 0], [0, 0]], decimal=3)
+        # delete dummy instances
+        Observable.del_instance('test_obs 1')
+        Observable.del_instance('test_obs 2')

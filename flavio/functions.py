@@ -5,6 +5,8 @@ import flavio
 import numpy as np
 from collections import defaultdict
 from multiprocessing import Pool
+from functools import partial
+
 
 def np_prediction(obs_name, wc_obj, *args, **kwargs):
     """Get the central value of the new physics prediction of an observable.
@@ -189,8 +191,19 @@ def sm_error_budget(obs_name, *args, N=50, **kwargs):
         individual_errors[key] = np.std(all_pred)/abs(pred_central)
     return individual_errors
 
-def sm_covariance(obs_list, N=100, par_vary='all', **kwargs):
-    """Get the covariance matrix of the Standard Model predictions for a
+
+def _get_prediction_array_sm(par, obs_list):
+    wc_sm = flavio.physics.eft._wc_sm
+    def get_prediction_sm(obs, par):
+        obs_dict = flavio.classes.Observable.argument_format(obs, 'dict')
+        obs_obj = flavio.classes.Observable[obs_dict.pop('name')]
+        return obs_obj.prediction_par(par, wc_sm, **obs_dict)
+    return np.array([get_prediction_sm(obs, par) for obs in obs_list])
+
+
+def sm_covariance(obs_list, N=100, par_vary='all', par_obj=None, threads=1,
+                  **kwargs):
+    r"""Get the covariance matrix of the Standard Model predictions for a
     list of observables.
 
     Parameters
@@ -201,38 +214,41 @@ def sm_covariance(obs_list, N=100, par_vary='all', **kwargs):
     of a string and values for the arguements the observable depends on (e.g.
     the values of `q2min` and `q2max` for a binned observable)
     - `N` (optional): number of random evaluations of the observables.
-    The relative accuracy of the uncertainties returned is given by $1/\sqrt{2N}$.
-    - `par_vary`: a list of parameters to vary. Defaults to 'all', i.e. all
+    The relative accuracy of the uncertainties returned is given
+    by $1/\sqrt{2N}$.
+    - `par_vary` (optional): a list of parameters to vary. Defaults to 'all', i.e. all
     parameters are varied according to their probability distributions.
+    - `par_obj` (optional): an instance of ParameterConstraints, defaults to
+    flavio.default_parameters.
+    - `threads` (optional): number of CPU threads to use for the computation.
+    Defaults to 1, i.e. serial computation.
     """
-    wc_sm = flavio.physics.eft._wc_sm
-    par_central_all = flavio.default_parameters.get_central_all()
-    # par_random_all = [flavio.default_parameters.get_random_all() for i in range(N)]
-    par_random_all = flavio.default_parameters.get_random_all(size=N)
+    par_obj = par_obj or flavio.default_parameters
+    par_central_all = par_obj.get_central_all()
+    par_random_all = par_obj.get_random_all(size=N)
+
     def par_random_some(par_random, par_central):
-        # take the central values for the parameters not to be varied
-        par1 = {k: v for k, v in par_central.items() if k not in par_vary}
+        # take the central values for the parameters not to be varied (N times)
+        par1 = {k: np.full(N, v) for k, v in par_central.items() if k not in par_vary}
         # take the random values for the parameters to be varied
         par2 = {k: v for k, v in par_random.items() if k in par_vary}
-        par1.update(par2) # merge them
+        par1.update(par2)  # merge them
         return par1
+
     if par_vary == 'all':
         par_random = par_random_all
         par_random = [{k: v[i] for k, v in par_random.items()} for i in range(N)]
     else:
         par_random = par_random_some(par_random_all, par_central_all)
         par_random = [{k: v[i] for k, v in par_random.items()} for i in range(N)]
-    def get_prediction(obs, par):
-        if isinstance(obs, str):
-             obs_obj = flavio.classes.Observable[obs]
-             return obs_obj.prediction_par(par, wc_sm, **kwargs)
-        elif isinstance(obs, tuple):
-             obs_obj = flavio.classes.Observable[obs[0]]
-             return obs_obj.prediction_par(par, wc_sm, *obs[1:], **kwargs)
-    all_pred = np.array([
-        [get_prediction(obs, par)
-            for par in par_random
-        ]
-        for obs in obs_list
-    ])
-    return np.cov(all_pred)
+
+    func_map = partial(_get_prediction_array_sm, obs_list=obs_list)
+    if threads == 1:
+        pred_map = map(func_map, par_random)
+    else:
+        pool = Pool(threads)
+        pred_map = pool.map(func_map, par_random)
+        pool.close()
+        pool.join()
+    all_pred = np.array(list(pred_map))
+    return np.cov(all_pred.T)
