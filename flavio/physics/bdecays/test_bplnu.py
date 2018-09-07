@@ -19,6 +19,10 @@ class TestBVll(unittest.TestCase):
         flavio.sm_prediction('Rtaumu(B->pilnu)')
         flavio.sm_prediction('<Rtaumu>(B->Dlnu)', 15, 16)
 
+    def test_bdtau_binned(self):
+        # for the full kinematical range, it should integrate to 1
+        self.assertAlmostEqual(
+            flavio.sm_prediction('<BR>/BR(B->Dtaunu)', 3, 23), 1, delta=0.01)
 
     def test_bplnu_nu(self):
         wc_sm = flavio.WilsonCoefficients()

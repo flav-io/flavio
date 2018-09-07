@@ -83,3 +83,8 @@ class TestBVll(unittest.TestCase):
                                flavio.sm_prediction('dBR_L/dq2(B0->D*enu)', q2=3) +
                                flavio.sm_prediction('dBR_T/dq2(B0->D*enu)', q2=3),
                                places=10)
+
+    def test_bdstau_binned(self):
+        # for the full kinematical range, it should integrate to 1
+        self.assertAlmostEqual(
+            flavio.sm_prediction('<BR>/BR(B->D*taunu)', 3.1, 11.7), 1, delta=0.03)
