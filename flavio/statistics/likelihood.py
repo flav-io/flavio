@@ -326,13 +326,7 @@ class MeasurementCovariance(object):
             our_obs = set(m_obj.all_parameters).intersection(ml.observables)
             # construct a dict. containing a vector of N random values for
             # each of these observables
-            random_dict = {}
-            for obs in our_obs:
-                random_dict[obs] = np.zeros(N)
-            for i in range(N):
-                m_random = m_obj.get_random_all()
-                for obs in our_obs:
-                    random_dict[obs][i] = m_random[obs]
+            random_dict = m_obj.get_random_all(size=N)
             random_arr = np.zeros((len(ml.observables), N))
             for i, obs in enumerate(ml.observables):
                 if obs in our_obs:
