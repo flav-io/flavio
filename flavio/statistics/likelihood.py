@@ -463,7 +463,7 @@ class FastLikelihood(NamedInstanceClass, iio.YAMLLoadable):
         'include_measurements': vol.Any(None, [str]),
     }
 
-    _input_schema_dict = {
+    _output_schema_dict = {
         'name': str,
         'par_obj': iio.get_par_diff,
         'fit_parameters': vol.Any(iio.ensurelist, [str]),
@@ -476,7 +476,7 @@ class FastLikelihood(NamedInstanceClass, iio.YAMLLoadable):
     def __init__(self, name,
                  par_obj=flavio.default_parameters,
                  fit_parameters=None,
-                 nuisance_parameters=None,
+                 nuisance_parameters='all',
                  observables=None,
                  exclude_measurements=None,
                  include_measurements=None,
@@ -484,7 +484,10 @@ class FastLikelihood(NamedInstanceClass, iio.YAMLLoadable):
         self.par_obj = par_obj
         self.parameters_central = self.par_obj.get_central_all()
         self.fit_parameters = fit_parameters or []
-        self.nuisance_parameters = nuisance_parameters or []
+        if nuisance_parameters == 'all':
+            self.nuisance_parameters = self.par_obj.all_parameters
+        else:
+            self.nuisance_parameters = nuisance_parameters or []
         self.observables = observables
         self.exclude_measurements = exclude_measurements
         self.include_measurements = include_measurements

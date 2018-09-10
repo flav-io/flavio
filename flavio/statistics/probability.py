@@ -602,7 +602,7 @@ class GammaDistributionPositive(ProbabilityDistribution):
 
     def get_random(self, size=None):
         if size is None:
-            return self._get_random()
+            return self._get_random(size=size)
         else:
             # some iteration necessary as discarding negative values
             # might lead to too small size

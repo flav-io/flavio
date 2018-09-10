@@ -220,6 +220,8 @@ class Constraints(object):
             carr = random_constraints[constraint]
             if size is None and num == 0 and np.isscalar(carr):
                 random_dict[parameter] = carr
+            elif size is None and num == 0 and carr.shape == tuple():
+                random_dict[parameter] = carr
             elif size is None:
                 random_dict[parameter] = carr[num]
             elif carr.shape == (size,) and num == 0:
