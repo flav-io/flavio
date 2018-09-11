@@ -13,7 +13,7 @@ class MeasurementLikelihood(iio.YAMLLoadable):
     """docstring for MeasurementLikelihood."""
 
     _input_schema_dict = {
-        'observables':  [iio.coerce_observable_tuple],
+        'observables':  vol.All([iio.coerce_observable_tuple], iio.list_deduplicate),
         'exclude_measurements': vol.Any(None, [str]),
         'include_measurements': vol.Any(None, [str]),
     }
@@ -182,7 +182,7 @@ class Likelihood(iio.YAMLLoadable):
     _input_schema_dict = {
         'par_obj': vol.All([dict], iio.coerce_par_obj),
         'fit_parameters': vol.Any(iio.ensurelist, [str]),
-        'observables':  [iio.coerce_observable_tuple],
+        'observables':  vol.All([iio.coerce_observable_tuple], iio.list_deduplicate),
         'exclude_measurements': vol.Any(iio.ensurelist, [str]),
         'include_measurements': vol.Any(iio.ensurelist, [str]),
     }
@@ -298,9 +298,9 @@ class SMCovariance(object):
         assert len(permutation) == len(self.observables), \
             "Covariance matrix does not contain all necessary entries"
         if len(permutation) == 1:
-            self._sm_covariance = d['covariance']
+            self._cov = d['covariance']
         else:
-            self._sm_covariance = d['covariance'][permutation][:, permutation]
+            self._cov = d['covariance'][permutation][:, permutation]
 
 
 class MeasurementCovariance(object):
@@ -452,7 +452,7 @@ class FastLikelihood(NamedInstanceClass, iio.YAMLLoadable):
         'par_obj': vol.All([dict], iio.coerce_par_obj),
         'fit_parameters': vol.Any(None, [str]),
         'nuisance_parameters': vol.Any(None, [str]),
-        'observables':  [iio.coerce_observable_tuple],
+        'observables':  vol.All([iio.coerce_observable_tuple], iio.list_deduplicate),
         'exclude_measurements': vol.Any(None, [str]),
         'include_measurements': vol.Any(None, [str]),
     }

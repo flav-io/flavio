@@ -147,3 +147,10 @@ def wc_function_factory(d):
     if not callable(f):
         raise ValueError("Function code not understood")
     return f
+
+
+def list_deduplicate(lst):
+    """Remove duplicate elements from a list but keep the order
+    (keep the first occuring element of duplicates). List elements must be
+    hashable."""
+    return list(OrderedDict.fromkeys(lst))
