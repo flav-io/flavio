@@ -899,7 +899,7 @@ CMS B->K*mumu 2015 4.3-6:
       value: 0.01 ± 0.15 ± 0.03
 
 # Note that this combination supersedes *both* 'CMS B->K*mumu 2013' *and* 'CMS B->K*mumu 2015'
-CMS B->K*mumu 2013 combined with 2015:
+CMS B->K*mumu 2013 combined with 2015 BR:
   experiment: CMS
   inspire: Khachatryan:2015isa
   url: https://twiki.cern.ch/twiki/bin/view/CMSPublic/PhysicsResultsBPH13010
@@ -928,6 +928,14 @@ CMS B->K*mumu 2013 combined with 2015:
       q2min: 16
       q2max: 19
       value: 4.3 ± 0.4 1e-8
+
+
+# Note that this combination supersedes *both* 'CMS B->K*mumu 2013' *and* 'CMS B->K*mumu 2015'
+CMS B->K*mumu 2013 combined with 2015:
+  experiment: CMS
+  inspire: Khachatryan:2015isa
+  url: https://twiki.cern.ch/twiki/bin/view/CMSPublic/PhysicsResultsBPH13010
+  values:
     - name: <FL>(B0->K*mumu)
       q2min: 1
       q2max: 2
