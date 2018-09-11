@@ -10,7 +10,20 @@ from flavio.io import instanceio as iio
 
 
 class MeasurementLikelihood(iio.YAMLLoadable):
-    """docstring for MeasurementLikelihood."""
+    """A `MeasurementLikelihood` provides a likelihood function from
+    experimental measurements.
+
+    Methods:
+
+    - `get_predictions_par`: Return a dictionary of SM predictions for the
+    observables of interest
+    - `log_likelihood_pred`: The likelihood as a function of the predictions
+    - `log_likelihood_par`: The likelihood as a function of parameters and
+    Wilson coefficients
+
+    Instances can be imported and exported from/to YAML using the `load`
+    and `dump` methods.
+    """
 
     _input_schema_dict = {
         'observables':  vol.All([iio.coerce_observable_tuple], iio.list_deduplicate),
@@ -28,6 +41,20 @@ class MeasurementLikelihood(iio.YAMLLoadable):
                  exclude_measurements=None,
                  include_measurements=None,
                  include_pseudo_measurements=False):
+        """Initialize the instance.
+
+        Parameters:
+        - `observables`: list of observables (tuples or strings)
+        - `exclude_measurements`: list of measurement names to exclude
+        (default: none ar excluded)
+        - `include_measurements`: list of measurement names to include
+        (default: all are included)
+
+        Only one of `exclude_measurements` or `include_measurements` should
+        be specified. By default, all existing instances of
+        `flavio.Measurements` are included as constraints (except if they
+        carry 'Pseudo-measurement' in their name).
+        """
         super().__init__()
         self.observables = observables
         self.exclude_measurements = exclude_measurements
@@ -132,15 +159,25 @@ class MeasurementLikelihood(iio.YAMLLoadable):
 
     def log_likelihood_par(self, par_dict, wc_obj):
         """Return the logarithm of the likelihood function as a function of
-        a parameter dictionary `par_dict`and WilsonCoefficient instance
+        a parameter dictionary `par_dict` and WilsonCoefficient instance
         `wc_obj`"""
         predictions = self.get_predictions_par(par_dict, wc_obj)
         return self.log_likelihood_pred(predictions)
 
 
 class ParameterLikelihood(iio.YAMLLoadable):
-    """docstring for ParameterLikelihood."""
+    """A `ParameterLikelihood` provides a likelihood function in terms of
+    parameters.
 
+    Methods:
+
+    - `log_likelihood_par`: The likelihood as a function of the parameters
+    - `get_central`: get an array with the parameters' central values
+    - `get_random`: get an array with random values for the parameters
+
+    Instances can be imported and exported from/to YAML using the `load`
+    and `dump` methods.
+    """
     _input_schema_dict = {
         'par_obj': vol.All([dict], iio.coerce_par_obj),
         'parameters': vol.Any(None, [str]),
@@ -154,30 +191,57 @@ class ParameterLikelihood(iio.YAMLLoadable):
     def __init__(self,
                  par_obj=flavio.default_parameters,
                  parameters=None):
+        """Initialize the instance.
+
+        Parameters:
+
+        - `par_obj`: an instance of `ParameterConstraints` (defaults to
+        `flavio.default_parameters`)
+        - parameters: a list of parameters whose constraints should be taken
+        into account in the likelihood.
+        """
         self.par_obj = par_obj
         self.parameters = parameters
         self.parameters_central = self.par_obj.get_central_all()
 
     def log_likelihood_par(self, par_dict):
-        """Return the prior probability for all fit parameters"""
+        """Return the prior probability for all parameters.
+
+        Note that only the parameters in `self.parameters` will give a
+        contribution to the likelihood."""
         exclude_parameters = list(set(self.par_obj._parameters.keys())-set(self.parameters))
         prob_dict = self.par_obj.get_logprobability_all(par_dict, exclude_parameters=exclude_parameters)
         return sum([p for obj, p in prob_dict.items()])
 
     @property
     def get_central(self):
-        """Return a numpy array with the central values of all nuisance parameters."""
+        """Return a numpy array with the central values of all parameters."""
         return np.asarray([self.parameters_central[p] for p in self.parameters])
 
     @property
     def get_random(self):
-        """Return a numpy array with random values for all nuisance parameters."""
+        """Return a numpy array with random values for all parameters."""
         all_random = self.par_obj.get_random_all()
         return np.asarray([all_random[p] for p in self.parameters])
 
 
 class Likelihood(iio.YAMLLoadable):
-    """Base class for likelihoods."""
+    """A `Likelihood` provides a likelihood function consisting of a
+    contribution from experimental measurements and a contribution from
+    parameters.
+
+    Methods:
+
+    - `log_prior_fit_parameters`: The parameter contribution to the
+    log-likelihood
+    - `log_likelihood_exp`: The experimental contribution to the
+    log-likelihood
+    - `log_likelihood`: The total log-likelihood that is the sum of the
+    parameter and the experimental contribution
+
+    Instances can be imported and exported from/to YAML using the `load`
+    and `dump` methods.
+    """
 
     _input_schema_dict = {
         'par_obj': vol.All([dict], iio.coerce_par_obj),
@@ -219,20 +283,37 @@ class Likelihood(iio.YAMLLoadable):
             parameters=fit_parameters)
 
     def log_prior_fit_parameters(self, par_dict):
+        """Parameter contribution to the log-likelihood."""
         if not self.fit_parameters:
             return 0  # nothing to do
         return self.parameter_likelihood.log_likelihood_par(par_dict)
 
     def log_likelihood_exp(self, par_dict, wc_obj):
+        """Experimental contribution to the log-likelihood."""
         return self.measurement_likelihood.log_likelihood_par(par_dict, wc_obj)
 
     def log_likelihood(self, par_dict, wc_obj):
-            return self.log_prior_fit_parameters(par_dict) + self.log_likelihood_exp(par_dict, wc_obj)
+        """Total log-likelihood.
+
+        Parameters:
+        - `par_dict`: a dictionary of parameter values
+        - `wc_obj`: an instance of `WilsonCoefficients` or `wilson.Wilson`
+        """
+        return self.log_prior_fit_parameters(par_dict) + self.log_likelihood_exp(par_dict, wc_obj)
 
 
 class SMCovariance(object):
     """Class to compute, save, and load a covariance matrix of SM
-    predictions."""
+    predictions.
+
+    Methods:
+
+    - `compute`: Compute the covariance
+    - `get`: Compute the covariance if necessary, otherwise return cached one
+    - `save`: Save the covariance to a file
+    - `load`: Load the covariance from a file
+    - `load_dict`: Load the covariance from a dictionary
+    """
 
     def __init__(self, observables, *,
                  vary_parameters='all', par_obj=None):
@@ -250,6 +331,8 @@ class SMCovariance(object):
         self._cov = None
 
     def compute(self, N, threads):
+        """Compute the covariance for `N` random values, using `threads`
+        CPU threads."""
         return flavio.sm_covariance(obs_list=self.observables,
                                     N=N,
                                     par_vary=self.vary_parameters,
@@ -257,6 +340,11 @@ class SMCovariance(object):
                                     threads=threads)
 
     def get(self, N=100, threads=1, force=True):
+        """Compute the covariance for `N` random values (default: 100),
+        using `threads` CPU threads (default: 1).
+
+        If `force` is False, return a cached version if it exists.
+        """
         if self._cov is None or force:
             self._cov = self.compute(N=N, threads=threads)
         elif N != 100:
@@ -268,7 +356,9 @@ class SMCovariance(object):
     def save(self, filename):
         """Save the SM covariance to a pickle file.
 
-        The covariance must have been computed before using `get` or `compute`."""
+        The covariance must have been computed before using `get` or
+        `compute`.
+        """
         if self._cov is None:
             raise ValueError("Call `get` or `compute` first.")
         with open(filename, 'wb') as f:
@@ -285,11 +375,12 @@ class SMCovariance(object):
     def load_dict(self, d):
         """Load the SM covariance from a dictionary.
 
-        It must have the form {'observables': [...], 'covariance': [[...]]}
+        It must have the form `{'observables': [...], 'covariance': [[...]]}`
         where 'covariance' is a covariance matrix in the basis of observables
         given by 'observables' which must at least contain all the observables
         involved in the fit. Additional observables will be ignored; the
-        ordering is arbitrary."""
+        ordering is arbitrary.
+        """
         obs = d['observables']
         try:
             permutation = [obs.index(o) for o in self.observables]
@@ -305,7 +396,16 @@ class SMCovariance(object):
 
 class MeasurementCovariance(object):
     """Class to compute, save, and load a covariance matrix and the central
-    values of experimental measurements."""
+    values of experimental measurements.
+
+    Methods:
+
+    - `compute`: Compute the covariance
+    - `get`: Compute the covariance if necessary, otherwise return cached one
+    - `save`: Save the covariance to a file
+    - `load`: Load the covariance from a file
+    - `load_dict`: Load the covariance from a dictionary
+    """
 
     def __init__(self, measurement_likelihood):
         """Initialize the class.
@@ -317,6 +417,7 @@ class MeasurementCovariance(object):
         self._central_cov = None
 
     def compute(self, N):
+        """Compute the covariance for `N` random values."""
         ml = self.measurement_likelihood
         means = []
         covariances = []
@@ -364,6 +465,10 @@ class MeasurementCovariance(object):
             return weighted_mean, weighted_covariance
 
     def get(self, N=5000, force=True):
+        """Compute the covariance for `N` random values (default: 5000).
+
+        If `force` is False, return a cached version if it exists.
+        """
         if self._central_cov is None or force:
             self._central_cov = self.compute(N=N)
         elif N != 5000:
@@ -398,7 +503,7 @@ class MeasurementCovariance(object):
         dictionary.
 
         It must have the form
-        {'observables': [...], 'central': [...], 'covariance': [[...]]}
+        `{'observables': [...], 'central': [...], 'covariance': [[...]]}`
         where 'central' is a vector of central values and 'covariance' is a
         covariance matrix, both in the basis of observables given by
         'observables' which must at least contain all the observables
@@ -425,11 +530,13 @@ class MeasurementCovariance(object):
 
 
 class FastLikelihood(NamedInstanceClass, iio.YAMLLoadable):
-    r"""A fit class that is meant for producing fast likelihood contour plots.
+    """A variant (but not subclass) of `Likelihood` where some or all
+    of the parameters have been "integrated out" and their theoretical
+    uncertainties combined with the experimental uncertainties into
+    a multivariate Gaussian "pseudo measurement".
 
-    Calling the method `make_measurement`, a pseudo-measurement is generated
-    that combines the actual experimental measurements with the theoretical
-    uncertainties stemming from the nuisance parameters. This is done by
+    The pseuo measurement is generated by calling the method `make_measurement`.
+    This is done by
     generating random samples of the nuisance parameters and evaluating all
     observables within the Standard Model many times (100 by default).
     Then, the covariance of all predictions is extracted. Similarly, a covariance
@@ -445,6 +552,24 @@ class FastLikelihood(NamedInstanceClass, iio.YAMLLoadable):
     - all uncertainties - experimental and theoretical - are treated as Gaussian
     - the theoretical uncertainties in the presence of new physics are assumed
       to be equal to the ones in the SM
+
+    Methods:
+
+    - `make_measurement`: Generate the pseudo measurement
+    - `log_likelihood`: The log-likelihood function
+
+    Important attributes/properties:
+
+    - `likelihood`: the `Likelihood` instance based on the pseudo measurement
+    - `full_measurement_likelihood`: the `MeasurementLikelihood` instance based
+    on the original measurements
+    - `sm_covariance`: the `SMCovariance` instance (that can be used to load
+    and save the SM covariance matrix)
+    - `exp_covariance`: the `MeasurementCovariance` instance (that can be used
+    to load and save the experimental covariance matrix)
+
+    Instances can be imported and exported from/to YAML using the `load`
+    and `dump` methods.
     """
 
     _input_schema_dict = {
@@ -499,7 +624,7 @@ class FastLikelihood(NamedInstanceClass, iio.YAMLLoadable):
         NamedInstanceClass.__init__(self, name)
 
     def make_measurement(self, N=100, Nexp=5000, threads=1, force=False, force_exp=False):
-        """Initialize the fit by producing a pseudo-measurement containing both
+        """Initialize the likelihood by producing a pseudo-measurement containing both
         experimental uncertainties as well as theory uncertainties stemming
         from nuisance parameters.
 
@@ -544,4 +669,10 @@ class FastLikelihood(NamedInstanceClass, iio.YAMLLoadable):
         return self._likelihood
 
     def log_likelihood(self, par_dict, wc_obj):
+        """Log-likelihood function.
+
+        Parameters:
+        - `par_dict`: a dictionary of parameter values
+        - `wc_obj`: an instance of `WilsonCoefficients` or `wilson.Wilson`
+        """
         return self.likelihood.log_likelihood_exp(par_dict, wc_obj)
