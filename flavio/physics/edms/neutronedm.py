@@ -1,28 +1,19 @@
 r"""Electric dipole moment of the neutron."""
 
 import flavio
-from flavio.config import config
-from math import pi, sqrt
+from .common import edm_f, cedm_f
 
 
 def nedm_wceff(wc_obj, par):
-    scale = config['renormalization scale']['nEDM']
-    v2 = 1 / (sqrt(2) * par['GF'])
-    md = flavio.physics.running.running.get_md(par, scale, nf_out=3)
-    mu = flavio.physics.running.running.get_mu(par, scale, nf_out=3)
-    ms = flavio.physics.running.running.get_ms(par, scale, nf_out=3)
-    alpha = flavio.physics.running.running.get_alpha(par, scale, nf_out=3)
-    e = sqrt(4 * pi * alpha['alpha_e'])
-    gs = sqrt(4 * pi * alpha['alpha_s'])
     wc = wc_obj.get_wc('dF=0', scale=2, par=par, eft='WET-3', basis='flavio')
     wceff = {}
-    pre = -4 * par['GF'] / sqrt(2) / (8 * pi**2)
-    wceff['edm_d'] = pre * e * md * wc['C7_dd'].imag
-    wceff['edm_u'] = pre * e * mu * wc['C7_uu'].imag
-    wceff['edm_s'] = pre * e * ms * wc['C7_ss'].imag
-    wceff['cedm_d'] = pre * md * wc['C8_dd'].imag
-    wceff['cedm_u'] = pre * mu * wc['C8_uu'].imag
-    wceff['cedm_s'] = pre * ms * wc['C8_ss'].imag
+    opt = dict(par=par, wc=wc, scale=2, eft='WET-3')
+    wceff['edm_d'] = edm_f(f='d', **opt)
+    wceff['edm_u'] = edm_f(f='u', **opt)
+    wceff['edm_s'] = edm_f(f='s', **opt)
+    wceff['cedm_d'] = cedm_f(f='d', **opt)
+    wceff['cedm_u'] = cedm_f(f='u', **opt)
+    wceff['cedm_s'] = cedm_f(f='s', **opt)
     wceff['Gtilde'] = wc['CGtilde']
     return wceff
 
