@@ -63,9 +63,9 @@ _f_val_19 = _f_array[:,5].reshape(11,11,51) + 1j*_f_array[:,6].reshape(11,11,51)
 _f_val_27 = _f_array[:,7].reshape(11,11,51) + 1j*_f_array[:,8].reshape(11,11,51)
 _f_val_29 = _f_array[:,9].reshape(11,11,51) + 1j*_f_array[:,10].reshape(11,11,51)
 _F_17 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_17, bounds_error=False, fill_value=None)
-_F_19 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_19, bounds_error=False, fill_value=None)
+_sh_F_19 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_19, bounds_error=False, fill_value=None)
 _F_27 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_27, bounds_error=False, fill_value=None)
-_F_29 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_29, bounds_error=False, fill_value=None)
+_sh_F_29 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_29, bounds_error=False, fill_value=None)
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def F_17(muh, z, sh):
@@ -87,7 +87,9 @@ def F_19(muh, z, sh):
     - `z` is $z=m_c^2/m_b^2$,
     - `sh` is $\hat s=q^2/m_b^2$.
     """
-    return _F_19([muh, z, sh])[0]
+    if sh == 0:
+        return 0
+    return _sh_F_19([muh, z, sh])[0] / sh
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def F_27(muh, z, sh):
@@ -109,7 +111,9 @@ def F_29(muh, z, sh):
     - `z` is $z=m_c^2/m_b^2$,
     - `sh` is $\hat s=q^2/m_b^2$.
     """
-    return _F_29([muh, z, sh])[0]
+    if sh == 0:
+        return 0
+    return _sh_F_29([muh, z, sh])[0] / sh
 
 
 def F_89(Ls, sh):
