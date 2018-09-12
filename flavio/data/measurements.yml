@@ -23,17 +23,11 @@ BaBar Btautau 2005:
   values:
     BR(B0->tautau): < 4.1e-3 @ 90% CL
 
-# Here the measured total BR is converted to the binned differential BR
-# by dividing the experimental number by the bin width (12 GeV^2),
-# taken to cover the entire kinematically allowed range.
 BaBar BKtautau 2016:
   experiment: BaBar
   inspire: TheBaBar:2016xwe
   values:
-    - name: <dBR/dq2>(B+->Ktautau)
-      q2min: 12
-      q2max: 24
-      value: (0.109167 +0.055 -0.0508333 +0.0291667 -0.0208333) e-3
+    BR(B+->Ktautau): (1.31 + 0.66 - 0.61 + 0.35 - 0.25) e-3
 
 B->Xgamma WA 2017:
   inspire: Misiak:2017bgg

@@ -58,7 +58,7 @@ def helicity_amps_ff(q2, wc_obj, par_dict, B, P, lep, cp_conjugate):
     return h
 
 def helicity_amps(q2, wc_obj, par, B, P, lep):
-    if q2 >= 8.7 and q2 < 14:
+    if q2 >= 8.7 and q2 < 14 and lep != 'tau':
         warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
     return add_dict((
         helicity_amps_ff(q2, wc_obj, par, B, P, lep, cp_conjugate=False),
@@ -66,7 +66,7 @@ def helicity_amps(q2, wc_obj, par, B, P, lep):
         ))
 
 def helicity_amps_bar(q2, wc_obj, par, B, P, lep):
-    if q2 >= 8.7 and q2 < 14:
+    if q2 >= 8.7 and q2 < 14 and lep != 'tau':
         warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
     return add_dict((
         helicity_amps_ff(q2, wc_obj, par, B, P, lep, cp_conjugate=True),
@@ -251,6 +251,15 @@ for l in ['e', 'mu', 'tau']:
         _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, bpll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['P'], l))
+
+        # only for tau: total branching ratio
+        if l == 'tau':
+            _obs_name = "BR("+M+l+l+")"
+            _obs = Observable(name=_obs_name)
+            _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
+            _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
+            _obs.add_taxonomy(_process_taxonomy)
+            Prediction(_obs_name, bpll_dbrdq2_tot_func(_hadr[M]['B'], _hadr[M]['P'], l))
 
 # Lepton flavour ratios
 for l in [('mu','e'), ('tau','mu'),]:

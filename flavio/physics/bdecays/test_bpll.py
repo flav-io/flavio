@@ -47,3 +47,8 @@ class TestBPll(unittest.TestCase):
         # LFU ratio = 1
         self.assertAlmostEqual(flavio.sm_prediction("Rmue(B+->Kll)", q2=6), 1, delta=1e-3)
         self.assertAlmostEqual(flavio.sm_prediction("Rmue(B0->Kll)", q2=6), 1, delta=1e-3)
+
+    def test_bktautau(self):
+        brbin = flavio.sm_prediction('<dBR/dq2>(B+->Ktautau)', 12, 24)
+        brtot = flavio.sm_prediction('BR(B+->Ktautau)')
+        self.assertAlmostEqual(brtot / brbin, 12, delta=0.1)
