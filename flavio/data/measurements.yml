@@ -13,9 +13,16 @@ HFLAV rad 2018:
   inspire: Amhis:2016xyh
   url: http://www.slac.stanford.edu/xorg/hflav/rare/May2018/radll/OUTPUT/TABLES/PDF/radll.pdf
   values:
+    # note that B+->taunu is wrong in this file! See (correct) PDG average below.
     BR(B+->enu): < 0.98e-6 @ 90% CL
     BR(B+->munu): < 1.0e-6 @ 90% CL
-    BR(B+->taunu): (144 ± 31) e-6
+
+PDG B->taunu 2018:
+  experiment: PDG
+  url: http://pdglive.lbl.gov/BranchingRatio.action?desig=184&parCode=S041
+  inspire:
+  values:
+    BR(B+->taunu): (1.09 ± 0.24) e-4
 
 BaBar Btautau 2005:
   experiment: BaBar
