@@ -263,6 +263,21 @@ class Constraints(object):
                                      np.ravel([errors_left[idx]])[num])
         return error_dict
 
+    def get_logprobability_single(self, parameter, value):
+        """Return a dictionary with the logarithm of the probability for each
+        constraint/probability distribution for a given value of a
+        single parameter.
+        """
+        num, constraint = self._parameters[parameter]
+        parameters = OrderedDict(self._constraints)[constraint]
+        if len(parameters) == 1:
+            return constraint.logpdf(value)
+        else:
+            # for multivariate distributions
+            exclude = tuple(i for i, p in enumerate(parameters)
+                            if p != parameter)
+            return constraint.logpdf([value], exclude=exclude)
+
     def get_logprobability_all(self, par_dict, exclude_parameters=[]):
         """Return a dictionary with the logarithm of the probability for each
         constraint/probability distribution.

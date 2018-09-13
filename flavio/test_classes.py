@@ -180,6 +180,30 @@ class TestClasses(unittest.TestCase):
         Parameter.del_instance('test_mb')
         Parameter.del_instance('test_mc')
 
+    def test_logprobability_single(self):
+        c_corr = Constraints()
+        c_uncorr = Constraints()
+        d1 = NormalDistribution(2, 0.3)
+        c_corr.add_constraint(['par_1'], d1)
+        c_uncorr.add_constraint(['par_1'], d1)
+        d23 = MultivariateNormalDistribution([4, 5],
+            covariance=[[0.2**2, 0.5*0.2*0.3], [0.5*0.2*0.3, 0.3**2]])
+        d2 = NormalDistribution(4, 0.2)
+        d3 = NormalDistribution(5, 0.3)
+        c_corr.add_constraint(['par_2', 'par_3'], d23)
+        d23_uncorr = MultivariateNormalDistribution([4, 5], covariance=[[0.2, 0], [0, 0.3]])
+        c_uncorr.add_constraint(['par_2'], d2)
+        c_uncorr.add_constraint(['par_3'], d3)
+        d = {'par_1': 2.8, 'par_2': 4.9, 'par_3': 4.3}
+        # all logprobs for the uncorrelated case
+        l_all = c_uncorr.get_logprobability_all(d)
+        # the dict should contain the same values as the "single" ones in
+        # the correlated case
+        for k, v in l_all.items():
+            par = dict(c_uncorr._constraints)[k][0]
+            self.assertEqual(v,
+                             c_corr.get_logprobability_single(par, d[par]),
+                             msg="Failed for {}".format(par))
 
     def test_pdf(self):
         # for the normal dist's, just check that no error is raised
