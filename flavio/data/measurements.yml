@@ -5035,3 +5035,15 @@ BaBar B->D*taunu shape 2013:
     q2min: 10.5
     q2max: 11.0
     value: 0.04 ± 0.025 ± 0.019
+
+
+LEP Bc->taunu:
+  experiment: LEP
+  inspire: Akeroyd:2017mhr
+  description: >
+    As shown in arXiv:1708.04072 (see also arXiv:hep-ph/9707248),
+    the LEP measurement of $B^+\to\tau^+\nu$ can be used to set an effective
+    bound on $B_c\to\tau^+\nu$ of around 10\%. This is interpreted as a
+    Gaussian 95% confidence level limit here.
+  values:
+    BR(Bc->taunu): < 0.1 @ 95% CL
