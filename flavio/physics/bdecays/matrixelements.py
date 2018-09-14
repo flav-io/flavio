@@ -153,8 +153,8 @@ def SeidelA(q2, mb, mu):
     """
     if q2==0:
         return 1/729. * (833 + 120j*pi - 312 * log(mb**2/mu**2))
-    sh = q2/mb**2
-    z = (4 * mb**2)/q2
+    sh = min(q2/mb**2, 0.999)
+    z = 4 / sh
     return (-(104)/(243) * log((mb**2)/(mu**2)) + (4 * sh)/(27 * (1 - sh)) *
     (li2(sh) + log(sh) * log( 1 - sh)) + (1)/(729 * (1 - sh)**2) * (6 * sh *
     (29 - 47 * sh) * log(sh) + 785 - 1600 * sh + 833 * sh**2 + 6 * pi * 1j * (20 -
@@ -168,8 +168,8 @@ def SeidelA(q2, mb, mu):
 def SeidelB(q2, mb, mu):
     """Function $A(s\equiv q^2)$ defined in eq. (30) of hep-ph/0403185v2.
     """
-    sh = q2/mb**2
-    z = (4 * mb**2)/q2
+    sh = min(q2/mb**2, 0.999)
+    z = 4 / sh
     x1 = 1/2 + 1j/2 * sqrt(z - 1)
     x2 = 1/2 - 1j/2 * sqrt(z - 1)
     x3 = 1/2 + 1j/(2 * sqrt(z - 1))
