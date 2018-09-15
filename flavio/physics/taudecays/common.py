@@ -13,10 +13,10 @@ def GammaFvf(M, mv, mf, gL, gR, gTL=0, gtTL=0, gTR=0, gtTR=0):
                 * (2*(mf**2 - M**2)**2 /mv**2 - mf**2 - M**2 - mv**2)
                 - 12 * mf * M * ( (gTL-gtTL).real * (gTR+gtTR).real
                                 + (gTL-gtTL).imag * (gTR+gtTR).imag ) )
-        I = ( 3*M * (mv**2 + mf**2 - M**2)
+        I = ( 3*M * (M**2 - mf**2 - mv**2)
                 *( gL.real*(gTR+gtTR).real + gR.real*(gTL-gtTL).real
                  + gL.imag*(gTR+gtTR).imag + gR.imag*(gTL-gtTL).imag)
-            + 3*mf * (mv**2 + M**2 - mf**2)
+            + 3*mf * (mf**2 - M**2 - mv**2)
                 *( gL.real*(gTL-gtTL).real + gR.real*(gTR+gtTR).real
                  + gL.imag*(gTL-gtTL).imag + gR.imag*(gTR+gtTR).imag) )
         amp2 = amp2_V + amp2_T + I

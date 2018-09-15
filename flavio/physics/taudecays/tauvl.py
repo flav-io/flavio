@@ -45,10 +45,10 @@ def br_tauvl(wc_obj, par, V, lep):
         KV = 1/3*e
     gL = mV*fV/2 * (g[0] + g[1])
     gR = mV*fV/2 * (g[2] + g[3])
-    gTL  = -fTV * g[4].conjugate() - 2*fV*KV/mV * Cgamma_ltau.conjugate()
-    gtTL = +fTV * g[4].conjugate()
-    gTR  = -fTV * g[5] - 2*fV*KV/mV * Cgamma_taul
-    gtTR = -fTV * g[5]
+    gTL  = +fTV * g[4].conjugate() + 2*fV*KV/mV * Cgamma_ltau.conjugate()
+    gtTL = -fTV * g[4].conjugate()
+    gTR  = +fTV * g[5] + 2*fV*KV/mV * Cgamma_taul
+    gtTR = +fTV * g[5]
     return (par['tau_tau']
             * common.GammaFvf(mtau, mV, ml, gL, gR, gTL, gtTL, gTR, gtTR) )
 
