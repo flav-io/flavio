@@ -1000,7 +1000,7 @@ class KernelDensityEstimate(NumericalDistribution):
             self.n_bins = min(1000, self.n)
         else:
             self.n_bins = n_bins
-        y, x_edges = np.histogram(data, bins=self.n_bins, normed=True)
+        y, x_edges = np.histogram(data, bins=self.n_bins, density=True)
         x = (x_edges[:-1] + x_edges[1:])/2.
         self.y_raw = y
         self.raw_dist = NumericalDistribution(x, y)
