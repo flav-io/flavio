@@ -42,7 +42,7 @@ def br_taupl(wc_obj, par, P, lep):
         FR = -(F['RRu'] - F['RRd']) / 2 + (F['LRu'] - F['LRd']) / 2
     full = 1/4/GF**2/0.95* (abs(FL)**2 + abs(FR)**2) * 0.11
 
-    return full#brtaupil
+    return brtaupil
 
 
 # function returning function needed for prediction instance
