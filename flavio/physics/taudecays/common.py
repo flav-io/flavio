@@ -7,18 +7,15 @@ def GammaFvf(M, mv, mf, gL, gR, gTL=0, gtTL=0, gTR=0, gtTR=0):
     """Generic decay width of a fermion to a vector boson and a fermion."""
     amp2_V = ((abs(gL)**2 + abs(gR)**2)
             * ((mf**2 - M**2)**2 /mv**2 + mf**2 + M**2 - 2. *mv**2)
-            - 12 * mf * M * (gL.real * gR.real + gL.imag * gR.imag))/2.
+            - 12 * mf * M * ( gR*gL.conjugate() ).real )/2.
     if any([gTL,gtTL,gTR,gtTR]):
         amp2_T = mv**2/2*( (abs(gTL-gtTL)**2 + abs(gTR+gtTR)**2)
                 * (2*(mf**2 - M**2)**2 /mv**2 - mf**2 - M**2 - mv**2)
-                - 12 * mf * M * ( (gTL-gtTL).real * (gTR+gtTR).real
-                                + (gTL-gtTL).imag * (gTR+gtTR).imag ) )
+                - 12 * mf * M * ( (gTR+gtTR)*(gTL-gtTL).conjugate() ).real )
         I = ( 3*M * (M**2 - mf**2 - mv**2)
-                *( gL.real*(gTR+gtTR).real + gR.real*(gTL-gtTL).real
-                 + gL.imag*(gTR+gtTR).imag + gR.imag*(gTL-gtTL).imag)
+            *( gL*(gTR+gtTR).conjugate() + gR*(gTL-gtTL).conjugate() ).real
             + 3*mf * (mf**2 - M**2 - mv**2)
-                *( gL.real*(gTL-gtTL).real + gR.real*(gTR+gtTR).real
-                 + gL.imag*(gTL-gtTL).imag + gR.imag*(gTR+gtTR).imag) )
+            *( gR*(gTR+gtTR).conjugate() + gL*(gTL-gtTL).conjugate() ).real )
         amp2 = amp2_V + amp2_T + I
     else:
         amp2 = amp2_V
