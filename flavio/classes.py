@@ -412,7 +412,8 @@ class Constraints(object):
 
 
 class ParameterConstraints(Constraints):
-    """
+    """Trivial subclass of `Constraints` that is meant for constraints on
+    theory parameters represented by instances of the `Parameter` class.
     """
 
     def __init__(self):
