@@ -9,6 +9,7 @@ import flavio
 from math import pi, sqrt
 import os
 import logging
+import warnings
 
 log = logging.getLogger('SLHA')
 log.setLevel('WARNING')
@@ -83,6 +84,8 @@ def read_wilson(filename):
     Returns an instance of `flavio.WilsonCoefficients` that can be used for
     `flavio.np_prediction`, for instance.
     """
+    warnings.warn("The FLHA interface will be removed in the near future. Please use the WCxf format instead.",
+                  FutureWarning)
     if not os.path.exists(filename):
         raise ValueError("File " + filename + " not found.")
     card = flavio.io.slha.read(filename)
@@ -124,6 +127,8 @@ def read_ckm(filename, par_constraints):
     *Caution*: since the FLHA/SLHA format does not specify uncertainties,
     the parameters are assumed to be known exactly.
     """
+    warnings.warn("The FLHA interface will be removed in the near future. Please use the WCxf format instead.",
+                  FutureWarning)
     if not os.path.exists(filename):
         raise ValueError("File " + filename + " not found.")
     if flavio.config['implementation']['CKM matrix'] != 'Wolfenstein':
