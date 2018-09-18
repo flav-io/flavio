@@ -5196,6 +5196,11 @@ PDG W width:
 
 Belle 2018 B->D*taunu FL:
   experiment: Belle
-  inspire:
   values:
     FLtot(B0->D*taunu): 0.60 ± 0.08 ± 0.03
+
+Belle B->D*lnu 2018 untagged:
+  experiment: Belle
+  inspire: Abdesselam:2018nnh
+  values:
+    Rmue(B->D*lnu): 0.99 ± 0.01 ± 0.03
