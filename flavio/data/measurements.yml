@@ -5193,3 +5193,9 @@ PDG W width:
   inspire: Patrignani:2016xqp
   values:
     GammaW: 2.085 ± 0.042
+
+Belle 2018 B->D*taunu FL:
+  experiment: Belle
+  inspire:
+  values:
+    FLtot(B0->D*taunu): 0.60 ± 0.08 ± 0.03

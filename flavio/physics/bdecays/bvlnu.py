@@ -167,6 +167,20 @@ def kinem_allowed(q2, par, B, V, lep):
     else:
         return True
 
+def FL_diff(q2, wc_obj, par, B, V, lep):
+    if not kinem_allowed(q2, par, B, V, lep):
+        return 0
+    J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
+    return dGdq2_L(J) / dGdq2(J)
+
+
+def FL_binned(q2min, q2max, wc_obj, par, B, V, lep):
+    num = flavio.math.integrate.nintegrate(lambda q2: dBRdq2(q2, wc_obj, par, B, V, lep, A='L'), q2min, q2max)
+    if num == 0:
+        return 0
+    denom = flavio.math.integrate.nintegrate(lambda q2: dBRdq2(q2, wc_obj, par, B, V, lep,  A=None), q2min, q2max)
+    return num / denom
+
 def dBR_dq2_dcosthl_binned(q2, clmin, clmax, wc_obj, par, B, V, lep):
     if not kinem_allowed(q2, par, B, V, lep):
         return 0
@@ -309,6 +323,22 @@ def BR_binned_tot_function(B, V, lep, A):
         return num / den
     return f
 
+def FL_function(B, V, lep):
+    return lambda wc_obj, par, q2: FL_diff(q2, wc_obj, par, B, V, lep)
+
+def FL_binned_function(B, V, lep):
+    return lambda wc_obj, par, q2min, q2max: FL_binned(q2min, q2max, wc_obj, par, B, V, lep)
+
+def FL_tot_function(B, V, lep):
+    def f(wc_obj, par):
+        mB = par['m_'+B]
+        mV = par['m_'+V]
+        ml = par['m_'+lep]
+        q2max = (mB-mV)**2
+        q2min = ml**2
+        return FL_binned(q2min, q2max, wc_obj, par, B, V, lep)
+    return f
+
 def BR_binned_costhl_function(B, V, lep):
     if lep == 'l':
         return lambda wc_obj, par, clmin, clmax: (
@@ -407,6 +437,9 @@ _func = {'dBR/dq2': dBRdq2_function, 'BR': BR_tot_function, '<BR>': BR_binned_fu
          'dBR/dcl': dBR_dcosthl_function,
          'dBR/dcV': dBR_dcosthV_function,
          'dBR/dphi': dBR_dphi_function,
+         'FL': FL_function,
+         '<FL>': FL_binned_function,
+         'FLtot': FL_tot_function,
          }
 _desc = {'dBR/dq2': r'$q^2$-differential', 'BR': 'Total', '<BR>': '$q^2$-binned',
          'dBR_L/dq2': 'Differential longitudinal', 'BR_L': 'Total longitudinal', '<BR_L>': 'Binned longitudinal',
@@ -417,6 +450,9 @@ _desc = {'dBR/dq2': r'$q^2$-differential', 'BR': 'Total', '<BR>': '$q^2$-binned'
          'dBR/dcl': r'$\cos\theta_l$-differential',
          'dBR/dcV':r'$\cos\theta_V$-differential ',
          'dBR/dphi': r'$\phi$-differential',
+         'FL': r'Differential longitudinal polarization fraction',
+         '<FL>': r'Binned longitudinal polarization fraction',
+         'FLtot': r'Total longitudinal polarization fraction',
          }
 _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'\langle\text{BR}\rangle',
            'dBR_L/dq2': r'\frac{d\text{BR}_L}{dq^2}', 'BR_L': r'\text{BR}_L', '<BR_L>': r'\langle\text{BR}_L\rangle',
@@ -427,6 +463,9 @@ _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'
            'dBR/dcl': r'\frac{d\text{BR}}{d\cos\theta_l}',
            'dBR/dcV': r'\frac{d\text{BR}}{d\cos\theta_V}',
            'dBR/dphi': r'\frac{d\text{BR}}{d\phi}',
+           'FL': r'$F_L$',
+           '<FL>': r'$\langle F_L\rangle$',
+           'FLtot': r'$F_L$',
             }
 _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max'],
          'dBR_L/dq2': ['q2'], 'BR_L': None, '<BR_L>': ['q2min', 'q2max'],
@@ -437,6 +476,9 @@ _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max'],
          'dBR/dcl': ['cl'],
          'dBR/dcV': ['cV'],
          'dBR/dphi': ['phi'],
+         'FL': ['q2'],
+         '<FL>': ['q2min', 'q2max'],
+         'FLtot': None,
          }
 _hadr = {
 'B0->D*': {'tex': r"B^0\to D^{\ast -}", 'B': 'B0', 'V': 'D*+', },
@@ -461,7 +503,8 @@ for l in ['e', 'mu', 'tau', 'l']:
                'dBR_L/dq2', 'BR_L', '<BR_L>',
                'dBR_T/dq2', 'BR_T', '<BR_T>',
                '<BR>/<cl>', '<BR>/<cV>', '<BR>/<phi>',
-               'dBR/dcl', 'dBR/dcV', 'dBR/dphi']:
+               'dBR/dcl', 'dBR/dcV', 'dBR/dphi',
+               '<FL>', 'FL', 'FLtot']:
         for M in _hadr.keys():
             _process_tex = _hadr[M]['tex']+_tex[l]+r"^+\nu_"+_tex[l]
             _obs_name = br + "("+M+l+"nu)"

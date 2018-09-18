@@ -88,3 +88,10 @@ class TestBVll(unittest.TestCase):
         # for the full kinematical range, it should integrate to 1
         self.assertAlmostEqual(
             flavio.sm_prediction('<BR>/BR(B->D*taunu)', 3.1, 11.7), 1, delta=0.03)
+
+    def test_FL(self):
+        self.assertAlmostEqual(flavio.sm_prediction('<FL>(B0->D*taunu)', 3.15, 10.71),
+                               0.46, delta=0.02)
+        self.assertAlmostEqual(flavio.sm_prediction('FLtot(B0->D*taunu)'),
+                               flavio.sm_prediction('<FL>(B0->D*taunu)', 3.15, 10.71),
+                               delta=0.001)
