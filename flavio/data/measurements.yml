@@ -20,7 +20,7 @@ HFLAV rad 2018:
 PDG B->taunu 2018:
   experiment: PDG
   url: http://pdglive.lbl.gov/BranchingRatio.action?desig=184&parCode=S041
-  inspire:
+  inspire: Tanabashi:2018oca
   values:
     BR(B+->taunu): (1.09 ± 0.24) e-4
 
@@ -63,6 +63,7 @@ LHCb rad 2012:
 
 LHCb phigamma 2016:
   experiment: LHCb
+  inspire: Aaij:2016ofv
   values:
     ADeltaGamma(Bs->phigamma): -0.98 + 0.46 - 0.52 + 0.23 - 0.20
 
@@ -96,6 +97,7 @@ HFAG K*gamma summer 2015:
 
 PDG kaon CPV:
   experiment: PDG
+  inspire: Tanabashi:2018oca
   values:
     eps_K: 2.228(11)e-3
 
@@ -1446,6 +1448,7 @@ LHCb B->K*mumu 2015 P 15-19:
 
 CMS B->K*mumu 2017 P1:
   experiment: CMS
+  inspire: CMS:2017ivg
   values:
     - name: <P1>(B0->K*mumu)
       q2min: 1
@@ -1478,6 +1481,7 @@ CMS B->K*mumu 2017 P1:
 
 CMS B->K*mumu 2017 P5p:
   experiment: CMS
+  inspire: CMS:2017ivg
   values:
     - name: <P5p>(B0->K*mumu)
       q2min: 1
@@ -1511,6 +1515,7 @@ CMS B->K*mumu 2017 P5p:
 
 ATLAS B->K*mumu 2017 FL:
   experiment: ATLAS
+  inspire: Aaboud:2018krd
   values:
     - name: <FL>(B0->K*mumu)
       q2min: 0.04
@@ -1539,6 +1544,7 @@ ATLAS B->K*mumu 2017 FL:
 
 ATLAS B->K*mumu 2017 S3:
   experiment: ATLAS
+  inspire: Aaboud:2018krd
   values:
     - name: <S3>(B0->K*mumu)
       q2min: 0.04
@@ -1567,6 +1573,7 @@ ATLAS B->K*mumu 2017 S3:
 
 ATLAS B->K*mumu 2017 S4:
   experiment: ATLAS
+  inspire: Aaboud:2018krd
   values:
     - name: <S4>(B0->K*mumu)
       q2min: 0.04
@@ -1595,6 +1602,7 @@ ATLAS B->K*mumu 2017 S4:
 
 ATLAS B->K*mumu 2017 S5:
   experiment: ATLAS
+  inspire: Aaboud:2018krd
   values:
     - name: <S5>(B0->K*mumu)
       q2min: 0.04
@@ -1623,6 +1631,7 @@ ATLAS B->K*mumu 2017 S5:
 
 ATLAS B->K*mumu 2017 S7:
   experiment: ATLAS
+  inspire: Aaboud:2018krd
   values:
     - name: <S7>(B0->K*mumu)
       q2min: 0.04
@@ -1651,6 +1660,7 @@ ATLAS B->K*mumu 2017 S7:
 
 ATLAS B->K*mumu 2017 S8:
   experiment: ATLAS
+  inspire: Aaboud:2018krd
   values:
     - name: <S8>(B0->K*mumu)
       q2min: 0.04
@@ -1679,6 +1689,7 @@ ATLAS B->K*mumu 2017 S8:
 
 ATLAS B->K*mumu 2017 P1:
   experiment: ATLAS
+  inspire: Aaboud:2018krd
   values:
     - name: <P1>(B0->K*mumu)
       q2min: 0.04
@@ -1707,6 +1718,7 @@ ATLAS B->K*mumu 2017 P1:
 
 ATLAS B->K*mumu 2017 P4p:
   experiment: ATLAS
+  inspire: Aaboud:2018krd
   values:
     - name: <P4p>(B0->K*mumu)
       q2min: 0.04
@@ -1735,6 +1747,7 @@ ATLAS B->K*mumu 2017 P4p:
 
 ATLAS B->K*mumu 2017 P5p:
   experiment: ATLAS
+  inspire: Aaboud:2018krd
   values:
     - name: <P5p>(B0->K*mumu)
       q2min: 0.04
@@ -1763,6 +1776,7 @@ ATLAS B->K*mumu 2017 P5p:
 
 ATLAS B->K*mumu 2017 P6p:
   experiment: ATLAS
+  inspire: Aaboud:2018krd
   values:
     - name: <P6p>(B0->K*mumu)
       q2min: 0.04
@@ -1791,6 +1805,7 @@ ATLAS B->K*mumu 2017 P6p:
 
 ATLAS B->K*mumu 2017 P8p:
   experiment: ATLAS
+  inspire: Aaboud:2018krd
   values:
     - name: <P8p>(B0->K*mumu)
       q2min: 0.04
@@ -3103,9 +3118,9 @@ Belle RD* sl 2016:
 
 Belle RD* had 2016:
   experiment: Belle
-  inspire: Abdesselam:2016xqt
+  inspire: Hirose:2016wfn
   values:
-    Rtaul(B->D*lnu): 0.276 ± 0.034 +0.029 -0.026
+    Rtaul(B->D*lnu): 0.270 ± 0.035 +0.028 -0.025
 
 LHCb RD* 2015:
   experiment: LHCb
@@ -3117,7 +3132,7 @@ LHCb RD* 2017:
   experiment: LHCb
   inspire: Aaij:2017uff
   values:
-    Rtaumu(B->D*lnu): 0.286 ± 0.019 ± 0.025 ± 0.021
+    Rtaumu(B->D*lnu): 0.291 ± 0.019 ± 0.026 ± 0.013
 
 CMS Bs->mumu 2013:
   experiment: CMS
@@ -3553,6 +3568,7 @@ Belle B->Xll 2014:
 CDF B+>Kmumu 2012:
   experiment: CDF
   url: https://www-cdf.fnal.gov/physics/new/bottom/120628.blessed-b2smumu_96/public_b2smumu.pdf
+  inspire: CDF:2012qwd
   values:
     - name: <dBR/dq2>(B+->Kmumu)
       q2min: 0.00
@@ -3587,6 +3603,7 @@ CDF B+>Kmumu 2012:
 CDF B0->K*mumu BR 2012:
   experiment: CDF
   url: https://www-cdf.fnal.gov/physics/new/bottom/120628.blessed-b2smumu_96/public_b2smumu.pdf
+  inspire: CDF:2012qwd
   values:
     - name: <dBR/dq2>(B0->K*mumu)
       q2min: 0.00
@@ -3625,6 +3642,7 @@ CDF B0->K*mumu BR 2012:
 CDF Bs->phimumu 2012:
   experiment: CDF
   url: https://www-cdf.fnal.gov/physics/new/bottom/120628.blessed-b2smumu_96/public_b2smumu.pdf
+  inspire: CDF:2012qwd
   values:
     - name: <dBR/dq2>(Bs->phimumu)
       q2min: 0.00
@@ -3662,6 +3680,7 @@ CDF Bs->phimumu 2012:
 CDF B0->Kmumu 2012:
   experiment: CDF
   url: https://www-cdf.fnal.gov/physics/new/bottom/120628.blessed-b2smumu_96/public_b2smumu.pdf
+  inspire: CDF:2012qwd
   values:
     - name: <dBR/dq2>(B0->Kmumu)
       q2min: 0.00
@@ -3699,6 +3718,7 @@ CDF B0->Kmumu 2012:
 CDF B+->K*mumu 2012:
   experiment: CDF
   url: https://www-cdf.fnal.gov/physics/new/bottom/120628.blessed-b2smumu_96/public_b2smumu.pdf
+  inspire: CDF:2012qwd
   values:
     - name: <dBR/dq2>(B+->K*mumu)
       q2min: 0.00
@@ -3736,6 +3756,7 @@ CDF B+->K*mumu 2012:
 CDF B0->K*mumu FL 2012:
   experiment: CDF
   url: https://www-cdf.fnal.gov/physics/new/bottom/120628.blessed-b2smumu_96/public_b2smumu.pdf
+  inspire: CDF:2012qwd
   values:
     - name: <FL>(B0->K*mumu)
       q2min: 0.00
@@ -3773,6 +3794,7 @@ CDF B0->K*mumu FL 2012:
 CDF B0->K*mumu AFB 2012:
   experiment: CDF
   url: https://www-cdf.fnal.gov/physics/new/bottom/120628.blessed-b2smumu_96/public_b2smumu.pdf
+  inspire: CDF:2012qwd
   values:
     - name: <AFB>(B0->K*mumu)
       q2min: 0.00
@@ -3813,6 +3835,7 @@ CDF B0->K*mumu AFB 2012:
 # (i.e., a Gaussian) outside the plot ranges
 LHCb RK* 2017:
    experiment: LHCb
+   inspire: Aaij:2017vbb
    values:
      - name: <Rmue>(B0->K*ll)
        q2min: 0.045
