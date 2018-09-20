@@ -17,8 +17,8 @@ def bsvll_obs(function, q2, wc_obj, par, B, V, lep):
     scale = flavio.config['renormalization scale']['bvll']
     mb = flavio.physics.running.running.get_mb(par, scale)
     ff = flavio.physics.bdecays.bvll.amplitudes.get_ff(q2, par, B, V)
-    h = flavio.physics.bdecays.bvll.amplitudes.helicity_amps(q2, wc_obj, par, B, V, lep)
-    h_bar = flavio.physics.bdecays.bvll.amplitudes.helicity_amps_bar(q2, wc_obj, par, B, V, lep)
+    h = flavio.physics.bdecays.bvll.amplitudes.helicity_amps(q2, ff, wc_obj, par, B, V, lep)
+    h_bar = flavio.physics.bdecays.bvll.amplitudes.helicity_amps_bar(q2, ff, wc_obj, par, B, V, lep)
     J = flavio.physics.bdecays.angular.angularcoeffs_general_v(h, q2, mB, mV, mb, 0, ml, ml)
     J_bar = flavio.physics.bdecays.angular.angularcoeffs_general_v(h_bar, q2, mB, mV, mb, 0, ml, ml)
     h_tilde = h_bar.copy()

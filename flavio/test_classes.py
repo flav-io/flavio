@@ -260,6 +260,45 @@ class TestClasses(unittest.TestCase):
             yaml2 = mnew.get_yaml_dict()
             self.assertEqual(yaml, yaml2)
 
+    def test_from_yaml_dict(self):
+        c = Constraints.from_yaml_dict([
+        {'my_par_1': '1 +- 0.3 +- 0.4'},
+        {'parameters': ['my_par_2'],
+         'values': {
+           'distribution': 'normal',
+           'central_value': 2,
+           'standard_deviation': 0.6,
+           }
+        },
+        {'parameters': ['my_par_3'],
+         'values': [{
+           'distribution': 'normal',
+           'central_value': 7,
+           'standard_deviation': 0.3,
+           },
+           {
+           'distribution': 'normal',
+           'central_value': 7,
+           'standard_deviation': 0.4,
+         }]
+
+        }
+        ])
+        self.assertListEqual(list(c._parameters.keys()), ['my_par_1', 'my_par_2', 'my_par_3'])
+        c1 = c._parameters['my_par_1'][1]
+        self.assertEqual(type(c1), NormalDistribution)
+        self.assertEqual(c1.central_value, 1)
+        self.assertEqual(c1.standard_deviation, 0.5)
+        c2 = c._parameters['my_par_2'][1]
+        self.assertEqual(type(c2), NormalDistribution)
+        self.assertEqual(c2.central_value, 2)
+        self.assertEqual(c2.standard_deviation, 0.6)
+        c3 = c._parameters['my_par_3'][1]
+        self.assertEqual(type(c3), NormalDistribution)
+        self.assertEqual(c3.central_value, 7)
+        self.assertEqual(c3.standard_deviation, 0.5)
+        del c
+
     def test_repr_meas(self):
         mtest = Measurement('repr test')
         self.assertEqual(repr(mtest), "Measurement('repr test')")

@@ -1,17 +1,15 @@
 """Functions for exclusive $B\to V\ell^+\ell^-$ decays."""
 
-from math import sqrt, pi, log
-import numpy as np
-from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
+from math import sqrt, log
+from flavio.physics.bdecays.common import meson_quark
+from flavio.physics.common import conjugate_par, conjugate_wc
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
-from flavio.physics.bdecays import matrixelements
-from flavio.physics import ckm
 from flavio.config import config
 from flavio.physics.running import running
 from .amplitudes import *
-from scipy.integrate import quad
 from flavio.classes import Observable, Prediction
 import flavio
+
 
 def dGdq2(J):
     return 3/4. * (2 * J['1s'] + J['1c']) - 1/4. * (2 * J['2s'] + J['2c'])
@@ -109,24 +107,274 @@ def FLhat_num(J, J_bar):
     return -S_theory_num(J, J_bar, '1c')
 
 
-def bvll_obs(function, q2, wc_obj, par, B, V, lep):
-    ml = par['m_'+lep]
-    mB = par['m_'+B]
-    mV = par['m_'+V]
-    if q2 < 4*ml**2 or q2 > (mB-mV)**2:
-        return 0
-    scale = config['renormalization scale']['bvll']
-    mb = running.get_mb(par, scale)
-    ff = get_ff(q2, par, B, V)
-    h = helicity_amps(q2, wc_obj, par, B, V, lep)
-    h_bar = helicity_amps_bar(q2, wc_obj, par, B, V, lep)
-    J = angular.angularcoeffs_general_v(h, q2, mB, mV, mb, 0, ml, ml)
-    J_bar = angular.angularcoeffs_general_v(h_bar, q2, mB, mV, mb, 0, ml, ml)
-    return function(J, J_bar)
+class BVllObservable(object):
+    r"""Base class for $B\to V\ell^+\ell^- observable functions that
+    facilitates caching/memoization."""
 
-def bvll_dbrdq2(q2, wc_obj, par, B, V, lep):
-    tauB = par['tau_'+B]
-    return tauB * bvll_obs(dGdq2_ave, q2, wc_obj, par, B, V, lep)
+    def __init__(self, B, V, lep, wc_obj, par):
+        """Initialize the class and cache results needed more often."""
+        self.B = B
+        self.V = V
+        self.lep = lep
+        self.wc_obj = wc_obj
+        self.par = par
+        self.par_conjugate = conjugate_par(par)
+        self.prefactor = prefactor(None, self.par, B, V)
+        self.prefactor_conjugate = prefactor(None, self.par_conjugate, B, V)
+        self.scale = config['renormalization scale']['bvll']
+        self.label = meson_quark[(B,V)] + lep + lep # e.g. bsmumu, bdtautau
+        self.wctot_dict = wctot_dict(wc_obj, self.label, self.scale, par)
+        self._ff = {}
+        self._wceff = {}
+        self._wceff_bar = {}
+        self._ha = {}
+        self._ha_bar = {}
+        self._j = {}
+        self._j_bar = {}
+        self.ml = par['m_'+lep]
+        self.mB = par['m_'+B]
+        self.mV = par['m_'+V]
+        self.mb = running.get_mb(par, self.scale)
+
+    def ff(self, q2):
+        """Get form factors. Cache and only recompute if necessary."""
+        if q2 not in self._ff:
+            self._ff[q2] = get_ff(q2, self.par, self.B, self.V)
+        return self._ff[q2]
+
+    def wceff(self, q2):
+        """Get effective WCs. Cache and only recompute if necessary."""
+        if q2 not in self._wceff:
+            self._wceff[q2] = get_wceff(q2, self.wctot_dict, self.par, self.B, self.V, self.lep, self.scale)
+        return self._wceff[q2]
+
+    def wceff_bar(self, q2):
+        """Get CP conjugate effective WCs. Cache and only recompute if necessary."""
+        if q2 not in self._wceff_bar:
+            self._wceff_bar[q2] = get_wceff(q2, conjugate_wc(self.wctot_dict), self.par_conjugate, self.B, self.V, self.lep, self.scale)
+        return self._wceff_bar[q2]
+
+    def helicity_amps_ff(self, q2, cp_conjugate):
+        """Get helicity amps proportional to FFs. Cache and only recompute if necessary."""
+        if not cp_conjugate:
+            return angular.helicity_amps_v(q2,
+                     self.mB, self.mV, self.mb, 0, self.ml, self.ml,
+                     self.ff(q2), self.wceff(q2), self.prefactor)
+        else:
+            return angular.helicity_amps_v(q2,
+                     self.mB, self.mV, self.mb, 0, self.ml, self.ml,
+                     self.ff(q2), self.wceff_bar(q2), self.prefactor_conjugate)
+
+    def ha(self, q2):
+        """Get full helicity amps. Cache and only recompute if necessary."""
+        if q2 not in self._ha:
+            self._ha[q2] = add_dict((
+                self.helicity_amps_ff(q2, cp_conjugate=False),
+                get_ss(q2, self.wc_obj, self.par, self.B, self.V, cp_conjugate=False),
+                get_subleading(q2, self.wc_obj, self.par, self.B, self.V, cp_conjugate=False)
+                ))
+        return self._ha[q2]
+
+    def ha_bar(self, q2):
+        """Get CP conjugate full helicity amps. Cache and only recompute if necessary."""
+        if q2 not in self._ha_bar:
+            self._ha_bar[q2] = add_dict((
+                self.helicity_amps_ff(q2, cp_conjugate=True),
+                get_ss(q2, self.wc_obj, self.par, self.B, self.V, cp_conjugate=True),
+                get_subleading(q2, self.wc_obj, self.par, self.B, self.V, cp_conjugate=True)
+                ))
+        return self._ha_bar[q2]
+
+    def j(self, q2):
+        """Get angular coeffs. Cache and only recompute if necessary."""
+        h = self.ha(q2)
+        if q2 not in self._j:
+            self._j[q2] = angular.angularcoeffs_general_v(h, q2, self.mB, self.mV, self.mb, 0, self.ml, self.ml)
+        return self._j[q2]
+
+    def jbar(self, q2):
+        """Get CP conjugate angular coeffs. Cache and only recompute if necessary."""
+        hbar = self.ha_bar(q2)
+        if q2 not in self._j_bar:
+            self._j_bar[q2] = angular.angularcoeffs_general_v(hbar, q2, self.mB, self.mV, self.mb, 0, self.ml, self.ml)
+        return self._j_bar[q2]
+
+    def jfunc(self, function, q2):
+        """Return a function of J and Jbar at one value of q2."""
+        return function(self.j(q2), self.jbar(q2))
+
+
+class BVllObservableDifferential(BVllObservable):
+    """Base class for differential observables depending on q2."""
+    def __init__(self, q2, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.q2 = q2
+        if q2 < 4 * self.ml**2 or q2 > (self.mB - self.mV)**2:
+            self.allowed = False
+        else:
+            self.allowed = True
+
+
+class BVllObservableBinned(BVllObservable):
+    """Base class for binned observables depending on q2min and q2max."""
+    def __init__(self, q2min, q2max, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.q2min = q2min
+        self.q2max = q2max
+        self.q2min_allowed = max(4 * self.ml**2, self.q2min)
+        self.q2max_allowed = min((self.mB - self.mV)**2, self.q2max)
+
+
+class BVll_dBRdq2(BVllObservableDifferential):
+    """Differential branching ratio"""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def __call__(self):
+        if not self.allowed:
+            return 0
+        tauB = self.par['tau_' + self.B]
+        return tauB * self.jfunc(dGdq2_ave, self.q2)
+
+
+class BVll_obs(BVllObservableDifferential):
+    """Differential function of angular coefficients"""
+    def __init__(self, func, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.func = func
+
+    def __call__(self):
+        if not self.allowed:
+            return 0
+        return self.jfunc(self.func, self.q2)
+
+
+class BVll_ratio(BVllObservableDifferential):
+    """Differential ratio of functions of angular coefficients"""
+    def __init__(self, func_num, func_den, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.func_num = func_num
+        self.func_den = func_den
+
+    def __call__(self):
+        if not self.allowed:
+            return 0
+        num = self.jfunc(self.func_num, self.q2)
+        if num == 0:
+            return 0
+        den = self.jfunc(self.func_den, self.q2)
+        return num / den
+
+
+class BVll_pprime(BVllObservableDifferential):
+    r"""Differential $P'$ observables"""
+    def __init__(self, func_num, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.func_num = func_num
+
+    @staticmethod
+    def func_2s(J, J_bar):
+        return S_experiment_num(J, J_bar, '2s')
+
+    @staticmethod
+    def func_2c(J, J_bar):
+        return S_experiment_num(J, J_bar, '2c')
+
+    def __call__(self):
+        if not self.allowed:
+            return 0
+        num = self.jfunc(self.func_num, self.q2)
+        if num == 0:
+            return 0
+        den_2s = self.jfunc(self.func_2s, self.q2)
+        den_2c = self.jfunc(self.func_2c, self.q2)
+        den = 2 * sqrt(-den_2s * den_2c)
+        return num / den
+
+
+class BVll_dBRdq2_int(BVllObservableBinned):
+    """Binned branching ratio"""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.epsrel = 0.005
+
+    def obs(self, q2):
+        tauB = self.par['tau_' + self.B]
+        return tauB * self.jfunc(dGdq2_ave, q2)
+
+    def __call__(self):
+        if self.q2max_allowed <= self.q2min_allowed:
+            return 0
+        return nintegrate_pole(self.obs, self.q2min_allowed, self.q2max_allowed, epsrel=self.epsrel) / (self.q2max - self.q2min)
+
+
+class BVll_obs_int(BVllObservableBinned):
+    """Binned function of angular coefficients"""
+    def __init__(self, func, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.epsrel = 0.005
+        self.func = func
+
+    def obs(self, q2):
+        return self.jfunc(self.func, q2)
+
+    def __call__(self):
+        if self.q2max_allowed <= self.q2min_allowed:
+            return 0
+        return nintegrate_pole(self.obs, self.q2min_allowed, self.q2max_allowed, epsrel=self.epsrel) / (self.q2max - self.q2min)
+
+
+class BVll_int_ratio(BVllObservableBinned):
+    """Binned ratio of functions if angular coefficients"""
+    def __init__(self, func_num, func_den, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.epsrel = 0.005
+        self.func_num = func_num
+        self.func_den = func_den
+
+    def obs_num(self, q2):
+        return self.jfunc(self.func_num, q2)
+
+    def obs_den(self, q2):
+        return self.jfunc(self.func_den, q2)
+
+    def __call__(self):
+        if self.q2max_allowed <= self.q2min_allowed:
+            return 0
+        num = nintegrate_pole(self.obs_num, self.q2min_allowed, self.q2max_allowed, epsrel=self.epsrel)
+        if num == 0:
+            return 0
+        den = nintegrate_pole(self.obs_den, self.q2min_allowed, self.q2max_allowed, epsrel=self.epsrel)
+        return num / den
+
+
+class BVll_int_pprime(BVllObservableBinned):
+    r"""Binned $P'$ observables"""
+    def __init__(self, func_num, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.epsrel = 0.005
+        self.func_num = func_num
+
+    def obs_num(self, q2):
+        return self.jfunc(self.func_num, q2)
+
+    def obs_2s(self, q2):
+        return self.jfunc(lambda J, J_bar: S_experiment_num(J, J_bar, '2s'), q2)
+
+    def obs_2c(self, q2):
+        return self.jfunc(lambda J, J_bar: S_experiment_num(J, J_bar, '2c'), q2)
+
+    def __call__(self):
+        if self.q2max_allowed <= self.q2min_allowed:
+            return 0
+        num = nintegrate_pole(self.obs_num, self.q2min_allowed, self.q2max_allowed, epsrel=self.epsrel)
+        if num == 0:
+            return 0
+        den_2s = nintegrate_pole(self.obs_2s, self.q2min_allowed, self.q2max_allowed, epsrel=self.epsrel)
+        den_2c = nintegrate_pole(self.obs_2c, self.q2min_allowed, self.q2max_allowed, epsrel=self.epsrel)
+        den = 2 * sqrt(-den_2s * den_2c)
+        return num / den
+
 
 def nintegrate_pole(function, q2min, q2max, epsrel=0.005):
     # this is a special integration function to treat the presence of the
@@ -143,88 +391,30 @@ def nintegrate_pole(function, q2min, q2max, epsrel=0.005):
     else:
         return flavio.math.integrate.nintegrate(function, q2min, q2max)
 
-def bvll_obs_int(function, q2min, q2max, wc_obj, par, B, V, lep, epsrel=0.005):
-    def obs(q2):
-        return bvll_obs(function, q2, wc_obj, par, B, V, lep)
-    _q2min = max(q2min, 4*par['m_'+lep]**2) # clip to physical range
-    return nintegrate_pole(obs, _q2min, q2max, epsrel=epsrel)
 
-def bvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep, epsrel=0.005):
-    def obs(q2):
-        return bvll_dbrdq2(q2, wc_obj, par, B, V, lep)
-    _q2min = max(q2min, 4*par['m_'+lep]**2) # clip to physical range
-    return nintegrate_pole(obs, _q2min, q2max, epsrel=epsrel)/(q2max-_q2min)
 
 # Functions returning functions needed for Prediction instances
 
-def bvll_dbrdq2_int_func(B, V, lep):
-    def fct(wc_obj, par, q2min, q2max):
-        return bvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, V, lep)
-    return fct
-
-def bvll_dbrdq2_func(B, V, lep):
-    def fct(wc_obj, par, q2):
-        return bvll_dbrdq2(q2, wc_obj, par, B, V, lep)
-    return fct
-
-def bvll_obs_int_ratio_func(func_num, func_den, B, V, lep):
-    def fct(wc_obj, par, q2min, q2max):
-        num = bvll_obs_int(func_num, q2min, q2max, wc_obj, par, B, V, lep)
-        if num == 0:
-            return 0
-        denom = bvll_obs_int(func_den, q2min, q2max, wc_obj, par, B, V, lep)
-        return num/denom
-    return fct
-
 def bvll_obs_int_ratio_leptonflavour(func, B, V, l1, l2):
     def fct(wc_obj, par, q2min, q2max):
-        num = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l1, epsrel=0.0005)
+        numobj = BVll_obs_int(func, q2min, q2max, B, V, l1, wc_obj, par)
+        numobj.epsrel = 0.0005
+        num = numobj()
         if num == 0:
             return 0
-        denom = bvll_obs_int(func, q2min, q2max, wc_obj, par, B, V, l2, epsrel=0.0005)
-        return num/denom
+        denobj = BVll_obs_int(func, q2min, q2max, B, V, l2, wc_obj, par)
+        denobj.epsrel = 0.0005
+        den = denobj()
+        return num / den
     return fct
 
 def bvll_obs_ratio_leptonflavour(func, B, V, l1, l2):
     def fct(wc_obj, par, q2):
-        num = bvll_obs(func, q2, wc_obj, par, B, V, l1)
+        num = BVll_obs(func, q2, B, V, l1, wc_obj, par)()
         if num == 0:
             return 0
-        denom = bvll_obs(func, q2, wc_obj, par, B, V, l2)
-        return num/denom
-    return fct
-
-def bvll_obs_ratio_func(func_num, func_den, B, V, lep):
-    def fct(wc_obj, par, q2):
-        num = bvll_obs(func_num, q2, wc_obj, par, B, V, lep)
-        if num == 0:
-            return 0
-        denom = bvll_obs(func_den, q2, wc_obj, par, B, V, lep)
-        return num/denom
-    return fct
-
-# function needed for the P' "optimized" observables
-# note that this is the convention used by LHCb, NOT the one used in 1303.5794!
-def bvll_pprime_func(func_num, B, V, lep):
-    def fct(wc_obj, par, q2):
-        num = bvll_obs(func_num, q2, wc_obj, par, B, V, lep)
-        if num == 0:
-            return 0
-        denom_2s = bvll_obs(lambda J, J_bar: S_experiment_num(J, J_bar, '2s'), q2, wc_obj, par, B, V, lep)
-        denom_2c = bvll_obs(lambda J, J_bar: S_experiment_num(J, J_bar, '2c'), q2, wc_obj, par, B, V, lep)
-        denom = 2*sqrt(-denom_2s*denom_2c)
-        return num/denom
-    return fct
-
-def bvll_pprime_int_func(func_num, B, V, lep):
-    def fct(wc_obj, par, q2min, q2max):
-        num = bvll_obs_int(func_num, q2min, q2max, wc_obj, par, B, V, lep)
-        if num == 0:
-            return 0
-        denom_2s = bvll_obs_int(lambda J, J_bar: S_experiment_num(J, J_bar, '2s'), q2min, q2max, wc_obj, par, B, V, lep)
-        denom_2c = bvll_obs_int(lambda J, J_bar: S_experiment_num(J, J_bar, '2c'), q2min, q2max, wc_obj, par, B, V, lep)
-        denom = 2*sqrt(-denom_2s*denom_2c)
-        return num/denom
+        den = BVll_obs(func, q2, B, V, l2, wc_obj, par)()
+        return num / den
     return fct
 
 
@@ -270,102 +460,143 @@ _hadr = {
 'B+->K*': {'tex': r"B^+\to K^{\ast +}", 'B': 'B+', 'V': 'K*+', },
 }
 
+def make_metadata_binned(M, l, obs, obsdict):
+    _process_tex = _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+r"^-"
+    _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _process_tex + r"$"
+    B = _hadr[M]['B']
+    V = _hadr[M]['V']
+    _obs_name = "<" + obs + ">("+M+l+l+")"
+    _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+    _obs.set_description('Binned ' + obsdict['desc'] + r" in $" + _process_tex + r"$")
+    _obs.tex = r"$\langle " + obsdict['tex'] + r"\rangle(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    return _obs
+
+def make_metadata_differential(M, l, obs, obsdict):
+    _process_tex = _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+r"^-"
+    _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _process_tex + r"$"
+    B = _hadr[M]['B']
+    V = _hadr[M]['V']
+    _obs_name = obs + "("+M+l+l+")"
+    _obs = Observable(name=_obs_name, arguments=['q2'])
+    _obs.set_description(obsdict['desc'][0].capitalize() + obsdict['desc'][1:] + r" in $" + _process_tex + r"$")
+    _obs.tex = r"$" + obsdict['tex'] + r"(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    return _obs
+
+def make_obs(M, l, obs, obsdict):
+    B = _hadr[M]['B']
+    V = _hadr[M]['V']
+    func_num = obsdict['func_num']
+
+    # binned angular observables
+    _obs = make_metadata_binned(M, l, obs, obsdict)
+    func = lambda wc_obj, par, q2min, q2max: BVll_int_ratio(func_num, SA_den, q2min, q2max, B, V, l, wc_obj, par)()
+    Prediction(_obs.name, func)
+
+    # differential angular observables
+    _obs = make_metadata_differential(M, l, obs, obsdict)
+    func = lambda wc_obj, par, q2: BVll_ratio(func_num, SA_den, q2, B, V, l, wc_obj, par)()
+    Prediction(_obs.name, func)
+
+
+def make_obs_p(M, l, obs, obsdict):
+    B = _hadr[M]['B']
+    V = _hadr[M]['V']
+    func_num = obsdict['func_num']
+
+    # binned "optimized" angular observables P
+    _obs = make_metadata_binned(M, l, obs, obsdict)
+    func = lambda wc_obj, par, q2min, q2max: BVll_int_ratio(func_num, P_den, q2min, q2max, B, V, l, wc_obj, par)()
+    Prediction(_obs.name, func)
+
+    # differential "optimized"  angular observables
+    _obs = make_metadata_differential(M, l, obs, obsdict)
+    func = lambda wc_obj, par, q2: BVll_ratio(func_num, P_den, q2, B, V, l, wc_obj, par)()
+    Prediction(_obs.name, func)
+
+
+def make_obs_pprime(M, l, obs, obsdict):
+    B = _hadr[M]['B']
+    V = _hadr[M]['V']
+    func_num = obsdict['func_num']
+
+    # binned "optimized"  angular observables
+    _obs = make_metadata_binned(M, l, obs, obsdict)
+    func = lambda wc_obj, par, q2min, q2max: BVll_int_pprime(func_num, q2min, q2max, B, V, l, wc_obj, par)()
+    Prediction(_obs.name, func)
+
+    # differential "optimized"  angular observables
+    _obs = make_metadata_differential(M, l, obs, obsdict)
+    func = lambda wc_obj, par, q2: BVll_pprime(func_num, q2, B, V, l, wc_obj, par)()
+    Prediction(_obs.name, func)
+
+
+def make_obs_br(M, l):
+    """Make observable instances for branching ratios"""
+    _process_tex = _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+r"^-"
+    _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _process_tex + r"$"
+    B = _hadr[M]['B']
+    V = _hadr[M]['V']
+
+    # binned branching ratio
+    _obs_name = "<dBR/dq2>("+M+l+l+")"
+    _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+    _obs.set_description(r"Binned differential branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    func = lambda wc_obj, par, q2min, q2max: BVll_dBRdq2_int(q2min, q2max, B, V, l, wc_obj, par)()
+    Prediction(_obs_name, func)
+
+    # differential branching ratio
+    _obs_name = "dBR/dq2("+M+l+l+")"
+    _obs = Observable(name=_obs_name, arguments=['q2'])
+    _obs.set_description(r"Differential branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    func = lambda wc_obj, par, q2: BVll_dBRdq2(q2, B, V, l, wc_obj, par)()
+    Prediction(_obs_name, func)
+
+
+def make_obs_lfur(M, l):
+    """Make observable instances for lepton flavour ratios"""
+    # binned ratio of BRs
+    _obs_name = "<R"+l[0]+l[1]+">("+M+"ll)"
+    _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+    _obs.set_description(r"Ratio of partial branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
+    _obs.tex = r"$\langle R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} \rangle(" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
+    for li in l:
+        # add taxonomy for both processes (e.g. B->Vee and B->Vmumu)
+        _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
+    Prediction(_obs_name, bvll_obs_int_ratio_leptonflavour(dGdq2_ave, _hadr[M]['B'], _hadr[M]['V'], *l))
+
+    # differential ratio of BRs
+    _obs_name = "R"+l[0]+l[1]+"("+M+"ll)"
+    _obs = Observable(name=_obs_name, arguments=['q2'])
+    _obs.set_description(r"Ratio of differential branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
+    _obs.tex = r"$R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} (" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
+    for li in l:
+        # add taxonomy for both processes (e.g. B->Vee and B->Vmumu)
+        _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
+    func = lambda wc_obj, par, q2: BVll_dBRdq2(q2, B, V, l, wc_obj, par)()
+    Prediction(_obs_name, bvll_obs_ratio_leptonflavour(dGdq2_ave, _hadr[M]['B'], _hadr[M]['V'], *l))
+
+# loop over all cases
 for l in ['e', 'mu', 'tau']:
     for M in _hadr.keys():
+        for obs, obsdict in _observables.items():
+            # angular obs
+            make_obs(M, l, obs, obsdict)
+        for obs, obsdict in _observables_p.items():
+            # P obs
+            make_obs_p(M, l, obs, obsdict)
+        for obs, obsdict in _observables_pprime.items():
+            # P' obs
+            make_obs_pprime(M, l, obs, obsdict)
+        # BRs
+        make_obs_br(M, l)
 
-        _process_tex = _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+r"^-"
-        _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _process_tex + r"$"
-
-        for obs in sorted(_observables.keys()):
-
-            # binned angular observables
-            _obs_name = "<" + obs + ">("+M+l+l+")"
-            _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-            _obs.set_description('Binned ' + _observables[obs]['desc'] + r" in $" + _process_tex + r"$")
-            _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _process_tex + r")$"
-            _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bvll_obs_int_ratio_func(_observables[obs]['func_num'], SA_den, _hadr[M]['B'], _hadr[M]['V'], l))
-
-            # differential angular observables
-            _obs_name = obs + "("+M+l+l+")"
-            _obs = Observable(name=_obs_name, arguments=['q2'])
-            _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _process_tex + r"$")
-            _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _process_tex + r")$"
-            _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bvll_obs_ratio_func(_observables[obs]['func_num'], SA_den, _hadr[M]['B'], _hadr[M]['V'], l))
-
-        for obs in sorted(_observables_p.keys()):
-
-            # binned "optimized" angular observables P
-            _obs_name = "<" + obs + ">("+M+l+l+")"
-            _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-            _obs.set_description('Binned ' + _observables_p[obs]['desc'] + r" in $" + _process_tex + r"$")
-            _obs.tex = r"$\langle " + _observables_p[obs]['tex'] + r"\rangle(" + _process_tex + r")$"
-            _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bvll_obs_int_ratio_func(_observables_p[obs]['func_num'], P_den, _hadr[M]['B'], _hadr[M]['V'], l))
-
-            # differential "optimized"  angular observables
-            _obs_name = obs + "("+M+l+l+")"
-            _obs = Observable(name=_obs_name, arguments=['q2'])
-            _obs.set_description(_observables_p[obs]['desc'][0].capitalize() + _observables_p[obs]['desc'][1:] + r" in $" + _process_tex + r"$")
-            _obs.tex = r"$" + _observables_p[obs]['tex'] + r"(" + _process_tex + r")$"
-            _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bvll_obs_ratio_func(_observables_p[obs]['func_num'], P_den, _hadr[M]['B'], _hadr[M]['V'], l))
-
-        for obs in sorted(_observables_pprime.keys()):
-
-            # binned "optimized" angular observables P'
-            _obs_name = "<" + obs + ">("+M+l+l+")"
-            _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-            _obs.set_description('Binned ' + _observables_pprime[obs]['desc'] + r" in $" + _process_tex + r"$")
-            _obs.tex = r"$\langle " + _observables_pprime[obs]['tex'] + r"\rangle(" + _process_tex + r")$"
-            _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bvll_pprime_int_func(_observables_pprime[obs]['func_num'], _hadr[M]['B'], _hadr[M]['V'], l))
-
-            # differential "optimized"  angular observables
-            _obs_name = obs + "("+M+l+l+")"
-            _obs = Observable(name=_obs_name, arguments=['q2'])
-            _obs.set_description(_observables_pprime[obs]['desc'][0].capitalize() + _observables_pprime[obs]['desc'][1:] + r" in $" + _process_tex + r"$")
-            _obs.tex = r"$" + _observables_pprime[obs]['tex'] + r"(" + _process_tex + r")$"
-            _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bvll_pprime_func(_observables_pprime[obs]['func_num'], _hadr[M]['B'], _hadr[M]['V'], l))
-
-        # binned branching ratio
-        _obs_name = "<dBR/dq2>("+M+l+l+")"
-        _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-        _obs.set_description(r"Binned differential branching ratio of $" + _process_tex + r"$")
-        _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(" + _process_tex + r")$"
-        _obs.add_taxonomy(_process_taxonomy)
-        Prediction(_obs_name, bvll_dbrdq2_int_func(_hadr[M]['B'], _hadr[M]['V'], l))
-
-        # differential branching ratio
-        _obs_name = "dBR/dq2("+M+l+l+")"
-        _obs = Observable(name=_obs_name, arguments=['q2'])
-        _obs.set_description(r"Differential branching ratio of $" + _process_tex + r"$")
-        _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _process_tex + r")$"
-        _obs.add_taxonomy(_process_taxonomy)
-        Prediction(_obs_name, bvll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['V'], l))
-
-# Lepton flavour ratios
+# lepton flavour ratios
 for l in [('mu','e'), ('tau','mu'),]:
     for M in _hadr.keys():
-
-        # binned ratio of BRs
-        _obs_name = "<R"+l[0]+l[1]+">("+M+"ll)"
-        _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-        _obs.set_description(r"Ratio of partial branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
-        _obs.tex = r"$\langle R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} \rangle(" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
-        for li in l:
-            # add taxonomy for both processes (e.g. B->Vee and B->Vmumu)
-            _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
-        Prediction(_obs_name, bvll_obs_int_ratio_leptonflavour(dGdq2_ave, _hadr[M]['B'], _hadr[M]['V'], *l))
-
-        # differential ratio of BRs
-        _obs_name = "R"+l[0]+l[1]+"("+M+"ll)"
-        _obs = Observable(name=_obs_name, arguments=['q2'])
-        _obs.set_description(r"Ratio of differential branching ratios of $" + _hadr[M]['tex'] +_tex[l[0]]+r"^+ "+_tex[l[0]]+r"^-$" + " and " + r"$" + _hadr[M]['tex'] +_tex[l[1]]+r"^+ "+_tex[l[1]]+"^-$")
-        _obs.tex = r"$R_{" + _tex[l[0]] + ' ' + _tex[l[1]] + r"} (" + _hadr[M]['tex'] + r"\ell^+\ell^-)$"
-        for li in l:
-            # add taxonomy for both processes (e.g. B->Vee and B->Vmumu)
-            _obs.add_taxonomy(r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _hadr[M]['tex'] +_tex[li]+r"^+"+_tex[li]+r"^-$")
-        Prediction(_obs_name, bvll_obs_ratio_leptonflavour(dGdq2_ave, _hadr[M]['B'], _hadr[M]['V'], *l))
+        make_obs_lfur(M, l)

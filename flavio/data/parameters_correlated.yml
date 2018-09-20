@@ -76,16 +76,16 @@
 # Subleading hadronic effects in B->Vll
 -
   values:
-    - B0->K*0 deltaC7 a_0 Re: 0 ± 0.06 # see eq. (26) of arXiv:1503.05534v1
-    - B+->K*+ deltaC7 a_0 Re: 0 ± 0.06
-    - Bs->phi deltaC7 a_0 Re: 0 ± 0.06
+    - B0->K*0 deltaC7 a_0 Re: 0 ± 0.12
+    - B+->K*+ deltaC7 a_0 Re: 0 ± 0.12
+    - Bs->phi deltaC7 a_0 Re: 0 ± 0.12
   correlation:
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
   values:
-    - B0->K*0 deltaC7 b_0 Re: 0 ± 0.025 # see eq. (12) of arXiv:1411.3161v4
-    - B+->K*+ deltaC7 b_0 Re: 0 ± 0.025
-    - Bs->phi deltaC7 b_0 Re: 0 ± 0.025
+    - B0->K*0 deltaC7 b_0 Re: 0 ± 0.05
+    - B+->K*+ deltaC7 b_0 Re: 0 ± 0.05
+    - Bs->phi deltaC7 b_0 Re: 0 ± 0.05
   correlation:
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
@@ -118,16 +118,16 @@
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
   values:
-    - B0->K*0 deltaC7 a_0 Im: 0 ± 0.06 # see eq. (26) of arXiv:1503.05534v1
-    - B+->K*+ deltaC7 a_0 Im: 0 ± 0.06
-    - Bs->phi deltaC7 a_0 Im: 0 ± 0.06
+    - B0->K*0 deltaC7 a_0 Im: 0 ± 0.12 # see eq. (26) of arXiv:1503.05534v1
+    - B+->K*+ deltaC7 a_0 Im: 0 ± 0.12
+    - Bs->phi deltaC7 a_0 Im: 0 ± 0.12
   correlation:
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
   values:
-    - B0->K*0 deltaC7 b_0 Im: 0 ± 0.025 # see eq. (12) of arXiv:1411.3161v4
-    - B+->K*+ deltaC7 b_0 Im: 0 ± 0.025
-    - Bs->phi deltaC7 b_0 Im: 0 ± 0.025
+    - B0->K*0 deltaC7 b_0 Im: 0 ± 0.05 # see eq. (12) of arXiv:1411.3161v4
+    - B+->K*+ deltaC7 b_0 Im: 0 ± 0.05
+    - Bs->phi deltaC7 b_0 Im: 0 ± 0.05
   correlation:
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -

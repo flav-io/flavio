@@ -13,9 +13,16 @@ HFLAV rad 2018:
   inspire: Amhis:2016xyh
   url: http://www.slac.stanford.edu/xorg/hflav/rare/May2018/radll/OUTPUT/TABLES/PDF/radll.pdf
   values:
+    # note that B+->taunu is wrong in this file! See (correct) PDG average below.
     BR(B+->enu): < 0.98e-6 @ 90% CL
     BR(B+->munu): < 1.0e-6 @ 90% CL
-    BR(B+->taunu): (144 ± 31) e-6
+
+PDG B->taunu 2018:
+  experiment: PDG
+  url: http://pdglive.lbl.gov/BranchingRatio.action?desig=184&parCode=S041
+  inspire:
+  values:
+    BR(B+->taunu): (1.09 ± 0.24) e-4
 
 BaBar Btautau 2005:
   experiment: BaBar
@@ -23,17 +30,11 @@ BaBar Btautau 2005:
   values:
     BR(B0->tautau): < 4.1e-3 @ 90% CL
 
-# Here the measured total BR is converted to the binned differential BR
-# by dividing the experimental number by the bin width (12 GeV^2),
-# taken to cover the entire kinematically allowed range.
 BaBar BKtautau 2016:
   experiment: BaBar
   inspire: TheBaBar:2016xwe
   values:
-    - name: <dBR/dq2>(B+->Ktautau)
-      q2min: 12
-      q2max: 24
-      value: (0.109167 +0.055 -0.0508333 +0.0291667 -0.0208333) e-3
+    BR(B+->Ktautau): (1.31 + 0.66 - 0.61 + 0.35 - 0.25) e-3
 
 B->Xgamma WA 2017:
   inspire: Misiak:2017bgg
@@ -2828,9 +2829,12 @@ PiENu pi->enu 2015:
   values:
     BR(pi+->enu): (1.2344±0.0023±0.0019)1e-4
 
-LHCb Lambdab->Lambdamumu 2015:
+# note: the angular observables in that measurement were partly incorrect
+# due to a mistake in the analysis and are superseded by
+# 'LHCb Lambdab->Lambdamumu 2018'
+LHCb Lambdab->Lambdamumu 2015 BR:
   experiment: LHCb
-  inspire:
+  inspire: Aaij:2015xza
   values:
     - name: <dBR/dq2>(Lambdab->Lambdamumu)
       q2min: 0.1
@@ -2872,78 +2876,25 @@ LHCb Lambdab->Lambdamumu 2015:
       q2min: 15
       q2max: 20
       value: 1.20  + 0.09 - 0.09 + 0.02 - 0.04 ± 0.25 e-7
-    - name: <FL>(Lambdab->Lambdamumu)
-      q2min: 0.1
-      q2max: 2
-      value: 0.56 + 0.23 - 0.56 ± 0.08
-    - name: <FL>(Lambdab->Lambdamumu)
-      q2min: 11
-      q2max: 12.5
-      value: 0.40 + 0.37 - 0.36 ± 0.06
-    - name: <FL>(Lambdab->Lambdamumu)
-      q2min: 15
-      q2max: 16
-      value: 0.49 + 0.30 - 0.30 ± 0.05
-    - name: <FL>(Lambdab->Lambdamumu)
-      q2min: 16
-      q2max: 18
-      value: 0.68 + 0.15 - 0.21 ± 0.05
-    - name: <FL>(Lambdab->Lambdamumu)
-      q2min: 18
-      q2max: 20
-      value: 0.62 + 0.24 - 0.27 ± 0.04
-    - name: <FL>(Lambdab->Lambdamumu)
-      q2min: 15
-      q2max: 20
-      value: 0.61 + 0.11 - 0.14 ± 0.03
-    - name: <AFBh>(Lambdab->Lambdamumu)
-      q2min: 0.1
-      q2max: 2
-      value: -0.12 + 0.31 - 0.28 ± 0.15
-    - name: <AFBh>(Lambdab->Lambdamumu)
-      q2min: 11
-      q2max: 12.5
-      value: -0.50 + 0.10 - 0.001 ± 0.04
+
+
+LHCb Lambdab->Lambdamumu 2018:
+  experiment: LHCb
+  inspire: Aaij:2018gwm
+  values:
     - name: <AFBh>(Lambdab->Lambdamumu)
       q2min: 15
-      q2max: 16
-      value: -0.19 + 0.14 - 0.16 ± 0.03
-    - name: <AFBh>(Lambdab->Lambdamumu)
-      q2min: 16
-      q2max: 18
-      value: -0.44 + 0.10 - 0.05 ± 0.03
-    - name: <AFBh>(Lambdab->Lambdamumu)
-      q2min: 18
-      q2max: 20
-      value: -0.13 + 0.09 - 0.12 ± 0.03
-    - name: <AFBh>(Lambdab->Lambdamumu)
-      q2min: 15
-      q2max: 20
-      value: -0.29 + 0.07 - 0.07 ± 0.03
-    - name: <AFBl>(Lambdab->Lambdamumu)
-      q2min: 0.1
-      q2max: 2
-      value: 0.37 + 0.37 - 0.48 ± 0.03
-    - name: <AFBl>(Lambdab->Lambdamumu)
-      q2min: 11
-      q2max: 12.5
-      value: 0.01 + 0.19 - 0.18 ± 0.06
+      q2max: 19
+      value: -0.30 ± 0.05 ± 0.02
     - name: <AFBl>(Lambdab->Lambdamumu)
       q2min: 15
-      q2max: 16
-      value: -0.10 + 0.18 - 0.16 ± 0.03
-    - name: <AFBl>(Lambdab->Lambdamumu)
-      q2min: 16
-      q2max: 18
-      value: -0.07 + 0.13 - 0.12 ± 0.04
-    - name: <AFBl>(Lambdab->Lambdamumu)
-      q2min: 18
-      q2max: 20
-      value: 0.01 + 0.15 - 0.14 ± 0.04
-    - name: <AFBl>(Lambdab->Lambdamumu)
+      q2max: 19
+      value: -0.39 ± 0.04 ± 0.01
+    - name: <AFBlh>(Lambdab->Lambdamumu)
       q2min: 15
-      q2max: 20
-      value: -0.05 + 0.09 - 0.09 ± 0.03
+      q2max: 19
+      value: 0.25 ± 0.04 ± 0.01
+
 
 LHCb B+->Kmumu FH 2014:
   experiment: LHCb
@@ -4788,3 +4739,311 @@ BaBar B->pill LFV 2007:
   values:
     BR(B+->piemu,mue): < 1.7e-7 @ 90% CL
     BR(B0->piemu,mue): < 1.4e-7 @ 90% CL
+
+CHARM-II neutrino trident:
+  experiment: CHARM-II
+  inspire: Geiregat:1990gz
+  values:
+    R_trident: 1.58 ± 0.57
+
+CCFR neutrino trident:
+  experiment: CCFR
+  inspire: Mishra:1991bv
+  values:
+    R_trident: 0.82 ± 0.28
+
+
+
+Belle B->Dtaunu shape 2015:
+  experiment: Belle
+  inspire: Huschle:2015rga
+  description: >
+      The numbers are constructed from Table V in 1612.07757. The entries for the
+      binned differential q^2-distribution is divided by the sum of all bins to
+      get rid of the arbitrary normalization factor, assumed in this paper. The systematic
+      error is obtained, by assuming the same one as in 1507.03233 for for R(D).
+  values:
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 4.0
+    q2max: 4.53
+    value: 0.078 ± 0.053 ± 0.022
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 4.53
+    q2max: 5.07
+    value: 0.091 ± 0.05 ± 0.02
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 5.07
+    q2max: 5.6
+    value: 0.072 ± 0.046 ± 0.019
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 5.6
+    q2max: 6.13
+    value: 0.093 ± 0.047 ± 0.019
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 6.13
+    q2max: 6.67
+    value: 0.053 ± 0.048 ± 0.02
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 6.67
+    q2max: 7.2
+    value: 0.145 ± 0.051 ± 0.021
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 7.2
+    q2max: 7.73
+    value: 0.046 ± 0.053 ± 0.022
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 7.73
+    q2max: 8.27
+    value: -0.01 ± 0.05 ± 0.02
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 8.27
+    q2max: 8.8
+    value: 0.053 ± 0.05 ± 0.02
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 8.8
+    q2max: 9.33
+    value: 0.122 ± 0.051 ± 0.021
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 9.33
+    q2max: 9.86
+    value: 0.063 ± 0.05 ± 0.02
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 9.86
+    q2max: 10.4
+    value: 0.121 ± 0.051 ± 0.021
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 10.4
+    q2max: 10.93
+    value: -0.003 ± 0.046 ± 0.019
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 10.93
+    q2max: 11.47
+    value: 0.065 ± 0.043 ± 0.017
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 11.47
+    q2max: 12.0
+    value: 0.011 ± 0.036 ± 0.014
+
+
+
+Belle B->D*taunu shape 2015:
+  experiment: Belle
+  inspire: Huschle:2015rga
+  description: >
+      The numbers are constructed from Table V in 1612.07757. The entries for the
+      binned differential q^2-distribution is divided by the sum of all bins to
+      get rid of the arbitrary normalization factor, assumed in this paper. The systematic
+      error is obtained, by assuming the same one as in 1507.03233 for R(D*).
+  values:
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 4.0
+    q2max: 4.53
+    value: 0.03 ± 0.051 ± 0.02
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 4.53
+    q2max: 5.07
+    value: 0.019 ± 0.044 ± 0.017
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 5.07
+    q2max: 5.6
+    value: -0.021 ± 0.037 ± 0.015
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 5.6
+    q2max: 6.13
+    value: 0.066 ± 0.046 ± 0.018
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 6.13
+    q2max: 6.67
+    value: 0.044 ± 0.051 ± 0.02
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 6.67
+    q2max: 7.2
+    value: 0.135 ± 0.045 ± 0.018
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 7.2
+    q2max: 7.73
+    value: 0.015 ± 0.043 ± 0.017
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 7.73
+    q2max: 8.27
+    value: 0.157 ± 0.05 ± 0.02
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 8.27
+    q2max: 8.8
+    value: 0.168 ± 0.046 ± 0.018
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 8.8
+    q2max: 9.33
+    value: 0.136 ± 0.042 ± 0.016
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 9.33
+    q2max: 9.86
+    value: 0.082 ± 0.037 ± 0.015
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 9.86
+    q2max: 10.4
+    value: 0.081 ± 0.028 ± 0.011
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 10.4
+    q2max: 10.93
+    value: 0.089 ± 0.028 ± 0.011
+
+
+
+
+BaBar B->Dtaunu shape 2013:
+  experiment: BaBar
+  inspire: Lees:2013uzd
+  description: >
+      The numbers are constructed from Table VI in 1612.07757. The entries for the
+      binned differential q^2-distribution is divided by the sum of all bins to
+      get rid of the arbitrary normalization factor, assumed in this paper. The systematic
+      error is obtained, by assuming the same one as in 1303.0571 for the corresponding
+      branching ratio.
+  values:
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 4.0
+    q2max: 4.5
+    value: 0.062 ± 0.032 ± 0.024
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 4.5
+    q2max: 5.0
+    value: 0.044 ± 0.031 ± 0.024
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 5.0
+    q2max: 5.5
+    value: 0.073 ± 0.027 ± 0.021
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 5.5
+    q2max: 6.0
+    value: 0.118 ± 0.034 ± 0.026
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 6.0
+    q2max: 6.5
+    value: 0.122 ± 0.035 ± 0.027
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 6.5
+    q2max: 7.0
+    value: 0.104 ± 0.035 ± 0.027
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 7.0
+    q2max: 7.5
+    value: 0.083 ± 0.032 ± 0.025
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 7.5
+    q2max: 8.0
+    value: 0.124 ± 0.039 ± 0.03
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 8.0
+    q2max: 8.5
+    value: 0.088 ± 0.037 ± 0.028
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 8.5
+    q2max: 9.0
+    value: 0.046 ± 0.034 ± 0.026
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 9.0
+    q2max: 9.5
+    value: -0.002 ± 0.034 ± 0.026
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 9.5
+    q2max: 10.0
+    value: 0.018 ± 0.037 ± 0.029
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 10.0
+    q2max: 10.5
+    value: 0.092 ± 0.042 ± 0.032
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 10.5
+    q2max: 11.0
+    value: 0.007 ± 0.032 ± 0.024
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 11.0
+    q2max: 11.5
+    value: 0.004 ± 0.029 ± 0.023
+  - name: <BR>/BR(B->Dtaunu)
+    q2min: 11.5
+    q2max: 12.0
+    value: 0.017 ± 0.023 ± 0.018
+
+
+
+
+BaBar B->D*taunu shape 2013:
+  experiment: BaBar
+  inspire: Lees:2013uzd
+  description: >
+      The numbers are constructed from Table VI in 1612.07757. The entries for the
+      binned differential q^2-distribution is divided by the sum of all bins to
+      get rid of the arbitrary normalization factor, assumed in this paper. The systematic
+      error is obtained, by assuming the same one as in 1303.0571 for the corresponding
+      branching ratio.
+  values:
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 4.0
+    q2max: 4.5
+    value: 0.001 ± 0.017 ± 0.013
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 4.5
+    q2max: 5.0
+    value: 0.057 ± 0.023 ± 0.018
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 5.0
+    q2max: 5.5
+    value: 0.054 ± 0.019 ± 0.014
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 5.5
+    q2max: 6.0
+    value: 0.05 ± 0.019 ± 0.014
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 6.0
+    q2max: 6.5
+    value: 0.048 ± 0.018 ± 0.014
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 6.5
+    q2max: 7.0
+    value: 0.093 ± 0.021 ± 0.016
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 7.0
+    q2max: 7.5
+    value: 0.107 ± 0.022 ± 0.017
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 7.5
+    q2max: 8.0
+    value: 0.119 ± 0.025 ± 0.019
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 8.0
+    q2max: 8.5
+    value: 0.096 ± 0.023 ± 0.017
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 8.5
+    q2max: 9.0
+    value: 0.09 ± 0.023 ± 0.018
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 9.0
+    q2max: 9.5
+    value: 0.092 ± 0.024 ± 0.018
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 9.5
+    q2max: 10.0
+    value: 0.076 ± 0.026 ± 0.02
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 10.0
+    q2max: 10.5
+    value: 0.077 ± 0.025 ± 0.019
+  - name: <BR>/BR(B->D*taunu)
+    q2min: 10.5
+    q2max: 11.0
+    value: 0.04 ± 0.025 ± 0.019
+
+
+LEP Bc->taunu:
+  experiment: LEP
+  inspire: Akeroyd:2017mhr
+  description: >
+    As shown in arXiv:1708.04072 (see also arXiv:hep-ph/9707248),
+    the LEP measurement of $B^+\to\tau^+\nu$ can be used to set an effective
+    bound on $B_c\to\tau^+\nu$ of around 10\%. This is interpreted as a
+    Gaussian 95% confidence level limit here.
+  values:
+    BR(Bc->taunu): < 0.1 @ 95% CL

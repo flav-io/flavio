@@ -126,6 +126,14 @@ def BR_tot(wc_obj, par, B, P, lep):
 def BR_tot_function(B, P, lep):
     return lambda wc_obj, par: BR_tot(wc_obj, par, B, P, lep)
 
+def BR_binned_tot_function(B, P, lep):
+    def f(wc_obj, par, q2min, q2max):
+        num = BR_binned(q2min, q2max, wc_obj, par, B, P, lep)
+        if num == 0:
+            return 0
+        den = BR_tot(wc_obj, par, B, P, lep)
+        return num / den
+    return f
 
 def BR_tot_leptonflavour(wc_obj, par, B, P, lnum, lden):
     num = BR_tot(wc_obj, par, B, P, lnum)
@@ -198,3 +206,14 @@ for l in [('mu','e'), ('tau','mu'), ('tau', 'l')]:
                 # add taxonomy for both processes (e.g. B->Penu and B->Pmunu) and for charged and neutral
                 _obs.add_taxonomy(_process_taxonomy + _hadr[N]['tex'] +_tex[li]+r"^+\nu_"+_tex[li]+r"$")
         Prediction(_obs_name, BR_tot_leptonflavour_function(_hadr_l[M]['B'], _hadr_l[M]['P'], l[0], l[1]))
+
+
+# B->Dtaunu normalized binned BR
+_obs_name = "<BR>/BR(B->Dtaunu)"
+_obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+_obs.set_description(r"Relative partial branching ratio of $B\to D\tau^+\nu$")
+_obs.tex = r"$\frac{\langle \text{BR} \rangle}{\text{BR}}(B\to D\tau^+\nu)$"
+for M in ['B+->D', 'B0->D']:
+    _process_tex = _hadr[M]['tex'] + r"\tau^+\nu"
+    _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
+Prediction(_obs_name, BR_binned_tot_function('B0', 'D+', 'tau'))

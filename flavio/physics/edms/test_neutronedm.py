@@ -1,6 +1,7 @@
 import unittest
 import flavio
 import wcxf
+from math import sqrt
 
 
 par = flavio.default_parameters.get_central_all()
@@ -37,4 +38,7 @@ class TestNeutronEDM(unittest.TestCase):
         par_dG['nEDM gT_u'] = 0
         par_dG['nEDM ~rho_u'] = 0
         p = flavio.Observable['d_n'].prediction_par(par_dG, wcf)
-        self.assertAlmostEqual(p, 2e-10, delta=0.3e-10)
+        v = 246.22
+        self.assertAlmostEqual(p,
+                               abs(-2*par_dG['nEDM ~rho_d']*1e-10),
+                               delta=0.3e-10)

@@ -63,9 +63,9 @@ _f_val_19 = _f_array[:,5].reshape(11,11,51) + 1j*_f_array[:,6].reshape(11,11,51)
 _f_val_27 = _f_array[:,7].reshape(11,11,51) + 1j*_f_array[:,8].reshape(11,11,51)
 _f_val_29 = _f_array[:,9].reshape(11,11,51) + 1j*_f_array[:,10].reshape(11,11,51)
 _F_17 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_17, bounds_error=False, fill_value=None)
-_F_19 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_19, bounds_error=False, fill_value=None)
+_sh_F_19 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_19, bounds_error=False, fill_value=None)
 _F_27 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_27, bounds_error=False, fill_value=None)
-_F_29 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_29, bounds_error=False, fill_value=None)
+_sh_F_29 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_29, bounds_error=False, fill_value=None)
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def F_17(muh, z, sh):
@@ -87,7 +87,9 @@ def F_19(muh, z, sh):
     - `z` is $z=m_c^2/m_b^2$,
     - `sh` is $\hat s=q^2/m_b^2$.
     """
-    return _F_19([muh, z, sh])[0]
+    if sh == 0:
+        return 0
+    return _sh_F_19([muh, z, sh])[0] / sh
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def F_27(muh, z, sh):
@@ -109,7 +111,9 @@ def F_29(muh, z, sh):
     - `z` is $z=m_c^2/m_b^2$,
     - `sh` is $\hat s=q^2/m_b^2$.
     """
-    return _F_29([muh, z, sh])[0]
+    if sh == 0:
+        return 0
+    return _sh_F_29([muh, z, sh])[0] / sh
 
 
 def F_89(Ls, sh):
@@ -149,8 +153,8 @@ def SeidelA(q2, mb, mu):
     """
     if q2==0:
         return 1/729. * (833 + 120j*pi - 312 * log(mb**2/mu**2))
-    sh = q2/mb**2
-    z = (4 * mb**2)/q2
+    sh = min(q2/mb**2, 0.999)
+    z = 4 / sh
     return (-(104)/(243) * log((mb**2)/(mu**2)) + (4 * sh)/(27 * (1 - sh)) *
     (li2(sh) + log(sh) * log( 1 - sh)) + (1)/(729 * (1 - sh)**2) * (6 * sh *
     (29 - 47 * sh) * log(sh) + 785 - 1600 * sh + 833 * sh**2 + 6 * pi * 1j * (20 -
@@ -164,8 +168,8 @@ def SeidelA(q2, mb, mu):
 def SeidelB(q2, mb, mu):
     """Function $A(s\equiv q^2)$ defined in eq. (30) of hep-ph/0403185v2.
     """
-    sh = q2/mb**2
-    z = (4 * mb**2)/q2
+    sh = min(q2/mb**2, 0.999)
+    z = 4 / sh
     x1 = 1/2 + 1j/2 * sqrt(z - 1)
     x2 = 1/2 - 1j/2 * sqrt(z - 1)
     x3 = 1/2 + 1j/(2 * sqrt(z - 1))

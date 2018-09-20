@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
-with open('flavio/_version.py') as f:
+with open('flavio/_version.py', encoding='utf-8') as f:
     exec(f.read())
 
-with open('README.md') as f:
+with open('README.md', encoding='utf-8') as f:
     LONG_DESCRIPTION = f.read()
 
 setup(name='flavio',
@@ -30,8 +30,7 @@ setup(name='flavio',
                 ]
       },
       install_requires=['numpy', 'scipy>=0.18', 'setuptools>=3.3', 'pyyaml',
-                        'wcxf>=1.4.1', 'ckmutil', 'wilson>=1.1', 'voluptuous',
-                        'dill'],
+                        'wcxf>=1.4.4', 'ckmutil', 'wilson>=1.2', ],
       extras_require={
             'testing': ['nose'],
             'plotting': ['matplotlib>=1.4'],

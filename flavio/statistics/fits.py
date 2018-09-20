@@ -16,115 +16,10 @@ import scipy.optimize
 import pickle
 from functools import partial
 import yaml
-import voluptuous as vol
-import dill
-import base64
-
-
-def ensurelist(v):
-    """Coerce NoneType to empty list, wrap non-list in list."""
-    if isinstance(v, list):
-        return v
-    elif v is None:
-        return []
-    else:
-        raise ValueError("Unexpected form of list: {}".format(v))
-
-
-def wc_function_factory(d):
-    """Return a Wilson coefficient function suitable for the `fit_wc_function`
-    argument starting from a dictionary.
-
-    There are three allowed forms. First form: simply taking the real values
-    of WCxf Wilson coefficients:
-
-    ```{'args': ['C9_bsmumu', 'C10_bsmumu']}```
-
-    which is equivalent to
-
-    ```lambda C9_bsmumu, C10_bsmumu: {'C9_bsmumu': C9_bsmumu, 'C10_bsmumu': C10_bsmumu}```
-
-    Second form: giving executable strings for each return key.
-
-    ```{'args': ['ReC9', 'ImC9'],
-        'return': {'C9_bsmumu': 'ReC9 + 1j * ImC9'}}```
-
-    which is equivalent to
-
-    ```lambda ReC9, ImC9: {'C9_bsmumu': ReC9 + 1j * ImC9}```
-
-    Third form: explicitly giving the Python code.
-    The function name is arbitrary. When using a lambda function,
-    it must be assigned to a name.
-
-    ```{'code': "def f(C9, C10):\n  return {'C9_bsmumu': 10 * C9, 'C10_bsmumu': 30 * C10}"```
-    """
-    if 'code' in d:
-        s = d['code']
-    elif 'pickle' in d:
-        return dill.loads(base64.b64decode(d['pickle'].encode('utf-8')))
-    elif 'args' not in d:
-        raise ValueError("Function dictionary not understood.")
-    elif 'return' not in d:
-        s = r"""def _f({}):
-    return locals()""".format(', '.join(d['args']))
-    else:
-        s = r"""def _f({}):
-    return {{{}}}""".format(', '.join(d['args']), ', '.join(["'{}': {}".format(k, v) for k, v in d['return'].items()]))
-    namespace = OrderedDict()
-    exec(s, namespace)  # execute string in empty namespace
-    namespace.pop('__builtins__', None)  # remove builtins key if exists
-    if not namespace:
-        warnings.warn("Function dictionary provided but no function found.")
-        return None
-    f = namespace.popitem()[1]  # assume the last variable is the function
-    if not callable(f):
-        raise ValueError("Function code not understood")
-    return f
-
-
-def fencode(f):
-    if f is None:
-        return None
-    return {'pickle': base64.b64encode(dill.dumps(f)).decode('utf-8')}
 
 
 class Fit(flavio.NamedInstanceClass):
     """Base class for fits. Not meant to be used directly."""
-
-    # voluptuous schema for loading fit from file
-    _input_schema = vol.Schema({
-        'name': str,
-        'fit_parameters': vol.Any(None, [str]),
-        'nuisance_parameters': vol.Any(None, [str]),
-        'observables':  [lambda v: flavio.Observable.argument_format(v, format='tuple')],
-        'exclude_measurements': vol.Any(None, [str]),
-        'include_measurements': vol.Any(None, [str]),
-        'input_scale': vol.Coerce(float),
-        'fit_wc_eft': str,
-        'fit_wc_basis': str,
-        'fit_wc_function': vol.All({'args': [vol.Coerce(str)],
-                                    'return': dict,
-                                    'code': vol.Coerce(str),
-                                    'pickle': vol.Coerce(str)}),
-    }, extra=vol.ALLOW_EXTRA)
-
-    # voluptuous schema for dumping fit to file
-    _output_schema = vol.Schema({
-        'name': str,
-        'fit_parameters': vol.All(ensurelist, [str]),
-        'nuisance_parameters': vol.All(ensurelist, [str]),
-        'observables':  [lambda v: flavio.Observable.argument_format(v, format='dict')],
-        'exclude_measurements': vol.All(ensurelist, [str]),
-        'include_measurements': vol.All(ensurelist, [str]),
-        'input_scale': vol.Coerce(float),
-        'fit_wc_eft': str,
-        'fit_wc_basis': str,
-        'fit_wc_function': vol.Any(None, {'args': [vol.Coerce(str)],
-                                          'return': dict,
-                                          'code': vol.Coerce(str),
-                                          'pickle': vol.Coerce(str)}),
-    }, extra=vol.REMOVE_EXTRA)
 
     def __init__(self,
                  name,
@@ -211,51 +106,6 @@ class Fit(flavio.NamedInstanceClass):
         self.dimension = len(self.fit_parameters) + len(self.nuisance_parameters) + len(self.fit_wc_names)
         self.eft = fit_wc_eft
         self.basis = fit_wc_basis
-
-    @classmethod
-    def load(cls, f):
-        """Load the fit definition from a YAML string or stream."""
-        kwargs = cls._input_schema(flavio.io.yaml.load_include(f))
-        if 'fit_wc_function' in kwargs:
-            # Copy string defining the fit_wc_function to local variable.
-            fit_wc_function_string = kwargs['fit_wc_function'].copy()
-            # Replace kwargs['fit_wc_function'] by actual function.
-            kwargs['fit_wc_function'] = wc_function_factory(fit_wc_function_string)
-        else:
-            fit_wc_function_string = None
-        fit = cls(**kwargs)
-        if fit_wc_function_string is not None:
-            # Save string defining the fit_wc_function as private attribute of fit.
-            fit._fit_wc_function_string = fit_wc_function_string
-            # Save the fit_wc_function associated to fit_wc_function_string as
-            # private method of fit. This allows comparing it with the public
-            # method fit.fit_wc_function and to infer if fit.fit_wc_function
-            # has been changed since initialization
-            fit._fit_wc_function_orig = kwargs['fit_wc_function']
-        return fit
-
-    def dump(self, stream=None, **kwargs):
-        """Dump the fit definition to a YAML string or stream.
-
-        Note that this currently does *not* dump any information contained
-        in the `par_obj` argument or `fit_wc_priors`.
-        """
-        d = self.__dict__.copy()
-        # Dump string defining the fit_wc_function if it exists and if
-        # fit_wc_function has not been changed since intialization, i.e. if it
-        # is identical to the original function _fit_wc_function_orig that has
-        # been generated from the string
-        if ('_fit_wc_function_string' in d
-        and '_fit_wc_function_orig' in d
-        and d['fit_wc_function'] ==  d['_fit_wc_function_orig']):
-            d['fit_wc_function'] = d['_fit_wc_function_string']
-        # Otherwise, dump the pickled fit_wc_function
-        elif d['fit_wc_function'] is not None:
-            d['fit_wc_function'] = fencode(d['fit_wc_function'])
-        d = self._output_schema(d)
-        # remove NoneTypes and empty lists
-        d = {k: v for k, v in d.items() if v is not None and v != []}
-        return yaml.dump(d, stream=stream, **kwargs)
 
     @property
     def get_central_fit_parameters(self):

@@ -31,7 +31,7 @@ def helicity_amps(q2, wc, par, B, V, l1, l2):
     h = flavio.physics.bdecays.angular.helicity_amps_v(q2, mB, mV, mb, 0, ml1, ml2, ff, wc_eff, N)
     return h
 
-def bvlilj_obs(function, q2, wc_obj, par, B, V, l1, l2):
+def bvlilj_obs(function, q2, wc, par, B, V, l1, l2):
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
     mB = par['m_'+B]
@@ -39,20 +39,23 @@ def bvlilj_obs(function, q2, wc_obj, par, B, V, l1, l2):
     if q2 < (ml1+ml2)**2 or q2 > (mB-mV)**2:
         return 0
     scale = flavio.config['renormalization scale']['bvll']
-    label = flavio.physics.bdecays.common.meson_quark[(B,V)] + l1 + l2 # e.g. bsemu, bdtaue
-    wc = wc_obj.get_wc(label, scale, par)
     mb = flavio.physics.running.running.get_mb(par, scale)
-    ff = flavio.physics.bdecays.bvll.amplitudes.get_ff(q2, par, B, V)
     h = helicity_amps(q2, wc, par, B, V, l1, l2)
     J = flavio.physics.bdecays.angular.angularcoeffs_general_v(h, q2, mB, mV, mb, 0, ml1, ml2)
     return function(J)
 
-def bvlilj_obs_int(function, q2min, q2max, wc_obj, par, B, V, l1, l2):
+def bvlilj_obs_int(function, q2min, q2max, wc, par, B, V, l1, l2):
     def obs(q2):
-        return bvlilj_obs(function, q2, wc_obj, par, B, V, l1, l2)
+        return bvlilj_obs(function, q2, wc, par, B, V, l1, l2)
     return flavio.math.integrate.nintegrate(obs, q2min, q2max)
 
 def BR_tot(wc_obj, par, B, V, l1, l2):
+    scale = flavio.config['renormalization scale']['bvll']
+    label = flavio.physics.bdecays.common.meson_quark[(B,V)] + l1 + l2 # e.g. bsemu, bdtaue
+    wc = wc_obj.get_wc(label, scale, par)
+    if all([abs(v) < 1e-12 for v in wc.values()]):
+        # if all WCs are essentially zero, return BR=0
+        return 0
     mB = par['m_'+B]
     mV = par['m_'+V]
     ml1 = par['m_'+l1]
@@ -61,7 +64,7 @@ def BR_tot(wc_obj, par, B, V, l1, l2):
     q2min = (ml1+ml2)**2
     tauB = par['tau_'+B]
     return tauB*bvlilj_obs_int(flavio.physics.bdecays.bvll.observables.dGdq2,
-                          q2min, q2max, wc_obj, par, B, V, l1, l2)
+                          q2min, q2max, wc, par, B, V, l1, l2)
 
 def BR_tot_function(B, V, l1, l2):
     return lambda wc_obj, par: BR_tot(wc_obj, par, B, V, l1, l2)

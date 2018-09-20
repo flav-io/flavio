@@ -1045,12 +1045,18 @@ nEDM gT_d:
 nEDM gT_u:
   tex: $g_T^u$
   description: Neutron up quark tensor charge
+nEDM gT_s:
+  tex: $g_T^s$
+  description: Nucleon strange quark tensor charge
 nEDM ~rho_d:
   tex: $\tilde \rho_d$
   description: coefficient of the down quark CEDM contribution to the neutron EDM
 nEDM ~rho_u:
   tex: $\tilde \rho_u$
   description: coefficient of the up quark CEDM contribution to the neutron EDM
+nEDM ~rho_s:
+  tex: $\tilde \rho_s$
+  description: coefficient of the strange quark CEDM contribution to the neutron EDM
 nEDM beta_G:
   tex: $\beta_G$
   description: coefficient of the three-gluon Weinberg operator contribution to the neutron EDM
@@ -1171,3 +1177,8 @@ Kpipi M0 SLL2_d:
 Kpipi M2 SLL2_d:
   tex: $\langle Q_2^{\text{SLL},d} \rangle_2$
   description: $K\to (\pi\pi)_{I=2}$ matrix element of $Q_2^{\text{SLL},d}$
+
+# anomalous magnet moment of the muon
+a_mu SM:
+  tex: $a_\mu^\text{SM}$
+  description: SM prediction for the anomalous magnetic moment of the muon
