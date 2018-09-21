@@ -404,7 +404,7 @@ def density_contour(x, y, covariance_factor=None, n_bins=None, n_sigma=(1, 2),
 
 
 def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
-              n_sigma=1, steps=20, threads=1):
+              n_sigma=1, steps=20, threads=1, pool=None):
     r"""Generate data required to plot coloured confidence contours (or bands)
     given a log likelihood function.
 
@@ -420,6 +420,9 @@ def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
       this number squared times the computing time of one `log_likelihood` call!)
     - `threads`: number of threads, defaults to 1. If greater than one,
       computation of z values will be done in parallel.
+    - `pool`: an instance of `multiprocessing.Pool` (or a compatible
+    implementation, e.g. from `multiprocess` or `schwimmbad`). Overrides the
+    `threads` argument.
     """
     _x = np.linspace(x_min, x_max, steps)
     _y = np.linspace(y_min, y_max, steps)
@@ -431,7 +434,7 @@ def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
         z = chi2_vect(x, y)
     else:
         xy = np.array([x, y]).reshape(2, steps**2).T
-        pool = Pool(threads)
+        pool = pool or Pool(threads)
         try:
             z = -2*np.array(pool.map(log_likelihood, xy )).reshape((steps, steps))
         except PicklingError:
