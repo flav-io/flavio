@@ -43,6 +43,7 @@ renormalization scale:
 
     #  tau decays
     taudecays: 1.8
+    tau g-2: 91.1876
 
     # EW decays
     zdecays: 91.1876

@@ -1200,10 +1200,14 @@ delta_Gammab:
 delta_Gammanu:
   tex: $\delta_{\Gamma_\nu}$
   description: Uncertainty in the SM $Z$ partial width to neutrinos in GeV
-# anomalous magnet moment of the muon
+
+# lepton anomalous magnet moments
 a_mu SM:
   tex: $a_\mu^\text{SM}$
   description: SM prediction for the anomalous magnetic moment of the muon
+a_tau SM:
+  tex: $a_\tau^\text{SM}$
+  description: SM prediction for the anomalous magnetic moment of the tau
 
 # Parameters for W decays
 GammaW_had:

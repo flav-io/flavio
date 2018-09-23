@@ -4,10 +4,10 @@ import flavio
 from math import sqrt, pi
 
 
-def al(wc_obj, par, l, scale):
+def al(wc_obj, par, l, eft, scale):
     r"""Anomalous magnetic moment of lepton `l` at scale `scale`,
     $a_\ell = (g_\ell - 2) / 2$."""
-    wc = wc_obj.get_wc(sector='dF=0', scale=scale, par=par, eft='WET-3', basis='flavio')
+    wc = wc_obj.get_wc(sector='dF=0', scale=scale, par=par, eft=eft, basis='flavio')
     # the covariant derivative contains d_mu + eta i e Q A, where Q=-1
     # the Lagrangian contains -eta * e*Q*a/(4*m) (...)
     # the effective Lagrangian contains p * ReC7 (...)
@@ -22,10 +22,16 @@ def al(wc_obj, par, l, scale):
 
 
 def amu(wc_obj, par):
-    r"""Anomalous magnetic moment of muon,
+    r"""Anomalous magnetic moment of the muon,
     $a_\mu = (g_\mu - 2) / 2$."""
     scale = flavio.config['renormalization scale']['mudecays']
-    return al(wc_obj, par, l='mu', scale=scale)
+    return al(wc_obj, par, l='mu', eft='WET-3', scale=scale)
+
+def atau(wc_obj, par):
+    r"""Anomalous magnetic moment of the tau lepton,
+    $a_\tau = (g_\tau - 2) / 2$."""
+    scale = flavio.config['renormalization scale']['tau g-2']
+    return al(wc_obj, par, l='tau', eft='WET', scale=scale)
 
 
 def make_observable(l, ltex, lname, lfunc):
@@ -39,3 +45,4 @@ def make_observable(l, ltex, lname, lfunc):
 
 
 make_observable('mu', r'\mu', 'muon', amu)
+make_observable('tau', r'\tau', 'tau lepton', atau)

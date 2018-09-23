@@ -5227,3 +5227,10 @@ Belle B->D*lnu 2018 untagged:
   inspire: Abdesselam:2018nnh
   values:
     Rmue(B->D*lnu): 0.99 ± 0.01 ± 0.03
+
+PDG g-2:
+  experiment: PDG
+  inspire: Tanabashi:2018oca
+  values:
+    a_mu: 11659208.9 ± 5.4 ± 3.3 e-10
+    a_tau: -0.018 ± 0.017
