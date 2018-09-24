@@ -2907,15 +2907,15 @@ LHCb Lambdab->Lambdamumu 2018:
   values:
     - name: <AFBh>(Lambdab->Lambdamumu)
       q2min: 15
-      q2max: 19
+      q2max: 20
       value: -0.30 ± 0.05 ± 0.02
     - name: <AFBl>(Lambdab->Lambdamumu)
       q2min: 15
-      q2max: 19
+      q2max: 20
       value: -0.39 ± 0.04 ± 0.01
     - name: <AFBlh>(Lambdab->Lambdamumu)
       q2min: 15
-      q2max: 19
+      q2max: 20
       value: 0.25 ± 0.04 ± 0.01
 
 
