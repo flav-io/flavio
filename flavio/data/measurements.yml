@@ -3250,7 +3250,7 @@ Belle B->hnunu SL 2017:
       background_variance: 3.4
     BR(B0->Knunu):
       distribution: general_gamma_upper_limit
-      limit: 1.3e-5
+      limit: 2.6e-5
       confidence_level: 0.9
       counts_total: 18
       counts_signal: 0.6
@@ -3313,7 +3313,7 @@ Belle B->hnunu had 2013:
       background_variance: 2.3
     BR(B0->Knunu):
       distribution: general_gamma_upper_limit
-      limit: 9.7e-5
+      limit: 19.4e-5
       confidence_level: 0.9
       counts_total: 4
       counts_signal: 1.8
