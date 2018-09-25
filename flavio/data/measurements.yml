@@ -5234,3 +5234,14 @@ PDG g-2:
   values:
     a_mu: 11659208.9 ± 5.4 ± 3.3 e-10
     a_tau: -0.018 ± 0.017
+
+K+->pinunu E949 2009:
+  experiment: 'E949'
+  inspire: Artamonov:2009sz
+  values:
+    BR(K+->pinunu): 0.173 + 0.115 - 0.105 e-9
+
+KL->pinunu KOTO 2018:
+  experiment: KOTO
+  values:
+    BR(KL->pinunu): < 3.0e-9 @ 90% CL
