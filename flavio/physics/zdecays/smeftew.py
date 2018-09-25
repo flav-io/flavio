@@ -71,11 +71,11 @@ def gA_SM(f, par):
 
 def d_gVl(f1, f2, par, C):
     i, j = sorted((_sectors['l'][f1], _sectors['l'][f2]))
-    d_g = -(C['phie_{}{}'.format(i, j)] + C['phil1_{}{}'.format(i, j)] + C['phil3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF']) + d_sh2(par, C)
+    d_g = -(C['phie_{}{}'.format(i, j)] + C['phil1_{}{}'.format(i, j)] + C['phil3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF'])
     if i > j:
         d_g = d_g.conjugate()
     if f1 == f2:
-        d_g += d_gZb(par, C) * gV_SM(f1, par)
+        d_g += d_gZb(par, C) * gV_SM(f1, par) + d_sh2(par, C)
     return d_g
 
 
@@ -91,21 +91,21 @@ def d_gVnu(f1, f2, par, C):
 
 def d_gVu(f1, f2, par, C):
     i, j = sorted((_sectors['u'][f1], _sectors['u'][f2]))
-    d_g = (-C['phiu_{}{}'.format(i, j)] - C['phiq1_{}{}'.format(i, j)] + C['phiq3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF']) - 2 / 3 * d_sh2(par, C)
+    d_g = (-C['phiu_{}{}'.format(i, j)] - C['phiq1_{}{}'.format(i, j)] + C['phiq3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF'])
     if i > j:
         d_g = d_g.conjugate()
     if f1 == f2:
-        d_g += d_gZb(par, C) * gV_SM(f1, par)
+        d_g += d_gZb(par, C) * gV_SM(f1, par) - 2 / 3 * d_sh2(par, C)
     return d_g
 
 
 def d_gVd(f1, f2, par, C):
     i, j = sorted((_sectors['d'][f1], _sectors['d'][f2]))
-    d_g = -(C['phid_{}{}'.format(i, j)] + C['phiq1_{}{}'.format(i, j)] + C['phiq3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF']) + 1 / 3 * d_sh2(par, C)
+    d_g = -(C['phid_{}{}'.format(i, j)] + C['phiq1_{}{}'.format(i, j)] + C['phiq3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF'])
     if i > j:
         d_g = d_g.conjugate()
     if f1 == f2:
-        d_g += d_gZb(par, C) * gV_SM(f1, par)
+        d_g += d_gZb(par, C) * gV_SM(f1, par) + 1 / 3 * d_sh2(par, C)
     return d_g
 
 
