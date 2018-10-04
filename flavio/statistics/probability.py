@@ -1113,6 +1113,31 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
         """Get `size` random numbers (default: a single one)"""
         return np.random.multivariate_normal(self.central_value, self.covariance, size)
 
+    def reduce_dimension(self, exclude=None):
+        """Return a different instance where certain dimensions, specified by
+        the iterable of integers `exclude`, are removed from the covariance.
+
+        If `exclude` contains all indices but one, an instance of
+        `NormalDistribution` will be returned.
+        """
+        if not exclude:
+            return self
+        # if parameters are to be excluded, construct a
+        # distribution with reduced mean vector and covariance matrix
+        _cent_ex = np.delete(self.central_value, exclude)
+        _cov_ex = np.delete(
+            np.delete(self.covariance, exclude, axis=0), exclude, axis=1)
+        if len(_cent_ex) == 1:
+            # if only 1 dimension remains, can use a univariate Gaussian
+            _dist_ex = NormalDistribution(
+                central_value=_cent_ex[0], standard_deviation=np.sqrt(_cov_ex[0, 0]))
+        else:
+            # if more than 1 dimension remains, use a (smaller)
+            # multivariate Gaussian
+            _dist_ex = MultivariateNormalDistribution(
+                central_value=_cent_ex, covariance=_cov_ex)
+        return _dist_ex
+
     def logpdf(self, x, exclude=None):
         """Get the logarithm of the probability density function.
 
@@ -1127,20 +1152,8 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
             # if parameters are to be excluded, construct a temporary
             # distribution with reduced mean vector and covariance matrix
             # and call its logpdf method
-            _cent_ex = np.delete(self.central_value, exclude)
-            _cov_ex = np.delete(
-                np.delete(self.covariance, exclude, axis=0), exclude, axis=1)
-            if len(_cent_ex) == 1:
-                # if only 1 dimension remains, can use a univariate Gaussian
-                _dist_ex = NormalDistribution(
-                    central_value=_cent_ex[0], standard_deviation=np.sqrt(_cov_ex[0, 0]))
-                return _dist_ex.logpdf(x)
-            else:
-                # if more than 1 dimension remains, use a (smaller)
-                # multivariate Gaussian
-                _dist_ex = MultivariateNormalDistribution(
-                    central_value=_cent_ex, covariance=_cov_ex)
-                return _dist_ex.logpdf(x, exclude=None)
+            _dist_ex = self.reduce_dimension(exclude=exclude)
+            return _dist_ex.logpdf(x)
         # undoing the rescaling of the covariance
         pdf_scaled = scipy.stats.multivariate_normal.logpdf(
             x / self.err, self.central_value / self.err, self.scaled_covariance)
@@ -1251,6 +1264,31 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
         xi_diff = np.array([ X[1]-X[0] for X in self.xi ])
         return xi_r + np.random.uniform(low=-0.5, high=0.5, size=len(self.xi)) * xi_diff
 
+    def reduce_dimension(self, exclude=None):
+        """Return a different instance where certain dimensions, specified by
+        the iterable of integers `exclude`, are removed from the covariance.
+
+        If `exclude` contains all indices but one, an instance of
+        `NumericalDistribution` will be returned.
+        """
+        if not exclude:
+            return self
+        # if parameters are to be excluded, construct a
+        # distribution with reduced mean vector and covariance matrix
+        try:
+            exclude = tuple(exclude)
+        except TypeError:
+            exclude = (exclude,)
+        xi = np.delete(self.xi, tuple(exclude), axis=0)
+        y = np.amax(self.y_norm, axis=tuple(exclude))
+        cv = np.delete(self.central_value, tuple(exclude))
+        if len(xi) == 1:
+            # if there is just 1 dimension left, use univariate
+            dist = NumericalDistribution(xi[0], y, cv)
+        else:
+            dist = MultivariateNumericalDistribution(xi, y, cv)
+        return dist
+
     def logpdf(self, x, exclude=None):
         """Get the logarithm of the probability density function.
 
@@ -1262,18 +1300,10 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
           along the remaining directions, i.e., they will be "profiled out".
         """
         if exclude is not None:
-            try:
-                exclude = tuple(exclude)
-            except TypeError:
-                exclude = (exclude,)
-            xi = np.delete(self.xi, tuple(exclude), axis=0)
-            y = np.amax(self.y_norm, axis=tuple(exclude))
-            cv = np.delete(self.central_value, tuple(exclude))
-            if len(xi) == 1:
-                # if there is just 1 dimension left, use univariate
-                dist = NumericalDistribution(xi[0], y, cv)
-            else:
-                dist = MultivariateNumericalDistribution(xi, y, cv)
+            # if parameters are to be excluded, construct a temporary
+            # distribution with reduced mean vector and covariance matrix
+            # and call its logpdf method
+            dist = self.reduce_dimension(exclude=exclude)
             return dist.logpdf(x)
         if np.asarray(x).shape == (len(self.central_value),):
             # return a scalar
@@ -1531,6 +1561,114 @@ def _convolve_multivariate_gaussian_numerical(mvgaussian,
         # shift back
         xi = (xi.T + np.array(mvgaussian.central_value)).T
     return MultivariateNumericalDistribution(xi, f)
+
+
+def combine_distributions(probability_distributions):
+    """Combine a set of probability distributions by multiplying the PDFs.
+
+    `probability_distributions` must be a list of instances of descendants of
+    `ProbabilityDistribution`.
+    """
+    def dim(x):
+        # 1 for floats and length for arrays
+        try:
+            float(x)
+        except:
+            return len(x)
+        else:
+            return 1
+    dims = [dim(p.central_value) for p in probability_distributions]
+    assert all([d == dims[0] for d in dims]), "All distributions must have the same number of dimensions"
+    if dims[0] == 1:
+        return _combine_distributions_univariate(probability_distributions)
+    else:
+        return _combine_distributions_multivariate(probability_distributions)
+
+def _combine_distributions_univariate(probability_distributions):
+    # if there's just one: return it immediately
+    if len(probability_distributions) == 1:
+        return probability_distributions[0]
+
+    # all delta dists
+    deltas = [p for p in probability_distributions if isinstance(
+        p, DeltaDistribution)]
+
+    if len(deltas) > 1:
+        # for multiple delta dists, check if central values are the same
+        cvs = set([p.central_value for p in deltas])
+        if len(cvs) > 1:
+            raise ValueError("Combining multiple delta distributions with different central values yields zero PDF")
+        else:
+            return deltas[0]
+    elif len(deltas) == 1:
+        # for single delta dist, nothing to combine: delta always wins!
+        return deltas[0]
+
+    # all normal dists
+    gaussians = [p for p in probability_distributions if isinstance(
+        p, NormalDistribution)]
+
+    # all other univariate dists
+    others = [p for p in probability_distributions
+              if not isinstance(p, NormalDistribution)
+              and not isinstance(p, DeltaDistribution)]
+
+    # let's combine the normal distributions into 1
+    if gaussians:
+        gaussian = _combine_gaussians(gaussians)
+
+    if gaussians and not others:
+        # if there are only the gaussians, we are done.
+        return gaussian
+    else:
+        # otherwise, we need to combine the (combined) gaussian with the others
+        if gaussians:
+            to_be_combined = others + [gaussian]
+        else:
+            to_be_combined = others
+        # turn all distributions into numerical distributions!
+        numerical = [NumericalDistribution.from_pd(p) for p in to_be_combined]
+        return _combine_numerical(numerical)
+
+
+def weighted_average(central_values, standard_deviations):
+    """Return the central value and standard deviation of the weighted average
+    if a set of normal distributions specified by a list of central values
+    and standard deviations"""
+    c = np.average(central_values, weights=1 / np.asarray(standard_deviations)**2)
+    u = np.sqrt(1 / np.sum(1 / np.asarray(standard_deviations)**2))
+    return c, u
+
+
+def _combine_gaussians(probability_distributions):
+    # if there's just one: return it immediately
+    if len(probability_distributions) == 1:
+        return probability_distributions[0]
+    assert all(isinstance(p, NormalDistribution) for p in probability_distributions), \
+        "Distributions should all be instances of NormalDistribution"
+    central_values = [p.central_value for p in probability_distributions]
+    standard_deviations = [p.standard_deviation for p in probability_distributions]
+    c, u = weighted_average(central_values, standard_deviations)
+    return NormalDistribution(central_value=c, standard_deviation=u)
+
+
+def _combine_numerical(probability_distributions, nsteps=1000):
+    if len(probability_distributions) == 1:
+        return probability_distributions[0]
+    assert all(isinstance(p, NumericalDistribution) for p in probability_distributions), \
+        "Distributions should all be instances of NumericalDistribution"
+    supports = np.array([p.support for p in probability_distributions])
+    support = (np.max(supports[:, 0]), np.min(supports[:, 1]))
+    if support [1] <= support[0]:
+        raise ValueError("Numerical distributions to not have overlapping support")
+    x = np.linspace(support[0], support[1], nsteps)
+    y = np.exp(np.sum([pd.logpdf(x) for pd in probability_distributions], axis=0))
+    return NumericalDistribution(x=x, y=y)
+
+
+def _combine_distributions_multivariate(probability_distributions):
+    raise NotImplementedError("Combining multivariate PDs is not implemented yet.")
+
 
 def dict2dist(constraint_dict):
     r"""Get a list of probability distributions from a list of dictionaries

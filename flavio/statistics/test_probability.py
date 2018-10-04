@@ -1,7 +1,6 @@
 import unittest
 import numpy as np
 import numpy.testing as npt
-import flavio
 import scipy.stats
 from math import pi, sqrt, exp, log
 from flavio.statistics.probability import *
@@ -427,8 +426,8 @@ class TestProbability(unittest.TestCase):
         xr2 = np.random.rand(10, 2)
         self.assertEqual(d.logpdf(xr3[0]).shape, ())
         self.assertEqual(d.logpdf(xr3).shape, (10,))
-        self.assertEqual(d.logpdf(xr2[0], exclude=(0)).shape, ())
-        self.assertEqual(d.logpdf(xr2, exclude=(0)).shape, (10,))
+        self.assertEqual(d.logpdf(xr2[0], exclude=(0,)).shape, ())
+        self.assertEqual(d.logpdf(xr2, exclude=(0,)).shape, (10,))
         self.assertEqual(d.logpdf(xr[0], exclude=(0, 1)).shape, ())
         self.assertEqual(d.logpdf(xr, exclude=(0, 1)).shape, (10,))
         xi = [np.linspace(-1,1,5), np.linspace(-1,1,6), np.linspace(-1,1,7)]
@@ -438,8 +437,8 @@ class TestProbability(unittest.TestCase):
         xr2 = np.random.rand(10, 2)
         self.assertEqual(d.logpdf(xr3[0]).shape, ())
         self.assertEqual(d.logpdf(xr3).shape, (10,))
-        self.assertEqual(d.logpdf(xr2[0], exclude=(0)).shape, ())
-        self.assertEqual(d.logpdf(xr2, exclude=(0)).shape, (10,))
+        self.assertEqual(d.logpdf(xr2[0], exclude=(0,)).shape, ())
+        self.assertEqual(d.logpdf(xr2, exclude=(0,)).shape, (10,))
         self.assertEqual(d.logpdf(xr[0], exclude=(0, 1)).shape, ())
         self.assertEqual(d.logpdf(xr, exclude=(0, 1)).shape, (10,))
 
@@ -590,3 +589,44 @@ class TestProbability(unittest.TestCase):
             npt.assert_array_equal(p.correlation, np.array([[1, 0.75], [0.75, 1]]))
         with self.assertRaises(ValueError):
             MultivariateNormalDistribution([0, 0], correlation=[[1, 0.75], [0.75, 1]])
+
+
+class TestCombineDistributions(unittest.TestCase):
+
+    def test_combine_normal(self):
+        p_1 = NormalDistribution(5, 0.2)
+        p_2 = NormalDistribution(4, 0.3)
+        p_comb = combine_distributions([p_1, p_2])
+        self.assertIsInstance(p_comb, NormalDistribution)
+        s = np.array([0.2, 0.3])
+        c = np.array([5, 4])
+        w = 1 / s**2  # weights
+        s_comb = sqrt(1 / np.sum(w))
+        c_comb = np.sum(c * w) / np.sum(w)
+        self.assertEqual(p_comb.central_value, c_comb)
+        self.assertEqual(p_comb.standard_deviation, s_comb)
+
+    def test_combine_delta(self):
+        pd_1 = DeltaDistribution(12.5)
+        pd_2 = DeltaDistribution(12.3)
+        pn = NormalDistribution(12.4, 2.463)
+        with self.assertRaises(ValueError):
+            combine_distributions([pd_1, pd_2])
+        for pd in [pd_1, pd_2]:
+            p_comb = combine_distributions([pd, pn])
+            self.assertIsInstance(p_comb, DeltaDistribution)
+            self.assertEqual(p_comb.central_value, pd.central_value)
+
+    def test_combine_numerical(self):
+        p_1 = NumericalDistribution.from_pd(NormalDistribution(5, 0.2))
+        p_2 = NumericalDistribution.from_pd(NormalDistribution(4, 0.3))
+        p_comb = combine_distributions([p_1, p_2])
+        self.assertIsInstance(p_comb, NumericalDistribution)
+        s = np.array([0.2, 0.3])
+        c = np.array([5, 4])
+        w = 1 / s**2  # weights
+        s_comb = sqrt(1 / np.sum(w))
+        c_comb = np.sum(c * w) / np.sum(w)
+        self.assertAlmostEqual(p_comb.central_value, c_comb, places=2)
+        self.assertAlmostEqual(p_comb.error_left, s_comb, places=2)
+        self.assertAlmostEqual(p_comb.error_right, s_comb, places=2)
