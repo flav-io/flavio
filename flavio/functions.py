@@ -6,6 +6,7 @@ import numpy as np
 from collections import defaultdict
 from multiprocessing import Pool
 from functools import partial
+import warnings
 
 
 def np_prediction(obs_name, wc_obj, *args, **kwargs):
@@ -252,3 +253,60 @@ def sm_covariance(obs_list, N=100, par_vary='all', par_obj=None, threads=1,
         pool.join()
     all_pred = np.array(list(pred_map))
     return np.cov(all_pred.T)
+
+
+def combine_measurements(observable, include_measurements=None,
+                         **kwargs):
+    """Combine all existing measurements of a particular observable.
+
+    Returns a one-dimensional instance of `ProbabilityDistribution`.
+    Correlations with other obersables are ignored.
+
+    Parameters:
+
+    - `observable`: observable name
+    - `include_measurements`: iterable of measurement names to be included
+      (default: all)
+
+    Observable arguments have to be specified as keyword arguments, e.g.
+    `combine_measurements('<dBR/dq2>(B+->Kmumu)', q2min=1, q2max=6)`.
+
+    Note that this function returns inconsistent results (and a corresponding
+    warning is issued) if an observable is constrained by more than one
+    multivariate measurement.
+    """
+    if not kwargs:
+        obs = observable
+    else:
+        args = flavio.Observable[observable].arguments
+        obs = (observable, ) + tuple(kwargs[a] for a in args)
+    constraints = []
+    _n_multivariate = 0  # number of multivariate constraints
+    for name, m in flavio.Measurement.instances.items():
+        if include_measurements is not None and name not in include_measurements:
+            continue
+        if obs not in m.all_parameters:
+            continue
+        num, constraint = m._parameters[obs]
+        if not np.isscalar(constraint.central_value):
+            _n_multivariate += 1
+            # for multivariate PDFs, reduce to 1D PDF
+            exclude = tuple([i for i, _ in enumerate(constraint.central_value)
+                             if i != num])  # exclude all i but num
+            constraint1d = constraint.reduce_dimension(exclude=exclude)
+            constraints.append(constraint1d)
+        else:
+            constraints.append(constraint)
+    if _n_multivariate > 1:
+        warnings.warn(("{} of the measurements of '{}' are multivariate. "
+                       "This can lead to inconsistent results as the other "
+                       "observables are profiled over. "
+                       "To be consistent, you should perform a multivariate "
+                       "combination that is not yet supported by `combine_measurements`."
+                       ).format(_n_multivariate, obs))
+    if not constraints:
+        raise ValueError("No experimental measurements found for this observable.")
+    elif len(constraints) == 1:
+        return constraints[0]
+    else:
+        return flavio.statistics.probability.combine_distributions(constraints)

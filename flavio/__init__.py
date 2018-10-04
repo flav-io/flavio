@@ -9,4 +9,4 @@ from .classes import Measurement, Parameter, ParameterConstraints, Observable, N
 from .config import config
 from flavio.physics.eft import WilsonCoefficients
 from flavio.parameters import default_parameters
-from flavio.functions import sm_prediction, sm_uncertainty, np_uncertainty, sm_error_budget, np_prediction, sm_covariance
+from flavio.functions import sm_prediction, sm_uncertainty, np_uncertainty, sm_error_budget, np_prediction, sm_covariance, combine_measurements

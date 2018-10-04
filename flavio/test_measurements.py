@@ -54,7 +54,7 @@ class TestMeasurements(unittest.TestCase):
         # check if all observables in existing measurements exist
         for name, m in flavio.Measurement.instances.items():
             for obs in m.all_parameters:
-                if 'test' in obs:
+                if 'test' in obs or 'test' in name:
                     continue  # ignore observables defined in unit tests
                 # this will raise if the observable does not exist
                 obsname = flavio.Observable.argument_format(obs, 'dict')['name']

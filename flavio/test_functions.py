@@ -1,10 +1,13 @@
 import unittest
 import numpy.testing as npt
 import flavio
-from flavio.classes import Observable, Prediction
+import numpy as np
+from math import sqrt
+from flavio.classes import Observable, Prediction, Measurement
+from flavio.statistics.probability import NormalDistribution, MultivariateNormalDistribution
 from flavio.functions import get_dependent_parameters_sm
 import copy
-import numpy as np
+
 
 class TestFunctions(unittest.TestCase):
     def test_functions(self):
@@ -21,6 +24,25 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual(flavio.sm_uncertainty('test_obs', 7, threads=2), 0)
         self.assertEqual(flavio.np_uncertainty('test_obs', x=7, wc_obj=wc_obj, threads=2), 0)
         # delete dummy instance
+        Observable.del_instance('test_obs')
+
+    def test_exp_combo(self):
+        o = Observable('test_obs')
+        o.arguments = ['x']
+        m = Measurement('test_obs measurement 1')
+        m.add_constraint([('test_obs', 1)], MultivariateNormalDistribution([1, 2], np.eye(2)))
+        # error: no measurement
+        with self.assertRaises(ValueError):
+            flavio.combine_measurements('test_obs', x=1, include_measurements=['bla'])
+        m.add_constraint([('test_obs', 1)], NormalDistribution(2, 3))
+        combo = flavio.combine_measurements('test_obs', x=1)
+        self.assertEqual(combo.central_value, 2)
+        self.assertEqual(combo.standard_deviation, 3)
+        m2 = Measurement('test_obs measurement 2')
+        m2.add_constraint([('test_obs', 1)], NormalDistribution(3, 3))
+        combo = flavio.combine_measurements('test_obs', x=1)
+        self.assertAlmostEqual(combo.central_value, 2.5)
+        self.assertAlmostEqual(combo.standard_deviation, sqrt(9 / 2))
         Observable.del_instance('test_obs')
 
     def test_get_dep_par(self):
