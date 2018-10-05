@@ -36,6 +36,11 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(pdf_n_1.logpdf(1.99), -np.inf)
         self.assertEqual(len(pdf_p_1.get_random(10)), 10)
         self.assertEqual(len(pdf_p_2.get_random(10)), 10)
+        d = HalfNormalDistribution(2, 0.3)
+        self.assertEqual(d.cdf(2), 0.0)
+        self.assertAlmostEqual(d.cdf(2.3), 0.6827, places=4)
+        self.assertAlmostEqual(d.ppf(0.6827), 2.3, places=4)
+
 
     def test_lognormal(self):
         with self.assertRaises(ValueError):
