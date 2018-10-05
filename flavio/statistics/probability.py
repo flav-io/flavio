@@ -247,11 +247,11 @@ class NormalDistribution(ProbabilityDistribution):
     def ppf(self, x):
         return scipy.stats.norm.ppf(x, self.central_value, self.standard_deviation)
 
-    def get_error_left(self, nsigma=1):
+    def get_error_left(self, nsigma=1, **kwargs):
         """Return the lower error"""
         return nsigma * self.standard_deviation
 
-    def get_error_right(self, nsigma=1):
+    def get_error_right(self, nsigma=1, **kwargs):
         """Return the upper error"""
         return nsigma * self.standard_deviation
 
@@ -570,12 +570,12 @@ class GammaDistribution(ProbabilityDistribution):
             return logpdf_x_left - logpdf_x_right
         return scipy.optimize.brentq(diff_logpdf, 0,  1 - confidence_level-1e-6)
 
-    def get_error_left(self, nsigma=1):
+    def get_error_left(self, nsigma=1, **kwargs):
         """Return the lower error"""
         a = self._find_error_cdf(confidence_level(nsigma))
         return self.central_value - self.ppf(a)
 
-    def get_error_right(self, nsigma=1):
+    def get_error_right(self, nsigma=1, **kwargs):
         """Return the upper error"""
         a = self._find_error_cdf(confidence_level(nsigma))
         return self.ppf(a + confidence_level(nsigma)) - self.central_value
@@ -656,7 +656,7 @@ class GammaDistributionPositive(ProbabilityDistribution):
             return logpdf_x_left - logpdf_x_right
         return scipy.optimize.brentq(diff_logpdf, 0,  1 - confidence_level-1e-6)
 
-    def get_error_left(self, nsigma=1):
+    def get_error_left(self, nsigma=1, **kwargs):
         """Return the lower error"""
         if self.logpdf(0) > self.logpdf(self.ppf(confidence_level(nsigma))):
             # look at a one-sided 1 sigma range. If the PDF at 0
@@ -667,7 +667,7 @@ class GammaDistributionPositive(ProbabilityDistribution):
             a = self._find_error_cdf(confidence_level(nsigma))
             return self.central_value - self.ppf(a)
 
-    def get_error_right(self, nsigma=1):
+    def get_error_right(self, nsigma=1, **kwargs):
         """Return the upper error"""
         one_sided_error = self.ppf(confidence_level(nsigma))
         if self.logpdf(0) > self.logpdf(one_sided_error):
@@ -981,7 +981,12 @@ class GeneralGammaUpperLimit(NumericalDistribution):
         # now that we have convolved, cut off anything below x=0
         x = num_unscaled.x
         y = num_unscaled.y_norm
-        y[x<0] = 0
+        y = y[np.where(x >= 0)]
+        x = x[np.where(x >= 0)]
+        if x[0] != 0:  #  make sure the PDF at 0 exists
+            x = np.insert(x, 0, 0.)  # add 0 as first element
+            y = np.insert(y, 0, y[0])  # copy first element
+        y[0]
         num_unscaled = NumericalDistribution(x, y)
         limit_unscaled = num_unscaled.ppf(self.confidence_level)
         # use the value of the limit to determine the scale factor
