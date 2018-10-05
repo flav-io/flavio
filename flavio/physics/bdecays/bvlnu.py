@@ -463,9 +463,9 @@ _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'
            'dBR/dcl': r'\frac{d\text{BR}}{d\cos\theta_l}',
            'dBR/dcV': r'\frac{d\text{BR}}{d\cos\theta_V}',
            'dBR/dphi': r'\frac{d\text{BR}}{d\phi}',
-           'FL': r'$F_L$',
-           '<FL>': r'$\langle F_L\rangle$',
-           'FLtot': r'$F_L$',
+           'FL': r'F_L',
+           '<FL>': r'\langle F_L\rangle',
+           'FLtot': r'F_L',
             }
 _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max'],
          'dBR_L/dq2': ['q2'], 'BR_L': None, '<BR_L>': ['q2min', 'q2max'],
