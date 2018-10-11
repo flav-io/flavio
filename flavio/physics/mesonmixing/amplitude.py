@@ -28,7 +28,7 @@ def matrixelements(par, meson):
     me['CVLR'] = -mM*fM**2*(1/6.)*BM(5)*r
     me['CSLL'] = -mM*fM**2*(5/24.)*BM(2)*r
     me['CSRR'] = me['CSLL']
-    me['CTLL'] = -mM*fM**2*(1/2.)*r*(5*BM(2)/3.-2*BM(3)/3.)
+    me['CTLL'] = mM*fM**2*(1/2.)*r*(5*BM(2)/3.-2*BM(3)/3.)
     me['CTRR'] = me['CTLL']
     return me
 
