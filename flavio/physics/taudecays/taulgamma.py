@@ -1,7 +1,7 @@
 r"""Functions for lepton flavour violating $\tau\to \ell\gamma$ decays."""
 
 import flavio
-from math import pi
+from math import pi, sqrt
 
 
 # names of LFV sectors in WCxf
@@ -16,15 +16,17 @@ def BR_llgamma(wc_obj, par, scale, l1, l2):
     ll = wcxf_sector_names[l1, l2]
     wc = wc_obj.get_wc(ll, scale, par, nf_out=4)
     alpha = flavio.physics.running.running.get_alpha_e(par, scale, nf_out=4)
+    e = sqrt(4 * pi * alpha)
+    ml = par['m_' + l1]
     # cf. (18) of hep-ph/0404211
-    pre = 6 * alpha / pi
-    C7 = wc['Cgamma_' + l1 + l2]
-    C7p = wc['Cgamma_' + l2 + l1].conjugate()
+    pre = 48 * pi**3 * alpha / par['GF']**2
+    DL = 2 / (e * ml) * wc['Cgamma_' + l1 + l2]
+    DR = 2 / (e * ml) * wc['Cgamma_' + l2 + l1].conjugate()
     if l1 == 'tau':
         BR_SL = par['BR(tau->{}nunu)'.format(l2)]
     else:
         BR_SL = 1  # BR(mu->enunu) = 1
-    return pre * (abs(C7)**2 + abs(C7p)**2) * BR_SL
+    return pre * (abs(DL)**2 + abs(DR)**2) * BR_SL
 
 
 def BR_taulgamma(wc_obj, par, lep):
