@@ -307,13 +307,13 @@
     - bag_B0_1: 0.913(76)(40)
     - bag_B0_2: 0.761(68)(33)
     - bag_B0_3: 1.07(21)(5)
-    - bag_B0_4: 1.040(75)(45)
-    - bag_B0_5: 0.964(93)(42)
+    - bag_B0_4: 1.148(83)(50)  # was 1.040(75)(45); multiplied by 1.104 due to differing definition
+    - bag_B0_5: 1.870(180)(81)  # was 0.964(93)(42); multiplied by 1.940 due to differing definition
     - bag_Bs_1: 0.952(58)(32)
     - bag_Bs_2: 0.806(52)(27)
     - bag_Bs_3: 1.10(15)(4)
-    - bag_Bs_4: 1.022(57)(34)
-    - bag_Bs_5: 0.943(68)(31)
+    - bag_Bs_4: 1.129(63)(38)  # was 1.022(57)(34); multiplied by 1.105 due to differing definition
+    - bag_Bs_5: 1.834(132)(60)  # was 0.943(68)(31); multiplied by 1.944 due to differing definition
   correlation:
     [[1,    0.504, 0.162, 0.494, 0.422, 0.754, 0.311, 0.077, 0.264, 0.246],
     [0.504, 1,     0.282, 0.494, 0.389, 0.311, 0.766, 0.201, 0.283, 0.226],
