@@ -18,8 +18,9 @@ def matrixelements(par, meson):
     fM = par['f_'+meson]
     BM = lambda i: par['bag_' + meson + '_' + str(i)]
     qi_qj = meson_quark[meson]
-    mq1 = par['m_'+qi_qj[0]]
-    mq2 = par['m_'+qi_qj[1]]
+    scale = config['renormalization scale'][meson + ' mixing']
+    mq1 = running.get_mq(qi_qj[0], par, scale)
+    mq2 = running.get_mq(qi_qj[1], par, scale)
     r = (mM/(mq1+mq2))**2
     me = {}
     me['CVLL'] =  mM*fM**2*(1/3.)*BM(1)
