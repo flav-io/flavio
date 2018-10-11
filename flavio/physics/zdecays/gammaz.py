@@ -120,10 +120,10 @@ for _f in (_leptons, _uquarks, _dquarks):
         _obs.tex = r"$R_{}^0$".format(tex)
         _obs.add_taxonomy(r'Process :: $Z^0$ decays :: Flavour conserving decays :: $' + _process_tex + r"$")
         if f in _leptons:
-            _obs.set_description(r"Ratio of $Z^0$ partial widths to hadrons vs. {} pairs".format(tex))
+            _obs.set_description(r"Ratio of $Z^0$ partial widths to hadrons vs. ${}$ pairs".format(tex))
             flavio.classes.Prediction(_obs_name, Remutau(f))
         else:
-            _obs.set_description(r"Ratio of $Z^0$ partial widths to {} pairs vs. all hadrons".format(tex))
+            _obs.set_description(r"Ratio of $Z^0$ partial widths to ${}$ pairs vs. all hadrons".format(tex))
             flavio.classes.Prediction(_obs_name, Rq(f))
 
 

@@ -34,8 +34,8 @@ def R_trident(wc_obj, par):
     return sigma_tot / sigma_SM
 
 
-_process_tex = r"$\nu_\mu N\to \nu_\ell\mu^+\mu^- \nu N$"
-_process_taxonomy = r'Process :: neutrino physics :: scattering cross sections :: $' + _process_tex + r"$"
+_process_tex = r"$\nu_\mu N\to \nu_\ell\mu^+\mu^-N$"
+_process_taxonomy = r'Process :: neutrino physics :: scattering cross sections :: ' + _process_tex
 
 _obs_name = "R_trident"
 _obs = flavio.classes.Observable(_obs_name)
