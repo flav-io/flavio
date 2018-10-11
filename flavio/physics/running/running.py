@@ -178,6 +178,15 @@ def get_ms(par, scale, nf_out=None):
     return qcd.m_s(ms2=par['m_s'], scale=scale, f=nf, alphasMZ=par['alpha_s'])
 
 
+def get_mq(q, par, scale, nf_out=None):
+    fdict = {'u': get_mu,
+             'c': get_mc,
+             'd': get_md,
+             's': get_ms,
+             'b': get_mb}
+    return fdict[q](par, scale, nf_out=nf_out)
+
+
 def get_mc_pole(par, nl=2): # for mc, default to 2-loop conversion only due to renormalon ambiguity!
     r"""Get the $c$ quark pole mass, using the 2-loop conversion
     formula from the $\overline{\mathrm{MS}}$ mass."""
