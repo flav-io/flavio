@@ -19,7 +19,10 @@ def BR_llgamma(wc_obj, par, l1, l2):
     ml2 = par['m_' + l2]
     gTL = 2 * wc['Cgamma_' + l1 + l2].conjugate()
     gTR = 2 * wc['Cgamma_' + l2 + l1]
-    return par['tau_' + l1] * GammaFvf(ml1, 0, ml2, 0, 0, gTL, 0, gTR, 0)
+    return (par['tau_' + l1] * GammaFvf(M=ml1, mv=0, mf=ml2,
+                                        gL=0, gR=0,
+                                        gTL=gTL, gtTL=0,
+                                        gTR=gTR, gtTR=0))
 
 
 def BR_taulgamma(wc_obj, par, lep):

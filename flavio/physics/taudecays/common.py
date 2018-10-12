@@ -20,12 +20,12 @@ def GammaFvf(M, mv, mf, gL, gR, gTL=0, gtTL=0, gTR=0, gtTR=0):
         else:
             amp2_T = False
         if amp2_V is not False and amp2_T is not False:
-            I = ( 3*M * (M**2 - mf**2)
+            amp2_I = ( 3*M * (M**2 - mf**2)
                 *( gL*(gTR+gtTR).conjugate() + gR*(gTL-gtTL).conjugate() ).real
                 + 3*mf * (mf**2 - M**2)
                 *( gR*(gTR+gtTR).conjugate() + gL*(gTL-gtTL).conjugate() ).real )
         else:
-            I = 0
+            amp2_I = 0
     else:
         if any([gL,gR]):
             amp2_V = ((abs(gL)**2 + abs(gR)**2)
@@ -40,13 +40,13 @@ def GammaFvf(M, mv, mf, gL, gR, gTL=0, gtTL=0, gTR=0, gtTR=0):
         else:
            amp2_T = False
         if amp2_V is not False and amp2_T is not False:
-            I = ( 3*M * (M**2 - mf**2 - mv**2)
+            amp2_I = ( 3*M * (M**2 - mf**2 - mv**2)
                 *( gL*(gTR+gtTR).conjugate() + gR*(gTL-gtTL).conjugate() ).real
                 + 3*mf * (mf**2 - M**2 - mv**2)
                 *( gR*(gTR+gtTR).conjugate() + gL*(gTL-gtTL).conjugate() ).real )
         else:
-            I = 0
-    amp2 = float(amp2_V) + float(amp2_T) + I
+            amp2_I = 0
+    amp2 = float(amp2_V) + float(amp2_T) + amp2_I
     return Gamma(amp2, M, mf, mv)
 
 def GammaFsf(M, ms, mf, gL, gR):
