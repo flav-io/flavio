@@ -6,8 +6,7 @@ from flavio.physics.taudecays.taulgamma import BR_llgamma
 
 def BR_muegamma(wc_obj, par):
     r"""Branching ratio of $\mu\to e\gamma$."""
-    scale = flavio.config['renormalization scale']['mudecays']
-    return BR_llgamma(wc_obj, par, scale, 'mu', 'e')
+    return BR_llgamma(wc_obj, par, 'mu', 'e')
 
 
 _process_tex = r"\mu\to e\gamma"

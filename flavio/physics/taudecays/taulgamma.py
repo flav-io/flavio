@@ -1,7 +1,7 @@
 r"""Functions for lepton flavour violating $\tau\to \ell\gamma$ decays."""
 
 import flavio
-from math import pi, sqrt
+from flavio.physics.taudecays.common import GammaFvf
 
 
 # names of LFV sectors in WCxf
@@ -10,29 +10,21 @@ wcxf_sector_names = {('tau', 'mu'): 'mutau',
                      ('mu', 'e'): 'mue', }
 
 
-def BR_llgamma(wc_obj, par, scale, l1, l2):
+def BR_llgamma(wc_obj, par, l1, l2):
     r"""Branching ratio of $\ell_1\to \ell_2\gamma$."""
-    scale = flavio.config['renormalization scale']['taudecays']
+    scale = flavio.config['renormalization scale'][l1 + 'decays']
     ll = wcxf_sector_names[l1, l2]
     wc = wc_obj.get_wc(ll, scale, par, nf_out=4)
-    alpha = flavio.physics.running.running.get_alpha_e(par, scale, nf_out=4)
-    e = sqrt(4 * pi * alpha)
-    ml = par['m_' + l1]
-    # cf. (18) of hep-ph/0404211
-    pre = 48 * pi**3 * alpha / par['GF']**2
-    DL = 2 / (e * ml) * wc['Cgamma_' + l1 + l2]
-    DR = 2 / (e * ml) * wc['Cgamma_' + l2 + l1].conjugate()
-    if l1 == 'tau':
-        BR_SL = par['BR(tau->{}nunu)'.format(l2)]
-    else:
-        BR_SL = 1  # BR(mu->enunu) = 1
-    return pre * (abs(DL)**2 + abs(DR)**2) * BR_SL
+    ml1 = par['m_' + l1]
+    ml2 = par['m_' + l2]
+    gTL = 2 * wc['Cgamma_' + l1 + l2].conjugate()
+    gTR = 2 * wc['Cgamma_' + l2 + l1]
+    return par['tau_' + l1] * GammaFvf(ml1, 0, ml2, 0, 0, gTL, 0, gTR, 0)
 
 
 def BR_taulgamma(wc_obj, par, lep):
     r"""Branching ratio of $\tau\to \ell\gamma$."""
-    scale = flavio.config['renormalization scale']['taudecays']
-    return BR_llgamma(wc_obj, par, scale, 'tau', lep)
+    return BR_llgamma(wc_obj, par, 'tau', lep)
 
 
 # function returning function needed for prediction instance
