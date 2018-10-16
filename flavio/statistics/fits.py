@@ -680,7 +680,10 @@ class FastFit(Fit):
         assert len(permutation) == len(self.observables), \
             "Covariance matrix does not contain all necessary entries"
         if len(permutation) == 1:
-            self._sm_covariance = d['covariance']
+            if d['covariance'].shape == ():
+                self._sm_covariance = d['covariance']
+            else:
+                self._sm_covariance = d['covariance'][permutation][:,permutation][0,0]
         else:
             self._sm_covariance = d['covariance'][permutation][:,permutation]
 
