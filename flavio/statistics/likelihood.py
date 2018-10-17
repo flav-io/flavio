@@ -384,7 +384,7 @@ class SMCovariance(object):
         obs = d['observables']
         try:
             permutation = [obs.index(o) for o in self.observables]
-        except ValueError:
+        except (ValueError, UnboundLocalError):
             "Covariance matrix does not contain all necessary entries"
         assert len(permutation) == len(self.observables), \
             "Covariance matrix does not contain all necessary entries"
