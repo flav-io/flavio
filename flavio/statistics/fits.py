@@ -590,8 +590,8 @@ class FastFit(Fit):
         obs = d['observables']
         try:
             permutation = [obs.index(o) for o in self.observables]
-        except (ValueError, UnboundLocalError):
-            "Covariance matrix does not contain all necessary entries"
+        except ValueError:
+            raise ValueError("Covariance matrix does not contain all necessary entries")
         assert len(permutation) == len(self.observables), \
             "Covariance matrix does not contain all necessary entries"
         if len(permutation) == 1:
@@ -676,7 +676,7 @@ class FastFit(Fit):
         try:
             permutation = [obs.index(o) for o in self.observables]
         except ValueError:
-            "Covariance matrix does not contain all necessary entries"
+            raise ValueError("Covariance matrix does not contain all necessary entries")
         assert len(permutation) == len(self.observables), \
             "Covariance matrix does not contain all necessary entries"
         if len(permutation) == 1:
