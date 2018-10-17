@@ -390,11 +390,11 @@ class SMCovariance(object):
             "Covariance matrix does not contain all necessary entries"
         if len(permutation) == 1:
             if d['covariance'].shape == ():
-                self._sm_covariance = d['covariance']
+                self._cov = d['covariance']
             else:
-                self._sm_covariance = d['covariance'][permutation][:,permutation][0,0]
+                self._cov = d['covariance'][permutation][:,permutation][0,0]
         else:
-            self._sm_covariance = d['covariance'][permutation][:,permutation]
+            self._cov = d['covariance'][permutation][:,permutation]
 
 
 class MeasurementCovariance(object):
