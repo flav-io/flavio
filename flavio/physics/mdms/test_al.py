@@ -7,6 +7,7 @@ from math import sqrt, pi
 par = flavio.default_parameters.get_central_all()
 amu_SM = 11659182.3e-10
 atau_SM = 117721e-8
+ae_SM = 0.00115965218157
 
 
 class TestGminus2Leptons(unittest.TestCase):
@@ -26,3 +27,12 @@ class TestGminus2Leptons(unittest.TestCase):
 
     def test_atau_SM(self):
         self.assertAlmostEqual(flavio.sm_prediction('a_tau') / atau_SM, 1)
+
+    def test_ae_SM(self):
+        self.assertAlmostEqual(flavio.sm_prediction('a_e') / ae_SM, 1)
+        pd = flavio.combine_measurements('a_e')
+        ae_exp = pd.central_value
+        ae_err_exp = pd.error_left
+        ae_err_sm = flavio.sm_uncertainty('a_e')
+        # check that there is a -2.3 sigma tension, see 1804.07409 p. 13
+        self.assertAlmostEqual((ae_exp - ae_SM) / sqrt(ae_err_sm**2 + ae_err_exp**2), -2.3, delta=0.5)

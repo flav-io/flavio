@@ -5232,6 +5232,7 @@ PDG g-2:
   experiment: PDG
   inspire: Tanabashi:2018oca
   values:
+    a_e: 1159652180.91(26) e-12
     a_mu: 11659208.9 ± 5.4 ± 3.3 e-10
     a_tau: -0.018 ± 0.017
 

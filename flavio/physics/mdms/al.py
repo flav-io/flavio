@@ -21,6 +21,12 @@ def al(wc_obj, par, l, eft, scale):
     return aSM + pre * C7.real
 
 
+def ae(wc_obj, par):
+    r"""Anomalous magnetic moment of the electron,
+    $a_e = (g_e - 2) / 2$."""
+    scale = flavio.config['renormalization scale']['e g-2']
+    return al(wc_obj, par, l='e', eft='WET-3', scale=scale)
+
 def amu(wc_obj, par):
     r"""Anomalous magnetic moment of the muon,
     $a_\mu = (g_\mu - 2) / 2$."""
@@ -46,3 +52,4 @@ def make_observable(l, ltex, lname, lfunc):
 
 make_observable('mu', r'\mu', 'muon', amu)
 make_observable('tau', r'\tau', 'tau lepton', atau)
+make_observable('e', r'e', 'electron', ae)

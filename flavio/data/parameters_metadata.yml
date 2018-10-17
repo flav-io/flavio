@@ -1202,6 +1202,9 @@ delta_Gammanu:
   description: Uncertainty in the SM $Z$ partial width to neutrinos in GeV
 
 # lepton anomalous magnet moments
+a_e SM:
+  tex: $a_e^\text{SM}$
+  description: SM prediction for the anomalous magnetic moment of the electron
 a_mu SM:
   tex: $a_\mu^\text{SM}$
   description: SM prediction for the anomalous magnetic moment of the muon
