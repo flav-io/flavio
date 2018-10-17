@@ -200,7 +200,7 @@ Prediction('phi_D', lambda wc_obj, par: phase(-q_over_p(wc_obj, par, 'D0')))
 
 o = Observable('q/p_D')
 o.set_description(r"Absolute value of $q/p$ in the $D^0$-$\bar D^0$ system")
-o.tex = r"$|q/p|_D$"
+o.tex = r"$\vert q/p\vert_D$"
 o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $D^0$-$\bar D^0$ mixing')
 Prediction('q/p_D', lambda wc_obj, par: abs(q_over_p(wc_obj, par, 'D0')))
 
