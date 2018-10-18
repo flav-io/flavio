@@ -244,11 +244,11 @@ def _get_mb_KS(mbmb, alpha_s, scale, nl):
     return masses.mMS2mKS(MS=mbmb, Nf=4, asM=alpha_s, Mu=scale, nl=nl)
 
 
-def get_mb_1S(par, scale, nl=3):
+def get_mb_1S(par, nl=3):
     r"""Get the $b$ quark mass in the 1S scheme."""
     mbmb = par['m_b']
     alpha_s = get_alpha(par, mbmb)['alpha_s']
-    return _get_mb_1S(mbmb=mbmb, alpha_s=alpha_s, scale=scale, nl=nl)
+    return _get_mb_1S(mbmb=mbmb, alpha_s=alpha_s, scale=mbmb, nl=nl)
 
 
 # cached version

@@ -12,7 +12,7 @@ def get_hqet_parameters(par, scale):
     p['ash'] = alphas / pi
     p['mb'] = running.get_mb_pole(par)
     p['mc'] = p['mb'] - 3.4
-    p['mb1S'] = running.get_mb_1S(par, scale)
+    p['mb1S'] = running.get_mb_1S(par)
     mBbar = (par['m_B0'] + 3 * par['m_B*0']) / 4
     # eq. (25); note the comment about the renormalon cancellation thereafter
     p['Lambdabar'] = mBbar - p['mb1S'] + par['lambda_1'] / (2 * p['mb1S'])

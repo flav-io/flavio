@@ -87,5 +87,5 @@ class TestRunning(unittest.TestCase):
     def test_mb1S(self):
         par = flavio.default_parameters.get_central_all()
         alpha_s = get_alpha(par, par['m_b'], nf_out=5)['alpha_s']
-        mb1S = get_mb_1S(par, par['m_b'], nl=3)
+        mb1S = get_mb_1S(par, nl=3)
         self.assertAlmostEqual(mb1S, 4.67, delta=0.005)
