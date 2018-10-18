@@ -31,10 +31,12 @@ Main author:
 
 - David M. Straub (<david.straub@tum.de>)
 
-Contributors:
+Contributors (in alphabetical order):
 
+- Jason Aebischer
 - Frederik Beaujean
 - Ece Gürler
+- Matthew Kirk
 - Jacky Kumar
 - Christoph Niehoff
 - Albert Puig
