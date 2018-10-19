@@ -50,6 +50,15 @@ flavio is released under the MIT license.
 
 ## Citation
 
-If you use flavio in a project, please cite:
+If you use flavio in a scientific publication, please cite:
+
+> D. Straub, "flavio: a Python package for flavour and precision
+phenomenology in the Standard Model and beyond", [arXiv:1810.08132](https://arxiv.org/abs/1810.08132)
+
+This paper contains many references to results in the literature that went
+into the code. Please also consider citing the relevant original literature,
+where the real work was done.
+
+The flavio repository itself is also citable via a DOI provided by Zenodo:
 
 [![DOI](https://zenodo.org/badge/22356/flav-io/flavio.svg)](https://zenodo.org/badge/latestdoi/22356/flav-io/flavio)
