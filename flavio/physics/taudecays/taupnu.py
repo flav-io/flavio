@@ -4,6 +4,7 @@ import flavio
 from flavio.physics.taudecays import common
 from flavio.physics.bdecays.wilsoncoefficients import get_CVLSM
 from math import sqrt
+from flavio.physics.taudecays.taulnunu import GFeff
 
 
 def _br_taupnu(wc_obj, par, P, lep):
@@ -24,7 +25,10 @@ def _br_taupnu(wc_obj, par, P, lep):
     wc = wc_obj.get_wc(qqlnu, scale, par, nf_out=4)
     # add SM contribution to Wilson coefficient
     if lep == 'tau':
-        wc['CVL_' + qqlnu] += get_CVLSM(par, scale, nf=4)
+        # for the SM contribution, need the Fermi constant with possible
+        # NP effects in mu->enunu subtracted, not the measured one
+        r_GF = GFeff(wc_obj, par) / par['GF']
+        wc['CVL_' + qqlnu] += get_CVLSM(par, scale, nf=4) * r_GF
     mtau = par['m_tau']
     mP = par['m_' + P]
     rWC = ((wc['CVL_' + qqlnu] - wc['CVR_' + qqlnu])
