@@ -3,6 +3,7 @@ r"""Functions for $\tau\to P\ell$."""
 import flavio
 from math import sqrt, pi
 from flavio.physics.common import lambda_K
+from flavio.physics.taudecays import common
 
 # names of LFV sectors in WCxf
 wcxf_sector_names = {('tau', 'mu'): 'mutau',
@@ -18,23 +19,31 @@ def br_taupl(wc_obj, par, P, lep):
     mP = par['m_' + P]
     GF = par['GF']
     mtau = par['m_tau']
+    mu = par['m_u']
+    md = par['m_d']
     mlep = par['m_' + lep]
-    fpi0 = 0.130 # FIX me 
+    fpi0 = par['f_' + P] #0.130 # FIX me ?
     F = {}
+    S = {}
     for q in 'ud':
         F['LL' + q] = wc['CVLL_tau{}{}'.format(lep, 2 * q)]  # FLL
         F['RR' + q] = wc['CVRR_tau{}{}'.format(lep, 2 * q)]  # FRR
         F['LR' + q] = wc['CVLR_tau{}{}'.format(lep, 2 * q)]  # FLR
         F['RL' + q] = wc['CVLR_{}tau{}'.format(2 * q, lep)]  # FLRqq
+     
+        S['RR' + q] = wc['CSRR_tau{}{}'.format(lep, 2 * q)]  # SRR
+        S['RL' + q] = wc['CSRL_tau{}{}'.format(lep, 2 * q)]  # SLR
+        S['LL' + q] = wc['CSRR_{}tau{}'.format(lep, 2 * q)].conjugate()  # SRRqq
+        S['LR' + q] = wc['CSRL_{}tau{}'.format(lep, 2 * q)].conjugate()  # SLRqq
+
     if P == 'pi0':
-        gL = fpi0*((F['LRu'] - F['LRd']) / 2 - (F['LLu'] - F['LLd']) / 2)/2
-        gR = fpi0*((F['RRu'] - F['RRd']) / 2 - (F['RLu'] - F['RLd']) / 2)/2       
-    norm = 1 / (16 * pi* mtau**3 )
-    MEsq = mP**2/2 *( (abs(gL)**2 + abs(gR)**2)*( (mlep**2- mtau**2)**2/mP**2 -mlep**2 -mtau**2 )  
-                        + 4*mlep*mtau*(gL.imag * gR.real + gL.real * gR.imag) )  \
-         * lambda_K(mtau**2,mlep**2, mP**2 )
-#   Method 1 : new result
-    brtaupil = norm * MEsq * par['tau_tau']
+        vL = fpi0*((F['LRu'] - F['LLu'])  + (F['LRd'] - F['LLd']) )/(2*sqrt(2))
+        vR = fpi0*((F['RRu'] - F['RLu'])  + (F['RRd'] - F['RLd']) )/(2*sqrt(2))   
+        sL =-fpi0*mP**2*((S['LRu']-S['LLu'])/mu + (S['LRd']-S['LLd'])/md)/(4*sqrt(2))
+        sR =-fpi0*mP**2*((S['RRu']-S['RLu'])/mu + (S['RRd']-S['RLd'])/md)/(4*sqrt(2)) 
+        gL = sL+ (vL*mlep-vR*mtau)
+        gR = sR+ (vR*mlep-vL*mtau)
+    brtaupil = par['tau_tau'] * common.GammaFsf(mtau, mP, mlep, gL, gR)
 
 #   Method 2 : Eq. 29 of hep-ph/0404211
     if P == 'pi0':
