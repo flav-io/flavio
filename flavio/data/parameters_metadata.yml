@@ -1432,3 +1432,29 @@ g_A:
 gS_u-d:
   tex: $g_S^{u-d}$
   description: Nucleon isovector scalar charge
+
+# Parameters for paramagnetic EDMs
+alpha_de(Tl):
+  tex: $\alpha_{d_e}^\text{Tl}$
+  description: Coefficient of the electron EDM contribution to the Thallium EDM
+alpha_CS(Tl):
+  tex: $\alpha_{C_S}^\text{Tl}$
+  description: Coefficient of the scalar coupling contribution to the Thallium EDM
+alpha_de(YbF):
+  tex: $\alpha_{d_e}^\text{YbF}$
+  description: Coefficient of the electron EDM contribution to the Ytterbium fluoride energy shift
+alpha_CS(YbF):
+  tex: $\alpha_{C_S}^\text{YbF}$
+  description: Coefficient of the scalar coupling contribution to the Ytterbium fluoride energy shift
+alpha_de(HfF):
+  tex: $\alpha_{d_e}^\text{HfF}$
+  description: Coefficient of the electron EDM contribution to the Hafnium fluoride energy shift
+alpha_CS(HfF):
+  tex: $\alpha_{C_S}^\text{HfF}$
+  description: Coefficient of the scalar coupling contribution to the Hafnium fluoride energy shift
+alpha_de(ThO):
+  tex: $\alpha_{d_e}^\text{ThO}$
+  description: Coefficient of the electron EDM contribution to the Thorium monoxide energy shift
+alpha_CS(ThO):
+  tex: $\alpha_{C_S}^\text{ThO}$
+  description: Coefficient of the scalar coupling contribution to the Thorium monoxide energy shift
