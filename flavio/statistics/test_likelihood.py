@@ -259,6 +259,8 @@ class TestFastLikelihood(unittest.TestCase):
         fit2 = FastLikelihood('fastlh_test_2', flavio.default_parameters, [], ['m_b'], ['test_obs 1', 'test_obs 2'])
         # fit with only a single observable and measurement
         fit1 = FastLikelihood('fastlh_test_1', flavio.default_parameters, [], ['m_b'], ['test_obs 2',])
+        fit3 = FastLikelihood('fastlh_test_3', flavio.default_parameters, ['m_b'],  [], ['test_obs 1', 'test_obs 2'],
+                       include_measurements=['measurement 2 of test_obs 1 and test_obs 2'])
         for fit in (fit2, fit1):
             fit.make_measurement(N=10000)
         fit = fit2  # the following is only for fit2

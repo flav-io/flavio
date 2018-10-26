@@ -127,7 +127,10 @@ class TestClasses(unittest.TestCase):
         fit2 = FastFit('fastfit_test_2', flavio.default_parameters, ['m_b'],  [], ['test_obs 1', 'test_obs 2'])
         # fit with only a single observable and measurement
         fit1 = FastFit('fastfit_test_1', flavio.default_parameters, ['m_b'],  [], ['test_obs 2',])
-        for fit in (fit2, fit1):
+        # fit with 2 observables but 1 measurement
+        fit3 = FastFit('fastfit_test_3', flavio.default_parameters, ['m_b'],  [], ['test_obs 1', 'test_obs 2'],
+                       include_measurements=['measurement 2 of test_obs 1 and test_obs 2'])
+        for fit in (fit2, fit3):
             fit.make_measurement()
             centr_cov_exp_before = fit._exp_central_covariance
             filename = os.path.join(tempfile.gettempdir(), 'tmp.p')

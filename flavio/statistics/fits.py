@@ -515,7 +515,11 @@ class FastFit(Fit):
             covariances.append(covariance)
         # if there is only a single measuement
         if len(means) == 1:
-            return means[0][0], covariances[0]
+            if len(means[0]) == 1:
+                # if there is only a single observable
+                return means[0][0], covariances[0]
+            else:
+                return means[0], covariances[0]
         # if there are severeal measurements, perform a weighted average
         else:
             # covariances: [Sigma_1, Sigma_2, ...]
