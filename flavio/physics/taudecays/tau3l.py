@@ -13,6 +13,8 @@ wcxf_sector_names = {('tau', 'mu'): 'mutau',
 def _BR_taumuee(mtau, me, wc):
     # (22) of hep-ph/0404211
     return (abs(wc['CVLL'])**2 + abs(wc['CVLR'])**2 + abs(wc['CVRL'])**2 + abs(wc['CVRR'])**2
+            + 1 / 4 * (abs(wc['CSLL'])**2 + abs(wc['CSLR'])**2 + abs(wc['CSRL'])**2 + abs(wc['CSRR'])**2)
+            + 12 * (abs(wc['CTLL'])**2 + abs(wc['CTRR'])**2)
             + 4 * (wc['C7'] * (wc['CVLL'] + wc['CVLR']).conjugate()
                  + wc['C7p'] * (wc['CVRL'] + wc['CVRR']).conjugate()).real
             + 8 * (abs(wc['C7'])**2 + abs(wc['C7p'])**2) * (log(mtau**2 / me**2) - 3))
@@ -41,19 +43,29 @@ def wc_eff(wc_obj, par, scale, l0, l1, l2, l3, nf_out=4):
     ml0 = par['m_' + l0]
     wc = wc_obj.get_wc(sector, scale, par, nf_out=nf_out)
     wceff = {}
-    # tau -> mull
-    if l0 == 'tau' and l1 == 'mu' and l2 == l3:
-        lep = l2
+    if (l0, l1, l2, l3) == ('tau', 'mu', 'mu', 'mu'):
         wceff['C7'] = e / ml0 * wc['Cgamma_taumu']
         wceff['C7p'] = e / ml0 * wc['Cgamma_mutau'].conjugate()
-        wceff['CVLL'] = wc['CVLL_{}taumu'.format(2 * lep)]
-        wceff['CVLR'] = wc['CVLR_{}taumu'.format(2 * lep)]
-        wceff['CVRL'] = wc['CVLR_taumu{}'.format(2 * lep)]
-        wceff['CVRR'] = wc['CVRR_{}taumu'.format(2 * lep)]
-        wceff['CSRR'] = wc['CSRR_{}taumu'.format(2 * lep)]
-        wceff['CSLL'] = wc['CSRR_{}mutau'.format(2 * lep)].conjugate()
-    # mu -> 3e
-    elif l0 == 'mu' and l1 == 'e' and l2 == l1 and l3 == l1:
+        wceff['CVLL'] = wc['CVLL_mumutaumu']
+        wceff['CVLR'] = wc['CVLR_mumutaumu']
+        wceff['CVRL'] = wc['CVLR_taumumumu']
+        wceff['CVRR'] = wc['CVRR_mumutaumu']
+        wceff['CSRR'] = wc['CSRR_mumutaumu']
+        wceff['CSLL'] = wc['CSRR_mumumutau'].conjugate()
+    elif (l0, l1, l2, l3) == ('tau', 'mu', 'e', 'e'):
+        wceff['C7'] = e / ml0 * wc['Cgamma_taumu']
+        wceff['C7p'] = e / ml0 * wc['Cgamma_mutau'].conjugate()
+        wceff['CVLL'] = wc['CVLL_eetaumu']
+        wceff['CVLR'] = wc['CVLR_eetaumu']
+        wceff['CVRL'] = wc['CVLR_taumuee']
+        wceff['CVRR'] = wc['CVRR_eetaumu']
+        wceff['CSRR'] = wc['CSRR_eetaumu'] - wc['CSRR_taueemu'] / 2
+        wceff['CSLL'] = wc['CSRR_eemutau'].conjugate() - wc['CSRR_mueetau'].conjugate() / 2
+        wceff['CSLR'] = -2 * wc['CVLR_taueemu']
+        wceff['CSRL'] = -2 * wc['CVLR_mueetau'].conjugate()
+        wceff['CTLL'] = -wc['CSRR_mueetau'].conjugate() / 8
+        wceff['CTRR'] = -wc['CSRR_taueemu'] / 8
+    elif (l0, l1, l2, l3) == ('mu', 'e', 'e', 'e'):
         wceff['C7'] = e / ml0 * wc['Cgamma_mue']
         wceff['C7p'] = e / ml0 * wc['Cgamma_emu'].conjugate()
         wceff['CVLL'] = wc['CVLL_eemue']
@@ -62,6 +74,8 @@ def wc_eff(wc_obj, par, scale, l0, l1, l2, l3, nf_out=4):
         wceff['CVRR'] = wc['CVRR_eemue']
         wceff['CSRR'] = wc['CSRR_eemue']
         wceff['CSLL'] = wc['CSRR_eeemu'].conjugate()
+    else:
+        raise ValueError("Decay {}-->{}-{}+{}- not implemented".format(l0, l1, l2, l3))
     return wceff
 
 
