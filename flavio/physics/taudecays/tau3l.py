@@ -15,9 +15,9 @@ def _BR_taumuee(mtau, me, wc):
     return (abs(wc['CVLL'])**2 + abs(wc['CVLR'])**2 + abs(wc['CVRL'])**2 + abs(wc['CVRR'])**2
             + 1 / 4 * (abs(wc['CSLL'])**2 + abs(wc['CSLR'])**2 + abs(wc['CSRL'])**2 + abs(wc['CSRR'])**2)
             + 12 * (abs(wc['CTLL'])**2 + abs(wc['CTRR'])**2)
-            + 4 * (wc['C7'] * (wc['CVLL'] + wc['CVLR']).conjugate()
+            + 8 * (wc['C7'] * (wc['CVLL'] + wc['CVLR']).conjugate()
                  + wc['C7p'] * (wc['CVRL'] + wc['CVRR']).conjugate()).real
-            + 8 * (abs(wc['C7'])**2 + abs(wc['C7p'])**2) * (log(mtau**2 / me**2) - 3))
+            + 32 * (abs(wc['C7'])**2 + abs(wc['C7p'])**2) * (log(mtau**2 / me**2) - 3))
 
 
 def _BR_tau3mu(mtau, mmu, wc):
