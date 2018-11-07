@@ -4708,6 +4708,8 @@ PDG 2017 tau LFV:
     BR(tau->mugamma): < 4.4e-8 @ 90% CL
     BR(tau->rhoe):    < 1.8e-8 @ 90% CL
     BR(tau->rhomu):   < 1.2e-8 @ 90% CL
+    BR(tau->eee):     < 2.7e-8 @ 90% CL
+    BR(tau->emumu):   < 2.7e-8 @ 90% CL
     BR(tau->mumumu):  < 2.1e-8 @ 90% CL
     BR(tau->muee):    < 1.8e-8 @ 90% CL
     BR(tau->phimu):   < 8.4e-8 @ 90% CL
