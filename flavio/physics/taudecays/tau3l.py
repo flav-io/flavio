@@ -10,6 +10,7 @@ wcxf_sector_names = {('tau', 'mu'): 'mutau',
                      ('mu', 'e'): 'mue', }
 
 
+
 def _BR_taumuee(mtau, me, wc):
     # (22) of hep-ph/0404211
     return (abs(wc['CVLL'])**2 + abs(wc['CVLR'])**2 + abs(wc['CVRL'])**2 + abs(wc['CVRR'])**2
@@ -29,6 +30,13 @@ def _BR_tau3mu(mtau, mmu, wc):
                           + wc['C7p'] * (wc['CVRL'] + 2 * wc['CVRR']).conjugate()).real
             + 8 * (abs(wc['C7'])**2 + abs(wc['C7p'])**2)
             * (log(mtau**2 / mmu**2) - 11 / 4))
+
+
+def _BR_taumuemu(wc):
+    r"""Function for $\Delta L=2$ decays like $\tau^-\to \mu^- e^+ \mu^-$."""
+    return (abs(wc['CVLL'])**2 + abs(wc['CVLR'])**2 + abs(wc['CVRL'])**2 + abs(wc['CVRR'])**2
+            + 1 / 4 * (abs(wc['CSLL'])**2 + abs(wc['CSLR'])**2 + abs(wc['CSRL'])**2 + abs(wc['CSRR'])**2)
+            + 12 * (abs(wc['CTLL'])**2 + abs(wc['CTRR'])**2))
 
 
 def wc_eff(wc_obj, par, scale, l0, l1, l2, l3, nf_out=4):
@@ -52,6 +60,15 @@ def wc_eff(wc_obj, par, scale, l0, l1, l2, l3, nf_out=4):
         wceff['CVRR'] = wc['CVRR_mumutaumu']
         wceff['CSRR'] = wc['CSRR_mumutaumu']
         wceff['CSLL'] = wc['CSRR_mumumutau'].conjugate()
+    elif (l0, l1, l2, l3) == ('tau', 'e', 'e', 'e'):
+        wceff['C7'] = e / ml0 * wc['Cgamma_taue']
+        wceff['C7p'] = e / ml0 * wc['Cgamma_etau'].conjugate()
+        wceff['CVLL'] = wc['CVLL_eetaue']
+        wceff['CVLR'] = wc['CVLR_eetaue']
+        wceff['CVRL'] = wc['CVLR_taueee']
+        wceff['CVRR'] = wc['CVRR_eetaue']
+        wceff['CSRR'] = wc['CSRR_eetaue']
+        wceff['CSLL'] = wc['CSRR_eeetau'].conjugate()
     elif (l0, l1, l2, l3) == ('tau', 'mu', 'e', 'e'):
         wceff['C7'] = e / ml0 * wc['Cgamma_taumu']
         wceff['C7p'] = e / ml0 * wc['Cgamma_mutau'].conjugate()
@@ -65,6 +82,19 @@ def wc_eff(wc_obj, par, scale, l0, l1, l2, l3, nf_out=4):
         wceff['CSRL'] = -2 * wc['CVLR_mueetau'].conjugate()
         wceff['CTLL'] = -wc['CSRR_mueetau'].conjugate() / 8
         wceff['CTRR'] = -wc['CSRR_taueemu'] / 8
+    elif (l0, l1, l2, l3) == ('tau', 'e', 'mu', 'mu'):
+        wceff['C7'] = e / ml0 * wc['Cgamma_taue']
+        wceff['C7p'] = e / ml0 * wc['Cgamma_etau'].conjugate()
+        wceff['CVLL'] = wc['CVLL_muetaumu']
+        wceff['CVLR'] = wc['CVLR_mumutaue']
+        wceff['CVRL'] = wc['CVLR_tauemumu']
+        wceff['CVRR'] = wc['CVRR_muetaumu']
+        wceff['CSRR'] = wc['CSRR_tauemumu'] - wc['CSRR_muetaumu'] / 2
+        wceff['CSLL'] = wc['CSRR_mumuetau'].conjugate() - wc['CSRR_emumutau'].conjugate() / 2
+        wceff['CSLR'] = -2 * wc['CVLR_taumumue']
+        wceff['CSRL'] = -2 * wc['CVLR_muetaumu']
+        wceff['CTLL'] = -wc['CSRR_emumutau'].conjugate() / 8
+        wceff['CTRR'] = -wc['CSRR_muetaumu'] / 8
     elif (l0, l1, l2, l3) == ('mu', 'e', 'e', 'e'):
         wceff['C7'] = e / ml0 * wc['Cgamma_mue']
         wceff['C7p'] = e / ml0 * wc['Cgamma_emu'].conjugate()
@@ -79,39 +109,46 @@ def wc_eff(wc_obj, par, scale, l0, l1, l2, l3, nf_out=4):
     return wceff
 
 
-def BR_taumull(wc_obj, par, lep):
-    r"""Branching ratio of $\tau^-\to\mu^-\ell^+\ell^-$."""
+def BR_taul1l2l3(wc_obj, par, l1, l2, l3):
+    r"""Branching ratio of $\tau^-\to\ell_1^-\ell_2^+\ell_3^-$."""
     scale = flavio.config['renormalization scale']['taudecays']
     # cf. (22, 23) of hep-ph/0404211
-    wceff = wc_eff(wc_obj, par, scale, 'tau', 'mu', lep, lep, nf_out=4)
-    mtau = par['m_tau']
-    if lep == 'e':
-        me = par['m_e']
-        br_wc = _BR_taumuee(mtau, me, wceff)
-    elif lep == 'mu':
-        mmu = par['m_mu']
-        br_wc = _BR_tau3mu(mtau, mmu, wceff)
-    pre_br = par['BR(tau->mununu)'] / (8 * par['GF']**2)
+    wceff = wc_eff(wc_obj, par, scale, 'tau', l1, l2, l3, nf_out=4)
+    if (l1, l2, l3) == ('mu', 'e', 'e'):
+        br_wc = _BR_taumuee(par['m_tau'], par['m_e'], wceff)
+    elif (l1, l2, l3) == ('e', 'mu', 'mu'):
+        br_wc = _BR_taumuee(par['m_tau'], par['m_mu'], wceff)
+    elif (l1, l2, l3) == ('mu', 'mu', 'mu'):
+        br_wc = _BR_tau3mu(par['m_tau'], par['m_mu'], wceff)
+    elif (l1, l2, l3) == ('e', 'e', 'e'):
+        br_wc = _BR_tau3mu(par['m_tau'], par['m_e'], wceff)
+    elif (l1, l2, l3) == ('e', 'mu', 'e'):
+        br_wc = _BR_taumuemu(wceff)
+    elif (l1, l2, l3) == ('mu', 'e', 'mu'):
+        br_wc = _BR_taumuemu(wceff)
+    pre_br = par['tau_tau'] * par['m_tau']**5 / 192 / 8 / pi**3
     return pre_br * br_wc
 
 
+
 # function returning function needed for prediction instance
-def br_taumull_fct(lep):
+def br_taul1l2l3_fct(l1, l2, l3):
     def f(wc_obj, par):
-        return BR_taumull(wc_obj, par, lep)
+        return BR_taul1l2l3(wc_obj, par, l1, l2, l3)
     return f
 
 
 # Observable and Prediction instances
 _tex = {'e': 'e', 'mu': r'\mu'}
 
-for lep in _tex:
-    _process_tex = r"\tau^-\to \mu^-" + _tex[lep] + r"^+" + _tex[lep] + r"^-"
+for (l1, l2, l3) in [('mu', 'e', 'e'), ('mu', 'mu', 'mu'),
+                     ('e', 'e', 'e'), ('e', 'mu', 'mu')]:
+    _process_tex = r"\tau^-\to " + _tex[l1] + r"^-" + _tex[l2] + r"^+" + _tex[l2] + r"^-"
     _process_taxonomy = r'Process :: $\tau$ lepton decays :: LFV decays :: $\tau\to \ell^\prime\ell\ell$ :: $' + _process_tex + r"$"
 
-    _obs_name = "BR(tau->mu" + 2 * lep + ")"
+    _obs_name = "BR(tau->" + l1 + 2 * l2 + ")"
     _obs = flavio.classes.Observable(_obs_name)
     _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
     _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
     _obs.add_taxonomy(_process_taxonomy)
-    flavio.classes.Prediction(_obs_name, br_taumull_fct(lep))
+    flavio.classes.Prediction(_obs_name, br_taul1l2l3_fct(l1, l2, l3))

@@ -7,3 +7,5 @@ class TestTau3l(unittest.TestCase):
         # compare to the experimental values
         self.assertEqual(flavio.sm_prediction('BR(tau->muee)'), 0)
         self.assertEqual(flavio.sm_prediction('BR(tau->mumumu)'), 0)
+        self.assertEqual(flavio.sm_prediction('BR(tau->emumu)'), 0)
+        self.assertEqual(flavio.sm_prediction('BR(tau->eee)'), 0)
