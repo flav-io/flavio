@@ -161,11 +161,11 @@ class UniformDistribution(ProbabilityDistribution):
         _lpvect = np.vectorize(self._logpdf)
         return _lpvect(x)
 
-    def get_error_left(self, nsigma=1):
+    def get_error_left(self, nsigma=1, **kwargs):
         """Return the lower error"""
         return confidence_level(nsigma) * self.half_range
 
-    def get_error_right(self, nsigma=1):
+    def get_error_right(self, nsigma=1, **kwargs):
         """Return the upper error"""
         return confidence_level(nsigma) * self.half_range
 
@@ -328,12 +328,12 @@ class LogNormalDistribution(ProbabilityDistribution):
         else:
             return scipy.stats.lognorm.ppf(x, scale=np.exp(self.log_central_value), s=self.log_standard_deviation)
 
-    def get_error_left(self, nsigma=1):
+    def get_error_left(self, nsigma=1, **kwargs):
         """Return the lower error"""
         cl = confidence_level(nsigma)
         return self.central_value - self.ppf(0.5 - cl/2.)
 
-    def get_error_right(self, nsigma=1):
+    def get_error_right(self, nsigma=1, **kwargs):
         """Return the upper error"""
         cl = confidence_level(nsigma)
         return self.ppf(0.5 + cl/2.) - self.central_value
@@ -403,11 +403,11 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
         _lpvect = np.vectorize(self._logpdf)
         return _lpvect(x)
 
-    def get_error_left(self, nsigma=1):
+    def get_error_left(self, nsigma=1, **kwargs):
         """Return the lower error"""
         return nsigma * self.left_deviation
 
-    def get_error_right(self, nsigma=1):
+    def get_error_right(self, nsigma=1, **kwargs):
         """Return the upper error"""
         return nsigma * self.right_deviation
 
@@ -474,14 +474,14 @@ class HalfNormalDistribution(ProbabilityDistribution):
                                             scale=self.standard_deviation)
 
 
-    def get_error_left(self, nsigma=1):
+    def get_error_left(self, nsigma=1, **kwargs):
         """Return the lower error"""
         if self.standard_deviation >= 0:
             return 0
         else:
             return nsigma * (-self.standard_deviation)  # return a positive value!
 
-    def get_error_right(self, nsigma=1):
+    def get_error_right(self, nsigma=1, **kwargs):
         """Return the upper error"""
         if self.standard_deviation <= 0:
             return 0
@@ -920,8 +920,8 @@ class GeneralGammaUpperLimit(NumericalDistribution):
             raise ValueError("Confidence level should be between 0 und 1")
         if limit <= 0:
             raise ValueError("The upper limit should be a positive number")
-        if counts_total is not None and counts_total <= 0:
-            raise ValueError("counts_total should be a positive number or None")
+        if counts_total is not None and counts_total < 0:
+            raise ValueError("counts_total should be a positive number, zero, or None")
         if counts_background is not None and counts_background <= 0:
             raise ValueError("counts_background should be a positive number or None")
         if background_variance < 0:
@@ -946,7 +946,7 @@ class GeneralGammaUpperLimit(NumericalDistribution):
             self.counts_total = counts_total
         self.background_variance = background_variance
         x, y = self._get_xy()
-        if self.background_variance/self.counts_total <= 1/100.:
+        if self.counts_total != 0 and self.background_variance/self.counts_total <= 1/100.:
             warnings.warn("For vanishing or very small background variance, "
                           "it is safer to use GammaUpperLimit instead of "
                           "GeneralGammaUpperLimit to avoid numerical "
