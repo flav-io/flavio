@@ -4708,12 +4708,55 @@ PDG 2017 tau LFV:
     BR(tau->mugamma): < 4.4e-8 @ 90% CL
     BR(tau->rhoe):    < 1.8e-8 @ 90% CL
     BR(tau->rhomu):   < 1.2e-8 @ 90% CL
-    BR(tau->eee):     < 2.7e-8 @ 90% CL
-    BR(tau->emumu):   < 2.7e-8 @ 90% CL
-    BR(tau->mumumu):  < 2.1e-8 @ 90% CL
-    BR(tau->muee):    < 1.8e-8 @ 90% CL
     BR(tau->phimu):   < 8.4e-8 @ 90% CL
     BR(tau->phie):    < 3.1e-8 @ 90% CL
+
+Belle 2010 tau->lll:
+  experiment: Belle
+  inspire: Hayasaka:2010np
+  values:
+    BR(tau->eee):
+        distribution: general_gamma_upper_limit
+        limit: 2.7e-8
+        confidence_level: 0.9
+        counts_total: 0
+        counts_background: 0.21
+        background_variance: 0.15
+    BR(tau->mumumu):
+        distribution: general_gamma_upper_limit
+        limit: 2.1e-8
+        confidence_level: 0.9
+        counts_total: 0
+        counts_background: 0.13
+        background_variance: 0.06
+    BR(tau->emumu):
+        distribution: general_gamma_upper_limit
+        limit: 2.7e-8
+        confidence_level: 0.9
+        counts_total: 0
+        counts_background: 0.10
+        background_variance: 0.04
+    BR(tau->muee):
+        distribution: general_gamma_upper_limit
+        limit: 1.8e-8
+        confidence_level: 0.9
+        counts_total: 0
+        counts_background: 0.04
+        background_variance: 0.04
+    BR(tau->muemu):
+        distribution: general_gamma_upper_limit
+        limit: 1.7e-8
+        confidence_level: 0.9
+        counts_total: 0
+        counts_background: 0.02
+        background_variance: 0.02
+    BR(tau->emue):
+        distribution: general_gamma_upper_limit
+        limit: 1.5e-8
+        confidence_level: 0.9
+        counts_total: 0
+        counts_background: 0.01
+        background_variance: 0.01
 
 PDG 2017 mu LFV:
   experiment: PDG
