@@ -1,4 +1,4 @@
-from flavio.physics.bdecays.formfactors.b_p import bcl, cln
+from flavio.physics.bdecays.formfactors.b_p import bcl, cln, bsz
 from flavio.classes import AuxiliaryQuantity, Implementation
 from flavio.config import config
 
@@ -14,6 +14,11 @@ for p in processes_H2L + processes_H2H:
     quantity = p + ' form factor'
     a = AuxiliaryQuantity(name=quantity, arguments=['q2'])
     a.set_description('Hadronic form factor for the ' + p + ' transition')
+
+    iname = p + ' BSZ3'
+    i = Implementation(name=iname, quantity=quantity,
+                       function=ff_function(bsz.ff, p, n=3))
+    i.set_description("3-parameter BSZ parametrization (see arXiv:1811.00983).")
 
     iname = p + ' BCL3'
     i = Implementation(name=iname, quantity=quantity,

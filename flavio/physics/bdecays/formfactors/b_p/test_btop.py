@@ -1,6 +1,7 @@
 import unittest
 from math import sqrt,radians,asin
-from flavio.physics.bdecays.formfactors.b_p import btop, bcl_parameters, bcl
+from flavio.physics.bdecays.formfactors.b_p import btop, bcl_parameters, bcl, bsz_parameters
+from flavio.physics.bdecays.formfactors.b_v.test_btov import test_eos_ff
 import numpy as np
 import copy
 from flavio.parameters import default_parameters
@@ -40,3 +41,20 @@ class TestBtoP(unittest.TestCase):
         self.assertAlmostEqual(ff_latt['f+'], 1.7, places=1)
         self.assertAlmostEqual(ff_latt['f0'], 0.71, places=1)
         self.assertAlmostEqual(ff_latt['fT'], 1.74, places=1)
+
+    def test_bsz(self):
+        bsz_parameters.load_parameters('data/arXiv-1811-00983v1/BD_LCSR.json', 'B->D', c)
+        ff_latt = Implementation['B->D BSZ3'].get_central(constraints_obj=c, wc_obj=None, q2=0)
+
+    def test_gkvd(self):
+        # compare to numbers of arXiv:1811.00983
+        c = copy.deepcopy(default_parameters)
+        for q2 in [1.5, 6]:
+            for ff in ['f+', 'f0']:
+                for P in ['K', 'D', 'pi']:
+                    bsz_parameters.gkvd_load('v1', 'LCSR-Lattice', ('B->{}'.format(P),), c)
+                    ffbsz3 = Implementation['B->{} BSZ3'.format(P)].get_central(constraints_obj=c, wc_obj=None, q2=q2)
+                    self.assertAlmostEqual(ffbsz3[ff] / test_eos_ff[P][q2][ff],
+                                           1,
+                                           places=3,
+                                           msg="Failed for {} in B->{} at q2={}".format(ff, P, q2))

@@ -15,10 +15,6 @@ def pole(ff,mres,q2):
     m = mres[mresdict[ff]]
     return 1/(1-q2/m**2)
 
-# resonance masses used in arXiv:1503.05534v1
-mres_bsz = {}
-mres_bsz['b->d'] = [5.279, 5.324, 5.716];
-mres_bsz['b->s'] = [5.367, 5.415, 5.830];
 
 process_dict = {}
 process_dict['B->K*'] =    {'B': 'B0', 'V': 'K*0',   'q': 'b->s'}
@@ -26,8 +22,10 @@ process_dict['B->rho'] =   {'B': 'B0', 'V': 'rho0',  'q': 'b->d'}
 process_dict['B->omega'] = {'B': 'B0', 'V': 'omega', 'q': 'b->d'}
 process_dict['Bs->phi'] =  {'B': 'Bs', 'V': 'phi',   'q': 'b->s'}
 process_dict['Bs->K*'] =   {'B': 'Bs', 'V': 'K*0',   'q': 'b->d'}
+process_dict['B->D*'] =    {'B': 'B0', 'V': 'D*0',   'q': 'b->c'}
 
-def ff(process, q2, par, n=2):
+
+def ff(process, q2, par, n=2, omit_A='A0'):
     r"""Central value of $B\to V$ form factors in the lattice convention
     and BSZ parametrization.
 
@@ -41,14 +39,16 @@ def ff(process, q2, par, n=2):
     where $P_i(q^2)=(1-q^2/m_{R,i}^2)^{-1}$ is a simple pole.
     """
     pd = process_dict[process]
-    mres = mres_bsz[pd['q']]
+    mres = (par[process + ' BCL m0'],
+            par[process + ' BCL m1-'],
+            par[process + ' BCL m1+'])
     mB = par['m_'+pd['B']]
     mV = par['m_'+pd['V']]
     ff = {}
     # setting a0_A0 and a0_T2 according to the exact kinematical relations,
     # cf. eq. (16) of arXiv:1503.05534
     par_prefix = process + ' BSZ'
-    par[par_prefix + ' a0_A0'] = 8*mB*mV/(mB**2-mV**2)*par[par_prefix + ' a0_A12']
+    par[par_prefix + ' a0_A12'] = par[par_prefix + ' a0_A0'] / (8*mB*mV / (mB**2-mV**2))
     par[par_prefix + ' a0_T2'] = par[par_prefix + ' a0_T1']
     for i in ["A0","A1","A12","V","T1","T2","T23"]:
         a = [ par[par_prefix + ' a' + str(j) + '_' + i] for j in range(n) ]

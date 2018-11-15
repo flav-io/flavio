@@ -845,6 +845,72 @@ Bs->K BCL a2_fT:
   tex: $a_2^{(T)}$
   description: BCL $B_s\to K$ form factor parametrization coefficient $a_2$ of $f_T$
 
+# Parameters for B->K* form factors in the BSZ or BCL parametrization
+B->K* BCL m0:
+  tex: $m_{B^*}^{A_0}$
+  description: Resonance mass for the $B\to K^*$ scalar form factor in BCL or BSZ parametrization
+B->K* BCL m1-:
+  tex: $m_{B^*}^{1^-}$
+  description: Resonance mass for the $B\to K^*$ form factors $V$ and $T_1$ in BCL or BSZ parametrization
+B->K* BCL m1+:
+  tex: $m_{B^*}^{1^+}$
+  description: Resonance mass for the $B\to K^*$ form factors $A_{12}$ and $T_{2,23}$ in BCL or BSZ parametrization
+
+# Parameters for Bs->phi form factors in the BSZ or BCL parametrization
+Bs->phi BCL m0:
+  tex: $m_{B^*}^{A_0}$
+  description: Resonance mass for the $B_s\to\phi$ scalar form factor in BCL or BSZ parametrization
+Bs->phi BCL m1-:
+  tex: $m_{B^*}^{1^-}$
+  description: Resonance mass for the $B_s\to\phi$ form factors $V$ and $T_1$ in BCL or BSZ parametrization
+Bs->phi BCL m1+:
+  tex: $m_{B^*}^{1^+}$
+  description: Resonance mass for the $B_s\to\phi$ form factors $A_{12}$ and $T_{2,23}$ in BCL or BSZ parametrization
+
+# Parameters for Bs->K* form factors in the BSZ or BCL parametrization
+Bs->K* BCL m0:
+  tex: $m_{B^*}^{A_0}$
+  description: Resonance mass for the $B_s\to K^*$ scalar form factor in BCL or BSZ parametrization
+Bs->K* BCL m1-:
+  tex: $m_{B^*}^{1^-}$
+  description: Resonance mass for the $B_s\to K^*$ form factors $V$ and $T_1$ in BCL or BSZ parametrization
+Bs->K* BCL m1+:
+  tex: $m_{B^*}^{1^+}$
+  description: Resonance mass for the $B_s\to K^*$ form factors $A_{12}$ and $T_{2,23}$ in BCL or BSZ parametrization
+
+# Parameters for B->D* form factors in the BSZ or BCL parametrization
+B->D* BCL m0:
+  tex: $m_{B^*}^{A_0}$
+  description: Resonance mass for the $B\to D^*$ scalar form factor in BCL or BSZ parametrization
+B->D* BCL m1-:
+  tex: $m_{B^*}^{1^-}$
+  description: Resonance mass for the $B\to D^*$ form factors $V$ and $T_1$ in BCL or BSZ parametrization
+B->D* BCL m1+:
+  tex: $m_{B^*}^{1^+}$
+  description: Resonance mass for the $B\to D^*$ form factors $A_{12}$ and $T_{2,23}$ in BCL or BSZ parametrization
+
+# Parameters for B->rho form factors in the BSZ or BCL parametrization
+B->rho BCL m0:
+  tex: $m_{B^*}^{A_0}$
+  description: Resonance mass for the $B\to \rho$ scalar form factor in BCL or BSZ parametrization
+B->rho BCL m1-:
+  tex: $m_{B^*}^{1^-}$
+  description: Resonance mass for the $B\to \rho$ form factors $V$ and $T_1$ in BCL or BSZ parametrization
+B->rho BCL m1+:
+  tex: $m_{B^*}^{1^+}$
+  description: Resonance mass for the $B\to \rho$ form factors $A_{12}$ and $T_{2,23}$ in BCL or BSZ parametrization
+
+# Parameters for B->omega form factors in the BSZ or BCL parametrization
+B->omega BCL m0:
+  tex: $m_{B^*}^{A_0}$
+  description: Resonance mass for the $B\to \omega$ scalar form factor in BCL or BSZ parametrization
+B->omega BCL m1-:
+  tex: $m_{B^*}^{1^-}$
+  description: Resonance mass for the $B\to \omega$ form factors $V$ and $T_1$ in BCL or BSZ parametrization
+B->omega BCL m1+:
+  tex: $m_{B^*}^{1^+}$
+  description: Resonance mass for the $B\to \omega$ form factors $A_{12}$ and $T_{2,23}$ in BCL or BSZ parametrization
+
 # Experimental data needed for the normalization of BR(B->Xqgamma) and BR(B->Xqll)
 C_BXlnu:
   tex: $C$
