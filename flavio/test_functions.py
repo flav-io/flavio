@@ -77,13 +77,13 @@ class TestFunctions(unittest.TestCase):
         np.random.seed(135)
         cov = flavio.sm_covariance(['test_obs 1', 'test_obs 2'],
                                    N=1000, par_vary='all', par_obj=par)
-        npt.assert_array_almost_equal(cov, cov_par, decimal=3)
+        npt.assert_array_almost_equal(cov, cov_par, decimal=2)
         # test parallel
         np.random.seed(135)
         cov_parallel = flavio.sm_covariance(['test_obs 1', 'test_obs 2'],
                                    N=1000, par_vary='all', par_obj=par,
                                    threads=4)
-        npt.assert_array_equal(cov, cov_parallel)
+        npt.assert_array_almost_equal(cov, cov_parallel, decimal=6)
         np.random.seed(135)
         cov_1 = flavio.sm_covariance(['test_obs 1'],
                                    N=1000, par_vary='all', par_obj=par)
