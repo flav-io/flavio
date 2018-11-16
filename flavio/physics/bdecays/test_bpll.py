@@ -32,7 +32,7 @@ wc_lfv.set_initial({'C10_bsemu':4., 'C10_bsmue':2.}, 160.)
 class TestBPll(unittest.TestCase):
     def test_bkll(self):
         # rough numerical test for branching ratio at high q^2 to old code
-        self.assertAlmostEqual(bpll_dbrdq2(15., wc_obj, par, 'B+', 'K+', 'mu')/2.1824401629030333e-8, 1, delta=0.1)
+        self.assertAlmostEqual(bpll_dbrdq2(15., wc_obj, par, 'B+', 'K+', 'mu')/2.1824401629030333e-8, 1, delta=0.15)
         # test for errors
         flavio.sm_prediction('dBR/dq2(B0->Kmumu)', q2=3)
         flavio.sm_prediction('AFB(B0->Kmumu)', q2=15)

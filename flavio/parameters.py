@@ -276,10 +276,11 @@ _read_yaml_object_values_correlated(pkgutil.get_data('flavio', 'data/parameters_
 read_pdg(2017, default_parameters)
 
 # Read default parameters for B->V form factors
-## first load LCSR-only form factors
-flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load_v2_lcsr(default_parameters)
-## then load combined LCSR-lattice fits. Overwrites LCSR ones for B->K*, Bs->K*, Bs->phi, but not B->rho, B->omega
-flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load_v2_combined(default_parameters)
+flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load('v2', 'LCSR', ('B->omega', 'B->rho'), default_parameters)
+flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load('v2', 'LCSR-Lattice', ('B->K*', 'Bs->phi', 'Bs->K*'), default_parameters)
+
+# Read default parameters for B->V form factors
+flavio.physics.bdecays.formfactors.b_p.bsz_parameters.gkvd_load('v1', 'LCSR-Lattice', ('B->K', 'B->pi'), default_parameters)
 
 # Read default parameters for Lambdab->Lambda form factors
 flavio.physics.bdecays.formfactors.lambdab_12.lattice_parameters.lattice_load_ho(default_parameters)

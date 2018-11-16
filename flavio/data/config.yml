@@ -83,9 +83,9 @@ implementation:
   B->D* form factor: B->D* CLN
 
   # B->P form factors
-  B->K form factor: B->K BCL3
+  B->K form factor: B->K BSZ3
   B->D form factor: B->D CLN
-  B->pi form factor: B->pi BCL3-IW
+  B->pi form factor: B->pi BSZ3
 
   # Lambdab form factors
   Lambdab->Lambda form factor: Lambdab->Lambda SSE3
