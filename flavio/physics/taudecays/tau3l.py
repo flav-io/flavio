@@ -27,9 +27,9 @@ def _BR_tau3mu(mtau, mmu, wc):
     # (117) of hep-ph/9909265
     return (2 * abs(wc['CVLL'])**2 + abs(wc['CVLR'])**2 + abs(wc['CVRL'])**2 + 2 * abs(wc['CVRR'])**2
             + 1 / 8 * (abs(wc['CSLL'])**2 + abs(wc['CSRR'])**2)
-            + 4 * (wc['C7'] * (2 * wc['CVLL'] + wc['CVLR']).conjugate()
+            + 8 * (wc['C7'] * (2 * wc['CVLL'] + wc['CVLR']).conjugate()
                           + wc['C7p'] * (wc['CVRL'] + 2 * wc['CVRR']).conjugate()).real
-            + 8 * (abs(wc['C7'])**2 + abs(wc['C7p'])**2)
+            + 32 * (abs(wc['C7'])**2 + abs(wc['C7p'])**2)
             * (log(mtau**2 / mmu**2) - 11 / 4))
 
 
