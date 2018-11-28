@@ -872,7 +872,125 @@ class NumericalDistribution(ProbabilityDistribution):
         _y = np.exp(pd.logpdf(_x))
         return cls(central_value=pd.central_value, x=_x, y=_y)
 
-class GeneralGammaUpperLimit(NumericalDistribution):
+
+class GeneralGammaDistributionPositive(NumericalDistribution):
+    r"""Distribution appropriate for
+    a positive quantitity obtained from a low-statistics counting experiment,
+    e.g. a rare decay rate.
+    The difference to `GammaUpperLimit` is that this class also allows to
+    specify an uncertainty on the number of background events. The result
+    is a numerical distribution obtained from the convolution of a normal
+    distribution (for the background uncertainty) and a gamma distribution,
+    restricted to positive values.
+    In contrast to `GammaUpperLimit`, the scale factor (the relational between
+    the observable of interest and the raw number of counts) is not determined
+    from a limit and a confidence level, but specified explicitly.
+    For the case of a limit, see `GeneralGammaUpperLimit`.
+    """
+
+    def __init__(self,
+                 scale_factor=1,
+                 counts_total=None,
+                 counts_background=None,
+                 counts_signal=None,
+                 background_variance=0):
+        r"""Initialize the distribution.
+
+        Parameters:
+
+        Parameters:
+
+        - `scale_factor`: scale factor by which the number of counts is multiplied
+          to get the observable of interest.
+        - `counts_total`: observed total number (signal and background) of counts.
+        - `counts_background`: expected mean number of expected background counts
+        - `counts_signal`: mean obseved number of signal events
+        - `background_variance`: standard deviation of the expected number of
+          background events
+
+        Of the three parameters `counts_total`, `counts_background`, and
+        `counts_signal`, only two must be specified. The third one will
+        be determined from the relation
+
+        `counts_total = counts_signal + counts_background`
+
+        Note that if `background_variance=0`, it makes more sense to use
+        `GammaUpperLimit`, which is equivalent but analytical rather than
+        numerical.
+        """
+        if scale_factor <= 0:
+            raise ValueError("Scale factor should be positive")
+        self.scale_factor = scale_factor
+        if counts_total is not None and counts_total < 0:
+            raise ValueError("counts_total should be a positive number, zero, or None")
+        if counts_background is not None and counts_background <= 0:
+            raise ValueError("counts_background should be a positive number or None")
+        if background_variance < 0:
+            raise ValueError("background_variance should be a positive number")
+        if [counts_total, counts_signal, counts_background].count(None) == 0:
+            # if all three are specified, check the relation holds!
+            if counts_background != counts_total - counts_signal:
+                raise ValueError("The relation `counts_total = counts_signal + counts_background` is not satisfied")
+        if counts_background is None:
+            self.counts_background = counts_total - counts_signal
+        else:
+            self.counts_background = counts_background
+        if counts_signal is None:
+            self.counts_signal = counts_total - counts_background
+        else:
+            self.counts_signal = counts_signal
+        if counts_total is None:
+            self.counts_total = counts_signal + counts_background
+        else:
+            self.counts_total = counts_total
+        self.background_variance = background_variance
+        x, y = self._get_xy()
+        if self.counts_total != 0 and self.background_variance/self.counts_total <= 1/100.:
+            warnings.warn("For vanishing or very small background variance, "
+                          "it is safer to use GammaUpperLimit instead of "
+                          "GeneralGammaUpperLimit to avoid numerical "
+                          "instability.")
+        super().__init__(x=x, y=y)
+
+    def __repr__(self):
+        return ('flavio.statistics.probability.GeneralGammaDistributionPositive'
+               '({}, counts_total={}, counts_signal={}, '
+               'background_variance={})').format(self.scale_factor,
+                                                self.counts_total,
+                                                self.counts_signal,
+                                                self.background_variance)
+
+    def _get_xy(self):
+        if self.background_variance == 0:
+            # this is a bit pointless as in this case it makes more
+            # sense to use GammaUpperLimit itself
+            gamma_unscaled = GammaDistributionPositive(a = self.counts_total + 1,
+                                                       loc = -self.counts_background,
+                                                       scale = 1)
+            num_unscaled = NumericalDistribution.from_pd(gamma_unscaled)
+        else:
+            # define a gamma distribution (with x>loc, not x>0!) and convolve
+            # it with a Gaussian
+            gamma_unscaled = GammaDistribution(a = self.counts_total + 1,
+                                               loc = -self.counts_background,
+                                               scale = 1)
+            norm_bg = NormalDistribution(0, self.background_variance)
+            num_unscaled = convolve_distributions([gamma_unscaled, norm_bg], central_values='sum')
+        # now that we have convolved, cut off anything below x=0
+        x = num_unscaled.x
+        y = num_unscaled.y_norm
+        y = y[np.where(x >= 0)]
+        x = x[np.where(x >= 0)]
+        if x[0] != 0:  #  make sure the PDF at 0 exists
+            x = np.insert(x, 0, 0.)  # add 0 as first element
+            y = np.insert(y, 0, y[0])  # copy first element
+        y[0]
+        num_unscaled = NumericalDistribution(x, y)
+        x = x * self.scale_factor
+        return x, y
+
+
+class GeneralGammaUpperLimit(GeneralGammaDistributionPositive):
     r"""Distribution appropriate for
     a positive quantitity obtained from a low-statistics counting experiment,
     e.g. a rare decay rate, given an upper limit on x.
@@ -881,6 +999,8 @@ class GeneralGammaUpperLimit(NumericalDistribution):
     is a numerical distribution obtained from the convolution of a normal
     distribution (for the background uncertainty) and a gamma distribution,
     restricted to positive values.
+    The only difference to `GeneralGammaDistributionPositive` is that the scale
+    factor is determined from the limit and confidence level.
     """
 
     def __init__(self,
@@ -916,42 +1036,23 @@ class GeneralGammaUpperLimit(NumericalDistribution):
         `GammaUpperLimit`, which is equivalent but analytical rather than
         numerical.
         """
-        if confidence_level > 1 or confidence_level < 0:
-            raise ValueError("Confidence level should be between 0 und 1")
-        if limit <= 0:
-            raise ValueError("The upper limit should be a positive number")
-        if counts_total is not None and counts_total < 0:
-            raise ValueError("counts_total should be a positive number, zero, or None")
-        if counts_background is not None and counts_background <= 0:
-            raise ValueError("counts_background should be a positive number or None")
-        if background_variance < 0:
-            raise ValueError("background_variance should be a positive number")
         self.limit = limit
         self.confidence_level = confidence_level
-        if [counts_total, counts_signal, counts_background].count(None) == 0:
-            # if all three are specified, check the relation holds!
-            if counts_background != counts_total - counts_signal:
-                raise ValueError("The relation `counts_total = counts_signal + counts_background` is not satisfied")
-        if counts_background is None:
-            self.counts_background = counts_total - counts_signal
-        else:
-            self.counts_background = counts_background
-        if counts_signal is None:
-            self.counts_signal = counts_total - counts_background
-        else:
-            self.counts_signal = counts_signal
-        if counts_total is None:
-            self.counts_total = counts_signal + counts_background
-        else:
-            self.counts_total = counts_total
-        self.background_variance = background_variance
-        x, y = self._get_xy()
-        if self.counts_total != 0 and self.background_variance/self.counts_total <= 1/100.:
-            warnings.warn("For vanishing or very small background variance, "
-                          "it is safer to use GammaUpperLimit instead of "
-                          "GeneralGammaUpperLimit to avoid numerical "
-                          "instability.")
-        super().__init__(x=x, y=y)
+        _d_unscaled = GeneralGammaDistributionPositive(
+            scale_factor=1,
+            counts_total=counts_total,
+            counts_background=counts_background,
+            counts_signal=counts_signal,
+            background_variance=background_variance)
+        limit_unscaled = _d_unscaled.ppf(self.confidence_level)
+        # use the value of the limit to determine the scale factor
+        scale_factor = self.limit / limit_unscaled
+        super().__init__(
+            scale_factor=scale_factor,
+            counts_total=counts_total,
+            counts_background=counts_background,
+            counts_signal=counts_signal,
+            background_variance=background_variance)
 
     def __repr__(self):
         return ('flavio.statistics.probability.GeneralGammaUpperLimit'
@@ -961,38 +1062,6 @@ class GeneralGammaUpperLimit(NumericalDistribution):
                                                 self.counts_total,
                                                 self.counts_signal,
                                                 self.background_variance)
-
-    def _get_xy(self):
-        if self.background_variance == 0:
-            # this is a bit pointless as in this case it makes more
-            # sense to use GammaUpperLimit itself
-            gamma_unscaled = GammaDistributionPositive(a = self.counts_total + 1,
-                                                       loc = -self.counts_background,
-                                                       scale = 1)
-            num_unscaled = NumericalDistribution.from_pd(gamma_unscaled)
-        else:
-            # define a gamma distribution (with x>loc, not x>0!) and convolve
-            # it with a Gaussian
-            gamma_unscaled = GammaDistribution(a = self.counts_total + 1,
-                                               loc = -self.counts_background,
-                                               scale = 1)
-            norm_bg = NormalDistribution(0, self.background_variance)
-            num_unscaled = convolve_distributions([gamma_unscaled, norm_bg], central_values='sum')
-        # now that we have convolved, cut off anything below x=0
-        x = num_unscaled.x
-        y = num_unscaled.y_norm
-        y = y[np.where(x >= 0)]
-        x = x[np.where(x >= 0)]
-        if x[0] != 0:  #  make sure the PDF at 0 exists
-            x = np.insert(x, 0, 0.)  # add 0 as first element
-            y = np.insert(y, 0, y[0])  # copy first element
-        y[0]
-        num_unscaled = NumericalDistribution(x, y)
-        limit_unscaled = num_unscaled.ppf(self.confidence_level)
-        # use the value of the limit to determine the scale factor
-        scale_factor = self.limit/limit_unscaled
-        x = x * scale_factor
-        return x, y
 
 
 class KernelDensityEstimate(NumericalDistribution):

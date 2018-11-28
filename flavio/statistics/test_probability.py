@@ -499,6 +499,7 @@ class TestProbability(unittest.TestCase):
          'multivariate_normal': MultivariateNormalDistribution,
          'multivariate_numerical': MultivariateNumericalDistribution,
          'gaussian_kde': GaussianKDE,
+         'general_gamma_positive': GeneralGammaDistributionPositive,
         }
         for k, v in class_from_string_old.items():
             self.assertEqual(v.class_to_string(), k)
