@@ -24,16 +24,16 @@ class YAMLLoadable(object):
         return vol.Schema(cls._output_schema_dict, extra=vol.REMOVE_EXTRA)
 
     @classmethod
-    def load_dict(cls, d):
+    def load_dict(cls, d, **kwargs):
         """Instantiate an object from a YAML dictionary."""
         schema = cls.input_schema()
-        return cls(**schema(d))
+        return cls(**schema(d), **kwargs)
 
     @classmethod
-    def load(cls, f):
+    def load(cls, f, **kwargs):
         """Instantiate an object from a YAML string or stream."""
         d = flavio.io.yaml.load_include(f)
-        return cls.load_dict(d)
+        return cls.load_dict(d, **kwargs)
 
     def get_yaml_dict(self):
         """Dump the object to a YAML dictionary."""
