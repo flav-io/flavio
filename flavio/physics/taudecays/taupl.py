@@ -62,8 +62,8 @@ def br_taupl(wc_obj, par, P, lep):
        Ks = Kv * mq2
        gV = - fP* Kv * C9m/2
        gA = - fP* Kv * C10m/2
-       gS =   fP* Ks * mP**2 * CSm/2 / (mq1+mq2)
-       gP =   fP* Ks * mP**2 * CPm/2 / (mq1+mq2)
+       gS = - fP* Ks * mP**2 * CSm/2 / (mq1+mq2)
+       gP = - fP* Ks * mP**2 * CPm/2 / (mq1+mq2)
        gVS = gS + gV*(mtau -mlep)
        gAP = gP - gA*(mtau +mlep)
        gL =  gVS - gAP
