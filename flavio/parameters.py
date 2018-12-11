@@ -273,7 +273,7 @@ _read_yaml_object_values(pkgutil.get_data('flavio', 'data/parameters_uncorrelate
 _read_yaml_object_values_correlated(pkgutil.get_data('flavio', 'data/parameters_correlated.yml'), default_parameters)
 
 # Read the parameters from the default PDG data file
-read_pdg(2017, default_parameters)
+read_pdg(2018, default_parameters)
 
 # Read default parameters for B->V form factors
 flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load('v2', 'LCSR', ('B->omega', 'B->rho'), default_parameters)
