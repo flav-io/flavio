@@ -7,8 +7,8 @@
 # for now, just assume 99% correlation
 -
   values:
-    - f_K+: 0.1556(4) # FLAG 2016 Nf=2+1+1
-    - f_K0: 0.1556(4)
+    - f_K+: 0.1557(3) # FLAG 2018 Nf=2+1+1
+    - f_K0: 0.1557(3)
   correlation: 0.99
 -
   values:
@@ -22,8 +22,8 @@
   correlation: 0.99
 -
   values:
-    - f_pi+: 0.1302(14)  # FLAG 2013/2016 Nf=2+1
-    - f_pi0: 0.1302(14)
+    - f_pi+: 0.1302(8)  # FLAG 2018 Nf=2+1
+    - f_pi0: 0.1302(8)
   correlation: 0.99
 -
   values:
