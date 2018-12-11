@@ -11,6 +11,14 @@ from math import log, pi
 from wilson.util import qcd
 import rundec
 
+# quark mass thresholds
+thresholds = {
+    3: 0.1,
+    4: config['RGE thresholds']['mc'],
+    5: config['RGE thresholds']['mb'],
+    6: config['RGE thresholds']['mt'],
+    7: np.inf,
+    }
 
 def rg_evolve(initial_condition, derivative, scale_in, scale_out):
     sol = odeint(derivative, initial_condition, [scale_in, scale_out])
@@ -27,14 +35,6 @@ def rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out, nf_out=N
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out, nf_out):
-    # quark mass thresholds
-    thresholds = {
-        3: 0.1,
-        4: config['RGE thresholds']['mc'],
-        5: config['RGE thresholds']['mb'],
-        6: config['RGE thresholds']['mt'],
-        7: np.inf,
-        }
     if scale_in > scale_out: # running DOWN
         # set initial values and scales
         initial_nf = initial_condition
@@ -67,14 +67,6 @@ def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out, nf_out)
             initial_nf = sol
             scale_in_nf = thresholds[nf+1]
     return sol
-
-    thresholds = {
-        3: 0.1,
-        4: config['RGE thresholds']['mc'],
-        5: config['RGE thresholds']['mb'],
-        6: config['RGE thresholds']['mt'],
-        7: np.inf,
-        }
 
 
 @lru_cache(maxsize=config['settings']['cache size'])
@@ -302,3 +294,31 @@ def get_wilson(par, c_in, derivative_nf, scale_in, scale_out, nf_out=None):
     sol = rg_evolve_sm(x_in, derivative_nf, scale_in, scale_out, nf_out=nf_out)
     c_out = sol[:-2]
     return c_out.view(np.complex)
+
+def get_f_perp(par, meson, scale):
+    r"""Get the transverse meson decay constant at a given scale.
+    The argument `meson` should be one of `rho0`, `rho+`, `K*0`, `K*+`, `omega`, `phi`
+    """
+    if scale < 0.52:
+        # get_alpha_s yields 0.0 for a scale below 5.2. GeV
+        raise ValueError('RG evolution below 5.2 GeV not implemented.')
+    f_perp = par['f_perp_' +  meson]
+    scale_start = 1
+    if scale_start > scale: # running DOWN
+        nf = 3
+        scale_stop = scale
+        f_perp = _rg_factor_f_perp(par, scale_start, scale_stop, nf)*f_perp
+        return f_perp
+    else: # running UP
+        for nf in (3,4,5,6):
+             # run either to next threshold or to final scale, whichever is closer
+            scale_stop = min(thresholds[nf+1], scale)
+            f_perp = _rg_factor_f_perp(par, scale_start, scale_stop, nf)*f_perp
+            if scale_stop == scale:
+                return f_perp
+            scale_start = thresholds[nf+1]
+
+def _rg_factor_f_perp(par, scale_start, scale_stop, nf):
+    alpha_start = get_alpha_s(par, scale_start, nf_out=nf)
+    alpha_stop = get_alpha_s(par, scale_stop, nf_out=nf)
+    return (alpha_stop/alpha_start)**(4/(33-2*nf))
