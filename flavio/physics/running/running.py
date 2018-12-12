@@ -300,7 +300,8 @@ def get_wilson(par, c_in, derivative_nf, scale_in, scale_out, nf_out=None):
 
 def get_f_perp(par, meson, scale):
     r"""Get the transverse meson decay constant at a given scale.
-    The argument `meson` should be one of `rho0`, `rho+`, `K*0`, `K*+`, `omega`, `phi`
+    The argument `meson` should be one of `rho0`, `rho+`, `K*0`, `K*+`, `omega`, `phi`.
+    The input transverse decay constant is taken from `par` and is assumed to be the value at 1 GeV.
     """
     thresholds = get_thresholds()
     if scale < 0.52:
