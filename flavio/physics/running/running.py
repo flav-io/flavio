@@ -324,6 +324,11 @@ def get_f_perp(par, meson, scale):
             scale_start = thresholds[nf+1]
 
 def _rg_factor_f_perp(par, scale_start, scale_stop, nf):
+    r"""
+    This function returns the leading order renormalization group (RG) factor that relates the value of the transverse meson decay constant at the scale `scale_stop` to its value at the scale `scale_start`.
+    The number of fermion flavours to be taken into account is specified by `nf`.
+    The exponent used in the RG factor can be written es `4/(3*beta_0)`, where `beta_0` is given by `11-2*nf/3` (cf. eg. https://arxiv.org/abs/hep-lat/0301020 eq. (14)).
+    """
     alpha_start = get_alpha_s(par, scale_start, nf_out=nf)
     alpha_stop = get_alpha_s(par, scale_stop, nf_out=nf)
     return (alpha_stop/alpha_start)**(4/(33-2*nf))
