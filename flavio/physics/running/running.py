@@ -12,7 +12,7 @@ from wilson.util import qcd
 import rundec
 
 # quark mass thresholds
-def get_thresholds():
+def _thresholds():
     thresholds = {
         3: 0.1,
         4: config['RGE thresholds']['mc'],
@@ -37,7 +37,7 @@ def rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out, nf_out=N
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def _rg_evolve_sm(initial_condition, derivative_nf, scale_in, scale_out, nf_out):
-    thresholds = get_thresholds()
+    thresholds = _thresholds()
     if scale_in > scale_out: # running DOWN
         # set initial values and scales
         initial_nf = initial_condition
@@ -303,7 +303,7 @@ def get_f_perp(par, meson, scale):
     The argument `meson` should be one of `rho0`, `rho+`, `K*0`, `K*+`, `omega`, `phi`.
     The input value for the transverse decay constant is taken from `par` and is assumed to be the one at 1 GeV.
     """
-    thresholds = get_thresholds()
+    thresholds = _thresholds()
     if scale < 0.52:
         # get_alpha_s yields 0.0 for a scale below 5.2. GeV
         raise ValueError('RG evolution below 5.2 GeV not implemented.')
