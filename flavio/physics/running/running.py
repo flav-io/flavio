@@ -304,9 +304,6 @@ def get_f_perp(par, meson, scale):
     The input value for the transverse decay constant is taken from `par` and is assumed to be the one at 1 GeV.
     """
     thresholds = _thresholds()
-    if scale < 0.52:
-        # get_alpha_s yields 0.0 for a scale below 5.2. GeV
-        raise ValueError('RG evolution below 5.2 GeV not implemented.')
     f_perp = par['f_perp_' +  meson]
     scale_start = 1
     if scale_start > scale: # running DOWN
