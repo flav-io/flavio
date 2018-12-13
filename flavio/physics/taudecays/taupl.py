@@ -40,8 +40,8 @@ def br_taupl(wc_obj, par, P, lep):
             S['LL' + q] = wc['CSRR_{}tau{}'.format(lep, 2 * q)].conjugate()  # SRRqq
             S['LR' + q] = wc['CSRL_{}tau{}'.format(lep, 2 * q)].conjugate()  # SLRqq
 
-        vL = -fP*((F['LRu'] - F['LLu'])/2  - (F['LRd'] - F['LLd'])/2 )/sqrt(2)
-        vR = -fP*((F['RRu'] - F['RLu'])/2  - (F['RRd'] - F['RLd'])/2 )/sqrt(2)
+        vL = fP*((F['LRu'] - F['LLu'])/2  - (F['LRd'] - F['LLd'])/2 )/sqrt(2)
+        vR = fP*((F['RRu'] - F['RLu'])/2  - (F['RRd'] - F['RLd'])/2 )/sqrt(2)
         sL = fP*mP**2/(mu+md)*((S['LRu']-S['LLu'])/2 - (S['LRd']-S['LLd'])/2)/sqrt(2)
         sR = fP*mP**2/(mu+md)*((S['RRu']-S['RLu'])/2 - (S['RRd']-S['RLd'])/2)/sqrt(2) 
         gL = sL+ (-vL*mlep + vR*mtau)
