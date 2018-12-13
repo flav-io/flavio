@@ -298,7 +298,7 @@ def get_wilson(par, c_in, derivative_nf, scale_in, scale_out, nf_out=None):
     c_out = sol[:-2]
     return c_out.view(np.complex)
 
-def get_f_perp(par, meson, scale):
+def get_f_perp(par, meson, scale, nf_out=None):
     r"""Get the transverse meson decay constant at a given scale.
     The argument `meson` should be one of `rho0`, `rho+`, `K*0`, `K*+`, `omega`, `phi`.
     The input value for the transverse decay constant is taken from `par` and is assumed to be the one at 1 GeV.
@@ -313,8 +313,12 @@ def get_f_perp(par, meson, scale):
         return f_perp
     else: # running UP
         for nf in (3,4,5,6):
-             # run either to next threshold or to final scale, whichever is closer
-            scale_stop = min(thresholds[nf+1], scale)
+            # run to final scale directly if nf equals nf_out
+            if nf_out is not None and nf_out == nf:
+                scale_stop = scale
+            # run either to next threshold or to final scale, whichever is closer
+            else:
+                scale_stop = min(thresholds[nf+1], scale)
             f_perp = _rg_factor_f_perp(par, scale_start, scale_stop, nf)*f_perp
             if scale_stop == scale:
                 return f_perp
