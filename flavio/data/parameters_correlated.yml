@@ -12,13 +12,13 @@
   correlation: 0.99
 -
   values:
-    - f_perp_K*+: 0.159(6) # 1503.05534v2 table 1
-    - f_perp_K*0: 0.159(6)
+    - f_perp_K*+: 0.145(6)  # 1503.05534v2 table 1, but at 2 GeV
+    - f_perp_K*0: 0.145(6)
   correlation: 0.99
 -
   values:
-    - f_perp_rho+: 0.160(7) # 1503.05534v2 table 1
-    - f_perp_rho0: 0.160(7)
+    - f_perp_rho+: 0.146(7)  # 1503.05534v2 table 1, but at 2 GeV
+    - f_perp_rho0: 0.146(7)
   correlation: 0.99
 -
   values:

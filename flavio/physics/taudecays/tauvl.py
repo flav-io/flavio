@@ -32,7 +32,7 @@ def br_tauvl(wc_obj, par, V, lep):
     ml = par['m_' + lep]
     mV = par['m_' + V]
     fV = par['f_' + V]
-    fTV = par['f_perp_' + V]
+    fTV = flavio.physics.running.running.get_f_perp(par, V, scale)
     Cgamma_taul = wc['Cgamma_tau{}'.format(lep)]
     Cgamma_ltau = wc['Cgamma_{}tau'.format(lep)]
     if V == 'rho0':

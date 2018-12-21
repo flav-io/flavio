@@ -282,7 +282,7 @@ def T_perp(q2, par, wc, B, V, scale,
     mc = running.get_mc_pole(par)
     EV = En_V(mB, mV, q2)
     fB = par['f_'+B]
-    fVperp = par['f_perp_'+V]
+    fVperp = flavio.physics.running.running.get_f_perp(par, V, scale)
     fVpara = par['f_'+V]
     N = pi**2 / 3. * fB * fVperp / mB
     a1_perp = par['a1_perp_'+V]

@@ -46,8 +46,8 @@ f_Bc: 0.434(15) # 1503.05762v2 eq. (20)
 
 # Parameters needed for meson light-cone distribution amplitudes
 
-f_perp_omega: 0.139(18)
-f_perp_phi: 0.191(6)
+f_perp_omega: 0.135(16)  # 1503.05534v2 table 1, but at 2 GeV, error enlarged
+f_perp_phi: 0.175(4)  # 1503.05534v2 table 1, but at 2 GeV
 a2_para_omega: 0.15(12)
 a2_perp_omega: 0.14(12)
 a2_para_phi: 0.23(8)

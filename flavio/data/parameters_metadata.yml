@@ -85,22 +85,22 @@ f_phi:
 
 f_perp_K*0:
   tex: $f^\perp_{K^{*0}}$
-  description: Transverse $K^{*0}$ decay constant at 1 GeV
+  description: Transverse $K^{*0}$ decay constant at 2 GeV in the 3-flavour scheme
 f_perp_K*+:
   tex: $f^\perp_{K^{\pm}}$
-  description: Transverse $K^{*\pm}$ decay constant at 1 GeV
+  description: Transverse $K^{*\pm}$ decay constant at 2 GeV in the 3-flavour scheme
 f_perp_rho0:
   tex: $f^\perp_{\rho^{0}}$
-  description: Transverse $\rho^{0}$ decay constant at 1 GeV
+  description: Transverse $\rho^{0}$ decay constant at 2 GeV in the 3-flavour scheme
 f_perp_rho+:
   tex: $f^\perp_{\rho^{\pm}}$
-  description: Transverse $\rho^{\pm}$ decay constant at 1 GeV
+  description: Transverse $\rho^{\pm}$ decay constant at 2 GeV in the 3-flavour scheme
 f_perp_omega:
   tex: $f^\perp_\omega$
-  description: Transverse $\omega$ decay constant at 1 GeV
+  description: Transverse $\omega$ decay constant at 2 GeV in the 3-flavour scheme
 f_perp_phi:
   tex: $f^\perp_\phi$
-  description: Transverse $\phi$ decay constant at 1 GeV
+  description: Transverse $\phi$ decay constant at 2 GeV in the 3-flavour scheme
 a2_para_K*0:
   tex: $a_2^{K^{*0}_\parallel}$
   description: Second Gegenbauer moment of the parallely polarized $K^{*0}$ LCDA at 1 GeV
