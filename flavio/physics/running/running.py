@@ -300,36 +300,38 @@ def get_wilson(par, c_in, derivative_nf, scale_in, scale_out, nf_out=None):
 
 def get_f_perp(par, meson, scale, nf_out=None):
     r"""Get the transverse meson decay constant at a given scale.
-    The argument `meson` should be one of `rho0`, `rho+`, `K*0`, `K*+`, `omega`, `phi`.
-    The input value for the transverse decay constant is taken from `par` and is assumed to be the one at 1 GeV.
+    The argument `meson` should be one of `rho0`, `rho+`, `K*0`, `K*+`,
+    `omega`, `phi`. The input value for the transverse decay constant is taken
+    from `par` and is assumed to be at a scale of 2 GeV in the 3-flavour
+    scheme.
     """
     thresholds = _thresholds()
     f_perp = par['f_perp_' +  meson]
-    scale_start = 1
-    if scale_start > scale: # running DOWN
-        nf = 3
-        scale_stop = scale
-        f_perp = _rg_factor_f_perp(par, scale_start, scale_stop, nf)*f_perp
+    scale_start = 2
+    nf = 3
+    if scale == scale_start:
         return f_perp
-    else: # running UP
-        for nf in (3,4,5,6):
-            # run to final scale directly if nf equals nf_out
-            if nf_out is not None and nf_out == nf:
-                scale_stop = scale
-            # run either to next threshold or to final scale, whichever is closer
-            else:
-                scale_stop = min(thresholds[nf+1], scale)
-            f_perp = _rg_factor_f_perp(par, scale_start, scale_stop, nf)*f_perp
-            if scale_stop == scale:
-                return f_perp
-            scale_start = thresholds[nf+1]
+    for nf in (3, 4, 5, 6):
+        # run to final scale directly if nf equals nf_out
+        if nf_out is not None and nf_out == nf:
+            scale_stop = scale
+        # run either to next threshold or to final scale, whichever is closer
+        else:
+            scale_stop = min(thresholds[nf + 1], scale)
+        f_perp = _rg_factor_f_perp(par, scale_start, scale_stop, nf) * f_perp
+        if scale_stop == scale:
+            return f_perp
+        scale_start = thresholds[nf + 1]
 
 def _rg_factor_f_perp(par, scale_start, scale_stop, nf):
-    r"""
-    This function returns the leading order renormalization group (RG) factor that relates the value of the transverse meson decay constant at the scale `scale_stop` to its value at the scale `scale_start`.
-    The number of fermion flavours to be taken into account is specified by `nf`.
-    The exponent used in the RG factor can be written es `4/(3*beta_0)`, where `beta_0` is given by `11-2*nf/3` (cf. eg. https://arxiv.org/abs/hep-lat/0301020 eq. (14)).
+    r"""This function returns the leading order renormalization group (RG)
+    factor that relates the value of the transverse meson decay constant
+    at the scale `scale_stop` to its value at the scale `scale_start`.
+    The number of fermion flavours to be taken into account is specified by
+    `nf`. The exponent used in the RG factor can be written es `4/(3*beta_0)`,
+    where `beta_0` is given by `11-2*nf/3` (cf. e.g.
+    https://arxiv.org/abs/hep-lat/0301020 eq. (14)).
     """
     alpha_start = get_alpha_s(par, scale_start, nf_out=nf)
     alpha_stop = get_alpha_s(par, scale_stop, nf_out=nf)
-    return (alpha_stop/alpha_start)**(4/(33-2*nf))
+    return (alpha_stop / alpha_start)**(4 / (33 - 2 * nf))
