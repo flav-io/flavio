@@ -89,3 +89,18 @@ class TestRunning(unittest.TestCase):
         alpha_s = get_alpha(par, par['m_b'], nf_out=5)['alpha_s']
         mb1S = get_mb_1S(par, nl=3)
         self.assertAlmostEqual(mb1S, 4.67, delta=0.005)
+
+    def test_f_perp(self):
+        par = flavio.default_parameters.get_central_all()
+        self.assertEqual(par['f_perp_K*0'], get_f_perp(par, 'K*0', 2))
+        self.assertEqual(par['f_perp_K*0'], get_f_perp(par, 'K*0', 2, nf_out=3))
+        self.assertEqual(par['f_perp_K*0'], get_f_perp(par, 'K*0', 2, nf_out=4))
+        # rough comparison of 1503.05534 and 0804.0473
+        self.assertAlmostEqual(get_f_perp(par, 'K*0', 1) / par['f_perp_K*0'],
+                               0.159 / (0.712 * 0.204),
+                               delta=0.025)
+        self.assertAlmostEqual(get_f_perp(par, 'K*0', 1) / par['f_perp_K*0'],
+                               0.159 / (0.712 * 0.204),
+                               delta=0.025)
+        # just check this doesn't raise
+        get_f_perp(par, 'phi', 100, nf_out=6)
