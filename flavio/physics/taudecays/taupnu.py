@@ -32,7 +32,7 @@ def _br_taupnu(wc_obj, par, P, lep):
     mtau = par['m_tau']
     mP = par['m_' + P]
     rWC = ((wc['CVL_' + qqlnu] - wc['CVR_' + qqlnu])
-           + mP**2 / mtau / (mq1 + mq2) * (wc['CSL_' + qqlnu] - wc['CSR_' + qqlnu]))
+           + mP**2 / mtau / (mq1 + mq2) * (wc['CSR_' + qqlnu] - wc['CSL_' + qqlnu]))
     gR = -sqrt(2) * par['GF'] * Vij * rWC * par['f_' + P] * par['m_tau']
     return par['tau_tau'] * common.GammaFsf(mtau, mP, 0, 0, gR)
 
