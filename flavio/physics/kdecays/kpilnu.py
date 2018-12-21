@@ -8,7 +8,7 @@ from flavio.classes import Observable, Prediction
 def get_ff(q2, par, K):
     ff_name = 'K->pi form factor'
     ff_K0 = flavio.classes.AuxiliaryQuantity[ff_name].prediction(par_dict=par, wc_obj=None, q2=q2)
-    if K == 'KL':
+    if K == 'KL' or K == 'KS':
         return ff_K0
     elif K == 'K+':
         # isospin breaking correction for K+->pi0lnu: multiply all FFs by 1+delta
@@ -56,7 +56,7 @@ def dBRdq2(q2, wc_obj, par, K, P, lep):
         return tauK * dGdq2(J) / 2.
     if K == 'K+':
         deltaEM = par['K+' + lep + '3 delta_EM'] # e.g. 'K+e3 delta_EM'
-    elif K == 'KL':
+    elif K == 'KL' or K == 'KS':
         deltaEM = par['K0' + lep + '3 delta_EM'] # e.g. 'K+e3 delta_EM'
     return tauK * dGdq2(J) * (1 + deltaEM)**2
 
@@ -84,6 +84,7 @@ _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'
 _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max']}
 _hadr = {
 'KL->pi': {'tex': r"K_L\to \pi^+", 'K': 'KL', 'P': 'pi+', },
+'KS->pi': {'tex': r"K_S\to \pi^+", 'K': 'KS', 'P': 'pi+', },
 'K+->pi': {'tex': r"K^+\to \pi^0", 'K': 'K+', 'P': 'pi0', },
 }
 
