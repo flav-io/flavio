@@ -2,6 +2,7 @@ import unittest
 import flavio
 from wilson import Wilson
 from math import sqrt, pi
+import numpy as np
 
 
 par = flavio.default_parameters.get_central_all()
@@ -33,6 +34,7 @@ class TestGminus2Leptons(unittest.TestCase):
         pd = flavio.combine_measurements('a_e')
         ae_exp = pd.central_value
         ae_err_exp = pd.error_left
+        np.random.seed(17)
         ae_err_sm = flavio.sm_uncertainty('a_e')
         # check that there is a -2.3 sigma tension, see 1804.07409 p. 13
         self.assertAlmostEqual((ae_exp - ae_SM) / sqrt(ae_err_sm**2 + ae_err_exp**2), -2.3, delta=0.5)
