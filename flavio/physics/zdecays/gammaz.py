@@ -90,6 +90,12 @@ def Rq(f):
     return _Rq
 
 
+def Rq1q2(f1, f2):
+    def _Rq1q2(wc_obj, par):
+        return (GammaZ(wc_obj, par, f1, f1) + GammaZ(wc_obj, par, f2, f2)) / (2 * Gammahad(wc_obj, par))
+    return _Rq1q2
+
+
 def Remutau(f):
     def _Remutau(wc_obj, par):
         return Gammahad(wc_obj, par) / GammaZ(wc_obj, par, f, f)
@@ -126,6 +132,12 @@ for _f in (_leptons, _uquarks, _dquarks):
             _obs.set_description(r"Ratio of $Z^0$ partial widths to ${}$ pairs vs. all hadrons".format(tex))
             flavio.classes.Prediction(_obs_name, Rq(f))
 
+_obs_name = "R_uc"
+_obs = flavio.classes.Observable(_obs_name)
+_obs.tex = r"$R_{uc}^0$"
+_obs.add_taxonomy(r'Process :: $Z^0$ decays :: Flavour conserving decays :: $' + _process_tex + r"$")
+_obs.set_description(r"Average ratio of $Z^0$ partial widths to $u$ or $c$ pairs vs. all hadrons")
+flavio.classes.Prediction(_obs_name, Rq1q2('u', 'c'))
 
 # LFV Z decays
 for (f1, f2) in [('e', 'mu'), ('e', 'tau'), ('mu', 'tau'), ]:

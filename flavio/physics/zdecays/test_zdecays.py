@@ -48,6 +48,10 @@ class TestGammaZ(unittest.TestCase):
                                20.743, delta=0.01)
         self.assertAlmostEqual(flavio.sm_prediction('R_tau'),
                                20.743, delta=0.05)
+        self.assertAlmostEqual(flavio.sm_prediction('R_uc'),
+                               0.1724, delta=0.0002)
+        self.assertEqual(flavio.sm_prediction('R_uc'),
+                         (flavio.sm_prediction('R_u') + flavio.sm_prediction('R_c')) / 2)
 
     def test_r_sm(self):
         # check that the Sm predictions for the Ri agree with the Gammas
