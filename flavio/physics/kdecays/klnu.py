@@ -34,6 +34,10 @@ def r_klnu(wc_obj, par, P):
     rg_corr = 1.00055
     return rg_corr*br_klnu(wc_obj, par, P, 'e')/br_klnu(wc_obj, par, P, 'mu')
 
+def gamma_klnu(wc_obj, par, P, l):
+    return br_klnu(wc_obj, par, P, l) / par['tau_' + P]
+
+
 def delta_Plnu(par, P, lep):
     mrho = par['m_rho0']
     mP = par['m_'+P]
@@ -68,6 +72,11 @@ def r_klnu_fct(P):
         return r_klnu(wc_obj, par, P)
     return f
 
+def gamma_klnu_fct(P, l):
+    def f(wc_obj, par):
+        return gamma_klnu(wc_obj, par, P, l)
+    return f
+
 # Observable and Prediction instances
 
 _tex = {'e': 'e', 'mu': '\mu'}
@@ -94,8 +103,8 @@ _obs.add_taxonomy(r'Process :: $s$ hadron decays :: Leptonic tree-level decays :
 _obs.add_taxonomy(r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $K^+\to \mu^+\nu_\mu$')
 flavio.classes.Prediction(_obs_name, r_klnu_fct('K+'))
 
-# for the pion decay, we only need the branching ratio of pi->enu, as
-# pi->munu is 100%!
+# for the pion decay, the only branching ratio needed is pi->enu, as
+# pi->munu is almost 100%!
 _obs_name = "BR(pi+->enu)"
 _obs = flavio.classes.Observable(_obs_name)
 _process_tex = r"\pi^+\to e^+\nu"
@@ -104,3 +113,13 @@ _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
 _process_taxonomy = r'Process :: Unflavoured meson decays :: Leptonic tree-level decays :: $\pi\to \ell\nu$ :: $' + _process_tex + r'$'
 _obs.add_taxonomy(_process_taxonomy)
 flavio.classes.Prediction(_obs_name, r_klnu_fct('pi+'))
+
+# include the partial width instead of BR for pi->munu
+_obs_name = "Gamma(pi+->munu)"
+_obs = flavio.classes.Observable(_obs_name)
+_process_tex = r"\pi^+\to mu^+\nu"
+_obs.set_description(r"Decay rate of $" + _process_tex + r"$")
+_obs.tex = r"$\Gamma(" + _process_tex + r")$"
+_process_taxonomy = r'Process :: Unflavoured meson decays :: Leptonic tree-level decays :: $\pi\to \ell\nu$ :: $' + _process_tex + r'$'
+_obs.add_taxonomy(_process_taxonomy)
+flavio.classes.Prediction(_obs_name, gamma_klnu_fct('pi+', 'mu'))
