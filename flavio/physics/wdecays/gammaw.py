@@ -55,11 +55,15 @@ def GammaW(wc_obj, par, f1, f2):
     return GSM + GNP
 
 
-def Gammatot(wc_obj, par):
+def Gammalep(wc_obj, par):
     lep = ['e', 'mu', 'tau']
-    Gammal = sum([GammaW(wc_obj, par, l1, l2) for l1 in lep for l2 in lep])
-    Gammaq = sum([GammaW(wc_obj, par, q1, q2) for q1 in 'uc' for q2 in 'dsb'])
-    return Gammal + Gammaq
+    return sum([GammaW(wc_obj, par, l1, l2) for l1 in lep for l2 in lep])
+
+def Gammahad(wc_obj, par):
+    return sum([GammaW(wc_obj, par, q1, q2) for q1 in 'uc' for q2 in 'dsb'])
+
+def Gammatot(wc_obj, par):
+    return Gammalep(wc_obj, par) + Gammahad(wc_obj, par)
 
 
 def BRWlnu_fct(l):
@@ -68,6 +72,11 @@ def BRWlnu_fct(l):
         # use calculated lifetime, which is more precise than measured one!
         return sum([GammaW(wc_obj, par, l, nu) for nu in lep]) / Gammatot(wc_obj, par)
     return fu
+
+
+def RWcX(wc_obj, par):
+    q = ['d', 's', 'b']
+    return sum([GammaW(wc_obj, par, 'c', d) for d in q]) / Gammahad(wc_obj, par)
 
 
 _leptons = {'e': ' e', 'mu': r'\mu', 'tau': r'\tau'}
@@ -83,6 +92,14 @@ for f, tex in _leptons.items():
     _obs.set_description(r"Branching ratio of $" + _process_tex + r"$, summed over neutrino flavours")
     _obs.add_taxonomy(r'Process :: $W^\pm$ decays :: Leptonic decays :: $' + _process_tex + r"$")
     flavio.classes.Prediction(_obs_name, BRWlnu_fct(f))
+
+_process_tex = r"W^+\to cX"
+_obs_name = "R(W->cX)"
+_obs = flavio.classes.Observable(_obs_name)
+_obs.tex = r"$\text{BR}(" + _process_tex + r")$"
+_obs.set_description(r"Ratio of partial width of $" + _process_tex + r"$, $X=\bar d, \bar s, \bar b$ over the hadronic $W$ width")
+_obs.add_taxonomy(r'Process :: $W^\pm$ decays :: Hadronic decays :: $' + _process_tex + r"$")
+flavio.classes.Prediction(_obs_name, RWcX)
 
 
 _obs_name = "GammaW"

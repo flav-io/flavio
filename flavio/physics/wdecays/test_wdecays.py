@@ -8,6 +8,7 @@ class TestWDecays(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction('BR(W->enu)'), 10.83e-2, delta=0.02e-2)
         self.assertAlmostEqual(flavio.sm_prediction('BR(W->munu)'), 10.83e-2, delta=0.02e-2)
         self.assertAlmostEqual(flavio.sm_prediction('BR(W->taunu)'), 10.83e-2, delta=0.02e-2)
+        self.assertAlmostEqual(flavio.sm_prediction('R(W->cX)'), 0.5, delta=1e-16)
         self.assertAlmostEqual(flavio.sm_prediction('GammaW'), 2.091, delta=0.001)
 
     def test_np(self):

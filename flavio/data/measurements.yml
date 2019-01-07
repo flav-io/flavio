@@ -5164,11 +5164,13 @@ A_s SLD:
   values:
     A(Z->ss): 0.895 ± 0.066 ± 0.062
 
-PDG Ruc:
+
+PDG Rc:
   experiment: PDG
   inspire: Tanabashi:2018oca
   values:
     R_uc: 0.166 ± 0.009
+    R(W->cX): 0.49 ± 0.04
 
 A_l LEP:
   experiment: LEP
