@@ -39,7 +39,7 @@ f_K0:
   tex: $f_{K^0}$
   description: Neutral kaon decay constant
 f_pi+:
-  tex: $f_{pi^\pm}$
+  tex: $f_{\pi^\pm}$
   description: Charged pion decay constant
 f_pi0:
   tex: $f_{\pi^0}$
