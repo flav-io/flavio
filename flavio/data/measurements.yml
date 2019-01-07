@@ -5158,6 +5158,12 @@ LEP-SLD cb:
                 [1.00, 0.11],
                 [1.00]]
 
+A_s SLD:
+  experiment: SLD
+  inspire: Abe:2000uc
+  values:
+    A(Z->ss): 0.895 ± 0.066 ± 0.062
+
 A_l LEP:
   experiment: LEP
   inspire: ALEPH:2005ab
