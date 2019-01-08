@@ -5,11 +5,24 @@
 # Decay constants of charged and neutral mesons are highly correlated; in
 # fact they are equal up to isosin breaking effects.
 # for now, just assume 99% correlation
+
+# For f_K and f_pi, lattice determinations are used where the physical scale
+# is not set using the experimental value of f_pi, in order not to assume
+# the SM in pion decays. This can be achieved by using the RBC/UKQCD (1411.7017)
+# and HPQCD (0706.1726) determinations. The correlations between f_pi and f_K
+# have been determined by reproducing the ratio f_K/f_pi quoted in these papers.
+# Then a two-dimensional combination has been performed.
 -
   values:
-    - f_K+: 0.1557(3) # FLAG 2018 Nf=2+1+1
-    - f_K0: 0.1557(3)
-  correlation: 0.99
+    - f_K+: 0.1557(7)
+    - f_K0: 0.1557(7)
+    - f_pi+: 0.1305(8)
+    - f_pi0: 0.1305(8)
+  correlation:
+    [[1, 0.99, 0.86, 0.86],
+     [0.99, 1, 0.86, 0.86],
+     [0.86, 0.86, 1, 0.99],
+     [0.86, 0.86, 0.99, 1]]
 -
   values:
     - f_perp_K*+: 0.145(6)  # 1503.05534v2 table 1, but at 2 GeV
@@ -19,11 +32,6 @@
   values:
     - f_perp_rho+: 0.146(7)  # 1503.05534v2 table 1, but at 2 GeV
     - f_perp_rho0: 0.146(7)
-  correlation: 0.99
--
-  values:
-    - f_pi+: 0.1302(8)  # FLAG 2018 Nf=2+1
-    - f_pi0: 0.1302(8)
   correlation: 0.99
 -
   values:
