@@ -74,6 +74,16 @@ def BRWlnu_fct(l):
     return fu
 
 
+def RWlnu_fct(l1, l2):
+    def fu(wc_obj, par):
+        lep = ['e', 'mu', 'tau']
+        # use calculated lifetime, which is more precise than measured one!
+        num = sum([GammaW(wc_obj, par, l1, nu) for nu in lep])
+        den = sum([GammaW(wc_obj, par, l2, nu) for nu in lep])
+        return num / den
+    return fu
+
+
 def RWcX(wc_obj, par):
     q = ['d', 's', 'b']
     return sum([GammaW(wc_obj, par, 'c', d) for d in q]) / Gammahad(wc_obj, par)
@@ -92,6 +102,21 @@ for f, tex in _leptons.items():
     _obs.set_description(r"Branching ratio of $" + _process_tex + r"$, summed over neutrino flavours")
     _obs.add_taxonomy(r'Process :: $W^\pm$ decays :: Leptonic decays :: $' + _process_tex + r"$")
     flavio.classes.Prediction(_obs_name, BRWlnu_fct(f))
+
+for (f1, f2) in [('tau', 'e'), ('mu', 'e'), ('tau', 'mu')]:
+    tex1 = _leptons[f1]
+    tex2 = _leptons[f2]
+    _process_tex = r"W^\pm\to \ell^\pm\nu".format(tex2)
+    _process_tex1 = r"W^\pm\to {}^\pm\nu".format(tex1)
+    _process_tex2 = r"W^\pm\to {}^\pm\nu".format(tex2)
+    _obs_name = "R{}{}(W->lnu)".format(f1, f2)
+    _obs = flavio.classes.Observable(_obs_name)
+    _obs.tex = r"$\text{R}_{{} {}}(" + _process_tex + r")$"
+    _obs.set_description(r"Ratio of branching ratio of $" + _process_tex1 + r"$ and  $" + _process_tex2 + r"$, individually summed over neutrino flavours")
+    _obs.add_taxonomy(r'Process :: $W^\pm$ decays :: Leptonic decays :: $' + _process_tex1 + r"$")
+    _obs.add_taxonomy(r'Process :: $W^\pm$ decays :: Leptonic decays :: $' + _process_tex2 + r"$")
+    flavio.classes.Prediction(_obs_name, RWlnu_fct(f1, f2))
+
 
 _process_tex = r"W^+\to cX"
 _obs_name = "R(W->cX)"

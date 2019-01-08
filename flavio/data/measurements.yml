@@ -5194,6 +5194,13 @@ A_l SLD:
                 [1.0, 0.007],
                 [1.0]]
 
+LHCb W->lnu 2016:
+  experiment: LHCb
+  inspire: Aaij:2016qqz
+  description: The inverse of the ratio quoted in the abstact
+  values:
+    Rmue(W->lnu): 0.980 ± 0.002 ± 0.018
+
 m_W Tevatron:
   experiment: CDF, D0
   inspire: Aaltonen:2013iut
