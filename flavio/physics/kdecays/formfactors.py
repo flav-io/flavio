@@ -24,9 +24,9 @@ def fp0_dispersive(q2, par):
     # (A.3) of 0903.1654
     H = H1*x + H2*x**2
     # (33) of 1005.2323
-    fp_bar = exp(q2/DeltaKpi * (lnC - G))
+    f0_bar = exp(q2/DeltaKpi * (lnC - G))
     # (37) of 1005.2323
-    f0_bar = exp(q2/mpi**2 * (Lp + H))
+    fp_bar = exp(q2/mpi**2 * (Lp + H))
     ff = {}
     ff['f+'] = fp_0 * fp_bar
     ff['f0'] = fp_0 * f0_bar
