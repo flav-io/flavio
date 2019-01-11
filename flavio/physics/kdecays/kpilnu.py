@@ -1,6 +1,6 @@
 r"""Functions for $K\to \pi\ell\nu$ decays."""
 
-from math import sqrt
+from math import sqrt, log
 import flavio
 from flavio.classes import Observable, Prediction
 
@@ -77,6 +77,45 @@ def BR_tot_function(K, P, lep):
     return lambda wc_obj, par: BR_tot(wc_obj, par, K, P, lep)
 
 
+def logC(wc_obj, par, lep):
+    mK = par['m_KL']
+    mP = par['m_pi+']
+    ml = par['m_' + lep]
+    q2 = mK**2 - mP**2
+    ff = get_ff(q2, par, 'KL')
+    ff0 = get_ff(0, par, 'KL')
+    scale = par['m_rho0']
+    ms = flavio.physics.running.running.get_ms(par, scale)
+    wc = flavio.physics.bdecays.wilsoncoefficients.get_wceff_fccc(wc_obj, par, 'su', lep, lep, ms, scale, nf=3)
+    A = ml / q2 * (wc['a'] + wc['ap'])
+    mu = 0  # mu/ms neglected
+    C = ff['f0'] / ff0['f0'] * ((wc['p'] + wc['pp']) / (ms + mu) + A) / A
+    return log(C)
+
+
+def RT(wc_obj, par, lep):
+    mK = par['m_KL']
+    mP = par['m_pi+']
+    scale = par['m_rho0']
+    ms = flavio.physics.running.running.get_ms(par, scale)
+    wc = flavio.physics.bdecays.wilsoncoefficients.get_wceff_fccc(wc_obj, par, 'su', lep, lep, ms, scale, nf=3)
+    ff = get_ff(0, par, 'KL')
+    BT = ff['fT'] * 2 * mK / (mK + mP)  # convert between tensor FF conventions
+    return -2 * BT / ff['f+'] * wc['tp']
+
+
+def logC_function(lep):
+    def _(wc_obj, par):
+        return logC(wc_obj, par, lep)
+    return _
+
+
+def RT_function(lep):
+    def _(wc_obj, par):
+        return RT(wc_obj, par, lep)
+    return _
+
+
 # Observable and Prediction instances
 
 _tex = {'e': 'e', 'mu': '\mu', 'l': r'\ell'}
@@ -86,6 +125,9 @@ _hadr = {
 'KL->pi': {'tex': r"K_L\to \pi^+", 'K': 'KL', 'P': 'pi+', },
 'KS->pi': {'tex': r"K_S\to \pi^+", 'K': 'KS', 'P': 'pi+', },
 'K+->pi': {'tex': r"K^+\to \pi^0", 'K': 'K+', 'P': 'pi0', },
+}
+_hadr_lnC = {
+'K->pi': {'tex': r"K\to \pi", 'K': 'KL', 'P': 'pi+', },
 }
 
 for l in ['e', 'mu', 'l']:
@@ -99,3 +141,18 @@ for l in ['e', 'mu', 'l']:
         _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, BR_tot_function(_hadr[M]['K'], _hadr[M]['P'], l))
+
+    for M in _hadr_lnC.keys():
+        _obs_name = "lnC("+M+l+"nu)"
+        _obs = Observable(_obs_name)
+        _obs.set_description(r"Effective scalar form factor in $" + _process_tex + r"$")
+        _obs.tex = r"$\ln(C)(" + _process_tex + r")$"
+        _obs.add_taxonomy(_process_taxonomy)
+        Prediction(_obs_name, logC_function(l))
+
+        _obs_name = "RT("+M+l+"nu)"
+        _obs = Observable(_obs_name)
+        _obs.set_description(r"Tensor coupling in $" + _process_tex + r"$")
+        _obs.tex = r"$R_T(" + _process_tex + r")$"
+        _obs.add_taxonomy(_process_taxonomy)
+        Prediction(_obs_name, RT_function(l))

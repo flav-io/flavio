@@ -43,3 +43,14 @@ class TestKpilnu(unittest.TestCase):
         self.assertAlmostEqual(br_mu/br_sm, 4, delta=0.06)
         # without interference: 1 + 1 = 2
         self.assertAlmostEqual(br_e/br_sm, 2, delta=0.03)
+
+    def test_logC(self):
+        # SM: prediction = input
+        self.assertAlmostEqual(flavio.sm_prediction('lnC(K->pimunu)'), par['K->pi ln(C)'], delta=0.0001)
+
+    def test_RT(self):
+        self.assertEqual(flavio.sm_prediction('RT(K->pimunu)'), 0)
+        wc = flavio.WilsonCoefficients()
+        wc.set_initial({'CT_sumunumu': 1}, par['m_rho0'])
+        self.assertEqual(flavio.np_prediction('RT(K->pienu)', wc), 0)
+        self.assertNotEqual(flavio.np_prediction('RT(K->pimunu)', wc), 0)
