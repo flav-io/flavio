@@ -25,7 +25,7 @@ def wc_eff(par, wc_obj, scale, nu):
     # divided out since it's already  contained in the Deltas
     CVLSM = get_CVLSM(par, scale, nf=3)
     DeltaRV = par['DeltaRV']
-    DeltaRA = par['DeltaRA']
+    DeltaRA = DeltaRV  # not needed for superallowed, for neutron difference absorbed in lambda
     rV = sqrt(1 + DeltaRV) / CVLSM
     rA = sqrt(1 + DeltaRA) / CVLSM
     # effective couplings

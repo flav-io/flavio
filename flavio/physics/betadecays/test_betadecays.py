@@ -41,11 +41,16 @@ class TestBetaDecays(unittest.TestCase):
     def test_ft(self):
         # compare to exp values in table 4 of 1803.08732
         wc_obj = flavio.WilsonCoefficients()
-        Ft = flavio.physics.betadecays.ft.Ft(par, wc_obj, '10C')
+        Ft = flavio.physics.betadecays.ft.Ft_superallowed(par, wc_obj, '10C')
         self.assertAlmostEqual(Ft / s, 3078, delta=2 * 5)
-        Ft = flavio.physics.betadecays.ft.Ft(par, wc_obj, '26mAl')
+        Ft = flavio.physics.betadecays.ft.Ft_superallowed(par, wc_obj, '26mAl')
         self.assertAlmostEqual(Ft / s, 3072.9, delta=3 * 1)
-        Ft = flavio.physics.betadecays.ft.Ft(par, wc_obj, '46V')
+        Ft = flavio.physics.betadecays.ft.Ft_superallowed(par, wc_obj, '46V')
         self.assertAlmostEqual(Ft / s, 3074.1, delta=2 * 2)
         Ft = flavio.sm_prediction('Ft(38Ca)')
         self.assertAlmostEqual(Ft / s, 3076.4, delta=2 * 7.2)
+
+    def test_taun(self):
+        # compare to exp value in table 5 of 1803.08732
+        tau_n = flavio.sm_prediction('tau_n', me_E=0.655)
+        self.assertAlmostEqual(tau_n / s, 879.75, delta=8 * 0.76)

@@ -1497,3 +1497,20 @@ alpha_de(ThO):
 alpha_CS(ThO):
   tex: $\alpha_{C_S}^\text{ThO}$
   description: Coefficient of the scalar coupling contribution to the Thorium monoxide energy shift
+
+# Parameters for beta decays
+DeltaRV:
+  tex: $\Delta_R^V$
+  description: Relative radiative correction to the SM Fermi beta decay rate
+DeltaRA:
+  tex: $\Delta_R^A$
+  description: Relative radiative correction to the SM Gamow-Teller beta decay rate
+deltaRp_n:
+  tex: $\delta R^\prime$
+  description: Long-distance radiative correction to neutron beta decay
+delta_deltaRp_Z2:
+  tex: $\delta(\delta R^\prime) / Z^2$
+  description: Uncertainty on the structure-indipendent radiative correction to beta decay divided by $Z^2
+f_n:
+  tex: $f_n$
+  description: Statistical rate function for neutron beta decay

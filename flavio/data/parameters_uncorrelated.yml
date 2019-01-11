@@ -392,3 +392,11 @@ CLN lp_3(1): 0
 CLN lp_4(1): 0
 CLN lp_5(1): 0
 CLN lp_6(1): 0
+
+# Parameters for beta decays
+DeltaRV: 0.02361(38)  # Marciano/Sirlin, arXiv:hep-ph/0510099
+# one third of the Z^2alpha^3 term in table V of 0710.3181,
+# as suggested in 1411.5987
+delta_deltaRp_Z2: 0 ± 0.00004e-2
+f_n: 1.6887(1)  # Hardy & Towner
+deltaRp_n: 0.014902(2)
