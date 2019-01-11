@@ -63,7 +63,7 @@ renormalization scale:
     nEDM: 2.  # neutron EDM
 
     # beta decays
-    betadecay: 2.
+    betadecay: 1.
 
 # these are the thresholds where quark flavours are decoupled in the RG
 # evolution to low energies.
