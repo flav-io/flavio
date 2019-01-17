@@ -42,8 +42,8 @@ def b_xi(C, MF, MGT, alpha, Z, s):
     # eq. (17) of arXiv:1803.08732
     # note that C_i' = C_i
     gamma = sqrt(1 - alpha**2 * Z**2)
-    return 2 * gamma * 2 * (abs(MF)**2 * (C['V'] *  C['S'].conjugate()).real
-                            + abs(MGT)**2 * (C['A'] *  C['T'].conjugate()).real)
+    return s * 2 * gamma * 2 * (abs(MF)**2 * (C['V'] *  C['S'].conjugate()).real
+                                + abs(MGT)**2 * (C['A'] *  C['T'].conjugate()).real)
 
 def dl(Jp, J):
     """Kronecker's delta"""

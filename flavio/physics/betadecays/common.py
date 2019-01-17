@@ -16,10 +16,6 @@ def wc_eff(par, wc_obj, scale, nu):
     gS = g['gS_u-d']
     gP = g['gP_u-d']
     gT = g['gT_u-d']
-    # modification of the couplings due to G_F NP modification
-    # GF = GFeff(wc_obj, par)
-    # r = GF / par['GF']
-    r = 1
     # radiative corrections
     # Note: CVLSM is the universal Marciano-Sirlin result that needs to be
     # divided out since it's already  contained in the Deltas
@@ -31,9 +27,9 @@ def wc_eff(par, wc_obj, scale, nu):
     # effective couplings
     # note that C_i' = C_i
     C = {}
-    C['V'] =  r * gV * (wc['VL'] * rV + wc['VR'])
-    C['A'] = -r * gA * (wc['VL'] * rA - wc['VR'])
-    C['S'] =  r * gS * (wc['SL'] + wc['SR']) / 2
-    C['P'] =  r * gP * (wc['SL'] - wc['SR']) / 2
-    C['T'] =  r * 4 * gT * (wc['T'])
+    C['V'] = gV * (wc['VL'] * rV + wc['VR'])
+    C['A'] = -gA * (wc['VL'] * rA - wc['VR'])
+    C['S'] = gS * (wc['SL'] + wc['SR'])
+    C['P'] = gP * (wc['SL'] - wc['SR'])
+    C['T'] = 4 * gT * (wc['T'])
     return C
