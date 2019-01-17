@@ -35,8 +35,8 @@ def _BR_tau3mu(mtau, mmu, wc):
 
 def _BR_taumuemu(wc):
     r"""Function for $\Delta L=2$ decays like $\tau^-\to \mu^- e^+ \mu^-$."""
-    return (abs(wc['CVLL'])**2 + abs(wc['CVLR'])**2 + abs(wc['CVRL'])**2 + abs(wc['CVRR'])**2
-            + 1 / 4 * (abs(wc['CSLL'])**2 + abs(wc['CSRR'])**2))
+    return (2 * abs(wc['CVLL'])**2 + abs(wc['CVLR'])**2 + abs(wc['CVRL'])**2 + 2 * abs(wc['CVRR'])**2
+            + 1 / 8 * (abs(wc['CSLL'])**2 + abs(wc['CSRR'])**2))
 
 
 def wc_eff(wc_obj, par, scale, l0, l1, l2, l3, nf_out=4):
