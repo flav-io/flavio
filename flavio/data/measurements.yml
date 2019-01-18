@@ -7635,3 +7635,13 @@ Mostovoi lambda_n 2001:
     - name: lambdaAB_n
       me_E: 0.581
       value: -1.2686(47)
+
+Moulson Kl3 averages 2014:
+  inspire: Moulson:2014cra
+  values:
+    lnC(K->pimunu): 0.1985(70)
+
+ISTRA+ Kl3 2003:
+  inspire: Yushchenko:2003xz
+  values:
+    RT(K->pimunu): -0.0007(71)
