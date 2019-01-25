@@ -79,7 +79,7 @@ def gamma_klnu_fct(P, l):
 
 # Observable and Prediction instances
 
-_tex = {'e': 'e', 'mu': '\mu'}
+_tex = {'e': 'e', 'mu': r'\mu'}
 _tex_p = {'K+': r'K^+', 'pi+': r'\pi^+',}
 
 # K+->lnu

@@ -1285,3 +1285,8 @@ GammaW_had:
 GammaW_lep:
   tex: $\Gamma_W^\text{lep}$
   description: Leptonic $W$ width in the SM
+
+# Parameters for K->ll decays
+chi_disp(KL->gammagamma):
+  tex: $\chi_\text{disp}$
+  description: Dispersive part of the $K_L\to\gamma\gamma$ amplitude

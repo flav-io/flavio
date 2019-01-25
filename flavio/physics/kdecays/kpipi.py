@@ -5,40 +5,9 @@ import flavio
 from flavio.classes import Prediction, Observable
 from flavio.config import config
 from flavio.physics import ckm
+from flavio.physics.kdecays.wilsoncoefficients import wilsoncoefficients_sm_fourquark
 from math import sqrt
-import scipy.interpolate
 
-
-# Table 1 of 1507.06345: Wilson coefficients at 1.3 GeV
-# for alpha_s = [0.1179, 0.1185, 0.1191]
-_yz = [[-0.4036, -0.4092, -0.4150],
-[1.2084, 1.2120, 1.2157],
-[0.0275, 0.0280, 0.0285],
-[-0.0555, -0.0563, -0.0571],
-[0.0054, 0.0052, 0.0050],
-[-0.0849, -0.0867, -0.0887],
-[-0.0404, -0.0403, -0.0402],
-[0.1207, 0.1234, 0.1261],
-[-1.3936, -1.3981, -1.4027],
-[0.4997, 0.5071, 0.5146]]
-_yz_rows = ["z1", "z2", "y3", "y4", "y5", "y6", "y7/al", "y8/al", "y9/al", "y10/al",]
-# inter- & extrapolating alpha_s dependence
-wcsm = scipy.interpolate.interp1d([0.1179, 0.1185, 0.1191], _yz, fill_value="extrapolate")
-
-
-def sd_wilsoncoefficients_sm(par, scale):
-    r"""Return the $\Delta S=1$ Wilson coefficients in the SM at the scale
-    `scale`.
-
-    Currently only implemented for `scale=1.3`."""
-    if scale != 1.3:
-        raise ValueError("Wilson coefficients only implemented for scale=1.3")
-    wcarr = wcsm(par['alpha_s'])
-    wc_dict = dict(zip(["z1", "z2", "y3", "y4", "y5", "y6",
-                        "y7/al", "y8/al", "y9/al", "y10/al",], wcarr))
-    for k in ['y7', 'y8', 'y9', 'y10']:
-        wc_dict[k] = wc_dict.pop('{}/al'.format(k)) / 128
-    return wc_dict
 
 
 def Kpipi_matrixelements_SM(par, scale):
@@ -137,7 +106,7 @@ def Kpipi_amplitudes_SM(par,
     pref = par['GF'] / sqrt(2) * ckm.xi('u', 'ds')(par)  # GF/sqrt(2) Vus* Vud
     me = Kpipi_matrixelements_SM(par, scale)
     # Wilson coefficients
-    wc = sd_wilsoncoefficients_sm(par, scale)
+    wc = wilsoncoefficients_sm_fourquark(par, scale)
     tau = -ckm.xi('t', 'ds')(par) / ckm.xi('u', 'ds')(par)
     k = [1, 2]
     if include_VmA:
