@@ -1,6 +1,23 @@
 # This file contains paraemeter values and uncertainties for parameters
 # that have correlated uncertainties
 
+# Quark masses from arXiv:1802.04248
+# The correlation is assumed to be the same as the one for the quark masses
+# at a common scale of 3 GeV, that is extracted from table IV.
+-
+  values:
+    - m_c: 1.273(10)
+    - m_b: 4.195(14)
+    - m_s: 0.09247(69)
+    - m_d: 0.004675(56)
+    - m_u: 0.002130(41)
+  correlation:
+    [[1., 0.957, 0.933, 0.613, 0.136],
+    [0.957, 1., 0.943, 0.625, 0.181],
+    [0.933, 0.943, 1., 0.703, 0.292],
+    [0.613, 0.625, 0.703, 1., -0.16],
+    [0.136, 0.181, 0.292, -0.16, 1.]]
+
 
 # Decay constants of charged and neutral mesons are highly correlated; in
 # fact they are equal up to isosin breaking effects.

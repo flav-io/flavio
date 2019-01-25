@@ -16,6 +16,9 @@ class TestPypmcScan(unittest.TestCase):
             return par_dict['m_b']
         def f2(wc_obj, par_dict):
             return 2.5
+        par = flavio.default_parameters.copy()
+        par.set_constraint('m_b', '4.2+-0.2')
+        par.set_constraint('m_c', '1.2+-0.1')
         Prediction( 'test_obs 1', f1 )
         Prediction( 'test_obs 2', f2 )
         d1 = NormalDistribution(5, 0.2)
@@ -25,7 +28,7 @@ class TestPypmcScan(unittest.TestCase):
         m2 = Measurement( 'measurement 2 of test_obs 1 and test_obs 2' )
         m1.add_constraint(['test_obs 1'], d1)
         m2.add_constraint(['test_obs 1', 'test_obs 2'], d2)
-        fit = BayesianFit('fit_emcee_test', flavio.default_parameters, ['m_b', 'm_c'],  [], ['test_obs 1', 'test_obs 2'])
+        fit = BayesianFit('fit_emcee_test', par, ['m_b', 'm_c'],  [], ['test_obs 1', 'test_obs 2'])
         scan = pypmcScan(fit)
         scan.run(3, burnin=0)
         self.assertTupleEqual(scan.result.shape, (3, 2))

@@ -32,7 +32,7 @@ class TestBXll(unittest.TestCase):
         self.assertAlmostEqual(1e6*flavio.sm_prediction('<BR>(B->Xsmumu)', 3.5, 6)/r,
                                0.731, delta=0.01)
         self.assertAlmostEqual(1e7*flavio.sm_prediction('<BR>(B->Xsmumu)', 14.4, 25)/r,
-                               2.53, delta=0.6) # larger difference due to Krüger-Sehgal
+                               2.53, delta=0.7) # larger difference due to Krüger-Sehgal
         self.assertAlmostEqual(1e6*flavio.sm_prediction('<BR>(B->Xsee)', 1, 3.5)/r,
                                0.926, delta=0.04)
         self.assertAlmostEqual(1e6*flavio.sm_prediction('<BR>(B->Xsee)', 3.5, 6)/r,
@@ -72,7 +72,7 @@ class TestBXll(unittest.TestCase):
         self.assertAlmostEqual((afb_num_low1_qed-afb_num_low1_noqed)/afb_num_low1_qed,
                                 -0.107, delta=0.050) # should lead to a -10.7% suppression
         self.assertAlmostEqual((afb_num_low2_qed-afb_num_low2_noqed)/afb_num_low2_qed,
-                                +0.162, delta=0.020) # should lead to a 16.2% enhancement
+                                +0.162, delta=0.025) # should lead to a 16.2% enhancement
         self.assertAlmostEqual((afb_den_low1_qed-afb_den_low1_noqed)/afb_den_low1_qed,
                                 0.068, delta=0.005) # should lead to a 6.8% enhancement
         self.assertAlmostEqual((afb_den_low2_qed-afb_den_low2_noqed)/afb_den_low2_qed,
@@ -89,4 +89,4 @@ class TestBXll(unittest.TestCase):
             1, delta=0.1)
         self.assertAlmostEqual(
             flavio.sm_prediction('<AFB>(B->Xsmumu)', 3.5, 6)/(3/4.*(0.67e-7)/((1.94e-7)+(5.34e-7))),
-            1, delta=0.1)
+            1, delta=0.15)

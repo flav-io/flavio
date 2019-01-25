@@ -95,9 +95,9 @@ def write_file(filename, constraints):
 pdg_include = ['B(s)', 'B(c)', 'B(s)*', 'B*+', 'B*0', 'B+', 'B0', 'D(s)', 'D(s)*', 'D+', 'D0',
                'H', 'J/psi(1S)', 'K(L)', 'K(S)', 'K*(892)+', 'K*(892)0', 'K+', 'K0',
                'Lambda', 'Lambda(b)', 'Lambda(c)', 'omega(782)', 'D*(2007)', 'D*(2010)',
-               'W', 'Z',  'b',  'c', 'd', 'e', 'eta', 'f(0)(980)',
+               'W', 'Z',  'e', 'eta', 'f(0)(980)',
                'mu',  'phi(1020)', 'pi+', 'pi0', 'psi(2S)', 'rho(770)+', 'rho(770)0',
-               's', 't', 'tau', 'u']
+               't', 'tau',]
 # dictionary translating PDG particle names to the ones in the code.
 pdg_translate = {
     'B(s)': 'Bs',
@@ -212,13 +212,7 @@ def read_pdg(year, constraints):
             # otherwise, create it
             m = Parameter(parameter_name)
         m.tex = r'$m_{' + tex_name + '}$'
-        if tex_name =='b' or tex_name == 'c':
-            m.tex = r'$m_{' + tex_name + '}(m_{' + tex_name + '})$'
-            m.description = r'$' + tex_name + r'$ quark mass in the $\overline{\text{MS}}$ scheme at the scale $m_' + tex_name + r'$'
-        elif tex_name =='s' or tex_name =='u' or tex_name =='d':
-            m.tex = r'$m_{' + tex_name + r'}(2\,\text{GeV})$'
-            m.description = r'$' + tex_name + r'$ quark mass in the $\overline{\text{MS}}$ scheme at 2 GeV'
-        elif tex_name =='t':
+        if tex_name =='t':
             m.description = r'$' + tex_name + r'$ quark pole mass'
         else:
             m.description = r'$' + tex_name + r'$ mass'

@@ -30,6 +30,25 @@ gamma:
   description: CKM angle $\gamma$ in radians
 
 
+# Quark masses
+
+m_u:
+  tex: $m_{u}(2\,\text{GeV})$
+  description: $u$ quark mass in the $\overline{\text{MS}}$ scheme at 2 GeV
+m_d:
+  tex: $m_{d}(2\,\text{GeV})$
+  description: $d$ quark mass in the $\overline{\text{MS}}$ scheme at 2 GeV
+m_s:
+  tex: $m_{s}(2\,\text{GeV})$
+  description: $s$ quark mass in the $\overline{\text{MS}}$ scheme at 2 GeV
+m_c:
+  tex: $m_{c}(m_{c})$
+  description: $c$ quark mass in the $\overline{\text{MS}}$ scheme at the scale $m_c$
+m_b:
+  tex: $m_{b}(m_{b})$
+  description: $b$ quark mass in the $\overline{\text{MS}}$ scheme at the scale $m_b$
+
+
 # Meson decay constants
 
 f_K+:
