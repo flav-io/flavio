@@ -111,7 +111,7 @@ for (f1, f2) in [('tau', 'e'), ('mu', 'e'), ('tau', 'mu')]:
     _process_tex2 = r"W^\pm\to {}^\pm\nu".format(tex2)
     _obs_name = "R{}{}(W->lnu)".format(f1, f2)
     _obs = flavio.classes.Observable(_obs_name)
-    _obs.tex = r"$\text{R}_{{} {}}(" + _process_tex + r")$"
+    _obs.tex = r"$\text{R}_{" + tex1 + " " + tex2 + "}(" + _process_tex + r")$"
     _obs.set_description(r"Ratio of branching ratio of $" + _process_tex1 + r"$ and  $" + _process_tex2 + r"$, individually summed over neutrino flavours")
     _obs.add_taxonomy(r'Process :: $W^\pm$ decays :: Leptonic decays :: $' + _process_tex1 + r"$")
     _obs.add_taxonomy(r'Process :: $W^\pm$ decays :: Leptonic decays :: $' + _process_tex2 + r"$")
@@ -121,7 +121,7 @@ for (f1, f2) in [('tau', 'e'), ('mu', 'e'), ('tau', 'mu')]:
 _process_tex = r"W^+\to cX"
 _obs_name = "R(W->cX)"
 _obs = flavio.classes.Observable(_obs_name)
-_obs.tex = r"$\text{BR}(" + _process_tex + r")$"
+_obs.tex = r"$\text{R}(" + _process_tex + r")$"
 _obs.set_description(r"Ratio of partial width of $" + _process_tex + r"$, $X=\bar d, \bar s, \bar b$ over the hadronic $W$ width")
 _obs.add_taxonomy(r'Process :: $W^\pm$ decays :: Hadronic decays :: $' + _process_tex + r"$")
 flavio.classes.Prediction(_obs_name, RWcX)
