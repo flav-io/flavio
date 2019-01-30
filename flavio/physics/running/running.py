@@ -201,7 +201,7 @@ def get_mc_KS(par, scale):
     r"""Get the $c$ quark mass in the kinetic scheme."""
     mcmc = par['m_c']
     alpha_s = get_alpha(par, mcmc)['alpha_s']
-    return _get_mb_KS(mbmb=mcmc, alpha_s=alpha_s, scale=scale, nl=3)
+    return _get_mc_KS(mcmc=mcmc, alpha_s=alpha_s, scale=scale, nl=3)
 
 
 # cached version
