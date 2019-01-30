@@ -26,7 +26,7 @@ class TestParameters(unittest.TestCase):
     def test_parameters(self):
         par_dict = default_parameters.get_central_all()
         # parameters from the YAML file
-        self.assertEqual(par_dict['alpha_s'],  0.1185)
+        self.assertEqual(par_dict['alpha_s'],  0.1182)
         self.assertEqual(par_dict['Gamma12_Bs_c'],  -48.0)
         # parameters from the PDG file
         self.assertEqual(par_dict['m_W'], 80.379)

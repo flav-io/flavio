@@ -82,11 +82,12 @@ class TestRunning(unittest.TestCase):
             1.329, delta=0.01)
         # MSbar -> KS conversion
         self.assertAlmostEqual(get_mb_KS(par_ks, 1.), 4.553, delta=0.01)
-        self.assertAlmostEqual(get_mc_KS(par_ks, 1.), 1.091, delta=0.075) # this is satisfied poorly!
+        self.assertAlmostEqual(get_mc_KS(par_ks, 1.), 1.091, delta=0.13) # this is satisfied poorly!
 
     def test_mb1S(self):
         par = flavio.default_parameters.get_central_all()
         par['m_b'] = 4.18
+        par['alpha_s'] = 0.1185
         alpha_s = get_alpha(par, par['m_b'], nf_out=5)['alpha_s']
         mb1S = get_mb_1S(par, nl=3)
         self.assertAlmostEqual(mb1S, 4.67, delta=0.005)
