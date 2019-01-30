@@ -28,7 +28,7 @@ par = {
     'Vus': 0.22,
     'Vub': 3.7e-3,
     'Vcb': 4.1e-2,
-    'gamma': 1.22,
+    'delta': 1.22,
 }
 
 class TestBMatrixElements(unittest.TestCase):

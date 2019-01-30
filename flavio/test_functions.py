@@ -48,11 +48,11 @@ class TestFunctions(unittest.TestCase):
     def test_get_dep_par(self):
         self.assertEqual(
             get_dependent_parameters_sm('BR(Bs->mumu)'),
-            {'DeltaGamma/Gamma_Bs', 'GF', 'Vcb', 'Vub', 'Vus', 'alpha_e', 'alpha_s', 'f_Bs', 'gamma', 'm_Bs', 'm_b', 'm_mu', 'm_s', 'tau_Bs', 'm_t'}
+            {'DeltaGamma/Gamma_Bs', 'GF', 'Vcb', 'Vub', 'Vus', 'alpha_e', 'alpha_s', 'f_Bs', 'delta', 'm_Bs', 'm_b', 'm_mu', 'm_s', 'tau_Bs', 'm_t'}
         )
         self.assertEqual(
             get_dependent_parameters_sm('BR(B0->ee)'),
-            {'GF', 'Vcb', 'Vub', 'Vus', 'alpha_e', 'alpha_s', 'f_B0', 'gamma', 'm_B0', 'm_b', 'm_e', 'm_d', 'tau_B0', 'm_t'}
+            {'GF', 'Vcb', 'Vub', 'Vus', 'alpha_e', 'alpha_s', 'f_B0', 'delta', 'm_B0', 'm_b', 'm_e', 'm_d', 'tau_B0', 'm_t'}
         )
         # for more complicated cases, just check there is no error
         get_dependent_parameters_sm('dBR/dq2(B+->Kmumu)', 3)

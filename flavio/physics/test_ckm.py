@@ -29,7 +29,7 @@ class TestCKM(unittest.TestCase):
     v_t = ckm_tree(Vus, Vub, Vcb, gamma)
     par_s = dict(t12=t12,t13=t13,t23=t23,delta=delta)
     par_w = dict(laC=laC,A=A,rhobar=rhobar,etabar=etabar)
-    par_t = dict(Vus=Vus,Vub=Vub,Vcb=Vcb,gamma=gamma)
+    par_t = dict(Vus=Vus,Vub=Vub,Vcb=Vcb,delta=gamma)
 
     def test_ckm_parametrizations(self):
         np.testing.assert_almost_equal(self.v_t/self.v_s, np.ones((3,3)), decimal=5)

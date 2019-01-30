@@ -20,7 +20,7 @@ c.set_constraint('f_Bs', '0.2277(45)')
 c.set_constraint('f_B0', '0.1905(42)')
 c.set_constraint('Vcb', 4.24e-2)
 c.set_constraint('Vub', 3.82e-3)
-c.set_constraint('gamma', radians(73.))
+c.set_constraint('delta', radians(73.))
 c.set_constraint('DeltaGamma/Gamma_Bs', 0.1226)
 
 par = c.get_central_all()

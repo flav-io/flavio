@@ -25,9 +25,9 @@ Vub:
 Vcb:
   tex: $V_{cb}$
   description: CKM element $V_{cb}$
-gamma:
-  tex: $\gamma$
-  description: CKM angle $\gamma$ in radians
+delta:
+  tex: $\delta$
+  description: CKM phase $\delta$ in radians
 
 
 # Quark masses
@@ -995,8 +995,12 @@ rho_D^3:
   tex: $\rho_D^3$
   description:
 rho_LS^3:
-  tex: $\rho_LS^3$
+  tex: $\rho_{LS}^3$
   description:
+delta_BXlnu:
+  tex: $\delta_{BX\ell\nu}$
+  description: Quantity parametrizing the remaining theory uncertainty due to higher orders $B\to X_c\ell\nu$.
+
 
 # charm quark mass entering alpha_s corrections to B->Vgamma.
 m_c BVgamma:

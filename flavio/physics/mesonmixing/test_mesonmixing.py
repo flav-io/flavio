@@ -77,7 +77,7 @@ class TestMesonMixing(unittest.TestCase):
         w_par['Vub'] = abs(V[0,2])
         w_par['Vcb'] = abs(V[1,2])
         w_par['Vus'] = abs(V[0,1])
-        w_par['gamma'] = -cmath.phase(V[0,2])
+        w_par['delta'] = -cmath.phase(V[0,2])
         etaB = 0.55
         BBsh = 1.22 # 0.952 * 1.517
         w_par['bag_Bs_1'] = BBsh/1.5173
