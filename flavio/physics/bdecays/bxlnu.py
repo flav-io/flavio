@@ -64,7 +64,8 @@ def _BR_BXclnu(par, wc_obj, lep, nu):
                  + alpha_s/pi *  par['mu_G^2'] * (-0.114774)
             )
     # average of B0 and B+ lifetimes
-    return (par['tau_B0']+par['tau_B+'])/2. * Gamma_LO * r_WC * r_BLO
+    r_rem = (1  + par['delta_BXlnu']) # residual pert & non-pert uncertainty
+    return (par['tau_B0']+par['tau_B+'])/2. * Gamma_LO * r_WC * r_BLO * r_rem
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def g(xc, xl):

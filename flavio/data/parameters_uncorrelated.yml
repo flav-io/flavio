@@ -34,7 +34,7 @@ s2w: 0.23129(5)       # PDG 2017
 Vus: 0.2248(8)   # FLAG 2017 Nf=2+1+1
 Vub: 3.73(14)e-3  # FLAG 2017 Nf=2+1 B->pilnu
 Vcb: 4.221(78)e-2
-gamma: 1.27(12)
+delta: 1.27(12)  # delta = gamma to excellent approximation
 
 
 # Meson decay constants
@@ -306,3 +306,10 @@ GammaW_lep: 0.6803384  # arXiv:hep-ph/0005060
 
 # Parameters for K->ll decays
 chi_disp(KL->gammagamma): 0 ± 0.71 ± 0.15 ± 1.0
+
+# parameters needed for power corrections to B->Xlnu
+mu_pi^2: 0.4(2)  # estimate based on hep-ph/0302262
+mu_G^2: 0.38(1)  # arXiv:1802.04248
+rho_D^3: 0.2(1)  # estimate based on hep-ph/0302262
+rho_LS^3: -0.2(2)  # estimate based on hep-ph/0302262
+delta_BXlnu: 0 ± 0.01  # 1% residual uncertainty in BR(B->Xlnu)
