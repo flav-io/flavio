@@ -52,10 +52,10 @@
   correlation: 0.99
 -
   values:
-    - f_B+: 0.1920(43)
-    - f_B0: 0.1920(43)  # FLAG 2016 Nf=2+1
+    - f_B+: 0.1900(43)  # FLAG 2016 Nf=2+1, -2 MeV to account for strong isospon breaking
+    - f_B0: 0.1940(43)  # FLAG 2016 Nf=2+1, +2 MeV to account for strong isospon breaking
     - f_Bs: 0.2284(37)  # FLAG 2016 Nf=2+1
-  correlation: [[1, 0.99, 0.8], [1, 0.8], [1]] # D+/D0 correlation is 99%, B0/Bs is 80%
+  correlation: [[1, 0.9, 0.7], [1, 0.7], [1]] # B+/B0 correlation is 90%, B0/Bs is 70%
 -
   values:
     - f_D+: 0.21215(145)
@@ -325,8 +325,20 @@
     [0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 1.000, 0.897],
     [0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 1.000]]
 
-# B_q BSM bag parameters, FNAL/MILC 2015, arXiv:1602.03560v2
 
+# B_q SM bag parameters,
+# for the bag parameters of the SM operator OVLL,
+# the "hatted" ones need to be divided by 1.517
+# (for B_q) and 1.369 (for K) to obtain the MSbar ones
+# (see also flavio.physics.mesonmixing.common.bag_msbar2rgi())
+-
+  values:
+    - bag_B0_1: 0.857(66)  # =1.30(10) for Bhat. FLAG 2018 Nf=2+1
+    - bag_Bs_1: 0.890(40)  # =1.35(6) for Bhat. FLAG 2018 Nf=2+1
+  correlation: [[1, 0.94], [0.94, 1]]  # to obtain 0.038 error on BBs/BBd (FLAG)
+
+
+# B_q BSM bag parameters, FNAL/MILC 2015, arXiv:1602.03560v2
 -
   values:
     - bag_B0_2: 0.761(68)(33)
