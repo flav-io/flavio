@@ -136,6 +136,15 @@ o.tex = r"$\Delta M_d$"
 o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B^0$-$\bar B^0$ mixing')
 Prediction('DeltaM_d', lambda wc_obj, par: DeltaM_positive(wc_obj, par, 'B0'))
 
+o = Observable('DeltaM_d/DeltaM_s')
+o.set_description(r"Ratio of Mass differences in the $B^0$-$\bar B^0$ and $B_s$-$\bar B_s$ systems")
+o.tex = r"$\Delta M_d/\Delta M_s$"
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B^0$-$\bar B^0$ mixing')
+o.add_taxonomy(r'Process :: Meson-antimeson mixing ::  $B_s$-$\bar B_s$ mixing')
+Prediction('DeltaM_d/DeltaM_s', lambda wc_obj, par: DeltaM_positive(wc_obj, par, 'B0')
+                                                    / DeltaM_positive(wc_obj, par, 'Bs'))
+
+
 o = Observable('a_fs_s')
 o.set_description(r"CP asymmetry in flavour-specific $B_s$ decays")
 o.tex = r"$a_\text{fs}^s$"
