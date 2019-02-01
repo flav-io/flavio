@@ -77,6 +77,11 @@ def gamma_klnu_fct(P, l):
         return gamma_klnu(wc_obj, par, P, l)
     return f
 
+def r_plnu_fct(l):
+    def f(wc_obj, par):
+        return gamma_klnu(wc_obj, par, 'K+', l) / gamma_klnu(wc_obj, par, 'pi+', l)
+    return f
+
 # Observable and Prediction instances
 
 _tex = {'e': 'e', 'mu': r'\mu'}
@@ -87,20 +92,33 @@ for l in ['e', 'mu']:
     # Individual (e and mu) modes
     _obs_name = "BR(K+->"+l+"nu)"
     _obs = flavio.classes.Observable(_obs_name)
-    _process_tex = r"K^+\to "+_tex[l]+r"^+\nu_"+_tex[l]
+    _process_tex = r"K^+\to "+_tex[l]+r"^+\nu"
     _process_taxonomy = r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $' + _process_tex + r'$'
     _obs.add_taxonomy(_process_taxonomy)
     _obs.set_description(r"Branching ratio of $" + _process_tex +r"(\gamma)$")
     _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
     flavio.classes.Prediction(_obs_name, br_klnu_fct('K+', l))
 
+    # pi/K ratio
+    _obs_name = "RKpi(P+->"+l+"nu)"
+    _obs = flavio.classes.Observable(_obs_name)
+    _process_tex_1 = r"\pi^+\to "+_tex[l]+r"^+\nu"
+    _process_tex_2 = r"K^+\to "+_tex[l]+r"^+\nu"
+    _process_taxonomy = r'Process :: Unflavoured meson decays :: Leptonic tree-level decays :: $\pi\to \ell\nu$ :: $' + _process_tex_1 + r'$'
+    _obs.add_taxonomy(_process_taxonomy)
+    _process_taxonomy = r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $' + _process_tex_2 + r'$'
+    _obs.add_taxonomy(_process_taxonomy)
+    _obs.set_description(r"Ratio $" + _process_tex_2 +r"$ and $" + _process_tex_1 +r"$ decay rates")
+    _obs.tex = r"$\text{R}_{K\pi}(P^+\to "+_tex[l]+r"^+\nu)$"
+    flavio.classes.Prediction(_obs_name, r_plnu_fct(l))
+
 # e/mu ratios
 _obs_name = "Remu(K+->lnu)"
 _obs = flavio.classes.Observable(_obs_name)
 _obs.set_description(r"Ratio of branching ratios of $K^+\to e^+\nu_e$ and $K^+\to \mu^+\nu_\mu$")
 _obs.tex = r"$R_{e\mu}(K^+\to \ell^+\nu)$"
-_obs.add_taxonomy(r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $K^+\to e^+\nu_e$')
-_obs.add_taxonomy(r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $K^+\to \mu^+\nu_\mu$')
+_obs.add_taxonomy(r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $K^+\to e^+\nu$')
+_obs.add_taxonomy(r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $K^+\to \mu^+\nu$')
 flavio.classes.Prediction(_obs_name, r_klnu_fct('K+'))
 
 # for the pion decay, the only branching ratio needed is pi->enu, as
@@ -117,7 +135,7 @@ flavio.classes.Prediction(_obs_name, r_klnu_fct('pi+'))
 # include the partial width instead of BR for pi->munu
 _obs_name = "Gamma(pi+->munu)"
 _obs = flavio.classes.Observable(_obs_name)
-_process_tex = r"\pi^+\to mu^+\nu"
+_process_tex = r"\pi^+\to \mu^+\nu"
 _obs.set_description(r"Decay rate of $" + _process_tex + r"$")
 _obs.tex = r"$\Gamma(" + _process_tex + r")$"
 _process_taxonomy = r'Process :: Unflavoured meson decays :: Leptonic tree-level decays :: $\pi\to \ell\nu$ :: $' + _process_tex + r'$'
