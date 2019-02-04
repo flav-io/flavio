@@ -68,9 +68,9 @@ class TestBll(unittest.TestCase):
         self.assertEqual(flavio.sm_prediction('BR(Bs->mutau,taumu)'), 0)
         wc = flavio.WilsonCoefficients()
         wc.set_initial({'C10_bdemu': 1, 'C10_bdmue': 2}, scale=4.8)
-        self.assertEqual(flavio.np_prediction('BR(B0->mue)', wc)
+        self.assertAlmostEqual(flavio.np_prediction('BR(B0->mue)', wc)
                         /flavio.np_prediction('BR(B0->emu)', wc), 4)
-        self.assertEqual(flavio.np_prediction('BR(B0->emu,mue)', wc)
+        self.assertAlmostEqual(flavio.np_prediction('BR(B0->emu,mue)', wc)
                         /flavio.np_prediction('BR(B0->emu)', wc), 5)
 
     def test_EffectiveLifetimes(self):
