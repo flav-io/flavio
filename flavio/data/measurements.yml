@@ -887,10 +887,6 @@ CMS B->K*mumu 2015 4.3-6:
   experiment: CMS
   inspire: Khachatryan:2015isa
   values:
-    - name: <dBR/dq2>(B0->K*mumu)
-      q2min: 4.3
-      q2max: 6
-      value: 3.4 ± 0.5 ± 0.3 1e-8
     - name: <FL>(B0->K*mumu)
       q2min: 4.3
       q2max: 6
@@ -899,6 +895,17 @@ CMS B->K*mumu 2015 4.3-6:
       q2min: 4.3
       q2max: 6
       value: 0.01 ± 0.15 ± 0.03
+
+# Note that this is only added to allow for using the 4.3-6 GeV bin separately.
+# This bin is not contained in the combination of 2013 and 2015 data.
+CMS B->K*mumu 2015 4.3-6 BR:
+  experiment: CMS
+  inspire: Khachatryan:2015isa
+  values:
+    - name: <dBR/dq2>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 6
+      value: 3.4 ± 0.5 ± 0.3 1e-8
 
 # Note that this combination supersedes *both* 'CMS B->K*mumu 2013' *and* 'CMS B->K*mumu 2015'
 CMS B->K*mumu 2013 combined with 2015 BR:
