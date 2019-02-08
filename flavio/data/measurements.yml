@@ -5934,8 +5934,9 @@ PDG W width:
 
 Belle 2018 B->D*taunu FL:
   experiment: Belle
+  inspire: Adamczyk:2019wyt
   values:
-    FLtot(B0->D*taunu): 0.60 ± 0.08 ± 0.03
+    FLtot(B0->D*taunu): 0.60 ± 0.08 ± 0.04
 
 Belle B->D*lnu 2018 untagged:
   experiment: Belle
@@ -5959,11 +5960,13 @@ K+->pinunu E949 2009:
 
 KL->pinunu KOTO 2018:
   experiment: KOTO
+  inspire: Ahn:2018mvc
   values:
     BR(KL->pinunu): < 3.0e-9 @ 90% CL
 
 PDG 2018 Kll:
   experiment: PDG
+  inspire: Tanabashi:2018oca
   values:
     BR(KL->mumu): (6.84 ± 0.11) e-9
     BR(KL->ee): (0.9 + 0.6 - 0.4) e-11
@@ -5973,6 +5976,7 @@ PDG 2018 Kll:
 
 ATLAS Bs->mumu 2018:
   experiment: ATLAS
+  inspire: Aaboud:2018mst
   url: https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/BPHY-2018-09/
   observables:
     - BR(Bs->mumu)
