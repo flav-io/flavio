@@ -1578,7 +1578,7 @@ def _convolve_multivariate_gaussians(probability_distributions, central_values='
     return MultivariateNormalDistribution(central_value=central_value, covariance=cov)
 
 
-def _convolve_numerical(probability_distributions, nsteps=1000, central_values='same'):
+def _convolve_numerical(probability_distributions, nsteps=10000, central_values='same'):
     # if there's just one: return it immediately
     if len(probability_distributions) == 1:
         return probability_distributions[0]
