@@ -168,6 +168,7 @@ class WilsonCoefficients(wilson.Wilson):
         fwc = cls()
         fwc.set_initial_wcxf(w.wc)
         fwc._cache = w._cache
+        fwc._options = w._options
         return fwc
 
     def run_wcxf(*args, **kwargs):
