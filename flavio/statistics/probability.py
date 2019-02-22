@@ -1751,7 +1751,57 @@ def _combine_numerical(probability_distributions, nsteps=1000):
 
 
 def _combine_distributions_multivariate(probability_distributions):
-    raise NotImplementedError("Combining multivariate PDs is not implemented yet.")
+    # if there's just one: return it immediately
+    if len(probability_distributions) == 1:
+        return probability_distributions[0]
+
+    # all normal dists
+    gaussians = [p for p in probability_distributions if isinstance(
+        p, MultivariateNormalDistribution)]
+
+    # all other univariate dists
+    others = [p for p in probability_distributions
+              if not isinstance(p, MultivariateNormalDistribution)]
+
+    # let's combine the normal distributions into 1
+    if gaussians:
+        gaussian = _combine_multivariate_gaussians(gaussians)
+
+    if gaussians and not others:
+        # if there are only the gaussians, we are done.
+        return gaussian
+    else:
+        # otherwise, we need to combine the (combined) gaussian with the others
+        if gaussians:
+            to_be_combined = others + [gaussian]
+        else:
+            to_be_combined = others
+        # turn all distributions into numerical distributions!
+        numerical = [MultivariateNumericalDistribution.from_pd(p) for p in to_be_combined]
+        return _combine_multivariate_numerical(numerical)
+
+
+def _combine_multivariate_gaussians(probability_distributions, nsteps=1000):
+    assert all(isinstance(p, MultivariateNormalDistribution) for p in probability_distributions), \
+        "Distributions should all be instances of MultivariateNormalDistribution"
+    # covariances: [Sigma_1, Sigma_2, ...]
+    # means: [x_1, x_2, ...]
+    # weights_ [W_1, W_2, ...] where W_i = (Sigma_i)^(-1)
+    # weighted covariance is  (W_1 + W_2 + ...)^(-1) = Sigma
+    # weigted mean is  Sigma.(W_1.x_1 + W_2.x_2 + ...) = x
+    covariances = [d.covariance for d in probability_distributions]
+    means = [d.central_value for d in probability_distributions]
+    weights = [np.linalg.inv(c) for c in covariances]
+    weighted_covariance = np.linalg.inv(np.sum(weights, axis=0))
+    weighted_mean = np.dot(weighted_covariance, np.sum(
+        [np.dot(weights[i], means[i]) for i in range(len(means))],
+        axis=0))
+    return MultivariateNormalDistribution(weighted_mean,
+                                          covariance=weighted_covariance)
+
+
+def _combine_multivariate_numerical(probability_distributions, nsteps=1000):
+    raise NotImplementedError("Combining multivariate numerical distributions is not implemented yet.")
 
 
 def dict2dist(constraint_dict):

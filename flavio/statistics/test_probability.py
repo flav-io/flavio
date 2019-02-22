@@ -636,3 +636,21 @@ class TestCombineDistributions(unittest.TestCase):
         self.assertAlmostEqual(p_comb.central_value, c_comb, places=2)
         self.assertAlmostEqual(p_comb.error_left, s_comb, places=2)
         self.assertAlmostEqual(p_comb.error_right, s_comb, places=2)
+
+    def test_combine_multivariate_normal(self):
+        # compare combination of to univariate Gaussians
+        # with the multivariate combination of two uncorrelated 2D Gaussians
+        p11 = NormalDistribution(3, 1)
+        p12 = NormalDistribution(5, 2)
+        p21 = NormalDistribution(4, 2)
+        p22 = NormalDistribution(6, 3)
+        p1 = MultivariateNormalDistribution([3, 5], [[1, 0], [0, 4]])
+        p2 = MultivariateNormalDistribution([4, 6], [[4, 0], [0, 9]])
+        pc1 = combine_distributions([p11, p21])
+        pc2 = combine_distributions([p12, p22])
+        pc = combine_distributions([p1, p2])
+        self.assertIsInstance(pc, MultivariateNormalDistribution)
+        self.assertAlmostEqual(pc.central_value[0], pc1.central_value)
+        self.assertAlmostEqual(pc.central_value[1], pc2.central_value)
+        self.assertAlmostEqual(pc.covariance[0, 0], pc1.standard_deviation**2)
+        self.assertAlmostEqual(pc.covariance[1, 1], pc2.standard_deviation**2)
