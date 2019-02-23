@@ -1405,7 +1405,10 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
 
     @classmethod
     def from_pd(cls, pd, nsteps=100):
-        _xi = np.array([np.linspace(pd.support[0, i], pd.support[-1, i], nsteps)
+        if  isinstance(pd, cls):
+            # nothing to do
+            return pd
+        _xi = np.array([np.linspace(pd.support[0][i], pd.support[-1][i], nsteps)
                         for i in range(len(pd.central_value))])
         ndim = len(_xi)
         _xlist = np.array(np.meshgrid(*_xi, indexing='ij')).reshape(ndim, nsteps**ndim).T
@@ -1781,7 +1784,7 @@ def _combine_distributions_multivariate(probability_distributions):
         return _combine_multivariate_numerical(numerical)
 
 
-def _combine_multivariate_gaussians(probability_distributions, nsteps=1000):
+def _combine_multivariate_gaussians(probability_distributions):
     assert all(isinstance(p, MultivariateNormalDistribution) for p in probability_distributions), \
         "Distributions should all be instances of MultivariateNormalDistribution"
     # covariances: [Sigma_1, Sigma_2, ...]
@@ -1800,8 +1803,23 @@ def _combine_multivariate_gaussians(probability_distributions, nsteps=1000):
                                           covariance=weighted_covariance)
 
 
-def _combine_multivariate_numerical(probability_distributions, nsteps=1000):
-    raise NotImplementedError("Combining multivariate numerical distributions is not implemented yet.")
+def _combine_multivariate_numerical(probability_distributions, nsteps=200):
+    assert all(isinstance(p, MultivariateNumericalDistribution) for p in probability_distributions), \
+        "Distributions should all be instances of MultivariateNumericalDistribution"
+    supports = np.array([d.support for d  in probability_distributions])
+    xi_min = np.max(supports[:, 0], axis=0)
+    xi_max = np.min(supports[:, 1], axis=0)
+    assert np.all(xi_min < xi_max), \
+        """Support of the multivariate distributions vanishes."""
+    ndim = len(probability_distributions[0].central_value)
+    _xi = np.array([np.linspace(xi_min[i], xi_max[i], nsteps)
+                    for i in range(ndim)])
+    _xlist = np.array(np.meshgrid(*_xi, indexing='ij')).reshape(ndim, nsteps**ndim).T
+    from functools import reduce
+    import operator
+    _ylist = reduce(operator.mul, [np.exp(d.logpdf(_xlist)) for d in probability_distributions], 1)
+    _y = _ylist.reshape(tuple(nsteps for i in range(ndim)))
+    return MultivariateNumericalDistribution(_xi, _y)
 
 
 def dict2dist(constraint_dict):

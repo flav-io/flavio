@@ -654,3 +654,13 @@ class TestCombineDistributions(unittest.TestCase):
         self.assertAlmostEqual(pc.central_value[1], pc2.central_value)
         self.assertAlmostEqual(pc.covariance[0, 0], pc1.standard_deviation**2)
         self.assertAlmostEqual(pc.covariance[1, 1], pc2.standard_deviation**2)
+
+    def test_combine_multivariate_numerical(self):
+        p1 = MultivariateNormalDistribution([3, 5], [[1, 0], [0, 4]])
+        p2 = MultivariateNormalDistribution([4, 6], [[4, 0], [0, 9]])
+        p1n = MultivariateNumericalDistribution.from_pd(p1)
+        p2n = MultivariateNumericalDistribution.from_pd(p2)
+        pc = combine_distributions([p1, p2])
+        pcn = combine_distributions([p1n, p2n])
+        self.assertAlmostEqual(pc.logpdf([2.7, 4.8]), pcn.logpdf([2.7, 4.8]), delta=0.01)
+        self.assertAlmostEqual(pc.logpdf([6.7, 2.8]), pcn.logpdf([6.7, 2.8]), delta=0.01)
