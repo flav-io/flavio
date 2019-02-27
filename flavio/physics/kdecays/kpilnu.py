@@ -118,7 +118,7 @@ def RT_function(lep):
 
 # Observable and Prediction instances
 
-_tex = {'e': 'e', 'mu': '\mu', 'l': r'\ell'}
+_tex = {'e': 'e', 'mu': r'\mu', 'l': r'\ell'}
 _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'\langle\text{BR}\rangle'}
 _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max']}
 _hadr = {
@@ -132,7 +132,7 @@ _hadr_lnC = {
 
 for l in ['e', 'mu', 'l']:
     for M in _hadr.keys():
-        _process_tex = _hadr[M]['tex']+_tex[l]+r"^+\nu_"+_tex[l]
+        _process_tex = _hadr[M]['tex']+_tex[l]+r"^+\nu"
         _process_taxonomy = r'Process :: $s$ hadron decays :: Semi-leptonic tree-level decays :: $K\to P\ell\nu$ :: $' + _process_tex + r"$"
 
         _obs_name = "BR("+M+l+"nu)"
