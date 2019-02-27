@@ -1514,3 +1514,11 @@ delta_deltaRp_Z2:
 f_n:
   tex: $f_n$
   description: Statistical rate function for neutron beta decay
+
+# Parameters for Lambda->p form factors
+Lambda->p f_1(0):
+  tex: $f_1(0)$
+  description: $\Lambda\to p$ vector form factor $f_1$ at $q^2=0$
+Lambda->p g_1(0):
+  tex: $g_1(0)$
+  description: $\Lambda\to p$ axial vector form factor $g_1$ at $q^2=0$

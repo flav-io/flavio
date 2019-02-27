@@ -7645,3 +7645,8 @@ ISTRA+ Kl3 2003:
   inspire: Yushchenko:2003xz
   values:
     RT(K->pimunu): -0.0007(71)
+
+PDG Lambda->plnu:
+  inspire:
+  values:
+    g1/f1(Lambda->penu): -0.718(15)

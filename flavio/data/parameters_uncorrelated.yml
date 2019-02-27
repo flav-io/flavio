@@ -400,3 +400,5 @@ DeltaRV: 0.02361(38)  # Marciano/Sirlin, arXiv:hep-ph/0510099
 delta_deltaRp_Z2: 0 ± 0.00004e-2
 f_n: 1.6887(1)  # Hardy & Towner
 deltaRp_n: 0.014902(2)
+Lambda->p f_1(0): -1.2247 ± 0.05  # -sqrt(3/2) +-  "few percent"
+Lambda->p g_1(0): -0.88(9)  # see 1605.07114, 1102.3407; 10% SU(3) breaking

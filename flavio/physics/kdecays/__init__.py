@@ -6,3 +6,4 @@ from . import kpilnu
 from . import klnu
 from . import kll
 from . import kpipi
+from . import lambdaplnu
