@@ -307,7 +307,7 @@ chi_disp(KL->gammagamma): 0 ± 0.71 ± 0.15 ± 1.0
 
 # parameters needed for power corrections to B->Xlnu
 mu_pi^2: 0.4(2)  # estimate based on hep-ph/0302262
-mu_G^2: 0.38(1)  # arXiv:1802.04248
+mu_G^2: 0.38(2)  # arXiv:1802.04248
 rho_D^3: 0.2(1)  # estimate based on hep-ph/0302262
 rho_LS^3: -0.2(2)  # estimate based on hep-ph/0302262
 delta_BXlnu: 0 ± 0.01  # 1% residual uncertainty in BR(B->Xlnu)
