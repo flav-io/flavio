@@ -24,7 +24,7 @@ class TestTaulnunu(unittest.TestCase):
     def test_taulnunu_np(self):
         w = Wilson({'CVLL_numunuetaue': 2e-4, 'CVLL_numunueetau': 1e-4},
                     80, 'WET', 'flavio')
-        wc_np = flavio.WilsonCoefficients.from_wilson(w)
+        wc_np = flavio.WilsonCoefficients.from_wilson(w, par)
         BR1 = taulnunu.BR_taulnunu(wc_np, par, 'e', 'e', 'mu')
         BR2 = taulnunu.BR_taulnunu(wc_np, par, 'e', 'mu', 'e')
         self.assertEqual(BR1 / BR2, 4)
@@ -40,12 +40,12 @@ class TestTaulnunu(unittest.TestCase):
         CLSM = -4 *  par['GF'] / sqrt(2)
         w = Wilson({'CVLL_numunueemu': CLSM},
                     80, 'WET', 'flavio')
-        wc_np = flavio.WilsonCoefficients.from_wilson(w)
+        wc_np = flavio.WilsonCoefficients.from_wilson(w, par)
         GFeff = taulnunu.GFeff(wc_np, par)
         self.assertEqual(GFeff / par['GF'], 0.5)
         w = Wilson({'CVLL_numunueemu': -0.5 * CLSM},
                     80, 'WET', 'flavio')
-        wc_np = flavio.WilsonCoefficients.from_wilson(w)
+        wc_np = flavio.WilsonCoefficients.from_wilson(w, par)
         GFeff = taulnunu.GFeff(wc_np, par)
         self.assertEqual(GFeff / par['GF'], 2)
 

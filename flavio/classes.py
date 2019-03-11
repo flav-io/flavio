@@ -650,11 +650,11 @@ class Prediction(object):
 
     def get_central(self, constraints_obj, wc_obj, *    args, **kwargs):
         par_dict = constraints_obj.get_central_all()
-        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj, par_dict)
         return self.function(fwc_obj, par_dict, *args, **kwargs)
 
     def get_par(self, par_dict, wc_obj, *args, **kwargs):
-        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj, par_dict)
         return self.function(fwc_obj, par_dict, *args, **kwargs)
 
 
@@ -684,16 +684,16 @@ class Implementation(NamedInstanceClass):
 
     def get_central(self, constraints_obj, wc_obj, *args, **kwargs):
         par_dict = constraints_obj.get_central_all()
-        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj, par_dict)
         return self.function(fwc_obj, par_dict, *args, **kwargs)
 
     def get_random(self, constraints_obj, wc_obj, *args, **kwargs):
         par_dict = constraints_obj.get_random_all()
-        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj, par_dict)
         return self.function(fwc_obj, par_dict, *args, **kwargs)
 
     def get(self, par_dict, wc_obj, *args, **kwargs):
-        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj)
+        fwc_obj = flavio.WilsonCoefficients.from_wilson(wc_obj, par_dict)
         return self.function(fwc_obj, par_dict, *args, **kwargs)
 
 

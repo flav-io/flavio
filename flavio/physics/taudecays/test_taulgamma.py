@@ -10,7 +10,8 @@ from flavio.physics.taudecays.taulgamma import wcxf_sector_names
 def compare_BR(wc_wilson, l1, l2):
     scale = flavio.config['renormalization scale'][l1+'decays']
     ll = wcxf_sector_names[l1, l2]
-    wc_obj = flavio.WilsonCoefficients.from_wilson(wc_wilson)
+    par = flavio.default_parameters.get_central_all()
+    wc_obj = flavio.WilsonCoefficients.from_wilson(wc_wilson, par)
     par = flavio.parameters.default_parameters.get_central_all()
     wc = wc_obj.get_wc(ll, scale, par, nf_out=4)
     alpha = flavio.physics.running.running.get_alpha_e(par, scale, nf_out=4)

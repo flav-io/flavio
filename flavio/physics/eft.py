@@ -160,7 +160,7 @@ class WilsonCoefficients(wilson.Wilson):
         return self.wc
 
     @classmethod
-    def from_wilson(cls, w):
+    def from_wilson(cls, w, par_dict):
         if w is None:
             return None
         if isinstance(w, cls):
@@ -169,6 +169,9 @@ class WilsonCoefficients(wilson.Wilson):
         fwc.set_initial_wcxf(w.wc)
         fwc._cache = w._cache
         fwc._options = w._options
+        fwc.set_option('parameters',
+            {k: par_dict[k] for k in ['Vus', 'Vcb', 'Vub', 'delta']}
+        )
         return fwc
 
     def run_wcxf(*args, **kwargs):
