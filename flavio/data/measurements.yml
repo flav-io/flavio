@@ -6672,9 +6672,6 @@ inofficial combination Bs->mumu 2019:
   values:
     distribution: multivariate_normal
     central_value: [2.710696005422246e-09, 1.0105857359607429e-10]
-    covariance:
-    - [1.6093903656229327e-19, -7.646239576361251e-21]
-    - [-7.646239576361251e-21, 6.514908233473438e-21]
     standard_deviation: [4.011720784928748e-10, 8.07149814685814e-11]
     correlation:
     - [1.0, -0.23613646173351874]
