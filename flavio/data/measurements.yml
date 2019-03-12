@@ -6663,7 +6663,7 @@ ATLAS Bs->mumu 2018:
       2.414937813083417e-37, 5.088397667898859e-38]
     central_value: [2.837480516296651e-09, -1.8607464155872002e-10]
 
-# This is Gaussian distribution fitted to the numerical combination of
+# This is a Gaussian distribution fitted to the numerical combination of
 # 'CMS Bs->mumu 2013', 'LHCb Bs->mumu 2017', and 'ATLAS Bs->mumu 2018'
 inofficial combination Bs->mumu 2019:
   observables:
