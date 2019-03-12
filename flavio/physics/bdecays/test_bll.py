@@ -167,29 +167,29 @@ class TestBll(unittest.TestCase):
 
         # test SM value
         br_SM = BR(0,0,0,0,0,0)
-        self.assertAlmostEqual(br_SM['flavio'] / br_SM['Amsterdam'], 1., places=2)
+        self.assertAlmostEqual(br_SM['flavio'] / br_SM['Amsterdam'], 1., delta=0.02)
 
         # test some values for WC's
         br = BR(-.4,0,0,0,0,0)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.01)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.02)
 
         br = BR(-.5*1j,0,0,0,0,0)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., places=2)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.02)
 
         br = BR(0,0,0.01,0,0,0)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., places=2)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.02)
 
         br = BR(0,0,0,-0.01*1j,0,0)
         self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=2)
 
         br = BR(0,0,0,0,0.01,0)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.03)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.05)
 
         br = BR(0,0,0,0,0,-0.02*1j)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.03)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.04)
 
         br = BR(-.5*1j,0,0.01,0,0,0)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., places=2)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.02)
 
         br = BR(-.5*1j,0,0,0,-0.03,0)
-        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.03)
+        self.assertAlmostEqual(br['flavio'] / br['Amsterdam'], 1., delta=0.04)
