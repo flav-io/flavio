@@ -169,9 +169,9 @@ class WilsonCoefficients(wilson.Wilson):
         fwc.set_initial_wcxf(w.wc)
         fwc._cache = w._cache
         fwc._options = w._options
-        fwc.set_option('parameters',
-            {k: par_dict[k] for k in ['Vus', 'Vcb', 'Vub', 'delta']}
-        )
+        _ckm_options = {k: par_dict[k] for k in ['Vus', 'Vcb', 'Vub', 'delta']}
+        if fwc.get_option('parameters') != _ckm_options:
+            fwc.set_option('parameters', _ckm_options)
         return fwc
 
     def run_wcxf(*args, **kwargs):
