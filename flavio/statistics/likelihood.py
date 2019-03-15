@@ -138,7 +138,7 @@ class MeasurementLikelihood(iio.YAMLLoadable):
         """Compute the predictions for all observables as functions of
         a parameter dictionary `par_dict`and WilsonCoefficient instance
         `wc_obj`"""
-        predictions_key = (hash(frozenset(par_dict.items())),hash(wc_obj))
+        predictions_key = hash((frozenset(par_dict.items()),wc_obj))
         if predictions_key != self.predictions_cache[0]:
             all_predictions = {}
             for observable in self.observables:
