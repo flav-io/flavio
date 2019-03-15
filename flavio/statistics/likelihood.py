@@ -60,6 +60,8 @@ class MeasurementLikelihood(iio.YAMLLoadable):
         self.exclude_measurements = exclude_measurements
         self.include_measurements = include_measurements
         self.include_pseudo_measurements = include_pseudo_measurements
+        self._predictions_cache_hash = None
+        self._predictions_cache_values = None
         if exclude_measurements and include_measurements:
             raise ValueError("The options exclude_measurements and include_measurements must not be specified simultaneously")
 
@@ -136,14 +138,22 @@ class MeasurementLikelihood(iio.YAMLLoadable):
     def get_predictions_par(self, par_dict, wc_obj):
         """Compute the predictions for all observables as functions of
         a parameter dictionary `par_dict`and WilsonCoefficient instance
-        `wc_obj`"""
-        all_predictions = {}
-        for observable in self.observables:
-            obs = flavio.classes.Observable.argument_format(observable, 'dict')
-            name = obs.pop('name')
-            _inst = flavio.classes.Observable[name]
-            all_predictions[observable] = _inst.prediction_par(par_dict, wc_obj, **obs)
-        return all_predictions
+        `wc_obj`.
+        The latest computed values are cached and returned if the function is
+        called successively with the same arguments.
+        """
+        # compute a hash from the function's arguments used for caching
+        arg_hash = hash((frozenset(par_dict.items()),wc_obj))
+        if arg_hash != self._predictions_cache_hash:
+            all_predictions = {}
+            for observable in self.observables:
+                obs = flavio.classes.Observable.argument_format(observable, 'dict')
+                name = obs.pop('name')
+                _inst = flavio.classes.Observable[name]
+                all_predictions[observable] = _inst.prediction_par(par_dict, wc_obj, **obs)
+            self._predictions_cache_values = all_predictions
+            self._predictions_cache_hash = arg_hash
+        return self._predictions_cache_values
 
     def log_likelihood_pred(self, pred_dict):
         """Return the logarithm of the likelihood function as a function of
