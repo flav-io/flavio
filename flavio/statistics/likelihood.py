@@ -137,16 +137,20 @@ class MeasurementLikelihood(iio.YAMLLoadable):
     def get_predictions_par(self, par_dict, wc_obj):
         """Compute the predictions for all observables as functions of
         a parameter dictionary `par_dict`and WilsonCoefficient instance
-        `wc_obj`"""
-        predictions_key = hash((frozenset(par_dict.items()),wc_obj))
-        if predictions_key != self.predictions_cache[0]:
+        `wc_obj`.
+        The latest computed values are cached and returned if the function is
+        called successively with the same arguments.
+        """
+        # compute a hash from the function's arguments used for caching
+        arg_hash = hash((frozenset(par_dict.items()),wc_obj))
+        if arg_hash != self.predictions_cache[0]:
             all_predictions = {}
             for observable in self.observables:
                 obs = flavio.classes.Observable.argument_format(observable, 'dict')
                 name = obs.pop('name')
                 _inst = flavio.classes.Observable[name]
                 all_predictions[observable] = _inst.prediction_par(par_dict, wc_obj, **obs)
-            self.predictions_cache = (predictions_key, all_predictions)
+            self.predictions_cache = (arg_hash, all_predictions)
         return self.predictions_cache[1]
 
     def log_likelihood_pred(self, pred_dict):
