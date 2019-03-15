@@ -131,6 +131,14 @@ class WilsonCoefficients(wilson.Wilson):
     """
     def __init__(self):
         self.wc = None
+        self._options = {}
+
+    def __hash__(self):
+        """Return a hash of the `WilsonCoefficient` instance.
+
+        The hash changes when Wilson coefficient values or options are modified.
+        It assumes that `wcxf.WC` instances are not modified after instantiation."""
+        return hash((self.wc, frozenset(self._options)))
 
     def set_initial(self, wc_dict, scale, eft='WET', basis='flavio'):
         """Set initial values of Wilson coefficients.
