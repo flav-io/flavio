@@ -579,6 +579,7 @@ def contour(x, y, z, levels,
     CS = ax.contour(x, y, z, levels=levels, **_contour_args)
     if label is not None:
         CS.collections[0].set_label(label)
+    return CS
 
 
 def flavio_branding(x=0.8, y=0.94, version=True):
