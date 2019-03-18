@@ -165,7 +165,7 @@ class MeasurementLikelihood(iio.YAMLLoadable):
             exclude_observables = set(exclude_observables or [])
             # exclude the observables not contained in the likelihood
             # as well as the ones explicitly excluded by `exclude_observables`
-            exclude_parameters = m_obs - set(self.observables) - exclude_observables
+            exclude_parameters = m_obs - set(self.observables) | exclude_observables
             if m_obs == exclude_parameters:
                 continue  # if all measured observables are excluded: nothing to do
             prob_dict = m_obj.get_logprobability_all(pred_dict, exclude_parameters=exclude_parameters)
