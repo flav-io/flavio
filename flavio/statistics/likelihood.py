@@ -155,24 +155,29 @@ class MeasurementLikelihood(iio.YAMLLoadable):
             self._predictions_cache_hash = arg_hash
         return self._predictions_cache_values
 
-    def log_likelihood_pred(self, pred_dict):
+    def log_likelihood_pred(self, pred_dict, exclude_observables=None):
         """Return the logarithm of the likelihood function as a function of
         a dictionary of observable predictions `pred_dict`"""
         ll = 0.
         for measurement in self.get_measurements:
             m_obj = flavio.Measurement[measurement]
-            m_obs = m_obj.all_parameters
-            exclude_observables = set(m_obs) - set(self.observables)
-            prob_dict = m_obj.get_logprobability_all(pred_dict, exclude_parameters=exclude_observables)
+            m_obs = set(m_obj.all_parameters)
+            exclude_observables = set(exclude_observables or [])
+            # exclude the observables not contained in the likelihood
+            # as well as the ones explicitly excluded by `exclude_observables`
+            exclude_parameters = m_obs - set(self.observables) - exclude_observables
+            if m_obs == exclude_parameters:
+                continue  # if all measured observables are excluded: nothing to do
+            prob_dict = m_obj.get_logprobability_all(pred_dict, exclude_parameters=exclude_parameters)
             ll += sum(prob_dict.values())
         return ll
 
-    def log_likelihood_par(self, par_dict, wc_obj):
+    def log_likelihood_par(self, par_dict, wc_obj, exclude_observables=None):
         """Return the logarithm of the likelihood function as a function of
         a parameter dictionary `par_dict` and WilsonCoefficient instance
         `wc_obj`"""
         predictions = self.get_predictions_par(par_dict, wc_obj)
-        return self.log_likelihood_pred(predictions)
+        return self.log_likelihood_pred(predictions, exclude_observables=exclude_observables)
 
 
 class ParameterLikelihood(iio.YAMLLoadable):
@@ -298,18 +303,18 @@ class Likelihood(iio.YAMLLoadable):
             return 0  # nothing to do
         return self.parameter_likelihood.log_likelihood_par(par_dict)
 
-    def log_likelihood_exp(self, par_dict, wc_obj):
+    def log_likelihood_exp(self, par_dict, wc_obj, exclude_observables=None):
         """Experimental contribution to the log-likelihood."""
-        return self.measurement_likelihood.log_likelihood_par(par_dict, wc_obj)
+        return self.measurement_likelihood.log_likelihood_par(par_dict, wc_obj, exclude_observables=exclude_observables)
 
-    def log_likelihood(self, par_dict, wc_obj):
+    def log_likelihood(self, par_dict, wc_obj, exclude_observables=None):
         """Total log-likelihood.
 
         Parameters:
         - `par_dict`: a dictionary of parameter values
         - `wc_obj`: an instance of `WilsonCoefficients` or `wilson.Wilson`
         """
-        return self.log_prior_fit_parameters(par_dict) + self.log_likelihood_exp(par_dict, wc_obj)
+        return self.log_prior_fit_parameters(par_dict) + self.log_likelihood_exp(par_dict, wc_obj, exclude_observables=exclude_observables)
 
 
 class SMCovariance(object):
@@ -685,11 +690,11 @@ class FastLikelihood(NamedInstanceClass, iio.YAMLLoadable):
             raise ValueError("You need to call `make_measurement` first.")
         return self._likelihood
 
-    def log_likelihood(self, par_dict, wc_obj):
+    def log_likelihood(self, par_dict, wc_obj, exclude_observables=None):
         """Log-likelihood function.
 
         Parameters:
         - `par_dict`: a dictionary of parameter values
         - `wc_obj`: an instance of `WilsonCoefficients` or `wilson.Wilson`
         """
-        return self.likelihood.log_likelihood_exp(par_dict, wc_obj)
+        return self.likelihood.log_likelihood_exp(par_dict, wc_obj, exclude_observables=exclude_observables)
