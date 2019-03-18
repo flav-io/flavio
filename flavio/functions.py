@@ -283,9 +283,11 @@ def combine_measurements(observable, include_measurements=None,
     constraints = []
     _n_multivariate = 0  # number of multivariate constraints
     for name, m in flavio.Measurement.instances.items():
-        if include_measurements is not None and name not in include_measurements:
+        if name.split(' ')[0] == 'Pseudo-measurement':
             continue
-        if obs not in m.all_parameters:
+        elif include_measurements is not None and name not in include_measurements:
+            continue
+        elif obs not in m.all_parameters:
             continue
         num, constraint = m._parameters[obs]
         if not np.isscalar(constraint.central_value):
