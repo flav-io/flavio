@@ -263,7 +263,7 @@ class Constraints(object):
                                      np.ravel([errors_left[idx]])[num])
         return error_dict
 
-    def get_logprobability_single(self, parameter, value):
+    def get_logprobability_single(self, parameter, value, delta=False):
         """Return a dictionary with the logarithm of the probability for each
         constraint/probability distribution for a given value of a
         single parameter.
@@ -271,14 +271,20 @@ class Constraints(object):
         num, constraint = self._parameters[parameter]
         parameters = OrderedDict(self._constraints)[constraint]
         if len(parameters) == 1:
-            return constraint.logpdf(value)
+            if not delta:
+                return constraint.logpdf(value)
+            else:
+                return constraint.delta_logpdf(value)
         else:
             # for multivariate distributions
             exclude = tuple(i for i, p in enumerate(parameters)
                             if p != parameter)
-            return constraint.logpdf([value], exclude=exclude)
+            if not delta:
+                return constraint.logpdf([value], exclude=exclude)
+            else:
+                return constraint.delta_logpdf([value], exclude=exclude)
 
-    def get_logprobability_all(self, par_dict, exclude_parameters=[]):
+    def get_logprobability_all(self, par_dict, exclude_parameters=[], delta=False):
         """Return a dictionary with the logarithm of the probability for each
         constraint/probability distribution.
 
@@ -305,7 +311,10 @@ class Constraints(object):
                 continue
             if len(parameters) == 1:
                 # 1D constraints should have a scalar, not a length-1 array
-                prob_dict[constraint] = constraint.logpdf(x[0])
+                if not delta:
+                    prob_dict[constraint] = constraint.logpdf(x[0])
+                else:
+                    prob_dict[constraint] = constraint.delta_logpdf(x[0])
             else:
                 # for multivariate distributions
                 if len(x) == len(parameters):
@@ -314,7 +323,10 @@ class Constraints(object):
                 else:
                     exclude = tuple(i for i, p in enumerate(parameters)
                                     if p not in p_cons)
-                prob_dict[constraint] = constraint.logpdf(x, exclude=exclude)
+                if not delta:
+                    prob_dict[constraint] = constraint.logpdf(x, exclude=exclude)
+                else:
+                    prob_dict[constraint] = constraint.delta_logpdf(x, exclude=exclude)
         return prob_dict
 
     def copy(self):

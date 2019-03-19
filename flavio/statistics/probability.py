@@ -124,6 +124,15 @@ class ProbabilityDistribution(object):
         od = self.get_dict(distribution=True, iterate=True, arraytolist=True)
         return yaml.dump(od, *args, **kwargs)
 
+    def delta_logpdf(self, x, **kwargs):
+        exclude = kwargs.get('exclude', None)
+        if exclude is not None:
+            d = len(self.central_value)
+            cv = [self.central_value[i] for i in range(d) if i not in exclude]
+        else:
+            cv = self.central_value
+        return self.logpdf(x, **kwargs) - self.logpdf(cv, **kwargs)
+
 class UniformDistribution(ProbabilityDistribution):
     """Distribution with constant PDF in a range and zero otherwise."""
 
