@@ -535,12 +535,12 @@ class MeasurementCovariance(object):
         assert len(permutation) == len(ml.observables), \
             "Covariance matrix does not contain all necessary entries"
         if len(permutation) == 1:
-            self._exp_central_covariance = (
+            self._central_cov = (
                 d['central'],
                 d['covariance']
             )
         else:
-            self._exp_central_covariance = (
+            self._central_cov = (
                 d['central'][permutation],
                 d['covariance'][permutation][:, permutation],
             )
