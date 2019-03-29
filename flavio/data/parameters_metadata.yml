@@ -1313,3 +1313,61 @@ GammaW_lep:
 chi_disp(KL->gammagamma):
   tex: $\chi_\text{disp}$
   description: Dispersive part of the $K_L\to\gamma\gamma$ amplitude
+
+#Parameters for neutrinoless mu-e conversion in Au{197,79}
+D Au:
+  tex: $D$
+  description: Overlap integral corresponding to the photon/Z contribution
+Sp Au:
+  tex: $S^{(p)}$
+  description: Scalar overlap integral with proton distribution
+Vp Au:
+  tex: $V^{(p)}$
+  description: Vector overlap integral with proton distribution
+Sn Au:
+  tex: $S^{(n)}$
+  description: Scalar overlap integral with neutron distribution
+Vn Au: 
+  tex: $V^{(n)$
+  description: Vector overlap integral with neutron distribution
+GammaCapture Au:
+  tex: $\Gamma_\text{capture}$
+  description: Capture rate of $\mu$ in $\phantom k^197_79 \mathrm{Au}$ 
+#Parameters for neutrinoless mu-e conversion in Al{27,13}
+D Al:
+  tex: $D$
+  description: Overlap integral corresponding to the photon/Z contribution
+Sp Al:
+  tex: $S^{(p)}$
+  description: Scalar overlap integral with proton distribution
+Vp Al:
+  tex: $V^{(p)}$
+  description: Vector overlap integral with proton distribution
+Sn Al:
+  tex: $S^{(n)}$
+  description: Scalar overlap integral with neutron distribution
+Vn Al: 
+  tex: $V^{(n)$
+  description: Vector overlap integral with neutron distribution
+GammaCapture Al:
+  tex: $\Gamma_\text{capture}$
+  description: Capture rate of $\mu$ in $\phantom k^27_13 \mathrm{Al}$ 
+#Nuclei independent mu-e parameters
+GuV:
+  tex: $G^u_V$
+  description: Vector coefficient for $u$-quark 
+GdV:
+  tex: $G^d_V$
+  description: Vector coefficient for $d$-quark 
+GsV:
+  tex: $G^s_V$
+  description: Vector coefficient for $s$-quark (vanishing) 
+GuS:
+  tex: $G^u_S$
+  description: Scalar coefficient for $u$-quark 
+GdS:
+  tex: $G^d_S$
+  description: Scalar coefficient for $d$-quark 
+GsS:
+  tex: $G^s_S$
+  description: Scalar coefficient for $s$-quark 
