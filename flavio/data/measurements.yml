@@ -1,5 +1,12 @@
 # This file contains all the experimental measurements.
 
+Sindrum II Au 2006:
+  experiment: SINDRUM II
+  inspire: Bertl:2006up
+  url: https://link.springer.com/article/10.1140%2Fepjc%2Fs2006-02582-x
+  values:
+    CR(mu->e, Au): < 7e-13 @ 90% CL
+
 HFAG rad 2014:
   experiment: HFAG
   inspire: Amhis:2014hma
