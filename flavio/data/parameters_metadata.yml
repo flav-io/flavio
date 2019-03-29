@@ -1331,8 +1331,8 @@ Vn Au:
   tex: $V^{(n)$
   description: Vector overlap integral with neutron distribution
 GammaCapture Au:
-  tex: $\Gamma_\text{capture}$
-  description: Capture rate of $\mu$ in $\phantom k^197_79 \mathrm{Au}$ 
+  tex: $\Gamma_\text{capture}(\phantom k^{197}_{79} \mathrm{Au})$
+  description: Capture rate of $\mu$ in $\phantom k^{197}_{79} \mathrm{Au}$ 
 #Parameters for neutrinoless mu-e conversion in Al{27,13}
 D Al:
   tex: $D$
@@ -1350,8 +1350,8 @@ Vn Al:
   tex: $V^{(n)$
   description: Vector overlap integral with neutron distribution
 GammaCapture Al:
-  tex: $\Gamma_\text{capture}$
-  description: Capture rate of $\mu$ in $\phantom k^27_13 \mathrm{Al}$ 
+  tex: $\Gamma_\text{capture}(\phantom k^{27}_{13} \mathrm{Al})$
+  description: Capture rate of $\mu$ in $\phantom k^{27}_{13} \mathrm{Al}$ 
 #Nuclei independent mu-e parameters
 GuV:
   tex: $G^u_V$

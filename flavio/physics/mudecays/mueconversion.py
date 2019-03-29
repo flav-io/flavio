@@ -56,12 +56,12 @@ def CR_mueAl(wc_obj, par):
 
 CRAu = Observable('CR(mu->e, Au)')
 Prediction('CR(mu->e, Au)', CR_mueAu)
-CRAu.tex = r"$CR(\mu - e)$ in $\phantom k^197_79 \mathrm{Au}$"
-CRAu.description = r"Coherent conversion rate of $\mu^-$ to $e^-$ in $\phantom k^197_79 \mathrm{Au}$"
+CRAu.tex = r"$CR(\mu - e)$ in $\phantom k^{197}_{79} \mathrm{Au}$"
+CRAu.description = r"Coherent conversion rate of $\mu^-$ to $e^-$ in $\phantom k^{197}_{79} \mathrm{Au}$"
 CRAu.add_taxonomy(r'Process :: $\mu$ lepton decays :: LFV decays :: $CR(\mu\to e)$ :: ' + CRAu.tex)
 
 CRAl = Observable('CR(mu->e, Al)')
 Prediction('CR(mu->e, Al)', CR_mueAl)
-CRAl.tex = r"$CR(\mu - e)$ in $\phantom k^27_13 \mathrm{Al}$"
-CRAl.description = r"Coherent conversion rate of $\mu^-$ to $e^-$ in $\phantom k^27_13 \mathrm{Al}$"
+CRAl.tex = r"$CR(\mu - e)$ in $\phantom k^{27}_{13} \mathrm{Al}$"
+CRAl.description = r"Coherent conversion rate of $\mu^-$ to $e^-$ in $\phantom k^{27}_{13} \mathrm{Al}$"
 CRAl.add_taxonomy(r'Process :: $\mu$ lepton decays :: LFV decays :: $CR(\mu\to e)$ :: ' + CRAl.tex)
