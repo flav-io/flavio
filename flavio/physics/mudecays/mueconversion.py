@@ -65,15 +65,6 @@ CRAu.add_taxonomy(r'Process :: $\mu$ lepton decays :: LFV decays :: $CR(\mu\to e
 
 CRAl = Observable('CR(mu->e, Al)')
 Prediction('CR(mu->e, Al)', CR_mueAl)
-<<<<<<< HEAD
-CRAl.tex = r"$CR(\mu - e)$ in $\phantom k^{27}_{13} \mathrm{Al}$"
-CRAl.description = r"Coherent conversion rate of $\mu^-$ to $e^-$ in $\phantom k^{27}_{13} \mathrm{Al}$"
-CRAl.add_taxonomy(r'Process :: $\mu$ lepton decays :: LFV decays :: $CR(\mu\to e)$ :: ' + CRAl.tex)
-||||||| merged common ancestors
-CRAl.tex = r"$CR(\mu - e)$ in $\phantom k^27_13 \mathrm{Al}$"
-CRAl.description = r"Coherent conversion rate of $\mu^-$ to $e^-$ in $\phantom k^27_13 \mathrm{Al}$"
-CRAl.add_taxonomy(r'Process :: $\mu$ lepton decays :: LFV decays :: $CR(\mu\to e)$ :: ' + CRAl.tex)
-=======
 CRAl.tex = r"$CR(\mu - e)$ in $\phantom k^{27}_{13} \mathrm{Al}$"
 CRAl.description = r"Coherent conversion rate of $\mu^-$ to $e^-$ in $\phantom k^{27}_{13} \mathrm{Al}$"
 CRAl.add_taxonomy(r'Process :: $\mu$ lepton decays :: LFV decays :: $CR(\mu\to e)$ :: ' + CRAl.tex)
@@ -83,4 +74,3 @@ Prediction('CR(mu->e, Ti)', CR_mueTi)
 CRTi.tex = r"$CR(\mu - e)$ in $\phantom k^{48}_{22} \mathrm{Ti}$"
 CRTi.description = r"Coherent conversion rate of $\mu^-$ to $e^-$ in $\phantom k^{48}_{22} \mathrm{Ti}$"
 CRTi.add_taxonomy(r'Process :: $\mu$ lepton decays :: LFV decays :: $CR(\mu\to e)$ :: ' + CRTi.tex)
->>>>>>> scatterplots
