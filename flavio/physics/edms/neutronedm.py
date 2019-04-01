@@ -22,9 +22,9 @@ def nedm(wc_obj, par):
     wceff = nedm_wceff(wc_obj, par)
     d = 0
     # quark EDM & CEDM contributions
-    d += par['nEDM gT_d'] * wceff['edm_d']
-    d += par['nEDM gT_u'] * wceff['edm_u']
-    d += par['nEDM gT_s'] * wceff['edm_s']
+    d += par['gT_u'] * wceff['edm_d']  # u<->d due to proton<->neutron!
+    d += par['gT_d'] * wceff['edm_u']  # u<->d due to proton<->neutron!
+    d += par['gT_s'] * wceff['edm_s']
     d += par['nEDM ~rho_d'] * wceff['cedm_d']
     d += par['nEDM ~rho_u'] * wceff['cedm_u']
     d += par['nEDM ~rho_s'] * wceff['cedm_s']

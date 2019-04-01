@@ -19,9 +19,9 @@ class TestNeutronEDM(unittest.TestCase):
         self.assertEqual(wcd['CG'], 0)
         self.assertAlmostEqual(wcd['CGtilde'], 0.007, delta=0.001)
         par_G = par.copy()
-        par_G['nEDM gT_d'] = 0
+        par_G['gT_d'] = 0
         par_G['nEDM ~rho_d'] = 0
-        par_G['nEDM gT_u'] = 0
+        par_G['gT_u'] = 0
         par_G['nEDM ~rho_u'] = 0
         p = flavio.Observable['d_n'].prediction_par(par_G, wcf)
         self.assertAlmostEqual(p, 4.5e-9, delta=1e-9)
@@ -33,9 +33,9 @@ class TestNeutronEDM(unittest.TestCase):
         wcd = wcf.get_wc('dF=0', scale=2, par=par, eft='WET-3', basis='flavio')
         self.assertAlmostEqual(wcd['C8_dd'] / 1j, 0.07, delta=0.02)
         par_dG = par.copy()
-        par_dG['nEDM gT_d'] = 0
+        par_dG['gT_d'] = 0
         par_dG['nEDM beta_G'] = 0
-        par_dG['nEDM gT_u'] = 0
+        par_dG['gT_u'] = 0
         par_dG['nEDM ~rho_u'] = 0
         p = flavio.Observable['d_n'].prediction_par(par_dG, wcf)
         v = 246.22

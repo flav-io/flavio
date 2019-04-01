@@ -221,10 +221,6 @@ Gamma12_D a_bs: 0 ± 0.35
 Gamma12_D a_ss: -0.35 ± 0.1
 
 # Parameters for neutron EDM
-# taken from 1808.07597, table III
-nEDM gT_d: 0.784(28)(10)
-nEDM gT_u: -0.204(11)(10)
-nEDM gT_s: -0.0027(16)
 # taken from 1308.6493, eq. (22), e~1/3
 nEDM ~rho_d: 0.2 */ 2  # 0.1..0.4
 nEDM ~rho_u: 0.1 */ 2  # 0.05..0.2
@@ -311,3 +307,14 @@ mu_G^2: 0.38(2)  # arXiv:1802.04248
 rho_D^3: 0.2(1)  # estimate based on hep-ph/0302262
 rho_LS^3: -0.2(2)  # estimate based on hep-ph/0302262
 delta_BXlnu: 0 ± 0.01  # 1% residual uncertainty in BR(B->Xlnu)
+
+# Parameters for nuclear matrix elements (EDMs, beta decays)
+gT_u: 0.784(28)(10)  # 1808.07597, table III
+gT_d: -0.204(11)(10)  # 1808.07597, table III
+gT_s: -0.0027(16)  # 1808.07597, table III
+gA_s: -0.053(8)  # 1806.10604
+sigma_piN: (59.1 ± 3.5) 1e-3  # 1506.04142
+sigma_s: (41.0 ± 8.8) 1e-3  # 1204.3866 + FLAG 2019
+delta_mN: (2.32 ± 0.17) 1e-3
+g_A: 1.251(33)  # FLAG 2019 Nf=2+1+1
+gS_u-d: 1.022(80)(60)  # FLAG 2019 Nf=2+1+1
