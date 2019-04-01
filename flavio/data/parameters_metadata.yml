@@ -1128,15 +1128,6 @@ B->D CLN deltac_h+:
   description: Power correction to $B\to D$ HQET form factor $h_+$
 
 # Parameters for neutron EDM
-nEDM gT_d:
-  tex: $g_T^d$
-  description: Neutron down quark tensor charge
-nEDM gT_u:
-  tex: $g_T^u$
-  description: Neutron up quark tensor charge
-nEDM gT_s:
-  tex: $g_T^s$
-  description: Nucleon strange quark tensor charge
 nEDM ~rho_d:
   tex: $\tilde \rho_d$
   description: coefficient of the down quark CEDM contribution to the neutron EDM
@@ -1371,22 +1362,32 @@ Vn Ti:
 GammaCapture Ti:
   tex: $\Gamma_\text{capture}(\phantom k^{48}_{22} \mathrm{Ti})$
   description: Capture rate of $\mu$ in $\phantom k^{48}_{22} \mathrm{Ti}$ 
-#Nuclei independent mu-e parameters
-# GuV:
-#   tex: $G^u_V$
-#   description: Vector coefficient for $u$-quark 
-# GdV:
-#   tex: $G^d_V$
-#   description: Vector coefficient for $d$-quark 
-# GsV:
-#   tex: $G^s_V$
-#   description: Vector coefficient for $s$-quark (vanishing) 
-GuS:
-  tex: $G^u_S$
-  description: Scalar coefficient for $u$-quark 
-GdS:
-  tex: $G^d_S$
-  description: Scalar coefficient for $d$-quark 
-GsS:
-  tex: $G^s_S$
-  description: Scalar coefficient for $s$-quark 
+
+# Parameters for nuclear matrix elements (EDMs, beta decays)
+gT_d:
+  tex: $g_T^d$
+  description: Proton down quark tensor charge
+gT_u:
+  tex: $g_T^u$
+  description: Proton up quark tensor charge
+gT_s:
+  tex: $g_T^s$
+  description: Proton strange quark tensor charge
+gA_s:
+  tex: $g_A^s$
+  description: Proton strange quark axial charge
+sigma_piN:
+  tex: $\sigma_{\pi N}$
+  description: Pion-nucleon $\sigma$ term
+sigma_s:
+  tex: $\sigma_s$
+  description: Nuclean strange quark $\sigma$ term
+delta_mN:
+  tex: $\delta m_N$
+  description: QCD contribution to the neutron-proton mass difference
+g_A:
+  tex: $g_A^{u-d}$
+  description: Nucleon isovector axial charge
+gS_u-d:
+  tex: $g_S^{u-d}$
+  description: Nucleon isovector scalar charge

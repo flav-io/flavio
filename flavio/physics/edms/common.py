@@ -52,3 +52,25 @@ def cedm_f(par, wc, f, scale, eft):
     m = get_m(par, f, scale, eft)
     pre_gs = 4 * par['GF'] / sqrt(2) / (16 * pi**2) * m  # p / gs
     return 2 * pre_gs * wc['C8_{}'.format(2*f)].imag
+
+
+def proton_charges(par, scale):
+    """Charges of the nucleon."""
+    mu = flavio.physics.running.running.get_mu(par, scale, nf_out=3)
+    md = flavio.physics.running.running.get_md(par, scale, nf_out=3)
+    ms = flavio.physics.running.running.get_ms(par, scale, nf_out=3)
+    me = {}
+    # u-d
+    me['gV_u-d'] = 1  # CVC
+    me['gA_u-d'] = par['g_A']
+    me['gS_u-d'] = par['gS_u-d']
+    me['gP_u-d'] = (par['m_p'] + par['m_n']) / (md + mu) + par['g_A']
+    me['gT_u-d'] = par['gT_u'] - par['gT_d']
+    # u+d
+    me['gS_u+d'] = par['sigma_piN'] / ((md + mu) / 2)
+    me['gT_u+d'] = par['gT_u'] + par['gT_d']
+    # strange
+    me['gA_s'] = par['gA_s']
+    me['gS_s'] = par['sigma_s'] / ms
+    me['gT_s'] = par['gT_s']
+    return me

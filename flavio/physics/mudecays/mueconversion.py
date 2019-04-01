@@ -1,17 +1,21 @@
 import flavio
 from flavio.classes import Observable, Prediction
 import numpy as np
+from flavio.physics.edms.common import proton_charges
+
 r"""Functions for neutrinoless $\mu - e$ conversion in different target nuclei"""
 def CR_mue(wc_obj, par, nucl):
   r"""Conversion rate independent of the target nucleus"""
   mm = par['m_mu']
+  scale = flavio.config['renormalization scale']['mudecays']
   #####overlap integrals and other parameters#####
   # GuV = par['GuV']
   # GdV = par['GdV']
   # GsV = par['GsV']
-  GuS = par['GuS']
-  GdS = par['GdS']
-  GsS = par['GsS']
+  pc = proton_charges(par, scale)
+  GuS = (pc['gS_u+d'] + pc['gS_u-d']) / 2
+  GdS = (pc['gS_u+d'] - pc['gS_u-d']) / 2
+  GsS = pc['gS_s']
   D   = par['D ' +nucl]*mm**(5/2)
   Sp  = par['Sp '+nucl]*mm**(5/2)
   Vp  = par['Vp '+nucl]*mm**(5/2)
@@ -20,7 +24,6 @@ def CR_mue(wc_obj, par, nucl):
   GC  = par['GammaCapture '+nucl]
   #####Wilson Coefficients######
   #####Conversion Rate obtained from hep-ph/0203110#####
-  scale = flavio.config['renormalization scale']['mudecays']
   wc = wc_obj.get_wc('mue', scale, par, nf_out=3)
   AL = np.sqrt(2)/(4*par['GF']*mm)*wc['Cgamma_emu'].conjugate()
   AR = np.sqrt(2)/(4*par['GF']*mm)*wc['Cgamma_mue']

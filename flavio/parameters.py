@@ -97,7 +97,7 @@ pdg_include = ['B(s)', 'B(c)', 'B(s)*', 'B*+', 'B*0', 'B+', 'B0', 'D(s)', 'D(s)*
                'Lambda', 'Lambda(b)', 'Lambda(c)', 'omega(782)', 'D*(2007)', 'D*(2010)',
                'W', 'Z',  'e', 'eta', 'f(0)(980)',
                'mu',  'phi(1020)', 'pi+', 'pi0', 'psi(2S)', 'rho(770)+', 'rho(770)0',
-               't', 'tau',]
+               't', 'tau', 'u', 'p', 'n']
 # dictionary translating PDG particle names to the ones in the code.
 pdg_translate = {
     'B(s)': 'Bs',

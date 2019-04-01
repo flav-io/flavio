@@ -221,10 +221,6 @@ Gamma12_D a_bs: 0 ± 0.35
 Gamma12_D a_ss: -0.35 ± 0.1
 
 # Parameters for neutron EDM
-# taken from 1808.07597, table III
-nEDM gT_d: 0.784(28)(10)
-nEDM gT_u: -0.204(11)(10)
-nEDM gT_s: -0.0027(16)
 # taken from 1308.6493, eq. (22), e~1/3
 nEDM ~rho_d: 0.2 */ 2  # 0.1..0.4
 nEDM ~rho_u: 0.1 */ 2  # 0.05..0.2
@@ -336,10 +332,14 @@ Vp Ti: 0.0396
 Sn Ti: 0.0435
 Vn Ti: 0.0468
 GammaCapture Ti: 1.7047689541260003 ± 0.007898543416806797 e-18 #[GeV] https://doi.org/10.1103/PhysRevC.35.2212
-#scalar and vector coefficients from hep-ph/0102101 independent of Nuclei
-# GuV: 2
-# GdV: 1
-# GsV: 0
-GuS: 5.1
-GdS: 4.3
-GsS: 2.5
+
+# Parameters for nuclear matrix elements (EDMs, beta decays)
+gT_u: 0.784(28)(10)  # 1808.07597, table III
+gT_d: -0.204(11)(10)  # 1808.07597, table III
+gT_s: -0.0027(16)  # 1808.07597, table III
+gA_s: -0.053(8)  # 1806.10604
+sigma_piN: (59.1 ± 3.5) 1e-3  # 1506.04142
+sigma_s: (41.0 ± 8.8) 1e-3  # 1204.3866 + FLAG 2019
+delta_mN: (2.32 ± 0.17) 1e-3
+g_A: 1.251(33)  # FLAG 2019 Nf=2+1+1
+gS_u-d: 1.022(80)(60)  # FLAG 2019 Nf=2+1+1
