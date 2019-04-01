@@ -514,34 +514,34 @@ class TestProbability(unittest.TestCase):
     def test_get_yaml(self):
         """Test the test_get_yaml method of all PDs"""
 
-        self.assertEqual(yaml.load(NormalDistribution(1, 2).get_yaml()),
+        self.assertEqual(yaml.load(NormalDistribution(1, 2).get_yaml(), Loader=yaml.FullLoader),
                          {'distribution': 'normal',
                          'central_value': 1,
                          'standard_deviation': 2})
-        self.assertEqual(yaml.load(HalfNormalDistribution(1, -2).get_yaml()),
+        self.assertEqual(yaml.load(HalfNormalDistribution(1, -2).get_yaml(), Loader=yaml.FullLoader),
                          {'distribution': 'half_normal',
                          'central_value': 1,
                          'standard_deviation': -2})
-        self.assertEqual(yaml.load(AsymmetricNormalDistribution(1, 2, 3.).get_yaml()),
+        self.assertEqual(yaml.load(AsymmetricNormalDistribution(1, 2, 3.).get_yaml(), Loader=yaml.FullLoader),
                          {'distribution': 'asymmetric_normal',
                          'central_value': 1,
                          'right_deviation': 2,
                          'left_deviation': 3.})
-        self.assertEqual(yaml.load(MultivariateNormalDistribution([1., 2], [[4, 0.2], [0.2, 4]]).get_yaml()),
+        self.assertEqual(yaml.load(MultivariateNormalDistribution([1., 2], [[4, 0.2], [0.2, 4]]).get_yaml(), Loader=yaml.FullLoader),
                          {'distribution': 'multivariate_normal',
                          'central_value': [1., 2],
                          'covariance': [[4, 0.2], [0.2, 4]],
                          'standard_deviation': [2, 2],
                          'correlation': [[1, 0.05], [0.05, 1]],
                          })
-        self.assertEqual(yaml.load(KernelDensityEstimate([1, 2, 3], NormalDistribution(0, 0.5)).get_yaml()),
+        self.assertEqual(yaml.load(KernelDensityEstimate([1, 2, 3], NormalDistribution(0, 0.5)).get_yaml(), Loader=yaml.FullLoader),
                          {'distribution': 'kernel_density_estimate',
                          'data': [1, 2, 3],
                          'kernel':  {'distribution': 'normal',
                           'central_value': 0,
                           'standard_deviation': 0.5},
                          'n_bins': 3})
-        self.assertEqual(yaml.load(MultivariateNumericalDistribution([[1., 2], [10., 20]], [[3, 4.],[5, 6.]], [2, 3]).get_yaml()),
+        self.assertEqual(yaml.load(MultivariateNumericalDistribution([[1., 2], [10., 20]], [[3, 4.],[5, 6.]], [2, 3]).get_yaml(), Loader=yaml.FullLoader),
                          {'distribution': 'multivariate_numerical',
                          'xi': [[1.0, 2.0], [10.0, 20.0]],
                          'y': [[3.0, 4.0], [5.0, 6.0]],
