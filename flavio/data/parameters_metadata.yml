@@ -1352,16 +1352,35 @@ Vn Al:
 GammaCapture Al:
   tex: $\Gamma_\text{capture}(\phantom k^{27}_{13} \mathrm{Al})$
   description: Capture rate of $\mu$ in $\phantom k^{27}_{13} \mathrm{Al}$ 
+#Parameters for neutrinoless mu-e conversion in Ti{48,22}
+D Ti:
+  tex: $D$
+  description: Overlap integral corresponding to the photon/Z contribution
+Sp Ti:
+  tex: $S^{(p)}$
+  description: Scalar overlap integral with proton distribution
+Vp Ti:
+  tex: $V^{(p)}$
+  description: Vector overlap integral with proton distribution
+Sn Ti:
+  tex: $S^{(n)}$
+  description: Scalar overlap integral with neutron distribution
+Vn Ti: 
+  tex: $V^{(n)$
+  description: Vector overlap integral with neutron distribution
+GammaCapture Ti:
+  tex: $\Gamma_\text{capture}(\phantom k^{48}_{22} \mathrm{Ti})$
+  description: Capture rate of $\mu$ in $\phantom k^{48}_{22} \mathrm{Ti}$ 
 #Nuclei independent mu-e parameters
-GuV:
-  tex: $G^u_V$
-  description: Vector coefficient for $u$-quark 
-GdV:
-  tex: $G^d_V$
-  description: Vector coefficient for $d$-quark 
-GsV:
-  tex: $G^s_V$
-  description: Vector coefficient for $s$-quark (vanishing) 
+# GuV:
+#   tex: $G^u_V$
+#   description: Vector coefficient for $u$-quark 
+# GdV:
+#   tex: $G^d_V$
+#   description: Vector coefficient for $d$-quark 
+# GsV:
+#   tex: $G^s_V$
+#   description: Vector coefficient for $s$-quark (vanishing) 
 GuS:
   tex: $G^u_S$
   description: Scalar coefficient for $u$-quark 
