@@ -37,8 +37,10 @@ Contributors (in alphabetical order):
 - Frederik Beaujean
 - Ece Gürler
 - Matthew Kirk
+- Jonathan Kriewald
 - Jacky Kumar
 - Christoph Niehoff
+- Markus Prim
 - Albert Puig
 - Stefanie Reichert
 - Peter Stangl
