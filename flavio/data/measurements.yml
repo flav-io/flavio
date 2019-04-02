@@ -1,4 +1,17 @@
 # This file contains all the experimental measurements.
+Sindrum II Ti 1993:
+  experiment: SINDRUM II
+  inspire: Dohmen:1993mp
+  url: https://doi.org/10.1016/0370-2693(93)91383-X
+  values: 
+    CR(mu->e, Ti): < 4.3e-12 @ 90% CL
+
+Sindrum II Au 2006:
+  experiment: SINDRUM II
+  inspire: Bertl:2006up
+  url: https://link.springer.com/article/10.1140%2Fepjc%2Fs2006-02582-x
+  values:
+    CR(mu->e, Au): < 7e-13 @ 90% CL
 
 HFAG rad 2014:
   experiment: HFAG

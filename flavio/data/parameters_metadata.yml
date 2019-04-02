@@ -1305,6 +1305,64 @@ chi_disp(KL->gammagamma):
   tex: $\chi_\text{disp}$
   description: Dispersive part of the $K_L\to\gamma\gamma$ amplitude
 
+#Parameters for neutrinoless mu-e conversion in Au{197,79}
+D Au:
+  tex: $D$
+  description: Overlap integral corresponding to the photon/Z contribution
+Sp Au:
+  tex: $S^{(p)}$
+  description: Scalar overlap integral with proton distribution
+Vp Au:
+  tex: $V^{(p)}$
+  description: Vector overlap integral with proton distribution
+Sn Au:
+  tex: $S^{(n)}$
+  description: Scalar overlap integral with neutron distribution
+Vn Au: 
+  tex: $V^{(n)$
+  description: Vector overlap integral with neutron distribution
+GammaCapture Au:
+  tex: $\Gamma_\text{capture}(\phantom k^{197}_{79} \mathrm{Au})$
+  description: Capture rate of $\mu$ in $\phantom k^{197}_{79} \mathrm{Au}$ 
+#Parameters for neutrinoless mu-e conversion in Al{27,13}
+D Al:
+  tex: $D$
+  description: Overlap integral corresponding to the photon/Z contribution
+Sp Al:
+  tex: $S^{(p)}$
+  description: Scalar overlap integral with proton distribution
+Vp Al:
+  tex: $V^{(p)}$
+  description: Vector overlap integral with proton distribution
+Sn Al:
+  tex: $S^{(n)}$
+  description: Scalar overlap integral with neutron distribution
+Vn Al: 
+  tex: $V^{(n)$
+  description: Vector overlap integral with neutron distribution
+GammaCapture Al:
+  tex: $\Gamma_\text{capture}(\phantom k^{27}_{13} \mathrm{Al})$
+  description: Capture rate of $\mu$ in $\phantom k^{27}_{13} \mathrm{Al}$ 
+#Parameters for neutrinoless mu-e conversion in Ti{48,22}
+D Ti:
+  tex: $D$
+  description: Overlap integral corresponding to the photon/Z contribution
+Sp Ti:
+  tex: $S^{(p)}$
+  description: Scalar overlap integral with proton distribution
+Vp Ti:
+  tex: $V^{(p)}$
+  description: Vector overlap integral with proton distribution
+Sn Ti:
+  tex: $S^{(n)}$
+  description: Scalar overlap integral with neutron distribution
+Vn Ti: 
+  tex: $V^{(n)$
+  description: Vector overlap integral with neutron distribution
+GammaCapture Ti:
+  tex: $\Gamma_\text{capture}(\phantom k^{48}_{22} \mathrm{Ti})$
+  description: Capture rate of $\mu$ in $\phantom k^{48}_{22} \mathrm{Ti}$ 
+
 # Parameters for nuclear matrix elements (EDMs, beta decays)
 gT_d:
   tex: $g_T^d$

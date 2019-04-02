@@ -308,6 +308,31 @@ rho_D^3: 0.2(1)  # estimate based on hep-ph/0302262
 rho_LS^3: -0.2(2)  # estimate based on hep-ph/0302262
 delta_BXlnu: 0 ± 0.01  # 1% residual uncertainty in BR(B->Xlnu)
 
+# parameters needed for neutrinoless mu to e conversion in Au{197,79}
+#Overlap integrals from hep-ph/0203110 in units of m_\mu^{5/2}
+D Au: 0.189
+Sp Au: 0.0614
+Vp Au: 0.0974
+Sn Au: 0.0918
+Vn Au: 0.146
+GammaCapture Au: 8.602830204798002 ± 0.18429934639200744 e-18 #[GeV] https://doi.org/10.1103/PhysRevC.35.2212
+# parameters needed for neutrinoless mu to e conversion in Al{27,13}
+#Overlap integrals from hep-ph/0203110 in units of m_\mu^{5/2}
+D Al: 0.0362
+Sp Al: 0.0155
+Vp Al: 0.0161
+Sn Al: 0.0167
+Vn Al: 0.0173
+GammaCapture Al: 4.6430271051756 ± 0.008556755368246523 e-19 #[GeV] https://doi.org/10.1103/PhysRevC.35.2212
+# parameters needed for neutrinoless mu to e conversion in Ti{48,22}
+#Overlap integrals from hep-ph/0203110 in units of m_\mu^{5/2}
+D Ti: 0.0864
+Sp Ti: 0.0368
+Vp Ti: 0.0396
+Sn Ti: 0.0435
+Vn Ti: 0.0468
+GammaCapture Ti: 1.7047689541260003 ± 0.007898543416806797 e-18 #[GeV] https://doi.org/10.1103/PhysRevC.35.2212
+
 # Parameters for nuclear matrix elements (EDMs, beta decays)
 gT_u: 0.784(28)(10)  # 1808.07597, table III
 gT_d: -0.204(11)(10)  # 1808.07597, table III
