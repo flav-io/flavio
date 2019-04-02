@@ -53,14 +53,14 @@ class TestBetaDecays(unittest.TestCase):
     def test_taun(self):
         # compare to exp value in table 5 of 1803.08732
         tau_n = flavio.sm_prediction('tau_n', me_E=0.655)
-        self.assertAlmostEqual(tau_n / s, 879.75, delta=8 * 0.76)
+        self.assertAlmostEqual(tau_n / s, 879.75, delta=39)
 
     def test_corrn(self):
         # compare to exp values in table 5 of 1803.08732
         self.assertAlmostEqual(flavio.sm_prediction('a_n'), -0.1034, delta=2 * 0.0037)
-        self.assertAlmostEqual(flavio.sm_prediction('atilde_n', me_E=0.695), -0.1090, delta=2 * 0.0041)
-        self.assertAlmostEqual(flavio.sm_prediction('Atilde_n', me_E=0.569), -0.11869, delta=2 * 0.00099)
-        self.assertAlmostEqual(flavio.sm_prediction('Btilde_n', me_E=0.591), 0.9805, delta=3 * 0.0030)
-        self.assertAlmostEqual(flavio.sm_prediction('lambdaAB_n', me_E=0.581), -1.2686, delta=2 * 0.0047)
+        self.assertAlmostEqual(flavio.sm_prediction('atilde_n', me_E=0.695), -0.1090, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction('Atilde_n', me_E=0.569), -0.11869, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction('Btilde_n', me_E=0.591), 0.9805, delta=3 * 0.003)
+        self.assertAlmostEqual(flavio.sm_prediction('lambdaAB_n', me_E=0.581), -1.2686, delta=0.04)
         self.assertEqual(flavio.sm_prediction('D_n'), 0)
         self.assertEqual(flavio.sm_prediction('R_n'), 0)
