@@ -374,7 +374,7 @@ class Constraints(object):
     @classmethod
     def from_yaml(cls, stream, *args, **kwargs):
         """Class method: load constraint from a YAML string or stream."""
-        data = yaml.load(stream, Loader=yaml.FullLoader)
+        data = yaml.safe_load(stream)
         return cls.from_yaml_dict(data, *args, **kwargs)
 
     @classmethod

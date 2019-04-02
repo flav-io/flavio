@@ -6,7 +6,7 @@ from flavio.statistics.probability import MultivariateNormalDistribution
 
 def load_parameters(filename, constraints):
     f = pkgutil.get_data('flavio.physics', filename)
-    ff_dict = yaml.load(f)
+    ff_dict = yaml.safe_load(f)
     for parameter_name in ff_dict['parameters']:
         try: # check if parameter object already exists
             p = Parameter[parameter_name]
