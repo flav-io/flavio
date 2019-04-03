@@ -5,17 +5,17 @@ from flavio.physics.bdecays.blnu import br_plnu_general
 from math import pi, log
 from flavio.math.functions import li2
 
-def br_klnu(wc_obj, par, P, lep):
+def br_plnu(wc_obj, par, P, lep):
     r"""Branching ratio of $P^+\to\ell^+\nu_\ell$."""
-    return sum([ _br_klnu(wc_obj,par,P,lep,nu) for nu in ['e','mu','tau']])
+    return sum([ _br_plnu(wc_obj, par, P, lep, nu) for nu in ['e','mu','tau']])
 
-def _br_klnu(wc_obj, par, P, lep, nu):
+def _br_plnu(wc_obj, par, P, lep, nu):
     # CKM element
-    if P=='K+':
-        Vij = flavio.physics.ckm.get_ckm(par)[0,1]
+    if P == 'K+':
+        Vij = flavio.physics.ckm.get_ckm(par)[0, 1]
         qiqj = 'su'
-    elif P=='pi+':
-        Vij = flavio.physics.ckm.get_ckm(par)[0,0]
+    elif P == 'pi+':
+        Vij = flavio.physics.ckm.get_ckm(par)[0, 0]
         qiqj = 'du'
     # renormalization scale is m_rho
     scale = par['m_rho0']
@@ -24,18 +24,21 @@ def _br_klnu(wc_obj, par, P, lep, nu):
     # add SM contribution to Wilson coefficient
     if lep == nu:
         wc['CVL_'+qiqj+lep+'nu'+nu] += flavio.physics.bdecays.wilsoncoefficients.get_CVLSM(par, scale, nf=3)
-    ms = flavio.physics.running.running.get_ms(par, scale)
+    if P == 'K+':
+        mq = flavio.physics.running.running.get_ms(par, scale)
+    elif P == 'pi+':
+        mq = flavio.physics.running.running.get_md(par, scale)
     mu = flavio.physics.running.running.get_mu(par, scale)
-    return br_plnu_general(wc, par, Vij, P, qiqj, lep, nu, ms, mu, delta=delta_Plnu(par, P, lep))
+    return br_plnu_general(wc, par, Vij, P, qiqj, lep, nu, mq, mu, delta=delta_Plnu(par, P, lep))
 
-def r_klnu(wc_obj, par, P):
+def r_plnu(wc_obj, par, P):
     # resumming logs according to (111) of 0707.4464
     # (this is negligibly small for the individual rates)
     rg_corr = 1.00055
-    return rg_corr*br_klnu(wc_obj, par, P, 'e')/br_klnu(wc_obj, par, P, 'mu')
+    return rg_corr*br_plnu(wc_obj, par, P, 'e')/br_plnu(wc_obj, par, P, 'mu')
 
-def gamma_klnu(wc_obj, par, P, l):
-    return br_klnu(wc_obj, par, P, l) / par['tau_' + P]
+def gamma_plnu(wc_obj, par, P, l):
+    return br_plnu(wc_obj, par, P, l) / par['tau_' + P]
 
 
 def delta_Plnu(par, P, lep):
@@ -62,24 +65,24 @@ def F(z):
             -2*(1+z)/(1-z)*li2(1-z) )
 
 # function returning function needed for prediction instance
-def br_klnu_fct(P, lep):
+def br_plnu_fct(P, lep):
     def f(wc_obj, par):
-        return br_klnu(wc_obj, par, P, lep)
+        return br_plnu(wc_obj, par, P, lep)
     return f
 
-def r_klnu_fct(P):
+def r_plnu_fct_p(P):
     def f(wc_obj, par):
-        return r_klnu(wc_obj, par, P)
+        return r_plnu(wc_obj, par, P)
     return f
 
-def gamma_klnu_fct(P, l):
+def gamma_plnu_fct(P, l):
     def f(wc_obj, par):
-        return gamma_klnu(wc_obj, par, P, l)
+        return gamma_plnu(wc_obj, par, P, l)
     return f
 
-def r_plnu_fct(l):
+def r_plnu_fct_l(l):
     def f(wc_obj, par):
-        return gamma_klnu(wc_obj, par, 'K+', l) / gamma_klnu(wc_obj, par, 'pi+', l)
+        return gamma_plnu(wc_obj, par, 'K+', l) / gamma_plnu(wc_obj, par, 'pi+', l)
     return f
 
 # Observable and Prediction instances
@@ -97,7 +100,7 @@ for l in ['e', 'mu']:
     _obs.add_taxonomy(_process_taxonomy)
     _obs.set_description(r"Branching ratio of $" + _process_tex +r"(\gamma)$")
     _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
-    flavio.classes.Prediction(_obs_name, br_klnu_fct('K+', l))
+    flavio.classes.Prediction(_obs_name, br_plnu_fct('K+', l))
 
     # pi/K ratio
     _obs_name = "RKpi(P+->"+l+"nu)"
@@ -110,7 +113,7 @@ for l in ['e', 'mu']:
     _obs.add_taxonomy(_process_taxonomy)
     _obs.set_description(r"Ratio $" + _process_tex_2 +r"$ and $" + _process_tex_1 +r"$ decay rates")
     _obs.tex = r"$\text{R}_{K\pi}(P^+\to "+_tex[l]+r"^+\nu)$"
-    flavio.classes.Prediction(_obs_name, r_plnu_fct(l))
+    flavio.classes.Prediction(_obs_name, r_plnu_fct_l(l))
 
 # e/mu ratios
 _obs_name = "Remu(K+->lnu)"
@@ -119,7 +122,7 @@ _obs.set_description(r"Ratio of branching ratios of $K^+\to e^+\nu_e$ and $K^+\t
 _obs.tex = r"$R_{e\mu}(K^+\to \ell^+\nu)$"
 _obs.add_taxonomy(r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $K^+\to e^+\nu$')
 _obs.add_taxonomy(r'Process :: $s$ hadron decays :: Leptonic tree-level decays :: $K\to \ell\nu$ :: $K^+\to \mu^+\nu$')
-flavio.classes.Prediction(_obs_name, r_klnu_fct('K+'))
+flavio.classes.Prediction(_obs_name, r_plnu_fct_p('K+'))
 
 # for the pion decay, the only branching ratio needed is pi->enu, as
 # pi->munu is almost 100%!
@@ -130,7 +133,7 @@ _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
 _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
 _process_taxonomy = r'Process :: Unflavoured meson decays :: Leptonic tree-level decays :: $\pi\to \ell\nu$ :: $' + _process_tex + r'$'
 _obs.add_taxonomy(_process_taxonomy)
-flavio.classes.Prediction(_obs_name, r_klnu_fct('pi+'))
+flavio.classes.Prediction(_obs_name, r_plnu_fct_p('pi+'))
 
 # include the partial width instead of BR for pi->munu
 _obs_name = "Gamma(pi+->munu)"
@@ -140,4 +143,4 @@ _obs.set_description(r"Decay rate of $" + _process_tex + r"$")
 _obs.tex = r"$\Gamma(" + _process_tex + r")$"
 _process_taxonomy = r'Process :: Unflavoured meson decays :: Leptonic tree-level decays :: $\pi\to \ell\nu$ :: $' + _process_tex + r'$'
 _obs.add_taxonomy(_process_taxonomy)
-flavio.classes.Prediction(_obs_name, gamma_klnu_fct('pi+', 'mu'))
+flavio.classes.Prediction(_obs_name, gamma_plnu_fct('pi+', 'mu'))
