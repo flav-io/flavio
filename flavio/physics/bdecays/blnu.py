@@ -61,7 +61,7 @@ _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 _tex_B = {'B+': r'B^+', 'Bc': r'B_c'}
 for l in ['e', 'mu', 'tau']:
     for B in ['B+', 'Bc']:
-        _process_tex = _tex_B[B] + r"\to "+_tex[l]+r"^+\nu_"+_tex[l]
+        _process_tex = _tex_B[B] + r"\to "+_tex[l]+r"^+\nu"
         _process_taxonomy = r'Process :: $b$ hadron decays :: Leptonic tree-level decays :: $B\to \ell\nu$ :: $' + _process_tex + r"$"
 
         _obs_name = "BR("+B+"->"+l+"nu)"

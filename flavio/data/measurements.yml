@@ -3,7 +3,7 @@ Sindrum II Ti 1993:
   experiment: SINDRUM II
   inspire: Dohmen:1993mp
   url: https://doi.org/10.1016/0370-2693(93)91383-X
-  values: 
+  values:
     CR(mu->e, Ti): < 4.3e-12 @ 90% CL
 
 Sindrum II Au 2006:
@@ -6689,3 +6689,9 @@ inofficial combination Bs->mumu 2019:
     correlation:
     - [1.0, -0.23613646173351874]
     - [-0.23613646173351874, 1.0]
+
+Bc lifetime:
+  experiment: PDG
+  inspire: Tanabashi:2018oca
+  values:
+    tau_Bc: (7.704 ± 0.137) 1e11
