@@ -152,6 +152,15 @@ B->gamma KM deltatv: 0.04
 B->gamma KM betata: 0.33
 B->gamma KM deltata: 0.30
 
+# D->pi form factors
+D->pi BCL m0: 2.318 # m_D*(0+)
+D->pi BCL m+: 2.007  # m_D*(1-)
+
+# D->K form factors
+D->K BCL m0: 2.318  # m_Ds*(0+)
+D->K BCL m+: 2.112  # m_Ds*(1-)
+
+
 # B->Xqgamma uncertainty parameters
 delta_BXsgamma: 0 ± 0.06557 # 5% + 3% + 3%
 delta_BXdgamma: 0 ± 0.06557 # 5% + 3% + 3%
@@ -402,3 +411,21 @@ f_n: 1.6887(1)  # Hardy & Towner
 deltaRp_n: 0.014902(2)
 Lambda->p f_1(0): -1.2247 ± 0.05  # -sqrt(3/2) +-  "few percent"
 Lambda->p g_1(0): -0.88(9)  # see 1605.07114, 1102.3407; 10% SU(3) breaking
+
+# Parameters for D->pi,K form factors in the BSZ parametrization
+# arXiv:1706.03017, arXiv:1803.04807
+# a0_f+ = f_+(0) was taken directly from the paper
+# the central values of a1_X where chosen to reproduce f_i(q2max) given
+# in the paper, and a naive 10% uncorrelated unceratainty was added
+# D->pi
+D->pi BSZ a0_f+: 0.612(35)
+D->pi BSZ a1_f+: 0.17(2)
+D->pi BSZ a1_f0: 0.32(3)
+D->pi BSZ a0_fT: 0.506(79)
+D->pi BSZ a1_fT: 0.28(3)
+# D->K
+D->K BSZ a0_f+: 0.765(31)
+D->K BSZ a1_f+: -0.08(1)
+D->K BSZ a1_f0: 1.25(12)
+D->K BSZ a0_fT: 0.687(54)
+D->K BSZ a1_fT: 0.10(1)

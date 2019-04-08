@@ -94,6 +94,10 @@ implementation:
   # B->gamma form factor
   B->gamma form factor: B->gamma KM
   
+  # D->P form factors
+  D->K form factor: D->K BSZ2
+  D->pi form factor: D->pi BSZ2
+
   # Lambdab form factors
   Lambdab->Lambda form factor: Lambdab->Lambda SSE3
 
