@@ -7650,3 +7650,24 @@ PDG Lambda->plnu:
   inspire:
   values:
     g1/f1(Lambda->penu): -0.718(15)
+
+PDG 2018 D->lnu:
+  inspire: Tanabashi:2018oca
+  values:
+    BR(D+->enu): < 8.8e-6 @ 90% CL
+    BR(D+->munu): (3.74 ± 0.17) 1e-4
+    BR(D+->taunu): < 1.2e-3 @ 90% CL
+    BR(Ds->enu): < 8.3e-5 @ 90% CL
+    BR(Ds->munu): (5.50 ± 0.23) 1e-3
+    BR(Ds->taunu): (5.48 ± 0.23) 1e-2
+
+PDG 2018 D->Plnu:
+  inspire: Tanabashi:2018oca
+  values:
+    BR(D0->pienu): (2.91 ± 0.04) 1e-3
+    BR(D0->pimunu): (2.37 ± 0.24) 1e-3
+    BR(D0->Kenu): (3.53 ± 0.028) 1e-2
+    BR(D0->Kmunu): (3.31 ± 0.13) 1e-2
+    BR(D+->pienu): (3.72 ± 0.17) 1e-3
+    BR(D+->Kenu): (8.73 ± 0.10) 1e-2
+    BR(D+->Kmunu): (8.74 ± 0.19) 1e-2
