@@ -38,6 +38,7 @@ renormalization scale:
 
     #  D decays
     dll: 2.      # D->l nu
+    dpll: 2.      # D->P l nu
 
     #  muon decays
     mudecays: 1.0
