@@ -5450,12 +5450,19 @@ BaBar B->Kll LFV 2016:
   experiment: BaBar
   inspire: Aubert:2006vb
   values:
-    BR(B+->Kemu): -12.1 +7.4 -5.0 ± 2.3 e-8
-    BR(B+->Kmue): -2.9 +7.4 -4.4 ± 1.9 e-8
-    BR(B0->K*emu): 7+ 23 - 13 ± 5 e-8
-    BR(B0->K*mue): -7 + 22 - 14 ± 7 e-8
-    BR(B+->K*emu): 9+ 65 - 44 ± 22 e-8
-    BR(B+->K*mue): -32+ 63 - 38 ± 15 e-8
+    BR(B+->Kmue): -12.1 +7.4 -5.0 ± 2.3 e-8  # NB this is B- -> K*- mu+ e-
+    BR(B+->Kemu): -2.9 +7.4 -4.4 ± 1.9 e-8  # NB this is B- -> K*- e+ mu-
+    BR(B0->K*mue): 7+ 23 - 13 ± 5 e-8  # NB this is Bbar0 -> K*bar0 mu+ e-
+    BR(B0->K*emu): -7 + 22 - 14 ± 7 e-8  # NB this is Bbar0 -> K*bar0 e+ mu-
+    BR(B+->K*mue): 9+ 65 - 44 ± 22 e-8  # NB this is B- -> K- mu+ e-
+    BR(B+->K*emu): -32+ 63 - 38 ± 15 e-8  # NB this is B- -> K- e+ mu-
+
+Belle B->K*emu 2018:
+  experiment: Belle
+  inspire: Sandilya:2018pop
+  values:
+    BR(B0->K*emu): < 1.2e-7 @ 90% CL  # NB this is Bbar0 -> K*bar0 e+ mu-
+    BR(B0->K*mue): < 1.6e-7 @ 90% CL  # NB this is Bbar0 -> K*bar0 mu+ e-
 
 BaBar B->ll' 2008:
   experiment: BaBar
