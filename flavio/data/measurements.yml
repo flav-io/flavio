@@ -6732,7 +6732,7 @@ LHCb RK 2019:
   url: https://lhcbproject.web.cern.ch/lhcbproject/Publications/p/LHCb-PAPER-2019-009.html
   values:
     - name: <Rmue>(B+->Kll)
-      q2min: 1.0
+      q2min: 1.1
       q2max: 6.0
       value:
         distribution: numerical
