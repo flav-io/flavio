@@ -3128,11 +3128,13 @@ Belle RD had 2015:
     Rtaul(B->D*lnu): 0.293 ± 0.038 ± 0.015
   correlation: -0.49 # HFAG
 
-Belle RD* sl 2016:
+Belle RD* sl 2019:
   experiment: Belle
-  inspire: Sato:2016svk
+  inspire: Abdesselam:2019dgh
   values:
-    Rtaul(B->D*lnu): 0.302 ± 0.030 ± 0.011
+    Rtaul(B->Dlnu): 0.307±0.037±0.016
+    Rtaul(B->D*lnu): 0.283±0.018±0.014
+  correlation: -0.53
 
 Belle RD* had 2016:
   experiment: Belle
