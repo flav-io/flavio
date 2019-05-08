@@ -70,6 +70,19 @@ class TestPlots(unittest.TestCase):
         with self.assertRaises(ValueError):
             bin_plot_exp('eps_K')
 
+    def test_q2_plot_exp(self):
+        # vanilla
+        m = flavio.Measurement('test measurement diff_plot_exp')
+        m.set_constraint(('dBR/dq2(B0->K*mumu)', 1), '1 +- 0.1 e-6')
+        m.set_constraint(('dBR/dq2(B0->K*mumu)', 2), '2 +- 0.2 e-6')
+        diff_plot_exp('dBR/dq2(B0->K*mumu)')
+        # with options
+        # check that observable not depending on q2 raises error
+        with self.assertRaises(ValueError):
+            diff_plot_exp('eps_K')
+        # remove test measurement
+        del flavio.Measurement['test measurement diff_plot_exp']
+
     def test_band_plot(self):
         # NB, this test only runs with matplotlib>=1.5.3 due to a matplotlib bug
         # check that no error is raised and output dimensions match

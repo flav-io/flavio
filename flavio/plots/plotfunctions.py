@@ -306,6 +306,86 @@ def bin_plot_exp(obs_name, col_dict=None, divide_binwidth=False, include_measure
             ax.errorbar(x, y, yerr=[dy_lower, dy_upper], xerr=dx, fmt='.', **kwargs_m)
     return y, bins
 
+
+def diff_plot_exp(obs_name, col_dict=None, include_measurements=None,
+                include_x=None, exclude_x=None,
+                **kwargs):
+    r"""Plot all existing experimental measurements of an observable
+    dependending on a continuous parameter, e.g. $q^2$ (in the form of
+    coloured error bars).
+
+    Parameters:
+
+    - `col_dict` (optional): a dictionary to assign colours to specific
+      experiments, e.g. `{'BaBar': 'b', 'Belle': 'r'}`
+    - `include_measurements` (optional): a list of strings with measurement
+      names (see measurements.yml) to include in the plot. By default, all
+      existing measurements will be included.
+    - `include_x` (optional): a list of values
+      to include in the plot. By default, all measured values
+      will be included. Should not be specified simultaneously with
+      `exclude_x`.
+    - `exclude_x` (optional): a list of values
+      not to include in the plot. By default, all measured values
+      will be included. Should not be specified simultaneously with
+      `include_x`.
+
+    Additional keyword arguments are passed to the matplotlib errorbar function,
+    e.g. 'c' for colour.
+    """
+    obs = flavio.classes.Observable[obs_name]
+    if not obs.arguments or len(obs.arguments) != 1:
+        raise ValueError(r"Only observables that depend on a single variable are allowed")
+    _experiment_labels = [] # list of experiments appearing in the plot legend
+    xs = []
+    for m_name, m_obj in flavio.Measurement.instances.items():
+        if include_measurements is not None and m_name not in include_measurements:
+            continue
+        obs_name_list = m_obj.all_parameters
+        obs_name_list_x = [o for o in obs_name_list if isinstance(o, tuple) and o[0]==obs_name]
+        if not obs_name_list_x:
+            continue
+        central = m_obj.get_central_all()
+        err = m_obj.get_1d_errors_rightleft()
+        x = []
+        y = []
+        dy_lower = []
+        dy_upper = []
+        for _, X in obs_name_list_x:
+            if include_x is not None:
+                if exclude_x is not None:
+                    raise ValueError("Please only specify include_x or exclude_x, not both")
+                elif X not in include_x:
+                    continue
+            elif exclude_x is not None:
+                if X in exclude_x:
+                    continue
+            xs.append(X)
+            c = central[(obs_name, X)]
+            e_right, e_left = err[(obs_name, X)]
+            ax=plt.gca()
+            x.append(X)
+            y.append(c)
+            dy_lower.append(e_left)
+            dy_upper.append(e_right)
+        kwargs_m = kwargs.copy() # copy valid for this measurement only
+        if x or y: # only if a data point exists
+            if col_dict is not None:
+                if m_obj.experiment in col_dict:
+                    col = col_dict[m_obj.experiment]
+                    kwargs_m['c'] = col
+            if 'label' not in kwargs_m:
+                if m_obj.experiment not in _experiment_labels:
+                    # if there is no plot legend entry for the experiment yet,
+                    # add it and add the experiment to the list keeping track
+                    # of existing labels (we don't want an experiment to appear
+                    # twice in the legend)
+                    kwargs_m['label'] = m_obj.experiment
+                    _experiment_labels.append(m_obj.experiment)
+            ax.errorbar(x, y, yerr=[dy_lower, dy_upper], fmt='.', **kwargs_m)
+    return y, xs
+
+
 def density_contour_data(x, y, covariance_factor=None, n_bins=None, n_sigma=(1, 2)):
     r"""Generate the data for a plot with confidence contours of the density
     of points (useful for MCMC analyses).
