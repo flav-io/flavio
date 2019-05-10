@@ -87,9 +87,9 @@ def logC(wc_obj, par, lep):
     scale = par['m_rho0']
     ms = flavio.physics.running.running.get_ms(par, scale)
     wc = flavio.physics.bdecays.wilsoncoefficients.get_wceff_fccc(wc_obj, par, 'su', lep, lep, ms, scale, nf=3)
-    A = ml / q2 * (wc['a'] + wc['ap'])
+    A = ml / q2 * (wc['a'] + wc['ap']).real
     mu = 0  # mu/ms neglected
-    C = ff['f0'] / ff0['f0'] * ((wc['p'] + wc['pp']) / (ms + mu) + A) / A
+    C = ff['f0'] / ff0['f0'] * ((wc['p'] + wc['pp']).real / (ms + mu) + A) / A
     return log(C)
 
 
@@ -101,7 +101,7 @@ def RT(wc_obj, par, lep):
     wc = flavio.physics.bdecays.wilsoncoefficients.get_wceff_fccc(wc_obj, par, 'su', lep, lep, ms, scale, nf=3)
     ff = get_ff(0, par, 'KL')
     BT = ff['fT'] * 2 * mK / (mK + mP)  # convert between tensor FF conventions
-    return -2 * BT / ff['f+'] * wc['tp']
+    return -2 * BT / ff['f+'] * wc['tp'].real
 
 
 def logC_function(lep):

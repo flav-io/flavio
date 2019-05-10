@@ -8,8 +8,8 @@ def g1_f1(wc_obj, par, lep, nu):
     scale = flavio.config['renormalization scale']['kdecays']
     ms = flavio.physics.running.running.get_ms(par, scale)
     wc = get_wceff_fccc_std(wc_obj, par, 'su', lep, nu, ms, scale, nf=3)
-    f1 = par['Lambda->p f_1(0)'] * (wc['VL'] + wc['VR'])
-    g1 = par['Lambda->p g_1(0)'] * (wc['VL'] - wc['VR'])
+    f1 = par['Lambda->p f_1(0)'] * (wc['VL'] + wc['VR']).real
+    g1 = par['Lambda->p g_1(0)'] * (wc['VL'] - wc['VR']).real
     return g1 / f1
 
 
