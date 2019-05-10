@@ -6,15 +6,15 @@ import flavio
 def tau_Bc(wc_obj, par):
     r"""Lifetime of the $B_c$ meson based on the SM OPE estimate plus
     the NP contribution to leptonic decays."""
-    tau_SM = par['tau_Bc_SM']
-    tau_exp = par['tau_Bc']
-    tau_lnu = 0
+    Gamma_SM = 1 / par['tau_Bc_SM']
+    Gamma_exp = 1 / par['tau_Bc']
+    Gamma_NP = 0
     wc_sm = flavio.WilsonCoefficients()
     for l in ['e', 'mu', 'tau']:
         _br_SM = flavio.Observable['BR(Bc->{}nu)'.format(l)].prediction_par(par, wc_sm)
         _br_NP = flavio.Observable['BR(Bc->{}nu)'.format(l)].prediction_par(par, wc_obj)
-        tau_lnu += (_br_NP - _br_SM) * tau_exp
-    return tau_SM + tau_lnu
+        Gamma_NP += (_br_NP - _br_SM) * Gamma_exp
+    return 1 / (Gamma_SM + Gamma_NP)
 
 
 # Observable and Prediction instance

@@ -15,8 +15,8 @@ class TestTauBc(unittest.TestCase):
         wc = flavio.WilsonCoefficients()
         for l in ['e', 'mu', 'tau']:
             wc.set_initial({'CSL_bc' + l + 'nu' + l: 1}, 4.8)
-            self.assertTrue(flavio.np_prediction('tau_Bc', wc) / par['tau_Bc_SM'] > 1.1)
-            self.assertAlmostEqual(flavio.np_prediction('tau_Bc', wc) / par['tau_Bc_SM'],
+            self.assertTrue(par['tau_Bc_SM'] / flavio.np_prediction('tau_Bc', wc) > 1.1)
+            self.assertAlmostEqual(par['tau_Bc_SM'] / flavio.np_prediction('tau_Bc', wc),
                                    1 + flavio.np_prediction('BR(Bc->' + l + 'nu)', wc)
                                    - flavio.sm_prediction('BR(Bc->' + l + 'nu)'),
                                    delta=0.05,
