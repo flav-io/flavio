@@ -27,3 +27,9 @@ for p in processes:
     i = Implementation(name=iname, quantity=quantity,
                        function=ff_function(bcl.ff, p, n=2))
     i.set_description("2-parameter BCL parametrization (see arXiv:0807.2722).")
+
+
+    iname = p + ' BSZ3'
+    i = Implementation(name=iname, quantity=quantity,
+                       function=ff_function(bsz.ff, p, n=3))
+    i.set_description("3-parameter BSZ parametrization (see arXiv:1811.00983).")

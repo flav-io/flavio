@@ -990,12 +990,21 @@ D->pi BSZ a1_f+:
 D->pi BSZ a1_f0:
   tex: $a_1^{f_0}$
   description: BSZ form factor parametrization coefficient $a_1$ of $f_0$
+D->pi BSZ a2_f+:
+  tex: $a_2^{f_+}$
+  description: BSZ form factor parametrization coefficient $a_2$ of $f_+$
+D->pi BSZ a2_f0:
+  tex: $a_2^{f_0}$
+  description: BSZ form factor parametrization coefficient $a_2$ of $f_0$
 D->pi BSZ a0_fT:
   tex: $a_0^{f_T}$
   description: BSZ form factor parametrization coefficient $a_0$ of $f_T$
 D->pi BSZ a1_fT:
   tex: $a_1^{f_T}$
   description: BSZ form factor parametrization coefficient $a_1$ of $f_T$
+D->pi BSZ a2_fT:
+  tex: $a_2^{f_T}$
+  description: BSZ form factor parametrization coefficient $a_2$ of $f_T$
 
 
 # Parameters for D->K form factors in the BSZ parametrization
@@ -1008,12 +1017,27 @@ D->K BSZ a1_f+:
 D->K BSZ a1_f0:
   tex: $a_1^{f_0}$
   description: BSZ form factor parametrization coefficient $a_1$ of $f_0$
+D->K BSZ a2_f+:
+  tex: $a_2^{f_+}$
+  description: BSZ form factor parametrization coefficient $a_2$ of $f_+$
+D->K BSZ a2_f0:
+  tex: $a_2^{f_0}$
+  description: BSZ form factor parametrization coefficient $a_2$ of $f_0$
+D->K BSZ a1_f+:
+  tex: $a_1^{f_+}$
+  description: BSZ form factor parametrization coefficient $a_1$ of $f_+$
+D->K BSZ a1_f0:
+  tex: $a_1^{f_0}$
+  description: BSZ form factor parametrization coefficient $a_1$ of $f_0$
 D->K BSZ a0_fT:
   tex: $a_0^{f_T}$
   description: BSZ form factor parametrization coefficient $a_0$ of $f_T$
 D->K BSZ a1_fT:
   tex: $a_1^{f_T}$
   description: BSZ form factor parametrization coefficient $a_1$ of $f_T$
+D->K BSZ a2_fT:
+  tex: $a_2^{f_T}$
+  description: BSZ form factor parametrization coefficient $a_2$ of $f_T$
 
 
 # Parameters for D->K form factors in the BSZ or BCL parametrization
