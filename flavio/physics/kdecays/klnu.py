@@ -4,6 +4,8 @@ import flavio
 from flavio.physics.bdecays.blnu import br_plnu_general
 from math import pi, log
 from flavio.math.functions import li2
+from flavio.physics.taudecays.taulnunu import GFeff
+
 
 def br_plnu(wc_obj, par, P, lep):
     r"""Branching ratio of $P^+\to\ell^+\nu_\ell$."""
@@ -23,7 +25,10 @@ def _br_plnu(wc_obj, par, P, lep, nu):
     wc = wc_obj.get_wc(qiqj + lep + 'nu' + nu, scale, par, nf_out=3)
     # add SM contribution to Wilson coefficient
     if lep == nu:
-        wc['CVL_'+qiqj+lep+'nu'+nu] += flavio.physics.bdecays.wilsoncoefficients.get_CVLSM(par, scale, nf=3)
+        # for the SM contribution, need the Fermi constant with possible
+        # NP effects in mu->enunu subtracted, not the measured one
+        r_GF = GFeff(wc_obj, par) / par['GF']
+        wc['CVL_'+qiqj+lep+'nu'+nu] += flavio.physics.bdecays.wilsoncoefficients.get_CVLSM(par, scale, nf=3) * r_GF
     if P == 'K+':
         mq = flavio.physics.running.running.get_ms(par, scale)
     elif P == 'pi+':
