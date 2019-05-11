@@ -5480,6 +5480,12 @@ LHCb B->ll' 2017:
     BR(Bs->emu,mue): < 6.3e-9 @ 95% CL
     BR(B0->emu,mue): < 1.3e-9 @ 95% CL
 
+LHCb B->taumu 2019:
+  experiment: LHCb
+  values:
+    BR(Bs->mutau,taumu): < 4.2e-5 @ 95% CL
+    BR(B0->mutau,taumu): < 1.4e-5 @ 95% CL
+
 BaBar B->pill LFV 2007:
   experiment: BaBar
   inspire: Aubert:2007mm
