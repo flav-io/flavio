@@ -9,6 +9,7 @@ par_nominal = flavio.default_parameters.copy()
 flavio.physics.bdecays.formfactors.lambdab_12.lattice_parameters.lattice_load_nominal(par_nominal)
 par_nominal.set_constraint('Vcb', 0.04175)
 par_nominal.set_constraint('tau_Lambdab', 1/4.49e-13) # PDG 2016 value
+par_nominal.set_constraint('Lambda->ppi alpha_-', 0.642) # PDG 2016 value
 par_dict = par_nominal.get_central_all()
 
 def ass_sm(s, name, q2min, q2max, target, delta, scalef=1):

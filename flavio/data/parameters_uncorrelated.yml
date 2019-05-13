@@ -181,7 +181,7 @@ K->pi H1: (1.92 + 0.63 - 0.32) e-3 # 0903.1654 table 2
 K->pi H2: (2.63 + 0.28 - 0.15) e-4 #  "
 
 # Lambda decay parameters
-Lambda->ppi alpha_-: 0.642(13) # PDG
+Lambda->ppi alpha_-: 0.750 ± 0.009 ± 0.004  # BESIII arXiv:1808.08917
 
 # Parameters for subleading hadronic effects in Lambdab->Lambdall
 Lambdab->Lambda deltaC7 a_perp0 Re: 0 ± 0.1
