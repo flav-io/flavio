@@ -178,7 +178,7 @@ def bpll_obs_int_ratio_leptonflavour(func, B, P, lnum, lden):
 def bpll_obs_ratio_leptonflavour(func, B, P, lnum, lden):
     def fct(wc_obj, par, q2):
         with warnings.catch_warnings():
-            warnings.filterwarningsfilterwarnings("ignore", message="The QCDF corrections should not be trusted .*")
+            warnings.filterwarning("ignore", message="The QCDF corrections should not be trusted .*")
             num = bpll_obs(func, q2, wc_obj, par, B, P, lnum)
             if num == 0:
                 return 0
