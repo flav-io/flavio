@@ -4,6 +4,8 @@ import flavio
 from flavio.physics.bdecays.formfactors.b_v import bsz_parameters
 from flavio.physics.bdecays.bvll import observables, observables_bs
 import cmath
+import warnings
+
 
 class TestBVll(unittest.TestCase):
     def test_compare_to_Davids_old_code(self):
@@ -158,3 +160,12 @@ class TestBVll(unittest.TestCase):
                                1, delta=0.01)
         self.assertAlmostEqual(nintegrate_pole(g, 0.0005, 2)/nintegrate(g, 0.0005, 2, epsrel=0.001),
                                1, delta=0.01)
+
+    def test_qcdf_warning(self):
+        # computing the BR at q²=8 should warn
+        with self.assertWarnsRegex(UserWarning, r"The QCDF corrections should not be trusted .*"):
+            flavio.sm_prediction('dBR/dq2(B0->K*mumu)', 8)
+        # computing the LFU ratio at q²=8 should not warn
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+            flavio.sm_prediction('Rmue(B0->K*ll)', 8)

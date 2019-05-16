@@ -166,20 +166,24 @@ def bpll_obs_int_ratio_func(func_num, func_den, B, P, lep):
 
 def bpll_obs_int_ratio_leptonflavour(func, B, P, lnum, lden):
     def fct(wc_obj, par, q2min, q2max):
-        num = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lnum, epsrel=0.0005)
-        if num == 0:
-            return 0
-        denom = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lden, epsrel=0.0005)
-        return num/denom
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The QCDF corrections should not be trusted .*")
+            num = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lnum, epsrel=0.0005)
+            if num == 0:
+                return 0
+            denom = bpll_obs_int(func, q2min, q2max, wc_obj, par, B, P, lden, epsrel=0.0005)
+            return num/denom
     return fct
 
 def bpll_obs_ratio_leptonflavour(func, B, P, lnum, lden):
     def fct(wc_obj, par, q2):
-        num = bpll_obs(func, q2, wc_obj, par, B, P, lnum)
-        if num == 0:
-            return 0
-        denom = bpll_obs(func, q2, wc_obj, par, B, P, lden)
-        return num/denom
+        with warnings.catch_warnings():
+            warnings.filterwarningsfilterwarnings("ignore", message="The QCDF corrections should not be trusted .*")
+            num = bpll_obs(func, q2, wc_obj, par, B, P, lnum)
+            if num == 0:
+                return 0
+            denom = bpll_obs(func, q2, wc_obj, par, B, P, lden)
+            return num/denom
     return fct
 
 def bpll_obs_ratio_func(func_num, func_den, B, P, lep):

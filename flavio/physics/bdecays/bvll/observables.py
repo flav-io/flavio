@@ -9,6 +9,7 @@ from flavio.physics.running import running
 from .amplitudes import *
 from flavio.classes import Observable, Prediction
 import flavio
+import warnings
 
 
 def dGdq2(J):
@@ -397,24 +398,29 @@ def nintegrate_pole(function, q2min, q2max, epsrel=0.005):
 
 def bvll_obs_int_ratio_leptonflavour(func, B, V, l1, l2):
     def fct(wc_obj, par, q2min, q2max):
-        numobj = BVll_obs_int(func, q2min, q2max, B, V, l1, wc_obj, par)
-        numobj.epsrel = 0.0005
-        num = numobj()
-        if num == 0:
-            return 0
-        denobj = BVll_obs_int(func, q2min, q2max, B, V, l2, wc_obj, par)
-        denobj.epsrel = 0.0005
-        den = denobj()
-        return num / den
+        # ignore QCDF warnings for LFU ratios!
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The QCDF corrections should not be trusted .*")
+            numobj = BVll_obs_int(func, q2min, q2max, B, V, l1, wc_obj, par)
+            numobj.epsrel = 0.0005
+            num = numobj()
+            if num == 0:
+                return 0
+            denobj = BVll_obs_int(func, q2min, q2max, B, V, l2, wc_obj, par)
+            denobj.epsrel = 0.0005
+            den = denobj()
+            return num / den
     return fct
 
 def bvll_obs_ratio_leptonflavour(func, B, V, l1, l2):
     def fct(wc_obj, par, q2):
-        num = BVll_obs(func, q2, B, V, l1, wc_obj, par)()
-        if num == 0:
-            return 0
-        den = BVll_obs(func, q2, B, V, l2, wc_obj, par)()
-        return num / den
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The QCDF corrections should not be trusted .*")
+            num = BVll_obs(func, q2, B, V, l1, wc_obj, par)()
+            if num == 0:
+                return 0
+            den = BVll_obs(func, q2, B, V, l2, wc_obj, par)()
+            return num / den
     return fct
 
 
