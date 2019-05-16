@@ -39,13 +39,13 @@ def CR_mue(wc_obj, par, nucl):
   gLS = {'u': 4*(wc['CSRL_emuuu'].conjugate() + wc['CSRR_mueuu']),
          'd': 4*(wc['CSRL_emudd'].conjugate() + wc['CSRR_muedd']),
          's': 4*(wc['CSRL_emuss'].conjugate() + wc['CSRR_muess'])}
-  lhc = (AR.conjugate()*D + (2*gLV['u'] + gLV['d'])*Vp 
-         +(gLV['u'] + 2*gLV['d'])*Vn 
-         + (GuS* gLS['u'] + GdS*gLS['d'] + GsS*gLS['s'])*Sp 
+  lhc = (AR.conjugate()*D + (2*gLV['u'] + gLV['d'])*Vp
+         +(gLV['u'] + 2*gLV['d'])*Vn
+         + (GuS* gLS['u'] + GdS*gLS['d'] + GsS*gLS['s'])*Sp
          + (GuS*gLS['u'] + GdS*gLS['d'] + GsS*gLS['s'])*Sn)
-  rhc = (AL.conjugate()*D + (2*gRV['u'] + gRV['d'])*Vp 
-         +(gRV['u'] + 2*gRV['d'])*Vn 
-         + (GuS* gRS['u'] + GdS*gRS['d'] + GsS*gRS['s'])*Sp 
+  rhc = (AL.conjugate()*D + (2*gRV['u'] + gRV['d'])*Vp
+         +(gRV['u'] + 2*gRV['d'])*Vn
+         + (GuS* gRS['u'] + GdS*gRS['d'] + GsS*gRS['s'])*Sp
          + (GuS*gRS['u'] + GdS*gRS['d'] + GsS*gRS['s'])*Sn)
   return 2*(par['GF']**2)*(abs(lhc)**2 + abs(rhc)**2)/GC
 
@@ -64,16 +64,16 @@ CRAu = Observable('CR(mu->e, Au)')
 Prediction('CR(mu->e, Au)', CR_mueAu)
 CRAu.tex = r"$CR(\mu - e)$ in $\phantom k^{197}_{79} \mathrm{Au}$"
 CRAu.description = r"Coherent conversion rate of $\mu^-$ to $e^-$ in $\phantom k^{197}_{79} \mathrm{Au}$"
-CRAu.add_taxonomy(r'Process :: $\mu$ lepton decays :: LFV decays :: $CR(\mu\to e)$ :: ' + CRAu.tex)
+CRAu.add_taxonomy(r'Process :: muon decays :: LFV decays :: $\mu N \to e N$ :: ' + CRAu.tex)
 
 CRAl = Observable('CR(mu->e, Al)')
 Prediction('CR(mu->e, Al)', CR_mueAl)
 CRAl.tex = r"$CR(\mu - e)$ in $\phantom k^{27}_{13} \mathrm{Al}$"
 CRAl.description = r"Coherent conversion rate of $\mu^-$ to $e^-$ in $\phantom k^{27}_{13} \mathrm{Al}$"
-CRAl.add_taxonomy(r'Process :: $\mu$ lepton decays :: LFV decays :: $CR(\mu\to e)$ :: ' + CRAl.tex)
+CRAl.add_taxonomy(r'Process :: muon decays :: LFV decays :: $\mu N \to e N$ :: ' + CRAl.tex)
 
 CRTi = Observable('CR(mu->e, Ti)')
 Prediction('CR(mu->e, Ti)', CR_mueTi)
 CRTi.tex = r"$CR(\mu - e)$ in $\phantom k^{48}_{22} \mathrm{Ti}$"
 CRTi.description = r"Coherent conversion rate of $\mu^-$ to $e^-$ in $\phantom k^{48}_{22} \mathrm{Ti}$"
-CRTi.add_taxonomy(r'Process :: $\mu$ lepton decays :: LFV decays :: $CR(\mu\to e)$ :: ' + CRTi.tex)
+CRTi.add_taxonomy(r'Process :: muon decays :: LFV decays :: $\mu N \to e N$ :: ' + CRTi.tex)
