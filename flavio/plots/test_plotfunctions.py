@@ -33,7 +33,7 @@ class TestPlots(unittest.TestCase):
 
     def test_q2_th_diff(self):
         # without specifying WCs
-        diff_plot_th('dBR/dq2(B0->pienu)', 0, 25, steps=10)
+        diff_plot_th('dBR/dq2(B0->pienu)', 0, 25, steps=10, scale_factor=1000)
         # with WCs
         diff_plot_th('dBR/dq2(B+->pienu)', 0, 25,
                                    wc=flavio.WilsonCoefficients(), steps=10)
@@ -44,7 +44,8 @@ class TestPlots(unittest.TestCase):
     def test_q2_th_diff_err(self):
         # without parallelization
         diff_plot_th_err('dBR/dq2(B0->pienu)', 1, 24, steps=5,
-                                                steps_err=3, N=10)
+                                                steps_err=3, N=10,
+                                                scale_factor=3)
         # with parallelization
         diff_plot_th_err('dBR/dq2(B0->pienu)', 1, 24, steps=5,
                                                  steps_err=3, N=10, threads=2)
@@ -65,7 +66,8 @@ class TestPlots(unittest.TestCase):
         bin_plot_exp('<dBR/dq2>(B0->K*mumu)')
         # with options
         bin_plot_exp('<dBR/dq2>(B0->K*mumu)', col_dict={'LHCb': 'r'},
-                                                        exclude_bins=[(1.1, 6)])
+                                                        exclude_bins=[(1.1, 6)],
+                                                        scale_factor=100)
         # check that observable not depending on q2 raises error
         with self.assertRaises(ValueError):
             bin_plot_exp('eps_K')
@@ -76,6 +78,7 @@ class TestPlots(unittest.TestCase):
         m.set_constraint(('dBR/dq2(B0->K*mumu)', 1), '1 +- 0.1 e-6')
         m.set_constraint(('dBR/dq2(B0->K*mumu)', 2), '2 +- 0.2 e-6')
         diff_plot_exp('dBR/dq2(B0->K*mumu)')
+        diff_plot_exp('dBR/dq2(B0->K*mumu)', scale_factor=10)
         # with options
         # check that observable not depending on q2 raises error
         with self.assertRaises(ValueError):
