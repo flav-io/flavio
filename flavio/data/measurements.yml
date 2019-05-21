@@ -74,11 +74,15 @@ LHCb rad 2012:
   values:
     BR(Bs->phigamma): 3.5 ± 0.4 e-5
 
-LHCb phigamma 2016:
+LHCb phigamma 2019:
   experiment: LHCb
-  inspire: Aaij:2016ofv
+  inspire: Aaij:2019pnd
   values:
-    ADeltaGamma(Bs->phigamma): -0.98 + 0.46 - 0.52 + 0.23 - 0.20
+    S_phigamma: 0.43 ± 0.30 ± 0.11
+    ACP(Bs->phigamma): 0.11 ± 0.29 ± 0.11
+    ADeltaGamma(Bs->phigamma): -0.67 +0.37 -0.41 ± 0.17
+  correlation:
+    [[1, 0.04, 0.04], [0.04, 1, 0.04], [0.04, 0.04, 1]]
 
 HFAG osc summer 2015:
   experiment: HFAG
@@ -2836,18 +2840,6 @@ LHCb B->K*ee 2013:
       q2max: 1.12
       value: 0.05 ± 0.09 ± 0.025 # P2 = 1/2 * ATRe
 
-LHCb B->Kee 2014:
-  experiment: LHCb
-  inspire: Aaij:2014ora
-  values:
-    - name: <Rmue>(B+->Kll)
-      q2min: 1.0
-      q2max: 6.0
-      value: 0.745 + 0.090 - 0.074 ± 0.036
-    - name: <dBR/dq2>(B+->Kee)
-      q2min: 1.0
-      q2max: 6.0
-      value: 0.312 +0.038 -0.030 +0.012 -0.008 e-7 # this is 1.56 +0.19 -0.15 +0.06 -0.04 e-7 for the partial BR
 
 PDG 2015:
   experiment: PDG
