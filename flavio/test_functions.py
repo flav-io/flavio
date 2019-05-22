@@ -5,7 +5,7 @@ import numpy as np
 from math import sqrt
 from flavio.classes import Observable, Prediction, Measurement
 from flavio.statistics.probability import NormalDistribution, MultivariateNormalDistribution
-from flavio.functions import get_dependent_parameters_sm
+from flavio.functions import get_dependent_parameters_sm, get_dependent_wcs
 import copy
 
 
@@ -96,3 +96,30 @@ class TestFunctions(unittest.TestCase):
         # delete dummy instances
         Observable.del_instance('test_obs 1')
         Observable.del_instance('test_obs 2')
+
+    def test_dependent_wcs(self):
+        # WET
+        self.assertEqual(
+            get_dependent_wcs('DeltaM_d'),
+            {(4.2, 'WET', 'flavio', ('dbdb',))}
+        )
+        # WET-3
+        self.assertEqual(
+            get_dependent_wcs('eps_K'),
+            {(2.0, 'WET-3', 'flavio', ('sdsd',))}
+        )
+        self.assertEqual(
+            get_dependent_wcs('BR(K+->pinunu)'),
+            {(2.0, 'WET-3', 'flavio', ('sdnunu',))}
+        )
+        # SMEFT
+        self.assertEqual(
+            get_dependent_wcs('AFB(Z->bb)'),
+            {(91.1876, 'SMEFT', 'Warsaw', 'all')}
+        )
+        # something with G_F
+        self.assertEqual(
+            get_dependent_wcs('BR(tau->enunu)'),
+            {(1.0, 'WET-3', 'flavio', ('nunumue',)),
+             (1.8, 'WET-4', 'flavio', ('nunutaue',))}
+         )

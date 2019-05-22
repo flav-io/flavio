@@ -103,8 +103,8 @@ def sm_uncertainty(obs_name, *args, N=100, threads=1, **kwargs):
     return np_uncertainty(obs_name, wc_sm, *args, N=N, threads=threads, **kwargs)
 
 class AwareDict(dict):
-    """Generalization of dictionary that adds the key to the previously defined
-    set `pcalled` upon getting an item."""
+    """Generalization of dictionary that adds the key to the
+    set `akeys` upon getting an item."""
 
     def __init__(self, d):
         """Initialize the instance."""
@@ -125,6 +125,19 @@ class AwareDict(dict):
     def copy(self):
         return self.__copy__()
 
+
+class AwareWilson(flavio.WilsonCoefficients):
+    """Subclass of `flavio.WilsonCoefficients` that adds the arguments of calls
+    to its `match_run`  method to `atuples` attribute."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.atuples = set()
+
+    def match_run(self, scale, eft, basis, sectors='all'):
+        self.atuples.add((scale, eft, basis, sectors))
+        return super().match_run(scale, eft, basis, sectors)
+
+
 def get_dependent_parameters_sm(obs_name, *args, **kwargs):
     """Get the set of parameters the SM prediction of the observable depends on."""
     obs = flavio.classes.Observable[obs_name]
@@ -137,6 +150,25 @@ def get_dependent_parameters_sm(obs_name, *args, **kwargs):
     # the dictionaries)
     return {p for p in apar_central.akeys
             if p in flavio.Parameter.instances.keys()}
+
+
+def get_dependent_wcs(obs_name, *args, **kwargs):
+    """Get the EFT, basis, scale, and sector of Wilson coefficients
+    the NP prediction of the observable depends on.
+
+    Returns a set of tuples of the form
+    `(scale, eft, basis, sectors)`,
+    where sectors is a tuple of WCxf sectors or 'all'.
+
+    Note that this function simply checks the arguments with which the
+    `match_run` method of the underlying `wilson.Wilson` instance is called.
+    Thus it is only guaranteed that the Wilson coefficients the observable
+    actually depends on are contained in these sectors."""
+    awc = AwareWilson()
+    awc.set_initial({'G': 1e-30}, 91.1876, 'SMEFT', 'Warsaw')
+    np_prediction(obs_name, awc, *args, **kwargs)
+    return awc.atuples
+
 
 def sm_error_budget(obs_name, *args, N=50, **kwargs):
     """Get the *relative* uncertainty of the Standard Model prediction due to
