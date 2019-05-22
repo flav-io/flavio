@@ -21,3 +21,9 @@ class TestFunctions(unittest.TestCase):
         self.assertAlmostEqual(confidence_level(1), 0.6826894921370859, places=10)
         self.assertAlmostEqual(confidence_level(2), 0.9544997361036416, places=10)
         self.assertAlmostEqual(confidence_level(5), 0.9999994266968562, places=10)
+
+    def test_pvalue(self):
+        # trivial
+        self.assertAlmostEqual(pvalue(1, 1), 1 - 0.6826894921370859, places=10)
+        # non-trivial: http://psychclassics.yorku.ca/Fisher/Methods/tabIII.gif
+        self.assertAlmostEqual(pvalue(22.362, 13), 0.05, places=6)

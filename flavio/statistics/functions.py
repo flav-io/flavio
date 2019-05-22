@@ -26,7 +26,7 @@ def delta_chi2(nsigma, dof):
     return chi2_ndof.ppf(cl_nsigma)
 
 def pull(delta_chi2, dof):
-    r"""Compute the pull in Gaussian standard deviations correspondsing to
+    r"""Compute the pull in Gaussian standard deviations corresponding to
     a $\Delta\chi^2$ with `dof` degrees of freedom.
 
     Example: For `dof=2` and `delta_chi2=2.3`, the result is roughly 1.0.
@@ -38,3 +38,8 @@ def pull(delta_chi2, dof):
     chi2_ndof = scipy.stats.chi2(dof)
     cl_delta_chi2 = chi2_ndof.cdf(delta_chi2)
     return scipy.stats.norm.ppf(0.5+cl_delta_chi2/2)
+
+def pvalue(chi2, dof):
+    r"""Compute the $p$-value corresponding to a $\chi^2$ with `dof` degrees
+    of freedom."""
+    return 1 - scipy.stats.chi2.cdf(chi2, dof)
