@@ -165,6 +165,7 @@ def get_dependent_wcs(obs_name, *args, **kwargs):
     Thus it is only guaranteed that the Wilson coefficients the observable
     actually depends on are contained in these sectors."""
     awc = AwareWilson()
+    # need at least one non-zero WC to make sure match_run is called at all
     awc.set_initial({'G': 1e-30}, 91.1876, 'SMEFT', 'Warsaw')
     np_prediction(obs_name, awc, *args, **kwargs)
     return awc.atuples
