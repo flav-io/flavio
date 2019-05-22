@@ -11,9 +11,13 @@ from flavio.physics.common import conjugate_par
 from flavio.classes import Observable, Prediction
 
 
+# WCxf-EFT by meson
+eft = {'K0': 'WET-3', 'D0': 'WET-4', 'B0': 'WET', 'Bs': 'WET'}
+
+
 def get_M12_G12(wc_obj, par, meson):
     scale = config['renormalization scale'][meson + ' mixing']
-    wc = wc_obj.get_wc(2*common.meson_quark[meson], scale, par)
+    wc = wc_obj.get_wc(2*common.meson_quark[meson], scale, par, eft=eft[meson])
     M12 = amplitude.M12(par, wc, meson)
     # TODO temporary fix: we don't have a prediction for Gamma12 in the kaon sector
     if meson == 'K0':
