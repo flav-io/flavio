@@ -6779,3 +6779,46 @@ LHCb RK 2019:
     2.4595682759129653e-09, 1.5393893886881072e-09, 9.638648772214433e-10, 6.037988519694699e-10,
     3.784527067496923e-10, 2.3736549256112685e-10, 1.4898134785503604e-10, 9.35822862332258e-11,
     5.88334820773259e-11, 3.7022325254176346e-11, 2.3319761074910682e-11]
+
+
+Belle B->K*mumu LFU 2016:
+   experiment: Belle
+   inspire: Wehle:2016yoi
+   description: >
+    This measurement actually performs an isospin-combined analysis
+    (with unkown weights of the two isospin states), but since the isospin
+    asymmetry in the lepton flavour difference should be very small,
+    it is interpreted as pure $B^0$ decay here for simplicity.
+   values:
+     - name: <Dmue_P4p>(B0->K*ll)
+       q2min: 1.0
+       q2max: 6.0
+       value: 0.498 ± 0.527 ± 0.166
+     - name: <Dmue_P4p>(B0->K*ll)
+       q2min: 0.1
+       q2max: 4.0
+       value: -0.723 ± 0.676 ± 0.163
+     - name: <Dmue_P4p>(B0->K*ll)
+       q2min: 4.0
+       q2max: 8.0
+       value: 0.448 ± 0.392 ± 0.076
+     - name: <Dmue_P4p>(B0->K*ll)
+       q2min: 14.18
+       q2max: 19.0
+       value: 0.041 ± 0.565 ± 0.082
+     - name: <Dmue_P5p>(B0->K*ll)
+       q2min: 1.0
+       q2max: 6.0
+       value: 0.656 ± 0.485 ± 0.103
+     - name: <Dmue_P5p>(B0->K*ll)
+       q2min: 0.1
+       q2max: 4.0
+       value: -0.097 ± 0.601 ± 0.164
+     - name: <Dmue_P5p>(B0->K*ll)
+       q2min: 4.0
+       q2max: 8.0
+       value: 0.498 ± 0.410 ± 0.095
+     - name: <Dmue_P5p>(B0->K*ll)
+       q2min: 14.18
+       q2max: 19.0
+       value:  0.778 ± 0.502 ± 0.065

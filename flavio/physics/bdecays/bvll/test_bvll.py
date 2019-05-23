@@ -56,6 +56,8 @@ class TestBVll(unittest.TestCase):
         # LFU ratio = 1
         self.assertAlmostEqual(flavio.sm_prediction("Rmue(B0->K*ll)", q2=6), 1, delta=1e-2)
         self.assertAlmostEqual(flavio.sm_prediction("Rmue(B+->K*ll)", q2=6), 1, delta=1e-2)
+        self.assertAlmostEqual(flavio.sm_prediction("Dmue_P4p(B0->K*ll)", q2=6), 0, delta=1e-6)
+        self.assertAlmostEqual(flavio.sm_prediction("Dmue_P5p(B0->K*ll)", q2=3), 0, delta=1e-2)
 
     def test_obs(self):
         # just test that this doesn't raise
