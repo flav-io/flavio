@@ -71,8 +71,14 @@ class TestMeasurementLikelihood(unittest.TestCase):
         pred = ml.get_predictions_par({'m_b': 4}, None)
         self.assertDictEqual(pred, {'test_obs': 8})
         self.assertEqual(ml.get_measurements, ['measurement of test_obs'])
+        self.assertEqual(ml.get_number_observations(), 1)
+        m = Measurement( 'measurement 2 of test_obs' )
+        m.add_constraint(['test_obs'], d)
+        self.assertEqual(ml.get_number_observations(), 2)
         Observable.del_instance('test_obs')
         Measurement.del_instance('measurement of test_obs')
+        Measurement.del_instance('measurement 2 of test_obs')
+
 
 class TestParameterLikelihood(unittest.TestCase):
     def test_parameter_likelihood(self):

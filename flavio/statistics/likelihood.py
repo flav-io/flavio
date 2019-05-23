@@ -155,6 +155,21 @@ class MeasurementLikelihood(iio.YAMLLoadable):
             self._predictions_cache_hash = arg_hash
         return self._predictions_cache_values
 
+    def get_number_observations(self, exclude_observables=None):
+        """Get the number of observations, defined as individual measurements
+        of observables."""
+        nobs = 0
+        for measurement in self.get_measurements:
+            m_obj = flavio.Measurement[measurement]
+            m_obs = set(m_obj.all_parameters)
+            exclude_observables = set(exclude_observables or [])
+            our_obs =  set(self.observables) - exclude_observables
+            # add the number of observables contained in the measurement
+            # and in our instance (except the excluded ones)
+            nobs += len(m_obs & our_obs)
+        return nobs
+
+
     def log_likelihood_pred(self, pred_dict, exclude_observables=None, delta=False):
         """Return the logarithm of the likelihood function as a function of
         a dictionary of observable predictions `pred_dict`"""
