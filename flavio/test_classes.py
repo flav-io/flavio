@@ -380,8 +380,8 @@ class TestClasses(unittest.TestCase):
             ['PDG kaon CPV']
         )
         self.assertEqual(
-            Observable['<BR>(B+->rholnu)'].get_measurements(),
-            ['Belle B+->rholnu 2013', 'BaBar B+->rholnu 2010']
+            sorted(Observable['<BR>(B+->rholnu)'].get_measurements()),
+            sorted(['Belle B+->rholnu 2013', 'BaBar B+->rholnu 2010'])
         )
         self.assertEqual(
             Observable['FL(B0->K*mumu)'].get_measurements(),
