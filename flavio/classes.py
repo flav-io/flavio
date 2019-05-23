@@ -621,6 +621,21 @@ class Observable(NamedInstanceClass):
         Prediction(name, pfct)
         return obs_obj
 
+    def get_measurements(self):
+        r"""Return the names of measurements that constrain the observable."""
+        ms = []
+        for name, m in Measurement.instances.items():
+            if self.name in m.all_parameters:
+                ms.append(name)
+            else:
+                for obs in m.all_parameters:
+                    if isinstance(obs, tuple):
+                        if obs[0] == self.name:
+                            ms.append(name)
+                            break
+        return ms
+
+
 
 class AuxiliaryQuantity(NamedInstanceClass):
     """An auxiliary quantity is something that can be computed theoretically but

@@ -373,3 +373,17 @@ class TestClasses(unittest.TestCase):
                               'eps_K')
         self.assertDictEqual(Observable.argument_format('eps_K', 'dict'),
                               {'name': 'eps_K'})
+
+    def test_obs_get_meas(self):
+        self.assertEqual(
+            Observable['eps_K'].get_measurements(),
+            ['PDG kaon CPV']
+        )
+        self.assertEqual(
+            Observable['<BR>(B+->rholnu)'].get_measurements(),
+            ['Belle B+->rholnu 2013', 'BaBar B+->rholnu 2010']
+        )
+        self.assertEqual(
+            Observable['FL(B0->K*mumu)'].get_measurements(),
+            []
+        )
