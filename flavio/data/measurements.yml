@@ -5228,8 +5228,8 @@ BaBar B->D*lnu 2007 hadronic tag:
     that accounts e.g. for changes in $D^\ast$ branching ratios used.
     $B^+\to D^{\ast 0}\ell^+\nu$ is reduced by 6%.
   values:
-    BR(B+->D*lnu): (5.48 ± 0.14 ± 0.28) 1e-2
-    BR(B0->D*lnu): (5.49 ± 0.16 ± 0.25) 1e-2
+    BR(B+->D*lnu): (5.35 ± 0.15 ± 0.33) 1e-2
+    BR(B0->D*lnu): (5.26 ± 0.16 ± 0.31) 1e-2
 
 BaBar B0->D*lnu 2007:
   experiment: BaBar
@@ -5240,9 +5240,9 @@ BaBar B0->D*lnu 2007:
     (http://www.slac.stanford.edu/xorg/hflav/semi/summer16/),
     that accounts e.g. for changes in $D^\ast$ branching ratios used.
   values:
-    BR(B0->D*lnu): (4.45 ± 0.03 ± 0.32) 1e-2
+    BR(B0->D*lnu): (4.52 ± 0.04 ± 0.33) 1e-2
 
-BaBar B+->D*lnu 2007:
+BaBar B+->D*enu 2007:
   experiment: BaBar
   inspire: Aubert:2007qs
   description: >
@@ -5251,7 +5251,7 @@ BaBar B+->D*lnu 2007:
     (http://www.slac.stanford.edu/xorg/hflav/semi/summer16/),
     that accounts e.g. for changes in $D^\ast$ branching ratios used.
   values:
-    BR(B+->D*lnu): (5.28 ± 0.08 ± 0.39) 1e-2
+    BR(B+->D*enu): (5.08 ± 0.08 ± 0.31) 1e-2
 
 Belle B->D*lnu 2010:
   experiment: Belle
