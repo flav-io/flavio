@@ -7600,12 +7600,30 @@ Neutron averages GACS 2018 1:
     - name: tau_n
       me_E: 0.655
       value: 1.3366(12) 1e+27 # 879.75(76) s
-    - name: Atilde_n
-      me_E: 0.569
-      value: -0.11869(99)
     - name: Btilde_n
       me_E: 0.591
       value: 0.9805(30)
+
+Neutron A parameter PERKEO II 2012:
+  inspire: Mund:2012fq
+  values:
+    - name: Atilde_n
+      me_E: 0.559
+      value: -0.11926(31)(42)
+
+Neutron A parameter PERKEO III 2018:
+  inspire: Markisch:2018ndu
+  values:
+    - name: Atilde_n
+      me_E: 0.559
+      value: -0.11985(17)(12)
+
+Neutron A parameter UCNA 2017:
+  inspire: Brown:2017mhw
+  values:
+    - name: Atilde_n
+      me_E: 0.586
+      value: -0.12015(34)(63)
 
 Neutron averages GACS 2018 2:
   inspire: Gonzalez-Alonso:2018omy
