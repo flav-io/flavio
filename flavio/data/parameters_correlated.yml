@@ -23,23 +23,22 @@
 # fact they are equal up to isosin breaking effects.
 # for now, just assume 99% correlation
 
-# For f_K and f_pi, lattice determinations are used where the physical scale
-# is not set using the experimental value of f_pi, in order not to assume
-# the SM in pion decays. This can be achieved by using the RBC/UKQCD (1411.7017)
-# and HPQCD (0706.1726) determinations. The correlations between f_pi and f_K
-# have been determined by reproducing the ratio f_K/f_pi quoted in these papers.
-# Then a two-dimensional combination has been performed.
+# In order not to depend on the experimental value of f_pi, f_pi is taken
+# from the FLAG lattice average and f_K and its correlation with f_pi
+# from the FLAG lattice average of the ratio f_K/f_pi.
+# This way, lattice determinations of f_K that use the measurement of f_pi
+# to set the scale are not used.
 -
   values:
-    - f_K+: 0.1557(7)
-    - f_K0: 0.1557(7)
-    - f_pi+: 0.1305(8)
-    - f_pi0: 0.1305(8)
+    - f_K+: 0.1554(10)  # reproduce f_K/f_pi=1.1932(19) from FLAG 2019 Nf=2+1+1
+    - f_K0: 0.1554(10)
+    - f_pi+: 0.1302(8)  # FLAG 2019 Nf=2+1
+    - f_pi0: 0.1302(8)
   correlation:
-    [[1, 0.99, 0.86, 0.86],
-     [0.99, 1, 0.86, 0.86],
-     [0.86, 0.86, 1, 0.99],
-     [0.86, 0.86, 0.99, 1]]
+    [[1, 0.99, 0.968, 0.968],
+     [0.99, 1, 0.968, 0.968],
+     [0.968, 0.968, 1, 0.99],
+     [0.968, 0.968, 0.99, 1]]
 -
   values:
     - f_perp_K*+: 0.145(6)  # 1503.05534v2 table 1, but at 2 GeV
