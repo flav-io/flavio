@@ -86,3 +86,13 @@ class TestHiggsMeasurements(unittest.TestCase):
         self.assertAlmostEqual(c.correlation[3, 7], -0.44, delta=0.005)
         self.assertEqual(m.all_parameters[3], 'mu_gg(h->tautau)')
         self.assertEqual(m.all_parameters[7], 'mu_VBF(h->tautau)')
+
+
+    def test_cms_run2_correlation(self):
+        # check that the large anticorrlation between ggF and VBF mumu is correct
+        m = flavio.classes.Measurement['CMS Run 2 Higgs 36/fb']
+        c = m._constraints[0][0]
+        self.assertEqual(len(c.central_value), 24)
+        self.assertAlmostEqual(c.correlation[5, 10], -0.54, delta=0.005)
+        self.assertEqual(m.all_parameters[5], 'mu_gg(h->mumu)')
+        self.assertEqual(m.all_parameters[10], 'mu_VBF(h->mumu)')
