@@ -69,7 +69,7 @@ class TestHiggsSignalStrengths(unittest.TestCase):
 
 
 class TestHiggsMeasurements(unittest.TestCase):
-    def test_run1_corrleation(self):
+    def test_run1_correlation(self):
         # check that the large anticorrlation between Wh and Zh gaga is correct
         m = flavio.classes.Measurement['LHC Run 1 Higgs combination']
         c = m._constraints[0][0]
@@ -77,3 +77,12 @@ class TestHiggsMeasurements(unittest.TestCase):
         self.assertAlmostEqual(c.correlation[12, 8], -0.64, delta=0.005)
         self.assertEqual(m.all_parameters[8], 'mu_Wh(h->gammagamma)')
         self.assertEqual(m.all_parameters[12], 'mu_Zh(h->gammagamma)')
+
+    def test_atlas_run2_correlation(self):
+        # check that the large anticorrlation between ggF and VBF tautau is correct
+        m = flavio.classes.Measurement['ATLAS Run 2 Higgs 80/fb']
+        c = m._constraints[0][0]
+        self.assertEqual(len(c.central_value), 12)
+        self.assertAlmostEqual(c.correlation[3, 7], -0.44, delta=0.005)
+        self.assertEqual(m.all_parameters[3], 'mu_gg(h->tautau)')
+        self.assertEqual(m.all_parameters[7], 'mu_VBF(h->tautau)')
