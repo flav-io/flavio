@@ -21,7 +21,7 @@ _sectors = {'l': {'e': 1, 'mu': 2, 'tau': 3},
 
 
 def d_GF(par, C):
-    return 1 / (sqrt(2) * par['GF']) * (sqrt(2) * (C['phil3_22'] + C['phil3_11']) / 2 - C['ll_1221'] / sqrt(2))
+    return 1 / (sqrt(2) * par['GF']) * sqrt(2) / 2 * (C['phil3_22'] + C['phil3_11'] - C['ll_1221'] / 2)
 
 
 def _sinthetahat2(par):
@@ -35,7 +35,7 @@ def d_sh2(par, C):
     ch = sqrt(ch2)
     s2h = 2 * ch * sh # sin(2 * thetahat)
     c2h = ch**2 - sh**2 # cos(2 * thetahat)
-    dC = s2h * (C['phiD'] + 2 * (C['phil3_22'] + C['phil3_11']) - 2 * C['ll_1221']) + 4 * C['phiWB']
+    dC = s2h * (C['phiD'] + 2 * (C['phil3_22'] + C['phil3_11'] - C['ll_1221'] / 2)) + 4 * C['phiWB']
     return s2h / (8 * c2h * sqrt(2) * par['GF']) * dC
 
 
