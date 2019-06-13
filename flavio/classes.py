@@ -13,6 +13,7 @@ import warnings
 import yaml
 import inspect
 import urllib.parse
+import re
 
 
 class NamedInstanceMetaclass(type):
@@ -64,6 +65,12 @@ class NamedInstanceClass(object, metaclass=NamedInstanceMetaclass):
     def clear_all(cls):
         """Delete all instances."""
         cls.instances = OrderedDict()
+
+    @classmethod
+    def find(cls, regex):
+        """Find all instance names matching the regular expression `regex`."""
+        rc = re.compile(regex)
+        return list(filter(rc.search, cls.instances))
 
     def set_description(self, description):
         self.description = description

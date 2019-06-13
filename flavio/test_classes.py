@@ -398,3 +398,14 @@ class TestClasses(unittest.TestCase):
             Observable['FL(B0->K*mumu)'].get_measurements(),
             []
         )
+
+    def test_find(self):
+        class TestClass(NamedInstanceClass):
+            pass
+
+        TestClass('test word 1')
+        TestClass('x test word 2')
+        TestClass('test 3')
+        self.assertEqual(TestClass.find('word'), ['test word 1', 'x test word 2'])
+        self.assertEqual(TestClass.find('^x'), ['x test word 2'])
+        self.assertEqual(TestClass.find('s.*3'), ['test 3'])
