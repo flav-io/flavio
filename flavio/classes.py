@@ -89,6 +89,17 @@ class Parameter(NamedInstanceClass):
         super().__init__(name)
         self.tex = ''
 
+    def __repr__(self):
+        return "Parameter('{}')".format(self.name)
+
+    def _repr_markdown_(self):
+        md = "### Parameter `{}`\n\n".format(self.name)
+        if self.tex:
+            md += "Parameter: {}\n\n".format(self.tex)
+        if self.description:
+            md += "Description: {}\n\n".format(self.description)
+        return md
+
 
 class Constraints(object):
     """Constraints are collections of probability distributions associated

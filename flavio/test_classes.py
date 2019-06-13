@@ -348,6 +348,17 @@ class TestClasses(unittest.TestCase):
                          "Observable('repr test', arguments=['blu'])")
         del Observable['repr test']
 
+    def test_repr_par(self):
+        ptest = Parameter('repr test')
+        self.assertEqual(repr(ptest),
+                         "Parameter('repr test')")
+        ptest._repr_markdown_()
+        ptest.description = "bla"
+        self.assertIn("bla", ptest._repr_markdown_())
+        ptest.tex = "blo"
+        self.assertIn("blo", ptest._repr_markdown_())
+        del Parameter['repr test']
+
     def test_argument_format(self):
         with self.assertRaises(KeyError):
             Observable.argument_format('dont_exist')
