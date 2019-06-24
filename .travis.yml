@@ -17,7 +17,8 @@ before_install:
   - pip install cython  # for pypmc
 
 install:
-  - pip install .[sampling,plotting,testing] --upgrade
+  - pip install numpy --upgrade
+  - pip install .[sampling,plotting,testing]
   - pip install coveralls
 
 script: nosetests --with-coverage --cover-package=flavio
