@@ -2,11 +2,8 @@
 
 import numpy as np
 import flavio
+import pypmc
 
-try:
-    import pypmc
-except:
-    pass
 
 class pypmcScan(object):
     """Interface to adaptive Markov Chain Monte Carlo using the `pypmc` package.
