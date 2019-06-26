@@ -5879,6 +5879,13 @@ LHCb W->lnu 2016:
   values:
     Rmue(W->lnu): 0.980 ± 0.002 ± 0.018
 
+D0 W->taunu 1999:
+  experiment: D0
+  inspire: Abbott:1999pk
+  description: The square of the ratio quoted in the abstact (cf. eq. (1))
+  values:
+    Rtaue(W->lnu): 0.960 ± 0.062
+
 m_W Tevatron:
   experiment: CDF, D0
   inspire: Aaltonen:2013iut
