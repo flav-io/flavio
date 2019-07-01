@@ -41,7 +41,7 @@ def dmW_SMEFT(par, C):
     ch2 = 1 - sh2
     ch = sqrt(ch2)
     Dh = ch * sh / ((ch**2 - sh**2) * 2 * sqrt(2) * par['GF'])
-    return Dh * (4 * C['phiWB'] + ch / sh * C['phiD'] + 2 * sh / ch * (C['phil3_11'] + C['phil3_22'] - C['ll_1221'] / 2)).real
+    return 1 / 2 * Dh * (4 * C['phiWB'] + ch / sh * C['phiD'] + 2 * sh / ch * (C['phil3_11'] + C['phil3_22'] - C['ll_1221'] / 2)).real
 
 def mW(wc_obj, par):
     r"""$W$ pole mass."""
