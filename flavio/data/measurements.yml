@@ -10125,6 +10125,26 @@ LHC Run 1 Higgs combination:
      [ 0.002, -0.02, 0.002, 0., -0.001, 0.011, 0.001, 0., 0., 0.001, 0.001, 0.002, 0., 0.002, 0.001, 0.001, 0., -0.472, 1.000, 0.005],
      [ 0.001, -0.016, 0.005, 0.008, 0.002, 0.008, -0.015, -0.015, 0., 0.005, 0.003, 0., 0., 0.001, 0., 0., 0.001, 0.012, 0.005, 1.000 ]]
 
+LHC Run 1 h->mumu:
+  experiment: ATLAS, CMS
+  inspire: Khachatryan:2016vau
+  description: Combined signal strength, intepreted as pure gluon fusion (by which it is dominated)
+  values:
+    mu_gg(h->mumu): 0.1 ± 2.5
+
+ATLAS Run 1 h->Zgamma:
+  experiment: ATLAS
+  inspire: Aad:2015gba
+  description: Combined signal strength, intepreted as pure gluon fusion (by which it is dominated)
+  values:
+    mu_gg(h->Zgamma): 2.7 + 4.5 - 5.3
+
+CMS Run 1 h->Zgamma:
+  experiment: CMS
+  inspire: Chatrchyan:2013vaa
+  description: Combined signal strength, intepreted as pure gluon fusion (by which it is dominated)
+  values:
+    mu_gg(h->Zgamma): -0.2 ± 4.9
 
 ATLAS Run 2 Higgs 80/fb:
   experiment: ATLAS
