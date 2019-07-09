@@ -152,10 +152,6 @@ Bs->gamma KM deltatv: 0.04
 Bs->gamma KM betata: 0.33
 Bs->gamma KM deltata: 0.30
 
-# Temp Bs->phi form factors (1503.05534v3) needed for Bs->mumugamma
-Bs->phi LCSR T10: 0.309 ± 0.027
-Gamma_phi: 0.004266
-
 # B->Xqgamma uncertainty parameters
 delta_BXsgamma: 0 ± 0.06557 # 5% + 3% + 3%
 delta_BXdgamma: 0 ± 0.06557 # 5% + 3% + 3%

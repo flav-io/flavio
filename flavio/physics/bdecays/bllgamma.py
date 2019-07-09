@@ -22,6 +22,7 @@ def _Co(z):
 
 ##################
 # hep-ph/0410146:
+#   - Uses the C7>0, C9<0, C10>0 convention
 #   - has a global minus sign typo in dG12dsMN
 #   - wrongly defines f_phi (up to a -3 factor)
 ##################
@@ -43,24 +44,24 @@ def getF1(s, par, B, ff, ff0, lep, wc):
     scale = config['renormalization scale']['bllgamma']
     mb = running.get_mb(par, scale, nf_out=5)
     mbh = mb/par['m_'+B]
-    gphi = -par['Bs->phi LCSR T10']
+    gphi = -par['Bs->phi BSZ a0_T1']
     fphi = -1./3*par['f_phi']
     #WILL MOVE TO par
-    a1 = -0.13
-    fftv = ff['tv']+ff0['tv']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']*par['Gamma_phi'])+16/3*a1/wc['7']*par['f_'+B]/mb
-    ffta = ff['ta']+ff0['ta']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']*par['Gamma_phi'])
+    a1 = -0.13 #-(C1+C2/3)
+    fftv = ff['tv']+ff0['tv']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']/par['tau_phi'])+16/3*a1/wc['7']*par['f_'+B]/mb
+    ffta = ff['ta']+ff0['ta']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']/par['tau_phi'])
     return (abs(wc['v'])**2 + abs(wc['a'])**2)*ff['v']**2 + 4*mbh**2/s**2*abs(wc['7']*fftv)**2 + 4*mbh/s*ff['v']*_Re(wc['7']*ffta*_Co(wc['v']))
 
 def getF2(s, par, B, ff, ff0, lep, wc):
     scale = config['renormalization scale']['bllgamma']
     mb = running.get_mb(par, scale, nf_out=5)
     mbh = mb/par['m_'+B]
-    gphi = -par['Bs->phi LCSR T10']
+    gphi = -par['Bs->phi BSZ a0_T1']
     fphi = -1./3*par['f_phi']
     #WILL MOVE TO par
     a1 = -0.13
-    fftv = ff['tv']+ff0['tv']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']*par['Gamma_phi'])+16/3*a1/wc['7']*par['f_'+B]/mb
-    ffta = ff['ta']+ff0['ta']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']*par['Gamma_phi'])
+    fftv = ff['tv']+ff0['tv']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']/par['tau_phi'])+16/3*a1/wc['7']*par['f_'+B]/mb
+    ffta = ff['ta']+ff0['ta']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']/par['tau_phi'])
     return (abs(wc['v'])**2 + abs(wc['a'])**2)*ff['a']**2 + 4*mbh**2/s**2*abs(wc['7']*ffta)**2 + 4*mbh/s*ff['a']*_Re(wc['7']*ffta*_Co(wc['v']))
 
     
@@ -81,12 +82,12 @@ def B120(s, par, B, ff, ff0, lep, wc):
     scale = config['renormalization scale']['bllgamma']
     mb = running.get_mb(par, scale, nf_out=5)
     mbh = mb/par['m_'+B]
-    gphi = -par['Bs->phi LCSR T10']
+    gphi = -par['Bs->phi BSZ a0_T1']
     fphi = -1./3*par['f_phi']
     #WILL MOVE TO par
     a1 = -0.13
-    fftv = ff['tv']+ff0['tv']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']*par['Gamma_phi'])+16/3*a1/wc['7']*par['f_'+B]/mb
-    ffta = ff['ta']+ff0['ta']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']*par['Gamma_phi'])
+    fftv = ff['tv']+ff0['tv']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']/par['tau_phi'])+16/3*a1/wc['7']*par['f_'+B]/mb
+    ffta = ff['ta']+ff0['ta']-2*fphi*gphi*par['m_'+B]**2*s/par['m_phi']/(par['m_'+B]**2*s-par['m_phi']**2+1j*par['m_phi']/par['tau_phi'])
     mlh = par['m_'+lep]/par['m_'+B]
     return -16*mlh**2*(1-s)*(ff['v']*_Re(wc['v']*_Co(wc['a'])) + 2*mbh/s*_Re(_Co(wc['a'])*fftv*wc['7']))
 
