@@ -131,6 +131,8 @@ def dGdsMN(s, par, B, ff, ff0, lep, wc):
 
 
 def bllg_dbrdq2(q2, wc_obj, par, B, lep):
+    if q2 >= 8.7 and q2 < 14 and lep != 'tau':
+        warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
     tauB = par['tau_'+B]
     ml = par['m_'+lep]
     mB = par['m_'+B]
