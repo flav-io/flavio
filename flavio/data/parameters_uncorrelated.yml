@@ -143,14 +143,14 @@ Bs->K BCL m0: 5.63 # m_B*(0+)
 Bs->K BCL m+: 5.3252 # m_B*(1-)
 
 # Parameters needed for B->gamma form factors (hep-ph/0208256)
-Bs->gamma KM betav: 0.28
-Bs->gamma KM deltav: 0.04
-Bs->gamma KM betaa: 0.26
-Bs->gamma KM deltaa: 0.30
-Bs->gamma KM betatv: 0.30
-Bs->gamma KM deltatv: 0.04
-Bs->gamma KM betata: 0.33
-Bs->gamma KM deltata: 0.30
+B->gamma KM betav: 0.28
+B->gamma KM deltav: 0.04
+B->gamma KM betaa: 0.26
+B->gamma KM deltaa: 0.30
+B->gamma KM betatv: 0.30
+B->gamma KM deltatv: 0.04
+B->gamma KM betata: 0.33
+B->gamma KM deltata: 0.30
 
 # B->Xqgamma uncertainty parameters
 delta_BXsgamma: 0 ± 0.06557 # 5% + 3% + 3%

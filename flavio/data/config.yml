@@ -89,7 +89,7 @@ implementation:
   B->pi form factor: B->pi BSZ3
 
   # B->gamma form factor
-  Bs->gamma form factor: Bs->gamma KM
+  B->gamma form factor: B->gamma KM
   
   # Lambdab form factors
   Lambdab->Lambda form factor: Lambdab->Lambda SSE3
