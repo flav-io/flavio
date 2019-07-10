@@ -3,8 +3,8 @@ from flavio.config import config
 
 
 def ff(q2, par, B):
-    r"""Central value of $B(s)\to \gamma$ form factors 
-    
+    r"""Central value of $B(s)\to \gamma$ form factors
+
     See hep-ph/0208256.pdf.
     """
     fB = par['f_'+B]

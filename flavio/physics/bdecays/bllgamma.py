@@ -83,7 +83,7 @@ def getF2(s, par, B, ff, ff0, lep, wc):
     fftv, ffta = getfft(s, par, B, ff, ff0, lep, wc)
     return (abs(wc['C9_'+label])**2 + abs(wc['C10_'+label])**2)*ff['a']**2 + 4*mbh**2/s**2*abs(wc['C7_'+bq]*ffta)**2 + 4*mbh/s*ff['a']*_Re(wc['C7_'+bq]*ffta*_Co(wc['C9_'+label]))
 
-    
+
 def B10(s, par, B, ff, ff0, lep, wc):
     F1 = getF1(s, par, B, ff, ff0, lep, wc)
     F2 = getF2(s, par, B, ff, ff0, lep, wc)
@@ -113,7 +113,7 @@ def dG1dsMN(s, par, B, ff, ff0, lep, wc):
     mlh = par['m_'+lep]/par['m_'+B]
     pref = prefactor(s, par, B, ff, lep, wc)*(1-s)**3*sqrt(1-4*mlh**2/s)
     return pref*(B10(s, par, B, ff, ff0, lep, wc) + (s - 4*mlh**2)/(3*s)*B12(s, par, B, ff, ff0, lep, wc))
-    
+
 def dG2dsMN(s, par, B, ff, ff0, lep, wc):
     mlh = par['m_'+lep]/par['m_'+B]
     bq = meson_quark[B]
@@ -188,5 +188,3 @@ for l in ['e', 'mu']:
         _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
         Prediction(_obs_name, bllg_dbrdq2_func(B, l))
-
-
