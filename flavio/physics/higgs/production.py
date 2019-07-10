@@ -7,7 +7,15 @@ along with SMEFTsim v2 in the alpha scheme.
 
 def ggF(C):
     r"""Higgs production from gluon fusion normalized to the SM"""
-    np = (+35.86 * C['phiG'])
+    np = (+35.86 * C['phiG']
+          +0.121 * (C['phiBox'] - C['phiD'] / 4.)
+          +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
+          +0.035 * C['uphi_33']
+          -0.034 * C['uphi_22']
+          -0.017 * C['dphi_33']
+          -0.043 * C['ephi_33']
+          -0.008 * C['ephi_22']
+          )
     return 1 + 1e6 * np.real
 
 def hw(C):
