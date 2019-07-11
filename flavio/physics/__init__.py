@@ -13,6 +13,7 @@ from . import betadecays
 from . import wdecays
 from . import zdecays
 from . import higgs
+from . import scattering
 from . import running
 from . import eft
 from . import units

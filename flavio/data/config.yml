@@ -54,6 +54,7 @@ renormalization scale:
     zdecays: 91.1876
     wdecays: 91.1876
     hdecays: 125
+    ee_ww: 91.1876
 
     # meson mixing
     Bs mixing: 4.2  # Bs-Bsbar mixing

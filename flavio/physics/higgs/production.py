@@ -20,11 +20,11 @@ def ggF(C):
 
 def hw(C):
     r"""Higgs production associated with a $W$ normalized to the SM"""
-    np = (+0.745 * C['phiW']
-          -0.241 * C['phiWB']
-          -0.135 * C['phiD']
-          +0.101 * C['phiBox']
-          +0.168 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
+    np = (+0.891 * C['phiW']
+          -0.187 * C['phiWB']
+          -0.115 * C['phiD']
+          +0.121 * C['phiBox']
+          +0.173 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
           )
     return 1 + 1e6 * np.real
 
@@ -52,11 +52,11 @@ def tth(C):
 
 def vv_h(C):
     r"""Higgs production from vector boson fusion normalized to the SM"""
-    np = (-0 * C['phiB']
-          -0.005 * C['phiW']
-          -0.021 * C['phiWB']
-          -0.011 * C['phiD']
-          +0.008 * C['phiBox']
-          +0.018 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
+    np = (-0.002 * C['phiB']
+          -0.088 * C['phiW']
+          -0.319 * C['phiWB']
+          -0.168 * C['phiD']
+          +0.121 * C['phiBox']
+          +0.277 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
           )
     return 1 + 1e6 * np.real
