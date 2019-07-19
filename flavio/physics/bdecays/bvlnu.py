@@ -181,6 +181,17 @@ def FL_binned(q2min, q2max, wc_obj, par, B, V, lep):
     denom = flavio.math.integrate.nintegrate(lambda q2: dBRdq2(q2, wc_obj, par, B, V, lep,  A=None), q2min, q2max)
     return num / denom
 
+def Itot_norm(fct_J, wc_obj, par, B, V, lep):
+    def fct(q2):
+        J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
+        return fct_J(J)
+    num = obs_q2int(fct, wc_obj, par, B, V, lep)
+    def fct_den(q2):
+        J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
+        return dGdq2(J)
+    den = obs_q2int(fct_den, wc_obj, par, B, V, lep)
+    return num / den
+
 def dBR_dq2_dcosthl_binned(q2, clmin, clmax, wc_obj, par, B, V, lep):
     if not kinem_allowed(q2, par, B, V, lep):
         return 0
@@ -339,6 +350,28 @@ def FL_tot_function(B, V, lep):
         return FL_binned(q2min, q2max, wc_obj, par, B, V, lep)
     return f
 
+def FLt_tot_function(B, V, lep):
+    def f(wc_obj, par):
+        def fct_J(J):
+            return -J['2c']
+        return Itot_norm(fct_J, wc_obj, par, B, V, lep)
+    return f
+
+def AFB_tot_function(B, V, lep):
+    def f(wc_obj, par):
+        def fct_J(J):
+            return 3 / 8 * (2 * J['6s'] + J['6c'])
+        return Itot_norm(fct_J, wc_obj, par, B, V, lep)
+    return f
+
+def I3_tot_function(B, V, lep):
+    def f(wc_obj, par):
+        def fct_J(J):
+            return J[3]
+        return Itot_norm(fct_J, wc_obj, par, B, V, lep)
+    return f
+
+
 def BR_binned_costhl_function(B, V, lep):
     if lep == 'l':
         return lambda wc_obj, par, clmin, clmax: (
@@ -440,6 +473,9 @@ _func = {'dBR/dq2': dBRdq2_function, 'BR': BR_tot_function, '<BR>': BR_binned_fu
          'FL': FL_function,
          '<FL>': FL_binned_function,
          'FLtot': FL_tot_function,
+         'FLttot': FLt_tot_function,
+         'AFBtot': AFB_tot_function,
+         'I3tot': I3_tot_function,
          }
 _desc = {'dBR/dq2': r'$q^2$-differential', 'BR': 'Total', '<BR>': '$q^2$-binned',
          'dBR_L/dq2': 'Differential longitudinal', 'BR_L': 'Total longitudinal', '<BR_L>': 'Binned longitudinal',
@@ -453,6 +489,9 @@ _desc = {'dBR/dq2': r'$q^2$-differential', 'BR': 'Total', '<BR>': '$q^2$-binned'
          'FL': r'Differential longitudinal polarization fraction',
          '<FL>': r'Binned longitudinal polarization fraction',
          'FLtot': r'Total longitudinal polarization fraction',
+         'FLttot': r'Total longitudinal polarization fraction',
+         'AFBtot': r'Total forward-backward asymmetry',
+         'I3tot': r'$q^2$-integrated angular coefficient $I_3$',
          }
 _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'\langle\text{BR}\rangle',
            'dBR_L/dq2': r'\frac{d\text{BR}_L}{dq^2}', 'BR_L': r'\text{BR}_L', '<BR_L>': r'\langle\text{BR}_L\rangle',
@@ -466,6 +505,9 @@ _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'
            'FL': r'F_L',
            '<FL>': r'\langle F_L\rangle',
            'FLtot': r'F_L',
+           'FLttot': r'\widetilde{F}_L',
+           'AFBtot': r'A_\text{FB}',
+           'I3tot': r'I_3',
             }
 _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max'],
          'dBR_L/dq2': ['q2'], 'BR_L': None, '<BR_L>': ['q2min', 'q2max'],
@@ -479,6 +521,9 @@ _args = {'dBR/dq2': ['q2'], 'BR': None, '<BR>': ['q2min', 'q2max'],
          'FL': ['q2'],
          '<FL>': ['q2min', 'q2max'],
          'FLtot': None,
+         'FLttot': None,
+         'AFBtot': None,
+         'I3tot': None,
          }
 _hadr = {
 'B0->D*': {'tex': r"B^0\to D^{\ast -}", 'B': 'B0', 'V': 'D*+', },
@@ -504,7 +549,7 @@ for l in ['e', 'mu', 'tau', 'l']:
                'dBR_T/dq2', 'BR_T', '<BR_T>',
                '<BR>/<cl>', '<BR>/<cV>', '<BR>/<phi>',
                'dBR/dcl', 'dBR/dcV', 'dBR/dphi',
-               '<FL>', 'FL', 'FLtot']:
+               '<FL>', 'FL', 'FLtot', 'FLttot', 'AFBtot', 'I3tot']:
         for M in _hadr.keys():
             _process_tex = _hadr[M]['tex']+_tex[l]+r"^+\nu_"+_tex[l]
             _obs_name = br + "("+M+l+"nu)"
