@@ -12,7 +12,13 @@ def ee_WW(C, E):
               -0.175 * C['phil3_22']
               +0.087 * C['ll_1221']
               -0.001 * C['phil1_11']
-              -0.001 * C['phie_11'])
+              -0.001 * C['phie_11']
+              # correction to M_W
+              +2.029 * C['phiWB']
+              +0.978 * C['phiD']
+              +0.621 * C['phil3_11']
+              +0.603 * C['phil3_22']
+              -0.321 * C['ll_1221'])
         return 1 + 1e6 * np
     if E == 172.1:
         np = (-0.001 * C['W']
@@ -22,7 +28,13 @@ def ee_WW(C, E):
               -0.172 * C['phil3_22']
               +0.086 * C['ll_1221']
               -0.005 * C['phil1_11']
-              -0.006 * C['phie_11'])
+              -0.006 * C['phie_11']
+              # correction to M_W
+              +0.271 * C['phiWB']
+              +0.124 * C['phiD']
+              +0.075 * C['phil3_11']
+              +0.073 * C['phil3_22']
+              -0.037 * C['ll_1221'])
         return 1 + 1e6 * np
     if E == 182.7:
         np = (-0.002 * C['W']
@@ -32,7 +44,13 @@ def ee_WW(C, E):
               -0.171 * C['phil3_22']
               +0.086 * C['ll_1221']
               -0.009 * C['phil1_11']
-              -0.009 * C['phie_11'])
+              -0.009 * C['phie_11']
+              # correction to M_W
+              +0.147 * C['phiWB']
+              +0.064 * C['phiD']
+              +0.045 * C['phil3_11']
+              +0.039 * C['phil3_22']
+              -0.02 * C['ll_1221'])
         return 1 + 1e6 * np
     if E == 188.6:
         np = (-0.002 * C['W']
@@ -42,7 +60,13 @@ def ee_WW(C, E):
               -0.171 * C['phil3_22']
               +0.086 * C['ll_1221']
               -0.012 * C['phil1_11']
-              -0.011 * C['phie_11'])
+              -0.011 * C['phie_11']
+              # correction to M_W
+              +0.068 * C['phiWB']
+              +0.051 * C['phiD']
+              +0.028 * C['phil3_11']
+              +0.031 * C['phil3_22']
+              -0.015 * C['ll_1221'])
         return 1 + 1e6 * np
     if E == 191.6:
         np = (-0.003 * C['W']
@@ -52,7 +76,13 @@ def ee_WW(C, E):
               -0.171 * C['phil3_22']
               +0.086 * C['ll_1221']
               -0.013 * C['phil1_11']
-              -0.012 * C['phie_11'])
+              -0.012 * C['phie_11']
+              # correction to M_W
+              +0.098 * C['phiWB']
+              +0.045 * C['phiD']
+              +0.03 * C['phil3_11']
+              +0.033 * C['phil3_22']
+              -0.012 * C['ll_1221'])
         return 1 + 1e6 * np
     if E == 195.5:
         np = (-0.003 * C['W']
@@ -62,7 +92,13 @@ def ee_WW(C, E):
               -0.171 * C['phil3_22']
               +0.086 * C['ll_1221']
               -0.014 * C['phil1_11']
-              -0.013 * C['phie_11'])
+              -0.013 * C['phie_11']
+              # correction to M_W
+              +0.089 * C['phiWB']
+              +0.044 * C['phiD']
+              +0.022 * C['phil3_11']
+              +0.021 * C['phil3_22']
+              -0.012 * C['ll_1221'])
         return 1 + 1e6 * np
     if E == 199.5:
         np = (-0.003 * C['W']
@@ -72,7 +108,13 @@ def ee_WW(C, E):
               -0.171 * C['phil3_22']
               +0.085 * C['ll_1221']
               -0.016 * C['phil1_11']
-              -0.013 * C['phie_11'])
+              -0.013 * C['phie_11']
+              # correction to M_W
+              +0.08 * C['phiWB']
+              +0.033 * C['phiD']
+              +0.02 * C['phil3_11']
+              +0.022 * C['phil3_22']
+              -0.009 * C['ll_1221'])
         return 1 + 1e6 * np
     if E == 201.6:
         np = (-0.004 * C['W']
@@ -82,7 +124,13 @@ def ee_WW(C, E):
               -0.171 * C['phil3_22']
               +0.086 * C['ll_1221']
               -0.016 * C['phil1_11']
-              -0.014 * C['phie_11'])
+              -0.014 * C['phie_11']
+              # correction to M_W
+              +0.069 * C['phiWB']
+              +0.033 * C['phiD']
+              +0.022 * C['phil3_11']
+              +0.016 * C['phil3_22']
+              -0.011 * C['ll_1221'])
         return 1 + 1e6 * np
     if E == 204.9:
         np = (-0.004 * C['W']
@@ -92,7 +140,13 @@ def ee_WW(C, E):
               -0.17 * C['phil3_22']
               +0.085 * C['ll_1221']
               -0.018 * C['phil1_11']
-              -0.014 * C['phie_11'])
+              -0.014 * C['phie_11']
+              # correction to M_W
+              -0.003 * C['phiWB']
+              +0.004 * C['phiD']
+              +0.001 * C['phil3_11']
+              +0.003 * C['phil3_22']
+              -0.001 * C['ll_1221'])
         return 1 + 1e6 * np
     if E == 206.6:
         np = (-0.004 * C['W']
@@ -102,7 +156,13 @@ def ee_WW(C, E):
               -0.171 * C['phil3_22']
               +0.086 * C['ll_1221']
               -0.018 * C['phil1_11']
-              -0.015 * C['phie_11'])
+              -0.015 * C['phie_11']
+              # correction to M_W
+              +0.01 * C['phiWB']
+              -0.004 * C['phiD']
+              +0.001 * C['phil3_11']
+              +0.002 * C['phil3_22']
+              -0.001 * C['ll_1221'])
         return 1 + 1e6 * np
     raise ValueError("The ee->WW cross section is not defined for {} GeV.".format(E))
 
