@@ -10234,6 +10234,15 @@ CMS Run 2 Higgs 36/fb:
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.04, 0.0, 0.03, 1.0, 0.0],
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.04, -0.42, 0.0, 1.0]]
 
+CMS h->cc 2019:
+  experiment: CMS
+  inspire: CMS:2019tbh
+  description: >
+    The $Vh$ combination for the signal strength is interpreted as pure $Zh$
+    since the correlation between the $Wh$ and $Zh$ channels is not specified.
+  values:
+    mu_Zh(h->cc): 36 + 20 - 19
+
 
 LEP ee->WW:
   experiment: LEP

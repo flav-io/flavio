@@ -69,6 +69,14 @@ def h_bb(C):
           -5.05 * C['dphi_33'])
     return 1 + 1e6 * np.real
 
+def h_cc(C):
+    r"""Higgs decay to two charm quarks normalized to the SM"""
+    np = (-0.03 * C['phiD']
+          +0.121 * C['phiBox']
+          +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
+          -16.49 * C['uphi_22'])
+    return 1 + 1e6 * np.real
+
 def h_tautau(C):
     r"""Higgs decay to two taus normalized to the SM"""
     np = (-0.03 * C['phiD']

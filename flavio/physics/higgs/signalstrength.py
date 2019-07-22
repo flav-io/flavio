@@ -40,6 +40,11 @@ decay_modes = {
         'str': 'bb',
         'tex_class': r'h\to ff',
     },
+    'h_cc': {
+        'tex': r'c\bar c',
+        'str': 'cc',
+        'tex_class': r'h\to ff',
+    },
     'h_tautau': {
         'tex': r'\tau^+\tau^-',
         'str': 'tautau',
