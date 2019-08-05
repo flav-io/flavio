@@ -10,11 +10,10 @@ def h_gg(C):
     np = (+39.29 * C['phiG']
           +0.121 * (C['phiBox'] - C['phiD'] / 4.)
           +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
-          +0.035 * C['uphi_33']
-          -0.034 * C['uphi_22']
-          -0.017 * C['dphi_33']
-          -0.043 * C['ephi_33']
-          -0.008 * C['ephi_22']
+          -0.129 * C['uphi_33']
+          +0.123 * C['uphi_22']
+          +0.239 * C['dphi_33']
+          +0.025 * C['dphi_22']
           )
     return 1 + 1e6 * np.real
 
@@ -25,20 +24,23 @@ def h_gaga(C):
           +25.62 * C['phiWB']
           +0.121 * (C['phiBox'] - C['phiD'] / 4.)
           +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
-          -0.129 * C['uphi_33']
-          +0.123 * C['uphi_22']
-          +0.239 * C['dphi_33']
-          +0.025 * C['dphi_22']
+          +0.035 * C['uphi_33']
+          -0.034 * C['uphi_22']
+          -0.017 * C['dphi_33']
+          -0.043 * C['ephi_33']
+          -0.008 * C['ephi_22']
           )
     return 1 + 1e6 * np.real
 
 def h_ww(C):
     r"""Higgs decay to two $W$ bosons normalized to the SM"""
-    np = (-0.028 * C['phiW']
-          -0.119 * C['phiWB']
-          -0.063 * C['phiD']
-          +0.037 * C['phiBox']
-          +0.088 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
+    np = (-0.092 * C['phiW']
+          -0.386 * C['phiWB']
+          -0.205 * C['phiD']
+          +0.121 * C['phiBox']
+          +0.144 * C['ll_1221']
+          -0.167 * C['phil3_11']
+          -0.167 * C['phil3_22']
           )
     return 1 + 1e6 * np.real
 
