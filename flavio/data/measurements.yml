@@ -10275,3 +10275,210 @@ LEP ee->WW:
      [0.076, 0.108, 0.048, 0.077, 0.078, 1.000, 0.077, 0.097],
      [0.104, 0.148, 0.066, 0.106, 0.106, 0.077, 1.000, 0.132],
      [0.130, 0.186, 0.083, 0.133, 0.134, 0.097, 0.132, 1.000]]
+
+LEP ee->WW angular:
+  experiment: LEP
+  inspire: Schael:2013ita
+  description: >
+    Combined LEP result from table XX. Correlations are neglected.
+  values:
+    - name: <dR/dtheta>(ee->WW)
+      E: 182.66
+      thetamin: -1.0
+      thetamax: -0.8
+      value: 0.502 ± 0.114
+    - name: <dR/dtheta>(ee->WW)
+      E: 182.66
+      thetamin: -0.8
+      thetamax: -0.6
+      value: 0.705 ± 0.129
+    - name: <dR/dtheta>(ee->WW)
+      E: 182.66
+      thetamin: -0.6
+      thetamax: -0.4
+      value: 0.868 ± 0.143
+    - name: <dR/dtheta>(ee->WW)
+      E: 182.66
+      thetamin: -0.4
+      thetamax: -0.2
+      value: 1.281 ± 0.203
+    - name: <dR/dtheta>(ee->WW)
+      E: 182.66
+      thetamin: -0.2
+      thetamax: 0.0
+      value: 1.529 ± 0.195
+    - name: <dR/dtheta>(ee->WW)
+      E: 182.66
+      thetamin: 0.0
+      thetamax: 0.2
+      value: 2.15 ± 0.244
+    - name: <dR/dtheta>(ee->WW)
+      E: 182.66
+      thetamin: 0.2
+      thetamax: 0.4
+      value: 2.583 ± 0.27
+    - name: <dR/dtheta>(ee->WW)
+      E: 182.66
+      thetamin: 0.4
+      thetamax: 0.6
+      value: 2.602 ± 0.254
+    - name: <dR/dtheta>(ee->WW)
+      E: 182.66
+      thetamin: 0.6
+      thetamax: 0.8
+      value: 4.245 ± 0.367
+    - name: <dR/dtheta>(ee->WW)
+      E: 182.66
+      thetamin: 0.8
+      thetamax: 1.0
+      value: 5.372 ± 0.419
+    - name: <dR/dtheta>(ee->WW)
+      E: 189.09
+      thetamin: -1.0
+      thetamax: -0.8
+      value: 0.718 ± 0.074
+    - name: <dR/dtheta>(ee->WW)
+      E: 189.09
+      thetamin: -0.8
+      thetamax: -0.6
+      value: 0.856 ± 0.079
+    - name: <dR/dtheta>(ee->WW)
+      E: 189.09
+      thetamin: -0.6
+      thetamax: -0.4
+      value: 1.009 ± 0.086
+    - name: <dR/dtheta>(ee->WW)
+      E: 189.09
+      thetamin: -0.4
+      thetamax: -0.2
+      value: 1.101 ± 0.088
+    - name: <dR/dtheta>(ee->WW)
+      E: 189.09
+      thetamin: -0.2
+      thetamax: 0.0
+      value: 1.277 ± 0.094
+    - name: <dR/dtheta>(ee->WW)
+      E: 189.09
+      thetamin: 0.0
+      thetamax: 0.2
+      value: 1.801 ± 0.123
+    - name: <dR/dtheta>(ee->WW)
+      E: 189.09
+      thetamin: 0.2
+      thetamax: 0.4
+      value: 2.215 ± 0.14
+    - name: <dR/dtheta>(ee->WW)
+      E: 189.09
+      thetamin: 0.4
+      thetamax: 0.6
+      value: 2.823 ± 0.151
+    - name: <dR/dtheta>(ee->WW)
+      E: 189.09
+      thetamin: 0.6
+      thetamax: 0.8
+      value: 4.001 ± 0.179
+    - name: <dR/dtheta>(ee->WW)
+      E: 189.09
+      thetamin: 0.8
+      thetamax: 1.0
+      value: 5.762 ± 0.223
+    - name: <dR/dtheta>(ee->WW)
+      E: 198.38
+      thetamin: -1.0
+      thetamax: -0.8
+      value: 0.679 ± 0.079
+    - name: <dR/dtheta>(ee->WW)
+      E: 198.38
+      thetamin: -0.8
+      thetamax: -0.6
+      value: 0.635 ± 0.065
+    - name: <dR/dtheta>(ee->WW)
+      E: 198.38
+      thetamin: -0.6
+      thetamax: -0.4
+      value: 0.991 ± 0.084
+    - name: <dR/dtheta>(ee->WW)
+      E: 198.38
+      thetamin: -0.4
+      thetamax: -0.2
+      value: 1.087 ± 0.088
+    - name: <dR/dtheta>(ee->WW)
+      E: 198.38
+      thetamin: -0.2
+      thetamax: 0.0
+      value: 1.275 ± 0.096
+    - name: <dR/dtheta>(ee->WW)
+      E: 198.38
+      thetamin: 0.0
+      thetamax: 0.2
+      value: 1.71 ± 0.116
+    - name: <dR/dtheta>(ee->WW)
+      E: 198.38
+      thetamin: 0.2
+      thetamax: 0.4
+      value: 2.072 ± 0.126
+    - name: <dR/dtheta>(ee->WW)
+      E: 198.38
+      thetamin: 0.4
+      thetamax: 0.6
+      value: 2.866 ± 0.158
+    - name: <dR/dtheta>(ee->WW)
+      E: 198.38
+      thetamin: 0.6
+      thetamax: 0.8
+      value: 4.1 ± 0.185
+    - name: <dR/dtheta>(ee->WW)
+      E: 198.38
+      thetamin: 0.8
+      thetamax: 1.0
+      value: 6.535 ± 0.236
+    - name: <dR/dtheta>(ee->WW)
+      E: 205.92
+      thetamin: -1.0
+      thetamax: -0.8
+      value: 0.495 ± 0.058
+    - name: <dR/dtheta>(ee->WW)
+      E: 205.92
+      thetamin: -0.8
+      thetamax: -0.6
+      value: 0.602 ± 0.066
+    - name: <dR/dtheta>(ee->WW)
+      E: 205.92
+      thetamin: -0.6
+      thetamax: -0.4
+      value: 0.653 ± 0.069
+    - name: <dR/dtheta>(ee->WW)
+      E: 205.92
+      thetamin: -0.4
+      thetamax: -0.2
+      value: 1.057 ± 0.094
+    - name: <dR/dtheta>(ee->WW)
+      E: 205.92
+      thetamin: -0.2
+      thetamax: 0.0
+      value: 1.24 ± 0.093
+    - name: <dR/dtheta>(ee->WW)
+      E: 205.92
+      thetamin: 0.0
+      thetamax: 0.2
+      value: 1.707 ± 0.115
+    - name: <dR/dtheta>(ee->WW)
+      E: 205.92
+      thetamin: 0.2
+      thetamax: 0.4
+      value: 2.294 ± 0.14
+    - name: <dR/dtheta>(ee->WW)
+      E: 205.92
+      thetamin: 0.4
+      thetamax: 0.6
+      value: 2.797 ± 0.143
+    - name: <dR/dtheta>(ee->WW)
+      E: 205.92
+      thetamin: 0.6
+      thetamax: 0.8
+      value: 4.481 ± 0.187
+    - name: <dR/dtheta>(ee->WW)
+      E: 205.92
+      thetamin: 0.8
+      thetamax: 1.0
+      value: 7.584 ± 0.26
