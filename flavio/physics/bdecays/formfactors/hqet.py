@@ -54,7 +54,7 @@ def L(par, w):
 def ell_i(i, par, z, order_z):
     """Sub-sub-leading power correction $\ell_i(w(z))$."""
     w_minus_1 = common.w_minus_1_pow_n(z, n=1, order_z=order_z)
-    return par['B->D(*) CLN l_{}(1)'.format(i)] + w_minus_1 * par['B->D(*) CLN lp_{}(1)'.format(i)]
+    return par['CLN l_{}(1)'.format(i)] + w_minus_1 * par['CLN lp_{}(1)'.format(i)]
 
 
 def ell(par, z, order_z):

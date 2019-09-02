@@ -380,15 +380,16 @@ eta(1): 0.336 ± 0.031
 etap(1): 0.416 ± 0.141
 CLN rho2_xi: 1.454 ± 0.064
 CLN c_xi: 1.337 ± 0.095
-B->D(*) CLN l_1(1): 0
-B->D(*) CLN l_2(1): 0
-B->D(*) CLN l_3(1): 0
-B->D(*) CLN l_4(1): 0
-B->D(*) CLN l_5(1): 0
-B->D(*) CLN l_6(1): 0
-B->D(*) CLN lp_1(1): 0
-B->D(*) CLN lp_2(1): 0
-B->D(*) CLN lp_3(1): 0
-B->D(*) CLN lp_4(1): 0
-B->D(*) CLN lp_5(1): 0
-B->D(*) CLN lp_6(1): 0
+CLN xi3: 0
+CLN l_1(1): 0
+CLN l_2(1): 0
+CLN l_3(1): 0
+CLN l_4(1): 0
+CLN l_5(1): 0
+CLN l_6(1): 0
+CLN lp_1(1): 0
+CLN lp_2(1): 0
+CLN lp_3(1): 0
+CLN lp_4(1): 0
+CLN lp_5(1): 0
+CLN lp_6(1): 0

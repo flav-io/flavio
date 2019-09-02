@@ -70,7 +70,7 @@ def ff(process, q2, par, scale):
     ell = hqet.ell(par, z, order_z=1)
     rho2 = par['CLN rho2_xi']
     c = par['CLN c_xi']
-    xi3 = 0
+    xi3 = par['CLN xi3']
     xi = hqet.xi(z, rho2, c, xi3, order_z=2)
     h = {}
     h['V'] = xi * (1 + ash * CV1

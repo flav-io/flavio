@@ -1154,44 +1154,47 @@ etap(1):
   description: Derivative of subleading Isgur-Wise function $\eta$ at $w=1$
 CLN rho2_xi:
   tex: $\rho^2_\xi$
-  description: Slope parameter of leading Isgur-Wise function $\xi(w)=1-\rho^2_\xi(w-1)+c_\xi(w-1)^2$
+  description: Slope parameter of leading Isgur-Wise function $\xi(w)=1-\rho^2_\xi(w-1)+\ldots$
 CLN c_xi:
   tex: $c_\xi$
-  description: Parameter of leading Isgur-Wise function $\xi(w)=1-\rho^2_\xi(w-1)+c_\xi(w-1)^2$
-B->D(*) CLN l_1(1):
+  description: Parameter of leading Isgur-Wise function $\xi(w)=1-\rho^2_\xi(w-1)+c_\xi(w-1)^2+\ldots$
+CLN xi3:
+  tex: $\xi^{(3)}$
+  description: Parameter of leading Isgur-Wise function $\xi(w)=1-\rho^2_\xi(w-1)+c_\xi(w-1)^2+\xi^{(3)}(w-1)^3/6$
+CLN l_1(1):
   tex: $\ell_1(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
-B->D(*) CLN l_2(1):
+CLN l_2(1):
   tex: $\ell_2(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
-B->D(*) CLN l_3(1):
+CLN l_3(1):
   tex: $\ell_3(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
-B->D(*) CLN l_4(1):
+CLN l_4(1):
   tex: $\ell_4(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
-B->D(*) CLN l_5(1):
+CLN l_5(1):
   tex: $\ell_5(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
-B->D(*) CLN l_6(1):
+CLN l_6(1):
   tex: $\ell_6(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
-B->D(*) CLN lp_1(1):
+CLN lp_1(1):
   tex: $\ell_1'(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
-B->D(*) CLN lp_2(1):
+CLN lp_2(1):
   tex: $\ell_2'(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
-B->D(*) CLN lp_3(1):
+CLN lp_3(1):
   tex: $\ell_3'(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
-B->D(*) CLN lp_4(1):
+CLN lp_4(1):
   tex: $\ell_4'(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
-B->D(*) CLN lp_5(1):
+CLN lp_5(1):
   tex: $\ell_5'(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
-B->D(*) CLN lp_6(1):
+CLN lp_6(1):
   tex: $\ell_6'(1)$
   description: $O(\epsilon_c^2)$ power correction to $B\to D^{(*)}$ HQET form factors
 
