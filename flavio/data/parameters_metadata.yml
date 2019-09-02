@@ -1143,15 +1143,24 @@ chi_2(1):
 chi_2p(1):
   tex: $\chi_2\'(1)$
   description: Derivative of subleading Isgur-Wise function $\chi_2$ at $w=1$
+chi_2pp(1):
+  tex: $\chi_2\'\'(1)$
+  description: 2nd derivative of subleading Isgur-Wise function $\chi_2$ at $w=1$
 chi_3p(1):
   tex: $\chi_3\'(1)$
   description: Derivative of subleading Isgur-Wise function $\chi_3$ at $w=1$
+chi_3pp(1):
+  tex: $\chi_3\'\'(1)$
+  description: 3rd derivative of subleading Isgur-Wise function $\chi_3$ at $w=1$
 eta(1):
   tex: $\eta(1)$
   description: Subleading Isgur-Wise function $\eta$ at $w=1$
 etap(1):
   tex: $\eta\'(1)$
   description: Derivative of subleading Isgur-Wise function $\eta$ at $w=1$
+etapp(1):
+  tex: $\eta\'\'(1)$
+  description: 2nd derivative of subleading Isgur-Wise function $\eta$ at $w=1$
 CLN rho2_xi:
   tex: $\rho^2_\xi$
   description: Slope parameter of leading Isgur-Wise function $\xi(w)=1-\rho^2_\xi(w-1)+\ldots$
