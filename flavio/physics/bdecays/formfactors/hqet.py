@@ -4,6 +4,7 @@ from math import sqrt, log, pi
 from functools import lru_cache
 from flavio.math.functions import li2
 from flavio.physics.running import running
+from flavio.physics.bdecays.formfactors import common
 
 
 def get_hqet_parameters(par, scale):
@@ -20,6 +21,21 @@ def get_hqet_parameters(par, scale):
     p['epsb'] = p['Lambdabar'] / (2 * p['mb'])
     p['zc'] = p['mc'] / p['mb']
     return p
+
+def xi(z, rho2, c, xi3, order_z):
+    r"""Leading-order Isgur-Wise function:
+    
+    $$\xi(z)=1-\rho^2 (w-1) + c (w-1)^2 + \xi^{(3)} (w-1)^3/6
+    
+    where w=w(z) is expanded in $z$ up to an including terms of order
+    `z**order_z`.
+    """
+    xi = (1
+          - rho2    * common.w_minus_1_pow_n(z, n=1, order_z=order_z)
+          + c       * common.w_minus_1_pow_n(z, n=2, order_z=order_z)
+          + xi3 / 6 * common.w_minus_1_pow_n(z, n=3, order_z=order_z))
+    return xi
+
 
 def L(par, w):
     chi2 = par['chi_2(1)'] + par['chi_2p(1)'] * (w - 1)

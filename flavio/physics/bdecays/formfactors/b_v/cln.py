@@ -69,8 +69,9 @@ def ff(process, q2, par, scale):
     # leading, universal Isgur-Wise function
     rho2 = par['CLN rho2_xi']
     c = par['CLN c_xi']
+    xi3 = 0
     z = common.z(mB, mV, q2, t0='tm')
-    xi = 1 - 8 * rho2 * z + (64 * c - 16 * rho2) * z**2
+    xi = hqet.xi(z, rho2, c, xi3, order_z=2)
     h = {}
     h['V'] = xi * (1 + ash * CV1
                    + epsc * (L[2] - L[5])
