@@ -43,12 +43,13 @@ def w_minus_1_pow_n(z, n, order_z):
     p0 = 8**n * z**n
     if order_z == 0:
         return p0
-    p1 = 2**(1 + 3 * n) * n * z**(1 + n)
+    p1 = 2**(1 + 3 * n) * n * z**n
     if order_z == 1:
         return p0 + p1 * z
-    p2 = 8**n * n * z**(1 + n) * (2 + (-1 + 2 * n) * z)
+    p2 = 8**n * n * (1 + 2 * n) * z**n
     if order_z == 2:
         return p0 + p1 * z + p2 * z**2
+    p3 = (2**(1 + 3 * n) * n * (1 + n) * (1 + 2 * n) * z**n)/3
     if order_z == 3:
         return p0 + p1 * z + p2 * z**2 + p3 * z**3
     raise ValueError("(w-1)^n monomial only implemented until n=3.")
