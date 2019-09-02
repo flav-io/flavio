@@ -41,18 +41,20 @@ def ff(process, q2, par, scale):
     CT2 = hqet.CT2(w, zc)
     CT3 = hqet.CT3(w, zc)
     L = hqet.L(par, w)
-    # leading, universal Isgur-Wise function
+    z = common.z(mB, mP, q2, t0='tm')
+    ell = hqet.ell(par, z, order_z=1)
     rho2 = par['CLN rho2_xi']
     c = par['CLN c_xi']
     xi3 = 0
-    z = common.z(mB, mP, q2, t0='tm')
     xi = hqet.xi(z, rho2, c, xi3, order_z=2)
     h = {}
     h['h+'] = xi * (1 + ash * (CV1 + (w + 1) / 2 * (CV2 + CV3))
                     + (epsc + epsb) * L[1]
-                    + epsc**2 * par['B->D CLN deltac_h+'])
+                    + epsc**2 * ell[1])
     h['h-'] = xi * (ash * (w + 1) / 2 * (CV2 - CV3)
-                    + (epsc - epsb) * L[4])
+                    + (epsc - epsb) * L[4]
+                    + epsc**2 * ell[4])
     h['hT'] = xi * (1 + ash * (CT1 - CT2 + CT3)
-                    + (epsc + epsb) * (L[1] - L[4]))
+                    + (epsc + epsb) * (L[1] - L[4])
+                    + epsc**2 * (ell[1] - ell[4]))
     return h_to_f(mB, mP, h, q2)
