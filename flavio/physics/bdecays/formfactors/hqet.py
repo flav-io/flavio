@@ -37,11 +37,14 @@ def xi(z, rho2, c, xi3, order_z):
     return xi
 
 
-def L(par, w):
-    chi2 = par['chi_2(1)'] + par['chi_2p(1)'] * (w - 1)
-    chi3 = par['chi_3p(1)'] * (w - 1)
-    eta = par['eta(1)'] + par['etap(1)'] * (w - 1)
+def Lz(par, w, z, order_z):
+    w_minus_1    = common.w_minus_1_pow_n(z, n=1, order_z=order_z)
+    w_minus_1_sq = common.w_minus_1_pow_n(z, n=2, order_z=order_z)
+    chi2 = par['chi_2(1)'] + par['chi_2p(1)'] * w_minus_1 + par['chi_2pp(1)'] / 2 * w_minus_1_sq
+    chi3 = par['chi_3p(1)'] * w_minus_1 + par['chi_3pp(1)'] / 2 * w_minus_1_sq
+    eta = par['eta(1)'] + par['etap(1)'] * w_minus_1 + par['etapp(1)'] / 2 * w_minus_1_sq
     d = {}
+    # w is not expanded in the kinematical factors
     d[1] = -4 * (w - 1) * chi2 + 12 * chi3
     d[2] = -4 * chi3
     d[3] = 4 * chi2

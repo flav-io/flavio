@@ -40,13 +40,13 @@ def ff(process, q2, par, scale):
     CT1 = hqet.CT1(w, zc)
     CT2 = hqet.CT2(w, zc)
     CT3 = hqet.CT3(w, zc)
-    L = hqet.L(par, w)
     z = common.z(mB, mP, q2, t0='tm')
-    ell = hqet.ell(par, z, order_z=1)
     rho2 = par['CLN rho2_xi']
     c = par['CLN c_xi']
     xi3 = par['CLN xi3']
-    xi = hqet.xi(z, rho2, c, xi3, order_z=2)
+    xi = hqet.xi(z, rho2, c, xi3, order_z=3)
+    L = hqet.Lz(par, w, z, order_z=2)
+    ell = hqet.ell(par, z, order_z=1)
     h = {}
     h['h+'] = xi * (1 + ash * (CV1 + (w + 1) / 2 * (CV2 + CV3))
                     + (epsc + epsb) * L[1]
