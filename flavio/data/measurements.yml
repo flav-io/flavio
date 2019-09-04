@@ -6711,6 +6711,20 @@ inofficial combination Bs->mumu 2019:
     - [1.0, -0.23148074357392087]
     - [-0.23148074357392087, 1.0]
 
+# This is a Gaussian distribution fitted to the numerical combination of
+# 'CMS Bs->mumu 2019', 'LHCb Bs->mumu 2017', and 'ATLAS Bs->mumu 2018'
+inofficial combination Bs->mumu 2019 CMS19:
+  observables:
+    - BR(Bs->mumu)
+    - BR(B0->mumu)
+  values:
+    distribution: multivariate_normal
+    central_value: [2.7281314619096296e-09, 5.970949596109174e-11]
+    standard_deviation: [3.7726525703143465e-10, 7.262924990704714e-11]
+    correlation:
+    - [1.0, -0.19367302581501317]
+    - [-0.19367302581501317, 1.0]
+
 Bc lifetime:
   experiment: PDG
   inspire: Tanabashi:2018oca
