@@ -6705,11 +6705,11 @@ inofficial combination Bs->mumu 2019:
     - BR(B0->mumu)
   values:
     distribution: multivariate_normal
-    central_value: [2.710696005422246e-09, 1.0105857359607429e-10]
-    standard_deviation: [4.011720784928748e-10, 8.07149814685814e-11]
+    central_value: [2.7261595019990026e-09, 1.026340656936204e-10]
+    standard_deviation: [4.1097488280098157e-10, 8.178600964361066e-11]
     correlation:
-    - [1.0, -0.23613646173351874]
-    - [-0.23613646173351874, 1.0]
+    - [1.0, -0.23148074357392087]
+    - [-0.23148074357392087, 1.0]
 
 Bc lifetime:
   experiment: PDG
