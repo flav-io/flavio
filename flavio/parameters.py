@@ -152,6 +152,10 @@ def _read_pdg_masswidth(filename):
         if  line.strip()[0] == '*':
             continue
         mass = ((line[33:51]), (line[52:60]), (line[61:69]))
+        if mass[0].replace(' ', '') == '':
+            # if mass is empty, go to next line
+            # (necessasry for 2019 neutrino entries)
+            continue
         mass = [float(m) for m in mass]
         width = ((line[70:88]), (line[89:97]), (line[98:106]))
         if  width[0].strip() == '':
