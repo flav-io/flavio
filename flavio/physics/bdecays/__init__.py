@@ -15,6 +15,7 @@ from . import bvnunu
 from . import bpnunu
 from . import bvgamma
 from . import bxgamma
+from . import bllgamma
 from . import lambdablambdall
 from . import lambdablambdall_subleading
 from . import bxll

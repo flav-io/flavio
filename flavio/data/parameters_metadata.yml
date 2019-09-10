@@ -674,6 +674,43 @@ Gamma12_B0_a:
   tex: $a$
   description: Coefficient in the approximate equality $\Delta \Gamma_d/M_{12}^d=10^{-4}[c+a\frac{\lambda_u}{\lambda_t}]$
 
+# Parameters for B->gamma form factors
+B->gamma KM betav:
+  tex: $\beta_v$
+  description: beta parameter for Fv form factor in KM parametrization
+B->gamma KM deltav:
+  tex: $\Delta_v$
+  description: Delta parameter for Fv form factor in KM parametrization
+B->gamma KM betaa:
+  tex: $\beta_a$
+  description: beta parameter for Fa form factor in KM parametrization
+B->gamma KM deltaa:
+  tex: $\Delta_a$
+  description: Delta parameter for Fa form factor in KM parametrization
+B->gamma KM betatv:
+  tex: $\beta_{tv}$
+  description: beta parameter for Ftv form factor in KM parametrization
+B->gamma KM deltatv:
+  tex: $\Delta_{tv}$
+  description: Delta parameter for Ftv form factor in KM parametrization
+B->gamma KM betata:
+  tex: $\beta_{ta}$
+  description: beta parameter for Fta form factor in KM parametrization
+B->gamma KM deltata:
+  tex: $\Delta_{ta}$
+  description: Delta parameter for Fta form factor in KM parametrization
+
+
+# Parameters for the Bs->phi form factors (1503.05534v3)
+Bs->phi LCSR T10:
+  tex: $T_1(0)$
+  description: Bs->phi T_1 parameter at q2=0 
+Gamma_phi:
+  tex: $\Gamma_\phi$
+  description: phi decay width 
+
+
+
 # experimental decay width differences
 DeltaGamma/Gamma_B0:
   tex: $\Delta \Gamma_d/\Gamma_d$
