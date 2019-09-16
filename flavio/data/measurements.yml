@@ -6005,8 +6005,12 @@ PDG 2018 Kll:
     BR(KL->mumu): (6.84 ± 0.11) e-9
     BR(KL->ee): (0.9 + 0.6 - 0.4) e-11
     BR(KL->emu,mue): < 4.7e-12 @ 90% CL
-    BR(KS->mumu): < 8e-10 @ 90% CL
     BR(KS->ee): < 9e-9 @ 90% CL
+
+LHCb KS->mumu 2019:
+  experiment: LHCb
+  values:
+    BR(KS->mumu): 0.94 +0.72 -0.64 e-10
 
 ATLAS Bs->mumu 2018:
   experiment: ATLAS
