@@ -19,7 +19,7 @@ def h_to_f(mB, mP, h, q2):
     return ff
 
 
-def ff(process, q2, par, scale):
+def ff(process, q2, par, scale, order_z=3, order_z_slp=2, order_z_sslp=1):
     r"""Central value of $B\to P$ form factors in the lattice convention
     CLN parametrization.
 
@@ -44,9 +44,9 @@ def ff(process, q2, par, scale):
     rho2 = par['CLN rho2_xi']
     c = par['CLN c_xi']
     xi3 = par['CLN xi3']
-    xi = hqet.xi(z, rho2, c, xi3, order_z=3)
-    L = hqet.Lz(par, w, z, order_z=2)
-    ell = hqet.ell(par, z, order_z=1)
+    xi = hqet.xi(z, rho2, c, xi3, order_z=order_z)
+    L = hqet.Lz(par, w, z, order_z=order_z_slp)
+    ell = hqet.ell(par, z, order_z=order_z_sslp)
     h = {}
     h['h+'] = xi * (1 + ash * (CV1 + (w + 1) / 2 * (CV2 + CV3))
                     + (epsc + epsb) * L[1]
