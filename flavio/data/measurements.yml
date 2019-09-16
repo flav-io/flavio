@@ -10146,6 +10146,27 @@ CMS Run 1 h->Zgamma:
   values:
     mu_gg(h->Zgamma): -0.2 ± 4.9
 
+ATLAS Run 2 h->mumu 36/fb:
+  experiment: ATLAS
+  inspire: Aaboud:2017ojs
+  description: Combined signal strength, intepreted as pure gluon fusion (by which it is dominated)
+  values:
+    mu_gg(h->mumu): -0.1 ± 1.5
+
+ATLAS Run 2 h->Zgamma 36/fb:
+  experiment: ATLAS
+  inspire: Aaboud:2017uhw
+  description: Reconstruced from the quoted expected and observed limits assuming Gaussian uncertainties
+  values:
+    mu_gg(h->Zgamma): 2.2 ± 2.2
+
+CMS Run 2 h->Zgamma 36/fb:
+  experiment: CMS
+  inspire: Sirunyan:2018tbk
+  description: Combined signal strength, intepreted as pure gluon fusion (by which it is dominated)
+  values:
+    mu_gg(h->Zgamma): 1.9 ± 1.0
+
 ATLAS Run 2 Higgs 80/fb:
   experiment: ATLAS
   inspire: ATLAS:2019slw
