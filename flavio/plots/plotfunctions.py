@@ -14,6 +14,8 @@ import warnings
 import inspect
 from multiprocessing import Pool
 from pickle import PicklingError
+from flavio.plots.colors import lighten_color, get_color
+
 
 def error_budget_pie(err_dict, other_cutoff=0.03):
     """Pie chart of an observable's error budget.
@@ -65,7 +67,12 @@ def error_budget_pie(err_dict, other_cutoff=0.03):
     def my_autopct(pct):
         return r'{p:.2g}\%'.format(p=pct*err_tot)
     plt.axis('equal')
-    return plt.pie(fracs, labels=labels, autopct=my_autopct, wedgeprops = {'linewidth':0.5}, colors=flavio.plots.colors.pastel)
+    return plt.pie(fracs,
+        labels=labels,
+        autopct=my_autopct,
+        wedgeprops={'linewidth':0.5},
+        colors=[lighten_color('C{}'.format(i), 0.5) for i in range(10)]
+    )
 
 
 def diff_plot_th(obs_name, x_min, x_max, wc=None, steps=100, scale_factor=1, **kwargs):
@@ -212,7 +219,7 @@ def bin_plot_th(obs_name, bin_list, wc=None, divide_binwidth=False, N=50, thread
         else:
             central = central_
         if 'fc' not in kwargs and 'facecolor' not in kwargs:
-            kwargs['fc'] = flavio.plots.colors.pastel[3]
+            kwargs['fc'] = 'C6'
         if 'linewidth' not in kwargs and 'lw' not in kwargs:
             kwargs['lw'] = 0
         if _i > 0:
@@ -423,7 +430,7 @@ def density_contour_data(x, y, covariance_factor=None, n_bins=None, n_sigma=(1, 
     """
     if n_bins is None:
         n_bins = min(10*int(sqrt(len(x))), 200)
-    f_binned, x_edges, y_edges = np.histogram2d(x, y, normed=True, bins=n_bins)
+    f_binned, x_edges, y_edges = np.histogram2d(x, y, density=True, bins=n_bins)
     x_centers = (x_edges[:-1] + x_edges[1:])/2.
     y_centers = (y_edges[:-1] + y_edges[1:])/2.
     x_mean = np.mean(x_centers)
@@ -617,7 +624,7 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max,
 def contour(x, y, z, levels,
               interpolation_factor=1,
               interpolation_order=2,
-              col=0, label=None,
+              col=None, color=None, label=None,
               filled=True,
               contour_args={}, contourf_args={}):
     r"""Plot coloured confidence contours (or bands) given numerical input
@@ -650,19 +657,16 @@ def contour(x, y, z, levels,
         x = scipy.ndimage.zoom(x, zoom=interpolation_factor, order=1)
         y = scipy.ndimage.zoom(y, zoom=interpolation_factor, order=1)
         z = scipy.ndimage.zoom(z, zoom=interpolation_factor, order=interpolation_order)
-    if not isinstance(col, int):
-        _col = 0
-    else:
-        _col = col
     _contour_args = {}
     _contourf_args = {}
-    _contour_args['colors'] = [flavio.plots.colors.set1[_col]]
+    color = get_color(col=col, color=color)
+    _contour_args['colors'] = color
     if filled:
         _contour_args['linewidths'] = 0.6
     else:
         _contour_args['linewidths'] = 0.8
     N = len(levels)
-    _contourf_args['colors'] = [flavio.plots.colors.pastel[_col] # RGB
+    _contourf_args['colors'] = [lighten_color(color, 0.5)# RGB
                                        + (max(1-n/N, 0),) # alpha, decreasing for contours
                                        for n in range(N)]
     _contour_args['linestyles'] = 'solid'
@@ -733,7 +737,7 @@ def pdf_plot(dist, x_min=None, x_max=None, fill=True, steps=500, normed=True, **
         fill_x=None
     likelihood_plot(x, y, fill_x=fill_x, **kwargs)
 
-def likelihood_plot(x, y, fill_x=None, col=None, label=None, plotargs={}, fillargs={},
+def likelihood_plot(x, y, fill_x=None, col=None, color=None, label=None, plotargs={}, fillargs={},
                     flipped=False):
     """Plot of a 1D probability density function.
 
@@ -755,12 +759,9 @@ def likelihood_plot(x, y, fill_x=None, col=None, label=None, plotargs={}, fillar
     _plotargs['linewidth'] = 0.6
     if label is not None:
         _plotargs['label'] = label
-    if col is None:
-        _plotargs['color'] = flavio.plots.colors.set1[0]
-        _fillargs['facecolor'] = flavio.plots.colors.pastel[0]
-    else:
-        _plotargs['color'] = flavio.plots.colors.set1[col]
-        _fillargs['facecolor'] = flavio.plots.colors.pastel[col]
+    color = get_color(col=col, color=color)
+    _plotargs['color'] = color
+    _fillargs['facecolor'] = lighten_color(color, 0.5)
     _fillargs.update(fillargs)
     _plotargs.update(plotargs)
     if not flipped:
@@ -776,7 +777,7 @@ def likelihood_plot(x, y, fill_x=None, col=None, label=None, plotargs={}, fillar
                 where=np.logical_and(fill_x[0] < x, x < fill_x[1]),
                 **_fillargs)
 
-def pvalue_plot(x, y, fill_y=None, col=None, label=None,
+def pvalue_plot(x, y, fill_y=None, col=None, color=None, label=None,
                 plotargs={}, fillargs={}):
     """Plot of a 1D confidence level distribution, where the y axis is 1-CL.
 
@@ -798,12 +799,9 @@ def pvalue_plot(x, y, fill_y=None, col=None, label=None,
     _plotargs['linewidth'] = 0.6
     if label is not None:
         _plotargs['label'] = label
-    if col is None:
-        _plotargs['color'] = flavio.plots.colors.set1[0]
-        _fillargs['facecolor'] = flavio.plots.colors.pastel[0]
-    else:
-        _plotargs['color'] = flavio.plots.colors.set1[col]
-        _fillargs['facecolor'] = flavio.plots.colors.pastel[col]
+    color = get_color(col=col, color=color)
+    _plotargs['color'] = color
+    _fillargs['facecolor'] = lighten_color(color, 0.5)
     _fillargs.update(fillargs)
     _plotargs.update(plotargs)
     ax.plot(x, y, **_plotargs)
@@ -816,7 +814,7 @@ def pvalue_plot(x, y, fill_y=None, col=None, label=None,
     ax.set_ylim([0, 1])
 
 def density_contour_joint(x, y,
-                          col=None,
+                          col=None, color=None,
                           bandwidth_x=None, bandwidth_y=None,
                           hist_args=None,
                           ax_2d=None, ax_x=None, ax_y=None,
@@ -858,7 +856,7 @@ def density_contour_joint(x, y,
     if ax_2d is None:
         ax_2d = plt.subplot(gs[1, 0])
     # make the 2D density contour plot
-    density_contour(x, y, col=col, **kwargs)
+    density_contour(x, y, col=col, color=color, **kwargs)
 
     # x axis histogram
     if hist_args is None:
@@ -866,13 +864,13 @@ def density_contour_joint(x, y,
     if ax_x is None:
         ax_x = plt.subplot(gs[0, 0], sharex=ax_2d, yticks=[], frameon=False)
     plt.sca(ax_x)
-    smooth_histogram(x, bandwidth=bandwidth_x, col=col, **hist_args)
+    smooth_histogram(x, bandwidth=bandwidth_x, col=col, color=color, **hist_args)
 
     # y axis histogram
     if ax_y is None:
         ax_y = plt.subplot(gs[1, 1], sharey=ax_2d, xticks=[], frameon=False)
     plt.sca(ax_y)
-    smooth_histogram(y, flipped=True, bandwidth=bandwidth_y, col=col, **hist_args)
+    smooth_histogram(y, flipped=True, bandwidth=bandwidth_y, col=col, color=color, **hist_args)
 
     # remove x and y histogram tick labels
     plt.setp(ax_x.get_xticklabels(), visible=False);

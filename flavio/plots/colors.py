@@ -1,5 +1,7 @@
+"""Colour schemes for plots and colour utility functions."""
 
-"""Colour schemes for plots."""
+import matplotlib
+
 
 # this was generated with the brewer2mpl package by calling
 # brewer2mpl.get_map('Pastel1', 'qualitative', 9).mpl_colors
@@ -36,3 +38,60 @@ set1 = [(0.8941176470588236, 0.10196078431372549, 0.10980392156862745),
  (0.6509803921568628, 0.33725490196078434, 0.1568627450980392),
  (0.9686274509803922, 0.5058823529411764, 0.7490196078431373),
  (0.6, 0.6, 0.6)]
+
+
+# darken and lighten functions taken from https://github.com/BagelOrb/CompressionTestAnalysis/blob/master/PlottingUtil.py
+
+def lighten_color(color, amount=0.5):
+    """
+    Lightens the given color by multiplying (1-luminosity) by the given amount.
+    Input can be matplotlib color string, hex string, or RGB tuple.
+
+    Examples:
+    >> lighten_color('g', 0.3)
+    >> lighten_color('#F034A3', 0.6)
+    >> lighten_color((.3,.55,.1), 0.5)
+    """
+    import matplotlib.colors as mc
+    import colorsys
+    try:
+        c = mc.cnames[color]
+    except:
+        c = color
+    c = colorsys.rgb_to_hls(*mc.to_rgb(c))
+    return colorsys.hls_to_rgb(c[0], 1 - amount * (1 - c[1]), c[2])
+
+
+def darken_color(color, amount=0.5):
+    """
+    Darkens the given color by multiplying luminosity by the given amount.
+    Input can be matplotlib color string, hex string, or RGB tuple.
+
+    Examples:
+    >> lighten_color('g', 0.3)
+    >> lighten_color('#F034A3', 0.6)
+    >> lighten_color((.3,.55,.1), 0.5)
+    """
+    import matplotlib.colors as mc
+    import colorsys
+    try:
+        c = mc.cnames[color]
+    except:
+        c = color
+    c = colorsys.rgb_to_hls(*mc.to_rgb(c))
+    return colorsys.hls_to_rgb(c[0], amount * c[1], c[2])
+
+
+def get_color(col, color):
+    """Function needed for backwards compatibility with the old "col" argument in
+    plt functions. It returns the default color 'C0' if both arguments are None.
+    If 'color' is not None, it always uses that. If 'color' is None and 
+    'col' is an integer, it returns the corresponding 'CN' color. If 'col' is
+    neither None nor integer, an error is raised."""
+    if color is None and col is None:
+        return 'C0'
+    if col is None:
+        return color
+    if not isinstance(col, int):
+        raise ValueError("`col` must be an integer. Consider using `color` instead.")
+    return 'C{}'.format(col)
