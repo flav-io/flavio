@@ -2,7 +2,17 @@
 perform statistical analyses within a particular statistical framework.
 
 Fits are instances of descendants of the `Fit` class (which is not meant
-to be used directly)."""
+to be used directly)
+
+Note that this module has been deprecated as of flavio v1.6.0. Please
+use the `flavio.statistics.likelihood` module instead."""
+
+import warnings
+warnings.warn("The `flavio.statistics.fits` module has been deprecated"
+              " as of flavio v1.6.0. Please use the `flavio.statistics.likelihood`"
+              " module instead.",
+              DeprecationWarning, stacklevel=2)
+
 
 import flavio
 import numpy as np
