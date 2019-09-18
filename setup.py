@@ -35,7 +35,7 @@ setup(name='flavio',
                         'ckmutil', 'wilson>=1.7', ],
       extras_require={
             'testing': ['nose'],
-            'plotting': ['matplotlib>=1.4'],
+            'plotting': ['matplotlib>=2.0'],
             'sampling': ['pypmc>=1.1.4', 'emcee', 'iminuit',],
             },
     )
