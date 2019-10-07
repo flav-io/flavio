@@ -355,7 +355,6 @@ gS_u-d: 1.022(80)(60)  # FLAG 2019 Nf=2+1+1
 
 tau_Bc_SM: (8.34 ± 2.28) 1e11  # 0.55 ± 0.15 ps, hep-ph/0211432
 
-
 # Parameters for paramagnetic EDMs
 # 1809.09114 eq. (44)-(47)
 # e cm = sqrt(4 * pi  / 137.036) * 1e-2 * flavio.physics.units.meter = 15346209583444.148
@@ -371,3 +370,25 @@ alpha_de(HfF): (1.50 ± 0.06) 1e-12  # (34.9±1.4)(mrad/s)(1e-27ecm)
 alpha_CS(HfF): (2.11 ± 0.09) 1e-19  # (32.0±1.3)(mrad/s) 1e-7
 alpha_de(ThO): (5.17 ± 0.21) 1e-12  # (120.6±4.9)(mrad/s)(1e-27ecm)
 alpha_CS(ThO): (1.20 ± 0.04) 1e-18  # (181.6±7.3)(mrad/s) 1e-7
+
+# Parameters for HQET form factors
+chi_2(1): -0.077 ± 0.020
+chi_2p(1): -0.018 ± 0.020
+chi_3p(1): 0.028 ± 0.017
+eta(1): 0.336 ± 0.031
+etap(1): 0.416 ± 0.141
+CLN rho2_xi: 1.454 ± 0.064
+CLN c_xi: 1.337 ± 0.095
+CLN xi3: 0
+CLN l_1(1): 0
+CLN l_2(1): 0
+CLN l_3(1): 0
+CLN l_4(1): 0
+CLN l_5(1): 0
+CLN l_6(1): 0
+CLN lp_1(1): 0
+CLN lp_2(1): 0
+CLN lp_3(1): 0
+CLN lp_4(1): 0
+CLN lp_5(1): 0
+CLN lp_6(1): 0

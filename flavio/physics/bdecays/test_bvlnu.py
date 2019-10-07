@@ -91,7 +91,7 @@ class TestBVll(unittest.TestCase):
 
     def test_FL(self):
         self.assertAlmostEqual(flavio.sm_prediction('<FL>(B0->D*taunu)', 3.15, 10.71),
-                               0.46, delta=0.022)
+                               0.46, delta=0.04)
         self.assertAlmostEqual(flavio.sm_prediction('FLtot(B0->D*taunu)'),
                                flavio.sm_prediction('<FL>(B0->D*taunu)', 3.15, 10.71),
                                delta=0.001)

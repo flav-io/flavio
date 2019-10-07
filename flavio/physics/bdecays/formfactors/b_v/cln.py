@@ -40,7 +40,7 @@ def h_to_A(mB, mV, h, q2):
     del ff['T3']
     return ff
 
-def ff(process, q2, par, scale):
+def ff(process, q2, par, scale, order_z=3, order_z_slp=2, order_z_sslp=1):
     r"""Central value of $B\to V$ form factors in the lattice convention
     CLN parametrization.
 
@@ -50,7 +50,7 @@ def ff(process, q2, par, scale):
     mB = par['m_' + pd['B']]
     mV = par['m_' + pd['V']]
     w = max((mB**2 + mV**2 - q2) / (2 * mB * mV), 1)
-    phqet = hqet.get_hqet_parameters(par, scale)
+    phqet = hqet.get_hqet_parameters(par)
     ash = phqet['ash']
     epsc = phqet['epsc']
     epsb = phqet['epsb']
@@ -65,31 +65,36 @@ def ff(process, q2, par, scale):
     CT1 = hqet.CT1(w, zc)
     CT2 = hqet.CT2(w, zc)
     CT3 = hqet.CT3(w, zc)
-    L = hqet.L(par, w)
-    # leading, universal Isgur-Wise function
+    z = common.z(mB, mV, q2, t0='tm')
     rho2 = par['CLN rho2_xi']
     c = par['CLN c_xi']
-    z = common.z(mB, mV, q2, t0='tm')
-    xi = 1 - 8 * rho2 * z + (64 * c - 16 * rho2) * z**2
+    xi3 = par['CLN xi3']
+    xi = hqet.xi(z, rho2, c, xi3, order_z=order_z)
+    L = hqet.Lz(par, w, z, order_z=order_z_slp)
+    ell = hqet.ell(par, z, order_z=order_z_sslp)
     h = {}
     h['V'] = xi * (1 + ash * CV1
                    + epsc * (L[2] - L[5])
-                   + epsb * (L[1] - L[4]))
+                   + epsb * (L[1] - L[4])
+                   + epsc**2 * (ell[2] - ell[5]))
     h['A1'] = xi * (1 + ash * CA1
                     + epsc * (L[2] - L[5] * (w - 1)/(w + 1))
                     + epsb * (L[1] - L[4] * (w - 1)/(w + 1))
-                    + epsc**2 * par['B->D* CLN deltac_hA1'])
+                    + epsc**2 * (ell[2] - ell[5] * (w - 1)/(w + 1)))
     h['A2'] = xi * (ash * CA2 + epsc * (L[3] + L[6]))
     h['A3'] = xi * (1 + ash * (CA1 + CA3)
                     + epsc * (L[2] - L[3] + L[6] - L[5])
-                    + epsb * (L[1] - L[4]))
+                    + epsb * (L[1] - L[4])
+                    + epsc**2 * (ell[2] - ell[3] + ell[6] - ell[5]))
     h['T1'] = xi * (1 + ash * (CT1 + (w - 1)/2 * (CT2 - CT3))
                     + epsc * L[2]
                     + epsb * L[1]
-                    + epsc**2 * par['B->D* CLN deltac_hT1'])
+                    + epsc**2 * ell[2])
     h['T2'] = xi * (ash * (w + 1)/2 * (CT2 + CT3)
                     + epsc * L[5]
-                    - epsb * L[4])
+                    - epsb * L[4]
+                    + epsc * ell[5])
     h['T3'] = xi * (ash * CT2
-                    + epsc * (L[6] - L[3]))
+                    + epsc * (L[6] - L[3])
+                    + epsc * (ell[6] - ell[3]))
     return h_to_A(mB, mV, h, q2)
