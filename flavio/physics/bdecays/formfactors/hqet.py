@@ -7,16 +7,17 @@ from flavio.physics.running import running
 from flavio.physics.bdecays.formfactors import common
 
 
-def get_hqet_parameters(par, scale):
+def get_hqet_parameters(par):
     p = {}
-    alphas = running.get_alpha(par, scale, nf_out=5)['alpha_s']
+    # The scale here is fixed to 2.7 GeV ~ sqrt(m_b^pole * m_c^pole)
+    alphas = running.get_alpha(par, scale=2.7, nf_out=5)['alpha_s']
     p['ash'] = alphas / pi
-    p['mb'] = running.get_mb_pole(par)
-    p['mc'] = p['mb'] - 3.4
     p['mb1S'] = running.get_mb_1S(par)
+    p['mb'] = p['mb1S'] * (1 + 2 * alphas**2 / 9)
+    p['mc'] = p['mb'] - 3.4
     mBbar = (par['m_B0'] + 3 * par['m_B*0']) / 4
     # eq. (25); note the comment about the renormalon cancellation thereafter
-    p['Lambdabar'] = mBbar - p['mb1S'] + par['lambda_1'] / (2 * p['mb1S'])
+    p['Lambdabar'] = mBbar - p['mb'] + par['lambda_1'] / (2 * p['mb1S'])
     p['epsc'] = p['Lambdabar'] / (2 * p['mc'])
     p['epsb'] = p['Lambdabar'] / (2 * p['mb'])
     p['zc'] = p['mc'] / p['mb']

@@ -29,7 +29,7 @@ def ff(process, q2, par, scale, order_z=3, order_z_slp=2, order_z_sslp=1):
     mB = par['m_' + pd['B']]
     mP = par['m_' + pd['P']]
     w = max((mB**2 + mP**2 - q2) / (2 * mB * mP), 1)
-    phqet = hqet.get_hqet_parameters(par, scale)
+    phqet = hqet.get_hqet_parameters(par)
     ash = phqet['ash']
     epsc = phqet['epsc']
     epsb = phqet['epsb']
