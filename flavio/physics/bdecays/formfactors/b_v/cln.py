@@ -75,7 +75,8 @@ def ff(process, q2, par, scale, order_z=3, order_z_slp=2, order_z_sslp=1):
     h = {}
     h['V'] = xi * (1 + ash * CV1
                    + epsc * (L[2] - L[5])
-                   + epsb * (L[1] - L[4]))
+                   + epsb * (L[1] - L[4])
+                   + epsc**2 * (ell[2] - ell[5]))
     h['A1'] = xi * (1 + ash * CA1
                     + epsc * (L[2] - L[5] * (w - 1)/(w + 1))
                     + epsb * (L[1] - L[4] * (w - 1)/(w + 1))
