@@ -36,6 +36,6 @@ setup(name='flavio',
       extras_require={
             'testing': ['nose'],
             'plotting': ['matplotlib>=2.0'],
-            'sampling': ['pypmc>=1.1.4', 'emcee', 'iminuit',],
+            'sampling': ['iminuit'],
             },
     )
