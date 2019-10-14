@@ -22,6 +22,11 @@ prod_modes = {
         'tex': 'Zh',
         'str': 'Zh',
     },
+    'hv': {
+        'desc': '$Z$ or $W$ boson associated production',
+        'tex': 'Vh',
+        'str': 'Vh',
+    },
     'tth': {
         'desc': 'top pair associated production',
         'tex': r't\bar t h',
@@ -63,6 +68,11 @@ decay_modes = {
     'h_zz': {
         'tex': r'ZZ',
         'str': 'ZZ',
+        'tex_class': r'h\to VV',
+    },
+    'h_vv': {
+        'tex': r'VV',
+        'str': 'VV',
         'tex_class': r'h\to VV',
     },
     'h_zga': {
