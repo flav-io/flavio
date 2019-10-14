@@ -4,6 +4,8 @@ The numerical coefficients have been obtained with MadGraph_aMC@NLO v2.6.5
 along with SMEFTsim v2 in the alpha scheme.
 """
 
+import flavio
+
 
 def h_gg(C):
     r"""Higgs decay to two gluons normalized to the SM"""
@@ -19,11 +21,12 @@ def h_gg(C):
 
 def h_gaga(C):
     r"""Higgs decay to two photons normalized to the SM"""
-    np = (-46.4 * C['phiB']
-          -14.14 * C['phiW']
-          +25.62 * C['phiWB']
-          +0.121 * (C['phiBox'] - C['phiD'] / 4.)
-          +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
+    np = (-45.78 * C['phiB']
+          -13.75 * C['phiW']
+          +(25.09 - 0.242) * C['phiWB']  # tree - loop
+          +0.121 * C['phiBox']
+          -0.141 * C['phiD']
+          +0.127 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
           +0.035 * C['uphi_33']
           -0.034 * C['uphi_22']
           -0.017 * C['dphi_33']
@@ -54,6 +57,14 @@ def h_zz(C):
           +0.198 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
           )
     return 1 + 1e6 * np.real
+
+def h_vv(C):
+    r"""Higgs decay to $W$ or $Z$ bosons normalized to the SM"""
+    br_ww = flavio.physics.higgs.width.BR_SM['WW']
+    br_zz = flavio.physics.higgs.width.BR_SM['ZZ']
+    d_ww = h_ww(C) - 1
+    d_zz = h_zz(C) - 1
+    return (br_ww * (1 + d_ww) + br_zz * (1 + d_zz)) / (br_ww + br_zz)
 
 def h_zga(C):
     r"""Higgs decay to $Z\gamma$ normalized to the SM"""
