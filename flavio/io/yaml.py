@@ -12,6 +12,7 @@ yaml.add_representer(OrderedDict, represent_dict_order)
 def dict_constructor(loader, node):
     return OrderedDict(loader.construct_pairs(node))
 yaml.add_constructor('tag:yaml.org,2002:map', dict_constructor)
+yaml.SafeLoader.add_constructor('tag:yaml.org,2002:map', dict_constructor)
 
 
 class SafeIncludeLoader(yaml.SafeLoader):
