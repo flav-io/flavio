@@ -12,7 +12,7 @@ class TestDPll(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction('BR(D0->pienu)'),
                                2.91e-3, delta=3 * 0.3e-3)
         self.assertAlmostEqual(flavio.sm_prediction('BR(D0->pimunu)'),
-                               2.37e-3, delta=0.2e-3)
+                               2.37e-3, delta=0.4e-3)
         self.assertAlmostEqual(flavio.sm_prediction('BR(D+->Kenu)'),
                                8.73e-2, delta=0.8e-2)
         self.assertAlmostEqual(flavio.sm_prediction('BR(D+->Kmunu)'),

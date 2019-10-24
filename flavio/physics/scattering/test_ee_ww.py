@@ -29,7 +29,7 @@ class TestEEWW(unittest.TestCase):
     def test_diff_ee_ww_NP(self):
         coeffs = ['phiWB', 'phiD', 'phil3_11', 'phil3_22', 'll_1221', 'phil1_11', 'phie_11']
         for coeff in coeffs:
-            for E in [182.66, 189.09, 198.4, 205.9]:
+            for E in [182.66, 189.09, 198.38, 205.92]:
                 _E = Es.flat[np.abs(Es - E).argmin()]
                 dsigma = []
                 dsigma_sm = []
@@ -45,5 +45,5 @@ class TestEEWW(unittest.TestCase):
                 sigma_tot = sum(dsigma)
                 self.assertAlmostEqual(sigma_tot / sigma_tot_sm,
                                        r_tot,
-                                       delta=0.2,
+                                       delta=0.25,
                                        msg="Failed for E={}, C_{}".format(E, coeff))

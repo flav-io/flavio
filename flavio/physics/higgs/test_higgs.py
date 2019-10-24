@@ -82,7 +82,7 @@ class TestHiggsMeasurements(unittest.TestCase):
         # check that the large anticorrlation between ggF and VBF tautau is correct
         m = flavio.classes.Measurement['ATLAS Run 2 Higgs 80/fb']
         c = m._constraints[0][0]
-        self.assertEqual(len(c.central_value), 12)
+        self.assertEqual(len(c.central_value), 16)
         self.assertAlmostEqual(c.correlation[3, 7], -0.44, delta=0.005)
         self.assertEqual(m.all_parameters[3], 'mu_gg(h->tautau)')
         self.assertEqual(m.all_parameters[7], 'mu_VBF(h->tautau)')
