@@ -5990,7 +5990,13 @@ K+->pinunu E949 2009:
   experiment: 'E949'
   inspire: Artamonov:2009sz
   values:
-    BR(K+->pinunu): 0.173 + 0.115 - 0.105 e-9
+    BR(K+->pinunu): 1.73 + 1.15 - 1.05 e-10
+
+K+->pinunu NA62 2019:
+  experiment: NA62
+  url: https://indico.cern.ch/event/846814/attachments/1903630/3161337/CERN_seminar_23_09_2019.pdf
+  values:
+    BR(K+->pinunu): 0.47 + 0.72 - 0.47 e-10
 
 KL->pinunu KOTO 2018:
   experiment: KOTO
