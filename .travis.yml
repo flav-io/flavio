@@ -3,10 +3,10 @@ python:
   - "3.5"
   - "3.6"
   - "3.7"
-  - "3.8-dev"
+  - "3.8"
 matrix:
   allow_failures:
-    - python: "3.8-dev"
+    - python: "3.8"
 services:
   - xvfb
 
@@ -15,7 +15,6 @@ notifications:
   email: false
 
 install:
-  - pip install numpy --upgrade  # for pypmc
   - pip install .[sampling,plotting,testing]
   - pip install coveralls
 
