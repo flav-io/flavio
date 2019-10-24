@@ -9,6 +9,10 @@ def represent_dict_order(self, data):
     return self.represent_mapping('tag:yaml.org,2002:map', data.items())
 yaml.add_representer(OrderedDict, represent_dict_order)
 
+def dict_constructor(loader, node):
+    return OrderedDict(loader.construct_pairs(node))
+yaml.add_constructor('tag:yaml.org,2002:map', dict_constructor)
+
 
 class SafeIncludeLoader(yaml.SafeLoader):
     """PyYAML loader supporting the `!include` and `!include_merge_list`
