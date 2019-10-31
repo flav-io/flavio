@@ -186,7 +186,7 @@ c4_pi+munu: 1.69(0.07)
 c2t_pi+lnu: 0
 
 # Parameters needed for K->pi form factors
-K->pi f+(0): 0.9706(27)            # FLAG 2019 Nf=2+1+1
+K->pi f+(0): 0.9696(15)(12)        # 1809.02827
 K->pi fT(0): 0.417(15)             # 1108.1021
 K->pi sT: 1.10(14)                 #  "
 K->pi delta_K+pi0: 0.029(4)        # 1005.2323
