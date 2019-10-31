@@ -84,6 +84,9 @@ LHCb phigamma 2019:
   correlation:
     [[1, 0.04, 0.04], [0.04, 1, 0.04], [0.04, 0.04, 1]]
 
+# When updating DeltaM_d or DeltaM_s,
+# DeltaM_d/DeltaM_s under "CKM ratio measurements"
+# should be updated as well!
 HFAG osc summer 2015:
   experiment: HFAG
   inspire: Amhis:2014hma
@@ -2841,6 +2844,9 @@ LHCb B->K*ee 2013:
       value: 0.05 ± 0.09 ± 0.025 # P2 = 1/2 * ATRe
 
 
+# When updating Gamma(pi+->munu) or BR(K+->munu),
+# RKpi(P+->munu) under "CKM ratio measurements"
+# should be updated as well!
 PDG 2015:
   experiment: PDG
   inspire: Agashe:2014kda
@@ -2861,6 +2867,16 @@ PiENu pi->enu 2015:
   inspire: Aguilar-Arevalo:2015cdf
   values:
     BR(pi+->enu): (1.2344±0.0023±0.0019)1e-4
+
+CKM ratio measurements:
+  description: >
+    Ratios of observables with reduced theoretical uncertainties. These 
+    are pseudo-measurements simply derived from the individual measurements
+    of the numerators and denominators. They should not be used in likelihoods
+    together with the individual measurements!
+  values:
+    RKpi(P+->munu): 1.3368 ± 0.0032
+    DeltaM_d/DeltaM_s: 0.02852 ± 0.00011
 
 # note: the angular observables in that measurement were partly incorrect
 # due to a mistake in the analysis and are superseded by
