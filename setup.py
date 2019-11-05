@@ -9,7 +9,7 @@ with open('README.md', encoding='utf-8') as f:
 setup(name='flavio',
       version=__version__,
       author='David M. Straub',
-      author_email='david.straub@tum.de',
+      author_email='straub@protonmail.com',
       url='https://flav-io.github.io',
       description='A Python package for flavour physics phenomenology in the Standard Model and beyond',
       long_description=LONG_DESCRIPTION,
@@ -32,7 +32,7 @@ setup(name='flavio',
                 ]
       },
       install_requires=['numpy', 'scipy', 'setuptools>=3.3', 'pyyaml',
-                        'ckmutil', 'wilson>=1.7', ],
+                        'ckmutil', 'wilson>=2.0', ],
       extras_require={
             'testing': ['nose'],
             'plotting': ['matplotlib>=2.0'],
