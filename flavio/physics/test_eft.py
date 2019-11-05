@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from .eft import *
 import pkgutil
-import wcxf
+from wilson import wcxf
 import wilson
 
 par = {

@@ -1,6 +1,6 @@
 import unittest
 import flavio
-import wcxf
+from wilson import wcxf
 from math import sqrt
 
 

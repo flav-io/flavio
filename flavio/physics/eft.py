@@ -1,6 +1,6 @@
 """Classes for effective field theory (EFT) Wilson coefficients"""
 
-import wcxf
+from wilson import wcxf
 import wilson
 
 
