@@ -405,8 +405,8 @@
 
 # Parameters for HQET form factors
 - values:
-    - CLN rho2_xi: -1.073 ± 0.204
-    - CLN c_xi: 0.475 ± 0.123
+    - CLN rho2_xi: 1.073 ± 0.204
+    - CLN c_xi: 0.951 ± 0.246
     - CLN xi3: -3.769 ± 1.084
     - chi_2(1): -0.060 ± 0.020
     - chi_2p(1): -0.000 ± 0.020
