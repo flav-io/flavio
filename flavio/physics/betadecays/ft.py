@@ -1,3 +1,6 @@
+r"""Functions for nuclear and neutron beta decay effective couplings and $Ft$ values."""
+
+
 from math import pi, log, sqrt
 from flavio.config import config
 from flavio.physics.betadecays.common import wc_eff

@@ -1,3 +1,5 @@
+"""Common functions for beta decays."""
+
 from flavio.physics.edms.common import proton_charges
 from flavio.physics.bdecays.wilsoncoefficients import get_wceff_fccc_std, get_CVLSM
 from math import sqrt

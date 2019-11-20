@@ -1,12 +1,13 @@
 r"""Functions for Higgs production.
 
-The numerical coefficients have been obtained with MadGraph_aMC@NLO v2.6.5
+Most of the numerical coefficients have been obtained with MadGraph_aMC@NLO v2.6.5
 along with SMEFTsim v2 in the alpha scheme.
 """
 
 
 def ggF(C):
     r"""Higgs production from gluon fusion normalized to the SM"""
+    # obtained from an analytical one-loop calculation
     np = (+35.86 * C['phiG']
           +0.121 * (C['phiBox'] - C['phiD'] / 4.)
           +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
