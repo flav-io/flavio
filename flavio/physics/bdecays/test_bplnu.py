@@ -4,7 +4,10 @@ import flavio
 
 class TestBVll(unittest.TestCase):
     def test_bpienu(self):
-        pass #TODO
+        Vcb = flavio.default_parameters.get_central('Vcb')
+        # assert that total BR is in the ballpark of the experimental number
+        self.assertAlmostEqual(
+            flavio.sm_prediction('BR(B+->Dlnu)') / 2.29e-2 * 0.04**2 / Vcb**2, 1, delta=0.1)
 
     def test_lfratios(self):
         self.assertAlmostEqual(

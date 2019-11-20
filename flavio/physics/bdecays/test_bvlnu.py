@@ -12,6 +12,13 @@ wc_obj = WilsonCoefficients()
 par = constraints.get_central_all()
 
 class TestBVll(unittest.TestCase):
+    def test_bdsenu(self):
+        Vcb = flavio.default_parameters.get_central('Vcb')
+        # assert that total BR is in the ballpark of the experimental number
+        self.assertAlmostEqual(
+            flavio.sm_prediction('BR(B+->D*lnu)') / 5.41e-2 * 0.04**2 / Vcb**2, 1, delta=0.1)
+
+
     def test_brhoee(self):
         q2 = 3.5
         self.assertEqual(
