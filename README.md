@@ -27,9 +27,13 @@ by E-mail. Thanks!
 
 ## Contributors
 
-Main author:
+Maintainer:
 
-- David M. Straub (<david.straub@tum.de>)
+- Peter Stangl (@peterstangl)
+
+Original author:
+
+- David M. Straub (@DavidMStraub)
 
 Contributors (in alphabetical order):
 
