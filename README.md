@@ -2,7 +2,8 @@
 
 # flavio – flavour phenomenology in the Standard model and beyond
 
-flavio is a Python package to compute observables in flavour physics both in
+flavio is a Python package to compute observables in flavour physics, electroweak precision tests, Higgs physics,
+and other precision tests of the Standard Model, both in
 the Standard Model and in the presence of new physics encoded in Wilson
 coefficients of dimension-6 operators.
 
@@ -21,9 +22,11 @@ See http://flav-io.github.io/docs/installation.html for instructions.
 
 ## Bugs and feature request
 
-Please submit bugs and feature request using
+Please submit questions, bugs and feature request using
 [Github's issue system](https://github.com/flav-io/flavio/issues) rather than
 by E-mail. Thanks!
+
+
 
 ## Contributors
 
