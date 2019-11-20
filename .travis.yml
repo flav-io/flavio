@@ -18,6 +18,6 @@ install:
   - pip install .[sampling,plotting,testing]
   - pip install coveralls
 
-script: nosetests --with-coverage --cover-package=flavio
+script: nose2 --with-coverage
 
 after_success: coveralls
