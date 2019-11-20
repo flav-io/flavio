@@ -1,5 +1,6 @@
 nosetests.json
 .ropeproject
+.coverage
 
 # editor tmp files
 *~
