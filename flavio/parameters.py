@@ -261,24 +261,5 @@ def read_pdg(year, constraints):
 # Create the object
 default_parameters = ParameterConstraints()
 
-# Read the parameter metadata from the default YAML data file
-_read_yaml_object_metadata(pkgutil.get_data('flavio', 'data/parameters_metadata.yml'), default_parameters)
-
-# Read the uncorrelated parameter values from the default YAML data file
-_read_yaml_object_values(pkgutil.get_data('flavio', 'data/parameters_uncorrelated.yml'), default_parameters)
-
-# Read the correlated parameter values from the default YAML data file
-_read_yaml_object_values_correlated(pkgutil.get_data('flavio', 'data/parameters_correlated.yml'), default_parameters)
-
-# Read the parameters from the default PDG data file
-read_pdg(2018, default_parameters)
-
-# Read default parameters for B->V form factors
-flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load('v2', 'LCSR', ('B->omega', 'B->rho'), default_parameters)
-flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load('v2', 'LCSR-Lattice', ('B->K*', 'Bs->phi', 'Bs->K*'), default_parameters)
-
-# Read default parameters for B->V form factors
-flavio.physics.bdecays.formfactors.b_p.bsz_parameters.gkvd_load('v1', 'LCSR-Lattice', ('B->K', 'B->pi'), default_parameters)
-
-# Read default parameters for Lambdab->Lambda form factors
-flavio.physics.bdecays.formfactors.lambdab_12.lattice_parameters.lattice_load_ho(default_parameters)
+# read default parameters
+default_parameters.read_default()
