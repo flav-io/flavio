@@ -2870,7 +2870,7 @@ PiENu pi->enu 2015:
 
 CKM ratio measurements:
   description: >
-    Ratios of observables with reduced theoretical uncertainties. These 
+    Ratios of observables with reduced theoretical uncertainties. These
     are pseudo-measurements simply derived from the individual measurements
     of the numerators and denominators. They should not be used in likelihoods
     together with the individual measurements!
@@ -5814,11 +5814,11 @@ LEP Bc->taunu:
 
 LEP-SLD:
   experiment: LEP, SLD
-  inspire: ALEPH:2005ab
-  description: Table B.13 of arXiv:1912.02067  
+  inspire: Janot:2019oyi
+  description: Table B.13 of arXiv:1912.02067
   values:
     GammaZ: 2.4955 ± 0.0023
-    sigma_had: 1065.14 ± 0.84 e-7 # 41.4742 ± 0.0326 nb 
+    sigma_had: 1065.14 ± 0.84 e-7 # 41.4742 ± 0.0326 nb
     R_e: 20.8038 ± 0.0497
     R_mu: 20.7842 ± 0.0335
     R_tau: 20.7644 ± 0.0448
