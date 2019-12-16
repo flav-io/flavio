@@ -42,6 +42,7 @@ Contributors (in alphabetical order):
 
 - Jason Aebischer
 - Frederik Beaujean
+- Adam Falkowski
 - Ece Gürler
 - Matthew Kirk
 - Jonathan Kriewald
