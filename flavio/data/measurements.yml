@@ -2870,7 +2870,7 @@ PiENu pi->enu 2015:
 
 CKM ratio measurements:
   description: >
-    Ratios of observables with reduced theoretical uncertainties. These 
+    Ratios of observables with reduced theoretical uncertainties. These
     are pseudo-measurements simply derived from the individual measurements
     of the numerators and denominators. They should not be used in likelihoods
     together with the individual measurements!
@@ -5814,25 +5814,25 @@ LEP Bc->taunu:
 
 LEP-SLD:
   experiment: LEP, SLD
-  inspire: ALEPH:2005ab
-  description: Table 2.13 of arXiv:hep-ex/0509008
+  inspire: Janot:2019oyi
+  description: Table B.13 of arXiv:1912.02067
   values:
-    GammaZ: 2.4952 ± 0.0023
-    sigma_had: 1066.85 ± 0.95 e-7 # 41.541 ± 0.037 nb
-    R_e: 20.804 ± 0.050
-    R_mu: 20.785 ± 0.033
-    R_tau: 20.764 ± 0.045
+    GammaZ: 2.4955 ± 0.0023
+    sigma_had: 1065.14 ± 0.84 e-7 # 41.4742 ± 0.0326 nb
+    R_e: 20.8038 ± 0.0497
+    R_mu: 20.7842 ± 0.0335
+    R_tau: 20.7644 ± 0.0448
     AFB(Z->ee): 0.0145 ± 0.0025
     AFB(Z->mumu): 0.0169 ± 0.0013
     AFB(Z->tautau): 0.0188 ± 0.0017
-  correlation: [[1.000, -0.297, -0.011, 0.008, 0.006, 0.007, 0.002, 0.001],
-                [1.000, 0.105, 0.131, 0.092, 0.001, 0.003, 0.002],
-                [1.000, 0.069, 0.046, -0.371, 0.020, 0.013],
-                [1.000, 0.069, 0.001, 0.012, -0.003],
-                [1.000, 0.003, 0.001, 0.009],
-                [1.000, -0.024, -0.020],
-                [1.000, 0.046],
-                [1.000]]
+  correlation: [[1.0000, -0.3238, -0.0110, 0.0079, 0.0059, 0.0071, 0.0020, 0.0013],
+                [1.0000, 0.1134, 0.1387, 0.0984, 0.0015, 0.0035, 0.0018],
+                [1.0000, 0.0694, 0.0464, -0.3704, 0.0197, 0.0132],
+                [1.0000, 0.0696, 0.0013, 0.0121, -0.0030],
+                [1.0000, 0.0029, 0.0012, 0.0093],
+                [1.0000, -0.0242, -0.0202],
+                [1.0000, 0.0464],
+                [1.0000]]
 
 LEP-SLD cb:
   experiment: LEP, SLD
