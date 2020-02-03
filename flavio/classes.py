@@ -14,6 +14,7 @@ import yaml
 import inspect
 import urllib.parse
 import re
+import pkgutil
 
 
 class NamedInstanceMetaclass(type):
@@ -465,6 +466,49 @@ class ParameterConstraints(Constraints):
 
     def __init__(self):
         super().__init__()
+
+    def read_default(self):
+        """Reset the instance and read the default parameters. Data is read
+        - from 'data/parameters_metadata.yml'
+        - from 'data/parameters_uncorrelated.yml'
+        - from 'data/parameters_correlated.yml'
+        - from the default PDG data file
+        - for B->V form factors
+        - for B->P form factors
+        - for Lambdab->Lambda form factors
+        """
+        # import functions to read parameters
+        from flavio.parameters import (
+            _read_yaml_object_metadata,
+            _read_yaml_object_values,
+            _read_yaml_object_values_correlated,
+            read_pdg
+        )
+
+        # reset the instance
+        self.__init__()
+
+        # Read the parameter metadata from the default YAML data file
+        _read_yaml_object_metadata(pkgutil.get_data('flavio', 'data/parameters_metadata.yml'), self)
+
+        # Read the uncorrelated parameter values from the default YAML data file
+        _read_yaml_object_values(pkgutil.get_data('flavio', 'data/parameters_uncorrelated.yml'), self)
+
+        # Read the correlated parameter values from the default YAML data file
+        _read_yaml_object_values_correlated(pkgutil.get_data('flavio', 'data/parameters_correlated.yml'), self)
+
+        # Read the parameters from the default PDG data file
+        read_pdg(2018, self)
+
+        # Read default parameters for B->V form factors
+        flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load('v2', 'LCSR', ('B->omega', 'B->rho'), self)
+        flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load('v2', 'LCSR-Lattice', ('B->K*', 'Bs->phi', 'Bs->K*'), self)
+
+        # Read default parameters for B->P form factors
+        flavio.physics.bdecays.formfactors.b_p.bsz_parameters.gkvd_load('v1', 'LCSR-Lattice', ('B->K', 'B->pi'), self)
+
+        # Read default parameters for Lambdab->Lambda form factors
+        flavio.physics.bdecays.formfactors.lambdab_12.lattice_parameters.lattice_load_ho(self)
 
 
 class WilsonCoefficientPriors(Constraints):
