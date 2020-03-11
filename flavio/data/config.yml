@@ -9,7 +9,7 @@
 #
 # 2) By directly modifying the flavio.config dictionary, e.g.
 #
-#    flavio.config['CKM matrix'] = 'Wolfenstein'
+#    flavio.config['implementation']['CKM matrix'] = 'Wolfenstein'
 
 # technical settings
 settings:
