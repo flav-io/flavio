@@ -1,7 +1,10 @@
 import scipy
 import numpy as np
 import warnings
-from scipy.integrate.quadrature import AccuracyWarning
+try:
+    from scipy.integrate import AccuracyWarning # scipy >= 1.5.0
+except ImportError:
+    from scipy.integrate.quadrature import AccuracyWarning # scipy <= 1.4.1
 
 def nintegrate(f, a, b, epsrel=0.005, **kwargs):
     with warnings.catch_warnings():
