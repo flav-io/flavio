@@ -148,7 +148,7 @@ class TestPlots(unittest.TestCase):
         self.assertEqual(data['z'].shape, (20,20))
         self.assertEqual(len(data['levels']), 1) # by default, plot 1 sigma contour
         self.assertAlmostEqual(data['levels'][0], 2.3, delta=0.01) #
-        self.assertEqual(np.min(data['z']), 0)
+        self.assertAlmostEqual(np.min(data['z']), 0.07202216) # keep value of mininum
         # test parallel computation
         data2 = likelihood_contour_data(dummy_loglikelihood,
                                         -2, 2, -3, 3, threads=2)
