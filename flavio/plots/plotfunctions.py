@@ -621,7 +621,7 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max,
     return contour_kwargs['x'], contour_kwargs['y'], contour_kwargs['z']
 
 
-def contour(x, y, z, levels, z_min=None,
+def contour(x, y, z, levels, *, z_min=None,
               interpolation_factor=1,
               interpolation_order=2,
               col=None, color=None, label=None,
