@@ -662,10 +662,10 @@ def contour(x, y, z, levels, z_min=None,
                       "different from the minimum on the grid. For better "
                       "precision, the actual minimum should be provided in the "
                       "`z_min` argument.")
+        z_min = np.min(z) # use minmum on the grid
     elif np.min(z) < z_min:
         raise ValueError("The provided minimum `z_min` has to be smaller than "
                          "the smallest `z` value on the grid.")
-    z_min = z_min or np.min(z) # use provided minimum or minmum on the grid
     z = z - z_min # subtract z minimum to make value of new z minimum 0
     if interpolation_factor > 1:
         x = scipy.ndimage.zoom(x, zoom=interpolation_factor, order=1)
