@@ -153,6 +153,11 @@ class TestPlots(unittest.TestCase):
         data2 = likelihood_contour_data(dummy_loglikelihood,
                                         -2, 2, -3, 3, threads=2)
         npt.assert_array_equal(data2['z'], data['z'])
+        # check that `z_min` larger than `np.min(z)` raises error
+        with self.assertRaises(ValueError):
+            kwargs = {'z_min':0.1}
+            kwargs.update(data) #  since we cannot do **data, **kwargs in Python <3.5
+            contour(**kwargs)
 
     def test_smooth_histogram(self):
         # just check this doesn't raise and error
