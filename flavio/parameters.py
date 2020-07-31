@@ -91,53 +91,6 @@ def write_file(filename, constraints):
     with open(filename, 'w') as f:
         yaml.dump(constraints.get_yaml_dict(), f)
 
-
-# particles from the PDG data file whose mass and width we're interested in
-pdg_particles = {
-    'Bs': 531,
-    'Bc': 541,
-    'Bs*': 533,
-    'B*+': 523,
-    'B*0': 513,
-    'B+': 521,
-    'B0': 511,
-    'Ds': 431,
-    'Ds*': 433,
-    'D+': 411,
-    'D0': 421,
-    'h': 25,
-    'J/psi': 443,
-    'KL': 130,
-    'KS': 310,
-    'K*+': 323,
-    'K*0': 313,
-    'K+': 321,
-    'K0': 311,
-    'Lambda': 3122,
-    'Lambdab': 5122,
-    'Lambdac': 4122,
-    'omega': 223,
-    'D*0': 423,
-    'D*+': 413,
-    'W': 24,
-    'Z': 23,
-    'e': 11,
-    'eta': 221,
-    'f0': 9010221,
-    'mu': 13,
-    'phi': 333,
-    'pi+': 211,
-    'pi0': 111,
-    'psi(2S)': 100443,
-    'rho+': 213,
-    'rho0': 113,
-    't': 6,
-    'tau': 15,
-    'u': 2,
-    'p': 2212,
-    'n': 2112,
-}
-
 class FlavioParticle(Particle):
     """This class extends the `particle.Particle` class.
 
@@ -146,7 +99,7 @@ class FlavioParticle(Particle):
     - from_flavio_name(flavio_name)
       returns a class instance for a given `flavio_name`
 
-    Additional properies
+    Additional properties
     --------------------
     - flavio_name
       the particle name as used in flavio if defined, otherwise `None`
@@ -160,16 +113,51 @@ class FlavioParticle(Particle):
       entries `name`, `tex`, `description`, `central`, `right`, `left`
     """
 
-    @classmethod
-    def from_flavio_name(cls, flavio_name):
-        return cls.from_pdgid(pdg_particles[flavio_name])
-
-    _pdg_particles_inv = {v:k for k,v in pdg_particles.items()}
-
-    @property
-    def flavio_name(self):
-        return self._pdg_particles_inv.get(self.pdgid, None)
-
+    PDG_PARTICLES = {
+        'Bs': 531,
+        'Bc': 541,
+        'Bs*': 533,
+        'B*+': 523,
+        'B*0': 513,
+        'B+': 521,
+        'B0': 511,
+        'Ds': 431,
+        'Ds*': 433,
+        'D+': 411,
+        'D0': 421,
+        'h': 25,
+        'J/psi': 443,
+        'KL': 130,
+        'KS': 310,
+        'K*+': 323,
+        'K*0': 313,
+        'K+': 321,
+        'K0': 311,
+        'Lambda': 3122,
+        'Lambdab': 5122,
+        'Lambdac': 4122,
+        'omega': 223,
+        'D*0': 423,
+        'D*+': 413,
+        'W': 24,
+        'Z': 23,
+        'e': 11,
+        'eta': 221,
+        'f0': 9010221,
+        'mu': 13,
+        'phi': 333,
+        'pi+': 211,
+        'pi0': 111,
+        'psi(2S)': 100443,
+        'rho+': 213,
+        'rho0': 113,
+        't': 6,
+        'tau': 15,
+        'u': 2,
+        'p': 2212,
+        'n': 2112,
+    }
+    _pdg_particles_inv = {v:k for k,v in PDG_PARTICLES.items()}
     _pdg_tex_regex = re.compile(
         r"^([A-Za-z\\/]+)" # latin or greek letters or slash
         r"(?:_\{(.*?)\})*" # _{...}
@@ -177,6 +165,15 @@ class FlavioParticle(Particle):
         r"(?:\((.*?)\))*" # (...)
         r"(?:\^\{(.*?)\})*" # ^{...}
     )
+
+    @classmethod
+    def from_flavio_name(cls, flavio_name):
+        return cls.from_pdgid(cls.PDG_PARTICLES[flavio_name])
+
+    @property
+    def flavio_name(self):
+        return self._pdg_particles_inv.get(self.pdgid, None)
+
     @property
     def latex_name_simplified(self):
         m = self._pdg_tex_regex.match(self.latex_name)
@@ -186,7 +183,7 @@ class FlavioParticle(Particle):
         sub = m.group(2)
         sup = (m.group(3) or '') + (m.group(5) or '')
         par = m.group(4)
-        if sub or name in {'W', 'Z', 'H', 'e', '\\mu', '\\tau'}:
+        if sub or name in ('W', 'Z', 'H', 'e', '\\mu', '\\tau'):
             # remove superscripts +-0 and keep only *
             sup = '*' if '*' in sup else ''
         if not sub and par and not par.isdigit() and name != 'J/\\psi':
@@ -200,7 +197,7 @@ class FlavioParticle(Particle):
     def flavio_m(self):
         name = 'm_' + self.flavio_name
         tex = r'$m_{' + self.latex_name_simplified + '}$'
-        pole_mass = ' quark pole' if self.latex_name_simplified == 't' else ''
+        pole_mass = ' quark pole' if self.name == 't' else ''
         description = r'${}${} mass'.format(
             self.latex_name_simplified, pole_mass
         )
@@ -227,9 +224,9 @@ class FlavioParticle(Particle):
 def read_pdg(year, constraints):
     """Read particle masses and widths from the PDG data file of a given year."""
     FlavioParticle.load_table(p_data.open_text(p_data, "particle{}.csv".format(year)))
-    for flavio_name in pdg_particles.keys():
+    for flavio_name in FlavioParticle.PDG_PARTICLES.keys():
         particle = FlavioParticle.from_flavio_name(flavio_name)
-        for data in {particle.flavio_m, particle.flavio_tau}:
+        for data in (particle.flavio_m, particle.flavio_tau):
             if data is None:
                 continue
             name, tex, description, central, right, left = data
