@@ -148,11 +148,16 @@ class TestPlots(unittest.TestCase):
         self.assertEqual(data['z'].shape, (20,20))
         self.assertEqual(len(data['levels']), 1) # by default, plot 1 sigma contour
         self.assertAlmostEqual(data['levels'][0], 2.3, delta=0.01) #
-        self.assertEqual(np.min(data['z']), 0)
+        self.assertAlmostEqual(np.min(data['z']), 0.07202216) # keep value of mininum
         # test parallel computation
         data2 = likelihood_contour_data(dummy_loglikelihood,
                                         -2, 2, -3, 3, threads=2)
         npt.assert_array_equal(data2['z'], data['z'])
+        # check that `z_min` larger than `np.min(z)` raises error
+        with self.assertRaises(ValueError):
+            kwargs = {'z_min':0.1}
+            kwargs.update(data) #  since we cannot do **data, **kwargs in Python <3.5
+            contour(**kwargs)
 
     def test_smooth_histogram(self):
         # just check this doesn't raise and error

@@ -503,6 +503,7 @@ def density_contour(x, y, covariance_factor=None, n_bins=None, n_sigma=(1, 2),
     """
     data = density_contour_data(x=x, y=y, covariance_factor=covariance_factor,
                                 n_bins=n_bins, n_sigma=n_sigma)
+    data['z_min'] = np.min(data['z']) # set minimum to prevent warning
     data.update(kwargs) #  since we cannot do **data, **kwargs in Python <3.5
     return contour(**data)
 
@@ -548,7 +549,6 @@ def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
                                 "in particular, you cannot use lambda expressions.")
         pool.close()
         pool.join()
-    z = z - np.min(z) # subtract the best fit point (on the grid)
 
     # get the correct values for 2D confidence/credibility contours for n sigma
     if isinstance(n_sigma, Number):
@@ -621,7 +621,7 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max,
     return contour_kwargs['x'], contour_kwargs['y'], contour_kwargs['z']
 
 
-def contour(x, y, z, levels,
+def contour(x, y, z, levels, *, z_min=None,
               interpolation_factor=1,
               interpolation_order=2,
               col=None, color=None, label=None,
@@ -634,10 +634,12 @@ def contour(x, y, z, levels,
 
     - `x`, `y`: 2D arrays containg x and y values as returned by numpy.meshgrid
     - `z` value of the function to plot. 2D array in the same shape as `x` and
-      `y`. The lowest value of the function should be 0 (i.e. the best fit
-      point).
+      `y`.
     - levels: list of function values where to draw the contours. They should
       be positive and in ascending order.
+    - `z_min` (optional): lowest value of the function to plot (i.e. value at
+      the best fit point). If not provided, the smallest value on the grid is
+      used.
     - `interpolation factor` (optional): in between the points on the grid,
       the functioncan be interpolated to get smoother contours.
       This parameter sets the number of subdivisions (default: 1, i.e. no
@@ -653,6 +655,18 @@ def contour(x, y, z, levels,
        to matplotlib.pyplot.contourf() (that paints the contour filling).
        Ignored if `filled` is false.
     """
+    if z_min is None:
+        warnings.warn("The smallest `z` value on the grid will be used as the "
+                      "minimum of the function to plot. This can lead to "
+                      "undesired results if the actual minimum is considerably "
+                      "different from the minimum on the grid. For better "
+                      "precision, the actual minimum should be provided in the "
+                      "`z_min` argument.")
+        z_min = np.min(z) # use minmum on the grid
+    elif np.min(z) < z_min:
+        raise ValueError("The provided minimum `z_min` has to be smaller than "
+                         "the smallest `z` value on the grid.")
+    z = z - z_min # subtract z minimum to make value of new z minimum 0
     if interpolation_factor > 1:
         x = scipy.ndimage.zoom(x, zoom=interpolation_factor, order=1)
         y = scipy.ndimage.zoom(y, zoom=interpolation_factor, order=1)
@@ -673,7 +687,8 @@ def contour(x, y, z, levels,
     _contour_args.update(contour_args)
     _contourf_args.update(contourf_args)
     # for the filling, need to add zero contour
-    levelsf = [np.min(z)] + list(levels)
+    zero_contour = min(np.min(z),np.min(levels)*(1-1e-16))
+    levelsf = [zero_contour] + list(levels)
     ax = plt.gca()
     if filled:
         ax.contourf(x, y, z, levels=levelsf, **_contourf_args)
