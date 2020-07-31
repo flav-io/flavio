@@ -2,7 +2,8 @@ import unittest
 import numpy as np
 from .parameters import *
 from .classes import *
-from .parameters import _read_pdg_masswidth
+from .parameters import (Particle, p_data, pdg_particles, _pdg_tex_simplify,
+                        _read_pdg_parameters)
 import tempfile
 
 s = 1.519267515435317e+24
@@ -10,17 +11,68 @@ ps = 1e-12*s
 
 
 class TestPDG(unittest.TestCase):
-    particles = _read_pdg_masswidth('data/pdg/mass_width_2015.mcd')
+    year = 2018
+    Particle.load_table(p_data.open_text(p_data, "particle{}.csv".format(year)))
     def test_pdg(self):
-        # check some masses
-        self.assertEqual(self.particles['K*(892)+']['mass'][0], 0.89166)
-        self.assertEqual(self.particles['K*(892)0']['mass'][0], 0.89581)
-        self.assertEqual(self.particles['t']['mass'][0], 173.21)
-        # compare B_s lifetime and errors in picoseconds to inverse width
-        GammaBs = self.particles['B(s)']['width']
-        self.assertAlmostEqual(1/GammaBs[0]/ps, 1.510, places=3)
-        self.assertAlmostEqual(1/ps*GammaBs[1]/GammaBs[0]**2, +0.005, places=3)
-        self.assertAlmostEqual(1/ps*GammaBs[2]/GammaBs[0]**2, -0.005, places=3)
+        # check some tex names and masses
+        to_check = {
+            'Bs': ('B_{s}', 5.366890000000001),
+            'Bc': ('B_{c}', 6.2749),
+            'Bs*': ('B_{s}^{*}', 5.4154),
+            'B*+': ('B^{*+}', 5.32465),
+            'B*0': ('B^{*0}', 5.32465),
+            'B+': ('B^{+}', 5.27932),
+            'B0': ('B^{0}', 5.27963),
+            'Ds': ('D_{s}', 1.96834),
+            'Ds*': ('D_{s}^{*}', 2.1122),
+            'D+': ('D^{+}', 1.86965),
+            'D0': ('D^{0}', 1.86483),
+            'h': ('H', 125.18),
+            'J/psi': ('J/\\psi', 3.0969),
+            'KL': ('K_{L}', 0.497611),
+            'KS': ('K_{S}', 0.497611),
+            'K*+': ('K^{*+}', 0.89176),
+            'K*0': ('K^{*0}', 0.89555),
+            'K+': ('K^{+}', 0.49367700000000003),
+            'K0': ('K^{0}', 0.497611),
+            'Lambda': ('\\Lambda', 1.115683),
+            'Lambdab': ('\\Lambda_{b}', 5.6196),
+            'Lambdac': ('\\Lambda_{c}', 2.28646),
+            'omega': ('\\omega', 0.78265),
+            'D*0': ('D^{*0}', 2.00685),
+            'D*+': ('D^{*+}', 2.01026),
+            'W': ('W', 80.379),
+            'Z': ('Z', 91.1876),
+            'e': ('e', 0.0005109989461),
+            'eta': ('\\eta', 0.547862),
+            'f0': ('f_{0}', 0.99),
+            'mu': ('\\mu', 0.1056583745),
+            'phi': ('\\phi', 1.019461),
+            'pi+': ('\\pi^{+}', 0.13957060999999998),
+            'pi0': ('\\pi^{0}', 0.134977),
+            'psi(2S)': ('\\psi_{2S}', 3.686097),
+            'rho+': ('\\rho^{+}', 0.7752600000000001),
+            'rho0': ('\\rho^{0}', 0.7752600000000001),
+            't': ('t', 173.1),
+            'tau': ('\\tau', 1.7768599999999999),
+            'u': ('u', 0.0022),
+            'p': ('p', 0.9382720809999999),
+            'n': ('n', 0.9395654130000001),
+        }
+        for flavio_name, (tex_test, mass_test) in to_check.items():
+            pdgid = pdg_particles[flavio_name]
+            particle = Particle.from_pdgid(pdgid)
+            tex_name = _pdg_tex_simplify(particle.latex_name)
+            self.assertEqual(tex_name, tex_test)
+            data = _read_pdg_parameters(particle, flavio_name, tex_name, 'm')
+            self.assertEqual(data[3], mass_test)
+        # check B_s lifetime and errors in picoseconds
+        particle = Particle.from_pdgid(pdg_particles['Bs'])
+        data = _read_pdg_parameters(particle, '', '', 'tau')
+        tauBs = data[3:]
+        self.assertAlmostEqual(tauBs[0]/ps, 1.509, places=3)
+        self.assertAlmostEqual(tauBs[1]/ps, 0.004, places=3)
+        self.assertAlmostEqual(tauBs[2]/ps, 0.004, places=3)
 
 class TestParameters(unittest.TestCase):
     def test_parameters(self):
