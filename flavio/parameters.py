@@ -152,11 +152,11 @@ def _pdg_tex_simplify(string):
     sub = m.group(2)
     sup = (m.group(3) or '') + (m.group(5) or '')
     par = m.group(4)
-    if sub or name in 'W Z H e \\mu \\tau':
+    if sub or name in {'W', 'Z', 'H', 'e', '\\mu', '\\tau'}:
         # remove superscripts +-0 and keep only *
         sup = '*' if '*' in sup else ''
-    if not sub and par and par.upper().isupper() and par not in '1S':
-        # subscript absent and parantheses contain letter but not '1S'
+    if not sub and par and not par.isdigit() and name != 'J/\\psi':
+        # subscript absent and parantheses contain letter but not for 'J/\\psi'
         sub = par
     sub_tex = r'_{' + sub + r'}' if sub else ''
     sup_tex = r'^{' + sup + r'}' if sup else ''
