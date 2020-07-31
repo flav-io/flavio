@@ -138,65 +138,101 @@ pdg_particles = {
     'n': 2112,
 }
 
-_pdg_tex_regex = re.compile(
-    r"^([A-Za-z\\/]+)" # latin or greek letters or slash
-    r"(?:_\{(.*?)\})*" # _{...}
-    r"(?:\^\{(.*?)\})*" # ^{...}
-    r"(?:\((.*?)\))*" # (...)
-    r"(?:\^\{(.*?)\})*" # ^{...}
-)
+class FlavioParticle(Particle):
+    """This class extends the `particle.Particle` class.
 
-def _pdg_tex_simplify(string):
-    m = _pdg_tex_regex.match(string)
-    name = m.group(1)
-    sub = m.group(2)
-    sup = (m.group(3) or '') + (m.group(5) or '')
-    par = m.group(4)
-    if sub or name in {'W', 'Z', 'H', 'e', '\\mu', '\\tau'}:
-        # remove superscripts +-0 and keep only *
-        sup = '*' if '*' in sup else ''
-    if not sub and par and not par.isdigit() and name != 'J/\\psi':
-        # subscript absent and parantheses contain letter but not for 'J/\\psi'
-        sub = par
-    sub_tex = r'_{' + sub + r'}' if sub else ''
-    sup_tex = r'^{' + sup + r'}' if sup else ''
-    return name + sub_tex + sup_tex
+    Additional class method
+    -----------------------
+    - from_flavio_name(flavio_name)
+      returns a class instance for a given `flavio_name`
 
-def _read_pdg_parameters(particle, flavio_name, tex_name, read_parameter):
-    if read_parameter == 'm':
-        name = 'm_' + flavio_name
-        tex = r'$m_{' + tex_name + '}$'
-        if tex_name =='t':
-            description = r'$' + tex_name + r'$ quark pole mass'
-        else:
-            description = r'$' + tex_name + r'$ mass'
-        central = particle.mass*1e-3
-        right = particle.mass_upper*1e-3
-        left = particle.mass_lower*1e-3
-    elif read_parameter == 'tau':
-        name = 'tau_' + flavio_name
-        tex = r'$\tau_{' + tex_name + '}$'
-        description = r'$' + tex_name + r'$ lifetime'
-        G_central = particle.width*1e-3
-        G_right = particle.width_upper*1e-3
-        G_left = particle.width_lower*1e-3
+    Additional properies
+    --------------------
+    - flavio_name
+      the particle name as used in flavio if defined, otherwise `None`
+    - latex_name_simplified
+      a simplified version of the latex name returned by `latex_name`
+    - flavio_m
+      a tuple with data on the particle mass as used in flavio, containing
+      entries `name`, `tex`, `description`, `central`, `right`, `left`
+    - flavio_tau
+      a tuple with data on the particle lifetime as used in flavio, containing
+      entries `name`, `tex`, `description`, `central`, `right`, `left`
+    """
+
+    @classmethod
+    def from_flavio_name(cls, flavio_name):
+        return cls.from_pdgid(pdg_particles[flavio_name])
+
+    _pdg_particles_inv = {v:k for k,v in pdg_particles.items()}
+
+    @property
+    def flavio_name(self):
+        return self._pdg_particles_inv.get(self.pdgid, None)
+
+    _pdg_tex_regex = re.compile(
+        r"^([A-Za-z\\/]+)" # latin or greek letters or slash
+        r"(?:_\{(.*?)\})*" # _{...}
+        r"(?:\^\{(.*?)\})*" # ^{...}
+        r"(?:\((.*?)\))*" # (...)
+        r"(?:\^\{(.*?)\})*" # ^{...}
+    )
+    @property
+    def latex_name_simplified(self):
+        m = self._pdg_tex_regex.match(self.latex_name)
+        if m is None:
+            return self.latex_name
+        name = m.group(1)
+        sub = m.group(2)
+        sup = (m.group(3) or '') + (m.group(5) or '')
+        par = m.group(4)
+        if sub or name in {'W', 'Z', 'H', 'e', '\\mu', '\\tau'}:
+            # remove superscripts +-0 and keep only *
+            sup = '*' if '*' in sup else ''
+        if not sub and par and not par.isdigit() and name != 'J/\\psi':
+            # subscript absent and parantheses contain letter but not for 'J/\\psi'
+            sub = par
+        sub_tex = r'_{' + sub + r'}' if sub else ''
+        sup_tex = r'^{' + sup + r'}' if sup else ''
+        return name + sub_tex + sup_tex
+
+    @property
+    def flavio_m(self):
+        name = 'm_' + self.flavio_name
+        tex = r'$m_{' + self.latex_name_simplified + '}$'
+        pole_mass = ' quark pole' if self.latex_name_simplified == 't' else ''
+        description = r'${}${} mass'.format(
+            self.latex_name_simplified, pole_mass
+        )
+        central = self.mass*1e-3
+        right = self.mass_upper*1e-3
+        left = self.mass_lower*1e-3
+        return name, tex, description, central, right, left
+
+    @property
+    def flavio_tau(self):
+        if {self.width, self.width_upper, self.width_lower} & {None, 0}:
+            return None
+        name = 'tau_' + self.flavio_name
+        tex = r'$\tau_{' + self.latex_name_simplified + '}$'
+        description = r'${}$ lifetime'.format(self.latex_name_simplified)
+        G_central = self.width*1e-3
+        G_right = self.width_upper*1e-3
+        G_left = self.width_lower*1e-3
         central = 1/G_central # life time = 1/width
         right = G_right/G_central**2
         left = G_left/G_central**2
-    return (name, tex, description, central, right, left)
+        return name, tex, description, central, right, left
 
 def read_pdg(year, constraints):
     """Read particle masses and widths from the PDG data file of a given year."""
-    Particle.load_table(p_data.open_text(p_data, "particle{}.csv".format(year)))
-    for flavio_name, pdgid in pdg_particles.items():
-        particle = Particle.from_pdgid(pdgid)
-        tex_name = _pdg_tex_simplify(particle.latex_name)
-        read_parameters = ['m']
-        if {particle.width, particle.width_upper, particle.width_lower}.isdisjoint({None, 0}):
-            read_parameters += ['tau']
-        for read_parameter in read_parameters:
-            data = _read_pdg_parameters(particle, flavio_name, tex_name, read_parameter)
-            (name, tex, description, central, right, left) = data
+    FlavioParticle.load_table(p_data.open_text(p_data, "particle{}.csv".format(year)))
+    for flavio_name in pdg_particles.keys():
+        particle = FlavioParticle.from_flavio_name(flavio_name)
+        for data in {particle.flavio_m, particle.flavio_tau}:
+            if data is None:
+                continue
+            name, tex, description, central, right, left = data
             try:
                 # if parameter already exists, remove existing constraints on it
                 p = Parameter[name]

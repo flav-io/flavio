@@ -2,8 +2,7 @@ import unittest
 import numpy as np
 from .parameters import *
 from .classes import *
-from .parameters import (Particle, p_data, pdg_particles, _pdg_tex_simplify,
-                        _read_pdg_parameters)
+from .parameters import FlavioParticle, p_data
 import tempfile
 
 s = 1.519267515435317e+24
@@ -12,7 +11,7 @@ ps = 1e-12*s
 
 class TestPDG(unittest.TestCase):
     year = 2018
-    Particle.load_table(p_data.open_text(p_data, "particle{}.csv".format(year)))
+    FlavioParticle.load_table(p_data.open_text(p_data, "particle{}.csv".format(year)))
     def test_pdg(self):
         # check some tex names and masses
         to_check = {
@@ -60,16 +59,12 @@ class TestPDG(unittest.TestCase):
             'n': ('n', 0.9395654130000001),
         }
         for flavio_name, (tex_test, mass_test) in to_check.items():
-            pdgid = pdg_particles[flavio_name]
-            particle = Particle.from_pdgid(pdgid)
-            tex_name = _pdg_tex_simplify(particle.latex_name)
-            self.assertEqual(tex_name, tex_test)
-            data = _read_pdg_parameters(particle, flavio_name, tex_name, 'm')
-            self.assertEqual(data[3], mass_test)
+            particle = FlavioParticle.from_flavio_name(flavio_name)
+            self.assertEqual(particle.latex_name_simplified, tex_test)
+            self.assertEqual(particle.flavio_m[3], mass_test)
         # check B_s lifetime and errors in picoseconds
-        particle = Particle.from_pdgid(pdg_particles['Bs'])
-        data = _read_pdg_parameters(particle, '', '', 'tau')
-        tauBs = data[3:]
+        particle = FlavioParticle.from_flavio_name('Bs')
+        tauBs = particle.flavio_tau[3:]
         self.assertAlmostEqual(tauBs[0]/ps, 1.509, places=3)
         self.assertAlmostEqual(tauBs[1]/ps, 0.004, places=3)
         self.assertAlmostEqual(tauBs[2]/ps, 0.004, places=3)
