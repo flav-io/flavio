@@ -94,13 +94,15 @@ def write_file(filename, constraints):
 class FlavioParticle(Particle):
     """This class extends the `particle.Particle` class.
 
-    Additional class method
-    -----------------------
+    Additional class methods
+    ------------------------
     - from_flavio_name(flavio_name)
       returns a class instance for a given `flavio_name`
+    - flavio_all()
+      returns a set of all class instances used in flavio
 
     Additional properties
-    --------------------
+    ---------------------
     - flavio_name
       the particle name as used in flavio if defined, otherwise `None`
     - latex_name_simplified
@@ -170,6 +172,10 @@ class FlavioParticle(Particle):
     def from_flavio_name(cls, flavio_name):
         return cls.from_pdgid(cls.PDG_PARTICLES[flavio_name])
 
+    @classmethod
+    def flavio_all(cls):
+        return {particle for particle in cls.all() if particle.flavio_name}
+
     @property
     def flavio_name(self):
         return self._pdg_particles_inv.get(self.pdgid, None)
@@ -224,8 +230,7 @@ class FlavioParticle(Particle):
 def read_pdg(year, constraints):
     """Read particle masses and widths from the PDG data file of a given year."""
     FlavioParticle.load_table(p_data.open_text(p_data, "particle{}.csv".format(year)))
-    for flavio_name in FlavioParticle.PDG_PARTICLES.keys():
-        particle = FlavioParticle.from_flavio_name(flavio_name)
+    for particle in FlavioParticle.flavio_all():
         for data in (particle.flavio_m, particle.flavio_tau):
             if data is None:
                 continue
