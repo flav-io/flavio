@@ -87,14 +87,47 @@ def transversity_amps(ha, q2, mLb, mL, mqh, wc, prefactor):
     return {k: prefactor*v for k, v in A.items()}
 
 
-def anular_coefficients(ta, alpha):
+def anular_coefficients(ta, br):
     # eqs (4.2) in arXiv
-    # missing BR(L(1520))
+    # br is BR(L(1520))
 
     L={}
-    L['1c'] = -2*()
+    L['1c'] = -2*br*( real(ta['Aperp1','L'] * ta['Apara1','L'].conj())
+                      - real(ta['Aperp1','R'] * ta['Apara1','R'].conj())
+    )
+    L['1cc'] = br*( abs(ta['Apara1','L'])**2 + abs(ta['Aperp1','L'])**2
+                    + abs(ta['Apara1','R'])**2 + abs(ta['Aperp1','R'])**2
+    )
+    L['1ss'] = br/2*( 2*( abs(ta['Apara0','L'])**2 + abs(ta['Aperp0','L'])**2 )
+                      + abs(ta['Apara1','L'])**2 + abs(ta['Aperp1', 'L'])**2
+                      + 2*(abs(ta['Apara0','R'])**2 + abs(ta['Aperp0', 'R'])**2)
+                      + abs(ta['Apara1','R'])**2 + abs(ta['Aperp1','R'])**2
+    )
+    L['2c'] = -br/2*( real(ta['Aperp1','L'] * ta['Apara1','L'].conj())
+                      + 3*real(ta['Bperp1','L'] * ta['Bpara1','L'].conj())
+                      - real(ta['Aperp1','R'] * ta['Apara1','R'].conj())
+                      - 3*real(ta['Bperp1','R'] * ta['Bpara1','R'].conj())
+    )
+    L['2cc'] = br/4*( abs(ta['Apara1','L'])**2 + abs(ta['Aperp1','L'])**2
+                      + 3*(abs(ta['Bpara1','L'])**2 + abs(ta['Bperp1','L'])**2)
+                      + abs(ta['Apara1','R'])**2 + abs(ta['Aperp1','R'])**2
+                      + 3*(abs(ta['Bpara1','R'])**2 + abs(ta['Bperp1','R'])**2)
+    )
+    L['2ss'] = br/8*( 2*abs(ta['Apara0','L'])**2 + abs(ta['Apara1','L'])**2
+                      + 2*abs(ta['Aperp0','L'])**2 + abs(ta['perp1','L'])**2
+                      + 3*(abs(ta['Bperp1','L'])**2 + abs(ta['Bperp1','L'])**2) 
+                      - 2*sqrt(3)*real(ta['Bpara1','L']*ta['Apara1','L'].conj())
+                      + 2*sqrt(3)*real(ta['Bperp1','L']*ta['Aperp1','L'].conj())
+                      + 2*abs(ta['Apara0','R'])**2 + abs(ta['Apara1','R'])**2
+                      + 2*abs(ta['Aperp0','R'])**2 + abs(ta['perp1','R'])**2
+                      + 3*(abs(ta['Bperp1','R'])**2 + abs(ta['Bperp1','R'])**2) 
+                      - 2*sqrt(3)*real(ta['Bpara1','R']*ta['Apara1','R'].conj())
+                      + 2*sqrt(3)*real(ta['Bperp1','R']*ta['Aperp1','R'].conj())
+    )
+    L['3ss'] = sqrt(3)/2*br*()
     
 
+    
 # def get_ff(q2, par) -> form factors from AuxiliaryQuantity computed in formfactor-directory
 
 # def prefactor(q2, par, scale) -> calculate prefactor N
