@@ -1,7 +1,7 @@
 r"""Functions for $\Lambda_b \to \Lambda(1520)(\to NK) \ell^+ \ell⁻$ decays as in arXiv:1903.00448."""
 
 import flavio
-from match import sqrt, pi
+from math import sqrt, pi
 from flavio.physics.bdecays.common import lambda_k, beta_l, meson_quark, meson_ff
 from flavio.classes import Observable, Prediction, AuxiliaryQuantity
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
@@ -87,26 +87,26 @@ def transversity_amps(ha, q2, mLb, mL, mqh, wc, prefactor):
     return {k: prefactor*v for k, v in A.items()}
 
 
-def anular_coefficients(ta, br):
+def angular_coefficients(ta, br):
     # eqs (4.2) in arXiv
-    # br is BR(L(1520))
+    # br is BR(L(1520)->Kp)
 
     L={}
-    L['1c'] = -2*br*( real(ta['Aperp1','L'] * ta['Apara1','L'].conj())
-                      - real(ta['Aperp1','R'] * ta['Apara1','R'].conj())
+    L['1c'] = -2*br*( ta['Aperp1','L'] * ta['Apara1','L'].conj()).real
+                      - (ta['Aperp1','R'] * ta['Apara1','R'].conj()).real
     )
     L['1cc'] = br*( abs(ta['Apara1','L'])**2 + abs(ta['Aperp1','L'])**2
                     + abs(ta['Apara1','R'])**2 + abs(ta['Aperp1','R'])**2
     )
-    L['1ss'] = br/2*( 2*( abs(ta['Apara0','L'])**2 + abs(ta['Aperp0','L'])**2 )
-                      + abs(ta['Apara1','L'])**2 + abs(ta['Aperp1', 'L'])**2
-                      + 2*(abs(ta['Apara0','R'])**2 + abs(ta['Aperp0', 'R'])**2)
+    L['1ss'] = br/2*( 2*(abs(ta['Apara0','L'])**2 + abs(ta['Aperp0','L'])**2)
+                      + abs(ta['Apara1','L'])**2 + abs(ta['Aperp1','L'])**2
+                      + 2*(abs(ta['Apara0','R'])**2 + abs(ta['Aperp0','R'])**2)
                       + abs(ta['Apara1','R'])**2 + abs(ta['Aperp1','R'])**2
     )
-    L['2c'] = -br/2*( real(ta['Aperp1','L'] * ta['Apara1','L'].conj())
-                      + 3*real(ta['Bperp1','L'] * ta['Bpara1','L'].conj())
-                      - real(ta['Aperp1','R'] * ta['Apara1','R'].conj())
-                      - 3*real(ta['Bperp1','R'] * ta['Bpara1','R'].conj())
+    L['2c'] = -br/2*( (ta['Aperp1','L'] * ta['Apara1','L'].conj()).real
+                      + 3*(ta['Bperp1','L'] * ta['Bpara1','L'].conj()).real
+                      - (ta['Aperp1','R'] * ta['Apara1','R'].conj()).real
+                      - 3*(ta['Bperp1','R'] * ta['Bpara1','R'].conj()).real
     )
     L['2cc'] = br/4*( abs(ta['Apara1','L'])**2 + abs(ta['Aperp1','L'])**2
                       + 3*(abs(ta['Bpara1','L'])**2 + abs(ta['Bperp1','L'])**2)
@@ -114,19 +114,49 @@ def anular_coefficients(ta, br):
                       + 3*(abs(ta['Bpara1','R'])**2 + abs(ta['Bperp1','R'])**2)
     )
     L['2ss'] = br/8*( 2*abs(ta['Apara0','L'])**2 + abs(ta['Apara1','L'])**2
-                      + 2*abs(ta['Aperp0','L'])**2 + abs(ta['perp1','L'])**2
-                      + 3*(abs(ta['Bperp1','L'])**2 + abs(ta['Bperp1','L'])**2) 
-                      - 2*sqrt(3)*real(ta['Bpara1','L']*ta['Apara1','L'].conj())
-                      + 2*sqrt(3)*real(ta['Bperp1','L']*ta['Aperp1','L'].conj())
+                      + 2*abs(ta['Aperp0','L'])**2 + abs(ta['Aperp1','L'])**2
+                      + 3*(abs(ta['Bpara1','L'])**2 + abs(ta['Bperp1','L'])**2) 
+                      - 2*sqrt(3)*(ta['Bpara1','L']*ta['Apara1','L'].conj()).real
+                      + 2*sqrt(3)*(ta['Bperp1','L']*ta['Aperp1','L'].conj()).real
                       + 2*abs(ta['Apara0','R'])**2 + abs(ta['Apara1','R'])**2
-                      + 2*abs(ta['Aperp0','R'])**2 + abs(ta['perp1','R'])**2
-                      + 3*(abs(ta['Bperp1','R'])**2 + abs(ta['Bperp1','R'])**2) 
-                      - 2*sqrt(3)*real(ta['Bpara1','R']*ta['Apara1','R'].conj())
-                      + 2*sqrt(3)*real(ta['Bperp1','R']*ta['Aperp1','R'].conj())
+                      + 2*abs(ta['Aperp0','R'])**2 + abs(ta['Aperp1','R'])**2
+                      + 3*(abs(ta['Bpara1','R'])**2 + abs(ta['Bperp1','R'])**2) 
+                      - 2*sqrt(3)*(ta['Bpara1','R']*ta['Apara1','R'].conj()).real
+                      + 2*sqrt(3)*(ta['Bperp1','R']*ta['Aperp1','R'].conj()).real
     )
-    L['3ss'] = sqrt(3)/2*br*()
-    
+    L['3ss'] = sqrt(3)/2*br*( (ta['Bpara1','L']*ta['Apara1','L'].conj()).real
+                              - (ta['Bperp1','L']*ta['Aperp1','L'].conj()).real
+                              + (ta['Bpara1','R']*ta['Apara1','R'].conj()).real
+                              - (ta['Bperp1','R']*ta['Aperp1','R'].conj()).real 
+    )
+    L['4ss'] = sqrt(3)/2*br*( (ta['Bperp1','L']*ta['Apara1','L'].conj()).imag
+                              - (ta['Bpara1','L']*ta['Aperp1','L'].conj()).imag
+                              + (ta['Bperp1','R']*ta['Apara1','R'].conj()).imag
+                              - (ta['Bpara1','R']*ta['Aperp1','R'].conj()).imag
+    )
+    L['5s'] = sqrt(3/2)*br*( (ta['Bperp1','L']*ta['Apara0','L'].conj()).real
+                             - (ta['Bpara1','L']*ta['Aperp0','L'].conj()).real
+                             - (ta['Bperp1','R']*ta['Apara0','R'].conj()).real
+                             + (ta['Bpara1','R']*ta['Aperp0','R'].conj()).real
+    ) 
+    L['5sc'] = sqrt(3/2)*br*( -(ta['Bpara1','L']*ta['Apara0','L'].conj()).real
+                              + (ta['Bperp1','L']*ta['Aperp0','L'].conj()).real
+                              - (ta['Bpara1','R']*ta['Apara0','R'].conj()).real
+                              + (ta['Bperp1','R']*ta['Aperp0','R'].conj()).real
+    )
+    L['6s'] = sqrt(3/2)*br*( (ta['Bpara1','L']*ta['Apara0','L'].conj()).imag
+                             - (ta['Bperp1','L']*ta['Aperp0','L'].conj()).imag
+                             - (ta['Bpara1','R']*ta['Apara0','R'].conj()).imag
+                             + (ta['Bperp1','R']*ta['Aperp0','R'].conj()).imag
+    ) 
+    L['6sc'] = -sqrt(3/2)*br*( (ta['Bperp1','L']*ta['Apara0','L'].conj()).imag
+                             - (ta['Bpara1','L']*ta['Aperp0','L'].conj()).imag
+                             + (ta['Bperp1','R']*ta['Apara0','R'].conj()).imag
+                             - (ta['Bpara1','R']*ta['Aperp0','R'].conj()).imag
+    )
 
+    return L
+    
     
 # def get_ff(q2, par) -> form factors from AuxiliaryQuantity computed in formfactor-directory
 
