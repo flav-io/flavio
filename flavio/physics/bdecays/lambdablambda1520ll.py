@@ -1,7 +1,7 @@
 r"""Functions for $\Lambda_b \to \Lambda(1520)(\to NK) \ell^+ \ell⁻$ decays as in arXiv:1903.00448."""
 
 import flavio
-from match import sqrt, pi
+from math import sqrt, pi
 from flavio.physics.bdecays.common import lambda_k, beta_l, meson_quark, meson_ff
 from flavio.classes import Observable, Prediction, AuxiliaryQuantity
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
@@ -163,7 +163,7 @@ def prefactor(q2, par, scale):
     alphaem = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
     mLb = par['m_Lambdab']
     mL = par['m_Lambda(1520)']
-    la_K = flavio.physics.bdecays.common.lambda_K(mlb**2, ml**2, q2)
+    la_K = flavio.physics.bdecays.common.lambda_K(mLb**2, mL**2, q2)
     return par['GF'] * xi_t * alphaem * sqrt(q2) * la_K**(1/4.) / sqrt(3 * 2 * mLb**3 * pi**5) / 32
 
 
@@ -171,13 +171,15 @@ def get_transversity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
     par = par_dict.copy()
     if cp_conjugate:
         par = conjugate_par(par)
+    # Scale works with lambdab instead Lambdab ?
     scale = flavio.config['renormalization scale']['lambdab']
-    mlb = par['m_lambdab']
-    ml = par['m_lambda']
+    mLb = par['m_Lambdab']
+    mL = par['m_Lambda(1520)']
     mb = flavio.physics.running.running.get_mb(par, scale)
     # !!! get_ff !!!
     ff = get_ff(q2, par)
-    wc = flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wc_obj, 'BS' + lep + lep, scale, par)
+    wc = flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wc_obj, 'bs' + lep + lep, scale, par)
+    # Is wc_eff working correctly ? 
     wc_eff = flavio.physics.bdecays.wilsoncoefficients.get_wceff(q2, wc, par, 'Lambdab', 'Lambda(1520)', lep, scale)
     ha = helicity_amps(q2, mLb, mL, ff)
     N = prefactor(q2, par, scale)
