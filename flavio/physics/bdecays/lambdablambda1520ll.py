@@ -1,7 +1,7 @@
 r"""Functions for $\Lambda_b \to \Lambda(1520)(\to NK) \ell^+ \ell⁻$ decays as in arXiv:1903.00448."""
 
 import flavio
-from math import sqrt, pi
+from match import sqrt, pi
 from flavio.physics.bdecays.common import lambda_k, beta_l, meson_quark, meson_ff
 from flavio.classes import Observable, Prediction, AuxiliaryQuantity
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
@@ -55,12 +55,9 @@ def helicity_amps(q2, mLb, mL, ff):
 
 
 def transversity_amps(ha, q2, mLb, mL, mqh, wc, prefactor):
-    r """Hadronic transversity amplitudes"""
+    # Hadronic transversity amplitudes
     # defined as in eqs (3.18) and (3.20)
-    # mqh is mb
 
-    # ???? How to deal with Normalization N1 ????
-    # !!!! Calculate normalization factor N !!!!
     C910Lpl = (wc['v'] - wc['a']) + (wc['vp'] - wc['ap'])
     C910Rpl = (wc['v'] + wc['a']) + (wc['vp'] + wc['ap'])
     C910Lmi = (wc['v'] - wc['a']) - (wc['vp'] - wc['ap'])
@@ -88,11 +85,11 @@ def transversity_amps(ha, q2, mLb, mL, mqh, wc, prefactor):
 
 
 def angular_coefficients(ta, br):
-    # eqs (4.2) in arXiv
-    # br is BR(L(1520)->Kp)
+    # eqs (4.2) in arxiv
+    # br is br(l(1520)->kp)
 
     L={}
-    L['1c'] = -2*br*( ta['Aperp1','L'] * ta['Apara1','L'].conj()).real
+    L['1c'] = -2*br*( (ta['Aperp1','L'] * ta['Apara1','L'].conj()).real
                       - (ta['Aperp1','R'] * ta['Apara1','R'].conj()).real
     )
     L['1cc'] = br*( abs(ta['Apara1','L'])**2 + abs(ta['Aperp1','L'])**2
@@ -113,7 +110,7 @@ def angular_coefficients(ta, br):
                       + abs(ta['Apara1','R'])**2 + abs(ta['Aperp1','R'])**2
                       + 3*(abs(ta['Bpara1','R'])**2 + abs(ta['Bperp1','R'])**2)
     )
-    L['2ss'] = br/8*( 2*abs(ta['Apara0','L'])**2 + abs(ta['Apara1','L'])**2
+    l['2ss'] = br/8*( 2*abs(ta['Apara0','L'])**2 + abs(ta['Apara1','L'])**2
                       + 2*abs(ta['Aperp0','L'])**2 + abs(ta['Aperp1','L'])**2
                       + 3*(abs(ta['Bpara1','L'])**2 + abs(ta['Bperp1','L'])**2) 
                       - 2*sqrt(3)*(ta['Bpara1','L']*ta['Apara1','L'].conj()).real
@@ -157,10 +154,36 @@ def angular_coefficients(ta, br):
 
     return L
     
-    
-# def get_ff(q2, par) -> form factors from AuxiliaryQuantity computed in formfactor-directory
 
-# def prefactor(q2, par, scale) -> calculate prefactor N
+# def get_ff(q2, par) -> form factors from auxiliaryquantity computed in formfactor-directory
+
+def prefactor(q2, par, scale):
+    #calculate prefactor N
+    xi_t = flavio.physics.ckm.xi('t','bs')(par)
+    alphaem = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
+    mLb = par['m_Lambdab']
+    mL = par['m_Lambda(1520)']
+    la_K = flavio.physics.bdecays.common.lambda_K(mlb**2, ml**2, q2)
+    return par['GF'] * xi_t * alphaem * sqrt(q2) * la_K**(1/4.) / sqrt(3 * 2 * mLb**3 * pi**5) / 32
+
+
+def get_transversity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
+    par = par_dict.copy()
+    if cp_conjugate:
+        par = conjugate_par(par)
+    scale = flavio.config['renormalization scale']['lambdab']
+    mlb = par['m_lambdab']
+    ml = par['m_lambda']
+    mb = flavio.physics.running.running.get_mb(par, scale)
+    # !!! get_ff !!!
+    ff = get_ff(q2, par)
+    wc = flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wc_obj, 'BS' + lep + lep, scale, par)
+    wc_eff = flavio.physics.bdecays.wilsoncoefficients.get_wceff(q2, wc, par, 'Lambdab', 'Lambda(1520)', lep, scale)
+    ha = helicity_amps(q2, mLb, mL, ff)
+    N = prefactor(q2, par, scale)
+    ta_ff = transversity_amps(ha, q2, mLb, mL, mb, 0, wc_eff, N)
+    return ta_ff
+
 
 # def get_transversity_amps_ff -> get helicity_amps+prefactor->transversity_amps
 
