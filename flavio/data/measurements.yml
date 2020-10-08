@@ -5539,6 +5539,12 @@ LHCb B->ll' 2017:
     BR(Bs->emu,mue): < 6.3e-9 @ 95% CL
     BR(B0->emu,mue): < 1.3e-9 @ 95% CL
 
+LHCb B->Ktaumu 2020:
+  experiment: LHCb
+  inspire: Aaij:2020mqb
+  values:
+    BR(B+->Ktaumu): < 3.9e-5 @ 90% CL # NB this is B- -> K- tau+ mu-
+
 LHCb B->taumu 2019:
   experiment: LHCb
   inspire: Aaij:2019okb
