@@ -5949,6 +5949,12 @@ LEP Z leptonic decay:
     Gamma(Z->mumu): 83.99 +- 0.18 e-3
     Gamma(Z->tautau): 84.08 +- 0.22 e-3
 
+ATLAS W->taunu 2020:
+  experiment: ATLAS
+  inspire: Aad:2020ayz
+  values:
+    Rtaumu(W->lnu): 0.992 ± 0.007 ± 0.011
+
 LHCb W->lnu 2016:
   experiment: LHCb
   inspire: Aaij:2016qqz
@@ -5998,6 +6004,14 @@ DELPHI Z LFV:
       confidence_level: 0.95
       counts_total: 0
       counts_background: 0
+
+ATLAS Z LFV 2020:
+  experiment: ATLAS
+  inspire: Aad:2020gkd
+  values:
+    # High background: assuming half-Gaussian for simplicity
+    BR(Z->etau): < 8.1e-6 @ 95% CL
+    BR(Z->mutau): < 9.5e-6 @ 95% CL
 
 ATLAS Z LFV 2014:
   experiment: ATLAS
