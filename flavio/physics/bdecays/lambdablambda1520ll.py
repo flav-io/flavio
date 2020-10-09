@@ -2,7 +2,7 @@ r"""Functions for $\Lambda_b \to \Lambda(1520)(\to NK) \ell^+ \ell⁻$ decays as
 
 import flavio
 from math import sqrt, pi
-from flavio.physics.bdecays.common import lambda_k, beta_l, meson_quark, meson_ff
+from flavio.physics.bdecays.common import lambda_K, beta_l, meson_quark, meson_ff
 from flavio.classes import Observable, Prediction, AuxiliaryQuantity
 from flavio.physics.common import conjugate_par, conjugate_wc, add_dict
 import warnings
@@ -86,7 +86,7 @@ def transversity_amps(ha, q2, mLb, mL, mqh, wc, prefactor):
 
 def angular_coefficients(ta, br):
     # eqs (4.2) in arxiv
-    # br is br(l(1520)->kp)
+    # br is BR(L(1520)->pK)
 
     L={}
     L['1c'] = -2*br*( (ta['Aperp1','L'] * ta['Apara1','L'].conj()).real
@@ -110,7 +110,7 @@ def angular_coefficients(ta, br):
                       + abs(ta['Apara1','R'])**2 + abs(ta['Aperp1','R'])**2
                       + 3*(abs(ta['Bpara1','R'])**2 + abs(ta['Bperp1','R'])**2)
     )
-    l['2ss'] = br/8*( 2*abs(ta['Apara0','L'])**2 + abs(ta['Apara1','L'])**2
+    L['2ss'] = br/8*( 2*abs(ta['Apara0','L'])**2 + abs(ta['Apara1','L'])**2
                       + 2*abs(ta['Aperp0','L'])**2 + abs(ta['Aperp1','L'])**2
                       + 3*(abs(ta['Bpara1','L'])**2 + abs(ta['Bperp1','L'])**2) 
                       - 2*sqrt(3)*(ta['Bpara1','L']*ta['Apara1','L'].conj()).real
@@ -155,10 +155,8 @@ def angular_coefficients(ta, br):
     return L
     
 
-# def get_ff(q2, par) -> form factors from auxiliaryquantity computed in formfactor-directory
-
 def prefactor(q2, par, scale):
-    #calculate prefactor N
+    # calculate prefactor N
     xi_t = flavio.physics.ckm.xi('t','bs')(par)
     alphaem = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
     mLb = par['m_Lambdab']
@@ -167,16 +165,32 @@ def prefactor(q2, par, scale):
     return par['GF'] * xi_t * alphaem * sqrt(q2) * la_K**(1/4.) / sqrt(3 * 2 * mLb**3 * pi**5) / 32
 
 
+# !!! form factors L -> L(1520) !!!
+def get_ff(q2, par):
+    ff_aux = AuxiliaryQuantity['Lambdab->Lambda(1520) form factor']
+    return ff_aux.prediction(par_dict=par, wc_obj=None, q2=q2)
+
+
+# !!! get subleading hadronic contribution at low q2 !!!
+def get_subleading(q2, wc_obj, par_dict, cp_conjugate):
+    if q2 <= 9:
+        subname = 'Lambdab->Lambda(1520)ll subleading effects at low q2'
+        return AuxiliaryQuantity[subname].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+    elif q2 > 14:
+        subname = 'Lambdab->Lambda(1520)ll subleading effects at high q2'
+        return AuxiliaryQuantity[subname].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
+    else:
+        return {}
+
+
 def get_transversity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
     par = par_dict.copy()
     if cp_conjugate:
         par = conjugate_par(par)
-    # Scale works with lambdab instead Lambdab ?
     scale = flavio.config['renormalization scale']['lambdab']
     mLb = par['m_Lambdab']
     mL = par['m_Lambda(1520)']
     mb = flavio.physics.running.running.get_mb(par, scale)
-    # !!! get_ff !!!
     ff = get_ff(q2, par)
     wc = flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wc_obj, 'bs' + lep + lep, scale, par)
     # Is wc_eff working correctly ? 
@@ -187,12 +201,167 @@ def get_transversity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
     return ta_ff
 
 
-# def get_transversity_amps_ff -> get helicity_amps+prefactor->transversity_amps
 
-# defget_subleading -> subleading hadronic contrubtions at low q2
+def get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate):
+    if q2 >= 8.7 and q2 < 14:
+        warnings.warn("The prediction in the region of narrow charmonium resonances are not meaningful")
+    return add_dict((
+        get_transversity_ams_ff(q2, wc_obj, par, lep, cp_conjugate),
+        get_subleading(q2, wc_ovj, par, cp_conjugate)
+        ))
 
-# def get_transversity_amps -> get_transversity_amps_ff + get_subleading
 
-# def get_obs -> L's
+def get_obs(function, q2, wc_obj, par, lep):
+    ml = par['m_'+lep]
+    mLb = par['m_Lambdab']
+    mL = par['m_Lambda(1520)']
+    if q2 < 4*ml**2 or q2 > (mLb-mL)**2:
+        return 0
+    ta = get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate=False)
+    # !!! BR not implemented in parameters !!! 
+    BR = par['BR(Lambda(1520)->pK)']
+    L = angular_coefficients(ta, BR)
+    return function(L)
 
-# def dGdq2(K), FL_num(K), AFBl_num(K), AFBh_num(K), AFBlh_num(K), dbrdq2, dbrdq2_int, obs_int, ...
+
+# OBSERVABLES
+def dGdq2(L):
+    # differential decay width
+    return [L['1cc'] + 2*L['1ss'] + 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss']]/3
+
+# !!! Use CP conjugate !!!
+def S(L, arg):
+    # CP-averaged angular observalbes
+    # arg is for example '1cc'
+    dG = dGdq2(L)
+    return ( L[arg] + conjugate_par(L[arg]) )/( dG + conjugate_par(dG)  ) 
+
+# !!! Use CP conjugate !!!
+def A(L, arg):
+    # CP-asymmetries
+    # arg is for example '1cc'
+    dG = dGdq2(L)
+    return ( L[arg] - L[arg].conj() )/( dG + dG.conj()  ) 
+
+
+def FL_num(L):
+    # longuitudinal polarization of the dilepton system
+    return 1-2*(L['1cc'] + 2*L['2cc'])/(3)
+
+
+def AFBl_num(L):
+    return (L['1c'] + 2*L['2c'])/(2)
+
+
+def AFBh:
+    return 0
+
+
+def AFBlh:
+    return 0
+
+
+def dbrdq2(q2, wc_obj, par, lep):
+    tauLb = par['tau_Lambdab']
+    return tauLb * get_obs(dGdq2, q2, wc_obj, par, lep)
+
+
+def dbrdq2_int(q2min, q2max, wc_obj, par, lep):
+    def obs(q2):
+        return dbrdq2(q2, wc_obj, par, lep)
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
+
+
+def obs_int(function, q2min, q2max, wc_obj, par, lep):
+    def obs(q2):
+        return get_obs(function, q2, wc_obj, par, lep):
+    return flavio.math.integrate.nintegrate(obs, q2min, q2max)
+
+
+# Functions returning functions needed for Prediction instance
+
+def dbrdq2_int_func(lep):
+    def fct(wc_obj, par, q2min, q2max):
+        return dbrdq2_int(q2min, q2max, wc_obj, par, lep)
+    return fct
+
+
+def dbrdq2_func(lep):
+    def fct(wc_obj, par, q2):
+        return dbrdq2(q2, wc_obj, par, lep)
+    return fct
+
+
+def obs_ratio_fct(func_num, func_den, lep):
+    def fct(wc_obj, par, q2):
+        num = get_obs(func_num, q2, wc_obj, par, lep)
+        if num == 0:
+            return 0
+        denom = get_obs(func_den, q2, wc_obj, par, lep)
+        return num/denom
+    return fct
+
+
+def obs_int_ratio_func(func_num, func_den, lep):
+    def fct(wc_obj, par, q2min, q2max):
+        num = obs_int(func_num, q2min, q2max, wc_obj, par, lep)
+        if num == 0:
+            return 0
+        denom = obs_int(func_den, q2min, q2max, wc_obj, par, lep)
+        return num/denom
+    return fct
+
+
+_tex = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau'}
+_observables = {
+    'FL': {'func_num': FL_num, 'num': True,'tex': r'F_L'. 'desc': 'longitudinal polarization fraction'},
+    'AFBl': {'func_num': AFBl_num, 'num': True, 'tex': r'A_\text{FB}^\ell', 'desc': 'leptonic forward-backward asymmetry'},
+    'AFBh': {'function': AFBh, 'num': False, 'tex': r'A_\text{FB}^\ell', 'desc': 'hadronic forward-backward asymmetry'},
+    'AFBlh': {'function': AFBlh, 'num': False, 'tex': r'A_\text{FB}^{\ell h}', 'desc': 'lepton-hadron forward-backward asymmetry'}
+    }
+
+for l in ['e', 'mu']:
+
+    _process_tex = r'\Lambda_b\to\Lambda(1520) '+_tex[l]+r'^+'+_tex[l]+r'^-'
+    _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC :: $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ :: $' + _process_tex + r'$'
+
+    # binned branching ratio
+    _obs_name = "<dBR/q2>(Lambdab->Lambda"+l+l+")"
+    _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+    _obs.set_description(r"Binned differential branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(" + _process_tex + r")$"
+    _obs.add_taxomony(_process_taxonomy)
+    Prediction(_obs_name, dbrdq2_int_func(l))
+
+    # differential branching ratio
+    _obs_name = "dBR/q2(Lambdab->Lambda"+l+l+")"
+    _obs = Observable(name=_obs_name, arguments=['q2'])
+    _obs.set_description(r"Differential branching ratio of $" + _process_tex + r"$")
+    _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _process_tex + r")$"
+    _obs.add_taxomony(_process_taxonomy)
+    Prediction(_obs_name, dbrdq2_func(l))
+
+    for obs in _observables:
+        # binned angular observables
+        _obs_name = "<" + obs ">(Lambdab->Lambda"+l+l+")"
+        _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+        _obs.set_description("Binned " + _observables[obs]['desc'] + r" in $" + _process_tex + r"$")
+        _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _process_tex + r"$"
+        _obs.add_taxonomy(_proces_taxonomy)
+        if _observables[obs]['num'] == True:
+            Prediction(_obs_name, obs_int_ratio_function(_observables[obs]['func_num'], dGdq2, l))
+        else:
+            Prediction(_obs_name, observables[obs]['function'])
+            
+        # differential angular observables
+        _obs_name = obs "(Lambdab->Lambda"+l+l+")"
+        _obs = Observable(name=_obs_name, arguments=['q2'])
+        _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] r" in $" + _process_tex + r"$")
+        _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _process_tex + r"$"
+        _obs.add_taxonomy(_proces_taxonomy)
+        if _observables[obs]['num'] == True:
+            Prediction(_obs_name, obs_int_ratio_function(_observables[obs]['func_num'], dGdq2, l))
+        else:
+            Prediction(_obs_name, observables[obs]['function'])
+
+    
