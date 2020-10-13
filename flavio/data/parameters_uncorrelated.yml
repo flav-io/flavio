@@ -251,6 +251,9 @@ BR(tau->mununu): 17.39(4)e-2
 BR(tau->enunu): 17.82(4)e-2
 BR(tau->rhonu): 25.2(3)e-2
 
+# Parameters for Lambdab->Lambda(->NKbar)ll helicity amplitudes
+BR(Lambda(1520)->NKbar)_exp: 0.45 +- 0.01
+
 # Parameters needed for eps'/eps
 eps_K: 2.228(11)e-3
 omega+: (4.53 ± 0.02) 1e-2

@@ -1048,6 +1048,13 @@ D->K BCL m+:
   tex: $m_{D^*}^{f_+}$
   description: Resonance mass for the $D\to K$ vector and tensor form factors in BCL parametrization
 
+
+# Experimental data needed for helicity amplitude calculation of Lambdab->Lambda(->NKbar)ll
+BR(Lambda(1520)->NKbar)_exp:
+  tex: $\text{BR}(\Lambda(1520)\to N\bar{K})_\text{exp}$
+  description: Experimental branching ratio of $\Lambda(1520)\to N\bar{K}$
+
+
 # Experimental data needed for the normalization of BR(B->Xqgamma) and BR(B->Xqll)
 C_BXlnu:
   tex: $C$
