@@ -5,6 +5,7 @@
 # (and not c-ubar->u-cbar!)
 
 from math import log,pi,sqrt
+import flavio
 from flavio.physics.mesonmixing.wilsoncoefficient import cvll_d
 from flavio.physics.mesonmixing.common import meson_quark, bag_msbar2rgi
 from flavio.config import config
@@ -82,6 +83,7 @@ def M12(par, wc, meson):
     return contribution_np + contribution_sm
 
 def G12_d_SM(par, meson):
+    flavio.citations.register("Beneke:2003az")
     di_dj = meson_quark[meson]
     xi_t = ckm.xi('t',di_dj)(par)
     xi_u = ckm.xi('u',di_dj)(par)
