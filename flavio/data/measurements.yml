@@ -2873,6 +2873,29 @@ LHCb Bs->phimumu 2015 15.0-19.0 GeV^2:
                 [1.00, 0.03],
                 [1.00]]
 
+LHCb B->K*ee 2020:
+  experiment: LHCb
+  inspire: Aaij:2020umj
+  values:
+    - name: <FL>(B0->K*ee)
+      q2min: 0.000784
+      q2max: 0.257
+      value: 0.044 ± 0.026 ± 0.014
+    - name: <P2>(B0->K*ee)
+      q2min: 0.000784
+      q2max: 0.257
+      value: -0.03 ± 0.04 ± 0.01 # P2 = 1/2 * ATRe
+    - name: <P1>(B0->K*ee) 
+      q2min: 0.000784
+      q2max: 0.257
+      value: 0.11 ± 0.10 ± 0.02 # P1 = AT2
+    - name: <ATIm>(B0->K*ee)
+      q2min: 0.000784
+      q2max: 0.257
+      value: 0.02 ± 0.10 ± 0.01
+  correlation:
+    [[1, -0.02, -0.01, 0.02], [-0.02, 1, 0.05, 0.02], [-0.01, 0.05, 1, 0.1], [0.02, 0.02, 0.10, 1]]
+
 LHCb B->K*ee 2013:
   experiment: LHCb
   inspire: Aaij:2015dea
@@ -6011,7 +6034,7 @@ DELPHI Z LFV:
       counts_total: 0
       counts_background: 0
 
-ATLAS Z LFV 2020:
+ATLAS Z->taul 2020:
   experiment: ATLAS
   inspire: Aad:2020gkd
   values:
