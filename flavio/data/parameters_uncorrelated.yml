@@ -227,6 +227,56 @@ Lambdab->Lambda deltaC9 c_perp1 Im: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_para1 Re: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_para1 Im: 0 ± 0.3
 
+# Parameters for the form factor calculation in the quark model of Lambdab->Lambda(1520)ll, uncertainties estimated later
+Lambdab->Lambda(1520) m_q: 0.2848  
+Lambdab->Lambda(1520) m_s: 0.5553
+Lambdab->Lambda(1520) alpha_Lambdab: 0.443
+Lambdab->Lambda(1520) alpha_Lambda(1520): 0.333 
+
+Lambdab->Lambda(1520) F1 a0: -1.66
+Lambdab->Lambda(1520) F1 a2: -0.295
+Lambdab->Lambda(1520) F1 a4: 0.00924
+Lambdab->Lambda(1520) F2 a0: 0.544
+Lambdab->Lambda(1520) F2 a2: 0.194
+Lambdab->Lambda(1520) F2 a4: -0.00420
+Lambdab->Lambda(1520) F3 a0: 0.126
+Lambdab->Lambda(1520) F3 a2: 0.00799
+Lambdab->Lambda(1520) F3 a4: -0.000365
+Lambdab->Lambda(1520) F4 a0: -0.0330
+Lambdab->Lambda(1520) F4 a2: -0.00977
+Lambdab->Lambda(1520) F4 a4: 0.00211
+Lambdab->Lambda(1520) G1 a0: -0.964
+Lambdab->Lambda(1520) G1 a2: -0.100
+Lambdab->Lambda(1520) G1 a4: 0.00264
+Lambdab->Lambda(1520) G2 a0: 0.625
+Lambdab->Lambda(1520) G2 a2: 0.219
+Lambdab->Lambda(1520) G2 a4: -0.00508
+Lambdab->Lambda(1520) G3 a0: -0.183
+Lambdab->Lambda(1520) G3 a2: -0.0380
+Lambdab->Lambda(1520) G3 a4: 0.00351
+Lambdab->Lambda(1520) G4 a0: 0.0530
+Lambdab->Lambda(1520) G4 a2: 0.0161
+Lambdab->Lambda(1520) G4 a4: -0.00221
+
+Lambdab->Lambda(1520) H1 a0: -1.08
+Lambdab->Lambda(1520) H1 a2: -0.0732
+Lambdab->Lambda(1520) H1 a4: 0.00464
+Lambdab->Lambda(1520) H2 a0: -0.507
+Lambdab->Lambda(1520) H2 a2: -0.246
+Lambdab->Lambda(1520) H2 a4: 0.00309
+Lambdab->Lambda(1520) H3 a0: 0.187
+Lambdab->Lambda(1520) H3 a2: 0.0295
+Lambdab->Lambda(1520) H3 a4: -0.00107
+Lambdab->Lambda(1520) H4 a0: 0.0772
+Lambdab->Lambda(1520) H4 a2: 0.0267
+Lambdab->Lambda(1520) H4 a4: -0.00217
+Lambdab->Lambda(1520) H5 a0: -0.0517
+Lambdab->Lambda(1520) H5 a2: -0.0173
+Lambdab->Lambda(1520) H5 a4: 0.00259
+Lambdab->Lambda(1520) H6 a0: 0.0206
+Lambdab->Lambda(1520) H6 a2: 0.00679
+Lambdab->Lambda(1520) H6 a4: -0.00220
+
 
 # Parameters for SM contribution to D-Dbar mixing
 # As it is poorly known, these are only conservative guesses to
