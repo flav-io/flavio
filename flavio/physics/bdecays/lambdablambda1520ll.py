@@ -165,22 +165,9 @@ def prefactor(q2, par, scale):
     return par['GF'] * xi_t * alphaem * sqrt(q2) * la_K**(1/4.) / sqrt(3 * 2 * mLb**3 * pi**5) / 32
 
 
-# !!! form factors L -> L(1520) !!!
 def get_ff(q2, par):
     ff_aux = AuxiliaryQuantity['Lambdab->Lambda(1520) form factor']
     return ff_aux.prediction(par_dict=par, wc_obj=None, q2=q2)
-
-
-# !!! get subleading hadronic contribution at low q2 !!!
-def get_subleading(q2, wc_obj, par_dict, cp_conjugate):
-    if q2 <= 9:
-        subname = 'Lambdab->Lambda(1520)ll subleading effects at low q2'
-        return AuxiliaryQuantity[subname].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
-    elif q2 > 14:
-        subname = 'Lambdab->Lambda(1520)ll subleading effects at high q2'
-        return AuxiliaryQuantity[subname].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
-    else:
-        return {}
 
 
 def get_transversity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
@@ -204,10 +191,7 @@ def get_transversity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
 def get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate):
     if q2 >= 8.7 and q2 < 14:
         warnings.warn("The prediction in the region of narrow charmonium resonances are not meaningful")
-    return add_dict((
-        get_transversity_ams_ff(q2, wc_obj, par, lep, cp_conjugate),
-        get_subleading(q2, wc_ovj, par, cp_conjugate)
-        ))
+    return get_transversity_ams_ff(q2, wc_obj, par, lep, cp_conjugate)
 
 
 def get_obs(function, q2, wc_obj, par, lep):
