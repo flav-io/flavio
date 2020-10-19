@@ -18,5 +18,6 @@ from . import bxgamma
 from . import bllgamma
 from . import lambdablambdall
 from . import lambdablambdall_subleading
+from . import lambdablambda1520ll
 from . import bxll
 from . import bc_lifetime

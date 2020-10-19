@@ -233,6 +233,9 @@ Lambdab->Lambda(1520) m_s: 0.5553
 Lambdab->Lambda(1520) alpha_Lambdab: 0.443
 Lambdab->Lambda(1520) alpha_Lambda(1520): 0.333 
 
+Lambdab->Lambda(1520) err_10percent: 1 +- 0.1
+Lambdab->Lambda(1520) err_30percent: 1 +- 0.3
+
 Lambdab->Lambda(1520) F1 a0: -1.66
 Lambdab->Lambda(1520) F1 a2: -0.295
 Lambdab->Lambda(1520) F1 a4: 0.00924

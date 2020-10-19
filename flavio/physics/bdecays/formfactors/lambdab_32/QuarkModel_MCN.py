@@ -1,5 +1,3 @@
-import flavio
-from flavio.classes import AuxiliaryQuantity, Implementation
 from math import sqrt, exp
 
 def p_Lambda(q2, mL, mLb):
@@ -49,51 +47,35 @@ def formfactors(process, par, q2):
     return FormDict, mL, mLb
 
 
-def ff_equivalence(process, par, q2):
+def ff_equiv(process, par, q2):
     # transform FormDict in form factors used in arXiv:1903.00448
     FD, mL, mLb = formfactors(process, par, q2)
+
+    e10 = par[process+' err_10percent']
+    e30 = par[process+' err_30percent']
+
     ff = {}
-    ff['fVt'] = ( FD['F2']*mL*(mL**2 - mLb**2 - q2) + mLb*(2*FD['F1']*mL*(mL - mLb) - 2*FD['F4']*mL*mLb + FD['F3']*(mL**2 - mLb**2 + q2)) )/( 2*mL*(mL-mLb)*mLb**2 ) 
-    ff['fVperp'] = FD["F1"]/mLb - FD["F4"]*mL/(mL**2 - 2*mL*mLb + mLb**2 - q2)
-    ff['fV0'] = ( FD["F2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(2*FD["F1"]*mL*(mL + mLb)*(mL**2 - 2*mL*mLb + mLb**2 - q2) - 2*FD["F4"]*mL*mLb*(mL**2 - mLb**2 + q2) + FD["F3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2))))/(2*mL*mLb**2*(mL+mLb)*(mL**2 - 2*mL*mLb + mLb**2 - q2)) 
-    ff['fVg'] = FD["F4"]
+    ff['fVt'] = ( FD['F2']*mL*(mL**2 - mLb**2 - q2) + mLb*(2*FD['F1']*mL*(mL - mLb) - 2*FD['F4']*mL*mLb + FD['F3']*(mL**2 - mLb**2 + q2)) )/( 2*mL*(mL-mLb)*mLb**2 ) * e10
+    ff['fVperp'] = ( FD["F1"]/mLb - FD["F4"]*mL/(mL**2 - 2*mL*mLb + mLb**2 - q2) )*e10
+    ff['fV0'] = ( FD["F2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(2*FD["F1"]*mL*(mL + mLb)*(mL**2 - 2*mL*mLb + mLb**2 - q2) - 2*FD["F4"]*mL*mLb*(mL**2 - mLb**2 + q2) + FD["F3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2))) )/( 2*mL*mLb**2*(mL+mLb)*(mL**2 - 2*mL*mLb + mLb**2 - q2) )*e10 
+    ff['fVg'] = FD["F4"]*e30
 
-    ff['fAt'] = ( FD["G2"]*mL*(mL**2 - mLb**2 - q2) + mLb*(-2*FD["G4"]*mL*mLb - 2*FD["G1"]*mL*(mL + mLb) + FD["G3"]*(mL**2 - mLb**2 + q2)) )/( 2*mL*mLb**2*(mL + mLb) )
-    ff['fAperp'] = FD["G1"]/mLb - (FD["G4"]*mL)/(mL**2 + 2*mL*mLb + mLb**2 - q2)
-    ff['fA0'] = ( FD["G2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(2*FD["G1"]*mL*(mL - mLb)*(mL**2 + 2*mL*mLb + mLb**2 - q2) - 2*FD["G4"]*mL*mLb*(mL**2 - mLb**2 + q2) + FD["G3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2))) )/( 2*mL*(mL - mLb)*mLb**2*(mL**2 + 2*mL*mLb + mLb**2 - q2) ) 
-    ff['fAg'] = -FD["G4"]
+    ff['fAt'] = ( FD["G2"]*mL*(mL**2 - mLb**2 - q2) + mLb*(-2*FD["G4"]*mL*mLb - 2*FD["G1"]*mL*(mL + mLb) + FD["G3"]*(mL**2 - mLb**2 + q2)) )/( 2*mL*mLb**2*(mL + mLb) )*e10
+    ff['fAperp'] = ( FD["G1"]/mLb - (FD["G4"]*mL)/(mL**2 + 2*mL*mLb + mLb**2 - q2) )*e10
+    ff['fA0'] = ( FD["G2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(2*FD["G1"]*mL*(mL - mLb)*(mL**2 + 2*mL*mLb + mLb**2 - q2) - 2*FD["G4"]*mL*mLb*(mL**2 - mLb**2 + q2) + FD["G3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2))) )/( 2*mL*(mL - mLb)*mLb**2*(mL**2 + 2*mL*mLb + mLb**2 - q2) )*e10 
+    ff['fAg'] = -FD["G4"]*e30
 
-    ff['fTt'] = 0
-    ff['fTperp'] = ( 2*FD["H5"]*mL - ((FD["H3"]+FD["H6"])*mL**2)/mLb + FD["H3"]*mLb + 2*FD["H1"]*mL*(mL + mLb)/mLb - 2*(FD["H5"] + FD["H6"])*mL**2*(mL - mLb)/((mL - mLb)**2 - q2) - FD["H3"]*q2/mLb + FD["H2"]*mL*(-mL**2 + mLb**2 + q2)/mLb**2 )/( 2*mL*(mL + mLb) )
-    ff['fT0'] = (FD["H1"] + FD["H2"] - FD["H3"] - FD["H6"])/mLb - 2*(FD["H5"] + FD["H6"]*mL)/((mL - mLb)**2 - q2) + FD["H4"]*((mL + mLb)**2 - q2)/(2*mL*mLb**2)
-    ff['fTg'] = FD["H5"]*(mL- mLb) - FD["H6"]*(-mL**2 + mLb**2 + q2)/(2*mLb)
+    ff['fTt'] = 0*e10
+    ff['fTperp'] = ( 2*FD["H5"]*mL - ((FD["H3"]+FD["H6"])*mL**2)/mLb + FD["H3"]*mLb + 2*FD["H1"]*mL*(mL + mLb)/mLb - 2*(FD["H5"] + FD["H6"])*mL**2*(mL - mLb)/((mL - mLb)**2 - q2) - FD["H3"]*q2/mLb + FD["H2"]*mL*(-mL**2 + mLb**2 + q2)/mLb**2 )/( 2*mL*(mL + mLb) )*e10
+    ff['fT0'] = ( (FD["H1"] + FD["H2"] - FD["H3"] - FD["H6"])/mLb - 2*(FD["H5"] + FD["H6"]*mL)/((mL - mLb)**2 - q2) + FD["H4"]*((mL + mLb)**2 - q2)/(2*mL*mLb**2) )*e10
+    ff['fTg'] = ( FD["H5"]*(mL- mLb) - FD["H6"]*(-mL**2 + mLb**2 + q2)/(2*mLb) )*e30
 
-    ff['fT5t'] = 0
-    ff['fT5perp'] = -1/(2*mL*(mL-mLb)*mLb**2*(mL**2 + 2*mL*mLb + mLb**2 - q2)) * (FD["H2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(mL*(2*FD["H5"]*mLb*(mL*mLb + mLb**2 - q2) + FD["H6"]*mL*(mL**2 + 2*mL*mLb + mLb**2 -q2)) - 2*FD["H1"]*mL*(mL - mLb)*(mL**2 + 2*mL*mLb + mLb**2 -q2) + FD["H3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2))))
-    ff['fT50'] = FD["H1"]/mLb + 2*FD["H5"]*mL/(mL**2 + 2*mL*mLb + mLb**2 - q2) 
-    ff['fT5g'] = -FD["H5"]*(mL + mLb) - FD["H6"]*(mL**2 + 2*mL*mLb + mLb**2 - q2)/(2*mLb)
+    ff['fT5t'] = 0*e10
+    ff['fT5perp'] = ( -1/(2*mL*(mL-mLb)*mLb**2*(mL**2 + 2*mL*mLb + mLb**2 - q2)) * (FD["H2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(mL*(2*FD["H5"]*mLb*(mL*mLb + mLb**2 - q2) + FD["H6"]*mL*(mL**2 + 2*mL*mLb + mLb**2 -q2)) - 2*FD["H1"]*mL*(mL - mLb)*(mL**2 + 2*mL*mLb + mLb**2 -q2) + FD["H3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)))) )*e10
+    ff['fT50'] = ( FD["H1"]/mLb + 2*FD["H5"]*mL/(mL**2 + 2*mL*mLb + mLb**2 - q2) )*e10
+    ff['fT5g'] = ( -FD["H5"]*(mL + mLb) - FD["H6"]*(mL**2 + 2*mL*mLb + mLb**2 - q2)/(2*mLb) )*e30
 
     return ff
 
-
-def ff_function(function, process):
-    return lambda wc_obj, par_dict, q2: function(process, q2, par_dict)
-
-
-_process_dict = {}
-_process_dict['Lambdab->Lambda(1520)'] = {'X': 'Lambda(1520)', 'P': 'K-', 'q': 'b->s'}
-
-processes = ['Lambdab->Lambda(1520)',]
-
-
-for p in processes:
-    quantity = p + ' form factor'
-    a = AuxiliaryQuantity(name=quantity, arguments=['q2'])
-    a.set_description('Hadronic form factor for the ' + p ' transition')
-    # MCN approach as in arXiv:1108.6129
-    iname = p + ' MCN'
-    i = Implementation(name=iname, quantity=quantity,
-                       function=ff_function(ff_equivalence, p))
-    i.set_description("Form factors calculated using the full quark model wave function with the full relativistic form of the quark current")
 
     

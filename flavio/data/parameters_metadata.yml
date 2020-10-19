@@ -557,6 +557,13 @@ Lambdab->Lambda(1520) alpha_Lambda(1520):
   tex: $\alpha_{\Lambda(1520)}$
   description: Parameter for the form factor calculation of $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ using the quark model as in arXiv 1108.6129
 
+Lambdab->Lambda(1520) err_10percent:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_30percent:
+  tex: $err_{0.3}$
+  description: 30 Percent error applied on the form factors
+
 Lambdab->Lambda(1520) F1 a0:
   tex: $a_0^{F1}$
   description: Parameter for the form factor calculation of $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ using the quark model as in arXiv 1108.6129
