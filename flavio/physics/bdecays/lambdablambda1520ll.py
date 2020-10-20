@@ -17,9 +17,9 @@ def helicity_amps(q2, mLb, mL, ff):
     # non-vanishing amplitudes in the vector part (V)
     # eqs (3.8) of arXiv:1903.00448
     # 1 for 1/2, 3 for 3/2
-    H['tV+1+1'] = ff['fVt'] * (mLB - mL)/sqrt(q2) * (sp * sqrt(sm))/(sqrt(6) * mL)
+    H['tV+1+1'] = ff['fVt'] * (mLb - mL)/sqrt(q2) * (sp * sqrt(sm))/(sqrt(6) * mL)
     H['tV-1-1'] = H['tV+1+1']
-    H['0V+1+1'] = -ff['fV0'] * (mLB + mL)/sqrt(q2) * (sm * sqrt(sp))/(sqrt(6) * mL)
+    H['0V+1+1'] = -ff['fV0'] * (mLb + mL)/sqrt(q2) * (sm * sqrt(sp))/(sqrt(6) * mL)
     H['0V-1-1'] = H['0V+1+1']
     H['+V+1-1'] = -ff['fVperp'] * (sm * sqrt(sp))/(sqrt(3) * mL)
     H['-V-1+1'] = H['+V+1-1']
@@ -27,9 +27,9 @@ def helicity_amps(q2, mLb, mL, ff):
     H['-V+1+3'] = H['+V-1-3']
 
     # for the axial part (A), eqs (3.9)
-    H['tA+1+1'] = ff['fAt'] * (mLB + mL)/sqrt(q2) * (sm * sqrt(sp))/(sqrt(6) * mL)
+    H['tA+1+1'] = ff['fAt'] * (mLb + mL)/sqrt(q2) * (sm * sqrt(sp))/(sqrt(6) * mL)
     H['tA-1-1'] = -H['tA+1+1']
-    H['0A+1+1'] = -ff['fA0'] * (mLB - mL)/sqrt(q2) * (sp * sqrt(sm))/(sqrt(6) * mL)
+    H['0A+1+1'] = -ff['fA0'] * (mLb - mL)/sqrt(q2) * (sp * sqrt(sm))/(sqrt(6) * mL)
     H['0A-1-1'] = -H['0A+1+1']
     H['+A+1-1'] = ff['fAperp'] * (sp * sqrt(sm))/(sqrt(3) * mL)
     H['-A-1+1'] = -H['+A+1-1']
@@ -39,14 +39,14 @@ def helicity_amps(q2, mLb, mL, ff):
     # for the tensor part (T), eqs (3.15)
     H['0T+1+1'] = ff['fT0'] * sqrt(q2) * (sm * sqrt(sp))/(sqrt(6) * mL)
     H['0T-1-1'] = H['0T+1+1']
-    H['+T+1-1'] = ff['fTperp'] * (mLB + mL) * (sm * sqrt(sp))/(sqrt(3) * mL)
+    H['+T+1-1'] = ff['fTperp'] * (mLb + mL) * (sm * sqrt(sp))/(sqrt(3) * mL)
     H['-T-1+1'] = H['+T+1-1']
     H['+T-1-3'] = -ff['fTg'] * sqrt(sp) 
     H['-T+1+3'] = H['+T-1-3']
 
     H['0T5+1+1'] = -ff['fT50'] * sqrt(q2) * (sp * sqrt(sm))/(sqrt(6) * mL)
     H['0T5-1-1'] = -H['0T5+1+1']
-    H['+T5+1-1'] = ff['fT5perp'] * (mLB - mL) * (sp * sqrt(sm))/(sqrt(3) * mL)
+    H['+T5+1-1'] = ff['fT5perp'] * (mLb - mL) * (sp * sqrt(sm))/(sqrt(3) * mL)
     H['-T5-1+1'] = -H['+T5+1-1']
     H['+T5-1-3'] = -ff['fT5g'] * sqrt(sm) 
     H['-T5+1+3'] = -H['+T5-1-3']
@@ -180,18 +180,17 @@ def get_transversity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
     mb = flavio.physics.running.running.get_mb(par, scale)
     ff = get_ff(q2, par)
     wc = flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wc_obj, 'bs' + lep + lep, scale, par)
-    # Is wc_eff working correctly ? 
     wc_eff = flavio.physics.bdecays.wilsoncoefficients.get_wceff(q2, wc, par, 'Lambdab', 'Lambda(1520)', lep, scale)
     ha = helicity_amps(q2, mLb, mL, ff)
     N = prefactor(q2, par, scale)
-    ta_ff = transversity_amps(ha, q2, mLb, mL, mb, 0, wc_eff, N)
+    ta_ff = transversity_amps(ha, q2, mLb, mL, mb, wc_eff, N)
     return ta_ff
 
 
 def get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate):
     if q2 >= 8.7 and q2 < 14:
         warnings.warn("The prediction in the region of narrow charmonium resonances are not meaningful")
-    return get_transversity_ams_ff(q2, wc_obj, par, lep, cp_conjugate)
+    return get_transversity_amps_ff(q2, wc_obj, par, lep, cp_conjugate)
 
 
 def get_obs(function, q2, wc_obj, par, lep):
@@ -225,7 +224,7 @@ def get_obs_new(function, q2, wc_obj, par, lep, arg):
 # OBSERVABLES
 def dGdq2(L):
     # differential decay width
-    return [L['1cc'] + 2*L['1ss'] + 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss']]/3
+    return (L['1cc'] + 2*L['1ss'] + 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss'])/3
 
 
 def S(L, L_conj, dG, dG_conj, arg):
@@ -365,7 +364,7 @@ for l in ['e', 'mu', ]:
     _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ :: $' + _process_tex + r'$'
 
     # binned branching ratio
-    _obs_name = "<dBR/q2>(Lambdab->Lambda(1520)"+l+l+")"
+    _obs_name = "<dBR/dq2>(Lambdab->Lambda(1520)"+l+l+")"
     _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
     _obs.set_description(r"Binned differential branching ratio of $" + _process_tex + r"$")
     _obs.tex = r"$\langle \frac{d\text{BR}}{dq^2} \rangle(" + _process_tex + r")$"
@@ -373,7 +372,7 @@ for l in ['e', 'mu', ]:
     Prediction(_obs_name, dbrdq2_int_func(l))
 
     # differential branching ratio
-    _obs_name = "dBR/q2(Lambdab->Lambda(1520)"+l+l+")"
+    _obs_name = "dBR/dq2(Lambdab->Lambda(1520)"+l+l+")"
     _obs = Observable(name=_obs_name, arguments=['q2'])
     _obs.set_description(r"Differential branching ratio of $" + _process_tex + r"$")
     _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _process_tex + r")$"

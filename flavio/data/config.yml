@@ -103,6 +103,7 @@ implementation:
 
   # Lambdab form factors
   Lambdab->Lambda form factor: Lambdab->Lambda SSE3
+  Lambdab->Lambda(1520) form factor: Lambdab->Lambda(1520) MCN
 
   # Kaon form factors
   K->pi form factor: K->pi dispersive + pole

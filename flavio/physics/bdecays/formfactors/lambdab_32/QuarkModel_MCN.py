@@ -18,6 +18,10 @@ def F(a0, a2, a4, p_L, m_q, m_L, alpha):
     return (a0 + a2*p_L**2 + a4*p_L**4)*exp(-3*(m_q*p_L)**2/(2*(m_L*alpha)**2))
 
 
+_process_dict = {}
+_process_dict['Lambdab->Lambda(1520)'] = {'X': 'Lambda(1520)', 'P': 'K-', 'q': 'b->s'}
+
+
 def formfactors(process, par, q2):
     r"Functions for $\Lambda_b\to X_{3/2}$ form factors where $X_{3/2} is a spin-3/2 baryon$ using the Quark Model and the MCN approach treated in arXiv:1108.6129 [nucl-th]"
 
@@ -47,7 +51,7 @@ def formfactors(process, par, q2):
     return FormDict, mL, mLb
 
 
-def ff_equiv(process, par, q2):
+def ff_equiv(process, q2, par):
     # transform FormDict in form factors used in arXiv:1903.00448
     FD, mL, mLb = formfactors(process, par, q2)
 

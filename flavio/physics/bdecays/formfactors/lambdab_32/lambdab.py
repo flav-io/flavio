@@ -7,9 +7,6 @@ def ff_function(function, process):
     return lambda wc_obj, par_dict, q2: function(process, q2, par_dict)
 
 
-_process_dict = {}
-_process_dict['Lambdab->Lambda(1520)'] = {'X': 'Lambda(1520)', 'P': 'K-', 'q': 'b->s'}
-
 processes = ['Lambdab->Lambda(1520)',]
 
 
