@@ -308,14 +308,11 @@ def obs_ratio_func(func_num, func_den, lep):
         return num/denom
     return fct
 
-
-def obs_ratio_func_new(func_num, func_den, lep, arg):
+# For CP symmetries and asymmetries
+def obs_ratio_func_new(func_num, lep, arg):
     def fct(wc_obj, par, q2):
         num = get_obs_new(func_num, q2, wc_obj, par, lep, arg)
-        if num == 0:
-            return 0
-        denom = get_obs_new(func_den, q2, wc_obj, par, lep, arg)
-        return num/denom
+        return num
     return fct
 
 
@@ -328,14 +325,11 @@ def obs_int_ratio_func(func_num, func_den, lep):
         return num/denom
     return fct
 
-
-def obs_int_ratio_func_new(func_num, func_den, lep, arg):
+# For CP symmetries and asymmetries
+def obs_int_ratio_func_new(func_num, lep, arg):
     def fct(wc_obj, par, q2min, q2max):
         num = obs_int_new(func_num, q2min, q2max, wc_obj, par, lep, arg)
-        if num ==0:
-            return 0
-        denom = obs_int_new(func_den, q2min, q2max, wc_obj, par, lep, arg)
-        return num/denom
+        return num
     return fct
 
 
@@ -405,7 +399,7 @@ for l in ['e', 'mu', ]:
         _obs.set_description("Binned " + _observables_new[obs]['desc'] + r" in $" + _process_tex + r"$")
         _obs.tex = r"$\langle " + _observables_new[obs]['tex'] + r"\rangle(" + _process_tex + r"$"
         _obs.add_taxonomy(_process_taxonomy)
-        Prediction(_obs_name, obs_int_ratio_func_new(_observables_new[obs]['func'], dGdq2, l, _observables_new[obs]['arg']))
+        Prediction(_obs_name, obs_int_ratio_func_new(_observables_new[obs]['func'], l, _observables_new[obs]['arg']))
 
         # differential angular observables
         _obs_name = obs+"(Lambdab->Lambda(1520)"+l+l+")"
@@ -413,5 +407,5 @@ for l in ['e', 'mu', ]:
         _obs.set_description(_observables_new[obs]['desc'][0].capitalize() + _observables_new[obs]['desc'][1:] + r" in $" + _process_tex + r"$")
         _obs.tex = r"$" + _observables_new[obs]['tex'] + r"(" + _process_tex + r"$"
         _obs.add_taxonomy(_process_taxonomy)
-        Prediction(_obs_name, obs_ratio_func_new(_observables_new[obs]['func'], dGdq2, l, _observables_new[obs]['arg']))
+        Prediction(_obs_name, obs_ratio_func_new(_observables_new[obs]['func'], l, _observables_new[obs]['arg']))
     
