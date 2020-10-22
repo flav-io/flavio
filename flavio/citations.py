@@ -16,6 +16,10 @@ class Citations:
     """
 
     def __init__(self):
+        self._reset()
+
+    def _reset(self):
+        "Reset citations to default only (only for testing purposes)"
         # Initialize empty papers to cite
         self._papers_to_cite = set()
 
