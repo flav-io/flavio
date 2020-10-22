@@ -40,20 +40,21 @@ class Citations:
         Parameters
         ----------
         filename : str, optional
-            Filename to which to print citations. If None, citations are printed to the
-            terminal.
+            Filename in which to print citations, in the form \cite{paper1,paper2}.
+            If None, the citation list is returned as a string of the form "paper1,paper2".
         """
-        citations = "\cite{" + ",".join(self._papers_to_cite) + "}"
+        citation_list = ",".join(self._papers_to_cite)
         if filename is None:
-            print(citations)
+            return citation_list
         else:
+            citation_text = "\cite{" + citation_list + "}"
             with open(filename, "w") as f:
-                f.write(citations)
+                f.write(citation_text)
 
 
 def print_citations(filename=None):
     "See `flavio.citations.print`"
-    flavio.citations.print(filename)
+    return flavio.citations.print(filename)
 
 
 citations = Citations()
