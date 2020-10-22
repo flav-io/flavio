@@ -698,6 +698,8 @@ class Observable(NamedInstanceClass):
         return ms
 
     def SM_citations(self):
+        """Return the theory papers to cite for the SM prediction for an
+        observable."""
         old_citations = flavio.citations
         flavio.citations = flavio.Citations()
         flavio.sm_prediction(self.name)
