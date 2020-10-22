@@ -22,8 +22,6 @@ class Citations:
         "Reset citations to default only (only for testing purposes)"
         # Initialize empty papers to cite
         self._papers_to_cite = set()
-        # Register the flavio paper
-        self.register("Straub:2018kue")
 
     def register(self, key):
         """Register a paper to be cited. The intended use is that this method
@@ -59,3 +57,5 @@ def print_citations(filename=None):
 
 
 citations = Citations()
+# Register the flavio paper
+citations.register("Straub:2018kue")

@@ -697,6 +697,13 @@ class Observable(NamedInstanceClass):
                             break
         return ms
 
+    def SM_citations(self):
+        old_citations = flavio.citations
+        flavio.citations = flavio.Citations()
+        flavio.sm_prediction(self.name)
+        flavio.citations.print()
+        flavio.citations = old_citations
+
 
 
 class AuxiliaryQuantity(NamedInstanceClass):
