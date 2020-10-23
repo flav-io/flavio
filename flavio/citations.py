@@ -12,7 +12,7 @@ class Citations:
     Examples
     --------
     >>> import flavio
-    >>> pybamm.print_citations("citations.tex")
+    >>> flavio.print_citations("citations.tex")
     """
 
     def __init__(self):
