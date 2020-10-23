@@ -10,6 +10,7 @@ def mW_SM(par):
     r"""Two-loop SM prediction for the $W$ pole mass.
 
     Eq. (6) of arXiv:hep-ph/0311148."""
+    flavio.citations.register("Awramik:2003rn")
     dH = log(par['m_h'] / 100)
     dh = (par['m_h'] / 100)**2
     dt = (par['m_t'] / 174.3)**2 - 1
@@ -36,6 +37,7 @@ def dmW_SMEFT(par, C):
     r"""Shift in the $W$ mass due to dimension-6 operators.
 
     Eq. (2) of arXiv:1606.06502."""
+    flavio.citations.register("Bjorn:2016zlr")
     sh2 = smeftew._sinthetahat2(par)
     sh = sqrt(sh2)
     ch2 = 1 - sh2

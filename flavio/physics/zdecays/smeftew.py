@@ -4,6 +4,7 @@ operators in SMEFT.
 Taken from Appendix A.1 in arXiv:1706.08945."""
 
 from math import sqrt, pi
+import flavio
 
 
 # fermion quantum numbers
@@ -21,14 +22,17 @@ _sectors = {'l': {'e': 1, 'mu': 2, 'tau': 3},
 
 
 def d_GF(par, C):
+    flavio.citations.register("Brivio:2017vri")
     return 1 / (sqrt(2) * par['GF']) * sqrt(2) / 2 * (C['phil3_22'] + C['phil3_11'] - C['ll_1221'] / 2)
 
 
 def _sinthetahat2(par):
     r"""$sin^2(\hat\theta)$"""
+    flavio.citations.register("Brivio:2017vri")
     return 1 / 2 * (1 - sqrt(1 - (4 * pi * par['alpha_e']) / (sqrt(2) * par['GF'] * par['m_Z']**2)))
 
 def d_sh2(par, C):
+    flavio.citations.register("Brivio:2017vri")
     sh2 = _sinthetahat2(par)
     sh = sqrt(sh2)
     ch2 = 1 - sh2
@@ -40,12 +44,14 @@ def d_sh2(par, C):
 
 
 def d_mZ2(par, C):
+    flavio.citations.register("Brivio:2017vri")
     return (1 / (2 * sqrt(2)) * par['m_Z']**2 / par['GF'] * C['phiD']
             + (2**(1 / 4) * sqrt(pi * par['alpha_e']) * par['m_Z'])
             / par['GF']**(3 / 2) * C['phiWB'])
 
 
 def d_gZb(par, C):
+    flavio.citations.register("Brivio:2017vri")
     sh2 = _sinthetahat2(par)
     sh = sqrt(sh2)
     ch = sqrt(1 - sh2)
@@ -70,6 +76,7 @@ def gA_SM(f, par):
 
 
 def d_gVl(f1, f2, par, C):
+    flavio.citations.register("Brivio:2017vri")
     i, j = sorted((_sectors['l'][f1], _sectors['l'][f2]))
     d_g = -(C['phie_{}{}'.format(i, j)] + C['phil1_{}{}'.format(i, j)] + C['phil3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF'])
     if i > j:
@@ -80,6 +87,7 @@ def d_gVl(f1, f2, par, C):
 
 
 def d_gVnu(f1, f2, par, C):
+    flavio.citations.register("Brivio:2017vri")
     i, j = sorted((_sectors['nu'][f1], _sectors['nu'][f2]))
     d_g = -(C['phil1_{}{}'.format(i, j)] - C['phil3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF'])
     if i > j:
@@ -90,6 +98,7 @@ def d_gVnu(f1, f2, par, C):
 
 
 def d_gVu(f1, f2, par, C):
+    flavio.citations.register("Brivio:2017vri")
     i, j = sorted((_sectors['u'][f1], _sectors['u'][f2]))
     d_g = (-C['phiu_{}{}'.format(i, j)] - C['phiq1_{}{}'.format(i, j)] + C['phiq3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF'])
     if i > j:
@@ -100,6 +109,7 @@ def d_gVu(f1, f2, par, C):
 
 
 def d_gVd(f1, f2, par, C):
+    flavio.citations.register("Brivio:2017vri")
     i, j = sorted((_sectors['d'][f1], _sectors['d'][f2]))
     d_g = -(C['phid_{}{}'.format(i, j)] + C['phiq1_{}{}'.format(i, j)] + C['phiq3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF'])
     if i > j:
@@ -110,6 +120,7 @@ def d_gVd(f1, f2, par, C):
 
 
 def d_gAl(f1, f2, par, C):
+    flavio.citations.register("Brivio:2017vri")
     i, j = sorted((_sectors['l'][f1], _sectors['l'][f2]))
     d_g = (C['phie_{}{}'.format(i, j)] - C['phil1_{}{}'.format(i, j)] - C['phil3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF'])
     if i > j:
@@ -124,6 +135,7 @@ def d_gAnu(f1, f2, par, C):
 
 
 def d_gAu(f1, f2, par, C):
+    flavio.citations.register("Brivio:2017vri")
     i, j = sorted((_sectors['u'][f1], _sectors['u'][f2]))
     d_g = -(-C['phiu_{}{}'.format(i, j)] + C['phiq1_{}{}'.format(i, j)] - C['phiq3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF'])
     if i > j:
@@ -134,6 +146,7 @@ def d_gAu(f1, f2, par, C):
 
 
 def d_gAd(f1, f2, par, C):
+    flavio.citations.register("Brivio:2017vri")
     i, j = sorted((_sectors['d'][f1], _sectors['d'][f2]))
     d_g = (C['phid_{}{}'.format(i, j)] - C['phiq1_{}{}'.format(i, j)] - C['phiq3_{}{}'.format(i, j)]) / (4 * sqrt(2) * par['GF'])
     if i > j:
@@ -166,6 +179,7 @@ def d_gA(f1, f2, par, C):
 
 
 def d_gWl(f1, f2, par, C):
+    flavio.citations.register("Brivio:2017vri")
     i, j = sorted((_sectors['l'][f1], _sectors['l'][f2]))
     sh2 = _sinthetahat2(par)
     sh = sqrt(sh2)
@@ -175,6 +189,7 @@ def d_gWl(f1, f2, par, C):
 
 
 def d_gWq(f1, f2, par, C):
+    flavio.citations.register("Brivio:2017vri")
     i, j = sorted((_sectors['u'][f1], _sectors['d'][f2]))
     sh2 = _sinthetahat2(par)
     sh = sqrt(sh2)
