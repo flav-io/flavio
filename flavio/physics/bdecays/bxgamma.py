@@ -40,6 +40,7 @@ def BRBXgamma(wc_obj, par, q, E0):
     cutoff $E_0$ in GeV
     (currently works only for `E0=1.6`).
     See arXiv:1503.01789 and references therein."""
+    flavio.citations.register("Misiak:2015xwa")
     scale = flavio.config['renormalization scale']['bxgamma']
     alphaem = 1/137.035999139 # this is alpha_e(0), a constant for our purposes
     bq = 'b' + q
@@ -55,6 +56,7 @@ def BRBXgamma(wc_obj, par, q, E0):
     # central value of non-perturbative correction (M. Misiak, private communication)
     P_nonpert = 0.00381745
     # eq. (2.1) of hep-ph/0609241
+    flavio.citations.register("Misiak:2006ab")
     return BRSL * abs(xi_t)**2/abs(Vcb)**2 * 6*alphaem/pi/C * (PE0 + P_nonpert + P_uncertainty)
 
 def PE0_BR_BXgamma(wc, par, q, E0):
