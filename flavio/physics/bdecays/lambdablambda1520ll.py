@@ -54,14 +54,21 @@ def helicity_amps(q2, mLb, mL, ff):
     return H
 
 
-def transversity_amps(ha, q2, mLb, mL, mqh, wc, prefactor):
+def transversity_amps(ha, q2, mLb, mL, mqh, wc, prefactor, t):
     # Hadronic transversity amplitudes
     # defined as in eqs (3.18) and (3.20)
 
+    ## by taking wc_eff
     C910Lpl = (wc['v'] - wc['a']) + (wc['vp'] - wc['ap'])
     C910Rpl = (wc['v'] + wc['a']) + (wc['vp'] + wc['ap'])
     C910Lmi = (wc['v'] - wc['a']) - (wc['vp'] - wc['ap'])
     C910Rmi = (wc['v'] + wc['a']) - (wc['vp'] + wc['ap'])
+
+    ## by taking SM wc
+    #C910Lpl = (wc['C9_'+t] - wc['C10_'+t]) + (wc['C9p_'+t] - wc['C10p_'+t])
+    #C910Rpl = (wc['C9_'+t] + wc['C10_'+t]) + (wc['C9p_'+t] + wc['C10p_'+t])
+    #C910Lmi = (wc['C9_'+t] - wc['C10_'+t]) - (wc['C9p_'+t] - wc['C10p'+t])
+    #C910Rmi = (wc['C9_'+t] + wc['C10_'+t]) - (wc['C9p_'+t] + wc['C10p'+t])
 
     A = {}
 
@@ -180,10 +187,13 @@ def get_transversity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
     mb = flavio.physics.running.running.get_mb(par, scale)
     ff = get_ff(q2, par)
     wc = flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wc_obj, 'bs' + lep + lep, scale, par)
+    #print('*** WCs wctot_dict: ',wc)
+    ## wc_eff contain complex coefficients 
     wc_eff = flavio.physics.bdecays.wilsoncoefficients.get_wceff(q2, wc, par, 'Lambdab', 'Lambda(1520)', lep, scale)
+    #print('*** WCs wc_eff: ',wc_eff)
     ha = helicity_amps(q2, mLb, mL, ff)
     N = prefactor(q2, par, scale)
-    ta_ff = transversity_amps(ha, q2, mLb, mL, mb, wc_eff, N)
+    ta_ff = transversity_amps(ha, q2, mLb, mL, mb, wc_eff, N, 'bs'+lep+lep)
     return ta_ff
 
 
@@ -216,7 +226,7 @@ def get_obs_new(function, q2, wc_obj, par, lep, arg):
     BR = par['BR(Lambda(1520)->NKbar)_exp']/2
     L = angular_coefficients(ta, BR)
     dG = dGdq2(L)
-    L_conj = angular_coefficients(ta, BR)
+    L_conj = angular_coefficients(ta_conj, BR)
     dG_conj = dGdq2(L_conj)
     return function(L, L_conj, dG, dG_conj, arg)
 
@@ -247,7 +257,7 @@ def A(L, L_conj, dG, dG_conj, arg):
 
 def FL_num(L):
     # longuitudinal polarization of the dilepton system
-    return 1-2*(L['1cc'] + 2*L['2cc'])/(3)
+    return (L['1cc'] + 2*L['1ss'] + 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss'])/3 - 2*(L['1cc'] + 2*L['2cc'])/3
 
 
 def AFBl_num(L):
