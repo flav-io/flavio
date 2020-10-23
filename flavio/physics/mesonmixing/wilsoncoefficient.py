@@ -25,6 +25,7 @@ def F_box(x, y):
 
 def S0_box(x, y, xu=0):
     r"""$\Delta F=2$ box loop function $S_0(x, y, x_u)$."""
+    flavio.citations.register("Inami:1980fz")
     return F_box(x, y) + F_box(xu, xu) - F_box(x, xu) - F_box(y, xu)
 
 def df2_prefactor(par):
