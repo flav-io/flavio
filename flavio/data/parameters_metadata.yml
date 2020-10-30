@@ -557,10 +557,52 @@ Lambdab->Lambda(1520) alpha_Lambda(1520):
   tex: $\alpha_{\Lambda(1520)}$
   description: Parameter for the form factor calculation of $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ using the quark model as in arXiv 1108.6129
 
-Lambdab->Lambda(1520) err_10percent:
+Lambdab->Lambda(1520) err_10percent 1:
   tex: $err_{0.1}$
   description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_30percent:
+Lambdab->Lambda(1520) err_10percent 2:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_10percent 3:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_10percent 4:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_10percent 5:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_10percent 6:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_10percent 7:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_10percent 8:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_10percent 9:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_10percent 10:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_10percent 11:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_10percent 12:
+  tex: $err_{0.1}$
+  description: 10 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_30percent 1:
+  tex: $err_{0.3}$
+  description: 30 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_30percent 2:
+  tex: $err_{0.3}$
+  description: 30 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_30percent 3:
+  tex: $err_{0.3}$
+  description: 30 Percent error applied on the form factors
+Lambdab->Lambda(1520) err_30percent 4:
   tex: $err_{0.3}$
   description: 30 Percent error applied on the form factors
 

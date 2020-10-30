@@ -57,19 +57,19 @@ def helicity_amps(q2, mLb, mL, ff):
 def transversity_amps(ha, q2, mLb, mL, mqh, wc, prefactor, t):
     # Hadronic transversity amplitudes
     # defined as in eqs (3.18) and (3.20)
-
+    
     ## by taking wc_eff
     C910Lpl = (wc['v'] - wc['a']) + (wc['vp'] - wc['ap'])
     C910Rpl = (wc['v'] + wc['a']) + (wc['vp'] + wc['ap'])
     C910Lmi = (wc['v'] - wc['a']) - (wc['vp'] - wc['ap'])
     C910Rmi = (wc['v'] + wc['a']) - (wc['vp'] + wc['ap'])
-
+    '''
     ## by taking SM wc
-    #C910Lpl = (wc['C9_'+t] - wc['C10_'+t]) + (wc['C9p_'+t] - wc['C10p_'+t])
-    #C910Rpl = (wc['C9_'+t] + wc['C10_'+t]) + (wc['C9p_'+t] + wc['C10p_'+t])
-    #C910Lmi = (wc['C9_'+t] - wc['C10_'+t]) - (wc['C9p_'+t] - wc['C10p'+t])
-    #C910Rmi = (wc['C9_'+t] + wc['C10_'+t]) - (wc['C9p_'+t] + wc['C10p'+t])
-
+    C910Lpl = (wc['C9_'+t] - wc['C10_'+t]) + (wc['C9p_'+t] - wc['C10p_'+t])
+    C910Rpl = (wc['C9_'+t] + wc['C10_'+t]) + (wc['C9p_'+t] + wc['C10p_'+t])
+    C910Lmi = (wc['C9_'+t] - wc['C10_'+t]) - (wc['C9p_'+t] - wc['C10p'+t])
+    C910Rmi = (wc['C9_'+t] + wc['C10_'+t]) - (wc['C9p_'+t] + wc['C10p'+t])
+    '''
     A = {}
 
     A['Bperp1', 'L'] = sqrt(2)*( C910Lpl * ha['+V-1-3'] - 2*mqh*(wc['7']+wc['7p'])/q2 * ha['+T-1-3'])
@@ -182,15 +182,19 @@ def get_transversity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
     if cp_conjugate:
         par = conjugate_par(par)
     scale = flavio.config['renormalization scale']['lambdab']
+    #print("scale: ", scale)
     mLb = par['m_Lambdab']
     mL = par['m_Lambda(1520)']
     mb = flavio.physics.running.running.get_mb(par, scale)
     ff = get_ff(q2, par)
     wc = flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wc_obj, 'bs' + lep + lep, scale, par)
     #print('*** WCs wctot_dict: ',wc)
-    ## wc_eff contain complex coefficients 
+    '''
+    wc_eff = wc
+    ''' 
     wc_eff = flavio.physics.bdecays.wilsoncoefficients.get_wceff(q2, wc, par, 'Lambdab', 'Lambda(1520)', lep, scale)
     #print('*** WCs wc_eff: ',wc_eff)
+    
     ha = helicity_amps(q2, mLb, mL, ff)
     N = prefactor(q2, par, scale)
     ta_ff = transversity_amps(ha, q2, mLb, mL, mb, wc_eff, N, 'bs'+lep+lep)

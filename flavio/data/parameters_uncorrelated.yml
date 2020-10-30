@@ -233,8 +233,22 @@ Lambdab->Lambda(1520) m_s: 0.5553
 Lambdab->Lambda(1520) alpha_Lambdab: 0.443
 Lambdab->Lambda(1520) alpha_Lambda(1520): 0.333 
 
-Lambdab->Lambda(1520) err_10percent: 1 +- 0.1
-Lambdab->Lambda(1520) err_30percent: 1 +- 0.3
+Lambdab->Lambda(1520) err_10percent 1: 1 +- 0.1
+Lambdab->Lambda(1520) err_10percent 2: 1 +- 0.1
+Lambdab->Lambda(1520) err_10percent 3: 1 +- 0.1
+Lambdab->Lambda(1520) err_10percent 4: 1 +- 0.1
+Lambdab->Lambda(1520) err_10percent 5: 1 +- 0.1
+Lambdab->Lambda(1520) err_10percent 6: 1 +- 0.1
+Lambdab->Lambda(1520) err_10percent 7: 1 +- 0.1
+Lambdab->Lambda(1520) err_10percent 8: 1 +- 0.1
+Lambdab->Lambda(1520) err_10percent 9: 1 +- 0.1
+Lambdab->Lambda(1520) err_10percent 10: 1 +- 0.1
+Lambdab->Lambda(1520) err_10percent 11: 1 +- 0.1
+Lambdab->Lambda(1520) err_10percent 12: 1 +- 0.1
+Lambdab->Lambda(1520) err_30percent 1: 1 +- 0.3
+Lambdab->Lambda(1520) err_30percent 2: 1 +- 0.3
+Lambdab->Lambda(1520) err_30percent 3: 1 +- 0.3
+Lambdab->Lambda(1520) err_30percent 4: 1 +- 0.3
 
 Lambdab->Lambda(1520) F1 a0: -1.66
 Lambdab->Lambda(1520) F1 a2: -0.295
