@@ -25,7 +25,7 @@ class TestCitations(unittest.TestCase):
         flavio.citations._reset()
         self.assertEqual("", flavio.print_citations())
 
-    def test_SM_citations(self):
-        DGs_citations = flavio.Observable["DeltaGamma_s"].SM_citations().split(",")
+    def test_theory_citations(self):
+        DGs_citations = flavio.Observable["DeltaGamma_s"].theory_citations().split(",")
         self.assertNotIn("Straub:2018kue", DGs_citations)
         self.assertIn("Beneke:2003az", DGs_citations)
