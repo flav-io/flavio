@@ -697,12 +697,16 @@ class Observable(NamedInstanceClass):
                             break
         return ms
 
-    def SM_citations(self):
+    def theory_citations(self, *args, **kwargs):
         """Return a list of theory papers (in the form of INSPIRE texkeys) to
-        cite for the SM prediction for an observable."""
+        cite for the theory prediction for an observable.
+        
+        Arguments are passed to the observable and are necessary,
+        depending on the observable (e.g. $q^2$-dependent observables).
+        """
         old_citations = flavio.citations
         flavio.citations = flavio.Citations()
-        flavio.sm_prediction(self.name)
+        flavio.sm_prediction(self.name, *args, **kwargs)
         SM_citations = flavio.citations.print()
         flavio.citations = old_citations
         return SM_citations
