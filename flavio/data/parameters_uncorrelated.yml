@@ -227,28 +227,28 @@ Lambdab->Lambda deltaC9 c_perp1 Im: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_para1 Re: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_para1 Im: 0 ± 0.3
 
-# Parameters for the form factor calculation in the quark model of Lambdab->Lambda(1520)ll, uncertainties estimated later
+# Parameters for the form factor calculation in the quark model of Lambdab->Lambda(1520)ll
 Lambdab->Lambda(1520) m_q: 0.2848  
 Lambdab->Lambda(1520) m_s: 0.5553
 Lambdab->Lambda(1520) alpha_Lambdab: 0.443
 Lambdab->Lambda(1520) alpha_Lambda(1520): 0.333 
 
-Lambdab->Lambda(1520) err_10percent 1: 1 +- 0.1
-Lambdab->Lambda(1520) err_10percent 2: 1 +- 0.1
-Lambdab->Lambda(1520) err_10percent 3: 1 +- 0.1
-Lambdab->Lambda(1520) err_10percent 4: 1 +- 0.1
-Lambdab->Lambda(1520) err_10percent 5: 1 +- 0.1
-Lambdab->Lambda(1520) err_10percent 6: 1 +- 0.1
-Lambdab->Lambda(1520) err_10percent 7: 1 +- 0.1
-Lambdab->Lambda(1520) err_10percent 8: 1 +- 0.1
-Lambdab->Lambda(1520) err_10percent 9: 1 +- 0.1
-Lambdab->Lambda(1520) err_10percent 10: 1 +- 0.1
-Lambdab->Lambda(1520) err_10percent 11: 1 +- 0.1
-Lambdab->Lambda(1520) err_10percent 12: 1 +- 0.1
-Lambdab->Lambda(1520) err_30percent 1: 1 +- 0.3
-Lambdab->Lambda(1520) err_30percent 2: 1 +- 0.3
-Lambdab->Lambda(1520) err_30percent 3: 1 +- 0.3
-Lambdab->Lambda(1520) err_30percent 4: 1 +- 0.3
+Lambdab->Lambda(1520) fVt uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fVperp uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fV0 uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fVg uncertainty: 1 +- 0.3
+Lambdab->Lambda(1520) fAt uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fAperp uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fA0 uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fAg uncertainty: 1 +- 0.3
+Lambdab->Lambda(1520) fTt uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fTperp uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fT0 uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fTg uncertainty: 1 +- 0.3
+Lambdab->Lambda(1520) fT5t uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fT5perp uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fT50 uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fT5g uncertainty: 1 +- 0.3
 
 Lambdab->Lambda(1520) F1 a0: -1.66
 Lambdab->Lambda(1520) F1 a2: -0.295

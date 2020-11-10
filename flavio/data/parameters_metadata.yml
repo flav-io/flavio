@@ -557,54 +557,54 @@ Lambdab->Lambda(1520) alpha_Lambda(1520):
   tex: $\alpha_{\Lambda(1520)}$
   description: Parameter for the form factor calculation of $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ using the quark model as in arXiv 1108.6129
 
-Lambdab->Lambda(1520) err_10percent 1:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_10percent 2:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_10percent 3:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_10percent 4:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_10percent 5:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_10percent 6:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_10percent 7:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_10percent 8:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_10percent 9:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_10percent 10:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_10percent 11:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_10percent 12:
-  tex: $err_{0.1}$
-  description: 10 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_30percent 1:
-  tex: $err_{0.3}$
-  description: 30 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_30percent 2:
-  tex: $err_{0.3}$
-  description: 30 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_30percent 3:
-  tex: $err_{0.3}$
-  description: 30 Percent error applied on the form factors
-Lambdab->Lambda(1520) err_30percent 4:
-  tex: $err_{0.3}$
-  description: 30 Percent error applied on the form factors
+Lambdab->Lambda(1520) fVt uncertainty:
+  tex: $\Delta_{fVt}$
+  description: Uncertainty applied on the form factor fVt
+Lambdab->Lambda(1520) fVperp uncertainty:
+  tex: $\Delta_{fVperp}$
+  description: Uncertainty applied on the form factor fVperp
+Lambdab->Lambda(1520) fV0 uncertainty:
+  tex: $\Delta_{fV0}$
+  description: Uncertainty applied on the form factor fV0
+Lambdab->Lambda(1520) fVg uncertainty:
+  tex: $\Delta_{fVg}$
+  description: Uncertainty applied on the form factor fVg
+Lambdab->Lambda(1520) fAt uncertainty:
+  tex: $\Delta_{fAt}$
+  description: Uncertainty applied on the form factor fAt
+Lambdab->Lambda(1520) fAperp uncertainty:
+  tex: $\Delta_{fAperp}$
+  description: Uncertainty applied on the form factor fAperp
+Lambdab->Lambda(1520) fA0 uncertainty:
+  tex: $\Delta_{fA0}$
+  description: Uncertainty applied on the form factor fA0
+Lambdab->Lambda(1520) fAg uncertainty:
+  tex: $\Delta_{fAg}$
+  description: Uncertainty applied on the form factor fAg
+Lambdab->Lambda(1520) fTt uncertainty:
+  tex: $\Delta_{fTt}$
+  description: Uncertainty applied on the form factor fTt
+Lambdab->Lambda(1520) fTperp uncertainty:
+  tex: $\Delta_{fTperp}$
+  description: Uncertainty applied on the form factor fTperp
+Lambdab->Lambda(1520) fT0 uncertainty:
+  tex: $\Delta_{fT0}$
+  description: Uncertainty applied on the form factor fT0
+Lambdab->Lambda(1520) fTg uncertainty:
+  tex: $\Delta_{fTg}$
+  description: Uncertainty applied on the form factor fTg
+Lambdab->Lambda(1520) fT5t uncertainty:
+  tex: $\Delta_{fT5t}$
+  description: Uncertainty applied on the form factor fT5t
+Lambdab->Lambda(1520) fT5perp uncertainty:
+  tex: $\Delta_{fT5perp}$
+  description: Uncertainty applied on the form factor fT5perp
+Lambdab->Lambda(1520) fT50 uncertainty:
+  tex: $\Delta_{fT50}$
+  description: Uncertainty applied on the form factor fT50
+Lambdab->Lambda(1520) fT5g uncertainty:
+  tex: $\Delta_{fT5g}$
+  description: Uncertainty applied on the form factor fT5g
 
 Lambdab->Lambda(1520) F1 a0:
   tex: $a_0^{F1}$
