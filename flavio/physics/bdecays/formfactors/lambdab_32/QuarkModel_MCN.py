@@ -78,7 +78,7 @@ def ff_equiv(process, q2, par):
     ff['fV0'] = ( FD["F2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(2*FD["F1"]*mL*(mL + mLb)*(mL**2 - 2*mL*mLb + mLb**2 - q2) - 2*FD["F4"]*mL*mLb*(mL**2 - mLb**2 + q2) + FD["F3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2))) )/( 2*mL*mLb**2*(mL+mLb)*(mL**2 - 2*mL*mLb + mLb**2 - q2) )*e_fV0 
     ff['fVg'] = FD["F4"]*e_fVg
 
-    ff['fAt'] = ( FD["G2"]*mL*(mL**2 - mLb**2 - q2) + mLb*(-2*FD["G4"]*mL*mLb - 2*FD["G1"]*mL*(mL + mLb) + FD["G3"]*(mL**2 - mLb**2 + q2)) )/( 2*mL*mLb**2*(mL + mLb) )*e_fAt
+    ff['fAt'] = ( FD["G2"]*mL*(mL**2 - mLb**2 - q2) + mLb*(-2*FD["G4"]*mL*mLb + 2*FD["G1"]*mL*(mL + mLb) + FD["G3"]*(mL**2 - mLb**2 + q2)) )/( 2*mL*mLb**2*(mL + mLb) )*e_fAt
     ff['fAperp'] = ( FD["G1"]/mLb - (FD["G4"]*mL)/(mL**2 + 2*mL*mLb + mLb**2 - q2) )*e_fAperp
     ff['fA0'] = ( FD["G2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(2*FD["G1"]*mL*(mL - mLb)*(mL**2 + 2*mL*mLb + mLb**2 - q2) - 2*FD["G4"]*mL*mLb*(mL**2 - mLb**2 + q2) + FD["G3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2))) )/( 2*mL*(mL - mLb)*mLb**2*(mL**2 + 2*mL*mLb + mLb**2 - q2) )*e_fA0 
     ff['fAg'] = -FD["G4"]*e_fAg
