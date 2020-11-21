@@ -626,7 +626,8 @@ def contour(x, y, z, levels, *, z_min=None,
               interpolation_order=2,
               col=None, color=None, label=None,
               filled=True,
-              contour_args={}, contourf_args={}):
+              contour_args={}, contourf_args={},
+              **kwargs):
     r"""Plot coloured confidence contours (or bands) given numerical input
     arrays.
 
