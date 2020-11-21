@@ -301,9 +301,9 @@ def dBRdq2_lep(q2, wc_obj, par, B, V, lep, A):
     J = get_angularcoeff(q2, wc_obj, par, B, V, lep)
     if A is  None:
         return tauB * dGdq2(J) * BRfac(V)
-    elif A is 'L':
+    elif A == 'L':
         return tauB * dGdq2_L(J) * BRfac(V)
-    elif A is 'T':
+    elif A == 'T':
         return tauB * dGdq2_T(J) * BRfac(V)
 
 
