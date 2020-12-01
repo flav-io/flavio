@@ -150,6 +150,7 @@ def epsprime_SM(par):
     ReA0 = par['ReA0(K->pipi)']
     ReA2 = par['ReA2(K->pipi)']
      # eq. (19) of arXiv:1507.06345
+    flavio.citations.register("Buras:2015yba")
     return (-par['omega+'] / (sqrt(2) * par['eps_K'])
             * (ImA0 / ReA0 * (1 - par['Omegahat_eff'])
                - 1 / a * ImA2 / ReA2).real)
@@ -165,6 +166,7 @@ def epsprime_NP(wc_obj, par):
     ReA2 = par['ReA2(K->pipi)']
     a = par['epsp a']  # eq. (16)
     # dividing by a to remove the isospin brk corr in omega+, cf. (16) in 1507.06345
+    flavio.citations.register("Buras:2015yba")
     return (-par['omega+'] / a / (sqrt(2) * par['eps_K'])
             * (ImA0 / ReA0 - ImA2 / ReA2).real)
 

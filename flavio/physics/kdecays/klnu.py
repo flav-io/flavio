@@ -39,6 +39,7 @@ def _br_plnu(wc_obj, par, P, lep, nu):
 def r_plnu(wc_obj, par, P):
     # resumming logs according to (111) of 0707.4464
     # (this is negligibly small for the individual rates)
+    flavio.citations.register("Cirigliano:2007ga")
     rg_corr = 1.00055
     return rg_corr*br_plnu(wc_obj, par, P, 'e')/br_plnu(wc_obj, par, P, 'mu')
 
