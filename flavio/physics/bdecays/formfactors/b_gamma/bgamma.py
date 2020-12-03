@@ -1,3 +1,4 @@
+import flavio
 from flavio.classes import AuxiliaryQuantity, Implementation
 from flavio.config import config
 
@@ -7,6 +8,7 @@ def ff(q2, par, B):
 
     See hep-ph/0208256.pdf.
     """
+    flavio.citations.register("Kruger:2002gf")
     fB = par['f_'+B]
     mB = par['m_'+B]
     name = 'B->gamma KM '
