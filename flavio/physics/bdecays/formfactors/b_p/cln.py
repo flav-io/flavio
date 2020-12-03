@@ -1,3 +1,4 @@
+import flavio
 from flavio.physics.bdecays.formfactors import hqet
 from flavio.physics.bdecays.formfactors import common
 from math import sqrt
@@ -25,6 +26,7 @@ def ff(process, q2, par, scale, order_z=3, order_z_slp=2, order_z_sslp=1):
 
     See arXiv:hep-ph/9712417 and arXiv:1703.05330.
     """
+    flavio.citations.register("Caprini:1997mu")
     pd = process_dict[process]
     mB = par['m_' + pd['B']]
     mP = par['m_' + pd['P']]
