@@ -65,6 +65,7 @@ def angular_coefficients(ta, alpha):
     transversity amplitudes and decay parameter $\alpha$.
 
     See (3.29)-(3.32) of arXiv:1410.2115."""
+    flavio.citations.register("Boer:2014kda")
     K = {}
     K['1ss'] = 1/4.*(   abs(ta['perp1', 'R'])**2 + abs(ta['perp1', 'L'])**2
                       + abs(ta['para1', 'R'])**2 + abs(ta['para1', 'L'])**2

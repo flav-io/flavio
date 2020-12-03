@@ -287,6 +287,7 @@ def Phill_logqed(I, sh, mb, ml, alpha_s, alpha_e, wc, q, lep, mc):
     # Note the different powers of ast (\tilde\alpha_s) and k (\kappa) due to
     # the different normalisation of 1) C9 and C10 and 2) the overall
     # normalisation of phi_ll
+    flavio.citations.register("Huber:2015sra")
     e = np.zeros((11, 11), dtype=complex) # from 0 to 10
     if I == 'T' or I == 'L' or I == 'BR':
         e[7,7] = 8 * ast    * k    * sigmaij_I(I, 7, 7, sh)*wem(I, 7, 7, sh, mb, ml, scale, mc)
@@ -360,6 +361,7 @@ def f_u(alpha_e, alpha_s, alpha_s_mu0, mb, l1, l2):
     # contribution to the branching ratio, as C9 and C10 are formally of
     # O(\tilde \alpha_s \kappa). This is a numerically relevant choice (around
     # 15% change of the low-q^2 BR).
+    flavio.citations.register("Huber:2015sra")
     ast = alpha_s/4./pi
     k = alpha_e/alpha_s
     eta = alpha_s_mu0/alpha_s

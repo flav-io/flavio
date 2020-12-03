@@ -3,7 +3,7 @@ $B\to X_q\ell^+\ell^-$ decays.
 
 See arXiv:1503.04849."""
 
-
+import flavio
 from flavio.math.functions import li2
 from math import log, pi, sqrt
 import numpy as np
@@ -368,6 +368,7 @@ wem_dict_high['BR', 7, 9] = wem_79_high
 wem_dict_high['BR', 9, 9] = wem_99_high
 
 def wem(I, i, j, sh, mb, ml, scale, mc):
+    flavio.citations.register("Huber:2015sra")
     if sh < 0.5:
         return wem_dict_low[I, i, j](sh, mb, ml, scale, mc)
     else:
