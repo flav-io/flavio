@@ -6,8 +6,8 @@ import flavio
 class Citations:
 
     """Entry point to citations management.
-    This object may be used to record Bibtex citation information and then register that
-    a particular citation is relevant for a particular implementation.
+    This object may be used to register a citation is relevant for a particular
+    implementation. It can then also then print out a list of papers to be cited.
 
     Examples
     --------
@@ -30,7 +30,7 @@ class Citations:
         Parameters
         ----------
         key : str
-            The INSPIRE key for the paper to be cited
+            The INSPIRE texkey for the paper to be cited
         """
         self._papers_to_cite.add(key)
 
