@@ -5948,7 +5948,7 @@ LEP Z leptonic decay:
     Gamma(Z->ee): 83.92 +- 0.12 e-3
     Gamma(Z->mumu): 83.99 +- 0.18 e-3
     Gamma(Z->tautau): 84.08 +- 0.22 e-3
-    
+
 LHCb W->lnu 2016:
   experiment: LHCb
   inspire: Aaij:2016qqz
@@ -6033,11 +6033,17 @@ OPAL Z LFV:
 LEP W->leptons:
   experiment: LEP
   inspire: Schael:2013ita
-  description: Table 5.5 and Equations (5.2)-(5.4)
+  description: Table 5.5
   values:
     BR(W->enu): 10.71 ± 0.16 e-2
     BR(W->munu): 10.63 ± 0.15 e-2
     BR(W->taunu): 11.38 ± 0.21 e-2
+
+LEP W->leptons ratios:
+  experiment: LEP
+  inspire: Schael:2013ita
+  description: Equations (5.2)-(5.4)
+  values:
     Rmue(W->lnu): 0.993 +- 0.019
     Rtaue(W->lnu): 1.063 +- 0.027
     Rtaumu(W->lnu): 1.070 +- 0.026
