@@ -35,9 +35,7 @@ def minimize_robust(fun, x0, args=(), methods=None, tries=3, disp=False,
                     if disp:
                         print("Skipping method MIGRAD: no iminuit installation found.")
                     continue
-                options = {'print_level': int(disp)} # 0 or 1
-                options.update(kwargs)
-                opt = minimize_migrad(fun, x0, args=args, **options)
+                opt = minimize_migrad(fun, x0, args=args, print_level=int(disp))
             else:
                 options = {'disp': disp}
                 options.update(kwargs)
@@ -67,53 +65,32 @@ def maximize_robust(fun, x0, args=(), methods=None, tries=3, disp=False, **kwarg
     return res
 
 
-class AttributeDict(dict):
-    """Dictionary subclass with attribute access"""
-    __getattr__ = dict.get
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__
-
-
 class MinuitFunction(object):
-    """Function wrapper for Minuit to allow supplying function with vector
+    """Function wrapper for Minuit to allow supplying function with additional
     arguments"""
-    def __init__(self, f, dim, args=()):
-        """Initialize the instance. f: function, dim: number of dimensions"""
+    def __init__(self, f, args=()):
+        """Initialize the instance. f: function"""
+        import iminuit
         self.f = f
-        self.dim = dim
         self.args = args
+        self.func_code = iminuit.util.make_func_code('x')
 
-    @property
-    def __code__(self):
-        """Needed to fake the function signature for Minuit"""
-        d = AttributeDict()
-        d.co_varnames = ['x{}'.format(i) for i in range(self.dim)]
-        d.co_argcount = len(d.co_varnames)
-        return d
-
-    def __call__(self, *x):
+    def __call__(self, x):
         return self.f(x, *self.args)
 
-
-def minimize_migrad(fun, x0, args=(), dx0=None, **kwargs):
+def minimize_migrad(fun, x0, args=(), print_level=0):
     """Minimization function using MINUIT's MIGRAD minimizer."""
     import iminuit
-    mfun = MinuitFunction(f=fun, dim=len(x0), args=args)
-    # bring the parameters in a suitable form
-    par = iminuit.util.describe(mfun)
-    x0_dict = {par[i]: x0i for i, x0i in enumerate(x0)}
-    if dx0 is None:
-        dx0 = np.ones(len(x0))
-    dx0_dict = {'error_' + par[i]: dx0i for i, dx0i in enumerate(dx0)}
+    mfun = MinuitFunction(f=fun, args=args)
     # run
-    minuit_args={'errordef': 1}
-    minuit_args.update(kwargs)
-    minuit = iminuit.Minuit(mfun, **x0_dict, **dx0_dict, **minuit_args)
-    fmin, param = minuit.migrad()
+    minuit = iminuit.Minuit(mfun, x0)
+    minuit.errordef = iminuit.Minuit.LEAST_SQUARES # == 1
+    minuit.print_level = print_level
+    mres = minuit.migrad()
     # cast migrad result in terms of scipy-like result object
     res = scipy.optimize.OptimizeResult()
-    res.success = fmin['is_valid']
-    res.fun = fmin['fval']
-    res.x = np.array([p['value'] for p in param])
-    res.nfev = fmin['nfcn']
+    res.success = mres.fmin.is_valid
+    res.fun = mres.fmin.fval
+    res.x = np.array(mres.values)
+    res.nfev = mres.fmin.nfcn
     return res
