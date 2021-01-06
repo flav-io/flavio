@@ -5521,14 +5521,14 @@ BaBar B+->htaul 2012:
   experiment: BaBar
   inspire: Lees:2012zz
   values:
-    BR(B+->Kmutau): 0.8 + 1.9 - 1.4 e-5
-    BR(B+->Ktaumu): -0.4 + 1.4 - 0.9 e-5
-    BR(B+->Ketau): 0.2 + 2.1 - 1.0 e-5
-    BR(B+->Ktaue): -1.3 + 1.5 - 1.8 e-5
-    BR(B+->pimutau): 0.4 + 3.1 - 2.2 e-5
-    BR(B+->pitaumu): 0.0 + 2.6 - 2.0 e-5
-    BR(B+->pietau): 2.8 + 2.4 - 1.9 e-5
-    BR(B+->pitaue): -3.1 + 2.4 - 2.1 e-5
+    BR(B+->Ktaumu): 0.8 + 1.9 - 1.4 e-5  # NB this is B- -> K- tau+ mu-
+    BR(B+->Kmutau): -0.4 + 1.4 - 0.9 e-5  # NB this is B- -> K- mu+ tau-
+    BR(B+->Ktaue): 0.2 + 2.1 - 1.0 e-5  # NB this is B- -> K- tau+ e-
+    BR(B+->Ketau): -1.3 + 1.5 - 1.8 e-5  # NB this is B- -> K- e+ tau-
+    BR(B+->pitaumu): 0.4 + 3.1 - 2.2 e-5  # NB this is B- -> pi- tau+ mu-
+    BR(B+->pimutau): 0.0 + 2.6 - 2.0 e-5  # NB this is B- -> pi- mu+ tau-
+    BR(B+->pitaue): 2.8 + 2.4 - 1.9 e-5  # NB this is B- -> pi- tau+ e-
+    BR(B+->pietau): -3.1 + 2.4 - 2.1 e-5  # NB this is B- -> pi- e+ tau-
 
 BaBar B->Kll LFV 2016:
   experiment: BaBar
