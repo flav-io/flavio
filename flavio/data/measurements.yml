@@ -2885,7 +2885,7 @@ LHCb B->K*ee 2020:
       q2min: 0.000784
       q2max: 0.257
       value: -0.03 ± 0.04 ± 0.01 # P2 = 1/2 * ATRe
-    - name: <P1>(B0->K*ee) 
+    - name: <P1>(B0->K*ee)
       q2min: 0.000784
       q2max: 0.257
       value: 0.11 ± 0.10 ± 0.02 # P1 = AT2
@@ -5577,9 +5577,10 @@ LHCb B->taumu 2019:
 
 LHCb B->Kll LFV 2019:
   experiment: LHCb
+  inspire: Aaij:2019nmj
   values:
     BR(B+->Kmue): < 7.0e-9 @ 90% CL # NB this is B- -> K- mu+ e-
-    BR(B+->Kemu): < 7.1e-9 @ 90% CL  # NB this is B- -> K- e+ mu-
+    BR(B+->Kemu): < 6.4e-9 @ 90% CL  # NB this is B- -> K- e+ mu-
 
 BaBar B->pill LFV 2007:
   experiment: BaBar
