@@ -5566,7 +5566,7 @@ LHCb B->Ktaumu 2020:
   experiment: LHCb
   inspire: Aaij:2020mqb
   values:
-    BR(B+->Ktaumu): < 3.9e-5 @ 90% CL # NB this is B- -> K- tau+ mu-
+    BR(B+->Kmutau): < 3.9e-5 @ 90% CL # NB this is B- -> K- mu+ tau-
 
 LHCb B->taumu 2019:
   experiment: LHCb
