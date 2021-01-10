@@ -52,6 +52,7 @@ Contributors (in alphabetical order):
 - Albert Puig
 - Stefanie Reichert
 - Peter Stangl
+- Olcyr Sumensari
 - Zeren Simon Wang
 
 ## License
