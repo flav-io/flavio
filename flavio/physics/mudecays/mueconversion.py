@@ -9,13 +9,13 @@ def CR_mue(wc_obj, par, nucl):
   mm = par['m_mu']
   scale = flavio.config['renormalization scale']['mudecays']
   #####overlap integrals and other parameters#####
-  # GuV = par['GuV']
-  # GdV = par['GdV']
-  # GsV = par['GsV']
   pc = proton_charges(par, scale)
-  GuS = (pc['gS_u+d'] + pc['gS_u-d']) / 2
-  GdS = (pc['gS_u+d'] - pc['gS_u-d']) / 2
-  GsS = pc['gS_s']
+  GuSp = (pc['gS_u+d'] + pc['gS_u-d']) / 2
+  GdSp = (pc['gS_u+d'] - pc['gS_u-d']) / 2
+  GsSp = pc['gS_s']
+  GuSn = GdSp
+  GdSn = GuSp
+  GsSn = GsSp
   D   = par['D ' +nucl]*mm**(5/2)
   Sp  = par['Sp '+nucl]*mm**(5/2)
   Vp  = par['Vp '+nucl]*mm**(5/2)
@@ -25,28 +25,29 @@ def CR_mue(wc_obj, par, nucl):
   #####Wilson Coefficients######
   #####Conversion Rate obtained from hep-ph/0203110#####
   wc = wc_obj.get_wc('mue', scale, par, nf_out=3)
-  AL = np.sqrt(2)/(4*par['GF']*mm)*wc['Cgamma_emu'].conjugate()
-  AR = np.sqrt(2)/(4*par['GF']*mm)*wc['Cgamma_mue']
-  gRV = {'u': 4*(wc['CVRR_mueuu'] + wc['CVLR_mueuu']),
-         'd': 4*(wc['CVRR_muedd'] + wc['CVLR_muedd']),
-         's': 4*(wc['CVRR_muess'] + wc['CVLR_muess'])}
-  gLV = {'u': 4*(wc['CVLR_uumue'] + wc['CVLL_mueuu']),
-         'd': 4*(wc['CVLR_ddmue'] + wc['CVLL_muedd']),
-         's': 4*(wc['CVLR_ssmue'] + wc['CVLL_muess'])}
-  gRS = {'u': 4*(wc['CSRR_emuuu'].conjugate() + wc['CSRL_mueuu']),
-         'd': 4*(wc['CSRR_emudd'].conjugate() + wc['CSRL_muedd']),
-         's': 4*(wc['CSRR_emuss'].conjugate() + wc['CSRL_muess'])}
-  gLS = {'u': 4*(wc['CSRL_emuuu'].conjugate() + wc['CSRR_mueuu']),
-         'd': 4*(wc['CSRL_emudd'].conjugate() + wc['CSRR_muedd']),
-         's': 4*(wc['CSRL_emuss'].conjugate() + wc['CSRR_muess'])}
+  AL = -np.sqrt(2)/(4*par['GF']*mm)*wc['Cgamma_emu']
+  AR = -np.sqrt(2)/(4*par['GF']*mm)*wc['Cgamma_mue'].conjugate()
+  prefac = -np.sqrt(2)/par['GF']
+  gRV = {'u': prefac * ( wc['CVRR_mueuu'] + wc['CVLR_uumue'] ) / 2,
+         'd': prefac * ( wc['CVRR_muedd'] + wc['CVLR_ddmue'] ) / 2,
+         's': prefac * ( wc['CVRR_muess'] + wc['CVLR_ssmue'] ) / 2}
+  gLV = {'u': prefac * ( wc['CVLR_mueuu'] + wc['CVLL_mueuu'] ) / 2,
+         'd': prefac * ( wc['CVLR_muedd'] + wc['CVLL_muedd'] ) / 2,
+         's': prefac * ( wc['CVLR_muess'] + wc['CVLL_muess'] ) / 2}
+  gRS = {'u': prefac * ( wc['CSRR_emuuu'] + wc['CSRL_emuuu'] ).conjugate() / 2,
+         'd': prefac * ( wc['CSRR_emudd'] + wc['CSRL_emudd'] ).conjugate() / 2,
+         's': prefac * ( wc['CSRR_emuss'] + wc['CSRL_emuss'] ).conjugate() / 2}
+  gLS = {'u': prefac * ( wc['CSRR_mueuu'] + wc['CSRL_mueuu'] ) / 2,
+         'd': prefac * ( wc['CSRR_muedd'] + wc['CSRL_muedd'] ) / 2,
+         's': prefac * ( wc['CSRR_muess'] + wc['CSRL_muess'] ) / 2}
   lhc = (AR.conjugate()*D + (2*gLV['u'] + gLV['d'])*Vp
          +(gLV['u'] + 2*gLV['d'])*Vn
-         + (GuS* gLS['u'] + GdS*gLS['d'] + GsS*gLS['s'])*Sp
-         + (GuS*gLS['u'] + GdS*gLS['d'] + GsS*gLS['s'])*Sn)
+         + (GuSp* gLS['u'] + GdSp*gLS['d'] + GsSp*gLS['s'])*Sp
+         + (GuSn*gLS['u'] + GdSn*gLS['d'] + GsSn*gLS['s'])*Sn)
   rhc = (AL.conjugate()*D + (2*gRV['u'] + gRV['d'])*Vp
          +(gRV['u'] + 2*gRV['d'])*Vn
-         + (GuS* gRS['u'] + GdS*gRS['d'] + GsS*gRS['s'])*Sp
-         + (GuS*gRS['u'] + GdS*gRS['d'] + GsS*gRS['s'])*Sn)
+         + (GuSp* gRS['u'] + GdSp*gRS['d'] + GsSp*gRS['s'])*Sp
+         + (GuSn*gRS['u'] + GdSn*gRS['d'] + GsSn*gRS['s'])*Sn)
   return 2*(par['GF']**2)*(abs(lhc)**2 + abs(rhc)**2)/GC
 
 
