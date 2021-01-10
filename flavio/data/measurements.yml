@@ -2873,6 +2873,29 @@ LHCb Bs->phimumu 2015 15.0-19.0 GeV^2:
                 [1.00, 0.03],
                 [1.00]]
 
+LHCb B->K*ee 2020:
+  experiment: LHCb
+  inspire: Aaij:2020umj
+  values:
+    - name: <FL>(B0->K*ee)
+      q2min: 0.000784
+      q2max: 0.257
+      value: 0.044 ± 0.026 ± 0.014
+    - name: <P2>(B0->K*ee)
+      q2min: 0.000784
+      q2max: 0.257
+      value: -0.03 ± 0.04 ± 0.01 # P2 = 1/2 * ATRe
+    - name: <P1>(B0->K*ee)
+      q2min: 0.000784
+      q2max: 0.257
+      value: 0.11 ± 0.10 ± 0.02 # P1 = AT2
+    - name: <ATIm>(B0->K*ee)
+      q2min: 0.000784
+      q2max: 0.257
+      value: 0.02 ± 0.10 ± 0.01
+  correlation:
+    [[1, -0.02, -0.01, 0.02], [-0.02, 1, 0.05, 0.02], [-0.01, 0.05, 1, 0.1], [0.02, 0.02, 0.10, 1]]
+
 LHCb B->K*ee 2013:
   experiment: LHCb
   inspire: Aaij:2015dea
@@ -5498,14 +5521,14 @@ BaBar B+->htaul 2012:
   experiment: BaBar
   inspire: Lees:2012zz
   values:
-    BR(B+->Kmutau): 0.8 + 1.9 - 1.4 e-5
-    BR(B+->Ktaumu): -0.4 + 1.4 - 0.9 e-5
-    BR(B+->Ketau): 0.2 + 2.1 - 1.0 e-5
-    BR(B+->Ktaue): -1.3 + 1.5 - 1.8 e-5
-    BR(B+->pimutau): 0.4 + 3.1 - 2.2 e-5
-    BR(B+->pitaumu): 0.0 + 2.6 - 2.0 e-5
-    BR(B+->pietau): 2.8 + 2.4 - 1.9 e-5
-    BR(B+->pitaue): -3.1 + 2.4 - 2.1 e-5
+    BR(B+->Ktaumu): 0.8 + 1.9 - 1.4 e-5  # NB this is B- -> K- tau+ mu-
+    BR(B+->Kmutau): -0.4 + 1.4 - 0.9 e-5  # NB this is B- -> K- mu+ tau-
+    BR(B+->Ktaue): 0.2 + 2.1 - 1.0 e-5  # NB this is B- -> K- tau+ e-
+    BR(B+->Ketau): -1.3 + 1.5 - 1.8 e-5  # NB this is B- -> K- e+ tau-
+    BR(B+->pitaumu): 0.4 + 3.1 - 2.2 e-5  # NB this is B- -> pi- tau+ mu-
+    BR(B+->pimutau): 0.0 + 2.6 - 2.0 e-5  # NB this is B- -> pi- mu+ tau-
+    BR(B+->pitaue): 2.8 + 2.4 - 1.9 e-5  # NB this is B- -> pi- tau+ e-
+    BR(B+->pietau): -3.1 + 2.4 - 2.1 e-5  # NB this is B- -> pi- e+ tau-
 
 BaBar B->Kll LFV 2016:
   experiment: BaBar
@@ -5539,6 +5562,12 @@ LHCb B->ll' 2017:
     BR(Bs->emu,mue): < 6.3e-9 @ 95% CL
     BR(B0->emu,mue): < 1.3e-9 @ 95% CL
 
+LHCb B->Kmutau 2020:
+  experiment: LHCb
+  inspire: Aaij:2020mqb
+  values:
+    BR(B+->Kmutau): < 3.9e-5 @ 90% CL # NB this is B- -> K- mu+ tau-
+
 LHCb B->taumu 2019:
   experiment: LHCb
   inspire: Aaij:2019okb
@@ -5548,9 +5577,10 @@ LHCb B->taumu 2019:
 
 LHCb B->Kll LFV 2019:
   experiment: LHCb
+  inspire: Aaij:2019nmj
   values:
     BR(B+->Kmue): < 7.0e-9 @ 90% CL # NB this is B- -> K- mu+ e-
-    BR(B+->Kemu): < 7.1e-9 @ 90% CL  # NB this is B- -> K- e+ mu-
+    BR(B+->Kemu): < 6.4e-9 @ 90% CL  # NB this is B- -> K- e+ mu-
 
 BaBar B->pill LFV 2007:
   experiment: BaBar
@@ -5949,6 +5979,12 @@ LEP Z leptonic decay:
     Gamma(Z->mumu): 83.99 +- 0.18 e-3
     Gamma(Z->tautau): 84.08 +- 0.22 e-3
 
+ATLAS W->taunu 2020:
+  experiment: ATLAS
+  inspire: Aad:2020ayz
+  values:
+    Rtaumu(W->lnu): 0.992 ± 0.007 ± 0.011
+
 LHCb W->lnu 2016:
   experiment: LHCb
   inspire: Aaij:2016qqz
@@ -5998,6 +6034,14 @@ DELPHI Z LFV:
       confidence_level: 0.95
       counts_total: 0
       counts_background: 0
+
+ATLAS Z->taul 2020:
+  experiment: ATLAS
+  inspire: Aad:2020gkd
+  values:
+    # High background: assuming half-Gaussian for simplicity
+    BR(Z->etau): < 8.1e-6 @ 95% CL
+    BR(Z->mutau): < 9.5e-6 @ 95% CL
 
 ATLAS Z LFV 2014:
   experiment: ATLAS
