@@ -21,7 +21,7 @@ def CR_mue(wc_obj, par, nucl):
     Vp  = par['Vp '+nucl]*mm**(5/2)
     Sn  = par['Sn '+nucl]*mm**(5/2)
     Vn  = par['Vn '+nucl]*mm**(5/2)
-    GC  = par['GammaCapture '+nucl]
+    omega_capt  = par['GammaCapture '+nucl]
     #####Wilson Coefficients######
     #####Conversion Rate obtained from hep-ph/0203110#####
     wc = wc_obj.get_wc('mue', scale, par, nf_out=3)
@@ -62,7 +62,8 @@ def CR_mue(wc_obj, par, nucl):
         + ( GuSp * gRS['u'] + GdSp * gRS['d'] + GsSp * gRS['s'] ) * Sp
         + ( GuSn * gRS['u'] + GdSn * gRS['d'] + GsSn * gRS['s'] ) * Sn
     )
-    return 2 * par['GF']**2 * ( abs(lhc)**2 + abs(rhc)**2 ) / GC
+    omega_conv = 2 * par['GF']**2 * ( abs(lhc)**2 + abs(rhc)**2 )
+    return omega_conv / omega_capt
 
 
 def CR_mueAu(wc_obj, par):
