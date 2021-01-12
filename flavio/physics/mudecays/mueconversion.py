@@ -25,9 +25,9 @@ def CR_mue(wc_obj, par, nucl):
   #####Wilson Coefficients######
   #####Conversion Rate obtained from hep-ph/0203110#####
   wc = wc_obj.get_wc('mue', scale, par, nf_out=3)
-  AL = -np.sqrt(2)/(4*par['GF']*mm)*wc['Cgamma_emu']
-  AR = -np.sqrt(2)/(4*par['GF']*mm)*wc['Cgamma_mue'].conjugate()
   prefac = -np.sqrt(2)/par['GF']
+  AL = prefac / ( 4 * mm ) * wc['Cgamma_emu']
+  AR = prefac / ( 4 * mm ) * wc['Cgamma_mue'].conjugate()
   gRV = {'u': prefac * ( wc['CVRR_mueuu'] + wc['CVLR_uumue'] ) / 2,
          'd': prefac * ( wc['CVRR_muedd'] + wc['CVLR_ddmue'] ) / 2,
          's': prefac * ( wc['CVRR_muess'] + wc['CVLR_ssmue'] ) / 2}
