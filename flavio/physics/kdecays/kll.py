@@ -53,18 +53,18 @@ def amplitudes(par, wc, K, l1, l2):
         S_aux, P_aux = amplitudes_weak_eigst(par, wc, l2, l1)
         S_K0 = -S_aux.conjugate()
         P_K0 = P_aux.conjugate()
-        if 'K' == 'KL':
+        if K == 'KL':
             sig = +1
-        elif 'K' == 'KS':
+        elif K == 'KS':
             sig = -1
         S = (S_K0 + sig * S_K0bar) / sqrt(2)
         P = (P_K0 + sig * P_K0bar) / sqrt(2)
     # Save computing time for special cases. See also arXiv:1711.11030.
     elif l1 == l2:
-        if 'K' == 'KL':
+        if K == 'KL':
             S = -1j * S_K0bar.imag * sqrt(2)
             P = P_K0bar.real * sqrt(2)
-        elif 'K' == 'KS':
+        elif K == 'KS':
             S = -S_K0bar.real * sqrt(2)
             P = -1j * P_K0bar.imag * sqrt(2)
     return P, S
