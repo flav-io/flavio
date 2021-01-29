@@ -57,16 +57,16 @@ def amplitudes(par, wc, K, l1, l2):
             sig = +1
         elif 'K' == 'KS':
             sig = -1
-        S = (S_K0 + sig * S_K0bar) / 2
-        P = (P_K0 + sig * P_K0bar) / 2
+        S = (S_K0 + sig * S_K0bar) / sqrt(2)
+        P = (P_K0 + sig * P_K0bar) / sqrt(2)
     # Save computing time for special cases. See also arXiv:1711.11030.
     elif l1 == l2:
         if 'K' == 'KL':
-            S = -1j * S_K0bar.imag 
-            P = P_K0bar.real
+            S = -1j * S_K0bar.imag * sqrt(2)
+            P = P_K0bar.real * sqrt(2)
         elif 'K' == 'KS':
-            S = -S_K0bar.real
-            P = -1j * P_K0bar.imag
+            S = -S_K0bar.real * sqrt(2)
+            P = -1j * P_K0bar.imag * sqrt(2)
     return P, S
 
 
@@ -75,7 +75,7 @@ def amplitudes_LD(par, K, l):
     ml = par['m_' + l]
     mK = par['m_' + K]
     s2w = par['s2w']
-    pre = 2 * ml / mK / s2w
+    pre = sqrt(2) * 2 * ml / mK / s2w
     # numbers extracted from arXiv:1711.11030
     if K == 'KS':
         ASgaga = 2.49e-4 * (-2.821 + 1.216j)
@@ -133,7 +133,7 @@ def br_kll(par, wc_obj, K, l1, l2, ld=True):
     beta = sqrt(lambda_K(mK**2, ml1**2, ml2**2)) / mK**2
     beta_p = sqrt(1 - (ml1 + ml2)**2 / mK**2)
     beta_m = sqrt(1 - (ml1 - ml2)**2 / mK**2)
-    prefactor = 2 * abs(N)**2 / 32. / pi * mK**3 * tauK * beta * fK**2
+    prefactor = abs(N)**2 / 32. / pi * mK**3 * tauK * beta * fK**2
     Peff, Seff = amplitudes_eff(par, wc, K, l1, l2, ld=ld)
     return prefactor * (beta_m**2 * abs(Peff)**2 + beta_p**2 * abs(Seff)**2)
 
