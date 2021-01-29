@@ -9,15 +9,13 @@ from flavio.physics.common import add_dict
 from math import pi, sqrt
 
 
-def amplitudes(par, wc, l1, l2):
-    r"""Amplitudes P and S entering the $K\to\ell_1^+\ell_2^-$ observables.
+def amplitudes_weak_eigst(par, wc, l1, l2):
+    r"""Amplitudes P and S for the decay $\bar K^0\to\ell_1^+\ell_2^-$.
 
     Parameters
     ----------
-
     - `par`: parameter dictionary
     - `wc`: Wilson coefficient dictionary
-    - `K`: should be `'KL'` or `'KS'`
     - `l1` and `l2`: should be `'e'` or `'mu'`
     """
     # masses
@@ -37,6 +35,40 @@ def amplitudes(par, wc, l1, l2):
     return xi_t * P, xi_t * S
 
 
+def amplitudes(par, wc, K, l1, l2):
+    r"""Amplitudes P and S entering the $K_{L,S}\to\ell_1^+\ell_2^-$ observables.
+    
+    Parameters
+    ----------
+    
+    - `par`: parameter dictionary
+    - `wc`: Wilson coefficient dictionary
+    - `K`: should be `'KL'` or `'KS'`
+    - `l1` and `l2`: should be `'e'` or `'mu'`
+    """
+    # KL, KS are linear combinations of K0, K0bar. So are the amplitudes.
+    S_K0bar, P_K0bar = amplitudes_weak_eigs(par, wc, l1, l2)
+    if l1 != l2:
+        S_aux, P_aux = amplitudes_weak_eigs(par, wc, l2, l1)
+        S_K0 = -S_aux.conjugate()
+        P_K0 = P_aux.conjugate()
+        if 'K' == 'KL':
+            sig = +1
+        elif 'K' == 'KS':
+            sig = -1
+        S = (S_K0 + sig * S_K0bar) / 2
+        P = (P_K0 + sig * P_K0bar) / 2
+    # Save computing time for special cases. See also arXiv:1711.11030.
+    elif l1 == l2:
+        if 'K' == 'KL':
+            S = -1j * S_K0bar.imag 
+            P = P_K0bar.real
+        elif 'K' == 'KS':
+            S = -S_K0bar.real
+            P = -1j * P_K0bar.imag
+    return P, S
+
+
 def amplitudes_LD(par, K, l):
     r"""Long-distance amplitudes entering the $K\to\ell^+\ell^-$ observables."""
     ml = par['m_' + l]
@@ -53,18 +85,18 @@ def amplitudes_LD(par, K, l):
 
 def amplitudes_eff(par, wc, K, l1, l2, ld=True):
     r"""Effective amplitudes entering the $K\to\ell_1^+\ell_2^-$ observables."""
-    P, S = amplitudes(par, wc, l1, l2)
+    P, S = amplitudes(par, wc, K, l1, l2)
     if l1 != l2 or not ld:
         SLD = 0
         PLD = 0
     else:
         SLD, PLD = amplitudes_LD(par, K, l1)
-    if K == 'KS' and l1 == l2:
-        Peff = P.imag
-        Seff = S.real + SLD
-    if K == 'KL':
-        Peff = P.real + PLD
-        Seff = S.imag
+    if K == 'KS':
+        Peff = P
+        Seff = S + SLD
+    elif K == 'KL':
+        Peff = P + PLD
+        Seff = S
     return Peff, Seff
 
 
