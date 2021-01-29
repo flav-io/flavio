@@ -48,9 +48,9 @@ def amplitudes(par, wc, K, l1, l2):
     - `l1` and `l2`: should be `'e'` or `'mu'`
     """
     # KL, KS are linear combinations of K0, K0bar. So are the amplitudes.
-    S_K0bar, P_K0bar = amplitudes_weak_eigs(par, wc, l1, l2)
+    S_K0bar, P_K0bar = amplitudes_weak_eigst(par, wc, l1, l2)
     if l1 != l2:
-        S_aux, P_aux = amplitudes_weak_eigs(par, wc, l2, l1)
+        S_aux, P_aux = amplitudes_weak_eigst(par, wc, l2, l1)
         S_K0 = -S_aux.conjugate()
         P_K0 = P_aux.conjugate()
         if 'K' == 'KL':
