@@ -31,6 +31,7 @@ def amplitudes_weak_eigst(par, wc, l1, l2):
     CSm = wc['CS_'+qqll] - wc['CSp_'+qqll]
     P = (ml2 + ml1)/mK * C10m + mK * CPm  # neglecting mu, md
     S = (ml2 - ml1)/mK * C9m  + mK * CSm  # neglecting mu, md
+    # Include complex part of the eff. operator prefactor. Phases matter.
     xi_t = ckm.xi('t', 'sd')(par)
     return xi_t * P, xi_t * S
 
@@ -127,7 +128,7 @@ def br_kll(par, wc_obj, K, l1, l2, ld=True):
     mK = par['m_K0']
     tauK = par['tau_'+K]
     fK = par['f_K0']
-    # appropriate CKM elements
+    # CKM part of the eff. operator prefactor included in Peff and Seff
     N = 4 * GF / sqrt(2) * alphaem / (4 * pi)
     beta = sqrt(lambda_K(mK**2, ml1**2, ml2**2)) / mK**2
     beta_p = sqrt(1 - (ml1 + ml2)**2 / mK**2)
