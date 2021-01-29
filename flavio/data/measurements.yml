@@ -126,6 +126,60 @@ PDG kaon CPV:
     eps_K: 2.228(11)e-3
 
 
+LHCb Lambdab->Lambda(1520)mumu 2020 Sensitivity study SM:
+  experiment: LHCb
+  inspire: Amhis:2020phx
+  values:
+    - name: <dBR/dq2>(Lambdab->Lambda(1520)mumu)
+      q2min: 0.1
+      q2max: 3
+      value: (0.464 +- 0.060)e-9
+    - name: <dBR/dq2>(Lambdab->Lambda(1520)mumu)
+      q2min: 3
+      q2max: 6
+      value: (1.37 +- 0.106)e-9
+    - name: <dBR/dq2>(Lambdab->Lambda(1520)mumu)
+      q2min: 6
+      q2max: 8.68
+      value: (3.49 +- 0.176)e-9
+    - name: <dBR/dq2>(Lambdab->Lambda(1520)mumu)
+      q2min: 1
+      q2max: 6
+      value: (0.95 +- 0.070)e-9
+    - name: <AFBl>(Lambdab->Lambda(1520)mumu)
+      q2min: 0.1
+      q2max: 3
+      value: 0.075 +- 0.140
+    - name: <AFBl>(Lambdab->Lambda(1520)mumu)
+      q2min: 3
+      q2max: 6
+      value: -0.107 +- 0.061
+    - name: <AFBl>(Lambdab->Lambda(1520)mumu)
+      q2min: 6
+      q2max: 8.68
+      value: -0.228 +- 0.036
+    - name: <AFBl>(Lambdab->Lambda(1520)mumu)
+      q2min: 1
+      q2max: 6
+      value: -0.098 +- 0.058
+    - name: <S_1cc>(Lambdab->Lambda(1520)mumu)
+      q2min: 0.1
+      q2max: 3
+      value: 0.230 +- 0.241
+    - name: <S_1cc>(Lambdab->Lambda(1520)mumu)
+      q2min: 3
+      q2max: 6
+      value: 0.212 +- 0.104
+    - name: <S_1cc>(Lambdab->Lambda(1520)mumu)
+      q2min: 6
+      q2max: 8.68
+      value: 0.339 +- 0.061
+    - name: <S_1cc>(Lambdab->Lambda(1520)mumu)
+      q2min: 1
+      q2max: 6
+      value: 0.221 +- 0.100
+
+
 LHCb B->K*mumu 2020 S 0.1-0.98:
   experiment: LHCb
   inspire: Aaij:2020nrf
