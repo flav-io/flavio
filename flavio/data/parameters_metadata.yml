@@ -732,7 +732,98 @@ Lambdab->Lambda(1520) H6 a2:
 Lambdab->Lambda(1520) H6 a4:
   tex: $a_4^{H6}$
   description: Parameter for the form factor calculation of $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ using the quark model as in arXiv 1108.6129
-  
+
+
+# Lambdab -> Lambda(1520) form factors from lattice QCD in high q2 region
+
+Lambdab->Lambda(1520) f0 F:
+  tex: $F^{f_{0}}$
+  description: Constant of the parametrization of the form factor $f_{0}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) f0 A:
+  tex: $F^{f_{0}}$
+  description: Slope of the parametrization of the form factor $f_{0}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) fplus F:
+  tex: $F^{f_{+}}$
+  description: Constant of the parametrization of the form factor $f_{+}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) fplus A:
+  tex: $F^{f_{+}}$
+  description: Slope of the parametrization of the form factor $f_{+}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) fperp F:
+  tex: $F^{f_{\perp}}$
+  description: Constant of the parametrization of the form factor $f_{\perp}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) fperp A:
+  tex: $F^{f_{\perp}}$
+  description: Slope of the parametrization of the form factor $f_{\perp}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) fperpPrim F:
+  tex: $F^{f_{\perp^{\prime}}}$
+  description: Constant of the parametrization of the form factor $f_{\perp^{\prime}}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) fperpPrim A:
+  tex: $F^{f_{\perp^{\prime}}}$
+  description: Slope of the parametrization of the form factor $f_{\perp^{\prime}}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+
+Lambdab->Lambda(1520) g0 F:
+  tex: $F^{g_{0}}$
+  description: Constant of the parametrization of the form factor $g_{0}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) g0 A:
+  tex: $F^{g_{0}}$
+  description: Slope of the parametrization of the form factor $g_{0}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) gplus F:
+  tex: $F^{g_{+}}$
+  description: Constant of the parametrization of the form factor $g_{+}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) gplus A:
+  tex: $F^{g_{+}}$
+  description: Slope of the parametrization of the form factor $g_{+}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) gperp F:
+  tex: $F^{g_{\perp}}$
+  description: Constant of the parametrization of the form factor $g_{\perp}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) gperp A:
+  tex: $F^{g_{\perp}}$
+  description: Slope of the parametrization of the form factor $g_{\perp}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) gperpPrim F:
+  tex: $F^{g_{\perp^{\prime}}}$
+  description: Constant of the parametrization of the form factor $g_{\perp^{\prime}}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) gperpPrim A:
+  tex: $F^{g_{\perp^{\prime}}}$
+  description: Slope of the parametrization of the form factor $g_{\perp^{\prime}}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+
+Lambdab->Lambda(1520) hplus F:
+  tex: $F^{h_{+}}$
+  description: Constant of the parametrization of the form factor $h_{+}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) hplus A:
+  tex: $F^{h_{+}}$
+  description: Slope of the parametrization of the form factor $h_{+}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) hperp F:
+  tex: $F^{h_{\perp}}$
+  description: Constant of the parametrization of the form factor $h_{\perp}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) hperp A:
+  tex: $F^{h_{\perp}}$
+  description: Slope of the parametrization of the form factor $h_{\perp}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) hperpPrim F:
+  tex: $F^{h_{\perp^{\prime}}}$
+  description: Constant of the parametrization of the form factor $h_{\perp^{\prime}}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) hperpPrim A:
+  tex: $F^{h_{\perp^{\prime}}}$
+  description: Slope of the parametrization of the form factor $h_{\perp^{\prime}}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) hTplus F:
+  tex: $F^{\tilde{h}_{+}}$
+  description: Constant of the parametrization of the form factor $\tilde{h}_{+}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) hTplus A:
+  tex: $F^{\tilde{h}_{+}}$
+  description: Slope of the parametrization of the form factor $\tilde{h}_{+}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) hTperp F:
+  tex: $F^{\tilde{h}_{\perp}}$
+  description: Constant of the parametrization of the form factor $\tilde{h}_{\perp}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) hTperp A:
+  tex: $F^{\tilde{h}_{\perp}}$
+  description: Slope of the parametrization of the form factor $\tilde{h}_{\perp}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) hTperpPrim F:
+  tex: $F^{\tilde{h}_{\perp^{\prime}}}$
+  description: Constant of the parametrization of the form factor $\tilde{h}_{\perp^{\prime}}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+Lambdab->Lambda(1520) hTperpPrim A:
+  tex: $F^{\tilde{h}_{\perp^{\prime}}}$
+  description: Slope of the parametrization of the form factor $\tilde{h}_{\perp^{\prime}}$ from lattice QCD in high q2 region as in arXiv:2009.09313
+
+
 
 
 # Meson bag parameters

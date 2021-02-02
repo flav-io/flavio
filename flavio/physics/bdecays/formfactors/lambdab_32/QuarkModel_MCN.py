@@ -34,7 +34,9 @@ def formfactors(process, par, q2):
     alpha_l1 = par[process +' alpha_Lambdab']
     alpha_l2 = par[process +' alpha_'+pd['X']]
 
-    FList = ['F1', 'F2', 'F3', 'F4', 'G1', 'G2', 'G3', 'G4', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6']
+    FList = ['F1', 'F2', 'F3', 'F4',
+             'G1', 'G2', 'G3', 'G4',
+             'H1', 'H2', 'H3', 'H4', 'H5', 'H6']
 
     p_L = p_Lambda(q2, mL, mLb)
     mL_tilde = m_Lambda(m_q, m_s)

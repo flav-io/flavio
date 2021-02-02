@@ -294,6 +294,38 @@ Lambdab->Lambda(1520) H6 a0: 0.0206
 Lambdab->Lambda(1520) H6 a2: 0.00679
 Lambdab->Lambda(1520) H6 a4: -0.000220
 
+# Form factor values for Lambdab->Lambda(1520)
+Lambdab->Lambda(1520) f0 F: 3.54 ± 0.29
+Lambdab->Lambda(1520) f0 A: -14.7 ± 3.3
+Lambdab->Lambda(1520) fplus F: 0.0432 ± 0.0064
+Lambdab->Lambda(1520) fplus A: 1.63 ± 0.19
+Lambdab->Lambda(1520) fperp F: -0.068 ± 0.018
+Lambdab->Lambda(1520) fperp A: 2.49 ± 0.35
+Lambdab->Lambda(1520) fperpPrim F: 0.0461 ± 0.0018
+Lambdab->Lambda(1520) fperpPrim A: -0.161 ± 0.027
+
+Lambdab->Lambda(1520) g0 F: 0.0024 ± 0.0038
+Lambdab->Lambda(1520) g0 A: 1.58 ± 0.17
+Lambdab->Lambda(1520) gplus F: 2.95 ± 0.25
+Lambdab->Lambda(1520) gplus A: -12.2 ± 2.9
+Lambdab->Lambda(1520) gperp F: 2.92 ± 0.24
+Lambdab->Lambda(1520) gperp A: -11.8 ± 2.8
+Lambdab->Lambda(1520) gperpPrim F: -0.037 ± 0.014
+Lambdab->Lambda(1520) gperpPrim A: 0.09 ± 0.25
+
+Lambdab->Lambda(1520) hplus F: 0.095 ± 0.019 
+Lambdab->Lambda(1520) hplus A: -2.38 ± 0.32
+Lambdab->Lambda(1520) hperp F: -0.0170 ± 0.0043
+Lambdab->Lambda(1520) hperp A: -1.49 ± 0.16
+Lambdab->Lambda(1520) hperpPrim F: 0.0196 ± 0.0013
+Lambdab->Lambda(1520) hperpPrim A: -0.038 ± 0.011
+Lambdab->Lambda(1520) hTplus F: -2.90 ± 0.24
+Lambdab->Lambda(1520) hTplus A: 12.0 ± 2.9
+Lambdab->Lambda(1520) hTperp F: -3.01 ± 0.25
+Lambdab->Lambda(1520) hTperp A: 12.2 ± 2.8
+Lambdab->Lambda(1520) hTperpPlus F: -0.144 ± 0.024
+Lambdab->Lambda(1520) hTperpPlus A: 0.74 ± 0.37
+
 
 # Parameters for SM contribution to D-Dbar mixing
 # As it is poorly known, these are only conservative guesses to
