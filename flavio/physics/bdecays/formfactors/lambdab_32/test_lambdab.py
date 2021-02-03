@@ -8,7 +8,6 @@ wc_sm = flavio.WilsonCoefficients()
 def pred_sm(s, name, q2val, target, delta, scalef=1):
     obs = flavio.classes.Observable[name]
     c = flavio.sm_prediction(name, q2=q2val)*scalef
-    print(c)
     s.assertAlmostEqual(c, target, delta=delta)
 
 
