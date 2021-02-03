@@ -40,7 +40,7 @@ def amplitudes(par, wc, l1, l2):
 def amplitudes_LD(par, K, l):
     r"""Long-distance amplitudes entering the $K\to\ell^+\ell^-$ observables."""
     ml = par['m_' + l]
-    mK = par['m_' + K]
+    mK = par['m_K0']
     s2w = par['s2w']
     pre = 2 * ml / mK / s2w
     # numbers extracted from arXiv:1711.11030
