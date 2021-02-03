@@ -44,11 +44,15 @@ def amplitudes_LD(par, K, l):
     s2w = par['s2w']
     pre = 2 * ml / mK / s2w
     # numbers extracted from arXiv:1711.11030
-    ASgaga = 2.49e-4 * (-2.821 + 1.216j)
-    ALgaga = 2.02e-4 * (par['chi_disp(KL->gammagamma)'] - 5.21j)
-    S = pre * ASgaga
-    P = -pre * ALgaga
-    return S, P
+    if K == 'KS':
+        ASgaga = 2.49e-4 * (-2.821 + 1.216j)
+        SLD = +pre * ASgaga
+        PLD = 0
+    elif K == 'KL':
+        ALgaga = 2.02e-4 * (par['chi_disp(KL->gammagamma)'] - 5.21j)
+        SLD = 0
+        PLD = -pre * ALgaga
+    return SLD, PLD
 
 
 def amplitudes_eff(par, wc, K, l1, l2, ld=True):
@@ -60,11 +64,11 @@ def amplitudes_eff(par, wc, K, l1, l2, ld=True):
     else:
         SLD, PLD = amplitudes_LD(par, K, l1)
     if K == 'KS':
-        Peff = P.imag
+        Peff = P.imag + PLD
         Seff = S.real + SLD
     if K == 'KL':
         Peff = P.real + PLD
-        Seff = S.imag
+        Seff = S.imag + SLD
     return Peff, Seff
 
 
