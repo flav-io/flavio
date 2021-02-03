@@ -17,14 +17,13 @@ def amplitudes(par, wc, l1, l2):
 
     - `par`: parameter dictionary
     - `wc`: Wilson coefficient dictionary
-    - `K`: should be `'KL'` or `'KS'`
     - `l1` and `l2`: should be `'e'` or `'mu'`
     """
     # masses
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
     mK = par['m_K0']
-    # Wilson coefficients
+    # Wilson coefficient postfix 
     qqll = 'sd' + l1 + l2
     # For LFV expressions see arXiv:1602.00881 eq. (5)
     C9m = wc['C9_'+qqll] - wc['C9p_'+qqll]  # only relevant for l1 != l2
@@ -33,6 +32,7 @@ def amplitudes(par, wc, l1, l2):
     CSm = wc['CS_'+qqll] - wc['CSp_'+qqll]
     P = (ml2 + ml1)/mK * C10m + mK * CPm  # neglecting mu, md
     S = (ml2 - ml1)/mK * C9m  + mK * CSm  # neglecting mu, md
+    # Include complex part of the eff. operator prefactor. Phases matter.
     xi_t = ckm.xi('t', 'sd')(par)
     return xi_t * P, xi_t * S
 
@@ -95,7 +95,7 @@ def br_kll(par, wc_obj, K, l1, l2, ld=True):
     mK = par['m_K0']
     tauK = par['tau_'+K]
     fK = par['f_K0']
-    # appropriate CKM elements
+    # CKM part of the eff. operator prefactor N is included in Peff and Seff
     N = 4 * GF / sqrt(2) * alphaem / (4 * pi)
     beta = sqrt(lambda_K(mK**2, ml1**2, ml2**2)) / mK**2
     beta_p = sqrt(1 - (ml1 + ml2)**2 / mK**2)
