@@ -19,7 +19,7 @@ def F(a0, a2, a4, p_L, m_q, m_L, alpha):
 
 
 _process_dict = {}
-_process_dict['Lambdab->Lambda(1520)'] = {'X': 'Lambda(1520)', 'P': 'K-', 'q': 'b->s'}
+_process_dict['Lambdab->Lambda(1520)'] = {'X': 'Lambda(1520)'}
 
 
 def formfactors(process, par, q2):

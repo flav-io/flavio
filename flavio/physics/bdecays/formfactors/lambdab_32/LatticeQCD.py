@@ -9,7 +9,7 @@ def F(q2, Ff, Af, Omega):
     return Ff + Af*(Omega - 1)
 
 _process_dict = {}
-_process_dict['Lambdab->Lambda(1520)'] = {'X': 'Lambda(1520)', 'P', 'K-', 'q': 'b->s'}
+_process_dict['Lambdab->Lambda(1520)'] = {'X': 'Lambda(1520)'}
 
 def formfactors(process, par, q2):
     r"Formfactors for $\Lambda_b\to L(1520)$ from Lattice QCD as in arXiv:2009.09313v1"
