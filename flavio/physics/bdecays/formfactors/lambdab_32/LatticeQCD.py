@@ -2,7 +2,7 @@ from math import sqrt, exp
 
 def omega(q2, mLb, mLst):
     # eq. (73) in arXiv:2009.09313v1
-    return (mLb*mLb + m_Lst*m_Lst - q2)/(2*mLb*m_Lst)
+    return (mLb*mLb + mLst*mLst - q2)/(2*mLb*mLst)
 
 def F(q2, Ff, Af, Omega):
     # eq. (75) 
