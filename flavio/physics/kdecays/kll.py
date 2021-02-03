@@ -59,7 +59,7 @@ def amplitudes_eff(par, wc, K, l1, l2, ld=True):
         PLD = 0
     else:
         SLD, PLD = amplitudes_LD(par, K, l1)
-    if K == 'KS' and l1 == l2:
+    if K == 'KS':
         Peff = P.imag
         Seff = S.real + SLD
     if K == 'KL':
