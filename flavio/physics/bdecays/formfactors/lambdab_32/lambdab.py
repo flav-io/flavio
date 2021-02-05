@@ -15,7 +15,7 @@ for p in processes:
     a = AuxiliaryQuantity(name=quantity, arguments=['q2'])
     a.set_description('Hadronic form factor for the ' + p + ' transition')
 
-    # MCN approach as in arXiv:1108.6129
+    # MCN quark model approach as in arXiv:1108.6129
     iname = p + ' MCN'
     i = Implementation(name=iname, quantity=quantity,
                        function=ff_function(QuarkModel_MCN.ff_equiv, p))
