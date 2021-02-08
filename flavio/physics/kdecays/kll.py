@@ -152,7 +152,8 @@ def br_kll_fct(K, l1, l2):
 
 def br_kll_fct_lsum(K, l1, l2):
     def f(wc_obj, par):
-        return br_kll(par, wc_obj, K, l1, l2) + br_kll(par, wc_obj, K, l2, l1)
+        # Neglecting indirect CPV in kaons, BR(KL,KS->e+mu-) = BR(KL,KS->mu+e-) 
+        return 2 * br_kll(par, wc_obj, K, l1, l2)
     return f
 
 
