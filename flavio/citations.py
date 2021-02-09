@@ -48,8 +48,7 @@ class Citations:
         self._reset()
 
     def _reset(self):
-        "Reset citations to default only (only for testing purposes)"
-        # Initialize empty papers to cite
+        "Reset citations to empty"
         self._papers_to_cite = set()
 
     def register(self, key):
