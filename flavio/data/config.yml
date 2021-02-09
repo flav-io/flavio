@@ -30,7 +30,7 @@ renormalization scale:
     bvgamma: 4.8  # B->V gamma
     bxgamma: 2.  # B->X gamma
     bxlnu: 4.6  # B->X l nu
-    lambdab: 4.8 # Lambdab->Lambda l+ l-
+    lambdab: 4.8 # Lambdab->Lambda l+ l-, Lambdab->Lambda(1520) l+ l-
 
     # K decays
     kdecays: 2.  # K->pinunu
