@@ -7,7 +7,7 @@ from . import measurements
 from . import classes
 from .classes import Measurement, Parameter, ParameterConstraints, Observable, NamedInstanceClass
 from .config import config
-from .citations import Citations, default_citations, print_citations
+from .citations import Citations, default_citations, tex_citation_string
 from flavio.physics.eft import WilsonCoefficients
 from flavio.parameters import default_parameters
 from flavio.functions import sm_prediction, sm_uncertainty, np_uncertainty, sm_error_budget, np_prediction, sm_covariance, combine_measurements

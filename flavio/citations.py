@@ -41,11 +41,19 @@ class Citations:
     Examples
     --------
     >>> import flavio
-    >>> flavio.print_citations("citations.tex")
+    >>> flavio.sm_prediction("DeltaM_s")
+    >>> print(flavio.default_citations)
     """
 
     def __init__(self):
         self._reset()
+
+    def __iter__(self):
+        for citation in self._papers_to_cite:
+            yield citation
+
+    def __str__(self):
+        return ",".join(self._papers_to_cite)
 
     def _reset(self):
         "Reset citations to empty"
@@ -62,27 +70,16 @@ class Citations:
         """
         self._papers_to_cite.add(key)
 
-    def print(self, filename=None):
-        """Print all citations that were used for calculating theory predictions.
-
-        Parameters
-        ----------
-        filename : str, optional
-            Filename in which to print citations, in the form \cite{paper1,paper2}.
-            If None, the citation list is returned as a string of the form "paper1,paper2".
+    def tex_citation_string(self):
+        """Return a LaTeX citation command for all citations that were used for 
+        calculating theory predictions.
         """
-        citation_list = ",".join(self._papers_to_cite)
-        if filename is None:
-            return citation_list
-        else:
-            citation_text = "\cite{" + citation_list + "}"
-            with open(filename, "w") as f:
-                f.write(citation_text)
+        return f"\cite{{{self}}}"
 
 
-def print_citations(filename=None):
-    "See `flavio.default_citations.print`"
-    return flavio.default_citations.print(filename)
+def tex_citation_string():
+    "See `flavio.default_citations.tex_citation_string`"
+    return flavio.default_citations.tex_citation_string()
 
 
 default_citations = Citations()
