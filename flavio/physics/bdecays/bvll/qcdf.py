@@ -37,8 +37,8 @@ def get_input(par, B, V, scale):
 # see eqs. (18), (50), (79) of hep-ph/0106067v2
 # and eqs. (47), (48) of hep-ph/0412400
 def Cq34(q2, par, wc, B, V, scale):
-    flavio.citations.register("Beneke:2001at")
-    flavio.citations.register("Beneke:2004dp")
+    flavio.default_citations.register("Beneke:2001at")
+    flavio.default_citations.register("Beneke:2004dp")
     # this is -C_q^12 (for q=u) or C_q^34 - eps_u * C_q^12 (for q=d,s) of hep-ph/0412400
     mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
     T_t = wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 12*wc['C5_'+qiqj] + 16*wc['C6_'+qiqj])
@@ -70,13 +70,13 @@ def T_para_minus_WA(q2, par, wc, B, V, scale):
 # (51) of hep-ph/0412400
 
 def T_perp_WA_PowC_1(q2, par, wc, B, V, scale):
-    flavio.citations.register("Beneke:2004dp")
+    flavio.default_citations.register("Beneke:2004dp")
     mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
     # NB, the remaining prefactors are added below in the function T_perp
     return -eq * 4/mb * (wc['C3_'+qiqj] + 4/3.*(wc['C4_'+qiqj] + 3*wc['C5_'+qiqj] + 4*wc['C6_'+qiqj]))
 
 def T_perp_WA_PowC_2(q2, par, wc, B, V, scale):
-    flavio.citations.register("Beneke:2004dp")
+    flavio.default_citations.register("Beneke:2004dp")
     mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
     # NB, the remaining prefactors are added below in the function T_perp
     return eq * 2/mb * Cq34(q2, par, wc, B, V, scale)
@@ -88,13 +88,13 @@ def T_perp_WA_PowC_2(q2, par, wc, B, V, scale):
 
 # chromomagnetic dipole contribution
 def T_perp_plus_O8(q2, par, wc, B, V, u, scale):
-    flavio.citations.register("Beneke:2001at")
+    flavio.default_citations.register("Beneke:2001at")
     mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
     ubar = 1 - u
     return - (alpha_s/(3*pi)) * 4*ed*wc['C8eff_'+qiqj]/(u + ubar*q2/mB**2)
 
 def T_para_minus_O8(q2, par, wc, B, V, u, scale):
-    flavio.citations.register("Beneke:2001at")
+    flavio.default_citations.register("Beneke:2001at")
     mB, mb, mc, alpha_s, q, eq, ed, eu, eps_u, qiqj = get_input(par, B, V, scale)
     ubar = 1 - u
     return (alpha_s/(3*pi)) * eq * 8 * wc['C8eff_'+qiqj]/(ubar + u*q2/mB**2)
@@ -154,7 +154,7 @@ def En_V(mB, mV, q2):
 
 # (27) of hep-ph/0106067v2
 def t_perp(q2, u, mq, par, B, V):
-    flavio.citations.register("Beneke:2001at")
+    flavio.default_citations.register("Beneke:2001at")
     mB = par['m_'+B]
     mV = par['m_'+V]
     EV = En_V(mB, mV, q2)
@@ -169,7 +169,7 @@ def t_perp(q2, u, mq, par, B, V):
 
 # (28) of hep-ph/0106067v2
 def t_para(q2, u, mq, par, B, V):
-    flavio.citations.register("Beneke:2001at")
+    flavio.default_citations.register("Beneke:2001at")
     mB = par['m_'+B]
     mV = par['m_'+V]
     EV = En_V(mB, mV, q2)
@@ -185,7 +185,7 @@ def B0diffBFS(q2, u, mq, mB):
 
 # (29) of hep-ph/0106067v2
 def B0(s, mq):
-    flavio.citations.register("Beneke:2001at")
+    flavio.default_citations.register("Beneke:2001at")
     if s==0.:
         return -2.
     if 4*mq**2/s == 1.:
@@ -197,7 +197,7 @@ def B0(s, mq):
 
 # (30), (31) of hep-ph/0106067v2
 def i1_bfs(q2, u, mq, mB):
-    flavio.citations.register("Beneke:2001at")
+    flavio.default_citations.register("Beneke:2001at")
     ubar = 1 - u
     iepsilon = 1e-8j
     mq2 = mq**2 - iepsilon
@@ -211,7 +211,7 @@ def i1_bfs(q2, u, mq, mB):
 
 # (32) of hep-ph/0106067v2
 def L1(x):
-    flavio.citations.register("Beneke:2001at")
+    flavio.default_citations.register("Beneke:2001at")
     if x == 0.:
         return -(pi**2/6.)
     elif x == 1.:
@@ -230,14 +230,14 @@ def phiV(u, a1, a2):
 # moments of the B meson light-cone distribution amplitude as in
 # eq. (54) and surroundings of hep-ph/0106067v2
 def lB_minus(q2, par, B):
-    flavio.citations.register("Beneke:2001at")
+    flavio.default_citations.register("Beneke:2001at")
     mB = par['m_'+B]
     mb = running.get_mb_pole(par)
     LambdaBar = mB - mb
     w0 = 2*LambdaBar/3
     return 1/(exp(-q2/mB/w0)/w0 * (-ei(q2/mB/w0) + 1j*pi))
 def lB_plus(par, B):
-    flavio.citations.register("Beneke:2001at")
+    flavio.default_citations.register("Beneke:2001at")
     mB = par['m_'+B]
     mb = running.get_mb_pole(par)
     LambdaBar = mB - mb

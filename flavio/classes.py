@@ -704,11 +704,11 @@ class Observable(NamedInstanceClass):
         Arguments are passed to the observable and are necessary,
         depending on the observable (e.g. $q^2$-dependent observables).
         """
-        old_citations = flavio.citations
-        flavio.citations = flavio.Citations()
+        old_citations = flavio.default_citations
+        flavio.default_citations = flavio.Citations()
         flavio.sm_prediction(self.name, *args, **kwargs)
-        SM_citations = flavio.citations.print()
-        flavio.citations = old_citations
+        SM_citations = flavio.default_citations.print()
+        flavio.default_citations = old_citations
         return SM_citations
 
 

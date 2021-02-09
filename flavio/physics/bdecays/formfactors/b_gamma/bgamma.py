@@ -8,7 +8,7 @@ def ff(q2, par, B):
 
     See hep-ph/0208256.pdf.
     """
-    flavio.citations.register("Kruger:2002gf")
+    flavio.default_citations.register("Kruger:2002gf")
     fB = par['f_'+B]
     mB = par['m_'+B]
     name = 'B->gamma KM '

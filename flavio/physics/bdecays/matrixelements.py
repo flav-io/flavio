@@ -46,7 +46,7 @@ def Y(q2, wc, par, scale, qiqj):
 
 # eq. (43) of hep-ph/0412400v1
 def Yu(q2, wc, par, scale, qiqj):
-    flavio.citations.register("Beneke:2004dp")
+    flavio.default_citations.register("Beneke:2004dp")
     mc = running.get_mc_pole(par)
     return ( (4/3.*wc['C1_'+qiqj] + wc['C2_'+qiqj])
             * ( h(s=q2, mq=mc, mu=scale) - h(s=q2, mq=0, mu=scale) ))
@@ -78,7 +78,7 @@ def F_17(muh, z, sh):
     - `z` is $z=m_c^2/m_b^2$,
     - `sh` is $\hat s=q^2/m_b^2$.
     """
-    flavio.citations.register("Greub:2008cy")
+    flavio.default_citations.register("Greub:2008cy")
     return _F_17([muh, z, sh])[0]
 
 @lru_cache(maxsize=config['settings']['cache size'])
@@ -90,7 +90,7 @@ def F_19(muh, z, sh):
     - `z` is $z=m_c^2/m_b^2$,
     - `sh` is $\hat s=q^2/m_b^2$.
     """
-    flavio.citations.register("Greub:2008cy")
+    flavio.default_citations.register("Greub:2008cy")
     if sh == 0:
         return 0
     return _sh_F_19([muh, z, sh])[0] / sh
@@ -104,7 +104,7 @@ def F_27(muh, z, sh):
     - `z` is $z=m_c^2/m_b^2$,
     - `sh` is $\hat s=q^2/m_b^2$.
     """
-    flavio.citations.register("Greub:2008cy")
+    flavio.default_citations.register("Greub:2008cy")
     return _F_27([muh, z, sh])[0]
 
 @lru_cache(maxsize=config['settings']['cache size'])
@@ -116,7 +116,7 @@ def F_29(muh, z, sh):
     - `z` is $z=m_c^2/m_b^2$,
     - `sh` is $\hat s=q^2/m_b^2$.
     """
-    flavio.citations.register("Greub:2008cy")
+    flavio.default_citations.register("Greub:2008cy")
     if sh == 0:
         return 0
     return _sh_F_29([muh, z, sh])[0] / sh
@@ -129,7 +129,7 @@ def F_89(Ls, sh):
     - `sh` is $\hat s=q^2/m_b^2$,
     - `Ls` is $\ln(\hat s)$.
     """
-    flavio.citations.register("Asatrian:2003vq")
+    flavio.default_citations.register("Asatrian:2003vq")
     return (104/9. - 32/27. * pi**2 + (1184/27. - 40/9. * pi**2) * sh
     + (14212/135. - 32/3 * pi**2) * sh**2 + (193444/945.
     - 560/27. * pi**2) * sh**3 + 16/9. * Ls * (1 + sh + sh**2 + sh**3))
@@ -140,7 +140,7 @@ def F_87(Lmu, sh):
 
     - `sh` is $\hat s=q^2/m_b^2$,
     """
-    flavio.citations.register("Asatrian:2003vq")
+    flavio.default_citations.register("Asatrian:2003vq")
     if sh==0.:
         return (-4*(33 + 24*Lmu + 6j*pi - 2*pi**2))/27.
     return (-32/9. * Lmu + 8/27. * pi**2 - 44/9. - 8/9. * 1j * pi
@@ -159,7 +159,7 @@ def acot(x):
 def SeidelA(q2, mb, mu):
     """Function $A(s\equiv q^2)$ defined in eq. (29) of hep-ph/0403185v2.
     """
-    flavio.citations.register("Seidel:2004jh")
+    flavio.default_citations.register("Seidel:2004jh")
     if q2==0:
         return 1/729. * (833 + 120j*pi - 312 * log(mb**2/mu**2))
     sh = min(q2/mb**2, 0.999)
@@ -177,7 +177,7 @@ def SeidelA(q2, mb, mu):
 def SeidelB(q2, mb, mu):
     """Function $A(s\equiv q^2)$ defined in eq. (30) of hep-ph/0403185v2.
     """
-    flavio.citations.register("Seidel:2004jh")
+    flavio.default_citations.register("Seidel:2004jh")
     sh = min(q2/mb**2, 0.999)
     z = 4 / sh
     x1 = 1/2 + 1j/2 * sqrt(z - 1)
@@ -205,7 +205,7 @@ def SeidelB(q2, mb, mu):
 def SeidelC(q2, mb, mu):
     """Function $A(s\equiv q^2)$ defined in eq. (31) of hep-ph/0403185v2.
     """
-    flavio.citations.register("Seidel:2004jh")
+    flavio.default_citations.register("Seidel:2004jh")
     return (-(16)/(81) * log((q2)/(mu**2)) + (428)/(243)
             - (64)/(27) * zeta(3) + (16)/(81) * pi * 1j)
 

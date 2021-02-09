@@ -82,10 +82,10 @@ class Citations:
 
 
 def print_citations(filename=None):
-    "See `flavio.citations.print`"
-    return flavio.citations.print(filename)
+    "See `flavio.default_citations.print`"
+    return flavio.default_citations.print(filename)
 
 
-citations = Citations()
+default_citations = Citations()
 # Register the flavio paper
-citations.register("Straub:2018kue")
+default_citations.register("Straub:2018kue")
