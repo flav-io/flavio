@@ -59,6 +59,14 @@ class Citations:
         "Reset citations to empty"
         self._papers_to_cite = set()
 
+    @property
+    def tostring(self):
+        return str(self)
+
+    @property
+    def toset(self):
+        return self._papers_to_cite
+
     def register(self, key):
         """Register a paper to be cited. The intended use is that this method
         should be called only when the referenced functionality is actually being used.
@@ -70,16 +78,6 @@ class Citations:
         """
         self._papers_to_cite.add(key)
 
-    def tex_citation_string(self):
-        """Return a LaTeX citation command for all citations that were used for 
-        calculating theory predictions.
-        """
-        return f"\cite{{{self}}}"
-
-
-def tex_citation_string():
-    "See `flavio.default_citations.tex_citation_string`"
-    return flavio.default_citations.tex_citation_string()
 
 
 default_citations = Citations()
