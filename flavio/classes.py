@@ -707,7 +707,7 @@ class Observable(NamedInstanceClass):
         old_citations = flavio.default_citations
         flavio.default_citations = flavio.Citations()
         flavio.sm_prediction(self.name, *args, **kwargs)
-        SM_citations = set(flavio.default_citations)
+        SM_citations = flavio.default_citations.toset
         flavio.default_citations = old_citations
         return SM_citations
 

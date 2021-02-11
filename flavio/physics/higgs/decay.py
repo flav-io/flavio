@@ -10,7 +10,7 @@ import flavio
 def h_gg(C):
     r"""Higgs decay to two gluons normalized to the SM"""
     # obtained from an analytical one-loop calculation
-    flavio.default_citations.register("Falkowski:2019hvp")
+    flavio.register_citation("Falkowski:2019hvp")
     np = (+39.29 * C['phiG']
           +0.121 * (C['phiBox'] - C['phiD'] / 4.)
           +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
@@ -24,7 +24,7 @@ def h_gg(C):
 def h_gaga(C):
     r"""Higgs decay to two photons normalized to the SM"""
     # obtained from an analytical one-loop calculation
-    flavio.default_citations.register("Falkowski:2019hvp")
+    flavio.register_citation("Falkowski:2019hvp")
     np = (-45.78 * C['phiB']
           -13.75 * C['phiW']
           +(25.09 - 0.242) * C['phiWB']  # tree - loop
@@ -41,7 +41,7 @@ def h_gaga(C):
 
 def h_ww(C):
     r"""Higgs decay to two $W$ bosons normalized to the SM"""
-    flavio.default_citations.register("Falkowski:2019hvp")
+    flavio.register_citation("Falkowski:2019hvp")
     np = (-0.092 * C['phiW']
           -0.386 * C['phiWB']
           -0.205 * C['phiD']
@@ -54,7 +54,7 @@ def h_ww(C):
 
 def h_zz(C):
     r"""Higgs decay to $Z$ bosons normalized to the SM"""
-    flavio.default_citations.register("Falkowski:2019hvp")
+    flavio.register_citation("Falkowski:2019hvp")
     np = (+0.329 * C['phiB']
           -0.386 * C['phiW']
           +0.149 * C['phiWB']
@@ -74,7 +74,7 @@ def h_vv(C):
 
 def h_zga(C):
     r"""Higgs decay to $Z\gamma$ normalized to the SM"""
-    flavio.default_citations.register("Falkowski:2019hvp")
+    flavio.register_citation("Falkowski:2019hvp")
     np = (+14.89 * C['phiB']
           -14.89 * C['phiW']
           +9.377 * C['phiWB']
@@ -83,7 +83,7 @@ def h_zga(C):
 
 def h_bb(C):
     r"""Higgs decay to two $b$ quarks normalized to the SM"""
-    flavio.default_citations.register("Falkowski:2019hvp")
+    flavio.register_citation("Falkowski:2019hvp")
     np = (-0.03 * C['phiD']
           +0.121 * C['phiBox']
           +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
@@ -92,7 +92,7 @@ def h_bb(C):
 
 def h_cc(C):
     r"""Higgs decay to two charm quarks normalized to the SM"""
-    flavio.default_citations.register("Falkowski:2019hvp")
+    flavio.register_citation("Falkowski:2019hvp")
     np = (-0.03 * C['phiD']
           +0.121 * C['phiBox']
           +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
@@ -101,7 +101,7 @@ def h_cc(C):
 
 def h_tautau(C):
     r"""Higgs decay to two taus normalized to the SM"""
-    flavio.default_citations.register("Falkowski:2019hvp")
+    flavio.register_citation("Falkowski:2019hvp")
     np = (-0.03 * C['phiD']
           +0.121 * C['phiBox']
           +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
@@ -110,7 +110,7 @@ def h_tautau(C):
 
 def h_mumu(C):
     r"""Higgs decay to two muons normalized to the SM"""
-    flavio.default_citations.register("Falkowski:2019hvp")
+    flavio.register_citation("Falkowski:2019hvp")
     np = (-0.03 * C['phiD']
           +0.121 * C['phiBox']
           +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])

@@ -18,7 +18,7 @@ def xi(C, MF, MGT):
     `MGT`."""
     # eq. (15) of arXiv:1803.08732
     # note that C_i' = C_i
-    flavio.default_citations.register("Gonzalez-Alonso:2018omy")
+    flavio.register_citation("Gonzalez-Alonso:2018omy")
     return 2 * (abs(MF)**2 * (abs(C['V'])**2 + abs(C['S'])**2)
                 + abs(MGT)**2 * (abs(C['A'])**2 + abs(C['T'])**2))
 
@@ -29,7 +29,7 @@ def a_xi(C, MF, MGT):
     `MGT`."""
     # eq. (16) of arXiv:1803.08732
     # note that C_i' = C_i
-    flavio.default_citations.register("Gonzalez-Alonso:2018omy")
+    flavio.register_citation("Gonzalez-Alonso:2018omy")
     return 2 * (abs(MF)**2 * (abs(C['V'])**2 - abs(C['S'])**2)
                 - 1 / 3 * abs(MGT)**2 * (abs(C['A'])**2 - abs(C['T'])**2))
 
@@ -47,7 +47,7 @@ def b_xi(C, MF, MGT, alpha, Z, s):
     `MGT`, the fine structure constant `alpha`, and the nucleon charge `Z`. The sign `s` is + for the electron and - for the positron."""
     # eq. (17) of arXiv:1803.08732
     # note that C_i' = C_i
-    flavio.default_citations.register("Gonzalez-Alonso:2018omy")
+    flavio.register_citation("Gonzalez-Alonso:2018omy")
     gamma = sqrt(1 - alpha**2 * Z**2)
     return s * 2 * gamma * 2 * (abs(MF)**2 * (C['V'] *  C['S'].conjugate()).real
                                 + abs(MGT)**2 * (C['A'] *  C['T'].conjugate()).real)

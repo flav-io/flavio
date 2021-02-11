@@ -10,7 +10,7 @@ def wc_eff(par, wc_obj, scale, nu):
     r"""Lee-Yang effective couplings.
 
     See eqS. (2), (9) of arXiv:1803.08732."""
-    flavio.default_citations.register("Gonzalez-Alonso:2018omy")
+    flavio.register_citation("Gonzalez-Alonso:2018omy")
     # wilson coefficients
     wc = get_wceff_fccc_std(wc_obj, par, 'du', 'e', nu, None, scale, nf=3)
     # proton charges

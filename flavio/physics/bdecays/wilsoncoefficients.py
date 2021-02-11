@@ -42,7 +42,7 @@ def CL_SM(par):
     Xt0 = Xt0_165 * (1 + 1.14064 * (mt/165. - 1)) # LO
     Xt1 = Xt0_165 * (-0.031435 - 0.139303 * (mt/165. - 1)) # QCD NLO
     # (4.3), (4.4) of 1009.0947: NLO EW
-    flavio.default_citations.register("Brod:2010hi")
+    flavio.register_citation("Brod:2010hi")
     XtEW = Xt0 * (1 - 1.11508 + 1.12316*1.15338**(mt/165.)-0.179454*(mt/165)) - 1
     XtEW = XtEW * 0.00062392534457616328 # <- alpha_em/4pi at 120 GeV
     Xt = Xt0 + Xt1 + XtEW
@@ -81,7 +81,7 @@ def wctot_dict(wc_obj, sector, scale, par, nf_out=5):
     else:
         raise NotImplementedError("DeltaF=1 Wilson coefficients only implemented for B physics")
     # fold in approximate m_t-dependence of C_10 (see eq. 4 of arXiv:1311.0903)
-    flavio.default_citations.register("Bobeth:2013uxa")
+    flavio.register_citation("Bobeth:2013uxa")
     wc_sm[9] = wc_sm[9] * (par['m_t']/173.1)**1.53
     # go from the effective to the "non-effective" WCs for C7 and C8
     yi = np.array([0, 0, -1/3., -4/9., -20/3., -80/9.])

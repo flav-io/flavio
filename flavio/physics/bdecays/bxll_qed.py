@@ -368,7 +368,7 @@ wem_dict_high['BR', 7, 9] = wem_79_high
 wem_dict_high['BR', 9, 9] = wem_99_high
 
 def wem(I, i, j, sh, mb, ml, scale, mc):
-    flavio.default_citations.register("Huber:2015sra")
+    flavio.register_citation("Huber:2015sra")
     if sh < 0.5:
         return wem_dict_low[I, i, j](sh, mb, ml, scale, mc)
     else:

@@ -22,7 +22,7 @@ def ff(process, q2, par, n=3, t0=None):
 
     The standard convention defines the form factors $f_+$, $f_0$, and $f_T$.
     """
-    flavio.default_citations.register("Bourrely:2008za")
+    flavio.register_citation("Bourrely:2008za")
     pd = process_dict[process]
     mpl = par[process + ' BCL m+']
     m0 = par[process + ' BCL m0']

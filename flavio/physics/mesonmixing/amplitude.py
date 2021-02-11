@@ -83,7 +83,7 @@ def M12(par, wc, meson):
     return contribution_np + contribution_sm
 
 def G12_d_SM(par, meson):
-    flavio.default_citations.register("Beneke:2003az")
+    flavio.register_citation("Beneke:2003az")
     di_dj = meson_quark[meson]
     xi_t = ckm.xi('t',di_dj)(par)
     xi_u = ckm.xi('u',di_dj)(par)

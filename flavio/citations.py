@@ -83,3 +83,6 @@ class Citations:
 default_citations = Citations()
 # Register the flavio paper
 default_citations.register("Straub:2018kue")
+
+def register_citation(inspire_key):
+    flavio.default_citations.register(inspire_key)
