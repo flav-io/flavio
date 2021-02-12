@@ -165,19 +165,19 @@ LHCb Lambdab->Lambda(1520)mumu 2020 Sensitivity study SM:
     - name: <S_1cc>(Lambdab->Lambda(1520)mumu)
       q2min: 0.1
       q2max: 3
-      value: 0.666 +- 0.099
+      value: 0.230 +- 0.241
     - name: <S_1cc>(Lambdab->Lambda(1520)mumu)
       q2min: 3
       q2max: 6
-      value: 0.636 +- 0.127
+      value: 0.212 +- 0.104
     - name: <S_1cc>(Lambdab->Lambda(1520)mumu)
       q2min: 6
       q2max: 8.68
-      value: 0.909 +- 0.132
+      value: 0.339 +- 0.061
     - name: <S_1cc>(Lambdab->Lambda(1520)mumu)
       q2min: 1
       q2max: 6
-      value: 0.917 +- 0.146
+      value: 0.183 +- 0.100
 
 
 LHCb B->K*mumu 2020 S 0.1-0.98:
