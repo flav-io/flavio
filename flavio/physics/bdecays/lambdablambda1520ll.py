@@ -399,7 +399,7 @@ for l in ['e', 'mu', ]:
         _obs_name = "<" + obs+">(Lambdab->Lambda(1520)"+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
         _obs.set_description("Binned " + _observables_new[obs]['desc'] + r" in $" + _process_tex + r"$")
-        _obs.tex = r"$\langle " + _observables_new[obs]['tex'] + r"\rangle(" + _process_tex + r"$"
+        _obs.tex = r"$\langle " + _observables_new[obs]['tex'] + r"\rangle(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, obs_int_ratio_func_new(_observables_new[obs]['func'], l, _observables_new[obs]['arg']))
 
@@ -407,7 +407,7 @@ for l in ['e', 'mu', ]:
         _obs_name = obs+"(Lambdab->Lambda(1520)"+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2'])
         _obs.set_description(_observables_new[obs]['desc'][0].capitalize() + _observables_new[obs]['desc'][1:] + r" in $" + _process_tex + r"$")
-        _obs.tex = r"$" + _observables_new[obs]['tex'] + r"(" + _process_tex + r"$"
+        _obs.tex = r"$" + _observables_new[obs]['tex'] + r"(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, obs_ratio_func_new(_observables_new[obs]['func'], l, _observables_new[obs]['arg']))
     
