@@ -8,4 +8,4 @@ rc('font',**{'family':'serif',
 rcParams['xtick.labelsize'] = 10
 rcParams['ytick.labelsize'] = 10
 rcParams['axes.labelsize'] = 14
-rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+rcParams['text.latex.preamble']=r"\usepackage{amsmath}"
