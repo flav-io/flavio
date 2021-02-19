@@ -54,7 +54,16 @@ class Citations:
         return str(self)
 
     def register(self, inspire_key):
-        self._array[self._all_citations[inspire_key]] = True
+        try:
+            self._array[self._all_citations[inspire_key]] = True
+        except KeyError:
+            from flavio.util import get_datapath
+            yaml_path = get_datapath('flavio', 'data/citations.yml')
+            raise KeyError(
+                f'The inspire key must be contained in {yaml_path}. '
+                f'The key `{inspire_key}` was not found there.'
+            )
+
 
     def clear(self):
         self._array[:] = [False]*len(self._array)
