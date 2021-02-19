@@ -9,10 +9,10 @@ from flavio.physics.running.masses import zeta
 
 # (19) of arXiv:1107.3100v1
 def fKsFromMs1(Mu, M, Nf):
-    flavio.register_citation("Gambino:2011cq")
+    flavio.citations.register("Gambino:2011cq")
     return -(4/3.)* (1- (4/3) * (Mu/M) - (Mu**2/(2*M**2)) )
 def fKsFromMs2(Mu, M, Nf):
-    flavio.register_citation("Gambino:2011cq")
+    flavio.citations.register("Gambino:2011cq")
     b0 = 11 - 2*Nf/3.
     return ((((1/3.)*log(M/(2*Mu))+13/18.)*b0 - pi**2/3. + 23/18.)*Mu**2/M**2
             + (((8/9.)*log(M/(2*Mu))+64/27.)*b0 - 8*pi**2/9. + 92/27.) * Mu/M
@@ -21,7 +21,7 @@ def fKsFromMs2(Mu, M, Nf):
             )
 # from (A.8) of hep-ph/0302262v1
 def fKsFromMs3(Mu, M, Nf):
-    flavio.register_citation("Benson:2003kp")
+    flavio.citations.register("Benson:2003kp")
     b0 = 11 - 2*Nf/3.
     return -(b0/2.)**2*(2353/2592.+13/36.*pi**2+7/6.*zeta(3)
             -16/9.*Mu/M*((log(M/(2*Mu))+8/3.)**2+67/36.-pi**2/6.)

@@ -700,16 +700,13 @@ class Observable(NamedInstanceClass):
     def theory_citations(self, *args, **kwargs):
         """Return a set of theory papers (in the form of INSPIRE texkeys) to
         cite for the theory prediction for an observable.
-        
+
         Arguments are passed to the observable and are necessary,
         depending on the observable (e.g. $q^2$-dependent observables).
         """
-        old_citations = flavio.default_citations
-        flavio.default_citations = flavio.Citations()
-        flavio.sm_prediction(self.name, *args, **kwargs)
-        SM_citations = flavio.default_citations.toset
-        flavio.default_citations = old_citations
-        return SM_citations
+        with flavio.citations.collect() as citations:
+            flavio.sm_prediction(self.name, *args, **kwargs)
+        return citations.set
 
 
 

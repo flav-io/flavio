@@ -26,7 +26,7 @@ def ff(process, q2, par, scale, order_z=3, order_z_slp=2, order_z_sslp=1):
 
     See arXiv:hep-ph/9712417 and arXiv:1703.05330.
     """
-    flavio.register_citation("Caprini:1997mu")
+    flavio.citations.register("Caprini:1997mu")
     pd = process_dict[process]
     mB = par['m_' + pd['B']]
     mP = par['m_' + pd['P']]

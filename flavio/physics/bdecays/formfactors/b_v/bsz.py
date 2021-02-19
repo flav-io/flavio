@@ -48,7 +48,7 @@ def ff(process, q2, par, n=2, omit_A='A0'):
     ff = {}
     # setting a0_A0 and a0_T2 according to the exact kinematical relations,
     # cf. eq. (16) of arXiv:1503.05534
-    flavio.register_citation("Straub:2015ica")
+    flavio.citations.register("Straub:2015ica")
     par_prefix = process + ' BSZ'
     par[par_prefix + ' a0_A12'] = par[par_prefix + ' a0_A0'] / (8*mB*mV / (mB**2-mV**2))
     par[par_prefix + ' a0_T2'] = par[par_prefix + ' a0_T1']

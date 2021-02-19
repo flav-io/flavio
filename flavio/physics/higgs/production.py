@@ -9,7 +9,7 @@ import flavio
 def ggF(C):
     r"""Higgs production from gluon fusion normalized to the SM"""
     # obtained from an analytical one-loop calculation
-    flavio.register_citation("Falkowski:2019hvp")
+    flavio.citations.register("Falkowski:2019hvp")
     np = (+35.86 * C['phiG']
           +0.121 * (C['phiBox'] - C['phiD'] / 4.)
           +0.061 * (C['ll_1221'] / 2 - C['phil3_22'] - C['phil3_11'])
@@ -22,7 +22,7 @@ def ggF(C):
 
 def hw(C):
     r"""Higgs production associated with a $W$ normalized to the SM"""
-    flavio.register_citation("Falkowski:2019hvp")
+    flavio.citations.register("Falkowski:2019hvp")
     np = (+0.891 * C['phiW']
           -0.187 * C['phiWB']
           -0.115 * C['phiD']
@@ -35,7 +35,7 @@ def hw(C):
 
 def hz(C):
     r"""Higgs production associated with a $Z$ normalized to the SM"""
-    flavio.register_citation("Falkowski:2019hvp")
+    flavio.citations.register("Falkowski:2019hvp")
     np = (+0.098 * C['phiB']
           +0.721 * C['phiW']
           +0.217 * C['phiWB']
@@ -65,7 +65,7 @@ def hv(C):
 
 def tth(C):
     r"""Higgs production associated with a top pair normalized to the SM"""
-    flavio.register_citation("Falkowski:2019hvp")
+    flavio.citations.register("Falkowski:2019hvp")
     np = (-0.030 * C['phiD']
           +0.118 * C['phiBox']
           -0.853 * C['uG_33']
@@ -77,7 +77,7 @@ def tth(C):
 
 def vv_h(C):
     r"""Higgs production from vector boson fusion normalized to the SM"""
-    flavio.register_citation("Falkowski:2019hvp")
+    flavio.citations.register("Falkowski:2019hvp")
     np = (-0.002 * C['phiB']
           -0.088 * C['phiW']
           -0.319 * C['phiWB']

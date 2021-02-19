@@ -52,7 +52,7 @@ def getfft(s, par, B, ff, ff0, lep, wc):
 
     #Add light meson resonances
     resonances = {'Bs': ['phi'], 'B0': ['rho0', 'omega']}
-    flavio.register_citation("Kozachuk:2017mdk")
+    flavio.citations.register("Kozachuk:2017mdk")
     fVtofVemfactors = {'phi': -1/3, 'rho0': 1/sqrt(2), 'omega': 1/(3*sqrt(2))} # Given in Sec. 8.A.3 of 1712.07926
     #We use the general B->rho and B->omega parameters, hence the isotopic factors
     resgV = {('Bs','phi'): -par['Bs->phi BSZ a0_T1'],
@@ -67,7 +67,7 @@ def getfft(s, par, B, ff, ff0, lep, wc):
     return (fftv, ffta)
 
 def getF1(s, par, B, ff, ff0, lep, wc):
-    flavio.register_citation("Melikhov:2004mk")
+    flavio.citations.register("Melikhov:2004mk")
     scale = config['renormalization scale']['bllgamma']
     mb = running.get_mb(par, scale, nf_out=5)
     mbh = mb/par['m_'+B]
@@ -77,7 +77,7 @@ def getF1(s, par, B, ff, ff0, lep, wc):
     return (abs(wc['C9_'+label])**2 + abs(wc['C10_'+label])**2)*ff['v']**2 + 4*mbh**2/s**2*abs(wc['C7_'+bq]*fftv)**2 + 4*mbh/s*ff['v']*_Re(wc['C7_'+bq]*ffta*_Co(wc['C9_'+label]))
 
 def getF2(s, par, B, ff, ff0, lep, wc):
-    flavio.register_citation("Melikhov:2004mk")
+    flavio.citations.register("Melikhov:2004mk")
     scale = config['renormalization scale']['bllgamma']
     mb = running.get_mb(par, scale, nf_out=5)
     mbh = mb/par['m_'+B]
@@ -88,8 +88,8 @@ def getF2(s, par, B, ff, ff0, lep, wc):
 
 
 def B10(s, par, B, ff, ff0, lep, wc):
-    flavio.register_citation("Melikhov:2004mk")
-    flavio.register_citation("Guadagnoli:2016erb")
+    flavio.citations.register("Melikhov:2004mk")
+    flavio.citations.register("Guadagnoli:2016erb")
     F1 = getF1(s, par, B, ff, ff0, lep, wc)
     F2 = getF2(s, par, B, ff, ff0, lep, wc)
     mlh = par['m_'+lep]/par['m_'+B]
@@ -99,15 +99,15 @@ def B10(s, par, B, ff, ff0, lep, wc):
 # B11 vanishes for the BR estimation
 
 def B12(s, par, B, ff, ff0, lep, wc):
-    flavio.register_citation("Melikhov:2004mk")
-    flavio.register_citation("Guadagnoli:2016erb")
+    flavio.citations.register("Melikhov:2004mk")
+    flavio.citations.register("Guadagnoli:2016erb")
     F1 = getF1(s, par, B, ff, ff0, lep, wc)
     F2 = getF2(s, par, B, ff, ff0, lep, wc)
     return s*(F1+F2)
 
 def B120(s, par, B, ff, ff0, lep, wc):
-    flavio.register_citation("Melikhov:2004mk")
-    flavio.register_citation("Guadagnoli:2016erb")
+    flavio.citations.register("Melikhov:2004mk")
+    flavio.citations.register("Guadagnoli:2016erb")
     scale = config['renormalization scale']['bllgamma']
     mb = running.get_mb(par, scale, nf_out=5)
     mbh = mb/par['m_'+B]
@@ -119,13 +119,13 @@ def B120(s, par, B, ff, ff0, lep, wc):
 
 
 def dG1dsMN(s, par, B, ff, ff0, lep, wc):
-    flavio.register_citation("Melikhov:2004mk")
+    flavio.citations.register("Melikhov:2004mk")
     mlh = par['m_'+lep]/par['m_'+B]
     pref = prefactor(s, par, B, ff, lep, wc)*(1-s)**3*sqrt(1-4*mlh**2/s)
     return pref*(B10(s, par, B, ff, ff0, lep, wc) + (s - 4*mlh**2)/(3*s)*B12(s, par, B, ff, ff0, lep, wc))
 
 def dG2dsMN(s, par, B, ff, ff0, lep, wc):
-    flavio.register_citation("Melikhov:2004mk")
+    flavio.citations.register("Melikhov:2004mk")
     mlh = par['m_'+lep]/par['m_'+B]
     bq = meson_quark[B]
     label = bq+lep+lep
@@ -133,7 +133,7 @@ def dG2dsMN(s, par, B, ff, ff0, lep, wc):
     return pref*(-8*sqrt(s-4*mlh**2)*sqrt(s)+4*atanh(sqrt(1-4*mlh**2/s))*(1+s-mlh**2*(1-s)**2))
 
 def dG12dsMN(s, par, B, ff, ff0, lep, wc):
-    flavio.register_citation("Melikhov:2004mk")
+    flavio.citations.register("Melikhov:2004mk")
     mlh = par['m_'+lep]/par['m_'+B]
     pref = 4*prefactor(s, par, B, ff, lep, wc)*par['f_'+B]/par['m_'+B]*(1-s)
     return pref*atanh(sqrt(1-4*mlh**2/s))*B120(s, par, B, ff, ff0, lep, wc)
