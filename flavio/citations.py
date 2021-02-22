@@ -54,6 +54,13 @@ class Citations:
         return str(self)
 
     def register(self, inspire_key):
+        """Register a paper to be cited. The intended use is that this method
+        should be called only when the referenced functionality is actually being used.
+        Parameters
+        ----------
+        key : str
+            The INSPIRE texkey for the paper to be cited
+        """
         try:
             self._array[self._all_citations[inspire_key]] = True
         except KeyError:
@@ -66,9 +73,11 @@ class Citations:
 
 
     def clear(self):
+        """Clear the list of cited papers (including any default citations)."""
         self._array[:] = [False]*len(self._array)
 
     def reset(self):
+        """Reset the list of cited papers back to only the default ones."""
         self.clear()
         for inspire_key in self._initial_citations:
             self.register(inspire_key)
