@@ -3,6 +3,7 @@ import os
 import sys
 from itertools import chain
 import re
+import ast
 
 
 def get_datapath(package, resource):
@@ -24,7 +25,12 @@ def get_datapath(package, resource):
     return resource_name
 
 def extract_citations():
-    regexp = re.compile(r'\.register\((\'.*?\'|".*?")\)')
+    string_in_parantheses_matcher = (
+        r'\(\s*[rfuRFU]{0,2}".*?(?<!\\)"\s*\)' # string between (" ")
+        '|'
+        r"\(\s*[rfuRFU]{0,2}'.*?(?<!\\)'\s*\)" # string between (' ')
+    )
+    regexp = re.compile(fr'\.register({string_in_parantheses_matcher})')
     flavio_dir = get_datapath('flavio', '')
     generator_py_files = chain.from_iterable((
         (   os.path.join(root, name) for name in files
@@ -35,6 +41,6 @@ def extract_citations():
     for filename in generator_py_files:
         with open(filename, 'r') as f:
             citations |= set(chain.from_iterable((
-                {v.strip('"\'') for v in regexp.findall(line)} for line in f
+                {ast.literal_eval(v) for v in regexp.findall(line)} for line in f
             )))
     return citations
