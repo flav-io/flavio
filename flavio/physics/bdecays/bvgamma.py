@@ -136,6 +136,12 @@ def BR_timeint(wc_obj, par, B, V):
 def BVgamma_function(function, B, V):
     return lambda wc_obj, par: function(wc_obj, par, B, V)
 
+def BVgamma_ratio_function(function_num, B_num, V_num, function_den, B_den, V_den):
+    return lambda wc_obj, par: (
+        function_num(wc_obj, par, B_num, V_num)
+        /
+        function_den(wc_obj, par, B_den, V_den)
+    )
 
 # Observable and Prediction instances
 
@@ -178,6 +184,23 @@ _obs.set_description(r"Time-integrated branching ratio of $" + _process_tex + r"
 _obs.tex = r"$\overline{\text{BR}}(" + _process_tex + r")$"
 _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
 Prediction(_obs_name, BVgamma_function(BR_timeint, 'Bs', 'phi'))
+
+_obs_name = "BR(B0->K*gamma)/BR(Bs->phigamma)"
+_obs = Observable(_obs_name)
+_process_num_tex = r"B^0\to K^{*0}\gamma"
+_process_den_tex = r"B_s\to \phi\gamma"
+_obs.set_description(
+    fr"Ratio of branching ratio of ${_process_num_tex}$ and time-integrated "
+    fr"branching ratio of ${_process_den_tex}$"
+)
+_obs.tex = (
+    fr"$\frac{{\text{{BR}}({_process_num_tex})}}"
+    fr"{{\overline{{\text{{BR}}}}({_process_den_tex})}}$"
+)
+_obs.add_taxonomy(_process_taxonomy + _process_den_tex + r"$")
+Prediction(_obs_name, BVgamma_ratio_function(
+    BR, 'B0', 'K*0', BR_timeint, 'Bs', 'phi'
+))
 
 _obs_name = "ADeltaGamma(Bs->phigamma)"
 _obs = Observable(_obs_name)

@@ -72,7 +72,7 @@ LHCb rad 2012:
   experiment: LHCb
   inspire: Aaij:2012ita
   values:
-    BR(Bs->phigamma): 3.5 ± 0.4 e-5
+    BR(B0->K*gamma)/BR(Bs->phigamma): 1.23 ± 0.06 ± 0.04 ± 0.03
 
 LHCb phigamma 2019:
   experiment: LHCb
