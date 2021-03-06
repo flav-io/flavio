@@ -24,6 +24,7 @@ def CR_mue(wc_obj, par, nucl):
     omega_capt  = par['GammaCapture '+nucl]
     #####Wilson Coefficients######
     #####Conversion Rate obtained from hep-ph/0203110#####
+    flavio.citations.register("Kitano:2002mt")
     wc = wc_obj.get_wc('mue', scale, par, nf_out=3)
     prefac = -np.sqrt(2)/par['GF']
     AL = prefac / ( 4 * mm ) * wc['Cgamma_emu']

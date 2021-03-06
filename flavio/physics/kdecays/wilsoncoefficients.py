@@ -1,6 +1,7 @@
 r"""Functions for SM Wilson coefficients in kaon decays."""
 
 import scipy.interpolate
+import flavio
 from flavio.physics import ckm
 
 
@@ -28,6 +29,7 @@ def wilsoncoefficients_sm_fourquark(par, scale):
     Currently only implemented for `scale=1.3`."""
     if scale != 1.3:
         raise ValueError("Wilson coefficients only implemented for scale=1.3")
+    flavio.citations.register("Buras:2015yba")
     wcarr = wcsm(par['alpha_s'])
     wc_dict = dict(zip(["z1", "z2", "y3", "y4", "y5", "y6",
                         "y7/al", "y8/al", "y9/al", "y10/al",], wcarr))
@@ -43,8 +45,10 @@ def wilsoncoefficients_sm_sl(par, scale):
     Currently only $C_{10}$ (top and charm contributions) is implemented."""
     wc_dict = {}
     # fold in approximate m_t-dependence of C_10 (see eq. 4 of arXiv:1311.0903)
+    flavio.citations.register("Bobeth:2013uxa")
     wc_dict['C10_t'] = -4.10  * (par['m_t']/173.1)**1.53
     Vus = abs(ckm.get_ckm(par)[0, 1])
     Pc = 0.115 # +-0.011, arXiv:hep-ph/0605203
+    flavio.citations.register("Gorbahn:2006bm")
     wc_dict['C10_c'] = -Pc / par['s2w'] * Vus**4
     return wc_dict

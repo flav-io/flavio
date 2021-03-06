@@ -50,6 +50,7 @@ def _BR_BXclnu(par, wc_obj, lep, nu):
              + 12*gVS(xc, xl) * (wc['VR']*wc['T']).real
            )
     # eq. (26) of arXiv:1107.3100 + corrections (P. Gambino, private communication)
+    flavio.citations.register("Gambino:2011cq")
     r_BLO = ( 1
                  # NLO QCD
                  + alpha_s/pi * pc1(xc, mb)

@@ -34,6 +34,7 @@ def bsvll_obs(function, q2, wc_obj, par, B, V, lep):
 
 def S_theory_num_Bs(y, J, J_bar, J_h, i):
     # (42) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
     return 1/(1-y**2) * (J[i] + J_bar[i]) - y/(1-y**2) * J_h[i]
 
 def S_experiment_num_Bs(y, J, J_bar, J_h, i):
@@ -51,6 +52,7 @@ def S_experiment_Bs(y, J, J_bar, J_h, i):
 
 def dGdq2_ave_Bs(y, J, J_bar, J_h):
     # (48) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
     return (1/(1-y**2) * (observables.dGdq2(J) + observables.dGdq2(J_bar))
             - y/(1-y**2) * observables.dGdq2(J_h))/2.
 

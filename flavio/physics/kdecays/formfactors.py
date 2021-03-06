@@ -1,5 +1,6 @@
 r"""Functions for $K\to pi$ hadronic form factors."""
 
+import flavio
 from flavio.classes import AuxiliaryQuantity, Implementation
 from flavio.config import config
 from math import exp
@@ -19,13 +20,17 @@ def fp0_dispersive(q2, par):
     H1 =    par['K->pi H1']
     H2 =    par['K->pi H2']
     # (A.1) of 0903.1654
+    flavio.citations.register("Bernard:2009zm")
     x = q2/t0
     G = x*D + (1-x)*d + x*(1-x)*k
     # (A.3) of 0903.1654
+    flavio.citations.register("Bernard:2009zm")
     H = H1*x + H2*x**2
     # (33) of 1005.2323
+    flavio.citations.register("Antonelli:2010yf")
     f0_bar = exp(q2/DeltaKpi * (lnC - G))
     # (37) of 1005.2323
+    flavio.citations.register("Antonelli:2010yf")
     fp_bar = exp(q2/mpi**2 * (Lp + H))
     ff = {}
     ff['f+'] = fp_0 * fp_bar

@@ -55,6 +55,7 @@ def BR_taulnunu(wc_obj, par, lep, nu1, nu2):
     pre = par['tau_tau'] / 3 / 2**9 / pi**3 * mtau**5
     alpha_e = flavio.physics.running.running.get_alpha_e(par, scale, nf_out=4)
     # eq. (3) of arXiv:1310.7922
+    flavio.citations.register("Pich:2013lsa")
     emcorr = 1 + alpha_e / (2 * pi) * (25 / 4 - pi**2)
     return pre * _BR(x, CL, CR) * emcorr
 

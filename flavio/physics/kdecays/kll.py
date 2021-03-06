@@ -44,6 +44,7 @@ def amplitudes_LD(par, K, l):
     s2w = par['s2w']
     pre = 2 * ml / mK / s2w
     # numbers extracted from arXiv:1711.11030
+    flavio.citations.register("Chobanova:2017rkj")
     ASgaga = 2.49e-4 * (-2.821 + 1.216j)
     ALgaga = 2.02e-4 * (par['chi_disp(KL->gammagamma)'] - 5.21j)
     S = pre * ASgaga

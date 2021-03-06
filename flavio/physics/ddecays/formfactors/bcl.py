@@ -3,6 +3,7 @@ r"""BCL parametrization of $D\to \pi,K$ form factors.
 Taken from `flavio.physics.bdecays.formfactors.b_p.bcl.py`
 """
 
+import flavio
 from flavio.physics.bdecays.formfactors.common import z
 from flavio.physics.bdecays.formfactors.b_p.bcl import param_fplusT, param_f0, pole
 
@@ -21,6 +22,7 @@ def ff(process, q2, par, n=3, t0=None):
 
     The standard convention defines the form factors $f_+$, $f_0$, and $f_T$.
     """
+    flavio.citations.register("Bourrely:2008za")
     pd = process_dict[process]
     mpl = par[process + ' BCL m+']
     m0 = par[process + ' BCL m0']

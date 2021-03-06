@@ -32,6 +32,7 @@ def kpinunu_charm(par):
     mc = par['m_c']
     alpha_s = par['alpha_s']
     # approximate formula for NNLO perturbative result: (14) of hep-ph/0603079
+    flavio.citations.register("Buras:2006gb")
     return 0.379 * (mc/1.3)**2.155 * (alpha_s/0.1187)**(-1.417)
 
 def br_kplus_pinunu(wc_obj, par, nu1, nu2):

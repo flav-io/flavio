@@ -5,6 +5,7 @@ Based on arXiv:1401.2447"""
 
 from math import log
 from scipy import constants
+import flavio
 
 
 # units: GeV=hbar=c=1
@@ -52,6 +53,7 @@ def Zobs(name, m_h, m_t, alpha_s, Dalpha, m_Z):
     r"""Expansion formula for $Z$ partial widths according to eq. (28) of
     arXiv:1401.2447.
     """
+    flavio.citations.register("Freitas:2014hra")
     L_H = log(m_h / 125.7)
     D_t = (m_t / 173.2)**2 - 1
     D_alpha_s = alpha_s / 0.1184 - 1

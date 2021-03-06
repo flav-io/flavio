@@ -14,6 +14,7 @@ wcxf_sector_names = {('tau', 'mu'): 'mutau',
 
 def _BR_taumuee(mtau, me, wc):
     # (22) of hep-ph/0404211
+    flavio.citations.register("Brignole:2004ah")
     return (abs(wc['CVLL'])**2 + abs(wc['CVLR'])**2 + abs(wc['CVRL'])**2 + abs(wc['CVRR'])**2
             + 1 / 4 * (abs(wc['CSLL'])**2 + abs(wc['CSLR'])**2 + abs(wc['CSRL'])**2 + abs(wc['CSRR'])**2)
             + 12 * (abs(wc['CTLL'])**2 + abs(wc['CTRR'])**2)
@@ -25,6 +26,8 @@ def _BR_taumuee(mtau, me, wc):
 def _BR_tau3mu(mtau, mmu, wc):
     # (23) of hep-ph/0404211
     # (117) of hep-ph/9909265
+    flavio.citations.register("Brignole:2004ah")
+    flavio.citations.register("Kuno:1999jp")
     return (2 * abs(wc['CVLL'])**2 + abs(wc['CVLR'])**2 + abs(wc['CVRL'])**2 + 2 * abs(wc['CVRR'])**2
             + 1 / 8 * (abs(wc['CSLL'])**2 + abs(wc['CSRR'])**2)
             + 8 * (wc['C7'] * (2 * wc['CVLL'] + wc['CVLR']).conjugate()

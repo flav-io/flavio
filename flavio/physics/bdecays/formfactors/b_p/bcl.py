@@ -1,5 +1,6 @@
 from math import sqrt
 import numpy as np
+import flavio
 from flavio.physics.bdecays.formfactors.common import z
 from flavio.physics.bdecays.formfactors.b_p.isgurwise import isgur_wise
 
@@ -35,6 +36,7 @@ def ff(process, q2, par, n=3, t0=None):
 
     The standard convention defines the form factors $f_+$, $f_0$, and $f_T$.
     """
+    flavio.citations.register("Bourrely:2008za")
     pd = process_dict[process]
     mpl = par[process + ' BCL m+']
     m0 = par[process + ' BCL m0']
@@ -62,6 +64,7 @@ def ff_isgurwise(process, q2, par, scale, n=3, t0=None):
     and BCL parametrization (arXiv:0807.2722) for $f_0$ and $f_+$, but using
     an improved Isgur-Wise relation in the heavy quark limit for $f_T$.
     """
+    flavio.citations.register("Bourrely:2008za")
     pd = process_dict[process]
     mpl = par[process + ' BCL m+']
     m0 = par[process + ' BCL m0']
