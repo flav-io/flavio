@@ -197,6 +197,7 @@ _obs.tex = (
     fr"$\frac{{\text{{BR}}({_process_num_tex})}}"
     fr"{{\overline{{\text{{BR}}}}({_process_den_tex})}}$"
 )
+_obs.add_taxonomy(_process_taxonomy + _process_num_tex + r"$")
 _obs.add_taxonomy(_process_taxonomy + _process_den_tex + r"$")
 Prediction(_obs_name, BVgamma_ratio_function(
     BR, 'B0', 'K*0', BR_timeint, 'Bs', 'phi'
