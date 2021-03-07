@@ -27,6 +27,7 @@ class Citations:
     __all_citations = set(yaml.safe_load(
         pkgutil.get_data('flavio', 'data/citations.yml')
     ))
+    __name__ = __name__
 
     def __init__(self, initial_citations=[]):
         self._initial_citations = set(initial_citations)
@@ -58,7 +59,7 @@ class Citations:
         should be called only when the referenced functionality is actually being used.
         Parameters
         ----------
-        key : str
+        inspire_key : str
             The INSPIRE texkey for the paper to be cited
         """
         try:
