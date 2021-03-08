@@ -9533,6 +9533,13 @@ CMS Bs->mumu 2019:
       6.0264851271401515e-19, 2.858029566844475e-19]
     central_value: [2.936395136708043e-09, 7.995782608027678e-11]
 
+LHCb B->ee 2020:
+  experiment: LHCb
+  inspire: Aaij:2020nol
+  values:
+    BR(Bs->ee): < 9.4e-9 @ 90% CL
+    BR(B0->ee): < 2.5e-9 @ 90% CL
+
 Ft(0+) Hardy/Towner 2014:
   experiment: various
   inspire: Hardy:2014qxa
