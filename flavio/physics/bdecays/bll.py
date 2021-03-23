@@ -190,7 +190,7 @@ _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 for l in ['e', 'mu', 'tau']:
     _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to\ell^+\ell^-$ :: $'
 
-    # For the B^0 decay, we take the time-integrated branching ratio
+    # For the Bs decay, we take the time-integrated branching ratio
     _obs_name = "BR(Bs->"+l+l+")"
     _obs = Observable(_obs_name)
     _process_tex = r"B_s\to "+_tex[l]+r"^+"+_tex[l]+r"^-"

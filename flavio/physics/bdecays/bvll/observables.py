@@ -608,23 +608,26 @@ for l in [('mu','e'), ('tau','mu'),]:
         make_obs_lfur(M, l)
 
 
-# define LFU differences D_P4p,5p
+# define LFU differences D_P4p,5p and D_AFB
 def diff(x, y):
     return x-y
 
 
-for Pp in ['P4p', 'P5p']:
-    tex = _observables_pprime[Pp]['tex']
-    obs = Observable.from_function('Dmue_{}(B0->K*ll)'.format(Pp),
-                                    ['{}(B0->K*mumu)'.format(Pp), '{}(B0->K*ee)'.format(Pp)],
+for D_obs in ['P4p', 'P5p', 'AFB']:
+    if D_obs in ['AFB']:
+        tex = _observables[D_obs]['tex']
+    else:
+        tex = _observables_pprime[D_obs]['tex']
+    obs = Observable.from_function('Dmue_{}(B0->K*ll)'.format(D_obs),
+                                    ['{}(B0->K*mumu)'.format(D_obs), '{}(B0->K*ee)'.format(D_obs)],
                                     diff)
     obs.set_description(r"Difference of angular observable ${}$ in $B^0\to K^{{\ast 0}}\mu^+\mu^-$ and $B^0\to K^{{\ast 0}}e^+e^-$".format(tex))
     obs.tex = r"$D_{{{}}}^{{\mu e}}(B^0\to K^{{\ast 0}}\ell^+\ell^-)$".format(tex)
     obs.add_taxonomy(r"Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $B^0\to K^{\ast 0}e^+e^-$")
     obs.add_taxonomy(r"Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $B^0\to K^{\ast 0}\mu^+\mu^-$")
 
-    obs = Observable.from_function('<Dmue_{}>(B0->K*ll)'.format(Pp),
-                                    ['<{}>(B0->K*mumu)'.format(Pp), '<{}>(B0->K*ee)'.format(Pp)],
+    obs = Observable.from_function('<Dmue_{}>(B0->K*ll)'.format(D_obs),
+                                    ['<{}>(B0->K*mumu)'.format(D_obs), '<{}>(B0->K*ee)'.format(D_obs)],
                                     diff)
     obs.set_description(r"Binned difference of angular observable ${}$ in $B^0\to K^{{\ast 0}}\mu^+\mu^-$ and $B^0\to K^{{\ast 0}}e^+e^-$".format(tex))
     obs.tex = r"$\langle D_{{{}}}^{{\mu e}} \rangle(B^0\to K^{{\ast 0}}\ell^+\ell^-)$".format(tex)
