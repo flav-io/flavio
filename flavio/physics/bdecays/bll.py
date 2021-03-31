@@ -65,8 +65,10 @@ def amplitudes(par, wc, B, l1, l2):
     C10m = wc['C10_'+qqll] - wc['C10p_'+qqll]
     CPm = wc['CP_'+qqll] - wc['CPp_'+qqll]
     CSm = wc['CS_'+qqll] - wc['CSp_'+qqll]
-    P = (ml2 + ml1)/mB * C10m + mB * mb/(mb + mspec) * CPm
-    S = (ml2 - ml1)/mB * C9m  + mB * mb/(mb + mspec) * CSm
+    beta_m = sqrt(1 - (ml1 - ml2)**2/mB**2)
+    beta_p = sqrt(1 - (ml1 + ml2)**2/mB**2)
+    P = beta_m * ( (ml2 + ml1)/mB * C10m + mB * mb/(mb + mspec) * CPm )
+    S = beta_p * ( (ml2 - ml1)/mB * C9m  + mB * mb/(mb + mspec) * CSm )
     return P, S
 
 def ADeltaGamma(par, wc, B, lep):
@@ -99,11 +101,9 @@ def br_inst(par, wc, B, l1, l2):
         xi_t = ckm.xi('t','bd')(par)
     N = xi_t * 4*GF/sqrt(2) * alphaem/(4*pi)
     beta = sqrt(lambda_K(mB**2,ml1**2,ml2**2))/mB**2
-    beta_p = sqrt(1 - (ml1 + ml2)**2/mB**2)
-    beta_m = sqrt(1 - (ml1 - ml2)**2/mB**2)
     prefactor = abs(N)**2 / 32. / pi * mB**3 * tauB * beta * fB**2
     P, S = amplitudes(par, wc, B, l1, l2)
-    return prefactor * ( beta_m**2 * abs(P)**2 + beta_p**2 * abs(S)**2 )
+    return prefactor * ( abs(P)**2 + abs(S)**2 )
 
 def br_timeint(par, wc, B, l1, l2):
     r"""Time-integrated branching ratio of $B_q\to\ell^+\ell^-$."""
