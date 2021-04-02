@@ -7053,7 +7053,7 @@ LHCb KS->mumu 2019:
   experiment: LHCb
   inspire: Aaij:2020sbt
   values:
-    BR(KS->mumu): 0.94 +0.72 -0.64 e-10
+    BR(KS->mumu): 0.9 +0.7 -0.6 e-10
 
 ATLAS Bs->mumu 2018:
   experiment: ATLAS
