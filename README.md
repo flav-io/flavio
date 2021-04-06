@@ -44,12 +44,14 @@ Contributors (in alphabetical order):
 - Frederik Beaujean
 - Adam Falkowski
 - Ece Gürler
+- Matěj Hudec
 - Matthew Kirk
 - Jonathan Kriewald
 - Jacky Kumar
 - Christoph Niehoff
 - Markus Prim
 - Albert Puig
+- Méril Reboud
 - Stefanie Reichert
 - Peter Stangl
 - Olcyr Sumensari
