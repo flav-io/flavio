@@ -9601,6 +9601,34 @@ inofficial combination Bs->mumu 2019 CMS19:
     - [1.0, -0.19367302581501317]
     - [-0.19367302581501317, 1.0]
 
+
+LHCb Bs->mumu effective lifetime 2017:
+  experiment: LHCb
+  inspire: Aaij:2017vad
+  values:
+    # to convert numbers from picoseconds to 1/GeV, multiply by
+    # ps = 1.519267447878626e+12 [1/GeV],
+    tau_mumu: (3.10 ± 0.67 ± 0.08) 1e12 # this is 2.04 ± 0.44 ± 0.05 ps
+
+
+CMS Bs->mumu effective lifetime 2019:
+  experiment: CMS
+  inspire: Sirunyan:2019xdu
+  values:
+    # to convert numbers from picoseconds to 1/GeV, multiply by
+    # ps = 1.519267447878626e+12 [1/GeV],
+    tau_mumu: (2.58 +0.91 -0.65 ± 0.14) 1e12 # this is 1.70 +0.60 -0.43 ± 0.09 ps
+
+
+LHCb Bs->mumu effective lifetime 2021:
+  experiment: LHCb
+  url: https://indico.cern.ch/event/976688/attachments/2213706/3747159/santimaria_LHC_seminar_2021.pdf
+  values:
+    # to convert numbers from picoseconds to 1/GeV, multiply by
+    # ps = 1.519267447878626e+12 [1/GeV],
+    tau_mumu: (3.14 ± 0.44 ± 0.05) 1e12 # this is 2.07 ± 0.29 ± 0.03 ps
+
+
 Bc lifetime:
   experiment: PDG
   inspire: Tanabashi:2018oca
