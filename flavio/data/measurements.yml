@@ -7014,13 +7014,28 @@ Belle B->D*lnu 2018 untagged:
   values:
     Rmue(B->D*lnu): 0.99 ± 0.01 ± 0.03
 
-PDG g-2:
+PDG g-2 e tau:
   experiment: PDG
   inspire: Tanabashi:2018oca
   values:
     a_e: 1159652180.91(26) e-12
-    a_mu: 11659208.9 ± 5.4 ± 3.3 e-10
     a_tau: -0.018 ± 0.017
+
+PDG g-2 mu:
+  experiment: PDG
+  inspire: Tanabashi:2018oca
+  values:
+    a_mu: 11659208.9 ± 5.4 ± 3.3 e-10
+
+FNAL g-2:
+  experiment: Muon g-2
+  values:
+    a_mu: 116592040(54) e-11
+
+FNAL g-2 combination:
+  experiment: Muon g-2
+  values:
+    a_mu: 116592061(41) e-11
 
 K+->pinunu E949 2009:
   experiment: 'E949'

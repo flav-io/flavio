@@ -301,8 +301,8 @@ delta_Gammab: 0 ± 0.21e-3
 delta_Gammanu: 0 ± 0.014e-3
 
 # anomalous magnetic moment of the muon
-# arXiv:1706.09436 eq. (2)
-a_mu SM: 11659182.3 ± 4.3 e-10
+# arXiv:2006.04822
+a_mu SM: 116591810(43) e-11
 
 # anomalous magnetic moment of the tau
 # arXiv:hep-ph/0701260 eq. (33)
