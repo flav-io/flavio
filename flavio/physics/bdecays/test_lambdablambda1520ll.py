@@ -23,13 +23,12 @@ def ass_sm(s, wc, name, q2min, q2max, target, delta, scalef=1):
 class TestLambdabLambda1520ll(unittest.TestCase):
     def test_lambdablambda1520ll_SM(self):
         # compare to SM values assuming 10% uncertainty on form factors in table 1 of 2005.09602
-        # Differences due to different C9eff
-        # In paper C9eff = C9 + Y , ignoring Yu and DeltaC9
-        # But implemented in flavio
-        # Better: look at test of lattice QCD and QM form factors 
+        # Differences due to C9eff = C9 and C7eff = C7
+        # Second test of angular distribution using lattice QCD form factors
+        # in /bdecays/formfactors/lambdab_32/test_lambdab.py 
         ass_sm(self, wc_sm, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 0.1, 3, 0.42, 0.05, 1e9)
-        ass_sm(self, wc_sm, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 3, 6, 1.34, 0.16, 1e9)#1.29, 0.18, 1e9)
-        ass_sm(self, wc_sm, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 6, 8.68, 3.4, 0.4, 1e9)#3.22, 0.42, 1e9)
+        ass_sm(self, wc_sm, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 3, 6, 1.34, 0.16, 1e9)
+        ass_sm(self, wc_sm, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 6, 8.68, 3.4, 0.4, 1e9)
         ass_sm(self, wc_sm, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 1, 6, 0.98, 0.11, 1e9)
         
         
