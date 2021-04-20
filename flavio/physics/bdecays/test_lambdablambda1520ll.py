@@ -28,12 +28,11 @@ class TestLambdabLambda1520ll(unittest.TestCase):
         # in /bdecays/formfactors/lambdab_32/test_lambdab.py 
         ass_sm(self, wc_sm, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 0.1, 3, 0.42, 0.05, 1e9)
         ass_sm(self, wc_sm, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 3, 6, 1.34, 0.16, 1e9)
-        ass_sm(self, wc_sm, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 6, 8.68, 3.4, 0.4, 1e9)
+        ass_sm(self, wc_sm, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 6, 8.86, 3.4, 0.4, 1e9)
         ass_sm(self, wc_sm, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 1, 6, 0.98, 0.11, 1e9)
         
-        
         ass_sm(self, wc_sm, '<AFBl>(Lambdab->Lambda(1520)mumu)', 3, 6, -0.131, 0.031)
-        ass_sm(self, wc_sm, '<AFBl>(Lambdab->Lambda(1520)mumu)', 6, 8.68, -0.24, 0.04)
+        ass_sm(self, wc_sm, '<AFBl>(Lambdab->Lambda(1520)mumu)', 6, 8.86, -0.24, 0.04)
         ass_sm(self, wc_sm, '<AFBl>(Lambdab->Lambda(1520)mumu)', 1, 6, -0.102, 0.028)
         
 
@@ -46,10 +45,10 @@ class TestLambdabLambda1520ll(unittest.TestCase):
     def test_lambdablambda1520ll_NP(self):
         # compare to NP values assuming 10% uncertainty on form factors in table 1 of 2005.09602
         ass_sm(self, wc_np_mu, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 3, 6, 1.04, 0.13, 1e9)
-        ass_sm(self, wc_np_mu, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 6, 8.68, 2.58, 0.32, 1e9)
+        ass_sm(self, wc_np_mu, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 6, 8.86, 2.58, 0.32, 1e9)
         ass_sm(self, wc_np_mu, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 1, 6, 0.77, 0.10, 1e9)
         
         ass_sm(self, wc_np_mu, '<AFBl>(Lambdab->Lambda(1520)mumu)', 3, 6, -0.059, 0.034)
-        ass_sm(self, wc_np_mu, '<AFBl>(Lambdab->Lambda(1520)mumu)', 6, 8.68, -0.166, 0.041)
+        ass_sm(self, wc_np_mu, '<AFBl>(Lambdab->Lambda(1520)mumu)', 6, 8.86, -0.166, 0.041)
         ass_sm(self, wc_np_mu, '<AFBl>(Lambdab->Lambda(1520)mumu)', 1, 6, -0.031, 0.032)
         
