@@ -22,9 +22,9 @@ class TestLambdabLambda1520_FF(unittest.TestCase):
         BRinv = 2/BR
 
         # Comparison to figure on slide 12 S.Meinel b-baryon FEST 2020
-        pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.0, pow(2.5, -9), pow(0.1, -9), BRinv)
-        pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.4, pow(1.2, -9), pow(0.1, -9), BRinv)
-        pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.8, 0.0, pow(0.01, -9), BRinv)
+        pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.0, 2.5*pow(10, -9), 0.1*pow(10, -9), BRinv)
+        pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.4, 1.2*pow(10, -9), 0.1*pow(10, -9), BRinv)
+        pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.8, 0.0, 0.05*pow(10, -9), BRinv)
 
         # Comparison to figure on slide 14 S.Meinel b-baryon FEST 2020
         pred_sm(self, 'AFBl(Lambdab->Lambda(1520)mumu)', 16.0, -0.09, 0.01)
