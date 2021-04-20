@@ -40,8 +40,8 @@ class TestLambdabLambda1520_FF(unittest.TestCase):
         flavio.config['implementation']['Lambdab->Lambda(1520) form factor'] = 'Lambdab->Lambda(1520) MCN'
 
         # Comparison to figure on slide 12 S.Meinel b-baryon FEST 2020
-        pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.0, 5.4e-9, 0.2e-9, BRinv)
-        pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.4, 2.2e-9, 0.2e-9, BRinv)
+        pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.0, 5.4e-9, 0.1e-9, BRinv)
+        pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.4, 2.2e-9, 0.1e-9, BRinv)
         pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.6, 0.8e-9, 0.1e-9, BRinv)
 
         # Comparison to figure on slide 14 S.Meinel b-baryon FEST 2020
