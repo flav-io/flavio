@@ -135,7 +135,8 @@ for _f in (_leptons, _uquarks, _dquarks):
 _obs_name = "R_uc"
 _obs = flavio.classes.Observable(_obs_name)
 _obs.tex = r"$R_{uc}^0$"
-_obs.add_taxonomy(r'Process :: $Z^0$ decays :: Flavour conserving decays :: $' + _process_tex + r"$")
+for q in ('u', 'c'):
+    _obs.add_taxonomy(r"Process :: $Z^0$ decays :: Flavour conserving decays :: $Z^0\to {}\bar {}$".format(q, q))
 _obs.set_description(r"Average ratio of $Z^0$ partial widths to $u$ or $c$ pairs vs. all hadrons")
 flavio.classes.Prediction(_obs_name, Rq1q2('u', 'c'))
 
