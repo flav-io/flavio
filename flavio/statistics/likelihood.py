@@ -554,7 +554,7 @@ class MeasurementCovariance(object):
             raise ValueError("Covariance matrix does not contain all necessary entries")
         assert len(permutation) == len(ml.observables), \
             "Covariance matrix does not contain all necessary entries"
-        if len(permutation) == 1:
+        if np.isscalar(d['central']):
             self._central_cov = (
                 d['central'],
                 d['covariance']
