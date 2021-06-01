@@ -76,9 +76,9 @@ class HelicityAmpsDeltaC_9_shift(HelicityAmpsDeltaC):
         deltaC9_pl   = par[B+'->'+V+' deltaC9 c_+ Re'] + 1j*par[B+'->'+V+' deltaC9 c_+ Im']
         deltaC9_mi   = par[B+'->'+V+' deltaC9 c_- Re'] + 1j*par[B+'->'+V+' deltaC9 c_- Im']
         ha = {}
-        ha['0', 'V'] = self.ha_deltaC(deltaC9_0, '9')['0', 'V']
-        ha['pl', 'V'] = self.ha_deltaC(deltaC9_pl, '9')['pl', 'V']
-        ha['mi', 'V'] = self.ha_deltaC(deltaC9_mi, '9')['mi', 'V']
+        ha['0', 'V'] = self.ha_deltaC(deltaC9_0, 'v')['0', 'V']
+        ha['pl', 'V'] = self.ha_deltaC(deltaC9_pl, 'v')['pl', 'V']
+        ha['mi', 'V'] = self.ha_deltaC(deltaC9_mi, 'v')['mi', 'V']
         return ha
 
 
