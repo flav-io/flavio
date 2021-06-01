@@ -49,6 +49,7 @@ Contributors (in alphabetical order):
 - Matthew Kirk
 - Jonathan Kriewald
 - Jacky Kumar
+- Christoph Langenbruch
 - Christoph Niehoff
 - Markus Prim
 - Albert Puig
