@@ -9602,7 +9602,8 @@ LHCb Bs->mumu 2021:
 
 # This is a Gaussian distribution fitted to the numerical combination of
 # 'ATLAS Bs->mumu 2018', 'CMS Bs->mumu 2019', and 'LHCb Bs->mumu 2021'
-inofficial combination Bs->mumu 2021:
+AS combination Bs->mumu 2021:
+  inspire: Altmannshofer:2021qrr
   observables:
     - BR(Bs->mumu)
     - BR(B0->mumu)
