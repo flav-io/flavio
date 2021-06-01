@@ -41,6 +41,7 @@ Original author:
 Contributors (in alphabetical order):
 
 - Jason Aebischer
+- Jorge Alda Gallo
 - Frederik Beaujean
 - Adam Falkowski
 - Ece Gürler
