@@ -3386,6 +3386,51 @@ LHCb Bs->phimumu BR 2015:
       q2max: 19.0
       value: 4.04 + 0.39 - 0.38 ± 0.13 ± 0.30 e-8
 
+LHCb Bs->phimumu BR 2021:
+  experiment: LHCb
+  inspire: Aaij:2021pkz
+  values:
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 0.98
+      value: 7.74 ± 0.53 ± 0.12 ± 0.37 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 2.5
+      value: 3.15 ± 0.29 ± 0.07 ± 0.15 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 2.5
+      q2max: 4.0
+      value: 2.34 ± 0.26 ± 0.05 ± 0.11 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 4.0
+      q2max: 6.0
+      value: 3.11 ± 0.24 ± 0.06 ± 0.15 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 6.0
+      q2max: 8.0
+      value: 3.15 ± 0.24 ± 0.06 ± 0.15 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: 4.78 ± 0.30 ± 0.08 ± 0.23 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 17.0
+      value: 5.25 ± 0.29 ± 0.10 ± 0.25 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 17.0
+      q2max: 19.0
+      value: 4.19 ± 0.29 ± 0.12 ± 0.20 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 6.0
+      value: 2.88 ± 0.15 ± 0.05 ± 0.14 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 19.0
+      value: 4.63 ± 0.20 ± 0.11 ± 0.22 e-8
+
 LHCb Bs->phimumu 2015 0.1-2.0 GeV^2:
   experiment: LHCb
   inspire: Aaij:2015esa
