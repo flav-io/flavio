@@ -44,6 +44,7 @@ Contributors (in alphabetical order):
 - Jorge Alda Gallo
 - Frederik Beaujean
 - Adam Falkowski
+- Tobias Felkl
 - Ece Gürler
 - Matěj Hudec
 - Matthew Kirk
