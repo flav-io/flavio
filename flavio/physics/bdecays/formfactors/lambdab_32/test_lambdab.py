@@ -5,19 +5,21 @@ from flavio.classes import Implementation
 from flavio.physics.bdecays.test_lambdablambdall import ass_sm
 import numpy as np
 
-NParray = np.load('2009.09313_digitized.npz')
+NParray = np.load('2009.09313_digitized2.npz')
 wc_sm = flavio.WilsonCoefficients()
 
 def pred_sm(s, name, q2val, target, delta, scalef=1):
     obs = flavio.classes.Observable[name]
     c = flavio.sm_prediction(name, q2=q2val)*scalef
     s.assertAlmostEqual(c, target, delta=delta)
-
+    return None
+    
 def pred_NParrays(s, name, targetArray, DeltaLoArray, DeltaHiArray, scalef=1):
     obs = flavio.classes.Observable[name]
     for i, q2val in enumerate(targetArray[0]):
         c = flavio.sm_prediction(name, q2=q2val)*scalef
-        u = flavio.sm_uncertainty(name, q2=q2val)*scalef
+        # Take N=10000 for better calculation of uncertainty
+        u = flavio.sm_uncertainty(name, q2=q2val, N=100)*scalef
         target = targetArray[1][i]
         delta = 0
         if target - c > 0:
@@ -27,6 +29,10 @@ def pred_NParrays(s, name, targetArray, DeltaLoArray, DeltaHiArray, scalef=1):
                     continue
             if delta == 0:
                 print("DID NOT FOUND UPPER UNCERTAINTY TO q2 = ", q2)
+                for j, q2 in enumerate(DeltaLoArray[0]):
+                    if q2 == q2val:
+                        delta = abs(DeltaLoArray[1][j])
+                        continue
         else:
             for j, q2 in enumerate(DeltaLoArray[0]):
                 if q2 == q2val:
@@ -34,12 +40,30 @@ def pred_NParrays(s, name, targetArray, DeltaLoArray, DeltaHiArray, scalef=1):
                     continue
             if delta == 0:
                 print("DID NOT FOUND LOWER UNCERTAINTY TO q2 = ", q2)
+                for j, q2 in enumerate(DeltaHiArray[0]):
+                    if q2 == q2val:
+                        delta = abs(DeltaHiArray[1][j])
+                        continue
+                
         if delta < u*0.05:
             print('Delta of ', delta, ' is smaller than 5 percent of flavio uncertainty ', u, ' -> take flavio uncertainty.')
             delta = u
+        
         s.assertAlmostEqual(c, target, delta=delta)
+    return None
 
-    
+def pred_NParrays_QM(s, name, targetArray, scalef=1):
+    obs = flavio.classes.Observable[name]
+    for i, q2val in enumerate(targetArray[0]):
+        c = flavio.sm_prediction(name, q2=q2val)*scalef
+        # Take N=10000 for better calculation of uncertainty
+        u = flavio.sm_uncertainty(name, q2=q2val, N=100)*scalef
+        target = targetArray[1][i]
+        delta = u
+        s.assertAlmostEqual(c, target, delta=delta)
+    return None
+
+
 class TestLambdabLambda1520_FF(unittest.TestCase):
 
     def test_lambdab_lambda1520_ff(self):
@@ -77,19 +101,23 @@ class TestLambdabLambda1520_FF(unittest.TestCase):
         flavio.config['implementation']['Lambdab->Lambda(1520) form factor'] = 'Lambdab->Lambda(1520) MCN'
 
         # Comparison to figure on slide 12 S.Meinel b-baryon FEST 2020
+        pred_NParrays_QM(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', NParray['dB_QM'], BRinv2)
+
         pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.0, 5.4e-9, 0.1e-9, BRinv)
         pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.4, 2.2e-9, 0.1e-9, BRinv)
         pred_sm(self, 'dBR/dq2(Lambdab->Lambda(1520)mumu)', 16.6, 0.8e-9, 0.1e-9, BRinv)
 
         # Comparison to figure on slide 14 S.Meinel b-baryon FEST 2020
+        pred_NParrays_QM(self, 'AFBl(Lambdab->Lambda(1520)mumu)', NParray['AFBl_QM'])
+
         pred_sm(self, 'AFBl(Lambdab->Lambda(1520)mumu)', 16.0, -0.16, 0.02)
         pred_sm(self, 'AFBl(Lambdab->Lambda(1520)mumu)', 16.4, -0.08, 0.02)
         pred_sm(self, 'AFBl(Lambdab->Lambda(1520)mumu)', 16.6, 0.0, 0.02)
         pred_sm(self, 'AFBl(Lambdab->Lambda(1520)mumu)', 16.8, 0.22, 0.02)
 
         # Comparison to figure on slide 13 S.Meinel b-baryon FEST 2020
+        pred_NParrays_QM(self, 'S_1cc(Lambdab->Lambda(1520)mumu)', NParray['S1cc_QM'])
+        
         pred_sm(self, 'S_1cc(Lambdab->Lambda(1520)mumu)', 16.0, 0.6, 0.02)
         pred_sm(self, 'S_1cc(Lambdab->Lambda(1520)mumu)', 16.4, 0.6, 0.02)
         pred_sm(self, 'S_1cc(Lambdab->Lambda(1520)mumu)', 16.8, 0.38, 0.02)
-
-        
