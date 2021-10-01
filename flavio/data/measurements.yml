@@ -3823,6 +3823,183 @@ LHCb Bs->phimumu 2015 15.0-19.0 GeV^2:
                 [1.00, 0.03],
                 [1.00]]
 
+
+LHCb Bs->phimumu 2021 0.1-0.98 GeV^2:
+  experiment: LHCb
+  inspire: LHCb:2021xxq
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 0.98
+      value: 0.254 ±0.045 ±0.017
+    - name: <S3>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 0.98
+      value: -0.004 ±0.068 ±0.014
+    - name: <S4>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 0.98
+      value: 0.213 ±0.082 ±0.005
+    - name: <S7>(Bs->phimumu)
+      q2min: 0.1
+      q2max: 0.98
+      value: -0.178 ±0.072 ±0.001
+  correlation: [[1.00, -0.03, 0.06, -0.20],
+                [1.00, 0.11, 0.07],
+                [1.00, 0.08],
+                [1.00]]
+
+LHCb Bs->phimumu 2021 1.1-4.0 GeV^2:
+  experiment: LHCb
+  inspire: LHCb:2021xxq
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 4.0
+      value: 0.723 ±0.053 ±0.015
+    - name: <S3>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 4.0
+      value: -0.030 ±0.057 ±0.004
+    - name: <S4>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 4.0
+      value: -0.110 ±0.079 ±0.002
+    - name: <S7>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 4.0
+      value: -0.101 ±0.075 ±0.001
+  correlation: [[1.00, -0.12, 0.03, -0.12],
+                [1.00, -0.07, 0.04],
+                [1.00, 0.01],
+                [1.00]]
+
+LHCb Bs->phimumu 2021 4.0-6.0 GeV^2:
+  experiment: LHCb
+  inspire: LHCb:2021xxq
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 4.0
+      q2max: 6.0
+      value: 0.701 ±0.050 ±0.016
+    - name: <S3>(Bs->phimumu)
+      q2min: 4.0
+      q2max: 6.0
+      value: -0.162 ±0.067 ±0.012
+    - name: <S4>(Bs->phimumu)
+      q2min: 4.0
+      q2max: 6.0
+      value: -0.222 ±0.092 ±0.010
+    - name: <S7>(Bs->phimumu)
+      q2min: 4.0
+      q2max: 6.0
+      value: 0.175 ±0.089 ±0.003
+  correlation: [[1.00, 0.15, 0.06, -0.01],
+                [1.00, -0.04, -0.06],
+                [1.00, 0.05],
+                [1.00]]
+
+LHCb Bs->phimumu 2021 6.0-8.0 GeV^2:
+  experiment: LHCb
+  inspire: LHCb:2021xxq
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 6.0
+      q2max: 8.0
+      value: 0.624 ±0.051 ±0.012
+    - name: <S3>(Bs->phimumu)
+      q2min: 6.0
+      q2max: 8.0
+      value: 0.013 ±0.080 ±0.009
+    - name: <S4>(Bs->phimumu)
+      q2min: 6.0
+      q2max: 8.0
+      value: -0.176 ±0.078 ±0.006
+    - name: <S7>(Bs->phimumu)
+      q2min: 6.0
+      q2max: 8.0
+      value: 0.033 ±0.081 ±0.002
+  correlation: [[1.00, 0.03, 0.07, 0.01],
+                [1.00, -0.08, -0.01],
+                [1.00, -0.05],
+                [1.00]]
+
+LHCb Bs->phimumu 2021 11.0-12.5 GeV^2:
+  experiment: LHCb
+  inspire: LHCb:2021xxq
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: 0.353 ±0.044 ±0.012
+    - name: <S3>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: -0.138 ±0.071 ±0.013
+    - name: <S4>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: -0.319 ±0.061 ±0.008
+    - name: <S7>(Bs->phimumu)
+      q2min: 11.0
+      q2max: 12.5
+      value: -0.170 ±0.069 ±0.000
+  correlation: [[1.00, 0.09, 0.02, -0.03],
+                [1.00, -0.14, 0.11],
+                [1.00, -0.01],
+                [1.00]]
+
+LHCb Bs->phimumu 2021 1.1-6.0 GeV^2:
+  experiment: LHCb
+  inspire: LHCb:2021xxq
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 6.0
+      value: 0.715 ±0.036 ±0.013
+    - name: <S3>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 6.0
+      value: -0.083 ±0.047 ±0.006
+    - name: <S4>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 6.0
+      value: -0.155 ±0.058 ±0.004
+    - name: <S7>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 6.0
+      value: 0.020 ±0.059 ±0.001
+  correlation: [[1.00, -0.03, 0.05, -0.08],
+                [1.00, -0.07, -0.07],
+                [1.00, -0.06],
+                [1.00]]
+
+LHCb Bs->phimumu 2021 15.0-18.9 GeV^2:
+  experiment: LHCb
+  inspire: LHCb:2021xxq
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 18.9
+      value: 0.359 ±0.031 ±0.019
+    - name: <S3>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 18.9
+      value: -0.247 ±0.042 ±0.014
+    - name: <S4>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 18.9
+      value: -0.208 ±0.047 ±0.006
+    - name: <S7>(Bs->phimumu)
+      q2min: 15.0
+      q2max: 18.9
+      value: 0.003 ±0.046 ±0.002
+  correlation: [[1.00, 0.20, -0.04, 0.00],
+                [1.00, -0.06, -0.08],
+                [1.00, -0.04],
+                [1.00]]
+
+
 LHCb B->K*ee 2020:
   experiment: LHCb
   inspire: Aaij:2020umj
