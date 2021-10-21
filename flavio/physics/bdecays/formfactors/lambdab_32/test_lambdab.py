@@ -5,7 +5,7 @@ from flavio.classes import Implementation
 from flavio.physics.bdecays.test_lambdablambdall import ass_sm
 import numpy as np
 
-NParray = np.load('2009.09313_digitized2.npz')
+NParray = np.load('2009.09313_digitized.npz')
 wc_sm = flavio.WilsonCoefficients()
 
 def pred_sm(s, name, q2val, target, delta, scalef=1):
