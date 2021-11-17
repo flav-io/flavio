@@ -3,9 +3,11 @@ import flavio
 from flavio.classes import Implementation
 from flavio.physics.bdecays.test_lambdablambdall import ass_sm
 import numpy as np
+from flavio.util import get_datapath
 
-
-SMarray = np.load('2009.09313_digitized.npz')
+path = get_datapath('flavio', 'data/test/')
+print(path)
+SMarray = np.load(path+'2009.09313_digitized.npz')
 wc_sm = flavio.WilsonCoefficients()
 
 
@@ -115,3 +117,6 @@ class TestLambdabLambda1520_FF(unittest.TestCase):
         pred_sm(self, S1cc, 16.0, 0.6, 0.02)
         pred_sm(self, S1cc, 16.4, 0.6, 0.02)
         pred_sm(self, S1cc, 16.8, 0.38, 0.02)
+
+
+        
