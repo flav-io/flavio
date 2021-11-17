@@ -11,8 +11,8 @@ print(path)
 print(os.path.isdir(path))
 print(os.path.isfile(path+'2009.09313_digitized.npz'))
 SMarray = np.load(path+'2009.09313_digitized.npz')
-wc_sm = flavio.WilsonCoefficients()
 
+wc_sm = flavio.WilsonCoefficients()
 
 def pred_sm(s, name, q2val, target, delta, scalef=1):
     obs = flavio.classes.Observable[name]
@@ -28,7 +28,7 @@ def pred_SMarrays(s, name, targetArray, Unc, delta, scalef=1):
         c = flavio.sm_prediction(name, q2=q2val)*scalef
         if Unc == True:
             # Take N=10000 for better calculation of uncertainty
-            u = flavio.sm_uncertainty(name, q2=q2val, N=10000)*scalef
+            u = flavio.sm_uncertainty(name, q2=q2val, N=1000)*scalef
             if target > c :
                 c = c + u
             else :
