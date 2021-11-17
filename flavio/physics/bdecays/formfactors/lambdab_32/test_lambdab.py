@@ -28,7 +28,7 @@ def pred_SMarrays(s, name, targetArray, Unc, delta, scalef=1):
         c = flavio.sm_prediction(name, q2=q2val)*scalef
         if Unc == True:
             # Take N=10000 for better calculation of uncertainty
-            u = flavio.sm_uncertainty(name, q2=q2val, N=1000)*scalef
+            u = flavio.sm_uncertainty(name, q2=q2val, N=5000)*scalef
             if target > c :
                 c = c + u
             else :
