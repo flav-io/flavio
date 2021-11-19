@@ -28,7 +28,7 @@ def pred_SMarrays(s, name, targetArray, Unc, delta, scalef=1):
         c = flavio.sm_prediction(name, q2=q2val)*scalef
         if Unc == True:
             # Take N=10000 for better calculation of uncertainty
-            u = flavio.sm_uncertainty(name, q2=q2val, N=5000)*scalef
+            u = flavio.sm_uncertainty(name, q2=q2val, N=1000)*scalef
             if target > c :
                 c = c + u
             else :
@@ -71,9 +71,9 @@ class TestLambdabLambda1520_FF(unittest.TestCase):
         print(AFB)
         pred_SMarrays(self, AFB, SMarray['AFBl_central'], False, 0.06)
         print(' - upper uncertainties ')
-        pred_SMarrays(self, AFB, SMarray['AFBl_upper'], True, 0.1)
+        pred_SMarrays(self, AFB, SMarray['AFBl_upper'], True, 0.11)
         print(' - lower uncertainties ')
-        pred_SMarrays(self, AFB, SMarray['AFBl_lower'], True, 0.1)
+        pred_SMarrays(self, AFB, SMarray['AFBl_lower'], True, 0.11)
         
         pred_sm(self, AFB, 16.0, -0.09, 0.01)
         pred_sm(self, AFB, 16.4, 0.05, 0.01)
