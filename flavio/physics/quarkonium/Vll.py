@@ -1,4 +1,4 @@
-r"""$B_c$ lifetime"""
+r"""$V\to ll^\prime$ branching ratio"""
 
 import flavio
 
