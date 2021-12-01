@@ -27,8 +27,8 @@ def formfactors(process, par, q2):
 
     # experimental masses because of small difference to model masses, differences will be covered by uncertainties
     pd = _process_dict[process]
-    mL = par['m_'+pd['X']]
-    mLb = par['m_Lambdab']
+    mL = par[process + ' m_'+pd['X']]
+    mLb = par[process + ' m_Lambdab']
     m_q = par[process + ' m_q']
     m_s = par[process + ' m_s']
     alpha_l1 = par[process +' alpha_Lambdab']

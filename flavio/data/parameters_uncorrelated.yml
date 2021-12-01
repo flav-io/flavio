@@ -232,6 +232,8 @@ Lambdab->Lambda(1520) m_q: 0.2848
 Lambdab->Lambda(1520) m_s: 0.5553
 Lambdab->Lambda(1520) alpha_Lambdab: 0.443
 Lambdab->Lambda(1520) alpha_Lambda(1520): 0.333 
+Lambdab->Lambda(1520) m_Lambdab: 5.61
+Lambdab->Lambda(1520) m_Lambda(1520): 1.53
 
 Lambdab->Lambda(1520) fVt uncertainty: 1 +- 0.1
 Lambdab->Lambda(1520) fVperp uncertainty: 1 +- 0.1
@@ -318,7 +320,7 @@ BR(tau->mununu): 17.39(4)e-2
 BR(tau->enunu): 17.82(4)e-2
 BR(tau->rhonu): 25.2(3)e-2
 
-# Parameters for Lambdab->Lambda(->NKbar)ll helicity amplitudes
+# Parameters for Lambdab->Lambda(->NKbar)ll helicity amplitudes, PDG 2020
 BR(Lambda(1520)->NKbar)_exp: 0.45 +- 0.01
 
 # Parameters needed for eps'/eps

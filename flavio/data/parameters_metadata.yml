@@ -544,6 +544,7 @@ Lambdab->Lambda deltaC9 c_para1 Im:
   description: Parameter for subleading hadronic effects in $\Lambda_b\to\Lambda\ell^+\ell^-$ at low $q^2$
 
 # Parameters for formfactor calculation in the quark model
+
 Lambdab->Lambda(1520) m_q:
   tex: $m_q^{model}$
   description: Parameter for the form factor calculation of $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ using the quark model as in arXiv 1108.6129
@@ -555,6 +556,12 @@ Lambdab->Lambda(1520) alpha_Lambdab:
   description: Parameter for the form factor calculation of $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ using the quark model as in arXiv 1108.6129
 Lambdab->Lambda(1520) alpha_Lambda(1520):
   tex: $\alpha_{\Lambda(1520)}$
+  description: Parameter for the form factor calculation of $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ using the quark model as in arXiv 1108.6129
+Lambdab->Lambda(1520) m_Lambdab:
+  tex: $m_{\Lambda b}^{model}$
+  description: Parameter for the form factor calculation of $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ using the quark model as in arXiv 1108.6129
+Lambdab->Lambda(1520) m_Lambda(1520):
+  tex: $m_{\Lambda (1520)}^{model}$
   description: Parameter for the form factor calculation of $\Lambda_b\to\Lambda(1520)\ell^+\ell^-$ using the quark model as in arXiv 1108.6129
 
 Lambdab->Lambda(1520) fVt uncertainty:
@@ -1331,7 +1338,7 @@ D->K BCL m+:
   description: Resonance mass for the $D\to K$ vector and tensor form factors in BCL parametrization
 
 
-# Experimental data needed for helicity amplitude calculation of Lambdab->Lambda(->NKbar)ll
+# Experimental data needed for helicity amplitude calculation of Lambdab->Lambda(->NKbar)ll from PDG
 BR(Lambda(1520)->NKbar)_exp:
   tex: $\text{BR}(\Lambda(1520)\to N\bar{K})_\text{exp}$
   description: Experimental branching ratio of $\Lambda(1520)\to N\bar{K}$
