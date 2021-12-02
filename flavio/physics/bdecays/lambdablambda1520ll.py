@@ -195,72 +195,53 @@ def get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate):
     return get_transversity_amps_ff(q2, wc_obj, par, lep, cp_conjugate)
 
 
-def get_obs(function, q2, wc_obj, par, lep):
+def get_obs(function, q2, wc_obj, par, lep, *angCoef):
     ml = par['m_'+lep]
     mLb = par['m_Lambdab']
     mL = par['m_Lambda(1520)']
     if q2 < 4*ml**2 or q2 > (mLb-mL)**2:
         return 0
     ta = get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate=False)
+ 
     BR = par['BR(Lambda(1520)->NKbar)_exp']/2
     L = angular_coefficients(ta, BR)
-    return function(L)
-
-
-def get_obs_new(function, q2, wc_obj, par, lep, arg):
-    ml = par['m_'+lep]
-    mLb = par['m_Lambdab']
-    mL = par['m_Lambda(1520)']
-    if q2 < 4*ml**2 or q2 > (mLb-mL)**2:
-        return 0
-    ta = get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate=False)
-    ta_conj = get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate=True)    
-    BR = par['BR(Lambda(1520)->NKbar)_exp']/2
-    L = angular_coefficients(ta, BR)
-    dG = dGdq2(L)
+    ta_conj = get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate=True)
     L_conj = angular_coefficients(ta_conj, BR)
-    dG_conj = dGdq2(L_conj)
-    return function(L, L_conj, dG, dG_conj, arg)
+    return function(L, L_conj, *angCoef)
 
 
 # OBSERVABLES
-def dGdq2(L):
+def dGdq2(L, L_conj, *args):
     # differential decay width
-    return (L['1cc'] + 2*L['1ss'] + 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss'])/3
+    return (L['1cc'] + 2*L['1ss'] + 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss'] + L_conj['1cc'] + 2*L_conj['1ss'] + 2*L_conj['2cc'] + 4*L_conj['2ss'] + 2*L_conj['3ss'])/6
 
 
-def S(L, L_conj, dG, dG_conj, arg):
+def S(L, L_conj, angCoef):
     # CP-averaged angular observalbes
-    # arg is for example '1cc'
-    if L[arg] + L_conj[arg] == 0:
-        return 0
-    else:
-        return ( L[arg] + L_conj[arg] )/( dG + dG_conj  ) 
+    # angCoef is for example '1cc'
+    return ( L[angCoef] + L_conj[angCoef] )/2
 
 
-def A(L, L_conj, dG, dG_conj, arg):
+def A(L, L_conj, angCoef):
     # CP-asymmetries
-    # arg is for example '1cc'
-    if L[arg] - L_conj[arg] == 0:
-        return 0
-    else:
-        return ( L[arg] - L_conj[arg] )/( dG + dG_conj  ) 
+    # angCoef is for example '1cc'
+    return ( L[angCoef] - L_conj[angCoef] )/2
 
 
-def FL_num(L):
+def FL_num(L, L_conj, *args):
     # longuitudinal polarization of the dilepton system
-    return (L['1cc'] + 2*L['1ss'] + 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss'])/3 - 2*(L['1cc'] + 2*L['2cc'])/3
+    return (-L['1cc'] + 2*L['1ss'] - 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss'] - L_conj['1cc'] + 2*L_conj['1ss'] - 2*L_conj['2cc'] + 4*L_conj['2ss'] + 2*L_conj['3ss'])/6 
 
 
-def AFBl_num(L):
-    return (L['1c'] + 2*L['2c'])/(2)
+def AFBl_num(L, L_conj, *args):
+    return (L['1c'] + 2*L['2c'] + L_conj['1c'] + 2*L_conj['2c'])/4
 
 
-def AFBh():
+def AFBh(*args):
     return 0
 
 
-def AFBlh():
+def AFBlh(*args):
     return 0
 
 
@@ -275,16 +256,10 @@ def dbrdq2_int(q2min, q2max, wc_obj, par, lep):
     return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
 
 
-def obs_int(function, q2min, q2max, wc_obj, par, lep):
+def obs_int(function, q2min, q2max, wc_obj, par, lep, *angCoef):
     def obs(q2):
-        return get_obs(function, q2, wc_obj, par, lep)
+        return get_obs(function, q2, wc_obj, par, lep, *angCoef)
     return flavio.math.integrate.nintegrate(obs, q2min, q2max)
-
-
-def obs_int_new(function, q2min, q2max, wc_obj, par, lep, arg):
-    def obs(q2):
-        return get_obs_new(function, q2, wc_obj, par, lep, arg)
-    return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
 
 
 # Functions returning functions needed for Prediction instance
@@ -301,37 +276,23 @@ def dbrdq2_func(lep):
     return fct
 
 
-def obs_ratio_func(func_num, func_den, lep):
+def obs_ratio_func(func_num, func_den, lep, *angCoef):
     def fct(wc_obj, par, q2):
-        num = get_obs(func_num, q2, wc_obj, par, lep)
+        num = get_obs(func_num, q2, wc_obj, par, lep, *angCoef)
         if num == 0:
             return 0
-        denom = get_obs(func_den, q2, wc_obj, par, lep)
+        denom = get_obs(func_den, q2, wc_obj, par, lep, *angCoef)
         return num/denom
     return fct
 
-# For CP symmetries and asymmetries
-def obs_ratio_func_new(func_num, lep, arg):
-    def fct(wc_obj, par, q2):
-        num = get_obs_new(func_num, q2, wc_obj, par, lep, arg)
-        return num
-    return fct
 
-
-def obs_int_ratio_func(func_num, func_den, lep):
+def obs_int_ratio_func(func_num, func_den, lep, *angCoef):
     def fct(wc_obj, par, q2min, q2max):
-        num = obs_int(func_num, q2min, q2max, wc_obj, par, lep)
+        num = obs_int(func_num, q2min, q2max, wc_obj, par, lep, *angCoef)
         if num == 0:
             return 0
-        denom = obs_int(func_den, q2min, q2max, wc_obj, par, lep)
+        denom = obs_int(func_den, q2min, q2max, wc_obj, par, lep, *angCoef)
         return num/denom
-    return fct
-
-# For CP symmetries and asymmetries
-def obs_int_ratio_func_new(func_num, lep, arg):
-    def fct(wc_obj, par, q2min, q2max):
-        num = obs_int_new(func_num, q2min, q2max, wc_obj, par, lep, arg)
-        return num
     return fct
 
 
@@ -343,15 +304,14 @@ _observables = {
     'AFBlh': {'func_num': AFBlh, 'tex': r'A_\text{FB}^{\ell h}', 'desc': 'lepton-hadron forward-backward asymmetry'}
     }
 
+# subscript of angular coefficients L
+angCoef_List = ['1c', '1cc', '1ss', '2c', '2cc', '2ss', '3ss', '4ss', '5s', '5sc', '6s', '6sc']
 
-arg_List = ['1c', '1cc', '1ss', '2c', '2cc', '2ss', '3ss', '4ss', '5s', '5sc', '6s', '6sc']
-
-_observables_new = {}
-for a in arg_List:
+for a in angCoef_List:
     S_string = 'S_'+a
     A_string = 'A_'+a
-    _observables_new[S_string] = {'func': S, 'tex': r'S_{'+a+'}', 'desc': 'CP symmetry '+a, 'arg': a}
-    _observables_new[A_string] = {'func': A, 'tex': r'A_{'+a+'}', 'desc': 'CP asymmetry '+a, 'arg': a}
+    _observables[S_string] = {'func_num': S, 'tex': r'S_{'+a+'}', 'desc': 'CP symmetry '+a, 'angCoef': a}
+    _observables[A_string] = {'func_num': A, 'tex': r'A_{'+a+'}', 'desc': 'CP asymmetry '+a, 'angCoef': a}
 
     
 for l in ['e', 'mu', ]:
@@ -382,32 +342,19 @@ for l in ['e', 'mu', ]:
         _obs.set_description("Binned " + _observables[obs]['desc'] + r" in $" + _process_tex + r"$")
         _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy)
-        Prediction(_obs_name, obs_int_ratio_func(_observables[obs]['func_num'], dGdq2, l))
-
+        if 'angCoef' in _observables[obs].keys():
+            Prediction(_obs_name, obs_int_ratio_func(_observables[obs]['func_num'], dGdq2, l, _observables[obs]['angCoef']))
+        else :
+            Prediction(_obs_name, obs_int_ratio_func(_observables[obs]['func_num'], dGdq2, l))
+            
         # differential angular observables
         _obs_name = obs+"(Lambdab->Lambda(1520)"+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2'])
         _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _process_tex + r"$")
         _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy)
-        Prediction(_obs_name, obs_ratio_func(_observables[obs]['func_num'], dGdq2, l))
+        if 'angCoef' in _observables[obs].keys():
+            Prediction(_obs_name, obs_ratio_func(_observables[obs]['func_num'], dGdq2, l, _observables[obs]['angCoef']))
+        else :
+            Prediction(_obs_name, obs_ratio_func(_observables[obs]['func_num'], dGdq2, l))
 
-        
-    # Adding CP-symmetries and asymmetries
-    for obs in _observables_new:
-        # binned angular observables
-        _obs_name = "<" + obs+">(Lambdab->Lambda(1520)"+l+l+")"
-        _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
-        _obs.set_description("Binned " + _observables_new[obs]['desc'] + r" in $" + _process_tex + r"$")
-        _obs.tex = r"$\langle " + _observables_new[obs]['tex'] + r"\rangle(" + _process_tex + r")$"
-        _obs.add_taxonomy(_process_taxonomy)
-        Prediction(_obs_name, obs_int_ratio_func_new(_observables_new[obs]['func'], l, _observables_new[obs]['arg']))
-
-        # differential angular observables
-        _obs_name = obs+"(Lambdab->Lambda(1520)"+l+l+")"
-        _obs = Observable(name=_obs_name, arguments=['q2'])
-        _obs.set_description(_observables_new[obs]['desc'][0].capitalize() + _observables_new[obs]['desc'][1:] + r" in $" + _process_tex + r"$")
-        _obs.tex = r"$" + _observables_new[obs]['tex'] + r"(" + _process_tex + r")$"
-        _obs.add_taxonomy(_process_taxonomy)
-        Prediction(_obs_name, obs_ratio_func_new(_observables_new[obs]['func'], l, _observables_new[obs]['arg']))
-    

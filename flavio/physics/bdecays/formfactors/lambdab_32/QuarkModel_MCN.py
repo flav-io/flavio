@@ -2,9 +2,14 @@ from math import sqrt, exp
 
 def p_Lambda(q2, mL, mLb):
     # daughter baryon momentum in the Lb rest frame
-    s = q2/mLb**2
+    s = q2/(mLb**2)
     r = (mL/mLb)**2
-    return mLb/2*sqrt((1-r)**2 - 2*(1+r)*s + s**2)
+    Phi = (1-r)**2 - 2*(1+r)*s + s**2
+    if Phi > 0 :
+        return mLb/2*sqrt(Phi)
+    else :
+        #print(Phi)
+        return mLb/2*sqrt(-Phi)
     
 def m_Lambda(m_q, m_s):
     return 2*m_q + m_s
@@ -25,15 +30,15 @@ _process_dict['Lambdab->Lambda(1520)'] = {'X': 'Lambda(1520)'}
 def formfactors(process, par, q2):
     r"Functions for $\Lambda_b\to X_{3/2}$ form factors where $X_{3/2} is a spin-3/2 baryon$ using the Quark Model and the MCN approach treated in arXiv:1108.6129 [nucl-th]"
 
-    # experimental masses because of small difference to model masses, differences will be covered by uncertainties
+    # Using the PDG mass values instead the model ones, will be covered by the uncertainties attached to the form factors. 
     pd = _process_dict[process]
-    mL = par[process + ' m_'+pd['X']]
-    mLb = par[process + ' m_Lambdab']
+    mL = par['m_Lambda(1520)']
+    mLb = par['m_Lambdab']
     m_q = par[process + ' m_q']
     m_s = par[process + ' m_s']
     alpha_l1 = par[process +' alpha_Lambdab']
     alpha_l2 = par[process +' alpha_'+pd['X']]
-
+    
     FList = ['F1', 'F2', 'F3', 'F4',
              'G1', 'G2', 'G3', 'G4',
              'H1', 'H2', 'H3', 'H4', 'H5', 'H6']

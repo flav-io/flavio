@@ -7,9 +7,6 @@ from flavio.util import get_datapath
 import numpy as np
 
 path = get_datapath('flavio', 'data/test/')
-print(path)
-print(os.path.isdir(path))
-print(os.path.isfile(path+'2009.09313_digitized.npz'))
 SMarray = np.load(path+'2009.09313_digitized.npz')
 
 wc_sm = flavio.WilsonCoefficients()
@@ -27,7 +24,6 @@ def pred_SMarrays(s, name, targetArray, Unc, delta, scalef=1):
         target = targetArray[1][i]
         c = flavio.sm_prediction(name, q2=q2val)*scalef
         if Unc == True:
-            # Take N=10000 for better calculation of uncertainty
             u = flavio.sm_uncertainty(name, q2=q2val, N=1000)*scalef
             if target > c :
                 c = c + u
@@ -98,7 +94,7 @@ class TestLambdabLambda1520_FF(unittest.TestCase):
         
         # Comparison to figure on slide 12 S.Meinel b-baryon FEST 2020
         print(dBR + ' with QM ff')
-        pred_SMarrays(self, dBR, SMarray['dB_QM'], False, 0.06, BRinv2)
+        pred_SMarrays(self, dBR, SMarray['dB_QM'], False, 0.07, BRinv2)
         
         pred_sm(self, dBR, 16.0, 5.4e-9, 0.1e-9, BRinv)
         pred_sm(self, dBR, 16.4, 2.2e-9, 0.1e-9, BRinv)

@@ -36,7 +36,7 @@ class TestLambdabLambda1520ll(unittest.TestCase):
         ass_sm(self, wc_sm, '<AFBl>(Lambdab->Lambda(1520)mumu)', 1, 6, -0.102, 0.028)
         
 
-        ass_sm(self, wc_sm, '<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.1, 3, 0.179, 0.051)
+        ass_sm(self, wc_sm, '<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.1, 3, 0.179, 0.054)
         ass_sm(self, wc_sm, '<S_1cc>(Lambdab->Lambda(1520)mumu)', 3, 6, 0.24, 0.04)
         ass_sm(self, wc_sm, '<S_1cc>(Lambdab->Lambda(1520)mumu)', 6, 8.86, 0.36, 0.05)
         ass_sm(self, wc_sm, '<S_1cc>(Lambdab->Lambda(1520)mumu)', 1, 6, 0.22, 0.04)
