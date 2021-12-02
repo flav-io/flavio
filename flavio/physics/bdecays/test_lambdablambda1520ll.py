@@ -21,7 +21,7 @@ def ass_sm(s, wc, name, q2min, q2max, target, delta, scalef=1):
 
     
 class TestLambdabLambda1520ll(unittest.TestCase):
-    def test_lambdablambda1520ll_SM(self):
+    def test_lambdablambda1520ll_QM_binned_SM(self):
         # compare to SM values assuming 10% uncertainty on form factors in table 1 of 2005.09602
         # Differences due to C9eff = C9 and C7eff = C7
         # Second test of angular distribution using lattice QCD form factors
@@ -41,8 +41,10 @@ class TestLambdabLambda1520ll(unittest.TestCase):
         ass_sm(self, wc_sm, '<S_1cc>(Lambdab->Lambda(1520)mumu)', 6, 8.86, 0.36, 0.05)
         ass_sm(self, wc_sm, '<S_1cc>(Lambdab->Lambda(1520)mumu)', 1, 6, 0.22, 0.04)
 
+        ass_sm(self, wc_sm, '<AFBh>(Lambdab->Lambda(1520)mumu)', 1, 6, 0.0, 0.0000001)
+        ass_sm(self, wc_sm, '<AFBh>(Lambdab->Lambda(1520)mumu)', 1, 6, 0.0, 0.0000001)
         
-    def test_lambdablambda1520ll_NP(self):
+    def test_lambdablambda1520ll_QM_binned_NP(self):
         # compare to NP values assuming 10% uncertainty on form factors in table 1 of 2005.09602
         ass_sm(self, wc_np_mu, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 3, 6, 1.04, 0.13, 1e9)
         ass_sm(self, wc_np_mu, '<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 6, 8.86, 2.58, 0.32, 1e9)
