@@ -35,7 +35,7 @@ def pred_SMarrays(s, name, targetArray, Unc, delta, scalef=1):
 
 class TestLambdabLambda1520_FF(unittest.TestCase):
 
-    def test_lambdab_lambda1520_LQCD_ff(self):
+    def test_lambdab_lambda1520_ff(self):
         flavio.config['implementation']['Lambdab->Lambda(1520) form factor'] = 'Lambdab->Lambda(1520) LatticeQCD'
         par = flavio.default_parameters.get_central_all()
         mLst = par['m_Lambda(1520)']
@@ -80,11 +80,9 @@ class TestLambdabLambda1520_FF(unittest.TestCase):
         pred_sm(self, S1cc, 16.4, 0.56, 0.02)
         pred_sm(self, S1cc, 16.8, 0.36, 0.02)
         
-    def test_lambdab_lambda1520_QM_ff(self):
         flavio.config['implementation']['Lambdab->Lambda(1520) form factor'] = 'Lambdab->Lambda(1520) MCN'
         
         # Comparison to figure on slide 12 S.Meinel b-baryon FEST 2020
-        dBR = 'dBR/dq2(Lambdab->Lambda(1520)mumu)'
         pred_SMarrays(self, dBR, SMarray['dB_QM'], False, 0.07, BRinv2)
         
         pred_sm(self, dBR, 16.0, 5.4e-9, 0.1e-9, BRinv)
@@ -92,7 +90,6 @@ class TestLambdabLambda1520_FF(unittest.TestCase):
         pred_sm(self, dBR, 16.6, 0.8e-9, 0.1e-9, BRinv)
         
         # Comparison to figure on slide 14 S.Meinel b-baryon FEST 2020
-        AFB = 'AFBl(Lambdab->Lambda(1520)mumu)'
         pred_SMarrays(self, AFB, SMarray['AFBl_QM'], False, 0.07)
 
         pred_sm(self, AFB, 16.0, -0.16, 0.02)
@@ -101,7 +98,6 @@ class TestLambdabLambda1520_FF(unittest.TestCase):
         pred_sm(self, AFB, 16.8, 0.22, 0.02)
 
         # Comparison to figure on slide 13 S.Meinel b-baryon FEST 2020
-        S1cc = 'S_1cc(Lambdab->Lambda(1520)mumu)'
         pred_SMarrays(self, S1cc, SMarray['S1cc_QM'], False, 0.02)
         
         pred_sm(self, S1cc, 16.0, 0.6, 0.02)
