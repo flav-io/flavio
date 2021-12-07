@@ -1,21 +1,20 @@
 from math import sqrt, exp
 
-def p_Lambda(q2, mL, mLb):
+def lambda_momentum(q2, mL, mLb):
     # daughter baryon momentum in the Lb rest frame
     s = q2/(mLb**2)
     r = (mL/mLb)**2
-    Phi = (1-r)**2 - 2*(1+r)*s + s**2
-    if Phi > 0 :
-        return mLb/2*sqrt(Phi)
+    phi = (1-r)**2 - 2*(1+r)*s + s**2
+    if phi > 0 :
+        return mLb/2*sqrt(phi)
     else :
-        #print(Phi)
-        return mLb/2*sqrt(-Phi)
+        return mLb/2*sqrt(-phi)
     
-def m_Lambda(m_q, m_s):
+def lambda_mass(m_q, m_s):
     return 2*m_q + m_s
 
     
-def alpha_ll(alpha_l1, alpha_l2):
+def alpha_lambda_lambdaprime(alpha_l1, alpha_l2):
     return sqrt((alpha_l1**2 + alpha_l2**2)/2)
 
 
@@ -39,28 +38,28 @@ def formfactors(process, par, q2):
     alpha_l1 = par[process +' alpha_Lambdab']
     alpha_l2 = par[process +' alpha_'+pd['X']]
     
-    FList = ['F1', 'F2', 'F3', 'F4',
-             'G1', 'G2', 'G3', 'G4',
-             'H1', 'H2', 'H3', 'H4', 'H5', 'H6']
+    ff_list = ['F1', 'F2', 'F3', 'F4',
+               'G1', 'G2', 'G3', 'G4',
+               'H1', 'H2', 'H3', 'H4', 'H5', 'H6']
 
-    p_L = p_Lambda(q2, mL, mLb)
-    mL_tilde = m_Lambda(m_q, m_s)
-    alpha_LL = alpha_ll(alpha_l1, alpha_l2)
+    p_lambda = lambda_momentum(q2, mL, mLb)
+    m_lambda_tilde = lambda_mass(m_q, m_s)
+    alpha_ll = alpha_lambda_lambdaprime(alpha_l1, alpha_l2)
 
-    FormDict = {}
-    for e in FList:
+    ff_dict = {}
+    for e in ff_list:
         a0 = par[process+' '+e+' a0']
         a2 = par[process+' '+e+' a2']
         a4 = par[process+' '+e+' a4']
 
-        FormDict[e] = F(a0, a2, a4, p_L, m_q, mL_tilde, alpha_LL)
+        ff_dict[e] = F(a0, a2, a4, p_lambda, m_q, m_lambda_tilde, alpha_ll)
 
-    return FormDict, mL, mLb
+    return ff_dict, mL, mLb
 
 
 def ff_equiv(process, q2, par):
     # transform FormDict in form factors used in arXiv:1903.00448
-    FD, mL, mLb = formfactors(process, par, q2)
+    ff_dict, mL, mLb = formfactors(process, par, q2)
 
     e_fVt = par[process+' fVt uncertainty']
     e_fVperp = par[process+' fVperp uncertainty']
@@ -80,25 +79,25 @@ def ff_equiv(process, q2, par):
     e_fT5g = par[process+' fT5g uncertainty']
 
     ff = {}
-    ff['fVt'] = ( FD['F2']*mL*(mL**2 - mLb**2 - q2) + mLb*(2*FD['F1']*mL*(mL - mLb) - 2*FD['F4']*mL*mLb + FD['F3']*(mL**2 - mLb**2 + q2)) )/( 2*mL*(mL-mLb)*mLb**2 ) * e_fVt
-    ff['fVperp'] = ( FD["F1"]/mLb - FD["F4"]*mL/(mL**2 - 2*mL*mLb + mLb**2 - q2) )*e_fVperp
-    ff['fV0'] = ( FD["F2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(2*FD["F1"]*mL*(mL + mLb)*(mL**2 - 2*mL*mLb + mLb**2 - q2) - 2*FD["F4"]*mL*mLb*(mL**2 - mLb**2 + q2) + FD["F3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2))) )/( 2*mL*mLb**2*(mL+mLb)*(mL**2 - 2*mL*mLb + mLb**2 - q2) )*e_fV0 
-    ff['fVg'] = FD["F4"]*e_fVg
+    ff['fVt'] = ( ff_dict['F2']*mL*(mL**2 - mLb**2 - q2) + mLb*(2*ff_dict['F1']*mL*(mL - mLb) - 2*ff_dict['F4']*mL*mLb + ff_dict['F3']*(mL**2 - mLb**2 + q2)) )/( 2*mL*(mL-mLb)*mLb**2 ) * e_fVt
+    ff['fVperp'] = ( ff_dict["F1"]/mLb - ff_dict["F4"]*mL/(mL**2 - 2*mL*mLb + mLb**2 - q2) )*e_fVperp
+    ff['fV0'] = ( ff_dict["F2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(2*ff_dict["F1"]*mL*(mL + mLb)*(mL**2 - 2*mL*mLb + mLb**2 - q2) - 2*ff_dict["F4"]*mL*mLb*(mL**2 - mLb**2 + q2) + ff_dict["F3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2))) )/( 2*mL*mLb**2*(mL+mLb)*(mL**2 - 2*mL*mLb + mLb**2 - q2) )*e_fV0 
+    ff['fVg'] = ff_dict["F4"]*e_fVg
 
-    ff['fAt'] = ( FD["G2"]*mL*(mL**2 - mLb**2 - q2) + mLb*(-2*FD["G4"]*mL*mLb + 2*FD["G1"]*mL*(mL + mLb) + FD["G3"]*(mL**2 - mLb**2 + q2)) )/( 2*mL*mLb**2*(mL + mLb) )*e_fAt
-    ff['fAperp'] = ( FD["G1"]/mLb - (FD["G4"]*mL)/(mL**2 + 2*mL*mLb + mLb**2 - q2) )*e_fAperp
-    ff['fA0'] = ( FD["G2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(2*FD["G1"]*mL*(mL - mLb)*(mL**2 + 2*mL*mLb + mLb**2 - q2) - 2*FD["G4"]*mL*mLb*(mL**2 - mLb**2 + q2) + FD["G3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2))) )/( 2*mL*(mL - mLb)*mLb**2*(mL**2 + 2*mL*mLb + mLb**2 - q2) )*e_fA0 
-    ff['fAg'] = -FD["G4"]*e_fAg
+    ff['fAt'] = ( ff_dict["G2"]*mL*(mL**2 - mLb**2 - q2) + mLb*(-2*ff_dict["G4"]*mL*mLb + 2*ff_dict["G1"]*mL*(mL + mLb) + ff_dict["G3"]*(mL**2 - mLb**2 + q2)) )/( 2*mL*mLb**2*(mL + mLb) )*e_fAt
+    ff['fAperp'] = ( ff_dict["G1"]/mLb - (ff_dict["G4"]*mL)/(mL**2 + 2*mL*mLb + mLb**2 - q2) )*e_fAperp
+    ff['fA0'] = ( ff_dict["G2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(2*ff_dict["G1"]*mL*(mL - mLb)*(mL**2 + 2*mL*mLb + mLb**2 - q2) - 2*ff_dict["G4"]*mL*mLb*(mL**2 - mLb**2 + q2) + ff_dict["G3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2))) )/( 2*mL*(mL - mLb)*mLb**2*(mL**2 + 2*mL*mLb + mLb**2 - q2) )*e_fA0 
+    ff['fAg'] = -ff_dict["G4"]*e_fAg
 
     ff['fTt'] = 0*e_fTt
-    ff['fTperp'] = ( 2*FD["H5"]*mL - ((FD["H3"]+FD["H6"])*mL**2)/mLb + FD["H3"]*mLb + 2*FD["H1"]*mL*(mL + mLb)/mLb - 2*(FD["H5"] + FD["H6"])*mL**2*(mL - mLb)/((mL - mLb)**2 - q2) - FD["H3"]*q2/mLb + FD["H2"]*mL*(-mL**2 + mLb**2 + q2)/mLb**2 )/( 2*mL*(mL + mLb) )*e_fTperp
-    ff['fT0'] = ( (FD["H1"] + FD["H2"] - FD["H3"] - FD["H6"])/mLb - 2*((FD["H5"] + FD["H6"])*mL)/((mL - mLb)**2 - q2) + FD["H4"]*((mL + mLb)**2 - q2)/(2*mL*mLb**2) )*e_fT0
-    ff['fTg'] = ( FD["H5"]*(mL- mLb) - FD["H6"]*(-mL**2 + mLb**2 + q2)/(2*mLb) )*e_fTg
+    ff['fTperp'] = ( 2*ff_dict["H5"]*mL - ((ff_dict["H3"]+ff_dict["H6"])*mL**2)/mLb + ff_dict["H3"]*mLb + 2*ff_dict["H1"]*mL*(mL + mLb)/mLb - 2*(ff_dict["H5"] + ff_dict["H6"])*mL**2*(mL - mLb)/((mL - mLb)**2 - q2) - ff_dict["H3"]*q2/mLb + ff_dict["H2"]*mL*(-mL**2 + mLb**2 + q2)/mLb**2 )/( 2*mL*(mL + mLb) )*e_fTperp
+    ff['fT0'] = ( (ff_dict["H1"] + ff_dict["H2"] - ff_dict["H3"] - ff_dict["H6"])/mLb - 2*((ff_dict["H5"] + ff_dict["H6"])*mL)/((mL - mLb)**2 - q2) + ff_dict["H4"]*((mL + mLb)**2 - q2)/(2*mL*mLb**2) )*e_fT0
+    ff['fTg'] = ( ff_dict["H5"]*(mL- mLb) - ff_dict["H6"]*(-mL**2 + mLb**2 + q2)/(2*mLb) )*e_fTg
 
     ff['fT5t'] = 0*e_fT5t
-    ff['fT5perp'] = ( -1/(2*mL*(mL-mLb)*mLb**2*(mL**2 + 2*mL*mLb + mLb**2 - q2)) * (FD["H2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(mL*(2*FD["H5"]*mLb*(mL*mLb + mLb**2 - q2) + FD["H6"]*mL*(mL**2 + 2*mL*mLb + mLb**2 -q2)) - 2*FD["H1"]*mL*(mL - mLb)*(mL**2 + 2*mL*mLb + mLb**2 -q2) + FD["H3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)))) )*e_fT5perp
-    ff['fT50'] = ( FD["H1"]/mLb + 2*FD["H5"]*mL/(mL**2 + 2*mL*mLb + mLb**2 - q2) )*e_fT50
-    ff['fT5g'] = ( -FD["H5"]*(mL + mLb) - FD["H6"]*(mL**2 + 2*mL*mLb + mLb**2 - q2)/(2*mLb) )*e_fT5g
+    ff['fT5perp'] = ( -1/(2*mL*(mL-mLb)*mLb**2*(mL**2 + 2*mL*mLb + mLb**2 - q2)) * (ff_dict["H2"]*mL*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)) + mLb*(mL*(2*ff_dict["H5"]*mLb*(mL*mLb + mLb**2 - q2) + ff_dict["H6"]*mL*(mL**2 + 2*mL*mLb + mLb**2 -q2)) - 2*ff_dict["H1"]*mL*(mL - mLb)*(mL**2 + 2*mL*mLb + mLb**2 -q2) + ff_dict["H3"]*(mL**4 + (mLb**2 - q2)**2 - 2*mL**2*(mLb**2 + q2)))) )*e_fT5perp
+    ff['fT50'] = ( ff_dict["H1"]/mLb + 2*ff_dict["H5"]*mL/(mL**2 + 2*mL*mLb + mLb**2 - q2) )*e_fT50
+    ff['fT5g'] = ( -ff_dict["H5"]*(mL + mLb) - ff_dict["H6"]*(mL**2 + 2*mL*mLb + mLb**2 - q2)/(2*mLb) )*e_fT5g
 
     return ff
 

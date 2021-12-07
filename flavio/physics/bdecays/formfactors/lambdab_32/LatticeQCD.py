@@ -1,12 +1,12 @@
 from math import sqrt, exp
 
-def omega(q2, mLb, mLst):
+def omega_fct(q2, mLb, mLst):
     # eq. (73) in arXiv:2009.09313v1
     return (mLb*mLb + mLst*mLst - q2)/(2*mLb*mLst)
 
-def F(q2, Ff, Af, Omega):
+def ff_formula(q2, F, A, omega):
     # eq. (75) 
-    return Ff + Af*(Omega - 1)
+    return F + A*(omega - 1)
 
 _process_dict = {}
 _process_dict['Lambdab->Lambda(1520)'] = {'X': 'Lambda(1520)'}
@@ -17,47 +17,47 @@ def formfactors(process, par, q2):
     mL = par['m_'+pd['X']]
     mLb = par['m_Lambdab']
 
-    Omega = omega(q2, mLb, mL)
-    FList = ['f0', 'fplus', 'fperp', 'fperpPrim',
-             'g0', 'gplus', 'gperp', 'gperpPrim',
-             'hplus', 'hperp', 'hperpPrim', 'hTplus', 'hTperp', 'hTperpPrim']
+    omega = omega_fct(q2, mLb, mL)
+    ff_list = ['f0', 'fplus', 'fperp', 'fperpPrim',
+               'g0', 'gplus', 'gperp', 'gperpPrim',
+               'hplus', 'hperp', 'hperpPrim', 'hTplus', 'hTperp', 'hTperpPrim']
 
-    FormDict = {}
-    for e in FList:
-        Ff = par[process+' '+e+' F']
-        Af = par[process+' '+e+' A']
+    ff_dict = {}
+    for e in ff_list:
+        F = par[process+' '+e+' F']
+        A = par[process+' '+e+' A']
 
-        FormDict[e] = F(q2, Ff, Af, Omega)
+        ff_dict[e] = ff_formula(q2, F, A, omega)
 
-    return FormDict, mL, mLb
+    return ff_dict, mL, mLb
 
 
 def ff_equiv(process, q2, par):
     # eq. (A21) - (A34) and (6)
-    FD, mLst, mLb = formfactors(process, par, q2)
+    ff_dict, mLst, mLb = formfactors(process, par, q2)
 
     splus  = (mLb + mLst)**2 - q2
     sminus = (mLb - mLst)**2 - q2
     
     ff = {}
-    ff['fVt']    = ( mLst/splus )*FD['f0']
-    ff['fV0']    = ( mLst/sminus )*FD['fplus']
-    ff['fVperp'] = ( mLst/sminus )*FD['fperp']
-    ff['fVg']    = FD['fperpPrim']
+    ff['fVt']    = ( mLst/splus )*ff_dict['f0']
+    ff['fV0']    = ( mLst/sminus )*ff_dict['fplus']
+    ff['fVperp'] = ( mLst/sminus )*ff_dict['fperp']
+    ff['fVg']    = ff_dict['fperpPrim']
 
-    ff['fAt']    = ( mLst/sminus )*FD['g0']
-    ff['fA0']    = ( mLst/splus )*FD['gplus']
-    ff['fAperp'] = ( mLst/splus )*FD['gperp']
-    ff['fAg']    = -FD['gperpPrim']
+    ff['fAt']    = ( mLst/sminus )*ff_dict['g0']
+    ff['fA0']    = ( mLst/splus )*ff_dict['gplus']
+    ff['fAperp'] = ( mLst/splus )*ff_dict['gperp']
+    ff['fAg']    = -ff_dict['gperpPrim']
 
     ff['fTt']    = 0
-    ff['fT0']    = ( mLst/sminus )*FD['hplus']
-    ff['fTperp'] = ( mLst/sminus )*FD['hperp']
-    ff['fTg']    = ( mLb + mLst )*FD['hperpPrim']
+    ff['fT0']    = ( mLst/sminus )*ff_dict['hplus']
+    ff['fTperp'] = ( mLst/sminus )*ff_dict['hperp']
+    ff['fTg']    = ( mLb + mLst )*ff_dict['hperpPrim']
 
     ff['fT5t']   = 0
-    ff['fT50']   = ( mLst/splus )*FD['hTplus']
-    ff['fT5perp']= ( mLst/splus )*FD['hTperp']
-    ff['fT5g']   = -( mLb - mLst )*FD['hTperpPrim']
+    ff['fT50']   = ( mLst/splus )*ff_dict['hTplus']
+    ff['fT5perp']= ( mLst/splus )*ff_dict['hTperp']
+    ff['fT5g']   = -( mLb - mLst )*ff_dict['hTperpPrim']
     
     return ff

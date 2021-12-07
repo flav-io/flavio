@@ -162,8 +162,8 @@ def prefactor(q2, par, scale):
     alphaem = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
     mLb = par['m_Lambdab']
     mL = par['m_Lambda(1520)']
-    la_K = flavio.physics.bdecays.common.lambda_K(mLb**2, mL**2, q2)
-    return par['GF'] * xi_t * alphaem * sqrt(q2) * la_K**(1/4.) / sqrt(3 * 2 * mLb**3 * pi**5) / 32
+    la_k = flavio.physics.bdecays.common.lambda_K(mLb**2, mL**2, q2)
+    return par['GF'] * xi_t * alphaem * sqrt(q2) * la_k**(1/4.) / sqrt(3 * 2 * mLb**3 * pi**5) / 32
 
 
 def get_ff(q2, par):
@@ -195,7 +195,7 @@ def get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate):
     return get_transversity_amps_ff(q2, wc_obj, par, lep, cp_conjugate)
 
 
-def get_obs(function, q2, wc_obj, par, lep, *angCoef):
+def get_obs(function, q2, wc_obj, par, lep, *ang_coef):
     ml = par['m_'+lep]
     mLb = par['m_Lambdab']
     mL = par['m_Lambda(1520)']
@@ -203,11 +203,11 @@ def get_obs(function, q2, wc_obj, par, lep, *angCoef):
         return 0
     ta = get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate=False)
  
-    BR = par['BR(Lambda(1520)->NKbar)_exp']/2
-    L = angular_coefficients(ta, BR)
+    br = par['BR(Lambda(1520)->NKbar)_exp']/2
+    L = angular_coefficients(ta, br)
     ta_conj = get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate=True)
-    L_conj = angular_coefficients(ta_conj, BR)
-    return function(L, L_conj, *angCoef)
+    L_conj = angular_coefficients(ta_conj, br)
+    return function(L, L_conj, *ang_coef)
 
 
 # OBSERVABLES
@@ -216,16 +216,16 @@ def dGdq2(L, L_conj, *args):
     return (L['1cc'] + 2*L['1ss'] + 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss'] + L_conj['1cc'] + 2*L_conj['1ss'] + 2*L_conj['2cc'] + 4*L_conj['2ss'] + 2*L_conj['3ss'])/6
 
 
-def S(L, L_conj, angCoef):
+def S(L, L_conj, ang_coef):
     # CP-averaged angular observalbes
-    # angCoef is for example '1cc'
-    return ( L[angCoef] + L_conj[angCoef] )/2
+    # ang_coef is for example '1cc'
+    return ( L[ang_coef] + L_conj[ang_coef] )/2
 
 
-def A(L, L_conj, angCoef):
+def A(L, L_conj, ang_coef):
     # CP-asymmetries
-    # angCoef is for example '1cc'
-    return ( L[angCoef] - L_conj[angCoef] )/2
+    # ang_coef is for example '1cc'
+    return ( L[ang_coef] - L_conj[ang_coef] )/2
 
 
 def FL_num(L, L_conj, *args):
@@ -256,9 +256,9 @@ def dbrdq2_int(q2min, q2max, wc_obj, par, lep):
     return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
 
 
-def obs_int(function, q2min, q2max, wc_obj, par, lep, *angCoef):
+def obs_int(function, q2min, q2max, wc_obj, par, lep, *ang_coef):
     def obs(q2):
-        return get_obs(function, q2, wc_obj, par, lep, *angCoef)
+        return get_obs(function, q2, wc_obj, par, lep, *ang_coef)
     return flavio.math.integrate.nintegrate(obs, q2min, q2max)
 
 
@@ -276,22 +276,22 @@ def dbrdq2_func(lep):
     return fct
 
 
-def obs_ratio_func(func_num, func_den, lep, *angCoef):
+def obs_ratio_func(func_num, func_den, lep, *ang_coef):
     def fct(wc_obj, par, q2):
-        num = get_obs(func_num, q2, wc_obj, par, lep, *angCoef)
+        num = get_obs(func_num, q2, wc_obj, par, lep, *ang_coef)
         if num == 0:
             return 0
-        denom = get_obs(func_den, q2, wc_obj, par, lep, *angCoef)
+        denom = get_obs(func_den, q2, wc_obj, par, lep, *ang_coef)
         return num/denom
     return fct
 
 
-def obs_int_ratio_func(func_num, func_den, lep, *angCoef):
+def obs_int_ratio_func(func_num, func_den, lep, *ang_coef):
     def fct(wc_obj, par, q2min, q2max):
-        num = obs_int(func_num, q2min, q2max, wc_obj, par, lep, *angCoef)
+        num = obs_int(func_num, q2min, q2max, wc_obj, par, lep, *ang_coef)
         if num == 0:
             return 0
-        denom = obs_int(func_den, q2min, q2max, wc_obj, par, lep, *angCoef)
+        denom = obs_int(func_den, q2min, q2max, wc_obj, par, lep, *ang_coef)
         return num/denom
     return fct
 
@@ -305,13 +305,13 @@ _observables = {
     }
 
 # subscript of angular coefficients L
-angCoef_List = ['1c', '1cc', '1ss', '2c', '2cc', '2ss', '3ss', '4ss', '5s', '5sc', '6s', '6sc']
+ang_coef_List = ['1c', '1cc', '1ss', '2c', '2cc', '2ss', '3ss', '4ss', '5s', '5sc', '6s', '6sc']
 
-for a in angCoef_List:
-    S_string = 'S_'+a
-    A_string = 'A_'+a
-    _observables[S_string] = {'func_num': S, 'tex': r'S_{'+a+'}', 'desc': 'CP symmetry '+a, 'angCoef': a}
-    _observables[A_string] = {'func_num': A, 'tex': r'A_{'+a+'}', 'desc': 'CP asymmetry '+a, 'angCoef': a}
+for a in ang_coef_List:
+    Sstring = 'S_'+a
+    Astring = 'A_'+a
+    _observables[Sstring] = {'func_num': S, 'tex': r'S_{'+a+'}', 'desc': 'CP symmetry '+a, 'ang_coef': a}
+    _observables[Astring] = {'func_num': A, 'tex': r'A_{'+a+'}', 'desc': 'CP asymmetry '+a, 'ang_coef': a}
 
     
 for l in ['e', 'mu', ]:
@@ -342,8 +342,8 @@ for l in ['e', 'mu', ]:
         _obs.set_description("Binned " + _observables[obs]['desc'] + r" in $" + _process_tex + r"$")
         _obs.tex = r"$\langle " + _observables[obs]['tex'] + r"\rangle(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy)
-        if 'angCoef' in _observables[obs].keys():
-            Prediction(_obs_name, obs_int_ratio_func(_observables[obs]['func_num'], dGdq2, l, _observables[obs]['angCoef']))
+        if 'ang_coef' in _observables[obs].keys():
+            Prediction(_obs_name, obs_int_ratio_func(_observables[obs]['func_num'], dGdq2, l, _observables[obs]['ang_coef']))
         else :
             Prediction(_obs_name, obs_int_ratio_func(_observables[obs]['func_num'], dGdq2, l))
             
@@ -353,8 +353,8 @@ for l in ['e', 'mu', ]:
         _obs.set_description(_observables[obs]['desc'][0].capitalize() + _observables[obs]['desc'][1:] + r" in $" + _process_tex + r"$")
         _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy)
-        if 'angCoef' in _observables[obs].keys():
-            Prediction(_obs_name, obs_ratio_func(_observables[obs]['func_num'], dGdq2, l, _observables[obs]['angCoef']))
+        if 'ang_coef' in _observables[obs].keys():
+            Prediction(_obs_name, obs_ratio_func(_observables[obs]['func_num'], dGdq2, l, _observables[obs]['ang_coef']))
         else :
             Prediction(_obs_name, obs_ratio_func(_observables[obs]['func_num'], dGdq2, l))
 
