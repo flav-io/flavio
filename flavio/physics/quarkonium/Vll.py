@@ -1,6 +1,7 @@
 r"""$V\to ll^\prime$ branching ratio"""
 
 import flavio
+meson_quark = { 'J/psi' : 'cc'}
 
 def kaellen(x,y,z):
     return x**2+y**2+z**2-2*(x*y+x*z+y*z)
@@ -8,6 +9,7 @@ def kaellen(x,y,z):
 def Vll_br(wc_obj, par,V,l1,l2):
     r"""Branching ratio for the lepton-flavour violating leptonic decay J/psi-> l l' based on XXXX.XXXXX"""
     mV = par['m_'+V]   # where is the J/psi mass stored 
+    GammaV = par['Gamma_'+V]   # where is the J/psi decay width 
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
     y1=ml1/mV
@@ -16,19 +18,22 @@ def Vll_br(wc_obj, par,V,l1,l2):
     y1s=y1**2
     y2s=y2**2
 
-    fV=1.  # form factors still have to be implemented
-    fV_T=fV # NRCSM
+    fV=par['f_'+V] 
+    fV_T=par['fT_'+V]
+    qq=meson_quark[V]
+    ll=l1+l2 
+    llqq = ll+qq
+    qqll=qq +ll
+    VL=fV*mV*(wc_obj['CVLL_'+llqq] + wc_obj['CVLR_'+llqq]) 
+    VR=fV*mV*(wc_obj['CVRR_'+llqq] + wc_obj['CVLR_'+qqll]) 
+    TR=fV_T*mV*wc_obj['CTRR_'+llqq] - ee*Q *fV*wc_obj['Cgamma_'+l2+l1] 
+    TL=(fV_T*mV*wc_obj['CTRR_'+l1+l2+qq] - ee*Q *fV*wc_obj['Cgamma_'+ll]).conjugate()
 
-    VL=fV*mV*1 # wc_obj[''] # Wilson coefficients have to be implemented
-    VR=fV*mV*1 # wc_obj['']
-    TL=fV_T*mV*1 # wc_obj['']
-    TR=fV_T*mV*1 # wc_obj['']
-
-    ampSquared_V = (np.abs(VL)**2+np.abs(VR)**2 )/24. *(3-2*y1s-2*y2s+2*y1s*y2s-y1s**2-y2s**2)+y1*y2*(VL*VR.conjugate()).real
-    ampSquared_T= 4./3.*(np.abs(TL)**2+np.abs(TR)**2) * (1+y1s+y2s-2*y1s**2-2*y2s**2+4*y1s*y2s) +16.*(TR*TL.conjugate()).real
-    ampSquared_VT = -2*y1*(1+y2s-y1s)*(VR*TR.conjugate()+VL*TL.conjugate()).real - 2*y2*(1+y1s-y2s)*(VL*TR.conjugate()+VR*TL.conjugate()).real
+    ampSquared_V = (np.abs(VL)**2+np.abs(VR)**2 )/12. *(2-y1s-y2s-(y1s-y2s)**2)+y1*y2*(VL*VR.conjugate()).real
+    ampSquared_T= 4./3.*(np.abs(TL)**2+np.abs(TR)**2) * (1+y1s+y2s-2*(y1s-y2s)**2) +16.*y1*y2*(TR*TL.conjugate()).real
+    ampSquared_VT = 2*y1*(1+y2s-y1s)*(VR*TR.conjugate()+VL*TL.conjugate()).real + 2*y2*(1+y1s-y2s)*(VL*TR.conjugate()+VR*TL.conjugate()).real
     
-    return mV/(16.*np.pi) * np.sqrt(kaellen(1,y1s,y2s)) * (ampSquared_V+ampSquared_T+ampSquared_VT)
+    return mV/(16.*np.pi*GammaV) * np.sqrt(kaellen(1,y1s,y2s)) * (ampSquared_V+ampSquared_T+ampSquared_VT)
 
 
 def Vll_br_func(V, l1, l2):

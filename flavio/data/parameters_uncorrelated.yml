@@ -44,6 +44,13 @@ f_omega: 0.185(5)  # 1501.06569 table 1
 f_phi: 0.231(5)  # 1501.06569 table 1
 f_Bc: 0.434(15) # 1503.05762v2 eq. (20)
 
+# Parameters for LFV quarkonium decay
+
+m_J/psi: 3.096900(6) # PDG 2021
+Gamma_J/psi: 92.6(1.7)e-6 # PDG 2021
+f_J/psi: 0.418(9) # 1607.00815 Table II
+fT_J/psi: 0.410(10) # 1607.00815 Table II
+
 # Parameters needed for meson light-cone distribution amplitudes
 
 f_perp_omega: 0.135(16)  # 1503.05534v2 table 1, but at 2 GeV, error enlarged
