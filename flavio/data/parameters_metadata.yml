@@ -49,6 +49,22 @@ m_b:
   description: $b$ quark mass in the $\overline{\text{MS}}$ scheme at the scale $m_b$
 
 
+# Parameters for LFV quarkonium decay
+
+m_J/psi: 
+  tex: $m_{J/\psi}$
+  description: $J/\psi$ mass
+Gamma_J/psi:
+  tex: $\Gamma_{J/\psi}$
+  description: total decay width of $J/\psi$
+f_J/psi: 
+  tex: $f_{J/\psi}$
+  description: $J/\psi$ decay constant
+fT_J/psi: 
+  tex: $f_{J/\psi}^T$
+  description: $J/\psi$ tensor decay constant
+
+
 # Meson decay constants
 
 f_K+:

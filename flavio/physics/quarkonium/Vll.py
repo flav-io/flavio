@@ -1,6 +1,9 @@
 r"""$V\to ll^\prime$ branching ratio"""
 
 import flavio
+from flavio.classes import Observable, Prediction
+
+
 meson_quark = { 'J/psi' : 'cc'}
 
 def kaellen(x,y,z):
@@ -8,8 +11,8 @@ def kaellen(x,y,z):
 
 def Vll_br(wc_obj, par,V,l1,l2):
     r"""Branching ratio for the lepton-flavour violating leptonic decay J/psi-> l l' based on XXXX.XXXXX"""
-    mV = par['m_'+V]   # where is the J/psi mass stored 
-    GammaV = par['Gamma_'+V]   # where is the J/psi decay width 
+    mV = par['m_'+V]   
+    GammaV = par['Gamma_'+V]  
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
     y1=ml1/mV
@@ -22,7 +25,7 @@ def Vll_br(wc_obj, par,V,l1,l2):
     fV_T=par['fT_'+V]
     qq=meson_quark[V]
     ll=l1+l2 
-    llqq = ll+qq
+    llqq =ll+qq
     qqll=qq +ll
     VL=fV*mV*(wc_obj['CVLL_'+llqq] + wc_obj['CVLR_'+llqq]) 
     VR=fV*mV*(wc_obj['CVRR_'+llqq] + wc_obj['CVLR_'+qqll]) 
@@ -75,4 +78,4 @@ for M in _hadr_lfv:
     for ll in [('e','mu'), ('e','tau'), ('mu','tau')]:
         # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
         _obs_name = _define_obs_V_ll(M, ('{0}{1},{1}{0}'.format(*ll),))
-        Prediction(_obs_name, VLL_br_comb_func(_hadr_lfv[M]['V'], ll[0], ll[1]))
+        Prediction(_obs_name, Vll_br_comb_func(_hadr_lfv[M]['V'], ll[0], ll[1]))
