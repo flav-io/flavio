@@ -63,9 +63,9 @@ f_J/psi:
 fT_J/psi: 
   tex: $f_{J/\psi}^T$
   description: $J/\psi$ tensor decay constant
-BR(J/psi->e+e-): 
+BR(J/psi->ee): 
   tex: $BR(J/\psi\to e^+ e^-)$
-  description: branching ratio $J/\psi\to e^+ e^-$ 
+  description: branching ratio $J/\psi\to ee$ 
 
 # Meson decay constants
 

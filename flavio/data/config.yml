@@ -68,6 +68,9 @@ renormalization scale:
     # beta decays
     betadecay: 1.
 
+    # quarkonium
+    J/psi: 3.
+
 # these are the thresholds where quark flavours are decoupled in the RG
 # evolution to low energies.
 RGE thresholds:
