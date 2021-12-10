@@ -69,7 +69,7 @@ renormalization scale:
     betadecay: 1.
 
     # quarkonium
-    J/psi: 3.
+    J/psi: 2.
 
 # these are the thresholds where quark flavours are decoupled in the RG
 # evolution to low energies.

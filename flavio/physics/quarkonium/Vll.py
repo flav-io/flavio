@@ -11,7 +11,7 @@ meson_quark = { 'J/psi' : 'cc'}
 def kaellen(x,y,z):
     return x**2+y**2+z**2-2*(x*y+x*z+y*z)
 
-def Vll_br(wc_obj, par,V,Q, l1,l2,label):
+def Vll_br(wc_obj, par,V,Q, l1,l2,ll):
     r"""Branching ratio for the lepton-flavour violating leptonic decay J/psi-> l l' based on XXXX.XXXXX"""
     mV = par['m_'+V]   
     GammaV = par['Gamma_'+V]  
@@ -25,7 +25,7 @@ def Vll_br(wc_obj, par,V,Q, l1,l2,label):
     # renormalization scale
     scale = flavio.config['renormalization scale'][V]
     # Wilson coefficients
-    wc = wc_obj.get_wc(label, scale, par)
+    wc = wc_obj.get_wc(ll, scale, par)
 
 
     alphaem = running.get_alpha(par, scale)['alpha_e']
@@ -34,13 +34,14 @@ def Vll_br(wc_obj, par,V,Q, l1,l2,label):
     fV=par['f_'+V] 
     fV_T=par['fT_'+V]
     qq=meson_quark[V]
-    ll=l1+l2 
-    llqq =ll+qq
-    qqll=qq +ll
-    VL=fV*mV*(wc['CVLL_'+llqq] + wc['CVLR_'+llqq]) 
-    VR=fV*mV*(wc['CVRR_'+llqq] + wc['CVLR_'+qqll]) 
-    TR=fV_T*mV*wc['CTRR_'+llqq] - ee*Q *fV*wc['Cgamma_'+l2+l1] 
-    TL=(fV_T*mV*wc['CTRR_'+l1+l2+qq] - ee*Q *fV*wc['Cgamma_'+ll]).conjugate()
+
+    VL=fV*mV*(wc['CVLL_'+ll+qq] + wc['CVLR_'+ll+qq]) 
+    VR=fV*mV*(wc['CVRR_'+ll+qq] + wc['CVLR_'+qq+ll]) 
+    TR=fV_T*mV*wc['CTRR_'+l1+l2+qq] - ee*Q *fV*wc['Cgamma_'+l2+l1] 
+    TL=(fV_T*mV*wc['CTRR_'+l2+l1+qq] - ee*Q *fV*wc['Cgamma_'+l1+l2]).conjugate()
+    if ll==l2+l1: 
+        VL=VL.conjugate()
+        VR=VR.conjugate()
 
     ampSquared_V = (np.abs(VL)**2+np.abs(VR)**2 )/12. *(2-y1s-y2s-(y1s-y2s)**2)+y1*y2*(VL*VR.conjugate()).real
     ampSquared_T= 4./3.*(np.abs(TL)**2+np.abs(TR)**2) * (1+y1s+y2s-2*(y1s-y2s)**2) +16.*y1*y2*(TR*TL.conjugate()).real
