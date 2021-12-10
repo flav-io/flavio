@@ -43,7 +43,8 @@ def getVT_lfc(wc_obj,par,V,Q,l,wc_sector):
     wc = wc_obj.get_wc(wc_sector, scale, par)
     ll=l+l
     alphaem = running.get_alpha(par, scale)['alpha_e']
-    ee=np.sqrt(4.*np.pi*alphaem) 
+    ee2=4.*np.pi*alphaem
+    ee=np.sqrt(ee2) 
 
     norm=4*par['GF']/np.sqrt(2)
     normDipole=norm*ee/(16*np.pi**2)*par['m_'+l]
@@ -53,8 +54,8 @@ def getVT_lfc(wc_obj,par,V,Q,l,wc_sector):
     fV_T=par['fT_'+V]
     qq=meson_quark[V]
 
-    VL=fV*mV*(wc['CVLL_'+ll+qq] + wc['CVLR_'+ll+qq]) *norm 
-    VR=fV*mV*(wc['CVRR_'+ll+qq] + wc['CVLR_'+qq+ll])*norm 
+    VL=fV*mV*(wc['CVLL_'+ll+qq]*norm + wc['CVLR_'+ll+qq]*norm - 2*Q* ee2/mV**2 ) 
+    VR=fV*mV*(wc['CVRR_'+ll+qq]*norm + wc['CVLR_'+qq+ll]*norm  - 2*Q* ee2/mV**2 )
     TR=fV_T*mV*wc['CTRR_'+ll+qq]*norm - ee*Q *fV*wc['C7_'+ll]*normDipole 
     TL=TR.conjugate()
     
@@ -128,7 +129,7 @@ for M in _hadr:
         # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
         _obs_name = _define_obs_V_ll(M, ('{0}{1},{1}{0}'.format(*ll),))
         Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
-    # for ll in ['e', 'mu', 'tau']:
-    #     _obs_name = _define_obs_V_ll(M, (ll,ll))
-    #     Prediction(_obs_name, Vll_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll,ll,'dF=0'))
+    for ll in ['e', 'mu', 'tau']:
+        _obs_name = _define_obs_V_ll(M, (ll,ll))
+        Prediction(_obs_name, Vll_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll,ll,'dF=0'))
  
