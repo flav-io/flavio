@@ -96,6 +96,20 @@ def Vll_br_comb_func(V, Q, l1, l2,wc_sector):
         return Vll_br(wc_obj, par, V, Q, l1, l2,wc_sector)+ Vll_br(wc_obj, par, V, Q, l2, l1,wc_sector)
     return fct
 
+def Vll_ratio_func(V, Q, l1, l2,wc_sector):
+    def fct(wc_obj, par):
+        BRee=Vll_br(wc_obj,par,V,Q,'e','e','dF=0')
+        return Vll_br(wc_obj, par, V, Q, l1, l2,wc_sector)/BRee
+    return fct
+
+
+def Vll_ratio_comb_func(V, Q, l1, l2,wc_sector):
+    def fct(wc_obj, par):
+        BRee=Vll_br(wc_obj,par,V,Q,'e','e','dF=0')
+        return (Vll_br(wc_obj, par, V, Q, l1, l2,wc_sector)+ Vll_br(wc_obj, par, V, Q, l2, l1,wc_sector))/BRee
+    return fct
+
+
 # Observable and Prediction instances
 _hadr = { 'J/psi': {'tex': r"J/\psi\to", 'V': 'J/psi', 'Q': 2./3., }, }
 
@@ -117,18 +131,33 @@ def _define_obs_V_ll(M, ll):
     _obs.add_taxonomy(_process_taxonomy)
     return _obs_name
 
+def _define_obs_V_ll_ratio(M, ll):
+    _process_tex = _hadr[M]['tex']+_tex[''.join(ll)]
+    _process_taxonomy = r'Process :: quarkonium lepton decays :: $V\to \ell^+\ell^-$ :: $' + _process_tex + r"$"
+    _obs_name = "R("+_hadr[M]['V']+"->"+''.join(ll)+")"
+    _obs = Observable(_obs_name)
+    _obs.set_description(r"Ratio of $"+_process_tex+r"$ over BR$(V\to ee)$")
+    _obs.tex = r"$\text{R}(" + _process_tex+r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    return _obs_name
+
+
 for M in _hadr:
     for ll0 in [('e','mu','mue'), ('mu','e','mue'), ('e','tau','taue'), ('tau','e','taue'), ('mu','tau','mutau'), ('tau','mu','mutau')]:
         ll=(ll0[0],ll0[1])
         wc_sector=ll0[2]
         _obs_name = _define_obs_V_ll(M, ll)
         Prediction(_obs_name, Vll_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        _obs_name = _define_obs_V_ll_ratio(M, ll)
+        Prediction(_obs_name, Vll_ratio_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
     for ll0 in [('e','mu','mue'), ('e','tau','taue'), ('mu','tau','mutau')]:
         ll=(ll0[0],ll0[1])
         wc_sector=ll0[2]
         # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
         _obs_name = _define_obs_V_ll(M, ('{0}{1},{1}{0}'.format(*ll),))
         Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        _obs_name = _define_obs_V_ll_ratio(M, ('{0}{1},{1}{0}'.format(*ll),))
+        Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
     for ll in ['e', 'mu', 'tau']:
         _obs_name = _define_obs_V_ll(M, (ll,ll))
         Prediction(_obs_name, Vll_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll,ll,'dF=0'))
