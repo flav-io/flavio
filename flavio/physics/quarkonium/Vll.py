@@ -117,8 +117,9 @@ _tex = {'ee': r'e^+e^-', 'mumu': r'\mu^+\mu^-', 'tautau': r'\tau^+\tau^-',
     'emu': r'e^+\mu^-', 'mue': r'\mu^+e^-',
     'taue': r'\tau^+e^-', 'etau': r'e^+\tau^-',
     'taumu': r'\tau^+\mu^-', 'mutau': r'\mu^+\tau^-',
-    'emu,mue': r'e^\pm\mu^\mp', 'etau,taue': r'e^\pm\tau^\mp',
-    'mutau,taumu': r'\mu^\pm\tau^\mp'}
+    'emu,mue': r'e^\pm\mu^\mp', 'etau,taue': r'e^\pm\tau^\mp','mutau,taumu': r'\mu^\pm\tau^\mp',
+    'mue,emu': r'e^\pm\mu^\mp', 'taue,etau': r'e^\pm\tau^\mp','taumu,mutau': r'\mu^\pm\tau^\mp'
+    }
 
 
 def _define_obs_V_ll(M, ll):
@@ -157,6 +158,10 @@ for M in _hadr:
         _obs_name = _define_obs_V_ll(M, ('{0}{1},{1}{0}'.format(*ll),))
         Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
         _obs_name = _define_obs_V_ll_ratio(M, ('{0}{1},{1}{0}'.format(*ll),))
+        Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        _obs_name = _define_obs_V_ll(M, ('{1}{0},{0}{1}'.format(*ll),))
+        Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        _obs_name = _define_obs_V_ll_ratio(M, ('{1}{0},{0}{1}'.format(*ll),))
         Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
     for ll in ['e', 'mu', 'tau']:
         _obs_name = _define_obs_V_ll(M, (ll,ll))

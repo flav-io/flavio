@@ -48,9 +48,10 @@ f_Bc: 0.434(15) # 1503.05762v2 eq. (20)
 
 m_J/psi: 3.096900(6) # PDG 2021
 Gamma_J/psi: 92.6(1.7)e-6 # PDG 2021
-f_J/psi: 0.418(9) # 1607.00815 Table II
-fT_J/psi: 0.410(10) # 1607.00815 Table II
-BR(J/psi->ee): 0.05971(32) # PDG 2021
+f_J/psi: 0.4104(17) # 2005.01845 abstract
+fT_J/psi: 0.3927(27) # 2008.02024 abstract
+BR_exp(J/psi->ee): 0.05971(32) # PDG 2021
+Gamma_SM(J/psi->ee): 5.637(49)e-6 # 2005.01845
 
 # Parameters needed for meson light-cone distribution amplitudes
 
