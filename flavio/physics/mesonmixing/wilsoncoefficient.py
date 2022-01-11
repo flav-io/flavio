@@ -56,9 +56,9 @@ def cvll_d(par, meson, scale=160):
     charm-, and charm-top-contribution to the Wilson coefficient. This
     separation is necessary as they run differently.
     """
-    mt = flavio.physics.running.running.get_mt(par, scale)
-    mc = flavio.physics.running.running.get_mc(par, scale)
-    mu = flavio.physics.running.running.get_mu(par, scale)
+    mt = flavio.physics.running.running.get_mt_mt(par)
+    mc = par["m_c"]
+    mu = par["m_u"]
     mW = par['m_W']
     xt = mt**2/mW**2
     xc = mc**2/mW**2

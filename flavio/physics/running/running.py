@@ -268,6 +268,21 @@ def _get_mt(mt_pole, alpha_s, scale):
     return crd.mOS2mMS(mt_pole, None, alpha_s, scale, 6, 3)
 
 
+def get_mt_mt(par):
+    r"""Get the scale invariant top quark mass mt(mt)."""
+    mt_pole = par['m_t']
+    return _get_mt_mt(mt_pole=mt_pole,
+                      alpha_s=get_alpha_s(par, mt_pole))
+
+
+# cached version
+@lru_cache(maxsize=config['settings']['cache size'])
+def _get_mt_mt(mt_pole, alpha_s):
+    r"""Get the scale invariant top quark mass mt(mt)."""
+    crd = rundec.CRunDec()
+    return crd.mOS2mSI(mt_pole, None, alpha_s, 6, 3)
+
+
 def make_wilson_rge_derivative(adm):
     if adm is None:
         return None

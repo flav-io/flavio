@@ -190,4 +190,4 @@ class TestMesonMixing(unittest.TestCase):
         self.assertAlmostEqual(
             flavio.np_prediction('eps_K', w) / flavio.sm_prediction('eps_K'),
             2,
-            delta=0.15)  # difference due to NNLO evolution of SM contribution + charm contribution
+            delta=0.30)  # difference due to NNLO evolution of SM contribution + charm contribution
