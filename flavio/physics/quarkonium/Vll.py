@@ -11,11 +11,11 @@ meson_quark = { 'J/psi' : 'cc'}
 def kaellen(x,y,z):
     return x**2+y**2+z**2-2*(x*y+x*z+y*z)
 
-def getVT_lfv(wc_obj,par,V,Q,l1,l2,ll):
+def getVT_lfv(wc_obj,par,V,Q,l1,l2,wc_sector):
     # renormalization scale
     scale = flavio.config['renormalization scale'][V]
     # Wilson coefficients
-    wc = wc_obj.get_wc(ll, scale, par)
+    wc = wc_obj.get_wc(wc_sector, scale, par)
 
     alphaem = running.get_alpha(par, scale)['alpha_e']
     ee=np.sqrt(4.*np.pi*alphaem) 
@@ -24,7 +24,12 @@ def getVT_lfv(wc_obj,par,V,Q,l1,l2,ll):
     fV=par['f_'+V] 
     fV_T=par['fT_'+V]
     qq=meson_quark[V]
-
+    # for emu and taue the name of the Wilson coefficient sector agrees with the ordering of leptons in the vector bilinear
+    # This is not the case for mutau. Thus distinguish between the two cases here.
+    if wc_sector=="mutau":
+        ll="taumu"
+    else:
+        ll=wc_sector
     VL=fV*mV*(wc['CVLL_'+ll+qq] + wc['CVLR_'+ll+qq]) 
     VR=fV*mV*(wc['CVRR_'+ll+qq] + wc['CVLR_'+qq+ll]) 
     TR=fV_T*mV*wc['CTRR_'+l1+l2+qq] - ee*Q *fV*wc['Cgamma_'+l2+l1] 
