@@ -229,7 +229,7 @@ class FlavioParticle(Particle):
 
 def read_pdg(year, constraints):
     """Read particle masses and widths from the PDG data file of a given year."""
-    FlavioParticle.load_table(p_data.open_text(p_data, "particle{}.csv".format(year)))
+    FlavioParticle.load_table(p_data.basepath / f"particle{year}.csv")
     for particle in FlavioParticle.flavio_all():
         for data in (particle.flavio_m, particle.flavio_tau):
             if data is None:
