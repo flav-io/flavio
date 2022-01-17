@@ -11,7 +11,7 @@ ps = 1e-12*s
 
 class TestPDG(unittest.TestCase):
     year = 2018
-    FlavioParticle.load_table(p_data.open_text(p_data, "particle{}.csv".format(year)))
+    FlavioParticle.load_table(p_data.basepath / f"particle{year}.csv")
     def test_pdg(self):
         # check some tex names and masses
         to_check = {
