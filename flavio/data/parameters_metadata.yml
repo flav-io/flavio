@@ -83,9 +83,9 @@ f_psi(2S):
 fT_psi(2S): 
   tex: $f_{\psi(2S)}^T$
   description: $\psi(2S)$ tensor decay constant
-# BR_exp(psi(2S)->ee): 
-#   tex: $BR_{\rm exp}(\psi(2S)\to e^+ e^-)$
-#   description: measured branching ratio $\psi(2S)\to ee$ 
+BR_exp(psi(2S)->ee): 
+  tex: $BR_{\rm exp}(\psi(2S)\to e^+ e^-)$
+  description: measured branching ratio $\psi(2S)\to ee$ 
 # Gamma_SM(psi(2S)->ee): 
 #   tex: $\Gamma_{\rm SM}(\psi(2S)\to e^+ e^-)$
 #   description: SM prediction for decay rate of $\psi(2S)\to ee$ 
@@ -102,7 +102,10 @@ f_Upsilon(1S):
 fT_Upsilon(1S): 
   tex: $f_{\Upsilon(1S)}^T$
   description: $\Upsilon(1S)$ tensor decay constant
- 
+BR_exp(Upsilon(1S)->ee): 
+  tex: $BR_{\rm exp}(\Upsilon(1S)\to e^+ e^-)$
+  description: measured branching ratio $\Upsilon(1S)\to ee$ 
+
 m_Upsilon(2S): 
   tex: $m_{\Upsilon(2S)}$
   description: $\Upsilon(2S)$ mass
@@ -115,6 +118,9 @@ f_Upsilon(2S):
 fT_Upsilon(2S): 
   tex: $f_{\Upsilon(2S)}^T$
   description: $\Upsilon(2S)$ tensor decay constant
+BR_exp(Upsilon(2S)->ee): 
+  tex: $BR_{\rm exp}(\Upsilon(2S)\to e^+ e^-)$
+  description: measured branching ratio $\Upsilon(2S)\to ee$ 
 
 m_Upsilon(3S): 
   tex: $m_{\Upsilon(3S)}$
@@ -128,6 +134,9 @@ f_Upsilon(3S):
 fT_Upsilon(3S): 
   tex: $f_{\Upsilon(3S)}^T$
   description: $\Upsilon(3S)$ tensor decay constant
+BR_exp(Upsilon(3S)->ee): 
+  tex: $BR_{\rm exp}(\Upsilon(3S)\to e^+ e^-)$
+  description: measured branching ratio $\Upsilon(3S)\to ee$ 
 
 
 #
