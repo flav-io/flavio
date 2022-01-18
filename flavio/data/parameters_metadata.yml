@@ -69,7 +69,68 @@ BR_exp(J/psi->ee):
 Gamma_SM(J/psi->ee): 
   tex: $\Gamma_{\rm SM}(J/\psi\to e^+ e^-)$
   description: SM prediction for decay rate of $J/\psi\to ee$ 
-  
+
+
+m_psi(2S): 
+  tex: $m_{\psi(2S)}$
+  description: $\psi(2S)$ mass
+Gamma_psi(2S):
+  tex: $\Gamma_{\psi(2S)}$
+  description: total decay width of $\psi(2S)$
+f_psi(2S): 
+  tex: $f_{\psi(2S)}$
+  description: $\psi(2S)$ decay constant
+fT_psi(2S): 
+  tex: $f_{\psi(2S)}^T$
+  description: $\psi(2S)$ tensor decay constant
+# BR_exp(psi(2S)->ee): 
+#   tex: $BR_{\rm exp}(\psi(2S)\to e^+ e^-)$
+#   description: measured branching ratio $\psi(2S)\to ee$ 
+# Gamma_SM(psi(2S)->ee): 
+#   tex: $\Gamma_{\rm SM}(\psi(2S)\to e^+ e^-)$
+#   description: SM prediction for decay rate of $\psi(2S)\to ee$ 
+
+m_Upsilon(1S): 
+  tex: $m_{\Upsilon(1S)}$
+  description: $\Upsilon(1S)$ mass
+Gamma_Upsilon(1S):
+  tex: $\Gamma_{\Upsilon(1S)}$
+  description: total decay width of $\Upsilon(1S)$
+f_Upsilon(1S): 
+  tex: $f_{\Upsilon(1S)}$
+  description: $\Upsilon(1S)$ decay constant
+fT_Upsilon(1S): 
+  tex: $f_{\Upsilon(1S)}^T$
+  description: $\Upsilon(1S)$ tensor decay constant
+ 
+m_Upsilon(2S): 
+  tex: $m_{\Upsilon(2S)}$
+  description: $\Upsilon(2S)$ mass
+Gamma_Upsilon(2S):
+  tex: $\Gamma_{\Upsilon(2S)}$
+  description: total decay width of $\Upsilon(2S)$
+f_Upsilon(2S): 
+  tex: $f_{\Upsilon(2S)}$
+  description: $\Upsilon(2S)$ decay constant
+fT_Upsilon(2S): 
+  tex: $f_{\Upsilon(2S)}^T$
+  description: $\Upsilon(2S)$ tensor decay constant
+
+m_Upsilon(3S): 
+  tex: $m_{\Upsilon(3S)}$
+  description: $\Upsilon(3S)$ mass
+Gamma_Upsilon(3S):
+  tex: $\Gamma_{\Upsilon(3S)}$
+  description: total decay width of $\Upsilon(3S)$
+f_Upsilon(3S): 
+  tex: $f_{\Upsilon(3S)}$
+  description: $\Upsilon(3S)$ decay constant
+fT_Upsilon(3S): 
+  tex: $f_{\Upsilon(3S)}^T$
+  description: $\Upsilon(3S)$ tensor decay constant
+
+
+#
 # Meson decay constants
 
 f_K+:

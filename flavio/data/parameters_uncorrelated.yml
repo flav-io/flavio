@@ -53,6 +53,26 @@ fT_J/psi: 0.3927(27) # 2008.02024 abstract
 BR_exp(J/psi->ee): 0.05971(32) # PDG 2021
 Gamma_SM(J/psi->ee): 5.637(49)e-6 # 2005.01845
 
+m_psi(2S): 3.68610(6) # PDG 2021
+Gamma_psi(2S): 294(8)e-6 # PDG 2021
+f_psi(2S): 0.294(5) # Table II in 1607.00815
+fT_psi(2S): 0.294(5) # Table II in 1607.00815
+
+m_Upsilon(1S): 9.46030(26) # PDG 2021
+Gamma_Upsilon(1S): 54.02(1.25)e-6 # PDG 2021
+f_Upsilon(1S): 0.649(31) # Table II in 1607.00815
+fT_Upsilon(1S):  0.649(31) # Table II in 1607.00815
+
+m_Upsilon(2S): 10.02326(31) # PDG 2021
+Gamma_Upsilon(2S): 31.98(2.63)e-6 # PDG 2021
+f_Upsilon(2S): 0.481(39) # Table II in 1607.00815
+fT_Upsilon(2S): 0.481(39) # Table II in 1607.00815
+
+m_Upsilon(3S): 10.3552(5) # PDG 2021
+Gamma_Upsilon(3S): 20.32(1.85)e-6 # PDG 2021
+f_Upsilon(3S): 0.539(84) # Table II in 1607.00815
+fT_Upsilon(3S): 0.539(84) # Table II in 1607.00815
+
 # Parameters needed for meson light-cone distribution amplitudes
 
 f_perp_omega: 0.135(16)  # 1503.05534v2 table 1, but at 2 GeV, error enlarged

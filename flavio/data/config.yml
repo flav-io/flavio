@@ -70,6 +70,10 @@ renormalization scale:
 
     # quarkonium
     J/psi: 2.
+    psi(2S): 2.
+    Upsilon(1S): 2.
+    Upsilon(2S): 2.
+    Upsilon(3S): 2.
 
 # these are the thresholds where quark flavours are decoupled in the RG
 # evolution to low energies.
