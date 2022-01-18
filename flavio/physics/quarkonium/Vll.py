@@ -6,7 +6,12 @@ from flavio.physics.running import running
 import flavio
 import numpy as np
 
-meson_quark = { 'J/psi' : 'cc'}
+meson_quark = { 'J/psi' : 'cc', 
+                'psi(2S)': 'cc',
+                'Upsilon(1S)': 'bb',
+                'Upsilon(2S)': 'bb',
+                'Upsilon(3S)': 'bb',
+                }
 
 def kaellen(x,y,z):
     return x**2+y**2+z**2-2*(x*y+x*z+y*z)

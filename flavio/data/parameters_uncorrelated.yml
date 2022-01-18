@@ -45,7 +45,8 @@ f_phi: 0.231(5)  # 1501.06569 table 1
 f_Bc: 0.434(15) # 1503.05762v2 eq. (20)
 
 # Parameters for LFV quarkonium decay
-# possibly useful https://arxiv.org/pdf/2007.01737.pdf
+# see also Tables 9 and 11 in 1707.07144 for results of decay constants
+
 m_J/psi: 3.096900(6) # PDG 2021
 Gamma_J/psi: 92.6(1.7)e-6 # PDG 2021
 f_J/psi: 0.4104(17) # 2005.01845 abstract
@@ -73,8 +74,10 @@ BR_exp(Upsilon(2S)->ee): 0.0191(16) # PDG 2021
 
 m_Upsilon(3S): 10.3552(5) # PDG 2021
 Gamma_Upsilon(3S): 20.32(1.85)e-6 # PDG 2021
-f_Upsilon(3S): 0.539(84) # Table 3 in 1503.04159
-fT_Upsilon(3S): 0.539(84) # assuming equality to vector form factor
+#f_Upsilon(3S): 0.539(84) # Table 3 in 1503.04159
+#fT_Upsilon(3S): 0.539(84) # assuming equality to vector form factor
+f_Upsilon(3S): 0.395(25) # using Eq.(5.45c) in 2007.01737, consistent with hep-ph/0603164 (0.388)
+fT_Upsilon(3S): 0.395(25) # assuming equality to vector form factor
 BR_exp(Upsilon(3S)->ee): 0.0218(20) # PDG 2021
 
 # Parameters needed for meson light-cone distribution amplitudes
