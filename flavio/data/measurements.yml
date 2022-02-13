@@ -10028,6 +10028,30 @@ LHCb RK 2021:
             9.122615178816618e-16, 2.771316976677127e-16]
 
 
+
+LHCb RKS 2021:
+   experiment: LHCb
+   inspire: LHCb:2021lvy
+   url: https://lhcbproject.web.cern.ch/Publications/LHCbProjectPublic/LHCb-PAPER-2021-038.html 
+   values:
+     - name: <Rmue>(B0->Kll)
+       q2min: 1.1
+       q2max: 6.0
+       value: 0.66 + 0.20 - 0.14 + 0.02 - 0.04
+
+
+LHCb RKstplus 2021:
+   experiment: LHCb
+   inspire: LHCb:2021lvy
+   url: https://lhcbproject.web.cern.ch/Publications/LHCbProjectPublic/LHCb-PAPER-2021-038.html	
+   values:
+     - name: <Rmue>(B+->K*ll)
+       q2min: 0.045
+       q2max: 6.0
+       value: 0.70 + 0.18 - 0.13 + 0.03 - 0.04
+
+
+
 Belle B->K*mumu LFU 2016:
    experiment: Belle
    inspire: Wehle:2016yoi
