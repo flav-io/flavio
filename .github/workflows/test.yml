@@ -21,7 +21,6 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install .[sampling,plotting,testing]
-          pip install coveralls
       - name: Test with pytest
         run: |
           pytest
