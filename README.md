@@ -56,6 +56,7 @@ Contributors (in alphabetical order):
 - Albert Puig
 - Méril Reboud
 - Stefanie Reichert
+- Niladri Sahoo
 - Peter Stangl
 - Olcyr Sumensari
 - Zeren Simon Wang
