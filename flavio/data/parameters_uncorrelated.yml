@@ -57,19 +57,19 @@ Gamma_SM(J/psi->ee): 5.637(49)e-6 # 2005.01845
 m_psi(2S): 3.68610(6) # PDG 2021
 Gamma_psi(2S): 294(8)e-6 # PDG 2021
 f_psi(2S): 0.2926(12) # Table 3 in 1503.04159 (0.713*f_J/psi), consistent with Tab II in hep-ph/0603164 (0.293)
-fT_psi(2S): 0.2926(12) # assuming equality to vector form factor
+fT_psi(2S): 0.2926(12) # assuming equality to vector form factor. This is consistent with the non-relativistic color singlet model.
 BR_exp(psi(2S)->ee): 0.00793(17) # PDG 2021
 
 m_Upsilon(1S): 9.46030(26) # PDG 2021
 Gamma_Upsilon(1S): 54.02(1.25)e-6 # PDG 2021
 f_Upsilon(1S): 0.6772(97) # Eq. (29) in 2101.08103
-fT_Upsilon(1S):  0.6772(97) # assuming equality to vector form factor
+fT_Upsilon(1S):  0.6772(97) # assuming equality to vector form factor. This is consistent with the non-relativistic color singlet model.
 BR_exp(Upsilon(1S)->ee): 0.0238(11) # PDG 2021
 
 m_Upsilon(2S): 10.02326(31) # PDG 2021
 Gamma_Upsilon(2S): 31.98(2.63)e-6 # PDG 2021
 f_Upsilon(2S): 0.481(39) # Eq. (24) in 1408.5768
-fT_Upsilon(2S): 0.481(39) # assuming equality to vector form factor
+fT_Upsilon(2S): 0.481(39) # assuming equality to vector form factor. This is consistent with the non-relativistic color singlet model.
 BR_exp(Upsilon(2S)->ee): 0.0191(16) # PDG 2021
 
 m_Upsilon(3S): 10.3552(5) # PDG 2021
@@ -77,8 +77,21 @@ Gamma_Upsilon(3S): 20.32(1.85)e-6 # PDG 2021
 #f_Upsilon(3S): 0.539(84) # Table 3 in 1503.04159
 #fT_Upsilon(3S): 0.539(84) # assuming equality to vector form factor
 f_Upsilon(3S): 0.395(25) # using Eq.(5.45c) in 2007.01737, consistent with hep-ph/0603164 (0.388)
-fT_Upsilon(3S): 0.395(25) # assuming equality to vector form factor
+fT_Upsilon(3S): 0.395(25) # assuming equality to vector form factor. This is consistent with the non-relativistic color singlet model.
 BR_exp(Upsilon(3S)->ee): 0.0218(20) # PDG 2021
+
+
+m_eta_c: 2.9839(4) # PDG 2021
+Gamma_eta_c: 32.0(0.7)e-3 # PDG 2021
+f_eta_c: 0.387(7) # 1312.2858 
+a_eta_c: 0.0 # Hazard, Petrov 1607.00815
+
+m_eta_b: 9.3987(20) # PDG 2021
+Gamma_eta_b: 10(5)e-3 # PDG 2021
+#f_eta_b: 0.667(6) # 1207.0994
+f_eta_b: 0.724(12) # 2101.08103
+a_eta_b: 0.0 # Hazard, Petrov 1607.00815
+
 
 # Parameters needed for meson light-cone distribution amplitudes
 

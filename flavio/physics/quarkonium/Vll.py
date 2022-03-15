@@ -1,4 +1,5 @@
 r"""$V\to ll^\prime$ branching ratio"""
+# TODO add reference
 
 #from math import pi,sqrt
 from flavio.classes import Observable, Prediction
@@ -73,7 +74,7 @@ def getVT_lfc(wc_obj,par,V,Q,l,wc_sector):
 
 
 def Vll_br(wc_obj, par,V,Q, l1,l2,wc_sector):
-    r"""Branching ratio for the lepton-flavour violating leptonic decay J/psi-> l l' based on XXXX.XXXXX"""
+    r"""Branching ratio for the lepton-flavour violating leptonic decay J/psi-> l l'"""
     mV = par['m_'+V]   
     GammaV = par['Gamma_'+V]  
     ml1 = par['m_'+l1]

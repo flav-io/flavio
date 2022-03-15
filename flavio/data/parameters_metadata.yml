@@ -139,6 +139,36 @@ BR_exp(Upsilon(3S)->ee):
   description: measured branching ratio $\Upsilon(3S)\to ee$ 
 
 
+m_eta_c: 
+  tex: $m_{\eta_c}$
+  description: $\eta_c$ mass
+Gamma_eta_c:
+  tex: $\Gamma_{\eta_c}$
+  description: total decay width of $\eta_c$
+f_eta_c: 
+  tex: $f_{\eta_c}$
+  description: $\eta_c$ decay constant
+
+a_eta_c: 
+  tex: $a_{\eta_c}$
+  description: $\eta_c$ anomaly decay constant
+
+
+m_eta_b: 
+  tex: $m_{\eta_b}$
+  description: $\eta_b$ mass
+Gamma_eta_b:
+  tex: $\Gamma_{\eta_b}$
+  description: total decay width of $\eta_b$
+f_eta_b: 
+  tex: $f_{\eta_b}$
+  description: $\eta_b$ decay constant
+
+a_eta_b: 
+  tex: $a_{\eta_b}$
+  description: $\eta_b$ anomaly decay constant
+
+
 #
 # Meson decay constants
 
