@@ -14,7 +14,12 @@ from flavio.physics import ckm
 
 def matrixelements(par, meson):
     r"""Returns a dictionary with the values of the matrix elements of the
-    $\Delta F=2$ operators."""
+    $\Delta F=2$ operators.
+    
+    Note that the normalisation factor 1/2M from M_12 is included here,
+    so the returned values of the matrix elements are really    
+    $$\langle Q \rangle = \frac{\langle M | Q |\bar M\rangle}{2M_M}$$
+    """
     mM = par['m_'+meson]
     fM = par['f_'+meson]
     BM = lambda i: par['bag_' + meson + '_' + str(i)]

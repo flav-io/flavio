@@ -1,4 +1,4 @@
-# This file contains paraemeter values and uncertainties for parameters
+# This file contains parameter values and uncertainties for parameters
 # that have correlated uncertainties
 
 # Quark masses from arXiv:1802.04248
@@ -20,7 +20,7 @@
 
 
 # Decay constants of charged and neutral mesons are highly correlated; in
-# fact they are equal up to isosin breaking effects.
+# fact they are equal up to isospin breaking effects.
 # for now, just assume 99% correlation
 
 # In order not to depend on the experimental value of f_pi, f_pi is taken
@@ -28,6 +28,11 @@
 # from the FLAG lattice average of the ratio f_K/f_pi.
 # This way, lattice determinations of f_K that use the measurement of f_pi
 # to set the scale are not used.
+#
+# The f_K uncertainty and correlation are calculated by assuming f_pi and
+# f_K/f_pi are totally uncorrelated - see discussion at
+# https://github.com/flav-io/flavio/issues/171 and/or the code at
+# https://gist.github.com/DavidMStraub/813bd0c4296837936a188a29c8d8b981
 -
   values:
     - f_K+: 0.1554(10)  # reproduce f_K/f_pi=1.1932(19) from FLAG 2019 Nf=2+1+1
