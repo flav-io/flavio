@@ -23,7 +23,7 @@ def getVT_lfv(wc_obj,par,V,Q,l1,l2,wc_sector):
     # Wilson coefficients
     wc = wc_obj.get_wc(wc_sector, scale, par)
 
-    alphaem = running.get_alpha(par, scale)['alpha_e']
+    alphaem = running.get_alpha_e(par, scale)
     ee=np.sqrt(4.*np.pi*alphaem) 
 
     mV = par['m_'+V]   
@@ -53,7 +53,7 @@ def getVT_lfc(wc_obj,par,V,Q,l,wc_sector):
     # Wilson coefficients
     wc = wc_obj.get_wc(wc_sector, scale, par)
     ll=l+l
-    alphaem = running.get_alpha(par, scale)['alpha_e']
+    alphaem = running.get_alpha_e(par, scale)
     ee2=4.*np.pi*alphaem
     ee=np.sqrt(ee2) 
 

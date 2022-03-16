@@ -23,7 +23,7 @@ def getWC_lfv(wc_obj,par,V,Q,l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtilde
     # Wilson coefficients
     wc = wc_obj.get_wc(wc_sector, scale, par)
 
-    alphaem = running.get_alpha(par, scale)['alpha_e']
+    alphaem = running.get_alpha_e(par, scale)
     ee=np.sqrt(4.*np.pi*alphaem) 
 
     mV = par['m_'+V]   
@@ -39,7 +39,7 @@ def getWC_lfv(wc_obj,par,V,Q,l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtilde
     VR=fV*mV*(wc['CVRR_'+ll+qq] + wc['CVLR_'+qq+ll]) 
     VL=fV*mV*(wc['CVLL_'+ll+qq] + wc['CVLR_'+ll+qq]) 
     TR=fV_T*mV*wc['CTRR_'+l1+l2+qq] - ee*Q *fV*wc['Cgamma_'+l2+l1] 
-    TL=(fV_T*mV*wc['CTRR_'+l2+l1+qq] - ee*Q *fV*wc*['Cgamma_'+l1+l2]).conjugate()
+    TL=(fV_T*mV*wc['CTRR_'+l2+l1+qq] - ee*Q *fV*wc['Cgamma_'+l1+l2]).conjugate()
     SR=2.*mV*fV*(wc['CSRR_'+l1+l2+qq]+wc['CSRL_'+l1+l2+qq])
     SL=2.*mV*fV*(wc['CSRL_'+l2+l1+qq]+wc['CSRR_'+l2+l1+qq]).conjugate()   
     PR=2.*mV*fV*(wc['CSRR_'+l1+l2+qq]-wc['CSRL_'+l1+l2+qq])
@@ -73,7 +73,7 @@ def F_S(mu):
 def Ftilde_P(mu):
     if mu==0:
         return 1./40
-    return (3.-30*mu-20*mu**2*(1-3*np.log(mu))+60**mu**3-15*mu**4+2*mu**5)/120
+    return (3.-30*mu-20*mu**2*(1+3*np.log(mu))+60**mu**3-15*mu**4+2*mu**5)/120
 def Fhat_S(mu):
     if mu==0:
         return 1./12
@@ -84,46 +84,48 @@ def F_PA(mu):
     return (1.+4*mu-5*mu**2+2*mu*(2+mu)*np.log(mu))/2.
 
 
-def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector):
+def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji):
     r"""Branching ratio for the lepton-flavour violating leptonic decay J/psi-> l l' \gamma"""
-    alphaem = running.get_alpha(par, scale)['alpha_e']
+    # renormalization scale
+    scale = flavio.config['renormalization scale'][V]
+    alphaem = running.get_alpha_e(par, scale)
     mV = par['m_'+V]   
     GammaV = par['Gamma_'+V]  
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
 
-    VL,VR,TL,TR,SR,SL,PR,PL,AR,AL,StildeR,StildeL,PtildeR,PtildeL = getWC_lfv(wc_obj,par,V,Q,l1,l2,wc_sector)
+    VL,VR,TL,TR,SR,SL,PR,PL,AR,AL,StildeR,StildeL,PtildeR,PtildeL = getWC_lfv(wc_obj,par,V,Q,l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)
  
-    AV=np.abs(AL)**2+np.abs*(AR)**2
+    AV=np.abs(AL)**2+np.abs(AR)**2
     SP=np.abs(SL)**2+np.abs(PL)**2+np.abs(SR)**2+np.abs(PR)**2
     SPtilde=np.abs(StildeL)**2+np.abs(StildeR)**2 + np.abs(PtildeL)**2+np.abs(PtildeR)**2
     SStilde= (SL*StildeL.conjugate() + SR*StildeR.conjugate()).real
    
     if ml1<ml2:
         y=ml2/mV
-        AP=(AL*PR.conjugate()+AR*PL.conjugate).real
+        AP=(AL*PR.conjugate()+AR*PL.conjugate()).real
     elif ml2<ml1:
         y=ml1/mV
-        AP=(AL*PL.conjugate()+AR*PR.conjugate).real
+        AP=(AL*PL.conjugate()+AR*PR.conjugate()).real
     else:
         print("The case of non-hierarchical masses is not implemented.")
 
     ys=y**2
 
-    prefactor=alphaem*Q**2*mV/(192*np.pi**2)
+    prefactor=alphaem*Q**2*mV/(192*np.pi**2*GammaV)
     
     return prefactor*(AV * F_A(ys) + SP*F_S(ys) + SPtilde *Ftilde_P(ys) +SStilde * Fhat_S(ys) + AP*F_PA(ys) )
 
 
 def Vllgamma_br_func(V, Q, l1, l2,wc_sector):
-    def fct(wc_obj, par):
-        return Vllgamma_br(wc_obj, par, V, Q, l1, l2,wc_sector)
+    def fct(wc_obj, par,CeFFij=0,CeFFji=0,CeFFtildeij=0,CeFFtildeji=0):
+        return Vllgamma_br(wc_obj, par, V, Q, l1, l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)
     return fct
 
 
 def Vllgamma_br_comb_func(V, Q, l1, l2,wc_sector):
-    def fct(wc_obj, par):
-        return Vllgamma_br(wc_obj, par, V, Q, l1, l2,wc_sector)+ Vllgamma_br(wc_obj, par, V, Q, l2, l1,wc_sector)
+    def fct(wc_obj, par,CeFFij=0,CeFFji=0,CeFFtildeij=0,CeFFtildeji=0):
+        return Vllgamma_br(wc_obj, par, V, Q, l1, l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)+ Vllgamma_br(wc_obj, par, V, Q, l2, l1,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)
     return fct
 
 # Observable and Prediction instances
@@ -148,7 +150,7 @@ def _define_obs_V_ll_gamma(M, ll):
     _process_tex = _hadr[M]['tex']+_tex[''.join(ll)]
     _process_taxonomy = r'Process :: quarkonium lepton decays :: $V\to \ell^+\ell^-\gamma$ :: $' + _process_tex + r"$"
     _obs_name = "BR("+_hadr[M]['V']+"->"+''.join(ll)+"gamma)"
-    _obs = Observable(_obs_name)
+    _obs = Observable(_obs_name,arguments=["CeFFij","CeFFji","CeFFtildeij","CeFFtildeji"])
     _obs.set_description(r"Branching ratio of $"+_process_tex+r"$")
     _obs.tex = r"$\text{BR}(" + _process_tex+r")$"
     _obs.add_taxonomy(_process_taxonomy)

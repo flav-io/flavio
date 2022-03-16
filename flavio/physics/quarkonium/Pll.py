@@ -4,6 +4,7 @@ r"""$P\to ll^\prime$ branching ratio"""
 #from math import pi,sqrt
 from flavio.classes import Observable, Prediction
 import flavio
+from flavio.physics.running import running
 import numpy as np
 
 meson_quark = { 'eta_c' : 'cc', 
@@ -16,6 +17,7 @@ def kaellen(x,y,z):
 def getS_lfv(wc_obj,par,P,l1,l2,wc_sector,CeGGij,CeGGji):
     # renormalization scale
     scale = flavio.config['renormalization scale'][P]
+    alphas = running.get_alpha_s(par, scale)
     # Wilson coefficients
     wc = wc_obj.get_wc(wc_sector, scale, par)
 
@@ -33,13 +35,15 @@ def getS_lfv(wc_obj,par,P,l1,l2,wc_sector,CeGGij,CeGGji):
         ll="taumu"
     else:
         ll=wc_sector
-    SR=(hP/4*mq)*(wc['CSRR_'+l1+l2+qq]-wc['CSRL_'+l1+l2+qq])    -(fP/2.)*(ml1*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml2* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] ))  + I*aP * CeGGij
-    SL=(hP/4*mq)*(wc['CSRL_'+l2+l1+qq]-wc['CSRR_'+l2+l1+qq]).conjugate()    -(fP/2.)*(ml2*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml1* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] )) +I* aP * CeGGji 
+    # CHECK print([ml1,ml2,mP,aP,hP,mq])
+    aPfac=1j*aP*4.*np.pi/alphas
+    SR= aPfac * CeGGij +  (hP/4*mq)*(wc['CSRR_'+l1+l2+qq]-wc['CSRL_'+l1+l2+qq])  -(fP/2.)*(ml1*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml2* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] ))  
+    SL= aPfac * CeGGji + (hP/4*mq)*(wc['CSRL_'+l2+l1+qq]-wc['CSRR_'+l2+l1+qq]).conjugate() -(fP/2.)*(ml2*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml1* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] )) 
     return SL,SR
 
 
 def Pll_br(wc_obj, par,P,Q, l1,l2,wc_sector,CeGGij,CeGGji):
-    r"""Branching ratio for the lepton-flavour violating leptonic decay P -> l l' based on XXXX.XXXXX"""
+    r"""Branching ratio for the lepton-flavour violating leptonic decay P -> l l' """
     mP = par['m_'+P]   
     GammaP = par['Gamma_'+P]  
     ml1 = par['m_'+l1]
@@ -48,9 +52,8 @@ def Pll_br(wc_obj, par,P,Q, l1,l2,wc_sector,CeGGij,CeGGji):
     y2=ml2/mP
     y1s=y1**2
     y2s=y2**2
-    SL,SR = getS_lfv(wc_obj,par,P,Q,l1,l2,wc_sector,CeGGij,CeGGji)
-
-    return mP/(16.*np.pi*GammaP) * np.sqrt(kaellen(1,y1s,y2s)) * ((1-y1s-y2s)*(np.abs(SL)**2+np.abs(SR)**2) -4*y1*y2 (SL*SR.conjugate()).real)
+    SL,SR = getS_lfv(wc_obj,par,P,l1,l2,wc_sector,CeGGij,CeGGji)
+    return  mP/(16.*np.pi*GammaP) * np.sqrt(kaellen(1,y1s,y2s)) * ((1-y1s-y2s)*(np.abs(SL)**2+np.abs(SR)**2) -4*y1*y2 *(SL*SR.conjugate()).real)
 
 
 def Pll_br_func(P, Q, l1, l2,wc_sector):
