@@ -31,7 +31,7 @@ setup(name='flavio',
                 ]
       },
       install_requires=['numpy>=1.16.5', 'scipy', 'setuptools>=3.3', 'pyyaml',
-                        'ckmutil', 'wilson>=2.0', 'particle', ],
+                        'ckmutil', 'wilson>=2.0', 'particle>=0.16.0', ],
       extras_require={
             'testing': ['nose2'],
             'plotting': ['matplotlib>=2.0'],
