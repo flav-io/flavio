@@ -37,8 +37,9 @@ def getS_lfv(wc_obj,par,P,l1,l2,wc_sector,CeGGij,CeGGji):
         ll=wc_sector
     # CHECK print([ml1,ml2,mP,aP,hP,mq])
     aPfac=1j*aP*4.*np.pi/alphas
-    SR= aPfac * CeGGij +  (hP/4*mq)*(wc['CSRR_'+l1+l2+qq]-wc['CSRL_'+l1+l2+qq])  -(fP/2.)*(ml1*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml2* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] ))  
-    SL= aPfac * CeGGji + (hP/4*mq)*(wc['CSRL_'+l2+l1+qq]-wc['CSRR_'+l2+l1+qq]).conjugate() -(fP/2.)*(ml2*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml1* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] )) 
+    SR= aPfac * CeGGij +  (hP/(4*mq))*(wc['CSRR_'+l1+l2+qq]-wc['CSRL_'+l1+l2+qq])  -(fP/2.)*(ml1*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml2* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] ))  
+    SL= aPfac * CeGGji + (hP/(4*mq))*(wc['CSRL_'+l2+l1+qq]-wc['CSRR_'+l2+l1+qq]).conjugate() -(fP/2.)*(ml2*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml1* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] )) 
+#    print("[SR,SL,CSRR] = ",[SR,SL,hP,mq,(hP/(4*mq))*(wc['CSRR_'+l1+l2+qq]-wc['CSRL_'+l1+l2+qq])])
     return SL,SR
 
 
