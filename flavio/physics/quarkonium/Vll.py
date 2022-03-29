@@ -176,6 +176,7 @@ for M in _hadr:
         Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
         _obs_name = _define_obs_V_ll_ratio(M, ('{0}{1},{1}{0}'.format(*ll),))
         Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+
         _obs_name = _define_obs_V_ll(M, ('{1}{0},{0}{1}'.format(*ll),))
         Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
         _obs_name = _define_obs_V_ll_ratio(M, ('{1}{0},{0}{1}'.format(*ll),))

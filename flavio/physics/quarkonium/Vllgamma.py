@@ -6,6 +6,7 @@ from flavio.classes import Observable, Prediction
 from flavio.physics.running import running
 import flavio
 import numpy as np
+from flavio.physics.quarkonium.Vll import Vll_br
 
 meson_quark = { 'J/psi' : 'cc', 
                 'psi(2S)': 'cc',
@@ -128,6 +129,21 @@ def Vllgamma_br_comb_func(V, Q, l1, l2,wc_sector):
         return Vllgamma_br(wc_obj, par, V, Q, l1, l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)+ Vllgamma_br(wc_obj, par, V, Q, l2, l1,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)
     return fct
 
+def Vllgamma_ratio_func(V, Q, l1, l2,wc_sector):
+    def fct(wc_obj, par,CeFFij=0,CeFFji=0,CeFFtildeij=0,CeFFtildeji=0):
+        BRee=Vll_br(wc_obj,par,V,Q,'e','e','dF=0')
+        return Vllgamma_br(wc_obj, par, V, Q, l1, l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)/BRee
+    return fct
+
+
+def Vllgamma_ratio_comb_func(V, Q, l1, l2,wc_sector):
+    def fct(wc_obj, par,CeFFij=0,CeFFji=0,CeFFtildeij=0,CeFFtildeji=0):
+        BRee=Vll_br(wc_obj,par,V,Q,'e','e','dF=0')
+        return (Vllgamma_br(wc_obj, par, V, Q, l1, l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)+ Vllgamma_br(wc_obj, par, V, Q, l2, l1,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji))/BRee
+    return fct
+
+
+
 # Observable and Prediction instances
 _hadr = { 
     'J/psi': {'tex': r"J/\psi\to", 'V': 'J/psi', 'Q': 2./3., },
@@ -156,6 +172,16 @@ def _define_obs_V_ll_gamma(M, ll):
     _obs.add_taxonomy(_process_taxonomy)
     return _obs_name
 
+def _define_obs_V_ll_gamma_ratio(M, ll):
+    _process_tex = _hadr[M]['tex']+_tex[''.join(ll)]
+    _process_taxonomy = r'Process :: quarkonium lepton decays :: $V\to \ell^+\ell^-\gamma$ :: $' + _process_tex + r"$"
+    _obs_name = "R("+_hadr[M]['V']+"->"+''.join(ll)+"gamma)"
+    _obs = Observable(_obs_name,arguments=["CeFFij","CeFFji","CeFFtildeij","CeFFtildeji"])
+    _obs.set_description(r"Ratio of $"+_process_tex+r"$ over BR$(V\to ee)$")
+    _obs.tex = r"$\text{R}(" + _process_tex+r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    return _obs_name
+
 
 for M in _hadr:
     for ll0 in [('e','mu','mue'), ('mu','e','mue'), ('e','tau','taue'), ('tau','e','taue'), ('mu','tau','mutau'), ('tau','mu','mutau')]:
@@ -163,12 +189,20 @@ for M in _hadr:
         wc_sector=ll0[2]
         _obs_name = _define_obs_V_ll_gamma(M, ll)
         Prediction(_obs_name, Vllgamma_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        _obs_name = _define_obs_V_ll_gamma_ratio(M, ll)
+        Prediction(_obs_name, Vllgamma_ratio_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+
     for ll0 in [('e','mu','mue'), ('e','tau','taue'), ('mu','tau','mutau')]:
         ll=(ll0[0],ll0[1])
         wc_sector=ll0[2]
         # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
         _obs_name = _define_obs_V_ll_gamma(M, ('{0}{1},{1}{0}'.format(*ll),))
         Prediction(_obs_name, Vllgamma_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        _obs_name = _define_obs_V_ll_gamma_ratio(M, ('{0}{1},{1}{0}'.format(*ll),))
+        Prediction(_obs_name, Vllgamma_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        
         _obs_name = _define_obs_V_ll_gamma(M, ('{1}{0},{0}{1}'.format(*ll),))
         Prediction(_obs_name, Vllgamma_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        _obs_name = _define_obs_V_ll_gamma_ratio(M, ('{1}{0},{0}{1}'.format(*ll),))
+        Prediction(_obs_name, Vllgamma_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
  
