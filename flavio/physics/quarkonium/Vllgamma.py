@@ -63,26 +63,31 @@ def getWC_lfv(wc_obj,par,V,Q,l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtilde
 
 # we use \mu=y^2 inside the kinematic functions.
 
-def F_A(mu):
+def F_A(y):
+    mu=y**2
     if mu==0:
         return 2./9
     return (8.-45*mu+36*mu**2+mu**3+6*(mu-6)*mu**2*np.log(mu))/36
-def F_S(mu):
+def F_S(y):
+    mu=y**2
     if mu==0:
         return 1./12
     return (1-6*mu+3*mu**2*(1-2*np.log(mu))+2*mu**3)/12
-def Ftilde_P(mu):
+def Ftilde_P(y):
+    mu=y**2
     if mu==0:
         return 1./40
     return (3.-30*mu-20*mu**2*(1+3*np.log(mu))+60**mu**3-15*mu**4+2*mu**5)/120
-def Fhat_S(mu):
+def Fhat_S(y):
+    mu=y**2
     if mu==0:
         return 1./12
     return (1.-8*mu-12*mu**2*np.log(mu)+8*mu**3-mu**4)/12
-def F_PA(mu):
-    if mu==0:
-        return 1./2
-    return (1.+4*mu-5*mu**2+2*mu*(2+mu)*np.log(mu))/2.
+def F_PA(y):
+    if y==0:
+        return 0.
+    mu=y**2
+    return y*(1.+4*mu-5*mu**2+2*mu*(2+mu)*np.log(mu))/2.
 
 
 def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji):
@@ -111,11 +116,10 @@ def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFt
     else:
         print("The case of non-hierarchical masses is not implemented.")
 
-    ys=y**2
 
     prefactor=alphaem*Q**2*mV/(192*np.pi**2*GammaV)
     
-    return prefactor*(AV * F_A(ys) + SP*F_S(ys) + SPtilde *Ftilde_P(ys) +SStilde * Fhat_S(ys) + AP*F_PA(ys) )
+    return prefactor*(AV * F_A(y) + SP*F_S(y) + SPtilde *Ftilde_P(y) +SStilde * Fhat_S(y) + AP*F_PA(y) )
 
 
 def Vllgamma_br_func(V, Q, l1, l2,wc_sector):
