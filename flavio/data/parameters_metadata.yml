@@ -148,7 +148,6 @@ Gamma_eta_c:
 f_eta_c: 
   tex: $f_{\eta_c}$
   description: $\eta_c$ decay constant
-
 a_eta_c: 
   tex: $a_{\eta_c}$
   description: $\eta_c$ anomaly decay constant
@@ -163,10 +162,53 @@ Gamma_eta_b:
 f_eta_b: 
   tex: $f_{\eta_b}$
   description: $\eta_b$ decay constant
-
 a_eta_b: 
   tex: $a_{\eta_b}$
   description: $\eta_b$ anomaly decay constant
+
+
+
+m_chi_c0(1P): 
+  tex: $m_{\chi_{c0}(1P)}$
+  description: $\chi_{c0}(1P)$ mass
+Gamma_chi_c0(1P):
+  tex: $\Gamma_{\chi_{c0}(1P)}$
+  description: total decay width of $\chi_{c0}(1P)$
+f_chi_c0(1P): 
+  tex: $f_{\chi_{c0}(1P)}$
+  description: $\chi_{c0}(1P)$ decay constant
+a_chi_c0(1P): 
+  tex: $a_{\chi_{c0}(1P)}$
+  description: $\chi_{c0}(1P)$ anomaly decay constant
+
+
+
+m_chi_b0(1P): 
+  tex: $m_{\chi_{b0}(1P)}$
+  description: $\chi_{b0}(1P)$ mass
+Gamma_chi_b0(1P):
+  tex: $\Gamma_{\chi_{b0}(1P)}$
+  description: total decay width of $\chi_{b0}(1P)$
+f_chi_b0(1P): 
+  tex: $f_{\chi_{b0}(1P)}$
+  description: $\chi_{b0}(1P)$ decay constant
+a_chi_b0(1P): 
+  tex: $a_{\chi_{b0}(1P)}$
+  description: $\chi_{b0}(1P)$ anomaly decay constant
+
+
+m_chi_b0(2P): 
+  tex: $m_{\chi_{b0}(2P)}$
+  description: $\chi_{b0}(2P)$ mass
+Gamma_chi_b0(2P):
+  tex: $\Gamma_{\chi_{b0}(2P)}$
+  description: total decay width of $\chi_{b0}(2P)$
+f_chi_b0(2P): 
+  tex: $f_{\chi_{b0}(2P)}$
+  description: $\chi_{b0}(2P)$ decay constant
+a_chi_b0(2P): 
+  tex: $a_{\chi_{b0}(2P)}$
+  description: $\chi_{b0}(2P)$ anomaly decay constant
 
 
 #
