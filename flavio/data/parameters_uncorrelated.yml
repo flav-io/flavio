@@ -94,17 +94,17 @@ a_eta_b: 0.0 # Hazard, Petrov 1607.00815
 
 m_chi_c0(1P): 3.41471(30) # PDG 2021
 Gamma_chi_c0(1P): 10.8(0.6)e-3 # PDG 2021
-f_chi_c0(1P): 0.887 # 1607.00815 (1510.04659)
+f_chi_c0(1P): 0.887 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815 
 a_chi_c0(1P): 0.0 # Hazard, Petrov 1607.00815
 
 m_chi_b0(1P): 9.85944(52) # PDG 2021 errors added in quadrature
-Gamma_chi_b0(1P): 1.35 # 1607.00815 (1507.00024,1510.04659) - calculated
-f_chi_b0(1P): 0.423 # 1607.00815 (1510.04659)
+Gamma_chi_b0(1P): 1.35e-3 # 1510.04659 following 1507.00024 - calculated
+f_chi_b0(1P): 0.423 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815 
 a_chi_b0(1P): 0.0 # Hazard, Petrov 1607.00815
 
 m_chi_b0(2P): 10.2325(6) # PDG 2021 errors added in quadrature
-Gamma_chi_b0(2P): 0.247(0.097) # 1607.00815 (1507.00024,1510.04659) - calculated
-f_chi_b0(2P): 0.421 # 1607.00815 (1510.04659)
+Gamma_chi_b0(2P): 247(93)e-6 # 1510.04659 following 1507.00024 - calculated
+f_chi_b0(2P): 0.421 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815
 a_chi_b0(2P): 0.0 # Hazard, Petrov 1607.00815
 
 

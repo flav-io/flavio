@@ -23,7 +23,8 @@ def getS_lfv(wc_obj,par,S,l1,l2,wc_sector,CeGGij,CeGGji):
     wc = wc_obj.get_wc(wc_sector, scale, par)
 
     mS = par['m_'+S]   
-    fS=par['f_'+S] 
+    # The form factor in the parameters_uncorrelated.yml file follows 1607.00815. Thus we have to include an additional factor of "-i" which drops out in the absence of an anomaly term.
+    fS=par['f_'+S]*(-1j) 
     aS=par['a_'+S]
     qq=meson_quark[S]
     # for emu and taue the name of the Wilson coefficient sector agrees with the ordering of leptons in the vector bilinear
