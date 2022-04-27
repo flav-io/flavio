@@ -1,6 +1,7 @@
 nosetests.json
 .ropeproject
 .coverage
+.DS_Store
 
 # editor tmp files
 *~
