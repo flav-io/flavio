@@ -212,7 +212,7 @@ def get_obs(function, q2, wc_obj, par, lep, *ang_coef):
 
 # OBSERVABLES
 def dGdq2(L, L_conj, *args):
-    # differential decay width
+    # differential decay width : (dG + dGbar)/dq2*(1/2)
     return (L['1cc'] + 2*L['1ss'] + 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss'] + L_conj['1cc'] + 2*L_conj['1ss'] + 2*L_conj['2cc'] + 4*L_conj['2ss'] + 2*L_conj['3ss'])/6
 
 
@@ -230,7 +230,7 @@ def A(L, L_conj, ang_coef):
 
 def FL_num(L, L_conj, *args):
     # longuitudinal polarization of the dilepton system
-    return (-L['1cc'] + 2*L['1ss'] - 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss'] - L_conj['1cc'] + 2*L_conj['1ss'] - 2*L_conj['2cc'] + 4*L_conj['2ss'] + 2*L_conj['3ss'])/6 
+    return (-L['1cc'] + 2*L['1ss'] - 2*L['2cc'] + 4*L['2ss'] + 2*L['3ss'] - L_conj['1cc'] + 2*L_conj['1ss'] - 2*L_conj['2cc'] + 4*L_conj['2ss'] + 2*L_conj['3ss'])/6
 
 
 def AFBl_num(L, L_conj, *args):
@@ -245,17 +245,6 @@ def AFBlh(*args):
     return 0
 
 
-def dbrdq2(q2, wc_obj, par, lep):
-    tauLb = par['tau_Lambdab']
-    return tauLb * get_obs(dGdq2, q2, wc_obj, par, lep)
-
-
-def dbrdq2_int(q2min, q2max, wc_obj, par, lep):
-    def obs(q2):
-        return dbrdq2(q2, wc_obj, par, lep)
-    return flavio.math.integrate.nintegrate(obs, q2min, q2max)/(q2max-q2min)
-
-
 def obs_int(function, q2min, q2max, wc_obj, par, lep, *ang_coef):
     def obs(q2):
         return get_obs(function, q2, wc_obj, par, lep, *ang_coef)
@@ -266,13 +255,15 @@ def obs_int(function, q2min, q2max, wc_obj, par, lep, *ang_coef):
 
 def dbrdq2_int_func(lep):
     def fct(wc_obj, par, q2min, q2max):
-        return dbrdq2_int(q2min, q2max, wc_obj, par, lep)
+        tauLb = par['tau_Lambdab']
+        return tauLb*obs_int(dGdq2, q2min, q2max, wc_obj, par, lep)/(q2max-q2min)
     return fct
 
 
 def dbrdq2_func(lep):
     def fct(wc_obj, par, q2):
-        return dbrdq2(q2, wc_obj, par, lep)
+        tauLb = par['tau_Lambdab']
+        return tauLb * get_obs(dGdq2, q2, wc_obj, par, lep)
     return fct
 
 
