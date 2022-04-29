@@ -1,10 +1,11 @@
 from math import sqrt, exp
+import warnings
 
 def omega_fct(q2, mLb, mLst):
     # eq. (73) in arXiv:2009.09313v1
     return (mLb*mLb + mLst*mLst - q2)/(2*mLb*mLst)
 
-def ff_formula(q2, F, A, omega):
+def ff_formula(F, A, omega):
     # eq. (75) 
     return F + A*(omega - 1)
 
@@ -27,15 +28,16 @@ def formfactors(process, par, q2):
         F = par[process+' '+e+' F']
         A = par[process+' '+e+' A']
 
-        ff_dict[e] = ff_formula(q2, F, A, omega)
+        ff_dict[e] = ff_formula(F, A, omega)
 
     return ff_dict, mL, mLb
 
 
 def ff_equiv(process, q2, par):
     # eq. (A21) - (A34) and (6)
+    if q2 < 16.0 or q2 > 16.81:
+        warnings.warn('Lattice QCD form factors are used out of the allowed q2 region [16.0; 16.81]. Use better quark model MCN form factors instead of LQCD.')
     ff_dict, mLst, mLb = formfactors(process, par, q2)
-
     splus  = (mLb + mLst)**2 - q2
     sminus = (mLb - mLst)**2 - q2
     
