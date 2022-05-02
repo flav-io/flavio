@@ -35,11 +35,12 @@ def formfactors(process, par, q2):
 
 def ff_equiv(process, q2, par):
     # eq. (A21) - (A34) and (6)
-    if q2 < 16.0 or q2 > 16.81:
-        warnings.warn('Lattice QCD form factors are used out of the allowed q2 region [16.0; 16.81]. Use better quark model MCN form factors instead of LQCD.')
     ff_dict, mLst, mLb = formfactors(process, par, q2)
     splus  = (mLb + mLst)**2 - q2
     sminus = (mLb - mLst)**2 - q2
+ 
+    if q2 < 16.0 or q2 > (mLb - mLst)**2:
+        warnings.warn(f'Lattice QCD form factors are used out of the allowed q2 region [16.0; {(mLb - mLst)**2:.3}].')
     
     ff = {}
     ff['fVt']    = ( mLst/splus )*ff_dict['f0']
