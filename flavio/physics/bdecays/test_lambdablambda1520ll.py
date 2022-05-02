@@ -85,18 +85,18 @@ class TestLambdabLambda1520ll(TestLambdabLambda1520):
 
         self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 0.397, rtol=0.17, scalef=1e9, q2min=0.1, q2max=3)
         self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 1.29, rtol=0.07, scalef=1e9, q2min=3, q2max=6)
-        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 3.22, rtol=0.12, scalef=1e9, q2min=6, q2max=8.86)
+        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 3.22, rtol=0.09, scalef=1e9, q2min=6, q2max=8.68)
         self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 0.95, rtol=0.07, scalef=1e9, q2min=1, q2max=6)
 
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', 0.048, rtol=0.57, q2min=0.1, q2max=3)
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.127, rtol=0.16, q2min=3, q2max=6)
-        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.235, rtol=0.02, q2min=6, q2max=8.86)
+        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.235, rtol=0.03, q2min=6, q2max=8.68)
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.098, rtol=0.24, q2min=1, q2max=6)
 
 
         self.assert_obs('<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.181, rtol=0.29, q2min=0.1, q2max=3)
         self.assert_obs('<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.242, rtol=0.07, q2min=3, q2max=6)
-        self.assert_obs('<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.361, rtol=0.04, q2min=6, q2max=8.86)
+        self.assert_obs('<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.361, rtol=0.05, q2min=6, q2max=8.68)
         self.assert_obs('<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.221, rtol=0.06, q2min=1, q2max=6)
 
     def test_lambdablambda1520ll_binned_qmff_np(self):
@@ -105,12 +105,12 @@ class TestLambdabLambda1520ll(TestLambdabLambda1520):
 
         self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 0.337, NP=True, rtol=0.19, scalef=1e9, q2min=0.1, q2max=3)
         self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 1.04, NP=True, rtol=0.06, scalef=1e9, q2min=3, q2max=6)
-        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 2.58, NP=True, rtol=0.10, scalef=1e9, q2min=6, q2max=8.86)
+        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 2.58, NP=True, rtol=0.07, scalef=1e9, q2min=6, q2max=8.68)
         self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 0.77, NP=True, rtol=0.07, scalef=1e9, q2min=1, q2max=6)
 
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', 0.098  , NP=True, rtol=0.26, q2min=0.1, q2max=3)
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.059, NP=True, rtol=0.38, q2min=3, q2max=6)
-        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.166, NP=True, rtol=0.02, q2min=6, q2max=8.86)
+        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.166, NP=True, rtol=0.01, q2min=6, q2max=8.68)
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.031, NP=True, rtol=0.84, q2min=1, q2max=6)
 
     def test_lambdablambda1520mm_all_observables(self):
