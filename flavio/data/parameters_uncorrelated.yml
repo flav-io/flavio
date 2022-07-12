@@ -98,7 +98,7 @@ f_chi_c0(1P): 0.887 # 1510.04659 - Note, the definition of the decay constant fo
 a_chi_c0(1P): 0.0 # Hazard, Petrov 1607.00815
 
 m_chi_b0(1P): 9.85944(52) # PDG 2021 errors added in quadrature
-Gamma_chi_b0(1P): 1.35(0.27)e-3 # calculated following 1510.04659 
+Gamma_chi_b0(1P): 1.23(0.17)e-3 # calculated following 1510.04659 
 f_chi_b0(1P): 0.423 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815 
 a_chi_b0(1P): 0.0 # Hazard, Petrov 1607.00815
 
