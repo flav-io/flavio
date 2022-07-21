@@ -73,7 +73,7 @@ def F_S(y):
     if mu==0:
         return 1./12
     return (1-6*mu+3*mu**2*(1-2*np.log(mu))+2*mu**3)/12
-def Ftilde_P(y):
+def Ftilde_S(y):
     mu=y**2
     if mu==0:
         return 1./40
@@ -87,7 +87,7 @@ def Fhat_P(y):
     mu=y**2
     if mu==0:
         return 0.
-    return mu**2*(8*mu-mu**2-12*np.log(mu))/12.
+    return -mu*(8-8*mu**2+mu**3 +12*mu*np.log(mu))/12.
 def F_PA(y):
     if y==0:
         return 0.
@@ -132,7 +132,7 @@ def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFt
 
     prefactor=alphaem*Q**2*mV/(192*np.pi**2*GammaV)
     
-    return prefactor*(AV * F_A(y) + SP*F_S(y) + SPtilde *Ftilde_P(y) +SStilde * Fhat_S(y) + PPtilde * Fhat_P(y) + AP*F_PA(y) +APtilde * Ftilde_PA(y))
+    return prefactor*(AV * F_A(y) + SP*F_S(y) + SPtilde *Ftilde_S(y) +SStilde * Fhat_S(y) + PPtilde * Fhat_P(y) + AP*F_PA(y) +APtilde * Ftilde_PA(y))
 
 
 def Vllgamma_br_func(V, Q, l1, l2,wc_sector):
