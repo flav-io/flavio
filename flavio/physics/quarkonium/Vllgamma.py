@@ -83,11 +83,21 @@ def Fhat_S(y):
     if mu==0:
         return 1./12
     return (1.-8*mu-12*mu**2*np.log(mu)+8*mu**3-mu**4)/12
+def Fhat_P(y):
+    mu=y**2
+    if mu==0:
+        return 0.
+    return mu**2*(8*mu-mu**2-12*np.log(mu))/12.
 def F_PA(y):
     if y==0:
         return 0.
     mu=y**2
     return y*(1.+4*mu-5*mu**2+2*mu*(2+mu)*np.log(mu))/2.
+def Ftilde_PA(y):
+    if y==0:
+        return 0.
+    mu=y**2
+    return y*(1.+9*mu-9*mu**2-mu**3+6*mu*(1+mu)*np.log(mu))/3.
 
 
 def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji):
@@ -106,20 +116,23 @@ def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFt
     SP=np.abs(SL)**2+np.abs(PL)**2+np.abs(SR)**2+np.abs(PR)**2
     SPtilde=np.abs(StildeL)**2+np.abs(StildeR)**2 + np.abs(PtildeL)**2+np.abs(PtildeR)**2
     SStilde= (SL*StildeL.conjugate() + SR*StildeR.conjugate()).real
+    PPtilde= (PL*PtildeL.conjugate() + PR*PtildeR.conjugate()).imag
    
     if ml1<ml2:
         y=ml2/mV
-        AP=(AL*PR.conjugate()+AR*PL.conjugate()).real
+        AP=-(AL*PR.conjugate()+AR*PL.conjugate()).real
+        APtilde=-(AL*PtildeR.conjugate()+AR*PtildeL.conjugate()).imag
     elif ml2<ml1:
         y=ml1/mV
         AP=(AL*PL.conjugate()+AR*PR.conjugate()).real
+        APtilde=(AL*PtildeL.conjugate()+AR*PtiledR.conjugate()).imag
     else:
         print("The case of non-hierarchical masses is not implemented.")
 
 
     prefactor=alphaem*Q**2*mV/(192*np.pi**2*GammaV)
     
-    return prefactor*(AV * F_A(y) + SP*F_S(y) + SPtilde *Ftilde_P(y) +SStilde * Fhat_S(y) + AP*F_PA(y) )
+    return prefactor*(AV * F_A(y) + SP*F_S(y) + SPtilde *Ftilde_P(y) +SStilde * Fhat_S(y) + PPtilde * Fhat_P(y) + AP*F_PA(y) +APtilde * Ftilde_PA(y))
 
 
 def Vllgamma_br_func(V, Q, l1, l2,wc_sector):
