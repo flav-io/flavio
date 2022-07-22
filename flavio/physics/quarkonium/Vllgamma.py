@@ -79,16 +79,17 @@ def Ftilde_S(y):
     if mu==0:
         return 1./40
     return (3.-30*mu-20*mu**2*(1+3*np.log(mu))+60**mu**3-15*mu**4+2*mu**5)/120
-def Fhat_S(y):
-    mu=y**2
-    if mu==0:
-        return 1./12
-    return (1.-8*mu-12*mu**2*np.log(mu)+8*mu**3-mu**4)/12
 def Fhat_P(y):
     mu=y**2
     if mu==0:
         return 0.
     return -mu*(8-8*mu**2+mu**3 +12*mu*np.log(mu))/12.
+def Fhat_S(y):
+    mu=y**2
+    if mu==0:
+        return 1./12
+#    return (1.-8*mu-12*mu**2*np.log(mu)+8*mu**3-mu**4)/12
+    return Fhat_P(y) + 1./12
 def F_PA(y):
     if y==0:
         return 0.
