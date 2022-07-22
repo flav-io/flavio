@@ -54,11 +54,12 @@ def getWC_lfv(wc_obj,par,V,Q,l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtilde
     PtildeL=4*mV**2*fV*CeFFtildeji.conjugate()
 
     if ll==l2+l1: 
+    # As we use ll instead of l1+l2 or l2+l1 above when constructing the effective parameters, we have to complex conjugate it, in case indices are reversed.
+    # This is not necessary for the others, because there we explicitly defined the flavour indices.
         VL=VL.conjugate()
         VR=VR.conjugate()
         AL=AL.conjugate()
         AR=AR.conjugate()
-    # TODO CHECK THIS IF STATEMENT aND COMMENT
     return VL,VR,TL,TR,SR,SL,PR,PL,AR,AL,StildeR,StildeL,PtildeR,PtildeL
 
 # we use \mu=y^2 inside the kinematic functions.
