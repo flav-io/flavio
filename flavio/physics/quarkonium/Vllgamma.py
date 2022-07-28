@@ -104,6 +104,8 @@ def Ftilde_PA(y):
 
 def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji):
     r"""Branching ratio for the lepton-flavour violating leptonic decay J/psi-> l l' \gamma"""
+    #####branching ratio obtained from 2207.10913#####
+    flavio.citations.register("Calibbi:2022ddo")
     # renormalization scale
     scale = flavio.config['renormalization scale'][V]
     alphaem = running.get_alpha_e(par, scale)

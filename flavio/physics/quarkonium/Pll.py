@@ -45,6 +45,8 @@ def getS_lfv(wc_obj,par,P,l1,l2,wc_sector,CeGGij,CeGGji):
 
 def Pll_br(wc_obj, par,P,Q, l1,l2,wc_sector,CeGGij,CeGGji):
     r"""Branching ratio for the lepton-flavour violating leptonic decay P -> l l' """
+    #####branching ratio obtained from 2207.10913#####
+    flavio.citations.register("Calibbi:2022ddo")
     mP = par['m_'+P]   
     GammaP = par['Gamma_'+P]  
     ml1 = par['m_'+l1]
