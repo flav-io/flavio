@@ -1,7 +1,5 @@
 r"""$S\to ll^\prime$ branching ratio"""
-# TODO add reference
 
-#from math import pi,sqrt
 from flavio.classes import Observable, Prediction
 import flavio
 from flavio.physics.running import running

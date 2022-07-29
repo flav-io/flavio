@@ -70,18 +70,23 @@ renormalization scale:
 
     # quarkonium
     # renormalization scales are set to the mass of the bb quarkonia and to 2 GeV for the cc quarkonia. The renormalization scale was explicitly specified for J/psi tensor form factor in 2008.02024.
-# TODO check renormalization scales 
     J/psi: 2.
     psi(2S): 2.
-    eta_c: 2.  
+    eta_c(1S): 2.  
     chi_c0(1P): 2.  
     
-    Upsilon(1S): 9.5
-    Upsilon(2S): 10.0
-    Upsilon(3S): 10.4
-    eta_b: 9.4
-    chi_b0(1P): 9.9
-    chi_b0(2P): 10.2
+    Upsilon(1S): 10.
+    Upsilon(2S): 10.
+    Upsilon(3S): 10.
+    eta_b(1S): 10.
+    chi_b0(1P): 10.
+    chi_b0(2P): 10.
+    # Upsilon(1S): 9.5
+    # Upsilon(2S): 10.0
+    # Upsilon(3S): 10.4
+    # eta_b(1S): 9.4
+    # chi_b0(1P): 9.9
+    # chi_b0(2P): 10.2
 
 # these are the thresholds where quark flavours are decoupled in the RG
 # evolution to low energies.

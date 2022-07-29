@@ -1,14 +1,12 @@
 r"""$P\to ll^\prime$ branching ratio"""
-# TODO add reference
 
-#from math import pi,sqrt
 from flavio.classes import Observable, Prediction
 import flavio
 from flavio.physics.running import running
 import numpy as np
 
-meson_quark = { 'eta_c' : 'cc', 
-                'eta_b': 'bb',
+meson_quark = { 'eta_c(1S)' : 'cc', 
+                'eta_b(1S)': 'bb',
                 }
 
 def kaellen(x,y,z):
@@ -73,8 +71,8 @@ def Pll_br_comb_func(P, Q, l1, l2,wc_sector):
 
 # Observable and Prediction instances
 _hadr = { 
-    'eta_c': {'tex': r"\eta_c\to", 'P': 'eta_c', 'Q': 2./3., },
-    'eta_b': {'tex': r"\eta_b\to", 'P': 'eta_b', 'Q': -1./3., },
+    'eta_c(1S)': {'tex': r"\eta_c(1S)\to", 'P': 'eta_c(1S)', 'Q': 2./3., },
+    'eta_b(1S)': {'tex': r"\eta_b(1S)\to", 'P': 'eta_b(1S)', 'Q': -1./3., },
  }
 
 _tex = {'ee': r'e^+e^-', 'mumu': r'\mu^+\mu^-', 'tautau': r'\tau^+\tau^-', 
