@@ -50,13 +50,6 @@ m_b:
 
 
 # Parameters for LFV quarkonium decay
-
-# m_J/psi: 
-#   tex: $m_{J/\psi}$
-#   description: $J/\psi$ mass
-# Gamma_J/psi:
-#   tex: $\Gamma_{J/\psi}$
-#   description: total decay width of $J/\psi$
 f_J/psi: 
   tex: $f_{J/\psi}$
   description: $J/\psi$ decay constant
@@ -71,12 +64,6 @@ Gamma_SM(J/psi->ee):
   description: SM prediction for decay rate of $J/\psi\to ee$ 
 
 
-# m_psi(2S): 
-#   tex: $m_{\psi(2S)}$
-#   description: $\psi(2S)$ mass
-# Gamma_psi(2S):
-#   tex: $\Gamma_{\psi(2S)}$
-#   description: total decay width of $\psi(2S)$
 f_psi(2S): 
   tex: $f_{\psi(2S)}$
   description: $\psi(2S)$ decay constant
@@ -86,16 +73,7 @@ fT_psi(2S):
 BR_exp(psi(2S)->ee): 
   tex: $BR_{\rm exp}(\psi(2S)\to e^+ e^-)$
   description: measured branching ratio $\psi(2S)\to ee$ 
-# Gamma_SM(psi(2S)->ee): 
-#   tex: $\Gamma_{\rm SM}(\psi(2S)\to e^+ e^-)$
-#   description: SM prediction for decay rate of $\psi(2S)\to ee$ 
 
-# m_Upsilon(1S): 
-#   tex: $m_{\Upsilon(1S)}$
-#   description: $\Upsilon(1S)$ mass
-# Gamma_Upsilon(1S):
-#   tex: $\Gamma_{\Upsilon(1S)}$
-#   description: total decay width of $\Upsilon(1S)$
 f_Upsilon(1S): 
   tex: $f_{\Upsilon(1S)}$
   description: $\Upsilon(1S)$ decay constant
@@ -106,12 +84,6 @@ BR_exp(Upsilon(1S)->ee):
   tex: $BR_{\rm exp}(\Upsilon(1S)\to e^+ e^-)$
   description: measured branching ratio $\Upsilon(1S)\to ee$ 
 
-# m_Upsilon(2S): 
-#   tex: $m_{\Upsilon(2S)}$
-#   description: $\Upsilon(2S)$ mass
-# Gamma_Upsilon(2S):
-#   tex: $\Gamma_{\Upsilon(2S)}$
-#   description: total decay width of $\Upsilon(2S)$
 f_Upsilon(2S): 
   tex: $f_{\Upsilon(2S)}$
   description: $\Upsilon(2S)$ decay constant
@@ -122,12 +94,6 @@ BR_exp(Upsilon(2S)->ee):
   tex: $BR_{\rm exp}(\Upsilon(2S)\to e^+ e^-)$
   description: measured branching ratio $\Upsilon(2S)\to ee$ 
 
-# m_Upsilon(3S): 
-#   tex: $m_{\Upsilon(3S)}$
-#   description: $\Upsilon(3S)$ mass
-# Gamma_Upsilon(3S):
-#   tex: $\Gamma_{\Upsilon(3S)}$
-#   description: total decay width of $\Upsilon(3S)$
 f_Upsilon(3S): 
   tex: $f_{\Upsilon(3S)}$
   description: $\Upsilon(3S)$ decay constant
@@ -139,12 +105,6 @@ BR_exp(Upsilon(3S)->ee):
   description: measured branching ratio $\Upsilon(3S)\to ee$ 
 
 
-# m_eta_c: 
-#   tex: $m_{\eta_c}$
-#   description: $\eta_c$ mass
-# Gamma_eta_c:
-#   tex: $\Gamma_{\eta_c}$
-#   description: total decay width of $\eta_c$
 f_eta_c(1S): 
   tex: $f_{\eta_c(1S)}$
   description: $\eta_c(1S)$ decay constant
@@ -153,12 +113,6 @@ a_eta_c(1S):
   description: $\eta_c(1S)$ anomaly decay constant
 
 
-# m_eta_b: 
-#   tex: $m_{\eta_b}$
-#   description: $\eta_b$ mass
-# Gamma_eta_b:
-#   tex: $\Gamma_{\eta_b}$
-#   description: total decay width of $\eta_b$
 f_eta_b(1S): 
   tex: $f_{\eta_b(1S)}$
   description: $\eta_b(1S)$ decay constant
@@ -167,13 +121,6 @@ a_eta_b(1S):
   description: $\eta_b(1S)$ anomaly decay constant
 
 
-
-# m_chi_c0(1P): 
-#   tex: $m_{\chi_{c0}(1P)}$
-#   description: $\chi_{c0}(1P)$ mass
-# Gamma_chi_c0(1P):
-#   tex: $\Gamma_{\chi_{c0}(1P)}$
-#   description: total decay width of $\chi_{c0}(1P)$
 f_chi_c0(1P): 
   tex: $f_{\chi_{c0}(1P)}$
   description: $\chi_{c0}(1P)$ decay constant
@@ -182,7 +129,7 @@ a_chi_c0(1P):
   description: $\chi_{c0}(1P)$ anomaly decay constant
 
 
-
+# TODO check what to do with calculated decay widths
 # m_chi_b0(1P): 
 #   tex: $m_{\chi_{b0}(1P)}$
 #   description: $\chi_{b0}(1P)$ mass
