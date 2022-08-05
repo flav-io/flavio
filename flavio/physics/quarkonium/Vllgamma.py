@@ -127,7 +127,7 @@ def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFt
     elif ml2<ml1:
         y=ml1/mV
         AP=(AL*PL.conjugate()+AR*PR.conjugate()).real
-        APtilde=(AL*PtildeL.conjugate()+AR*PtiledR.conjugate()).imag
+        APtilde=(AL*PtildeL.conjugate()+AR*PtildeR.conjugate()).imag
     else:
         print("The case of non-hierarchical masses is not implemented.")
 

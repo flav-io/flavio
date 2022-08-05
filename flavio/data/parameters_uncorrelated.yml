@@ -70,6 +70,8 @@ BR_exp(Upsilon(3S)->ee): 0.0218(20) # PDG 2021
 f_eta_c(1S): 0.387(7) # 1312.2858 
 a_eta_c(1S): 0.0 # Hazard, Petrov 1607.00815
 
+m_eta_b(1S): 9.3987(20) # PDG 2022
+tau_eta_b(1S): 100(50) # PDG 2022 (lower error slightly increased to have symmetric errors)
 f_eta_b(1S): 0.724(12) # 2101.08103
 a_eta_b(1S): 0.0 # Hazard, Petrov 1607.00815
 
