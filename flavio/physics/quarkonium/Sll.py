@@ -38,7 +38,7 @@ def Sll_br(wc_obj, par,S, l1,l2,wc_sector,CeGGij,CeGGji):
     #####branching ratio obtained from 2207.10913#####
     flavio.citations.register("Calibbi:2022ddo")
     mP = par['m_'+S]   
-    GammaP = par['Gamma_'+S]  
+    tauP = par['tau_'+S]  
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
     y1=ml1/mP
@@ -46,7 +46,7 @@ def Sll_br(wc_obj, par,S, l1,l2,wc_sector,CeGGij,CeGGji):
     y1s=y1**2
     y2s=y2**2
     SL,SR = getS_lfv(wc_obj,par,S,l1,l2,wc_sector,CeGGij,CeGGji)
-    return  mP/(16.*np.pi*GammaP) * np.sqrt(kaellen(1,y1s,y2s)) * ((1-y1s-y2s)*(np.abs(SL)**2+np.abs(SR)**2) -4*y1*y2 *(SL*SR.conjugate()).real)
+    return  tauP*mP/(16.*np.pi) * np.sqrt(kaellen(1,y1s,y2s)) * ((1-y1s-y2s)*(np.abs(SL)**2+np.abs(SR)**2) -4*y1*y2 *(SL*SR.conjugate()).real)
 
 
 def Sll_br_func(S,  l1, l2,wc_sector):

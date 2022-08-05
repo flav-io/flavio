@@ -108,7 +108,7 @@ def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFt
     scale = flavio.config['renormalization scale'][V]
     alphaem = running.get_alpha_e(par, scale)
     mV = par['m_'+V]   
-    GammaV = par['Gamma_'+V]  
+    tauV = par['tau_'+V]  
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
 
@@ -132,7 +132,7 @@ def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFt
         print("The case of non-hierarchical masses is not implemented.")
 
 
-    prefactor=alphaem*Q**2*mV/(192*np.pi**2*GammaV)
+    prefactor=alphaem*Q**2*tauV*mV/(192*np.pi**2)
     
     return prefactor*(AV * F_A(y) + SP*F_S(y) + SPtilde *Ftilde_S(y) +SStilde * Fhat_S(y) + PPtilde * Fhat_P(y) + AP*F_PA(y) +APtilde * Ftilde_PA(y))
 

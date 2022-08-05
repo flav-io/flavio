@@ -76,7 +76,7 @@ def Vll_br(wc_obj, par,V,Q, l1,l2,wc_sector):
     #####branching ratio obtained from 2207.10913#####
     flavio.citations.register("Calibbi:2022ddo")
     mV = par['m_'+V]   
-    GammaV = par['Gamma_'+V]  
+    tauV = par['tau_'+V]  
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
     y1=ml1/mV
@@ -93,7 +93,7 @@ def Vll_br(wc_obj, par,V,Q, l1,l2,wc_sector):
     ampSquared_T= 4./3.*(np.abs(TL)**2+np.abs(TR)**2) * (1+y1s+y2s-2*(y1s-y2s)**2) +16.*y1*y2*(TR*TL.conjugate()).real
     ampSquared_VT = 2*y1*(1+y2s-y1s)*(VR*TR.conjugate()+VL*TL.conjugate()).real + 2*y2*(1+y1s-y2s)*(VL*TR.conjugate()+VR*TL.conjugate()).real
     
-    return mV/(16.*np.pi*GammaV) * np.sqrt(kaellen(1,y1s,y2s)) * (ampSquared_V+ampSquared_T+ampSquared_VT)
+    return tauV*mV/(16.*np.pi) * np.sqrt(kaellen(1,y1s,y2s)) * (ampSquared_V+ampSquared_T+ampSquared_VT)
 
 
 def Vll_br_func(V, Q, l1, l2,wc_sector):

@@ -76,13 +76,11 @@ a_eta_b(1S): 0.0 # Hazard, Petrov 1607.00815
 f_chi_c0(1P): 0.887 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815 
 a_chi_c0(1P): 0.0 # Hazard, Petrov 1607.00815
 
-# m_chi_b0(1P): 9.85944(52) # PDG 2021 errors added in quadrature
-# Gamma_chi_b0(1P): 1.23(0.17)e-3 # calculated following 1510.04659 
+tau_chi_b0(1P): 815(113) # lifetime calculated following 1510.04659 
 f_chi_b0(1P): 0.423 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815 
 a_chi_b0(1P): 0.0 # Hazard, Petrov 1607.00815
 
-# m_chi_b0(2P): 10.2325(6) # PDG 2021 errors added in quadrature
-# Gamma_chi_b0(2P): 0.76(0.20)e-3 # calculated following 1510.04659 
+tau_chi_b0(2P): 1300(255) # calculated following 1510.04659. The final result for the lifetime has been obtained using a simple weighted average of the lifetimes estimated from BR(Upsilon(1S)+gamma) and BR(Upsilon(2S)+gamma) with errors added in quadrature.
 f_chi_b0(2P): 0.421 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815
 a_chi_b0(2P): 0.0 # Hazard, Petrov 1607.00815
 
