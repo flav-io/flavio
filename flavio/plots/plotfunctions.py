@@ -695,7 +695,9 @@ def contour(x, y, z, levels, *, z_min=None,
         ax.contourf(x, y, z, levels=levelsf, **_contourf_args)
     CS = ax.contour(x, y, z, levels=levels, **_contour_args)
     if label is not None:
-        CS.collections[0].set_label(label)
+        handle = CS.legend_elements()[0][0]
+        handle.set_label(label)
+        ax.add_container(handle)
     return CS
 
 
