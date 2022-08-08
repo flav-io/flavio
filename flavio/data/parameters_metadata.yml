@@ -112,7 +112,13 @@ a_eta_c(1S):
   tex: $a_{\eta_c(1S)}$
   description: $\eta_c(1S)$ anomaly decay constant
 
-
+# mass and lifetime of eta_b(1S) manually added, because it is not included in scikit-hep particle code
+m_eta_b(1S): 
+  tex: $m_{\eta_b(1S)}$
+  description: $\eta_b(1S)$ mass
+tau_eta_b(1S): 
+  tex: $\tau_{\eta_b(1S)}$
+  description: $\eta_b(1S)$ lifetime
 f_eta_b(1S): 
   tex: $f_{\eta_b(1S)}$
   description: $\eta_b(1S)$ decay constant

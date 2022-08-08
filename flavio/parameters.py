@@ -161,9 +161,8 @@ class FlavioParticle(Particle):
         'Upsilon(1S)' : 553,
         'Upsilon(2S)' : 100553,
         'Upsilon(3S)' : 200553,
-        'eta_c(1S)' : 411,
-        'chi_c0(1P)' : 10411,
-        'eta_b(1S)' : 551,
+        'eta_c(1S)' : 441,
+        'chi_c0(1P)' : 10441,
         'chi_b0(1P)' : 10551,
         'chi_b0(2P)' : 110551,
     }
