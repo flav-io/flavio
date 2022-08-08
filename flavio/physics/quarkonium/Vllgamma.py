@@ -60,7 +60,7 @@ def getWC_lfv(wc_obj,par,V,Q,l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtilde
         AR=AR.conjugate()
     return VL,VR,TL,TR,SR,SL,PR,PL,AR,AL,StildeR,StildeL,PtildeR,PtildeL
 
-# we use \mu=y^2 inside the kinematic functions.
+# we use \mu=y^2 inside the kinematic functions and denote them by F_ instead of G_ in the paper.
 
 def F_A(y):
     mu=y**2
@@ -71,17 +71,17 @@ def F_S(y):
     mu=y**2
     if mu==0:
         return 1./12
-    return (1-6*mu+3*mu**2*(1-2*np.log(mu))+2*mu**3)/12
+    return (1-6*mu+3*mu**2*(1-2*np.log(mu))+2*mu**3)/12.
 def Ftilde_S(y):
     mu=y**2
     if mu==0:
         return 1./40
-    return (3.-30*mu-20*mu**2*(1+3*np.log(mu))+60**mu**3-15*mu**4+2*mu**5)/120
+    return (3.-30.*mu-20.*mu**2+60.*mu**3-15*mu**4+2*mu**5-60.*mu**2*np.log(mu))/120.
 def Fhat_P(y):
     mu=y**2
     if mu==0:
         return 0.
-    return -mu*(8-8*mu**2+mu**3 +12*mu*np.log(mu))/12.
+    return mu*(-8+8*mu**2-mu**3 - 12*mu*np.log(mu))/12.
 def Fhat_S(y):
     mu=y**2
     if mu==0:
@@ -116,25 +116,28 @@ def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFt
  
     AV=np.abs(AL)**2+np.abs(AR)**2
     SP=np.abs(SL)**2+np.abs(PL)**2+np.abs(SR)**2+np.abs(PR)**2
-    SPtilde=np.abs(StildeL)**2+np.abs(StildeR)**2 + np.abs(PtildeL)**2+np.abs(PtildeR)**2
+    SPtilde=np.abs(StildeL)**2+ np.abs(PtildeL)**2 +np.abs(StildeR)**2  +np.abs(PtildeR)**2
     SStilde= (SL*StildeL.conjugate() + SR*StildeR.conjugate()).real
     PPtilde= (PL*PtildeL.conjugate() + PR*PtildeR.conjugate()).imag
+
    
     if ml1<ml2:
         y=ml2/mV
-        AP=-(AL*PR.conjugate()+AR*PL.conjugate()).real
-        APtilde=-(AL*PtildeR.conjugate()+AR*PtildeL.conjugate()).imag
+        I_AP=-(AL*PR.conjugate()+AR*PL.conjugate()).real
+        I_APtilde=-(AL*PtildeR.conjugate()+AR*PtildeL.conjugate()).imag
     elif ml2<ml1:
         y=ml1/mV
-        AP=(AL*PL.conjugate()+AR*PR.conjugate()).real
-        APtilde=(AL*PtildeL.conjugate()+AR*PtildeR.conjugate()).imag
+        I_AP=(AL*PL.conjugate()+AR*PR.conjugate()).real
+        I_APtilde=(AL*PtildeL.conjugate()+AR*PtildeR.conjugate()).imag
     else:
         print("The case of non-hierarchical masses is not implemented.")
 
+    # print([SPtilde,SStilde,PPtilde,I_APtilde])
+    # print([SPtilde *Ftilde_S(y), SStilde * Fhat_S(y), PPtilde * Fhat_P(y),I_APtilde * Ftilde_PA(y)])
 
     prefactor=alphaem*Q**2*tauV*mV/(192*np.pi**2)
     
-    return prefactor*(AV * F_A(y) + SP*F_S(y) + SPtilde *Ftilde_S(y) +SStilde * Fhat_S(y) + PPtilde * Fhat_P(y) + AP*F_PA(y) +APtilde * Ftilde_PA(y))
+    return prefactor*(AV * F_A(y) + SP*F_S(y) + I_AP*F_PA(y) + SPtilde *Ftilde_S(y) + SStilde * Fhat_S(y) + PPtilde * Fhat_P(y) +I_APtilde * Ftilde_PA(y))
 
 
 def Vllgamma_br_func(V, Q, l1, l2,wc_sector):

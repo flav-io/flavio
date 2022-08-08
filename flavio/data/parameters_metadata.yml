@@ -134,7 +134,7 @@ a_chi_c0(1P):
   tex: $a_{\chi_{c0}(1P)}$
   description: $\chi_{c0}(1P)$ anomaly decay constant
 
-
+# lifetimes of scalar bottomonium not measured yet. These are theoretically calcualted lifetimes from the branching ratios of radiative decays.
 tau_chi_b0(1P):
   tex: $\tau_{\chi_{b0}(1P)}$
   description: lifetime of $\chi_{b0}(1P)$
