@@ -59,10 +59,6 @@ fT_J/psi:
 BR_exp(J/psi->ee): 
   tex: $BR_{\rm exp}(J/\psi\to e^+ e^-)$
   description: measured branching ratio $J/\psi\to ee$ 
-Gamma_SM(J/psi->ee): 
-  tex: $\Gamma_{\rm SM}(J/\psi\to e^+ e^-)$
-  description: SM prediction for decay rate of $J/\psi\to ee$ 
-
 
 f_psi(2S): 
   tex: $f_{\psi(2S)}$
@@ -104,7 +100,6 @@ BR_exp(Upsilon(3S)->ee):
   tex: $BR_{\rm exp}(\Upsilon(3S)\to e^+ e^-)$
   description: measured branching ratio $\Upsilon(3S)\to ee$ 
 
-
 f_eta_c(1S): 
   tex: $f_{\eta_c(1S)}$
   description: $\eta_c(1S)$ decay constant
@@ -112,20 +107,12 @@ a_eta_c(1S):
   tex: $a_{\eta_c(1S)}$
   description: $\eta_c(1S)$ anomaly decay constant
 
-# mass and lifetime of eta_b(1S) manually added, because it is not included in scikit-hep particle code
-m_eta_b(1S): 
-  tex: $m_{\eta_b(1S)}$
-  description: $\eta_b(1S)$ mass
-tau_eta_b(1S): 
-  tex: $\tau_{\eta_b(1S)}$
-  description: $\eta_b(1S)$ lifetime
 f_eta_b(1S): 
   tex: $f_{\eta_b(1S)}$
   description: $\eta_b(1S)$ decay constant
 a_eta_b(1S): 
   tex: $a_{\eta_b(1S)}$
   description: $\eta_b(1S)$ anomaly decay constant
-
 
 f_chi_c0(1P): 
   tex: $f_{\chi_{c0}(1P)}$
@@ -134,10 +121,6 @@ a_chi_c0(1P):
   tex: $a_{\chi_{c0}(1P)}$
   description: $\chi_{c0}(1P)$ anomaly decay constant
 
-# lifetimes of scalar bottomonium not measured yet. These are theoretically calcualted lifetimes from the branching ratios of radiative decays.
-tau_chi_b0(1P):
-  tex: $\tau_{\chi_{b0}(1P)}$
-  description: lifetime of $\chi_{b0}(1P)$
 f_chi_b0(1P): 
   tex: $f_{\chi_{b0}(1P)}$
   description: $\chi_{b0}(1P)$ decay constant
@@ -145,10 +128,6 @@ a_chi_b0(1P):
   tex: $a_{\chi_{b0}(1P)}$
   description: $\chi_{b0}(1P)$ anomaly decay constant
 
-
-tau_chi_b0(2P):
-  tex: $\tau_{\chi_{b0}(2P)}$
-  description: lifetime of $\chi_{b0}(2P)$
 f_chi_b0(2P): 
   tex: $f_{\chi_{b0}(2P)}$
   description: $\chi_{b0}(2P)$ decay constant
@@ -156,6 +135,22 @@ a_chi_b0(2P):
   tex: $a_{\chi_{b0}(2P)}$
   description: $\chi_{b0}(2P)$ anomaly decay constant
 
+
+# mass and lifetime of eta_b(1S) manually added, because it is not included in scikit-hep particle code
+m_eta_b(1S): 
+  tex: $m_{\eta_b(1S)}$
+  description: $\eta_b(1S)$ mass
+tau_eta_b(1S): 
+  tex: $\tau_{\eta_b(1S)}$
+  description: $\eta_b(1S)$ lifetime
+
+# lifetimes of scalar bottomonium not measured yet. These are theoretically calculated lifetimes from the branching ratios of radiative decays.
+tau_chi_b0(1P):
+  tex: $\tau_{\chi_{b0}(1P)}$
+  description: lifetime of $\chi_{b0}(1P)$
+tau_chi_b0(2P):
+  tex: $\tau_{\chi_{b0}(2P)}$
+  description: lifetime of $\chi_{b0}(2P)$
 
 #
 # Meson decay constants

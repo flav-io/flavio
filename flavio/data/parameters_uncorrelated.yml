@@ -49,7 +49,6 @@ f_Bc: 0.434(15) # 1503.05762v2 eq. (20)
 f_J/psi: 0.4104(17) # 2005.01845 abstract
 fT_J/psi: 0.3927(27) # 2008.02024 abstract
 BR_exp(J/psi->ee): 0.05971(32) # PDG 2021
-Gamma_SM(J/psi->ee): 5.637(49)e-6 # 2005.01845
 
 f_psi(2S): 0.2926(12) # Table 3 in 1503.04159 (0.713*f_J/psi), consistent with Tab II in hep-ph/0603164 (0.293)
 fT_psi(2S): 0.2926(12) # assuming equality to vector form factor. This is consistent with the non-relativistic color singlet model.
@@ -70,21 +69,24 @@ BR_exp(Upsilon(3S)->ee): 0.0218(20) # PDG 2021
 f_eta_c(1S): 0.387(7) # 1312.2858 
 a_eta_c(1S): 0.0 # Hazard, Petrov 1607.00815
 
-m_eta_b(1S): 9.3987(20) # PDG 2022
-tau_eta_b(1S): 100(50) # PDG 2022 (lower error slightly increased to have symmetric errors)
 f_eta_b(1S): 0.724(12) # 2101.08103
 a_eta_b(1S): 0.0 # Hazard, Petrov 1607.00815
 
 f_chi_c0(1P): 0.887 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815 
 a_chi_c0(1P): 0.0 # Hazard, Petrov 1607.00815
 
-tau_chi_b0(1P): 815(113) # lifetime calculated following 1510.04659 
 f_chi_b0(1P): 0.423 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815 
 a_chi_b0(1P): 0.0 # Hazard, Petrov 1607.00815
 
-tau_chi_b0(2P): 1300(255) # calculated following 1510.04659. The final result for the lifetime has been obtained using a simple weighted average of the lifetimes estimated from BR(Upsilon(1S)+gamma) and BR(Upsilon(2S)+gamma) with errors added in quadrature.
 f_chi_b0(2P): 0.421 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815
 a_chi_b0(2P): 0.0 # Hazard, Petrov 1607.00815
+
+m_eta_b(1S): 9.3987(20) # PDG 2022
+tau_eta_b(1S): 100(50) # PDG 2022 (lower error slightly increased to have symmetric errors)
+
+tau_chi_b0(1P): 815(113) # lifetime calculated following 1510.04659 
+tau_chi_b0(2P): 1300(255) # calculated following 1510.04659. The final result for the lifetime has been obtained using a simple weighted average of the lifetimes estimated from BR(Upsilon(1S)+gamma) and BR(Upsilon(2S)+gamma) with errors added in quadrature.
+
 
 # Parameters needed for meson light-cone distribution amplitudes
 
