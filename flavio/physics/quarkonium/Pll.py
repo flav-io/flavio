@@ -5,7 +5,7 @@ import flavio
 from flavio.physics.running import running
 import numpy as np
 
-meson_quark = { 'eta_c(1S)' : 'cc', 
+meson_quark = { 'eta_c(1S)': 'cc', 
                 'eta_b(1S)': 'bb',
                 }
 
