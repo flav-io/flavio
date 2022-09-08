@@ -71,9 +71,9 @@ class TestProbability(unittest.TestCase):
             self.assertEqual(p.central_value, loc + 10)
             r = p.get_random(10)
             self.assertEqual(len(r), 10)
-            self.assertAlmostEqual(p.cdf(p.support[1]), 1-2e-9, delta=0.1e-9)
-            self.assertAlmostEqual(p.ppf(1-2e-9), p.support[1], delta=0.0001)
-            self.assertEqual(loc, p.support[0])
+            self.assertAlmostEqual(p.cdf(p.support[1]), 1-1e-9, delta=0.1e-9)
+            self.assertAlmostEqual(p.ppf(1-1e-9), p.support[1], delta=0.0001)
+            self.assertEqual(p.scipy_dist.ppf(1e-9), p.support[0])
         # nearly normal distribution
         p = GammaDistribution(a=10001, loc=0, scale=1)
         self.assertAlmostEqual(p.error_left, sqrt(10000), delta=1)
@@ -91,9 +91,9 @@ class TestProbability(unittest.TestCase):
             self.assertTrue(np.min(r) >= 0)
             self.assertEqual(p.logpdf(-0.1), -np.inf)
             self.assertEqual(p.cdf(0), 0)
-            self.assertAlmostEqual(p.cdf(p.support[1]), 1-2e-9, delta=0.1e-9)
+            self.assertAlmostEqual(p.cdf(p.support[1]), 1-1e-9, delta=0.1e-9)
             self.assertAlmostEqual(p.ppf(0), 0, places=14)
-            self.assertAlmostEqual(p.ppf(1-2e-9), p.support[1], delta=0.0001)
+            self.assertAlmostEqual(p.ppf(1-1e-9), p.support[1], delta=0.0001)
             self.assertEqual(p.cdf(-1), 0)
         p = GammaDistributionPositive(a=11, loc=-9, scale=1)
         self.assertEqual(p.central_value, 1)
@@ -145,7 +145,7 @@ class TestProbability(unittest.TestCase):
         with self.assertWarns(Warning):
             GeneralGammaUpperLimit(counts_total=10000, counts_background=10000,
                             limit=3., confidence_level=0.95,
-                            background_variance=10)
+                            background_variance=1)
 
 
     def test_numerical(self):
