@@ -9,6 +9,8 @@ import warnings
 
 
 def helicity_amps(q2, mLb, mL, ff):
+    flavio.citations.register("Descotes-Genon:2019dbw")
+
     # Hadronic helicity amplitudes of Lb->L(1520)(->pK)l+l-
     sp = (mLb + mL)**2 - q2
     sm = (mLb - mL)**2 - q2

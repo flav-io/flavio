@@ -1,4 +1,5 @@
 from math import sqrt, exp
+import flavio
 
 def lambda_momentum(q2, mL, mLb):
     # daughter baryon momentum in the Lb rest frame
@@ -28,6 +29,7 @@ _process_dict['Lambdab->Lambda(1520)'] = {'X': 'Lambda(1520)'}
 
 def formfactors(process, par, q2):
     r"Functions for $\Lambda_b\to X_{3/2}$ form factors where $X_{3/2} is a spin-3/2 baryon$ using the Quark Model and the MCN approach treated in arXiv:1108.6129 [nucl-th]"
+    flavio.citations.register("Mott:2011cx")
 
     # Using the PDG mass values instead the model ones, will be covered by the uncertainties attached to the form factors.
     pd = _process_dict[process]

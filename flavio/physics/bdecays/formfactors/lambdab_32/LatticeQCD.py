@@ -1,5 +1,6 @@
 from math import sqrt, exp
 import warnings
+import flavio
 
 def omega_fct(q2, mLb, mLst):
     # eq. (73) in arXiv:2009.09313v1
@@ -14,6 +15,8 @@ _process_dict['Lambdab->Lambda(1520)'] = {'X': 'Lambda(1520)'}
 
 def formfactors(process, par, q2):
     r"Formfactors for $\Lambda_b\to L(1520)$ from Lattice QCD as in arXiv:2009.09313v1"
+    flavio.citations.register("Meinel:2020owd")
+
     pd = _process_dict[process]
     mL = par['m_'+pd['X']]
     mLb = par['m_Lambdab']
