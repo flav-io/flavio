@@ -59,6 +59,7 @@ Contributors (in alphabetical order):
 - Niladri Sahoo
 - Peter Stangl
 - Olcyr Sumensari
+- Felicia Volle
 - Zeren Simon Wang
 
 ## License
