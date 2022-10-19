@@ -1,27 +1,52 @@
-name: unit tests
+name: Check & Deploy
 
 on:
   push:
     branches:
       - master
   pull_request:
+  release:
+    types:
+      - published
 
 jobs:
-  build:
+  check-and-deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.7, 3.8, 3.9, '3.10']
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout git repository
+        uses: actions/checkout@v2
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install Python dependencies
         run: |
           pip install .[sampling,plotting,testing]
           pip install pytest
-      - name: Test with pytest 
+
+      - name: Test with pytest
         run: |
           pytest
+
+      - name: Verify release version matches source code version
+        if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          export TAG_VERSION=${GITHUB_REF##refs/tags/v}
+          export SRC_VERSION=$(python3 -c "from flavio._version import __version__; print(__version__)")
+          if [[ ${TAG_VERSION} != ${SRC_VERSION} ]] ; then
+            echo "tag/release version and source code version disagree, exiting"
+            exit 1
+          fi
+
+      - name: Upload to PyPI
+        if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v')
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user:     ${{ secrets.TWINE_USERNAME }}
+          password: ${{ secrets.TWINE_PASSWORD }}
