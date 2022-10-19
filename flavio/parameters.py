@@ -136,6 +136,7 @@ class FlavioParticle(Particle):
         'K+': 321,
         'K0': 311,
         'Lambda': 3122,
+        'Lambda(1520)': 3124,
         'Lambdab': 5122,
         'Lambdac': 4122,
         'omega': 223,

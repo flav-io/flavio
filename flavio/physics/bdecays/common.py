@@ -20,6 +20,7 @@ meson_quark = {
 ('B0','K*0'): 'bs',
 ('B+','K*+'): 'bs',
 ('Lambdab','Lambda'): 'bs',
+('Lambdab','Lambda(1520)'): 'bs',
 ('B0','pi0'): 'bd',
 ('B+','pi+'): 'bd',
 ('B0','rho0'): 'bd',
