@@ -41,14 +41,14 @@ def helicity_amps(q2, mLb, mL, ff):
     H['0T-1-1'] = H['0T+1+1']
     H['+T+1-1'] = ff['fTperp'] * (mLb + mL) * (sm * sqrt(sp))/(sqrt(3) * mL)
     H['-T-1+1'] = H['+T+1-1']
-    H['+T-1-3'] = -ff['fTg'] * sqrt(sp) 
+    H['+T-1-3'] = -ff['fTg'] * sqrt(sp)
     H['-T+1+3'] = H['+T-1-3']
 
     H['0T5+1+1'] = -ff['fT50'] * sqrt(q2) * (sp * sqrt(sm))/(sqrt(6) * mL)
     H['0T5-1-1'] = -H['0T5+1+1']
     H['+T5+1-1'] = ff['fT5perp'] * (mLb - mL) * (sp * sqrt(sm))/(sqrt(3) * mL)
     H['-T5-1+1'] = -H['+T5+1-1']
-    H['+T5-1-3'] = -ff['fT5g'] * sqrt(sm) 
+    H['+T5-1-3'] = -ff['fT5g'] * sqrt(sm)
     H['-T5+1+3'] = -H['+T5-1-3']
 
     return H
@@ -57,7 +57,7 @@ def helicity_amps(q2, mLb, mL, ff):
 def transversity_amps(ha, q2, mLb, mL, mqh, wc, prefactor, t):
     # Hadronic transversity amplitudes
     # defined as in eqs (3.18) and (3.20)
-    
+
     ## by taking wc_eff
     C910Lpl = (wc['v'] - wc['a']) + (wc['vp'] - wc['ap'])
     C910Rpl = (wc['v'] + wc['a']) + (wc['vp'] + wc['ap'])
@@ -71,7 +71,7 @@ def transversity_amps(ha, q2, mLb, mL, mqh, wc, prefactor, t):
     A['Bpara1', 'L'] = -sqrt(2)*( C910Lmi * ha['+A-1-3'] + 2*mqh*(wc['7']-wc['7p'])/q2 * ha['+T5-1-3'])
     A['Bpara1', 'R'] = -sqrt(2)*( C910Rmi * ha['+A-1-3'] + 2*mqh*(wc['7']-wc['7p'])/q2 * ha['+T5-1-3'])
 
-    
+
     A['Aperp1', 'L'] = sqrt(2)*( C910Lpl * ha['+V+1-1'] - 2*mqh*(wc['7']+wc['7p'])/q2 * ha['+T+1-1'])
     A['Aperp1', 'R'] = sqrt(2)*( C910Rpl * ha['+V+1-1'] - 2*mqh*(wc['7']+wc['7p'])/q2 * ha['+T+1-1'])
     A['Apara1', 'L'] = -sqrt(2)*( C910Lmi * ha['+A+1-1'] + 2*mqh*(wc['7']-wc['7p'])/q2 * ha['+T5+1-1'])
@@ -113,19 +113,19 @@ def angular_coefficients(ta, br):
     )
     L['2ss'] = br/8*( 2*abs(ta['Apara0','L'])**2 + abs(ta['Apara1','L'])**2
                       + 2*abs(ta['Aperp0','L'])**2 + abs(ta['Aperp1','L'])**2
-                      + 3*(abs(ta['Bpara1','L'])**2 + abs(ta['Bperp1','L'])**2) 
+                      + 3*(abs(ta['Bpara1','L'])**2 + abs(ta['Bperp1','L'])**2)
                       - 2*sqrt(3)*(ta['Bpara1','L']*ta['Apara1','L'].conj()).real
                       + 2*sqrt(3)*(ta['Bperp1','L']*ta['Aperp1','L'].conj()).real
                       + 2*abs(ta['Apara0','R'])**2 + abs(ta['Apara1','R'])**2
                       + 2*abs(ta['Aperp0','R'])**2 + abs(ta['Aperp1','R'])**2
-                      + 3*(abs(ta['Bpara1','R'])**2 + abs(ta['Bperp1','R'])**2) 
+                      + 3*(abs(ta['Bpara1','R'])**2 + abs(ta['Bperp1','R'])**2)
                       - 2*sqrt(3)*(ta['Bpara1','R']*ta['Apara1','R'].conj()).real
                       + 2*sqrt(3)*(ta['Bperp1','R']*ta['Aperp1','R'].conj()).real
     )
     L['3ss'] = sqrt(3)/2*br*( (ta['Bpara1','L']*ta['Apara1','L'].conj()).real
                               - (ta['Bperp1','L']*ta['Aperp1','L'].conj()).real
                               + (ta['Bpara1','R']*ta['Apara1','R'].conj()).real
-                              - (ta['Bperp1','R']*ta['Aperp1','R'].conj()).real 
+                              - (ta['Bperp1','R']*ta['Aperp1','R'].conj()).real
     )
     L['4ss'] = sqrt(3)/2*br*( (ta['Bperp1','L']*ta['Apara1','L'].conj()).imag
                               - (ta['Bpara1','L']*ta['Aperp1','L'].conj()).imag
@@ -136,7 +136,7 @@ def angular_coefficients(ta, br):
                              - (ta['Bpara1','L']*ta['Aperp0','L'].conj()).real
                              - (ta['Bperp1','R']*ta['Apara0','R'].conj()).real
                              + (ta['Bpara1','R']*ta['Aperp0','R'].conj()).real
-    ) 
+    )
     L['5sc'] = sqrt(3/2)*br*( -(ta['Bpara1','L']*ta['Apara0','L'].conj()).real
                               + (ta['Bperp1','L']*ta['Aperp0','L'].conj()).real
                               - (ta['Bpara1','R']*ta['Apara0','R'].conj()).real
@@ -146,7 +146,7 @@ def angular_coefficients(ta, br):
                              - (ta['Bperp1','L']*ta['Aperp0','L'].conj()).imag
                              - (ta['Bpara1','R']*ta['Apara0','R'].conj()).imag
                              + (ta['Bperp1','R']*ta['Aperp0','R'].conj()).imag
-    ) 
+    )
     L['6sc'] = -sqrt(3/2)*br*( (ta['Bperp1','L']*ta['Apara0','L'].conj()).imag
                              - (ta['Bpara1','L']*ta['Aperp0','L'].conj()).imag
                              + (ta['Bperp1','R']*ta['Apara0','R'].conj()).imag
@@ -154,7 +154,7 @@ def angular_coefficients(ta, br):
     )
 
     return L
-    
+
 
 def prefactor(q2, par, scale):
     # calculate prefactor N
@@ -182,7 +182,7 @@ def get_transversity_amps_ff(q2, wc_obj, par_dict, lep, cp_conjugate):
     ff = get_ff(q2, par)
     wc = flavio.physics.bdecays.wilsoncoefficients.wctot_dict(wc_obj, 'bs' + lep + lep, scale, par)
     wc_eff = flavio.physics.bdecays.wilsoncoefficients.get_wceff(q2, wc, par, 'Lambdab', 'Lambda(1520)', lep, scale)
-    
+
     ha = helicity_amps(q2, mLb, mL, ff)
     N = prefactor(q2, par, scale)
     ta_ff = transversity_amps(ha, q2, mLb, mL, mb, wc_eff, N, 'bs'+lep+lep)
@@ -202,7 +202,7 @@ def get_obs(function, q2, wc_obj, par, lep, *ang_coef):
     if q2 < 4*ml**2 or q2 > (mLb-mL)**2:
         return 0
     ta = get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate=False)
- 
+
     br = par['BR(Lambda(1520)->NKbar)_exp']/2
     L = angular_coefficients(ta, br)
     ta_conj = get_transversity_amps(q2, wc_obj, par, lep, cp_conjugate=True)
@@ -304,7 +304,7 @@ for a in ang_coef_List:
     _observables[Sstring] = {'func_num': S, 'tex': r'S_{'+a+'}', 'desc': 'CP symmetry '+a, 'ang_coef': a}
     _observables[Astring] = {'func_num': A, 'tex': r'A_{'+a+'}', 'desc': 'CP asymmetry '+a, 'ang_coef': a}
 
-    
+
 for l in ['e', 'mu', ]:
 
     _process_tex = r'\Lambda_b\to\Lambda(1520) '+_tex[l]+r'^+'+_tex[l]+r'^-'
@@ -337,7 +337,7 @@ for l in ['e', 'mu', ]:
             Prediction(_obs_name, obs_int_ratio_func(_observables[obs]['func_num'], dGdq2, l, _observables[obs]['ang_coef']))
         else :
             Prediction(_obs_name, obs_int_ratio_func(_observables[obs]['func_num'], dGdq2, l))
-            
+
         # differential angular observables
         _obs_name = obs+"(Lambdab->Lambda(1520)"+l+l+")"
         _obs = Observable(name=_obs_name, arguments=['q2'])
@@ -348,4 +348,3 @@ for l in ['e', 'mu', ]:
             Prediction(_obs_name, obs_ratio_func(_observables[obs]['func_num'], dGdq2, l, _observables[obs]['ang_coef']))
         else :
             Prediction(_obs_name, obs_ratio_func(_observables[obs]['func_num'], dGdq2, l))
-

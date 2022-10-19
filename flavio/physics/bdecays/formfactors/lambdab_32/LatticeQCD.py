@@ -6,7 +6,7 @@ def omega_fct(q2, mLb, mLst):
     return (mLb*mLb + mLst*mLst - q2)/(2*mLb*mLst)
 
 def ff_formula(F, A, omega):
-    # eq. (75) 
+    # eq. (75)
     return F + A*(omega - 1)
 
 _process_dict = {}
@@ -38,10 +38,10 @@ def ff_equiv(process, q2, par):
     ff_dict, mLst, mLb = formfactors(process, par, q2)
     splus  = (mLb + mLst)**2 - q2
     sminus = (mLb - mLst)**2 - q2
- 
+
     if q2 < 16.0 or q2 > (mLb - mLst)**2:
         warnings.warn(f'Lattice QCD form factors are used out of the allowed q2 region [16.0; {(mLb - mLst)**2:.3}].')
-    
+
     ff = {}
     ff['fVt']    = ( mLst/splus )*ff_dict['f0']
     ff['fV0']    = ( mLst/sminus )*ff_dict['fplus']
@@ -62,5 +62,5 @@ def ff_equiv(process, q2, par):
     ff['fT50']   = ( mLst/splus )*ff_dict['hTplus']
     ff['fT5perp']= ( mLst/splus )*ff_dict['hTperp']
     ff['fT5g']   = -( mLb - mLst )*ff_dict['hTperpPrim']
-    
+
     return ff
