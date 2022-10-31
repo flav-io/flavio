@@ -57,6 +57,7 @@ Contributors (in alphabetical order):
 - Méril Reboud
 - Stefanie Reichert
 - Niladri Sahoo
+- Aleks Smolkovič
 - Peter Stangl
 - Olcyr Sumensari
 - Felicia Volle
