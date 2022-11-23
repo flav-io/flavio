@@ -8,8 +8,8 @@ def kpinunu_amplitude(wc_obj, par, nu1, nu2):
     # This is the amplitude for $K\to\pi\nu\bar\nu$ (charged or neutral) in
     # some convenient normalization
     # top and charm CKM factors
-    xi_t = flavio.physics.ckm.xi('t', 'sd')(par)
-    xi_c = flavio.physics.ckm.xi('c', 'sd')(par)
+    xi_t = flavio.physics.ckm.xi('t', 'ds')(par)
+    xi_c = flavio.physics.ckm.xi('c', 'ds')(par)
     label = 'sd' + nu1 + nu2 # e.g. sdnuenue, sdnutaunumu
     scale = flavio.config['renormalization scale']['kdecays']
     # Wilson coefficients

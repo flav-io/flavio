@@ -1,0 +1,38 @@
+name: Check & Deploy
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  check-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout git repository
+        uses: actions/checkout@v2
+
+      - name: Install Python dependencies
+        run: |
+          pip install .[sampling,plotting,testing]
+          pip install pytest
+
+      - name: Test with pytest
+        run: |
+          pytest
+
+      - name: Verify release version matches source code version
+        shell: bash
+        run: |
+          export TAG_VERSION=${GITHUB_REF##refs/tags/v}
+          export SRC_VERSION=$(python3 -c "from flavio._version import __version__; print(__version__)")
+          if [[ ${TAG_VERSION} != ${SRC_VERSION} ]] ; then
+            echo "tag/release version and source code version disagree, exiting"
+            exit 1
+          fi
+
+      - name: Upload to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user:     ${{ secrets.TWINE_USERNAME }}
+          password: ${{ secrets.TWINE_PASSWORD }}
