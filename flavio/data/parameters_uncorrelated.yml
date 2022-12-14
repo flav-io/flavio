@@ -186,10 +186,10 @@ c4_pi+munu: 1.69(0.07)
 c2t_pi+lnu: 0
 
 # Parameters needed for K->pi form factors
-K->pi f+(0): 0.9696(15)(12)        # 1809.02827
+K->pi f+(0): 0.9698(17)            # FLAG 2021 Nf=2+1+1 average
 K->pi fT(0): 0.417(15)             # 1108.1021
 K->pi sT: 1.10(14)                 #  "
-K->pi delta_K+pi0: 0.029(4)        # 1005.2323
+K->pi delta_K+pi0: 0.0252(11)      # 2208.11707, in text of sec. 2
 K->pi ln(C): 0.1998(138)           # 1602.04113
 K->pi Lambda_+: 24.22(1.16) 1e-3   #  "
 K->pi D: 0.0209(21)                # 0903.1654 table 1
@@ -473,7 +473,7 @@ CLN lp_5(1): 0
 CLN lp_6(1): 0
 
 # Parameters for beta decays
-DeltaRV: 0.02361(38)  # Marciano/Sirlin, arXiv:hep-ph/0510099
+DeltaRV: 0.02467(27)  # Average from 2208.11707
 # one third of the Z^2alpha^3 term in table V of 0710.3181,
 # as suggested in 1411.5987
 delta_deltaRp_Z2: 0 ± 0.00004e-2
@@ -495,3 +495,10 @@ D->pi BSZ a2_fT: 0
 D->K BSZ a0_fT: 0.687(54)
 D->K BSZ a1_fT: 0.10(1)
 D->K BSZ a2_fT: 0
+
+# Updated EM corrections for Ke3 decays
+# From 2103.04843 (Table VI) 
+# Uncertainties combined in quadrature, factor of 2 normalisation difference since
+# flavio used the normalisation of 1005.2323
+K0e3 delta_EM: 0.580(16)1e-2
+K+e3 delta_EM: 0.105(24)1e-2

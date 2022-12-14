@@ -35,15 +35,16 @@
 # https://gist.github.com/DavidMStraub/813bd0c4296837936a188a29c8d8b981
 -
   values:
-    - f_K+: 0.1554(10)  # reproduce f_K/f_pi=1.1932(19) from FLAG 2019 Nf=2+1+1
+    - f_K+: 0.1554(10)  # reproduce f_K/f_pi=1.1932(21) from FLAG 2021 Nf=2+1+1
     - f_K0: 0.1554(10)
-    - f_pi+: 0.1302(8)  # FLAG 2019 Nf=2+1
+    - f_pi+: 0.1302(8)  # FLAG 2021 Nf=2+1
     - f_pi0: 0.1302(8)
   correlation:
-    [[1, 0.99, 0.968, 0.968],
-     [0.99, 1, 0.968, 0.968],
-     [0.968, 0.968, 1, 0.99],
-     [0.968, 0.968, 0.99, 1]]
+    [[1, 0.99, 0.961, 0.961],
+     [0.99, 1, 0.961, 0.961],
+     [0.961, 0.961, 1, 0.99],
+     [0.961, 0.961, 0.99, 1]]
+
 -
   values:
     - f_perp_K*+: 0.145(6)  # 1503.05534v2 table 1, but at 2 GeV
@@ -398,14 +399,14 @@
 
 # Electromagnetic corrections in Kl3 decays
 # 1005.2323 table 1 & eq. 18
+# Set just the Kmu3 parameters here, as we use 
+# updated Ke3 values (but without correlations)
 -
   values:
-    - K0e3 delta_EM: 0.495(110)1e-2
-    - K+e3 delta_EM: 0.050(125)1e-2
     - K0mu3 delta_EM: 0.700(110)1e-2
     - K+mu3 delta_EM: 0.008(125)1e-2
   correlation:
-    [[1, 0.081, 0.685, -0.147], [1, -0.147, 0.764], [1, 0.081], [1]]
+    [[1, 0.081], [1]]
 
 
 # Parameters for HQET form factors

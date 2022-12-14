@@ -4063,6 +4063,31 @@ PDG 2015:
     BR(K+->pienu): (5.07±0.04)1e-2
     Gamma(pi+->munu): (2.52809±0.00050)1e-17
 
+PDG 2022:
+  experiment: PDG
+  inspire: ParticleDataGroup:2022pth
+  values:
+    BR(pi+->enu): (1.230±0.004)1e-4
+    BR(K+->munu): (63.56±0.11)1e-2
+    Remu(K+->lnu): 2.488±0.009e-5
+    BR(KL->pimunu): (27.04±0.07)1e-2
+    BR(KL->pienu): (40.55±0.11)1e-2
+    BR(K+->pimunu): (3.352±0.033)1e-2
+    BR(K+->pienu): (5.07±0.04)1e-2
+    Gamma(pi+->munu): (2.52809±0.00050)1e-17
+
+KLOE-2 KS->pimunu 2019:
+  experiment: KLOE-2
+  inspire: KLOE-2:2019rev
+  values:
+    BR(KS->pimunu): (4.56±0.20)1e-4
+
+KLOE-2 KS->pienu 2022:
+  experiment: KLOE-2
+  inspire: KLOE-2:2022dot
+  values:
+    BR(KS->pienu): (7.153±0.057)1e-4
+
 PiENu pi->enu 2015:
   experiment: PiENu
   inspire: Aguilar-Arevalo:2015cdf
@@ -7265,11 +7290,11 @@ K+->pinunu E949 2009:
   values:
     BR(K+->pinunu): 1.73 + 1.15 - 1.05 e-10
 
-K+->pinunu NA62 2019:
+K+->pinunu NA62 2021:
   experiment: NA62
-  url: https://indico.cern.ch/event/846814/attachments/1903630/3161337/CERN_seminar_23_09_2019.pdf
+  inspire: NA62:2021zjw
   values:
-    BR(K+->pinunu): 0.47 + 0.72 - 0.47 e-10
+    BR(K+->pinunu): 10.6 + 4.1 - 3.5 e-11
 
 KL->pinunu KOTO 2018:
   experiment: KOTO
@@ -11167,6 +11192,28 @@ PDG 2018 D->Plnu:
     BR(D+->Kenu): (8.73 ± 0.10) 1e-2
     BR(D+->Kmunu): (8.74 ± 0.19) 1e-2
 
+PDG 2022 D->lnu:
+  inspire: ParticleDataGroup:2022pth
+  values:
+    BR(D+->enu): < 8.8e-6 @ 90% CL
+    BR(D+->munu): (3.74 ± 0.17) 1e-4
+    BR(D+->taunu): (1.20 ± 0.27) 1e-3
+    BR(Ds->enu): < 8.3e-5 @ 90% CL
+    BR(Ds->munu): (5.43 ± 0.15) 1e-3
+    BR(Ds->taunu): (5.32 ± 0.11) 1e-2
+
+PDG 2022 D->Plnu:
+  inspire: ParticleDataGroup:2022pth
+  values:
+    BR(D0->pienu): (2.91 ± 0.04) 1e-3
+    BR(D0->pimunu): (2.67 ± 0.12) 1e-3
+    BR(D0->Kenu): (3.549 ± 0.026) 1e-2
+    BR(D0->Kmunu): (3.41 ± 0.04) 1e-2
+    BR(D+->pienu): (3.72 ± 0.17) 1e-3
+    BR(D+->pimunu): (3.50 ± 0.15) 1e-3
+    BR(D+->Kenu): (8.72 ± 0.09) 1e-2
+    BR(D+->Kmunu): (8.76 ± 0.19) 1e-2
+    
 BESIII D0->Kenu 2015:
   observables:
   - name: <BR>(D0->Kenu)
