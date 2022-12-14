@@ -498,7 +498,7 @@ class ParameterConstraints(Constraints):
         _read_yaml_object_values_correlated(pkgutil.get_data('flavio', 'data/parameters_correlated.yml'), self)
 
         # Read the parameters from the default PDG data file
-        read_pdg(2018, self)
+        read_pdg(2022, self)
 
         # Read default parameters for B->V form factors
         flavio.physics.bdecays.formfactors.b_v.bsz_parameters.bsz_load('v2', 'LCSR', ('B->omega', 'B->rho'), self)
