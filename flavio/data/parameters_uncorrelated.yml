@@ -554,6 +554,7 @@ PDFmembers avg=0 replicas=1-100:
 # Parameter for Bs->K*0mumu uncertainty inside resonant regions
 # 2209.04457, appendix B, Eq. B7, we save a relative uncertainty
 delta_BsKstarmumu: 0 ± 0.078
+
 # Updated EM corrections for Ke3 decays
 # From 2103.04843 (Table VI) 
 # Uncertainties combined in quadrature, factor of 2 normalisation difference since
