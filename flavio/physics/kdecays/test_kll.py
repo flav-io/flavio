@@ -19,7 +19,7 @@ class TestKll(unittest.TestCase):
                       'delta': 59.0 / 180 * pi})
         self.assertAlmostEqual(br_kll(par06, wc_obj, 'KL', 'mu', 'mu', ld=False),
                                0.79 * 1e-9,
-                               delta=0.02e-9)
+                               delta=0.027e-9)
 
     def test_ksmm_sd_sm(self):
         # compare to 1707.06999
