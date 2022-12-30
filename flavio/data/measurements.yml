@@ -10915,9 +10915,9 @@ CMS Bs->mumu effective lifetime 2022:
 
 Bc lifetime:
   experiment: PDG
-  inspire: Tanabashi:2018oca
+  inspire: ParticleDataGroup:2022pth
   values:
-    tau_Bc: (7.704 ± 0.137) 1e11
+    tau_Bc: (7.748 ± 0.137) 1e11
 
 
 Belle RK* 2019:
