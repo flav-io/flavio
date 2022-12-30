@@ -10,7 +10,7 @@ par = flavio.default_parameters.get_central_all()
 
 class TestMW(unittest.TestCase):
     def test_mW_SM(self):
-        self.assertAlmostEqual(mw.mW_SM(par), 80.3779, delta=0.02)
+        self.assertAlmostEqual(mw.mW_SM(par), 80.3551, delta=0.02)
 
     def test_shifts_sm(self):
         C = ZeroDict({})
