@@ -69,4 +69,4 @@ class TestTaulnunu(unittest.TestCase):
                     80, 'WET', 'flavio')
         BR1 = flavio.sm_prediction('BR(tau->enunu)')
         BR2 = flavio.np_prediction('BR(tau->enunu)', w)
-        self.assertEqual(BR2 / BR1, 9)
+        self.assertAlmostEqual(BR2 / BR1, 9, delta=2e-15)
