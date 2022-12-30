@@ -19,29 +19,29 @@ class TestGammaZ(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction('sigma_had') / pb / 1e3,
                                41.488, delta=0.05)
         self.assertAlmostEqual(flavio.sm_prediction('Gamma(Z->ee)'),
-                               83.966e-3, delta=0.001e-3)
+                               83.966e-3, delta=0.02e-3)
         self.assertAlmostEqual(flavio.sm_prediction('Gamma(Z->mumu)'),
-                               83.966e-3, delta=0.001e-3)
+                               83.966e-3, delta=0.02e-3)
         self.assertAlmostEqual(flavio.sm_prediction('Gamma(Z->tautau)'),
-                               83.776e-3, delta=0.001e-3)
+                               83.776e-3, delta=0.02e-3)
         self.assertAlmostEqual(flavio.sm_prediction('Gamma(Z->uu)'),
-                               299.936e-3, delta=0.04e-3)
+                               299.936e-3, delta=0.6e-3)
         self.assertAlmostEqual(flavio.sm_prediction('Gamma(Z->cc)'),
-                               299.860e-3, delta=0.04e-3)
+                               299.860e-3, delta=0.6e-3)
         self.assertAlmostEqual(flavio.sm_prediction('Gamma(Z->dd)'),
-                               382.770e-3, delta=0.04e-3)
+                               382.770e-3, delta=0.4e-3)
         self.assertAlmostEqual(flavio.sm_prediction('Gamma(Z->ss)'),
-                               382.770e-3, delta=0.04e-3)
+                               382.770e-3, delta=0.4e-3)
         self.assertAlmostEqual(flavio.sm_prediction('Gamma(Z->bb)'),
-                               375.724e-3, delta=0.02e-3)
+                               375.724e-3, delta=0.4e-3)
         self.assertAlmostEqual(flavio.sm_prediction('Gamma(Z->nunu)'),
-                               167.157e-3, delta=0.01e-3)
+                               167.157e-3, delta=0.03e-3)
         self.assertAlmostEqual(flavio.sm_prediction('R_l'),
-                               20750.9e-3, delta=2e-3)
+                               20750.9e-3, delta=30e-3)
         self.assertAlmostEqual(flavio.sm_prediction('R_c'),
-                               172.23e-3, delta=0.01e-3)
+                               172.23e-3, delta=0.09e-3)
         self.assertAlmostEqual(flavio.sm_prediction('R_b'),
-                               215.80e-3, delta=0.01e-3)
+                               215.80e-3, delta=0.06e-3)
         self.assertAlmostEqual(flavio.sm_prediction('R_e'),
                                20.743, delta=0.01)
         self.assertAlmostEqual(flavio.sm_prediction('R_mu'),
