@@ -1993,7 +1993,49 @@ deltaRp_n:
   description: Long-distance radiative correction to neutron beta decay
 delta_deltaRp_Z2:
   tex: $\delta(\delta R^\prime) / Z^2$
-  description: Uncertainty on the structure-indipendent radiative correction to beta decay divided by $Z^2
+  description: Uncertainty on the structure-indipendent radiative correction to beta decay divided by $Z^2$
+delta_deltaNS 10C:
+  tex: $\delta(\delta_{NS}) ({}^{10}\text{C})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{10}\text{C}$ beta decay
+delta_deltaNS 14O:
+  tex: $\delta(\delta_{NS}) ({}^{14}\text{O})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{14}\text{O}$ beta decay
+delta_deltaNS 22Mg:
+  tex: $\delta(\delta_{NS}) ({}^{22}\text{Mg})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{22}\text{Mg}$ beta decay
+delta_deltaNS 26mAl:
+  tex: $\delta(\delta_{NS}) ({}^{26m}\text{Al})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{26m}\text{Al}$ beta decay
+delta_deltaNS 34Cl:
+  tex: $\delta(\delta_{NS}) ({}^{34}\text{Cl})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{34}\text{Cl}$ beta decay
+delta_deltaNS 34Ar:
+  tex: $\delta(\delta_{NS}) ({}^{34}\text{Ar})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{34}\text{Ar}$ beta decay
+delta_deltaNS 38mK:
+  tex: $\delta(\delta_{NS}) ({}^{38m}\text{K})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{38m}\text{K}$ beta decay
+delta_deltaNS 38Ca:
+  tex: $\delta(\delta_{NS}) ({}^{38}\text{Ca})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{38}\text{Ca}$ beta decay
+delta_deltaNS 42Sc:
+  tex: $\delta(\delta_{NS}) ({}^{42}\text{Sc})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{42}\text{Sc}$ beta decay
+delta_deltaNS 46V:
+  tex: $\delta(\delta_{NS}) ({}^{46}\text{V})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{46}\text{V}$ beta decay
+delta_deltaNS 50Mn:
+  tex: $\delta(\delta_{NS}) ({}^{50}\text{Mn})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{50}\text{Mn}$ beta decay
+delta_deltaNS 54Co:
+  tex: $\delta(\delta_{NS}) ({}^{54}\text{Co})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{54}\text{Co}$ beta decay
+delta_deltaNS 62Ga:
+  tex: $\delta(\delta_{NS}) ({}^{62}\text{Ga})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{62}\text{Ga}$ beta decay
+delta_deltaNS 74Rb:
+  tex: $\delta(\delta_{NS}) ({}^{74}\text{Rb})
+  description: Uncertainty on the nuclear structure dependent corrections to ${}^{74}\text{Rb}$ beta decay
 f_n:
   tex: $f_n$
   description: Statistical rate function for neutron beta decay

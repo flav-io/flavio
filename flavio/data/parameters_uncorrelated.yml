@@ -525,6 +525,21 @@ DeltaRV: 0.02467(27)  # Average from 2208.11707
 # one third of the Z^2alpha^3 term in table V of 0710.3181,
 # as suggested in 1411.5987
 delta_deltaRp_Z2: 0 ± 0.00004e-2
+# Systematic errors on delta_NS from table XI of Hardy:2020qwl
+delta_deltaNS 10C:   0 +- 0.036e-2
+delta_deltaNS 14O:   0 +- 0.040e-2
+delta_deltaNS 22Mg:  0 +- 0.046e-2
+delta_deltaNS 26mAl: 0 +- 0.047e-2
+delta_deltaNS 34Cl:  0 +- 0.055e-2
+delta_deltaNS 34Ar:  0 +- 0.058e-2
+delta_deltaNS 38mK:  0 +- 0.058e-2
+delta_deltaNS 38Ca:  0 +- 0.062e-2
+delta_deltaNS 42Sc:  0 +- 0.061e-2
+delta_deltaNS 46V:   0 +- 0.065e-2
+delta_deltaNS 50Mn:  0 +- 0.069e-2
+delta_deltaNS 54Co:  0 +- 0.074e-2
+delta_deltaNS 62Ga:  0 +- 0.080e-2
+delta_deltaNS 74Rb:  0 +- 0.089e-2
 f_n: 1.6887(1)  # Hardy & Towner
 deltaRp_n: 0.014902(2)
 Lambda->p f_1(0): -1.2247 ± 0.05  # -sqrt(3/2) +-  "few percent"
