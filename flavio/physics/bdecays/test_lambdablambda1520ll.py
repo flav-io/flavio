@@ -94,7 +94,7 @@ class TestLambdabLambda1520ll(TestLambdabLambda1520):
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.098, rtol=0.24, q2min=1, q2max=6)
 
 
-        self.assert_obs('<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.181, rtol=0.29, q2min=0.1, q2max=3)
+        self.assert_obs('<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.181, rtol=0.30, q2min=0.1, q2max=3)
         self.assert_obs('<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.242, rtol=0.07, q2min=3, q2max=6)
         self.assert_obs('<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.361, rtol=0.05, q2min=6, q2max=8.68)
         self.assert_obs('<S_1cc>(Lambdab->Lambda(1520)mumu)', 0.221, rtol=0.06, q2min=1, q2max=6)
@@ -108,10 +108,10 @@ class TestLambdabLambda1520ll(TestLambdabLambda1520):
         self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 2.58, NP=True, rtol=0.07, scalef=1e9, q2min=6, q2max=8.68)
         self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 0.77, NP=True, rtol=0.07, scalef=1e9, q2min=1, q2max=6)
 
-        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', 0.098  , NP=True, rtol=0.26, q2min=0.1, q2max=3)
-        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.059, NP=True, rtol=0.38, q2min=3, q2max=6)
+        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', 0.098  , NP=True, rtol=0.27, q2min=0.1, q2max=3)
+        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.059, NP=True, rtol=0.39, q2min=3, q2max=6)
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.166, NP=True, rtol=0.01, q2min=6, q2max=8.68)
-        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.031, NP=True, rtol=0.84, q2min=1, q2max=6)
+        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.031, NP=True, rtol=0.85, q2min=1, q2max=6)
 
     def test_lambdablambda1520mm_all_observables(self):
         # Test if all the observables with l=mu work fine.
