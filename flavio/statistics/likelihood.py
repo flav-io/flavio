@@ -279,6 +279,7 @@ class Likelihood(iio.YAMLLoadable):
         'observables':  vol.All([iio.coerce_observable_tuple], iio.list_deduplicate),
         'exclude_measurements': vol.Any(iio.ensurelist, [str]),
         'include_measurements': vol.Any(iio.ensurelist, [str]),
+        'renormalization_scale': vol.Any(None, float),
     }
 
     _output_schema_dict = {
@@ -296,6 +297,7 @@ class Likelihood(iio.YAMLLoadable):
                  exclude_measurements=None,
                  include_measurements=None,
                  include_pseudo_measurements=False,
+                 renormalization_scale=None,
                  ):
         self.par_obj = par_obj
         self.parameters_central = self.par_obj.get_central_all()
@@ -311,6 +313,7 @@ class Likelihood(iio.YAMLLoadable):
         self.parameter_likelihood = ParameterLikelihood(
             par_obj=par_obj,
             parameters=fit_parameters)
+        self.renormalization_scale = renormalization_scale
 
     def log_prior_fit_parameters(self, par_dict, delta=False):
         """Parameter contribution to the log-likelihood."""
