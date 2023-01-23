@@ -104,15 +104,15 @@ class ProbabilityDistribution(object):
                         if isinstance(x, np.ndarray):
                             od[k][i] = od[k][i].tolist()
         for k in od:
-            if isinstance(od[k], np.int):
+            if isinstance(od[k], int):
                 od[k] = int(od[k])
-            elif isinstance(od[k], np.float):
+            elif isinstance(od[k], float):
                 od[k] = float(od[k])
             if isinstance(od[k], list):
                 for i, x in enumerate(od[k]):
-                    if isinstance(x, np.float):
+                    if isinstance(x, float):
                         od[k][i] = float(od[k][i])
-                    elif isinstance(x, np.int):
+                    elif isinstance(x, int):
                         od[k][i] = int(od[k][i])
         return od
 
@@ -1296,7 +1296,7 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
                 self.xi[i] = np.linspace(x[0], x[1], self.y.shape[i])
         if central_value is not None:
             super().__init__(central_value=central_value,
-                             support=(np.asarray(self.xi).T[0], np.asarray(self.xi).T[-1]))
+                             support=(np.asarray([x[0] for x in self.xi]), np.asarray([x[-1] for x in self.xi])))
         else:
             # if no central value is specified, set it to the mode
             mode_index = (slice(None),) + np.unravel_index(self.y.argmax(), self.y.shape)
@@ -1372,7 +1372,7 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
             exclude = tuple(exclude)
         except TypeError:
             exclude = (exclude,)
-        xi = np.delete(self.xi, tuple(exclude), axis=0)
+        xi = [x for i,x in enumerate(self.xi) if i not in exclude]
         y = np.amax(self.y_norm, axis=tuple(exclude))
         cv = np.delete(self.central_value, tuple(exclude))
         if len(xi) == 1:
