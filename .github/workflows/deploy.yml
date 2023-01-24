@@ -11,15 +11,22 @@ jobs:
     steps:
       - name: Checkout git repository
         uses: actions/checkout@v2
+        with:
+          submodules: true
+          path: _src/
 
       - name: Install Python dependencies
         run: |
+          pushd _src
           pip install .[sampling,plotting,testing]
           pip install pytest
+          popd
 
       - name: Test with pytest
         run: |
+          pushd _src
           pytest
+          popd
 
       - name: Verify release version matches source code version
         shell: bash
