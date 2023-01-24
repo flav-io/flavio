@@ -293,7 +293,7 @@ def make_wilson_rge_derivative(adm):
         c = c_real.view(np.complex)
         d_alpha = betafunctions.beta_qcd_qed([alpha_s, alpha_e], mu, nf)
         d_c = np.dot(adm(nf, alpha_s, alpha_e).T, c)/mu
-        d_c_real = d_c.view(np.float)
+        d_c_real = d_c.view(float)
         return np.append(d_c_real, d_alpha)
     def derivative_nf(nf):
         return lambda x, mu: derivative(x, mu, nf)
@@ -307,7 +307,7 @@ def get_wilson(par, c_in, derivative_nf, scale_in, scale_out, nf_out=None):
     """
     alpha_in = get_alpha(par, scale_in, nf_out=nf_out)
     # x is (c_1, ..., c_N, alpha_s, alpha_e)
-    c_in_real = np.asarray(c_in, dtype=complex).view(np.float)
+    c_in_real = np.asarray(c_in, dtype=complex).view(float)
     x_in = np.append(c_in_real, [alpha_in['alpha_s'], alpha_in['alpha_e']])
     sol = rg_evolve_sm(x_in, derivative_nf, scale_in, scale_out, nf_out=nf_out)
     c_out = sol[:-2]
