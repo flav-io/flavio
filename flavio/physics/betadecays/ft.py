@@ -189,6 +189,25 @@ nuclei_superallowed = {
 }
 
 
+# Transition energies in MeV (Table I of Hardy:2020qwl)
+Q_EC = {
+"10C":   1907.994e-3,
+"14O":   2831.543e-3,
+"22Mg":  4124.49e-3,
+"26mAl": 4232.72e-3,
+"34Cl":  5491.662e-3,
+"34Ar":  6061.83e-3,
+"38mK":  6044.240e-3,
+"38Ca":  6612.12e-3,
+"42Sc":  6426.34e-3,
+"46V":   7052.45e-3,
+"50Mn":  7634.453e-3,
+"54Co":  8244.38e-3,
+"62Ga":  9181.07e-3,
+"74Rb":  10416.8e-3,
+}
+
+
 def Ft_superallowed(par, wc_obj, A):
     r"""Corrected $\mathcal{F}t$ value of the beta decay of isotope `A`."""
     MF = sqrt(2)
@@ -203,7 +222,10 @@ def Ft_superallowed(par, wc_obj, A):
     GF = GFeff(wc_obj, par)
     pre = GF / sqrt(2) * Vud
     ddRp = par['delta_deltaRp_Z2'] * Z**2  # relative uncertainty on \delta R' (universal)
-    ddNS = par[f'delta_deltaNS {A}'] # systematic uncertainty on \delta_NS for specific decay
+    ddNS_A = par[f'delta_deltaNS,A'] # systematic uncertainty on \delta_NS,A
+    # # systematic uncertainty on \delta_NS,E for a specific decay
+    ddNS_E = par['delta_deltaNS,E'] * Q_EC[A]
+    ddNS = sqrt(ddNS_A**2 + ddNS_E**2)
     return (1 + ddRp + ddNS) * K(par) / Xi * 1 / (1 + B * me_E) / abs(pre)**2
 
 
