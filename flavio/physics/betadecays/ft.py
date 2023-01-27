@@ -205,7 +205,6 @@ def Ft_superallowed(par, wc_obj, A):
     ddRp = par['delta_deltaRp_Z2'] * Z**2  # relative uncertainty on \delta R' (universal)
     ddNS = par[f'delta_deltaNS {A}'] # systematic uncertainty on \delta_NS for specific decay
     return (1 + ddRp + ddNS) * K(par) / Xi * 1 / (1 + B * me_E) / abs(pre)**2
-    # return (1 + ddRp) * K(par) / Xi * 1 / (1 + B * me_E) / abs(pre)**2
 
 
 class NeutronObservable:
