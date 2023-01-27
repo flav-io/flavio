@@ -1993,7 +1993,7 @@ deltaRp_n:
   description: Long-distance radiative correction to neutron beta decay
 delta_deltaRp_Z2:
   tex: $\delta(\delta R^\prime) / Z^2$
-  description: Uncertainty on the structure-indipendent radiative correction to beta decay divided by $Z^2$
+  description: Uncertainty on the structure-independent radiative correction to beta decay divided by $Z^2$
 delta_deltaNS 10C:
   tex: $\delta(\delta_{NS}) ({}^{10}\text{C})
   description: Uncertainty on the nuclear structure dependent corrections to ${}^{10}\text{C}$ beta decay
