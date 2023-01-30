@@ -190,6 +190,7 @@ nuclei_superallowed = {
 
 
 # Transition energies in MeV (Table I of Hardy:2020qwl)
+# Used for the calculation of the deltaNS uncertainties
 Q_EC = {
 "10C":   1907.994e-3,
 "14O":   2831.543e-3,
