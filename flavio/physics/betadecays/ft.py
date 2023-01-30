@@ -225,7 +225,7 @@ def Ft_superallowed(par, wc_obj, A):
     ddRp = par['delta_deltaRp_Z2'] * Z**2  # relative uncertainty on \delta R' (universal)
     ddNS_A = par[f'delta_deltaNS,A'] # systematic uncertainty on \delta_NS,A
     # systematic uncertainty on \delta_NS,E for a specific decay
-    ddNS_E = par['delta_deltaNS,E'] * Q_EC[A]
+    ddNS_E = par['delta_deltaNS,E_QEC'] * Q_EC[A]
     return (1 + ddRp + ddNS_A + ddNS_E) * K(par) / Xi * 1 / (1 + B * me_E) / abs(pre)**2
 
 

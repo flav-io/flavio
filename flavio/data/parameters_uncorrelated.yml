@@ -528,7 +528,7 @@ delta_deltaRp_Z2: 0 ± 0.00004e-2
 # Systematic uncertainty on delta_NS,A (eq. 16 of Hardy:2020qwl)
 delta_deltaNS,A: 0 +- 0.033e-2
 # Systematic uncertainty on delta_NS,E (eq. 18 of Hardy:2020qwl)
-delta_deltaNS,E: 0 +- 0.008e-2
+delta_deltaNS,E_QEC: 0 +- 0.008e-2
 f_n: 1.6887(1)  # Hardy & Towner
 deltaRp_n: 0.014902(2)
 Lambda->p f_1(0): -1.2247 ± 0.05  # -sqrt(3/2) +-  "few percent"
