@@ -5702,6 +5702,21 @@ CDF B0->K*mumu AFB 2012:
       q2max: 6.00
       value: 0.29+0.25-0.21 ± 0.06
 
+
+# Updated value from LHCb https://inspirehep.net/literature/2615983
+LHCb RK* 2022:
+   experiment: LHCb
+   inspire: LHCb:2022qnv
+   values:
+     - name: <Rmue>(B0->K*ll)
+       q2min: 0.045
+       q2max: 1.1
+       value: 0.927+0.093-0.087 ± 0.035
+     - name: <Rmue>(B0->K*ll)
+       q2min: 1.1
+       q2max: 6.0
+       value: 1.027+0.072-0.068 ± 0.026
+
 # The 1D likelihoods were extracted from the plots in
 # https://indico.cern.ch/event/580620/attachments/1442409/2226501/cern_2017_04_18.pdf
 # and extrapolated with a 2nd-order polynomial for the log likelihood
@@ -9777,6 +9792,22 @@ LHCb Bs->mumu 2021:
     central_value: [3.0297718212935134e-09, 1.196432308881323e-10]
 
 
+# A Gaussian distribution fitted to the numerical combination of
+# 'ATLAS Bs->mumu 2018', 'CMS Bs->mumu 2021', and 'LHCb Bs->mumu 2021'
+AD combination Bs->mumu 2022:
+  inspire: Allanach:2022iod
+  observables:
+    - BR(Bs->mumu)
+    - BR(B0->mumu)
+  values:
+    distribution: multivariate_normal
+    central_value: [3.28118e-09, 0.0321038e-9]    
+    standard_deviation: [0.260341e-9, 0.0534205e-9]
+    correlation:
+    - [1.0, -0.157735]
+    - [-0.157735, 1.0]
+
+
 # This is a Gaussian distribution fitted to the numerical combination of
 # 'ATLAS Bs->mumu 2018', 'CMS Bs->mumu 2019', and 'LHCb Bs->mumu 2021'
 AS combination Bs->mumu 2021:
@@ -10027,6 +10058,16 @@ LHCb RK 2021:
             2.930030266827948e-14, 9.380204518810159e-15, 2.9509468703762604e-15,
             9.122615178816618e-16, 2.771316976677127e-16]
 
+
+LHCb RK 2022:
+  experiment: LHCb
+  inspire: LHCb:2022qnv
+  url: https://inspirehep.net/literature/2615983
+  values:
+    - name: <Rmue>(B+->Kll)
+      q2min: 1.1
+      q2max: 6.0
+      value: 0.949 + 0.042-0.041 ± 0.22
 
 
 LHCb RKS 2021:
@@ -10311,7 +10352,7 @@ LHCb RKstplus 2021:
             0.0002358, 0.0002237, 0.0002122, 0.0002012, 0.0001909, 0.0001811, 0.0001718, 0.0001627, 0.0001539, 0.0001455, 0.0001376, 0.0001301, 0.0001231,
             0.0001164, 0.0001101, 0.0001041, 0.0000984, 0.0000931, 0.0000880, 0.0000832, 0.0000787, 0.0000742, 0.0000699, 0.0000659, 0.0000621, 0.0000586,
             0.0000552, 0.0000521, 0.0000491, 0.0000463, 0.0000436, 0.0000411, 0.0000388, 0.0000365, 0.0000343, 0.0000323, 0.0000303, 0.0000285, 0.0000268,
-            0.0000252, 0.0000237, 0.0000222, 0.0000209, 0.0000196, 0.0000185, 0.0000174, 0.0000163, 0.0000153, 0.0000143, 0.0000134, 0.0000126]
+            0.0000252, 0.0000237, 0.0000222, 0.0000209, 0.0000196, 0.0000185, 0.0000174, 0.0000163, 0.0000153, 0.0000143, 0.0000134, 0.0000126] 
 
 
 Belle B->K*mumu LFU 2016:
@@ -11048,7 +11089,7 @@ LHCb B->ee 2020:
   experiment: LHCb
   inspire: Aaij:2020nol
   values:
-    BR(Bs->ee): 2.4 ± 4.4 1e-9
+    BR(Bs->ee): 2.4 ± 4.4 1e-9 
     BR(B0->ee): 0.30 ± 1.29 1e-9
 
 Ft(0+) Hardy/Towner 2014:
@@ -13997,3 +14038,35 @@ LEP ee->WW angular:
       thetamin: 0.8
       thetamax: 1.0
       value: 7.584 ± 0.26
+
+# Added by BCA 21/2/23. NB check numbers!
+LEP ee->mumu:
+    experiment: LEP
+    inspire: Schael:2013ita
+    description: >
+      Combined LEP result from table 3.4 - difference of total to SM cross-section
+    values:
+      - name: dsigma(ee->mumu)
+        E: 182.7
+        value: 0.061±0.145±0.042
+      - name: dsigma(ee->mumu)
+        E: 188.6
+        value: -0.057±0.075±0.016
+      - name: dsigma(ee->mumu)
+        E: 191.6 
+        value: -0.17±0.181±0.018
+      - name: dsigma(ee->mumu)
+        E: 195.5
+        value: 0.033±0.110±0.018
+      - name: dsigma(ee->mumu)
+        E: 199.5
+        value: 0.139±0.108±0.018
+      - name: dsigma(ee->mumu)
+        E: 201.6
+        value: -0.057±0.146±0.017
+      - name: dsigma(ee->mumu)
+        E: 204.9
+        value: -0.209±0.098±0.015
+      - name: dsigma(ee->mumu)
+        E: 206.6
+        value: -0.010±0.078±0.014
