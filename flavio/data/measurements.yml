@@ -14040,33 +14040,41 @@ LEP ee->WW angular:
       value: 7.584 ± 0.26
 
 # Added by BCA 21/2/23. NB check numbers!
-LEP ee->mumu:
+LEP ee->ll:
     experiment: LEP
     inspire: Schael:2013ita
     description: >
       Combined LEP result from table 3.4 - difference of total to SM cross-section
     values:
-      - name: dsigma(ee->mumu)
+      - name: dsigma(ee->ll)
         E: 182.7
+        fam: 2
         value: 0.061±0.145±0.042
-      - name: dsigma(ee->mumu)
+      - name: dsigma(ee->ll)
         E: 188.6
+        fam: 2
         value: -0.057±0.075±0.016
-      - name: dsigma(ee->mumu)
-        E: 191.6 
+      - name: dsigma(ee->ll)
+        E: 191.6
+        fam: 2
         value: -0.17±0.181±0.018
-      - name: dsigma(ee->mumu)
+      - name: dsigma(ee->ll)
         E: 195.5
+        fam: 2
         value: 0.033±0.110±0.018
-      - name: dsigma(ee->mumu)
+      - name: dsigma(ee->ll)
         E: 199.5
+        fam: 2
         value: 0.139±0.108±0.018
-      - name: dsigma(ee->mumu)
+      - name: dsigma(ee->ll)
         E: 201.6
+        fam: 2
         value: -0.057±0.146±0.017
-      - name: dsigma(ee->mumu)
+      - name: dsigma(ee->ll)
         E: 204.9
+        fam: 2
         value: -0.209±0.098±0.015
-      - name: dsigma(ee->mumu)
+      - name: dsigma(ee->ll)
         E: 206.6
+        fam: 2
         value: -0.010±0.078±0.014
