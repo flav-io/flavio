@@ -14044,37 +14044,165 @@ LEP ee->ll:
     experiment: LEP
     inspire: Schael:2013ita
     description: >
-      Combined LEP result from table 3.4 - difference of total to SM cross-section
+      Combined LEP result from table 3.4 - difference of total to SM cross-section or A_FB (for afb: True)
     values:
       - name: dsigma(ee->ll)
         E: 182.7
         fam: 2
+        afb: False
         value: 0.061±0.145±0.042
       - name: dsigma(ee->ll)
         E: 188.6
         fam: 2
+        afb: False
         value: -0.057±0.075±0.016
       - name: dsigma(ee->ll)
         E: 191.6
         fam: 2
+        afb: False
         value: -0.17±0.181±0.018
       - name: dsigma(ee->ll)
         E: 195.5
         fam: 2
+        afb: False
         value: 0.033±0.110±0.018
       - name: dsigma(ee->ll)
         E: 199.5
         fam: 2
+        afb: False
         value: 0.139±0.108±0.018
       - name: dsigma(ee->ll)
         E: 201.6
         fam: 2
+        afb: False
         value: -0.057±0.146±0.017
       - name: dsigma(ee->ll)
         E: 204.9
         fam: 2
+        afb: False
         value: -0.209±0.098±0.015
       - name: dsigma(ee->ll)
         E: 206.6
         fam: 2
+        afb: False
         value: -0.010±0.078±0.014
+      - name: dsigma(ee->ll)
+        E: 182.7
+        fam: 3
+        afb: False
+        value: -0.077±0.174±0.049
+      - name: dsigma(ee->ll)
+        E: 188.6
+        fam: 3
+        afb: False
+        value: -0.002±0.107±0.032
+      - name: dsigma(ee->ll)
+        E: 191.6
+        fam: 3
+        afb: False
+        value: -0.236±0.246±0.032
+      - name: dsigma(ee->ll)
+        E: 195.5
+        fam: 3
+        afb: False
+        value: 0.000±0.152±0.029
+      - name: dsigma(ee->ll)
+        E: 199.5
+        fam: 3
+        afb: False
+        value: 0.120±0.152±0.029
+      - name: dsigma(ee->ll)
+        E: 201.6
+        fam: 3
+        afb: False
+        value: 0.073±0.208±0.022
+      - name: dsigma(ee->ll)
+        E: 204.9
+        fam: 3
+        afb: False
+        value: 0.111±0.149±0.028
+      - name: dsigma(ee->ll)
+        E: 206.6
+        fam: 3
+        afb: False
+        value: -0.126±0.109±0.029
+      - name: dsigma(ee->ll)
+        E: 182.7
+        fam: 2
+        afb: True
+        value: -0.012±0.034±0.008
+      - name: dsigma(ee->ll)
+        E: 188.6
+        fam: 2
+        afb: True
+        value: 0.002±0.020±0.005
+      - name: dsigma(ee->ll)
+        E: 191.
+        fam: 2
+        afb: True
+        value: -0.015±0.051±0.007
+      - name: dsigma(ee->ll)
+        E: 195.5
+        fam: 2
+        afb: True
+        value: 0.030±0.030±0.005
+      - name: dsigma(ee->ll)
+        E: 199.5
+        fam: 2
+        afb: True
+        value: -0.039±0.031±0.005
+      - name: dsigma(ee->ll)
+        E: 201.6
+        fam: 2
+        afb: True
+        value: -0.009±0.045±0.005
+      - name: dsigma(ee->ll)
+        E: 204.9
+        fam: 2
+        afb: True
+        value: 0.003±0.034±0.004
+      - name: dsigma(ee->ll)
+        E: 206.6
+        fam: 2
+        afb: True
+        value: -0.017±0.028±0.004
+      - name: dsigma(ee->ll)
+        E: 182.7
+        fam: 3
+        afb: True
+        value: 0.028±0.044±0.011 
+      - name: dsigma(ee->ll)
+        E: 188.6
+        fam: 3
+        afb: True
+        value: 0.021±0.026±0.007
+      - name: dsigma(ee->ll)
+        E: 191.6
+        fam: 3
+        afb: True
+        value: 0.025±0.067±0.008
+      - name: dsigma(ee->ll)
+        E: 195.5
+        fam: 3
+        afb: True
+        value: -0.097±0.044±0.008
+      - name: dsigma(ee->ll)
+        E: 199.5
+        fam: 3
+        afb: True
+        value: -0.019±0.041±0.007 
+      - name: dsigma(ee->ll)
+        E: 201.6
+        fam: 3
+        afb: True
+        value: 0.021±0.041±0.007 
+      - name: dsigma(ee->ll)
+        E: 204.9
+        fam: 3
+        afb: True
+        value: 0.065±0.040±0.008
+      - name: dsigma(ee->ll)
+        E: 206.6
+        fam: 3
+        afb: True
+        value: 0.038±0.034±0.010

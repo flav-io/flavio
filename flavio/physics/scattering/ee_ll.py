@@ -4,10 +4,11 @@ r"""Functions for $e^+ e^-\to l^+ l^- of various flavours"""
 import flavio
 import numpy as np
 
-# predicted difference to SM correction from SMEFT operators of e+e-->mumu for LEP2 energy E and family fam
-def ee_ll(C, par, E, fam):
+# predicted difference to SM correction from SMEFT operators of e+e-->mumu for LEP2 energy E and family fam total cross-section. afb should be true for forward-backward asymmetry, whereas it should be false for the total cross-section
+def ee_ll(C, par, E, fam, afb):
     # Check energy E is correct
-    if (E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and E != 199.5 and E!= 201.6 and E!= 206.6):
+    if (E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and
+        E != 199.5 and E!= 201.6 and E!= 206.6):
         raise ValueError('ee_ll called with incorrect LEP2 energy {} GeV.'.format(E))
         
     # For now, delta g couplings have been NEGLECTED
@@ -24,18 +25,24 @@ def ee_ll(C, par, E, fam):
     gYsq  = gLsq * s2w / (1. - s2w)
     vSq   = 1. / (np.sqrt(2.) * GF)
     res   = 0
+    fac   = 1
+    div   = 24
+    if (bool(afb)):
+        fac = -1
+        div = 32.
+    # Expression from 1511.07434v2
     if (fam == 2 or fam == 3):
-        res   = 1. / (24. * PI * vSq) * (
+        res   = 1. / (div * PI * vSq) * (
             eSq * (C['ll_11' + str(fam) + str(fam)] +
                    C['ll_1' + str(fam) + str(fam) + '1'] +
                    C['ee_11' + str(fam) + str(fam)] +
-                   C['le_11' + str(fam) + str(fam)] +
-                   C['le_' + str(fam) + str(fam) + '11']) +
+                   fac * C['le_11' + str(fam) + str(fam)] +
+                   fac * C['le_' + str(fam) + str(fam) + '11']) +
             s * (gLsq + gYsq) / (s - mz**2) * (
                 gzeL**2 * (C['ll_11' + str(fam) + str(fam)] +
                            C['ll_1' + str(fam) + str(fam) + '1']) +
                 gzeR**2 *  C['ee_11' + str(fam) + str(fam)] +
-                gzeL * gzeR * (C['le_11' + str(fam) + str(fam)] +
+                fac * gzeL * gzeR * (C['le_11' + str(fam) + str(fam)] +
                                C['le_' + str(fam) + str(fam)])
             )
         )
@@ -43,21 +50,24 @@ def ee_ll(C, par, E, fam):
         raise ValueError('ee_ll called with incorrect family {}'.format(fam))
     # The following numerical check made it looks like the constants have the correct values, meaning the conventions are understtod: 21/2/23
     # print('# DEBUG: MZ=', np.sqrt(vSq * (gLsq + gYsq) / 4.),' MW=', np.sqrt(gLsq * vSq / 4.),' PI=',PI, ' v=',np.sqrt(vSq))
-    return res 
+    conversion_factor = 0.389397e9 # To convert cross-sections in GeV^(-2) to pb
+    return res * conversion_factor
 
-def ee_ll_obs(wc_obj, par, E, fam):
+def ee_ll_obs(wc_obj, par, E, fam, afb):
     scale = flavio.config['renormalization scale']['ee_ww'] # Use LEP2 renorm scale
     C = wc_obj.get_wcxf(sector='all', scale=scale, par=par,
                         eft='SMEFT', basis='Warsaw')
-    return ee_ll(C, par, E, fam)
+    return ee_ll(C, par, E, fam, afb)
 
 _process_tex = r"e^+e^- \to l^+l^-"
 _process_taxonomy = r'Process :: $e^+e^-$ scattering :: $e^+e^-\to l^+l^-$ :: $' + _process_tex + r"$"
 
 _obs_name = "dsigma(ee->ll)"
 _obs = flavio.classes.Observable(_obs_name)
-_obs.arguments = ['E', 'fam']
+_obs.arguments = ['E', 'fam', 'afb']
 flavio.classes.Prediction(_obs_name, ee_ll_obs)
 _obs.set_description(r"Cross section of $" + _process_tex + r"$ at energy $E$ minus that of the SM")
 _obs.tex = r"$d\sigma(" + _process_tex + r")$"
 _obs.add_taxonomy(_process_taxonomy)
+
+
