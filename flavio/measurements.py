@@ -121,6 +121,7 @@ def _fix_correlation_matrix(corr, n_dim):
     if not isinstance(corr, list):
         raise TypeError("Correlation matrix must be of type list")
     if len(corr) != n_dim:
+        print(len(corr), ' versus ', n_dim)
         raise ValueError("The correlation matrix has inappropriate number of dimensions")
     corr_out = np.zeros((n_dim, n_dim))
     for i, line in enumerate(corr):
