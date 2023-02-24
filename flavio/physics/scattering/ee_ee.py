@@ -9,27 +9,27 @@ def usq_o_ssq(x):
     return 0.25 * (x**3 / 3. + x**2 + x)
 
 def usq_o_st (x):
-    return 0.5 * (x + 2 * log(1 - x))
+    return 0.5 * (x + 2 * np.log(1 - x))
 
 def tsq_o_ssq(x):
     return 0.25 * (x - x**2 + x**3 / 3.)        
 
 def s_o_t(x):
-    return 2 * log(1. - x)
+    return 2 * np.log(1. - x)
 
-def s_o_t_mz(x, mz_sq_o_s):
-    return 2 * log(1. - x + 2 * mz_sq_o_s)
+def s_o_t_mz(x, mzsq_o_s):
+    return 2 * np.log(1. - x + 2 * mzsq_o_s)
 
 def usq_o_s_o_mz(x, mzsq_o_s):
-    return 0.5 * (0.5 * (x + 1.) * (5 + 4 * mz_sq_o_s + x) +
-                  (2 + 2 * mz_sq_o_s)**2 * log(1 + 2 * mz_sq_o_s - x))
+    return 0.5 * (0.5 * (x + 1.) * (5 + 4 * mzsq_o_s + x) +
+                  (2 + 2 * mzsq_o_s)**2 * np.log(1 + 2 * mzsq_o_s - x))
     
 # predicted difference to SM correction from SMEFT operators of e+e-->mumu for LEP2 energy E and family fam total cross-section. cthmin/max are the minimum and maximum cosines of the scattering angle in the current bin
 def ee_ee(C, par, E, cthmin, cthmax):
     # Check energy E is correct
     if (E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and
-        E != 199.5 and E!= 201.6 and E!= 206.6):
-        raise ValueError('ee_ll called with incorrect LEP2 energy {} GeV.'.format(E))
+        E != 199.5 and E != 201.6 and E != 204.9 and E!= 206.6):
+        raise ValueError('ee_ee called with incorrect LEP2 energy {} GeV.'.format(E))
     #    
     # For now, delta g couplings have been NEGLECTED
     PI = 3.141592653589793
@@ -46,13 +46,13 @@ def ee_ee(C, par, E, cthmin, cthmax):
     gYsq  = gLsq * s2w / (1. - s2w)
     vSq   = 1. / (np.sqrt(2.) * GF)
     # The fi are functions of cthmin and cthmax after integration
-    f1 = usq_o_ssq(cthmax) - u_sq_o_ssq(cthmin) + usq_o_st(cthmax) - usq_o_st(cthmin)
-    f2 = (usq_o_ssq(cthmax) - u_sq_o_ssq(chtmin)) / (1. - mz**2 / s)
-    f3 = usq_o_s_o_mz(cthmax, mz_sq_o_s) - usq_o_s_o_mz(cthmin, mz_sq_o_s)
+    f1 = usq_o_ssq(cthmax) - usq_o_ssq(cthmin) + usq_o_st(cthmax) - usq_o_st(cthmin)
+    f2 = (usq_o_ssq(cthmax) - usq_o_ssq(cthmin)) / (1. - mz**2 / s)
+    f3 = usq_o_s_o_mz(cthmax, mzsq_o_s) - usq_o_s_o_mz(cthmin, mzsq_o_s)
     f4 = tsq_o_ssq(cthmax) - tsq_o_ssq(cthmin)
     f5 = s_o_t(cthmax) - s_o_t(cthmin)
-    f6 = (tsq_o_ssq(cthmax) - tsq_o_ssq(chtmin)) / (1. - mz**2 / s)
-    f7 = s_o_t_mz(cthmax, mz_sq_o_s) - s_o_t_mz(cthmin, mz_sq_o_s)
+    f6 = (tsq_o_ssq(cthmax) - tsq_o_ssq(cthmin)) / (1. - mz**2 / s)
+    f7 = s_o_t_mz(cthmax, mzsq_o_s) - s_o_t_mz(cthmin, mzsq_o_s)
     # I've integrated the costheta's beforehand, but it all needs checking!
     # Expression from 1511.07434v2: don't forget to divide by diff
     res   = 1. / (8 * PI * vSq) * (

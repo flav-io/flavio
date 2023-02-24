@@ -8,7 +8,7 @@ import numpy as np
 def ee_ll(C, par, E, fam, afb):
     # Check energy E is correct
     if (E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and
-        E != 199.5 and E!= 201.6 and E!= 206.6):
+        E != 199.5 and E!= 201.6 and E!= 204.9 and E!= 206.6):
         raise ValueError('ee_ll called with incorrect LEP2 energy {} GeV.'.format(E))
         
     # For now, delta g couplings have been NEGLECTED

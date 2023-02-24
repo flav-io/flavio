@@ -14215,7 +14215,7 @@ LEP ee->ee:
       Combined LEP result from table 3.11,3.12 - difference of measured to SM differential cross-section divided by Delta(cos theta)
     values:
       - name: dsigma(ee->ee)
-        E: 186.6
+        E: 188.6
         cthmin: -0.90
         cthmax: -0.72
         value: -0.189 +- 0.161
