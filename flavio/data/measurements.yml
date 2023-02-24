@@ -14137,7 +14137,7 @@ LEP ee->ll:
         afb: True
         value: 0.002±0.020±0.005
       - name: dsigma(ee->ll)
-        E: 191.
+        E: 191.6
         fam: 2
         afb: True
         value: -0.015±0.051±0.007
