@@ -4,13 +4,33 @@ r"""Functions for $e^+ e^-\to l^+ l^- of various flavours"""
 import flavio
 import numpy as np
 
+# some functions for use by ee_ee function
+def usq_o_ssq(x):
+    return 0.25 * (x**3 / 3. + x**2 + x)
+
+def usq_o_st (x):
+    return 0.5 * (x + 2 * log(1 - x))
+
+def tsq_o_ssq(x):
+    return 0.25 * (x - x**2 + x**3 / 3.)        
+
+def s_o_t(x):
+    return 2 * log(1. - x)
+
+def s_o_t_mz(x, mz_sq_o_s):
+    return 2 * log(1. - x + 2 * mz_sq_o_s)
+
+def usq_o_s_o_mz(x, mzsq_o_s):
+    return 0.5 * (0.5 * (x + 1.) * (5 + 4 * mz_sq_o_s + x) +
+                  (2 + 2 * mz_sq_o_s)**2 * log(1 + 2 * mz_sq_o_s - x))
+    
 # predicted difference to SM correction from SMEFT operators of e+e-->mumu for LEP2 energy E and family fam total cross-section. cthmin/max are the minimum and maximum cosines of the scattering angle in the current bin
 def ee_ee(C, par, E, cthmin, cthmax):
     # Check energy E is correct
     if (E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and
         E != 199.5 and E!= 201.6 and E!= 206.6):
         raise ValueError('ee_ll called with incorrect LEP2 energy {} GeV.'.format(E))
-        
+    #    
     # For now, delta g couplings have been NEGLECTED
     PI = 3.141592653589793
     s = E * E
@@ -18,29 +38,33 @@ def ee_ee(C, par, E, cthmin, cthmax):
     GF = par['GF']
     alpha = par['alpha_e']
     s2w   = par['s2w']
+    mzsq_o_s = mz**2 / s
     gzeL  = -0.5 + s2w
     gzeR  = s2w
     eSq   = 4 * PI * alpha
     gLsq  = eSq / s2w
     gYsq  = gLsq * s2w / (1. - s2w)
     vSq   = 1. / (np.sqrt(2.) * GF)
-    # NB you should try to integrate the cos thetas beforehand!
-    # Expression from 1511.07434v2
-    res   = 1. / (8 * PI * vSq * s) * (
-        eSq * (C['ll_11' + str(fam) + str(fam)] +
-               C['ll_1' + str(fam) + str(fam) + '1'] +
-               C['ee_11' + str(fam) + str(fam)] +
-               fac * C['le_11' + str(fam) + str(fam)] +
-               fac * C['le_' + str(fam) + str(fam) + '11']) +
-        s * (gLsq + gYsq) / (s - mz**2) * (
-            gzeL**2 * (C['ll_11' + str(fam) + str(fam)] +
-                       C['ll_1' + str(fam) + str(fam) + '1']) +
-            gzeR**2 *  C['ee_11' + str(fam) + str(fam)] +
-            fac * gzeL * gzeR * (C['le_11' + str(fam) + str(fam)] +
-                                 C['le_' + str(fam) + str(fam)])
+    # The fi are functions of cthmin and cthmax after integration
+    f1 = usq_o_ssq(cthmax) - u_sq_o_ssq(cthmin) + usq_o_st(cthmax) - usq_o_st(cthmin)
+    f2 = (usq_o_ssq(cthmax) - u_sq_o_ssq(chtmin)) / (1. - mz**2 / s)
+    f3 = usq_o_s_o_mz(cthmax, mz_sq_o_s) - usq_o_s_o_mz(cthmin, mz_sq_o_s)
+    f4 = tsq_o_ssq(cthmax) - tsq_o_ssq(cthmin)
+    f5 = s_o_t(cthmax) - s_o_t(cthmin)
+    f6 = (tsq_o_ssq(cthmax) - tsq_o_ssq(chtmin)) / (1. - mz**2 / s)
+    f7 = s_o_t_mz(cthmax, mz_sq_o_s) - s_o_t_mz(cthmin, mz_sq_o_s)
+    # I've integrated the costheta's beforehand, but it all needs checking!
+    # Expression from 1511.07434v2: don't forget to divide by diff
+    res   = 1. / (8 * PI * vSq) * (
+        eSq * (C['ll_1111'] + C['ee_1111']) * f1  +
+        (gLsq + gYsq) * (gzeL**2 * C['ll_1111'] + gzeR**2 *  C['ee_1111'])
+        * (f2 + f3) +
+        C['le_1111'] * (
+            eSq * (f4 + f5) +
+            (gLsq + gYsq) * gzeL * gzeR  * (f6 + f7)
         )
     )
-    # The following numerical check made it looks like the constants have the correct values, meaning the conventions are understtod: 21/2/23
+    # The following numerical check made it looks like the constants have the correct values, meaning the conventions are understood: 21/2/23
     # print('# DEBUG: MZ=', np.sqrt(vSq * (gLsq + gYsq) / 4.),' MW=', np.sqrt(gLsq * vSq / 4.),' PI=',PI, ' v=',np.sqrt(vSq))
     conversion_factor = 0.389397e9 / (cthmax - cthmin) # To convert cross-sections in GeV^(-2) to pb
     return res * conversion_factor
