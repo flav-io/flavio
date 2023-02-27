@@ -27,9 +27,6 @@ def ee_ll(C, par, E, fam):
     res   = 0
     fac   = 1
     div   = 24
-    if (bool(afb)):
-        fac = -1
-        div = 32.
     # Expression from 1511.07434v2
     if (fam == 2 or fam == 3):
         res   = 1. / (div * PI * vSq) * (
@@ -122,11 +119,11 @@ def ee_ll_afb(C, par, E, fam, AfbSM, sigmaSM):
 
     return AfbSM * (1.0 - dsigma_tot / sigmaSM) + dsigma_fb / sigmaSM
 
-def ee_ll_afb_obs(wc_obj, par, E, AfbSM, sigmaSM):
+def ee_ll_afb_obs(wc_obj, par, E, fam, AfbSM, sigmaSM):
     scale = flavio.config['renormalization scale']['ee_ww'] # Use LEP2 renorm scale
     C = wc_obj.get_wcxf(sector='all', scale=scale, par=par,
                         eft='SMEFT', basis='Warsaw')
-    return ee_ll(C, par, E, AfbSM, sigmaSM)
+    return ee_ll_afb(C, par, E, fam, AfbSM, sigmaSM)
 
 _process_tex = r"e^+e^- \to l^+l^-"
 _process_taxonomy = r'Process :: $e^+e^-$ scattering :: $e^+e^-\to l^+l^-$ :: $' + _process_tex + r"$"
@@ -134,7 +131,7 @@ _process_taxonomy = r'Process :: $e^+e^-$ scattering :: $e^+e^-\to l^+l^-$ :: $'
 _obs_name = "AFB(ee->ll)"
 _obs = flavio.classes.Observable(_obs_name)
 _obs.arguments = ['E', 'fam', 'AfbSM', 'sigmaSM']
-flavio.classes.Prediction(_obs_name, ee_ll_obs)
+flavio.classes.Prediction(_obs_name, ee_ll_afb_obs)
 _obs.set_description(r"$A_{FB} of $" + _process_tex + r"$ at energy $E$")
 _obs.tex = r"$A_{FB}(" + _process_tex + r")$"
 _obs.add_taxonomy(_process_taxonomy)

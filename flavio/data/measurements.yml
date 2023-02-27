@@ -14045,7 +14045,7 @@ LEP ee->ll:
     experiment: LEP
     inspire: Schael:2013ita
     description: >
-      Combined LEP result from table 3.4 - difference of total to SM cross-section or sigma(forward)-sigma(backward) (for afb: True): in pb
+      Combined LEP result from table 3.4 - difference of total to SM cross-section: in pb
     values:
       - name: dsigma(ee->ll)
         E: 182.7
@@ -14134,7 +14134,7 @@ LEP AFB(ee->ll):
       - name: AFB(ee->ll)
         E: 191.6
         fam: 2
-        AfbSM: 0.569
+        AfbSM: 0.566
         sigmaSM: 3.096
         value: 0.551±0.051±0.007
       - name: AFB(ee->ll)
@@ -14215,7 +14215,6 @@ LEP AFB(ee->ll):
         AfbSM: 0.552
         sigmaSM: 2.628
         value: 0.590±0.034±0.010
-
 
 
 # Added by BCA 23/2/23. Checked by BCA 27/2/23.
@@ -14859,105 +14858,3 @@ LEP ee->ee:
        [ 0.017, 0.011, 0.012, 0.013, 0.017, 0.013, 0.014, 0.017, 0.021, 0.026, 0.032, 0.040, 0.054, 0.114, 0.183, 0.008, 0.006, 0.006, 0.006, 0.008, 0.007, 0.007, 0.010, 0.011, 0.015, 0.015, 0.021, 0.028, 0.062, 0.104, 0.015, 0.008, 0.009, 0.011, 0.013, 0.010, 0.012, 0.014, 0.017, 0.020, 0.025, 0.032, 0.044, 0.093, 0.152, 0.015, 0.008, 0.009, 0.011, 0.013, 0.011, 0.012, 0.014, 0.015, 0.019, 0.026, 0.032, 0.044, 0.092, 0.151, 0.010, 0.005, 0.006, 0.007, 0.007, 0.006, 0.008, 0.009, 0.010, 0.012, 0.014, 0.019, 0.026, 0.057, 0.095, 0.013, 0.008, 0.010, 0.011, 0.012, 0.011, 0.012, 0.014, 0.016, 0.019, 0.025, 0.032, 0.043, 0.092, 0.153, 0.021, 0.013, 0.014, 0.016, 0.019, 0.015, 0.019, 0.020, 0.025, 0.031, 0.039, 0.049, 0.065, 0.135, 1.000]]
 
      
-# Added by BCA 27/2/23. 
-LEP AFB(ee->ll):
-    experiment: LEP
-    inspire: Schael:2013ita
-    description: Combined LEP result from table 3.4 - AFB prediction
-    values:
-      - name: AFB(ee->ll)
-        E: 182.7
-        fam: 2
-        AfbSM: 0.576
-        sigmaSM: 3.444
-        value: 0.564±0.034±0.008
-      - name: AFB(ee->ll)
-        E: 188.6
-        fam: 2
-        AfbSM: 0.569
-        sigmaSM: 3.207
-        value: 0.571±0.020±0.005
-      - name: AFB(ee->ll)
-        E: 191.6
-        fam: 2
-        AfbSM: 0.569
-        sigmaSM: 3.096
-        value: 0.551±0.051±0.007
-      - name: AFB(ee->ll)
-        E: 195.5
-        fam: 2
-        AfbSM: 0.562
-        sigmaSM: 2.961
-        value: 0.592±0.030±0.005
-      - name: AFB(ee->ll)
-        E: 199.5
-        fam: 2
-        AfbSM: 0.558
-        sigmaSM: 2.833
-        value: 0.519±0.031±0.005
-      - name: AFB(ee->ll)
-        E: 201.6
-        fam: 2
-        AfbSM: 0.556
-        sigmaSM: 2.766
-        value: 0.547±0.045±0.005 
-      - name: AFB(ee->ll)
-        E: 204.9
-        fam: 2
-        AfbSM: 0.553
-        sigmaSM: 2.673
-        value: 0.556±0.034±0.004
-      - name: AFB(ee->ll)
-        E: 206.6
-        fam: 2
-        AfbSM: 0.552
-        sigmaSM: 2.628
-        value: 0.535±0.028±0.004
-      - name: AFB(ee->ll)
-        E: 182.7
-        fam: 3
-        AfbSM: 0.576
-        sigmaSM: 3.444
-        value: 0.604±0.044±0.011
-      - name: AFB(ee->ll)
-        E: 188.6
-        fam: 3
-        AfbSM: 0.569
-        sigmaSM: 3.206
-        value: 0.590±0.026±0.007
-      - name: AFB(ee->ll)
-        E: 191.6
-        fam: 3
-        AfbSM: 0.565
-        sigmaSM: 3.096
-        value: 0.590±0.026±0.007
-      - name: AFB(ee->ll)
-        E: 195.5
-        fam: 3
-        AfbSM: 0.561
-        sigmaSM: 2.961
-        value: 0.464±0.044±0.008
-      - name: AFB(ee->ll)
-        E: 199.5
-        fam: 3
-        AfbSM: 0.558
-        sigmaSM: 2.832
-        value: 0.539±0.041±0.007
-      - name: AFB(ee->ll)
-        E: 201.6
-        fam: 3
-        AfbSM: 0.556
-        sigmaSM: 2.765
-        value: 0.535±0.058±0.009
-      - name: AFB(ee->ll)
-        E: 204.9
-        fam: 3
-        AfbSM: 0.553
-        sigmaSM: 2.672
-        value: 0.618±0.040±0.008
-      - name: AFB(ee->ll)
-        E: 206.6
-        fam: 3
-        AfbSM: 0.552
-        sigmaSM: 2.628
-        value: 0.590±0.034±0.010
