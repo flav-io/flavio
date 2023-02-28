@@ -1,5 +1,5 @@
 r"""Functions for $e^+ e^-\to l^+ l^- of various flavours"""
-# Written by Ben Allanach 
+# Written by Ben Allanach: note ignores small imaginary parts coming from Wilson coefficient running. Not yet appropriate for complex Wilson coefficients.
 
 import flavio
 import numpy as np
@@ -30,12 +30,12 @@ def ee_ll(C, par, E, fam):
     # Expression from 1511.07434v2
     if (fam == 2 or fam == 3):
         res   = 1. / (div * PI * vSq) * (
-            eSq * (C['ll_11' + str(fam) + str(fam)] +
+            eSq * np.real_if_close(C['ll_11' + str(fam) + str(fam)] +
                    C['ll_1' + str(fam) + str(fam) + '1'] +
                    C['ee_11' + str(fam) + str(fam)] +
                    fac * C['le_11' + str(fam) + str(fam)] +
                    fac * C['le_' + str(fam) + str(fam) + '11']) +
-            s * (gLsq + gYsq) / (s - mz**2) * (
+            s * (gLsq + gYsq) / (s - mz**2) * np.real_if_close(
                 gzeL**2 * (C['ll_11' + str(fam) + str(fam)] +
                            C['ll_1' + str(fam) + str(fam) + '1']) +
                 gzeR**2 *  C['ee_11' + str(fam) + str(fam)] +
@@ -95,12 +95,12 @@ def ee_ll_afb(C, par, E, fam, AfbSM, sigmaSM):
     # Expression from 1511.07434v2
     if (fam == 2 or fam == 3):
         res   = conversion_factor / (div * PI * vSq) * (
-            eSq * (C['ll_11' + str(fam) + str(fam)] +
+            eSq * np.real_if_close(C['ll_11' + str(fam) + str(fam)] +
                    C['ll_1' + str(fam) + str(fam) + '1'] +
                    C['ee_11' + str(fam) + str(fam)] +
                    fac * C['le_11' + str(fam) + str(fam)] +
                    fac * C['le_' + str(fam) + str(fam) + '11']) +
-            s * (gLsq + gYsq) / (s - mz**2) * (
+            s * (gLsq + gYsq) / (s - mz**2) * np.real_if_close(
                 gzeL**2 * (C['ll_11' + str(fam) + str(fam)] +
                            C['ll_1' + str(fam) + str(fam) + '1']) +
                 gzeR**2 *  C['ee_11' + str(fam) + str(fam)] +
@@ -116,7 +116,6 @@ def ee_ll_afb(C, par, E, fam, AfbSM, sigmaSM):
     dsigma_fb  = res
     # New physics contribution to total cross-section at this energy
     dsigma_tot = ee_ll(C, par, E, fam)
-
     return AfbSM * (1.0 - dsigma_tot / sigmaSM) + dsigma_fb / sigmaSM
 
 def ee_ll_afb_obs(wc_obj, par, E, fam, AfbSM, sigmaSM):
