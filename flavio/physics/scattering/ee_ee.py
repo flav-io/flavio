@@ -55,7 +55,7 @@ def ee_ee(C, par, E, cthmin, cthmax):
     f7 = s_o_t_mz(cthmax, mzsq_o_s) - s_o_t_mz(cthmin, mzsq_o_s)
     # I've integrated the costheta's beforehand, but it all needs checking!
     # Expression from 1511.07434v2: don't forget to divide by diff
-    res   = 1. / (8 * PI * vSq) * (
+    res   = 1. / (8 * PI) * (
         eSq * (C['ll_1111'] + C['ee_1111']) * f1  +
         (gLsq + gYsq) * (gzeL**2 * C['ll_1111'] + gzeR**2 *  C['ee_1111'])
         * (f2 + f3) +

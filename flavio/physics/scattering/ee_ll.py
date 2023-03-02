@@ -29,8 +29,8 @@ def ee_ll(C, par, E, fam):
     div   = 24
     # Expression from 1511.07434v2
     if (fam == 2 or fam == 3):
-        res   = 1. / (div * PI * vSq) * (
-            eSq * np.real_if_close(C['ll_11' + str(fam) + str(fam)] +
+        res   = 1. / (div * PI) * (
+            eSq * np.real_if_close(C[f'll_11{fam}{fam}'].real +
                    C['ll_1' + str(fam) + str(fam) + '1'] +
                    C['ee_11' + str(fam) + str(fam)] +
                    fac * C['le_11' + str(fam) + str(fam)] +
@@ -94,7 +94,7 @@ def ee_ll_afb(C, par, E, fam, AfbSM, sigmaSM):
     conversion_factor = 0.389397e9 # To convert cross-sections in GeV^(-2) to pb
     # Expression from 1511.07434v2
     if (fam == 2 or fam == 3):
-        res   = conversion_factor / (div * PI * vSq) * (
+        res   = conversion_factor / (div * PI) * (
             eSq * np.real_if_close(C['ll_11' + str(fam) + str(fam)] +
                    C['ll_1' + str(fam) + str(fam) + '1'] +
                    C['ee_11' + str(fam) + str(fam)] +
