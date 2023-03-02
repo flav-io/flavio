@@ -54,11 +54,12 @@ def ee_ee(C, par, E, cthmin, cthmax):
     f6 = (tsq_o_ssq(cthmax) - tsq_o_ssq(cthmin)) / (1. - mz**2 / s)
     f7 = s_o_t_mz(cthmax, mzsq_o_s) - s_o_t_mz(cthmin, mzsq_o_s)
     # I've integrated the costheta's beforehand, but it all needs checking!
-    # Expression from 1511.07434v2: don't forget to divide by diff
+    # Expression from 1511.07434v2: the factors of 2 come from difference
+    # between Wilson convention and Falkowski's for symmetry factor of WCs
     res   = 1. / (8 * PI) * (
-        eSq * (C['ll_1111'] + C['ee_1111']) * f1  +
+        eSq * (C['ll_1111'] + C['ee_1111']) * f1 * 2 +
         (gLsq + gYsq) * (gzeL**2 * C['ll_1111'] + gzeR**2 *  C['ee_1111'])
-        * (f2 + f3) +
+        * (f2 + f3)  * 2+
         C['le_1111'] * (
             eSq * (f4 + f5) +
             (gLsq + gYsq) * gzeL * gzeR  * (f6 + f7)
