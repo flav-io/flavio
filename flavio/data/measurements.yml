@@ -11342,6 +11342,32 @@ LHCb RKstplus 2021:
             0.0000252, 0.0000237, 0.0000222, 0.0000209, 0.0000196, 0.0000185, 0.0000174, 0.0000163, 0.0000153, 0.0000143, 0.0000134, 0.0000126]
 
 
+LHCb RK RK* 2022:
+  experiment: LHCb
+  inspire: LHCb:2022zom
+  values:
+    - name: <Rmue>(B+->Kll) # RK cental-q^2
+      q2min: 1.1
+      q2max: 6.0
+      value: 0.949 +0.042 -0.041 +0.022 -0.022
+    - name: <Rmue>(B+->Kll) # RK low-q^2
+      q2min: 0.1
+      q2max: 1.1
+      value: 0.994 +0.090 -0.082 +0.029 -0.027
+    - name: <Rmue>(B0->K*ll) # RK* cental-q^2
+      q2min: 1.1
+      q2max: 6.0
+      value: 1.027 +0.072 -0.068 +0.027 -0.026
+    - name: <Rmue>(B0->K*ll) # RK* low-q^2
+      q2min: 0.1
+      q2max: 1.1
+      value: 0.927 +0.093 -0.087 +0.036 -0.035
+  correlation: [[1.000, 0.015, -0.017, 0.005],
+                [0.015, 1.000, 0.004, -0.033],
+                [-0.017, 0.004, 1.000, 0.016],
+                [0.005, -0.033, 0.016, 1.000]]
+
+
 Belle B->K*mumu LFU 2016:
    experiment: Belle
    inspire: Wehle:2016yoi
