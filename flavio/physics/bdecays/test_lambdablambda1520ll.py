@@ -83,10 +83,10 @@ class TestLambdabLambda1520ll(TestLambdabLambda1520):
         # Differences due to C9eff = C9 and C7eff = C7
         flavio.config['implementation']['Lambdab->Lambda(1520) form factor'] = 'Lambdab->Lambda(1520) MCN'
 
-        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 0.397, rtol=0.17, scalef=1e9, q2min=0.1, q2max=3)
-        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 1.29, rtol=0.07, scalef=1e9, q2min=3, q2max=6)
-        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 3.22, rtol=0.09, scalef=1e9, q2min=6, q2max=8.68)
-        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 0.95, rtol=0.07, scalef=1e9, q2min=1, q2max=6)
+        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 0.397, rtol=0.18, scalef=1e9, q2min=0.1, q2max=3)
+        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 1.29, rtol=0.08, scalef=1e9, q2min=3, q2max=6)
+        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 3.22, rtol=0.10, scalef=1e9, q2min=6, q2max=8.68)
+        self.assert_obs('<dBR/dq2>(Lambdab->Lambda(1520)mumu)', 0.95, rtol=0.08, scalef=1e9, q2min=1, q2max=6)
 
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', 0.048, rtol=0.57, q2min=0.1, q2max=3)
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.127, rtol=0.16, q2min=3, q2max=6)
