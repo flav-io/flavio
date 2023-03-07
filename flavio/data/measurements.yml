@@ -2429,6 +2429,112 @@ CMS B->K*mumu 2013 combined with 2015:
       value: 0.39 ± 0.04
 
 
+CMS B->K*mumu 2017 1-2:
+  experiment: CMS
+  insipre: CMS:2017rzx
+  values:
+    - name: <P1>(B0->K*mumu)
+      q2min: 1
+      q2max: 2
+      value: 0.12 + 0.46 -0.47 ± 0.10
+    - name: <P5p>(B0->K*mumu)
+      q2min: 1
+      q2max: 2
+      value: 0.10 + 0.32 -0.31 ± 0.07
+  correlation: [[ 1.    ,-0.0526],
+                [-0.0526, 1.    ]]
+
+CMS B->K*mumu 2017 2-4.3:
+  experiment: CMS
+  insipre: CMS:2017rzx
+  values:
+    - name: <P1>(B0->K*mumu)
+      q2min: 2
+      q2max: 4.3
+      value: -0.69 + 0.58 -0.27 ± 0.23
+    - name: <P5p>(B0->K*mumu)
+      q2min: 2
+      q2max: 4.3
+      value: -0.57 + 0.34 -0.31 ± 0.18
+  correlation: [[ 1.    ,-0.0452],
+                [-0.0452, 1.    ]]
+
+CMS B->K*mumu 2017 4.3-6:
+  experiment: CMS
+  insipre: CMS:2017rzx
+  values:
+    - name: <P1>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 6
+      value: 0.53 + 0.24 -0.33 ± 0.19
+    - name: <P5p>(B0->K*mumu)
+      q2min: 4.3
+      q2max: 6
+      value: -0.96 + 0.22 -0.21 ± 0.25
+  correlation: [[ 1.    , 0.4715],
+                [ 0.4715, 1.    ]]
+
+CMS B->K*mumu 2017 6-8.68:
+  experiment: CMS
+  insipre: CMS:2017rzx
+  values:
+    - name: <P1>(B0->K*mumu)
+      q2min: 6
+      q2max: 8.68
+      value: -0.47 + 0.27 -0.23 ± 0.15
+    - name: <P5p>(B0->K*mumu)
+      q2min: 6
+      q2max: 8.68
+      value: -0.64 + 0.15 -0.19 ± 0.13
+  correlation: [[ 1.    , 0.0761],
+                [ 0.0761, 1.    ]]
+
+CMS B->K*mumu 2017 10.09-12.86:
+  experiment: CMS
+  insipre: CMS:2017rzx
+  values:
+    - name: <P1>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: -0.53 + 0.20 -0.14 ± 0.15
+    - name: <P5p>(B0->K*mumu)
+      q2min: 10.09
+      q2max: 12.86
+      value: -0.69 + 0.11 -0.14 ± 0.13
+  correlation: [[ 1.    , 0.6077],
+                [ 0.6077, 1.    ]]
+
+CMS B->K*mumu 2017 14.18-16:
+  experiment: CMS
+  insipre: CMS:2017rzx
+  values:
+    - name: <P1>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16
+      value: -0.33 + 0.24 -0.23 ± 0.20
+    - name: <P5p>(B0->K*mumu)
+      q2min: 14.18
+      q2max: 16
+      value: -0.66 + 0.13 -0.20 ± 0.18
+  correlation: [[ 1.    , 0.4188],
+                [ 0.4188, 1.    ]]
+
+CMS B->K*mumu 2017 16-19:
+  experiment: CMS
+  insipre: CMS:2017rzx
+  values:
+    - name: <P1>(B0->K*mumu)
+      q2min: 16
+      q2max: 19
+      value: -0.53 + 0.19 -0.19 ± 0.16
+    - name: <P5p>(B0->K*mumu)
+      q2min: 16
+      q2max: 19
+      value: -0.56 + 0.12 -0.12 ± 0.07
+  correlation: [[ 1.    , 0.4621],
+                [ 0.4621, 1.    ]]
+
+
 CMS B->K*mumu 2017 P1:
   experiment: CMS
   inspire: CMS:2017ivg
