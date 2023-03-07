@@ -1047,7 +1047,7 @@ LHCb B->K*mumu 2020 P 15-19:
 
 LHCb B+->K*mumu 2020 S 0.1-0.98:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 0.1
@@ -1092,7 +1092,7 @@ LHCb B+->K*mumu 2020 S 0.1-0.98:
 
 LHCb B+->K*mumu 2020 S 1.1-2.5:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 1.1
@@ -1137,7 +1137,7 @@ LHCb B+->K*mumu 2020 S 1.1-2.5:
 
 LHCb B+->K*mumu 2020 S 2.5-4:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 2.5
@@ -1182,7 +1182,7 @@ LHCb B+->K*mumu 2020 S 2.5-4:
 
 LHCb B+->K*mumu 2020 S 4-6:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 4
@@ -1227,7 +1227,7 @@ LHCb B+->K*mumu 2020 S 4-6:
 
 LHCb B+->K*mumu 2020 S 6-8:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 6
@@ -1272,7 +1272,7 @@ LHCb B+->K*mumu 2020 S 6-8:
 
 LHCb B+->K*mumu 2020 S 11-12.5:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 11
@@ -1317,7 +1317,7 @@ LHCb B+->K*mumu 2020 S 11-12.5:
 
 LHCb B+->K*mumu 2020 S 15-17:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 15
@@ -1362,7 +1362,7 @@ LHCb B+->K*mumu 2020 S 15-17:
 
 LHCb B+->K*mumu 2020 S 17-19:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 17
@@ -1407,7 +1407,7 @@ LHCb B+->K*mumu 2020 S 17-19:
 
 LHCb B+->K*mumu 2020 S 1.1-6:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 1.1
@@ -1452,7 +1452,7 @@ LHCb B+->K*mumu 2020 S 1.1-6:
 
 LHCb B+->K*mumu 2020 S 15-19:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 15
@@ -1497,7 +1497,7 @@ LHCb B+->K*mumu 2020 S 15-19:
 
 LHCb B+->K*mumu 2020 P 0.1-0.98:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 0.1
@@ -1542,7 +1542,7 @@ LHCb B+->K*mumu 2020 P 0.1-0.98:
 
 LHCb B+->K*mumu 2020 P 1.1-2.5:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 1.1
@@ -1587,7 +1587,7 @@ LHCb B+->K*mumu 2020 P 1.1-2.5:
 
 LHCb B+->K*mumu 2020 P 2.5-4:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 2.5
@@ -1632,7 +1632,7 @@ LHCb B+->K*mumu 2020 P 2.5-4:
 
 LHCb B+->K*mumu 2020 P 4-6:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 4
@@ -1677,7 +1677,7 @@ LHCb B+->K*mumu 2020 P 4-6:
 
 LHCb B+->K*mumu 2020 P 6-8:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 6
@@ -1722,7 +1722,7 @@ LHCb B+->K*mumu 2020 P 6-8:
 
 LHCb B+->K*mumu 2020 P 11-12.5:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 11
@@ -1767,7 +1767,7 @@ LHCb B+->K*mumu 2020 P 11-12.5:
 
 LHCb B+->K*mumu 2020 P 15-17:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 15
@@ -1812,7 +1812,7 @@ LHCb B+->K*mumu 2020 P 15-17:
 
 LHCb B+->K*mumu 2020 P 17-19:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 17
@@ -1857,7 +1857,7 @@ LHCb B+->K*mumu 2020 P 17-19:
 
 LHCb B+->K*mumu 2020 P 1.1-6:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 1.1
@@ -1902,7 +1902,7 @@ LHCb B+->K*mumu 2020 P 1.1-6:
 
 LHCb B+->K*mumu 2020 P 15-19:
   experiment: LHCb (9 fb-1)
-  inspire:
+  inspire: LHCb:2020gog
   values:
     - name: <FL>(B+->K*mumu)
       q2min: 15
