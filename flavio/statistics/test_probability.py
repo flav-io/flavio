@@ -521,6 +521,7 @@ class TestProbability(unittest.TestCase):
          'general_gamma_positive': GeneralGammaDistributionPositive,
          'gamma_counting_process': GammaCountingProcess,
          'general_gamma_counting_process': GeneralGammaCountingProcess,
+         'discrete_uniform': DiscreteUniformDistribution,
         }
         for k, v in class_from_string_old.items():
             self.assertEqual(v.class_to_string(), k)
