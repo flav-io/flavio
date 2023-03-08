@@ -80,7 +80,7 @@ class TestParameters(unittest.TestCase):
         self.assertEqual(par_dict['tau_phi'], 1/4.249e-3)
         # just check if the random values are numbers
         for par_random in default_parameters.get_random_all().values():
-            self.assertIsInstance(par_random, float)
+            self.assertIsInstance(par_random, (float, int))
         for par_random in default_parameters.get_random_all(size=2).values():
             self.assertEqual(par_random.shape, (2,))
 
