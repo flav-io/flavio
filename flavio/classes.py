@@ -506,6 +506,7 @@ class ParameterConstraints(Constraints):
 
         # Read default parameters for B->P form factors
         flavio.physics.bdecays.formfactors.b_p.bsz_parameters.gkvd_load('v1', 'LCSR-Lattice', ('B->K', 'B->pi'), self)
+        flavio.physics.bdecays.formfactors.b_p.bcl_parameters_lmvd.load_parameters('data/arXiv-2102.07233v2/LCSR-LQCD_mod_BCL_params_K=4.yaml', self)
 
         # Read default parameters for Lambdab->Lambda form factors
         flavio.physics.bdecays.formfactors.lambdab_12.lattice_parameters.lattice_load_ho(self)

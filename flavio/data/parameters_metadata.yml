@@ -987,10 +987,10 @@ B->gamma KM deltata:
 # Parameters for the Bs->phi form factors (1503.05534v3)
 Bs->phi LCSR T10:
   tex: $T_1(0)$
-  description: Bs->phi T_1 parameter at q2=0 
+  description: Bs->phi T_1 parameter at q2=0
 Gamma_phi:
   tex: $\Gamma_\phi$
-  description: phi decay width 
+  description: phi decay width
 
 
 
@@ -1078,6 +1078,9 @@ B->D BCL a2_f0:
 B->pi BCL m0:
   tex: $m_{B^*}^{f_0}$
   description: Resonance mass for the $B\to \pi$ scalar form factor in BCL parametrization
+B->pi BCL LMVD m0:
+  tex: $m_{B^*}^{f_0}$
+  description: Resonance mass for the $B\to \pi$ scalar form factor in BCL parametrization from LMVD
 B->pi BCL m+:
   tex: $m_{B^*}^{f_+}$
   description: Resonance mass for the $B\to \pi$ vector and tensor form factors in BCL parametrization
