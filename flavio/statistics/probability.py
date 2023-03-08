@@ -542,9 +542,10 @@ class GammaDistribution(ProbabilityDistribution):
         self.scipy_dist = scipy.stats.gamma(a=a, loc=loc, scale=scale)
         mode = loc + (a-1)*scale
         # support extends until the CDF is roughly "6 sigma"
-        support_limit = self.scipy_dist.ppf(1-2e-9)
+        support_min = min(self.scipy_dist.ppf(1e-9), mode)
+        support_max = self.scipy_dist.ppf(1-1e-9)
         super().__init__(central_value=mode, # the mode
-                         support=(loc, support_limit))
+                         support=(support_min, support_max))
         self.a = a
         self.loc = loc
         self.scale = scale
@@ -606,9 +607,10 @@ class GammaDistributionPositive(ProbabilityDistribution):
         if mode < 0:
             mode = 0
         # support extends until the CDF is roughly "6 sigma", assuming x>0
-        support_limit = self.scipy_dist.ppf(1-2e-9*(1-self.scipy_dist.cdf(0)))
+        support_min = max(min(self.scipy_dist.ppf(1e-9), mode), 0)
+        support_max = self.scipy_dist.ppf(1-1e-9*(1-self.scipy_dist.cdf(0)))
         super().__init__(central_value=mode, # the mode
-                         support=(0, support_limit))
+                         support=(support_min, support_max))
         self.a = a
         self.loc = loc
         self.scale = scale
@@ -953,12 +955,13 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
         else:
             self.counts_total = counts_total
         self.background_variance = background_variance
-        x, y = self._get_xy()
-        if self.counts_total != 0 and self.background_variance/self.counts_total <= 1/100.:
+        if self.background_variance/np.sqrt(self.counts_total+1) < 1/100:
+            self.background_variance = 0
             warnings.warn("For vanishing or very small background variance, "
                           "it is safer to use GammaUpperLimit instead of "
                           "GeneralGammaUpperLimit to avoid numerical "
                           "instability.")
+        x, y = self._get_xy()
         super().__init__(x=x, y=y)
 
     def __repr__(self):
@@ -985,16 +988,23 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
                                                scale = 1)
             norm_bg = NormalDistribution(0, self.background_variance)
             num_unscaled = convolve_distributions([gamma_unscaled, norm_bg], central_values='sum')
-        # now that we have convolved, cut off anything below x=0
+        # now that we have convolved, add the mirrored values from below x=loc and
+        # then cut off anything below x=0
         x = num_unscaled.x
         y = num_unscaled.y_norm
-        y = y[np.where(x >= 0)]
-        x = x[np.where(x >= 0)]
+        if -self.counts_background in x:
+            to_mirror = y[x<=-self.counts_background][::-1]
+            y_pos = y[len(to_mirror)-1:len(to_mirror)*2-1]
+            y[len(to_mirror)-1:len(to_mirror)*2-1] += to_mirror[:len(y_pos)]
+        else:
+            to_mirror = y[x<-self.counts_background][::-1]
+            y_pos = y[len(to_mirror):len(to_mirror)*2]
+            y[len(to_mirror):len(to_mirror)*2] += to_mirror[:len(y_pos)]
+        y = y[x >= 0]
+        x = x[x >= 0]
         if x[0] != 0:  #  make sure the PDF at 0 exists
             x = np.insert(x, 0, 0.)  # add 0 as first element
             y = np.insert(y, 0, y[0])  # copy first element
-        y[0]
-        num_unscaled = NumericalDistribution(x, y)
         x = x * self.scale_factor
         return x, y
 
