@@ -60,16 +60,17 @@ class TestBtoP(unittest.TestCase):
                                            msg="Failed for {} in B->{} at q2={}".format(ff, P, q2))
 
     def test_bcl_lmvd(self):
-        # compare to results obtained from EOS (see also fig. 5 in arXiv:2102.07233)
-        q2vals_eos = [-10,-5,0,5,10,15,20,25]
-        eos_Btopi = np.array([[0.13944073, 0.1786386 , 0.23467602, 0.31969463, 0.46026432,
-                               0.7264543 , 1.37263015, 4.34113315],
-                              [0.19729307, 0.21337439, 0.23467602, 0.26452324, 0.30960826,
-                               0.38517962, 0.53237519, 0.87948273],
-                              [0.14937763, 0.18405398, 0.23500764, 0.31456728, 0.44987482,
-                               0.71224394, 1.35505172, 4.19770336]])
+        # compare to results obtained from EOS (see https://gist.github.com/peterstangl/7d6c862bff87a10e7334993acd2ae0c5 for the notebook used)
+        # see also fig. 5 in arXiv:2102.07233
+        q2vals = [-10, -5, 0, 5, 10, 15, 20, 25]
+        eos_Btopi = np.array([[0.13944073, 0.1786386 , 0.23467602, 0.31969463,
+                               0.46026432, 0.7264543 , 1.37263015, 4.34113315],
+                              [0.19729307, 0.21337439, 0.23467602, 0.26452324,
+                               0.30960826, 0.38517962, 0.53237519, 0.87948273],
+                              [0.14937763, 0.18405398, 0.23500764, 0.31456728,
+                               0.44987482, 0.71224394, 1.35505172, 4.19770336]])
 
-        for i, q2 in enumerate(q2vals_eos):
+        for i, q2 in enumerate(q2vals):
             ff_bcl_lmvd = Implementation['B->pi BCL4-LMVD'].get_central(constraints_obj=c, wc_obj=None, q2=q2)
             self.assertAlmostEqual(ff_bcl_lmvd['f+'], eos_Btopi[0,i], places=2, msg="Failed for f+ in B->pi at q2={}".format(q2))
             self.assertAlmostEqual(ff_bcl_lmvd['f0'], eos_Btopi[1,i], places=2, msg="Failed for f0 in B->pi at q2={}".format(q2))
