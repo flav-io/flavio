@@ -741,8 +741,11 @@ class GammaCountingProcess(GammaDistributionPositive):
             self.counts_total = counts_signal + counts_background
         else:
             self.counts_total = counts_total
-        a, loc, scale = self._get_a_loc_scale()
-        super().__init__(a=a, loc=loc, scale=scale)
+        super().__init__(
+            a = self.counts_total + 1,
+            loc = -self.counts_background * self.scale_factor,
+            scale = self.scale_factor
+        )
 
     def __repr__(self):
         return ('flavio.statistics.probability.GammaCountingProcess'
@@ -751,16 +754,6 @@ class GammaCountingProcess(GammaDistributionPositive):
                     self.counts_total,
                     self.counts_signal
                 )
-
-    def _get_a_loc_scale(self):
-        """Convert the counts and limit to the input parameters needed for
-        GammaDistributionPositive"""
-        a = self.counts_total + 1
-        loc = -self.counts_background
-        # rescale
-        scale = self.scale_factor
-        loc = -self.counts_background*scale
-        return a, loc, scale
 
 class GammaUpperLimit(GammaCountingProcess):
     r"""Gamma distribution with x restricted to be positive appropriate for
