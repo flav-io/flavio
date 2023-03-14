@@ -1224,6 +1224,7 @@ class GeneralGammaUpperLimit(GeneralGammaCountingProcess):
                 background_std = background_variance
         elif background_std is None:
             background_std = 0
+        self.background_variance = background_std
         self.limit = limit
         self.confidence_level = confidence_level
         _d_unscaled = GeneralGammaCountingProcess(

@@ -469,8 +469,8 @@ class TestProbability(unittest.TestCase):
                          fsp + 'GammaDistributionPositive(5, -2, 1.5)')
         self.assertEqual(repr(GammaUpperLimit(15, 10, 1e-9, 0.95)),
                          fsp + 'GammaUpperLimit(15, 10, 1e-09, 0.95)')
-        self.assertEqual(repr(GeneralGammaUpperLimit(1e-9, 0.95, counts_total=15, counts_background=10, background_variance=0.2)),
-                         fsp + 'GeneralGammaUpperLimit(1e-09, 0.95, counts_total=15, counts_signal=5, background_variance=0.2)')
+        self.assertEqual(repr(GeneralGammaUpperLimit(1e-9, 0.95, counts_total=15, counts_background=10, background_std=0.2)),
+                         fsp + 'GeneralGammaUpperLimit(1e-09, 0.95, counts_total=15, counts_signal=5, background_std=0.2)')
         self.assertEqual(repr(MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]])),
                          fsp + 'MultivariateNormalDistribution([1.0, 2], [[2, 0.1], [0.1, 2]])')
         self.assertEqual(repr(NumericalDistribution([1., 2], [3, 4.])),
@@ -500,6 +500,9 @@ class TestProbability(unittest.TestCase):
          'multivariate_numerical': MultivariateNumericalDistribution,
          'gaussian_kde': GaussianKDE,
          'general_gamma_positive': GeneralGammaDistributionPositive,
+         'gamma_counting_process': GammaCountingProcess,
+         'general_gamma_counting_process': GeneralGammaCountingProcess,
+         'general_gamma_positive_temporary': GeneralGammaDistributionPositiveTemporary,
         }
         for k, v in class_from_string_old.items():
             self.assertEqual(v.class_to_string(), k)
