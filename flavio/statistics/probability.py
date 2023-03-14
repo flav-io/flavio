@@ -723,8 +723,8 @@ class GammaCountingProcess(GammaDistributionPositive):
         self.scale_factor = scale_factor
         if counts_total is not None and counts_total < 0:
             raise ValueError("counts_total should be a positive number, zero, or None")
-        if counts_background is not None and counts_background <= 0:
-            raise ValueError("counts_background should be a positive number or None")
+        if counts_background is not None and counts_background < 0:
+            raise ValueError("counts_background should be a positive number, zero, or None")
         if [counts_total, counts_signal, counts_background].count(None) == 0:
             # if all three are specified, check the relation holds!
             if abs((counts_total - counts_background - counts_signal)/(counts_total if counts_total != 0 else 1)) > 1e-15:
@@ -1057,10 +1057,10 @@ class GeneralGammaCountingProcess(GeneralGammaDistributionPositiveTemporary):
         self.scale_factor = scale_factor
         if counts_total is not None and counts_total < 0:
             raise ValueError("counts_total should be a positive number, zero, or None")
-        if counts_background is not None and counts_background <= 0:
-            raise ValueError("counts_background should be a positive number or None")
+        if counts_background is not None and counts_background < 0:
+            raise ValueError("counts_background should be a positive number, zero, or None")
         if background_std < 0:
-            raise ValueError("background_variance should be a positive number")
+            raise ValueError("background_std should be a positive number")
         if [counts_total, counts_signal, counts_background].count(None) == 0:
             # if all three are specified, check the relation holds!
             if abs((counts_total - counts_background - counts_signal)/(counts_total if counts_total != 0 else 1)) > 1e-15:
