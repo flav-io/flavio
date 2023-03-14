@@ -137,7 +137,6 @@ B->K BCL m+: 5.4154 # m_Bs*(1-)
 B->pi BCL m0: 0
 B->pi BCL m+: 5.319 # m_B*(1-)
 B->pi IW a_T: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
-B->pi BCL LMVD m0: 5.54 # correction for 2102.07233
 
 # Bs->K form factors (1501.05373v3)
 Bs->K BCL m0: 5.63 # m_B*(0+)

@@ -4,6 +4,14 @@ import numpy as np
 from flavio.classes import Parameter
 from flavio.statistics.probability import MultivariateNormalDistribution
 
+# Resonance masses used in arXiv:2102.07233
+resonance_masses_lmvd = {
+    'B->pi': {
+        'm0': 5.540,
+        'm+': 5.325,
+    },
+}
+
 def load_parameters(filename, constraints):
     f = pkgutil.get_data('flavio.physics', filename)
     ff_dict = yaml.safe_load(f)
@@ -36,3 +44,8 @@ def load_parameters(filename, constraints):
         covariance = covariance + covariance.T - np.diag(np.diag(covariance))
     constraints.add_constraint(observables_renamed,
             MultivariateNormalDistribution(central_value=central_values, covariance=covariance) )
+
+    # set resonance masses
+    for tr in resonance_masses_lmvd.keys():
+        for m, v in resonance_masses_lmvd[tr].items():
+            constraints.set_constraint('{} BCL LMVD {}'.format(tr, m), v)

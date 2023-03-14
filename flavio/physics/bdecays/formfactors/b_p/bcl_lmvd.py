@@ -38,7 +38,7 @@ def ff(process, q2, par, n=4, t0=None):
     """
     flavio.citations.register("Leljak:2021vte")
     pd = process_dict[process]
-    mpl = par[process + ' BCL m+']
+    mpl = par[process + ' BCL LMVD m+']
     m0 = par[process + ' BCL LMVD m0']
     mB = par['m_'+pd['B']]
     mP = par['m_'+pd['P']]
