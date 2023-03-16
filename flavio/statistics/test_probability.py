@@ -147,6 +147,25 @@ class TestProbability(unittest.TestCase):
                             limit=3., confidence_level=0.95,
                             background_variance=1)
 
+    def test_counting_process(self):
+        # check that GeneralGammaCountingProcess with background_std set to 0
+        # gives the same pdf as GammaCountingProcess
+        for counts_total in [100, 200, 300]:
+            for counts_background in [25, 50, 100]:
+                for scale_factor in [1, 2, 3]:
+                    p_gcp = GammaCountingProcess(scale_factor=scale_factor,
+                                                 counts_total=counts_total,
+                                                 counts_background=counts_background)
+                    p_ggcp = GeneralGammaCountingProcess(scale_factor=scale_factor,
+                                                         counts_total=counts_total,
+                                                         counts_background=counts_background,
+                                                         background_std=0)
+                    for x in np.linspace(0, 1000, 500):
+                        pdf_gcp = np.exp(p_gcp.logpdf(x))
+                        pdf_ggcp = p_ggcp.pdf(x)
+                        if pdf_gcp > 1e-5 and pdf_ggcp > 1e-5:
+                            err = np.abs((pdf_gcp - pdf_ggcp)/pdf_gcp)
+                            self.assertLess(err, 1e-3, msg=f'x={x}, pdf_gcp={pdf_gcp}, pdf_ggcp={pdf_ggcp}')
 
     def test_numerical(self):
         x = np.arange(-5,7,0.01)
