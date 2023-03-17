@@ -697,7 +697,7 @@ class GammaCountingProcess(GammaDistributionPositive):
     The diference to `GammaUpperLimit` is that the scale factor has to be given
     directly and is not expressed in terms of an upper limit.
     """
-    def __init__(self,
+    def __init__(self, *,
                  scale_factor=1,
                  counts_total=None,
                  counts_background=None,
@@ -764,7 +764,11 @@ class GammaUpperLimit(GammaCountingProcess):
     The diference to `GammaCountingProcess` is that a scale factor is determined
     from the upper limit and not specified directly."""
 
-    def __init__(self, counts_total, counts_background, limit, confidence_level):
+    def __init__(self, *,
+                 limit, confidence_level,
+                 counts_total=None,
+                 counts_background=None,
+                 counts_signal=None):
         r"""Initialize the distribution.
 
         Parameters:
@@ -787,7 +791,8 @@ class GammaUpperLimit(GammaCountingProcess):
         dist_unscaled = GammaCountingProcess(
                  scale_factor=1,
                  counts_total=counts_total,
-                 counts_background=counts_background)
+                 counts_background=counts_background,
+                 counts_signal=counts_signal)
         limit_unscaled = dist_unscaled.ppf(self.confidence_level)
         # use the value of the limit to determine the scale factor
         scale_factor = self.limit / limit_unscaled
@@ -1037,7 +1042,7 @@ class GeneralGammaCountingProcess(GeneralGammaDistributionPositive):
     determined from a limit and a confidence level, but specified explicitly.
     """
 
-    def __init__(self,
+    def __init__(self, *,
                  scale_factor=1,
                  counts_total=None,
                  counts_background=None,
@@ -1128,7 +1133,7 @@ class GeneralGammaUpperLimit(GeneralGammaCountingProcess):
     factor is determined from the limit and confidence level.
     """
 
-    def __init__(self,
+    def __init__(self, *,
                  limit, confidence_level,
                  counts_total=None,
                  counts_background=None,
