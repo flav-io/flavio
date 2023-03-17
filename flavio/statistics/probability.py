@@ -729,6 +729,8 @@ class GammaCountingProcess(GammaDistributionPositive):
             # if all three are specified, check the relation holds!
             if abs((counts_total - counts_background - counts_signal)/(counts_total if counts_total != 0 else 1)) > 1e-15:
                 raise ValueError("The relation `counts_total = counts_signal + counts_background` is not satisfied")
+        if [counts_total, counts_signal, counts_background].count(None) > 1:
+            raise ValueError("Of the three parameters `counts_total`, `counts_background`, and `counts_signal`, two must be specified")
         if counts_background is None:
             self.counts_background = counts_total - counts_signal
         else:
@@ -1076,6 +1078,8 @@ class GeneralGammaCountingProcess(GeneralGammaDistributionPositive):
             # if all three are specified, check the relation holds!
             if abs((counts_total - counts_background - counts_signal)/(counts_total if counts_total != 0 else 1)) > 1e-15:
                 raise ValueError("The relation `counts_total = counts_signal + counts_background` is not satisfied")
+        if [counts_total, counts_signal, counts_background].count(None) > 1:
+            raise ValueError("Of the three parameters `counts_total`, `counts_background`, and `counts_signal`, two must be specified")
         if counts_background is None:
             self.counts_background = counts_total - counts_signal
         else:
