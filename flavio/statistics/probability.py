@@ -946,10 +946,21 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
     is specified by a Gaussian standard deviation. The result is a numerical
     distribution obtained from the convolution of a normal distribution
     (with the Gaussian standard deviation) and a gamma distribution, restricted to
-    positive values.
+    positive values. Note that the convolution is done before applying the scale factor
     """
 
     def __init__(self, *, a, loc, scale, gaussian_standard_deviation):
+        r"""Initialize the distribution.
+
+        The parameters `a`, `loc`, and `scale` are the same as in `GammaDistributionPositive`.
+        The parameter `gaussian_standard_deviation` defines a normal distribution that
+        is convoluted with the gamma distribution. Note that the convolution is performed
+        before the `scale` factor is applied.
+
+        If `gaussian_standard_deviation=0`, it makes more sense to use
+        `GammaDistributionPositive`, which is equivalent but analytical rather than
+        numerical.
+        """
         if loc > 0:
             raise ValueError("loc must be negative or zero")
         self.a = a
