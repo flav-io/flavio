@@ -486,10 +486,10 @@ class TestProbability(unittest.TestCase):
                          fsp + 'GammaDistribution(5, -2, 1.5)')
         self.assertEqual(repr(GammaDistributionPositive(5, -2, 1.5)),
                          fsp + 'GammaDistributionPositive(5, -2, 1.5)')
-        self.assertEqual(repr(GammaUpperLimit(15, 10, 1e-9, 0.95)),
-                         fsp + 'GammaUpperLimit(15, 10, 1e-09, 0.95)')
-        self.assertEqual(repr(GeneralGammaUpperLimit(1e-9, 0.95, counts_total=15, counts_background=10, background_std=0.2)),
-                         fsp + 'GeneralGammaUpperLimit(1e-09, 0.95, counts_total=15, counts_signal=5, background_std=0.2)')
+        self.assertEqual(repr(GammaUpperLimit(limit=1e-9, confidence_level=0.95, counts_total=15, counts_background=10)),
+                         fsp + 'GammaUpperLimit(limit=1e-09, confidence_level=0.95, counts_total=15, counts_background=10)')
+        self.assertEqual(repr(GeneralGammaUpperLimit(limit=1e-9, confidence_level=0.95, counts_total=15, counts_background=10, background_std=0.2)),
+                         fsp + 'GeneralGammaUpperLimit(limit=1e-09, confidence_level=0.95, counts_total=15, counts_background=10, background_std=0.2)')
         self.assertEqual(repr(MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]])),
                          fsp + 'MultivariateNormalDistribution([1.0, 2], [[2, 0.1], [0.1, 2]])')
         self.assertEqual(repr(NumericalDistribution([1., 2], [3, 4.])),
@@ -578,8 +578,8 @@ class TestProbability(unittest.TestCase):
             GaussianUpperLimit(1e-9, 0.95),
             GammaDistribution(5, -2, 1.5),
             GammaDistributionPositive(5, -2, 1.5),
-            GammaUpperLimit(15, 10, 1e-9, 0.95),
-            GeneralGammaUpperLimit(1e-9, 0.95, counts_total=15, counts_background=10, background_variance=0.2),
+            GammaUpperLimit(counts_total=15, counts_background=10, limit=1e-9, confidence_level=0.95),
+            GeneralGammaUpperLimit(limit=1e-9, confidence_level=0.95, counts_total=15, counts_background=10, background_variance=0.2),
             MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]]),
             NumericalDistribution([1., 2], [3, 4.]),
             GaussianKDE([1, 2, 3], 0.1),

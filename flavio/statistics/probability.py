@@ -751,7 +751,7 @@ class GammaCountingProcess(GammaDistributionPositive):
 
     def __repr__(self):
         return ('flavio.statistics.probability.GammaCountingProcess'
-                '({}, counts_total={}, counts_signal={})').format(
+                '(scale_factor={}, counts_total={}, counts_signal={})').format(
                     self.scale_factor,
                     self.counts_total,
                     self.counts_signal
@@ -802,11 +802,12 @@ class GammaUpperLimit(GammaCountingProcess):
             counts_background=counts_background)
 
     def __repr__(self):
-        return 'flavio.statistics.probability.GammaUpperLimit' + \
-               '({}, {}, {}, {})'.format(self.counts_total,
-                                         self.counts_background,
-                                         self.limit,
-                                         self.confidence_level)
+        return ('flavio.statistics.probability.GammaUpperLimit'
+                '(limit={}, confidence_level={}, counts_total={}, counts_background={})'
+               ).format(self.limit,
+                        self.confidence_level,
+                        self.counts_total,
+                        self.counts_background)
 
 class NumericalDistribution(ProbabilityDistribution):
     """Univariate distribution defined in terms of numerical values for the
@@ -985,7 +986,7 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
 
     def __repr__(self):
         return ('flavio.statistics.probability.GeneralGammaDistributionPositive'
-               '({}, {}, {}, {})'.format(
+               '(a={}, loc={}, scale={}, gaussian_standard_deviation={})'.format(
                     self.a,
                     self.loc,
                     self.scale,
@@ -1113,8 +1114,8 @@ class GeneralGammaCountingProcess(GeneralGammaDistributionPositive):
 
     def __repr__(self):
         return ('flavio.statistics.probability.GeneralGammaCountingProcess'
-               '({}, counts_total={}, counts_signal={}, '
-               'background_variance={})').format(self.scale_factor,
+               '(scale_factor={}, counts_total={}, counts_signal={}, '
+               'background_std={})').format(self.scale_factor,
                                                 self.counts_total,
                                                 self.counts_signal,
                                                 self.background_std)
@@ -1198,11 +1199,11 @@ class GeneralGammaUpperLimit(GeneralGammaCountingProcess):
 
     def __repr__(self):
         return ('flavio.statistics.probability.GeneralGammaUpperLimit'
-               '({}, {}, counts_total={}, counts_signal={}, '
+               '(limit={}, confidence_level={}, counts_total={}, counts_background={}, '
                'background_std={})').format(self.limit,
                                                 self.confidence_level,
                                                 self.counts_total,
-                                                self.counts_signal,
+                                                self.counts_background,
                                                 self.background_std)
 
 
