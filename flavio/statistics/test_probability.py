@@ -127,16 +127,16 @@ class TestProbability(unittest.TestCase):
     def test_general_gamma_limit(self):
         p = GeneralGammaUpperLimit(counts_total=30, counts_background=10,
                             limit=2e-5, confidence_level=0.68,
-                            background_variance=5)
+                            background_std=5)
         self.assertAlmostEqual(p.cdf(2e-5), 0.68, delta=0.0001)
         # background excess
         p = GeneralGammaUpperLimit(counts_total=30, counts_background=50,
                             limit=2e5, confidence_level=0.68,
-                            background_variance=25)
+                            background_std=25)
         self.assertAlmostEqual(p.cdf(2e5), 0.68, delta=0.0001)
         p = GeneralGammaUpperLimit(counts_total=10000, counts_background=10000,
                             limit=3., confidence_level=0.95,
-                            background_variance=1000)
+                            background_std=1000)
         p_norm = GaussianUpperLimit(limit=3., confidence_level=0.95)
         # check that large-statistics Gamma and Gauss give nearly same PDF
         for x in [1, 2, 3, 4]:
@@ -145,8 +145,27 @@ class TestProbability(unittest.TestCase):
         with self.assertWarns(Warning):
             GeneralGammaUpperLimit(counts_total=10000, counts_background=10000,
                             limit=3., confidence_level=0.95,
-                            background_variance=1)
+                            background_std=1)
 
+    def test_counting_process(self):
+        # check that GeneralGammaCountingProcess with background_std set to 0
+        # gives the same pdf as GammaCountingProcess
+        for counts_total in [100, 200, 300]:
+            for counts_background in [25, 50, 100]:
+                for scale_factor in [1, 2, 3]:
+                    p_gcp = GammaCountingProcess(scale_factor=scale_factor,
+                                                 counts_total=counts_total,
+                                                 counts_background=counts_background)
+                    p_ggcp = GeneralGammaCountingProcess(scale_factor=scale_factor,
+                                                         counts_total=counts_total,
+                                                         counts_background=counts_background,
+                                                         background_std=0)
+                    for x in np.linspace(0, 1000, 500):
+                        pdf_gcp = np.exp(p_gcp.logpdf(x))
+                        pdf_ggcp = p_ggcp.pdf(x)
+                        if pdf_gcp > 1e-5 and pdf_ggcp > 1e-5:
+                            err = np.abs((pdf_gcp - pdf_ggcp)/pdf_gcp)
+                            self.assertLess(err, 1e-3, msg=f'x={x}, pdf_gcp={pdf_gcp}, pdf_ggcp={pdf_ggcp}')
 
     def test_numerical(self):
         x = np.arange(-5,7,0.01)
@@ -467,10 +486,10 @@ class TestProbability(unittest.TestCase):
                          fsp + 'GammaDistribution(5, -2, 1.5)')
         self.assertEqual(repr(GammaDistributionPositive(5, -2, 1.5)),
                          fsp + 'GammaDistributionPositive(5, -2, 1.5)')
-        self.assertEqual(repr(GammaUpperLimit(15, 10, 1e-9, 0.95)),
-                         fsp + 'GammaUpperLimit(15, 10, 1e-09, 0.95)')
-        self.assertEqual(repr(GeneralGammaUpperLimit(1e-9, 0.95, counts_total=15, counts_background=10, background_variance=0.2)),
-                         fsp + 'GeneralGammaUpperLimit(1e-09, 0.95, counts_total=15, counts_signal=5, background_variance=0.2)')
+        self.assertEqual(repr(GammaUpperLimit(limit=1e-9, confidence_level=0.95, counts_total=15, counts_background=10)),
+                         fsp + 'GammaUpperLimit(limit=1e-09, confidence_level=0.95, counts_total=15, counts_background=10)')
+        self.assertEqual(repr(GeneralGammaUpperLimit(limit=1e-9, confidence_level=0.95, counts_total=15, counts_background=10, background_std=0.2)),
+                         fsp + 'GeneralGammaUpperLimit(limit=1e-09, confidence_level=0.95, counts_total=15, counts_background=10, background_std=0.2)')
         self.assertEqual(repr(MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]])),
                          fsp + 'MultivariateNormalDistribution([1.0, 2], [[2, 0.1], [0.1, 2]])')
         self.assertEqual(repr(NumericalDistribution([1., 2], [3, 4.])),
@@ -500,6 +519,8 @@ class TestProbability(unittest.TestCase):
          'multivariate_numerical': MultivariateNumericalDistribution,
          'gaussian_kde': GaussianKDE,
          'general_gamma_positive': GeneralGammaDistributionPositive,
+         'gamma_counting_process': GammaCountingProcess,
+         'general_gamma_counting_process': GeneralGammaCountingProcess,
         }
         for k, v in class_from_string_old.items():
             self.assertEqual(v.class_to_string(), k)
@@ -557,8 +578,8 @@ class TestProbability(unittest.TestCase):
             GaussianUpperLimit(1e-9, 0.95),
             GammaDistribution(5, -2, 1.5),
             GammaDistributionPositive(5, -2, 1.5),
-            GammaUpperLimit(15, 10, 1e-9, 0.95),
-            GeneralGammaUpperLimit(1e-9, 0.95, counts_total=15, counts_background=10, background_variance=0.2),
+            GammaUpperLimit(counts_total=15, counts_background=10, limit=1e-9, confidence_level=0.95),
+            GeneralGammaUpperLimit(limit=1e-9, confidence_level=0.95, counts_total=15, counts_background=10, background_std=0.2),
             MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]]),
             NumericalDistribution([1., 2], [3, 4.]),
             GaussianKDE([1, 2, 3], 0.1),
