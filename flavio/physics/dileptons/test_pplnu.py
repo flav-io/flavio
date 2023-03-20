@@ -2,7 +2,7 @@ import unittest
 import flavio
 from flavio.physics.dileptons import pplnu
 from wilson import wcxf
-from flavio.physics.dileptons.test_ppll import uses_pdf, pdf_set_for_tests
+from flavio.physics.dileptons.test_ppll import uses_pdf
 import numpy as np
 import parton
 from functools import lru_cache
@@ -29,7 +29,7 @@ class Test_QQLNU(unittest.TestCase):
         for i in range(nbins):
             center = 0.5*(bins[i]+bins[i+1])
             width = bins[i+1]-bins[i]
-            spectrum = pplnu.sigma_qqlnu_int(s, bins[i], bins[i+1], 'mu', 0, par2, center**2, 0, newphys=False, pdf_set=pdf_set_for_tests)*GeVtopb/width
+            spectrum = pplnu.sigma_qqlnu_int(s, bins[i], bins[i+1], 'mu', 0, par2, center**2, 0, newphys=False)*GeVtopb/width
             err = (spectrum-spectrum_mg[i])/spectrum_mg[i]
             self.assertAlmostEqual(err,0,delta=0.02,msg=f'error in bin {i}: {err}')
 
@@ -43,7 +43,7 @@ class Test_QQLNU(unittest.TestCase):
     def test_qqlnu_np_sm(self):
         r"""Test the R ratio with presence of wilson coefficients set to zero"""
         wc_obj = flavio.WilsonCoefficients()
-        R = pplnu.R_sigma_qqlnu_int(13e3**2, 1300, 1800, 'mu', wc_obj, par, pdf_set=pdf_set_for_tests)
+        R = pplnu.R_sigma_qqlnu_int(13e3**2, 1300, 1800, 'mu', wc_obj, par)
         self.assertEqual(R, 1,msg=f'SM prediction for R ratio: {R} (has to be 1)')
 
     @uses_pdf
@@ -64,7 +64,7 @@ class Test_QQLNU(unittest.TestCase):
             wc = wcxf.WC('SMEFT', 'Warsaw up', center, {'lq3_2211': 1e-7})
             wc_obj = flavio.WilsonCoefficients()
             wc_obj.set_initial_wcxf(wc)
-            R = pplnu.R_sigma_qqlnu_int(13e3**2, bins[i], bins[i+1], 'mu', wc_obj, par2, pdf_set=pdf_set_for_tests)
+            R = pplnu.R_sigma_qqlnu_int(13e3**2, bins[i], bins[i+1], 'mu', wc_obj, par2)
             err = (R-R_mg[i])/R_mg[i]
             self.assertAlmostEqual(err,0,delta=0.02,msg=f'error in bin {i}: {err}')
 
@@ -86,7 +86,7 @@ class Test_QQLNU(unittest.TestCase):
             wc = wcxf.WC('SMEFT', 'Warsaw up', center, {'lequ1_2232': 1e-7})
             wc_obj = flavio.WilsonCoefficients()
             wc_obj.set_initial_wcxf(wc)
-            R = pplnu.R_sigma_qqlnu_int(13e3**2, bins[i], bins[i+1], 'mu', wc_obj, par2, pdf_set=pdf_set_for_tests)
+            R = pplnu.R_sigma_qqlnu_int(13e3**2, bins[i], bins[i+1], 'mu', wc_obj, par2)
             err = (R-R_mg[i])/R_mg[i]
             self.assertAlmostEqual(err,0,delta=0.02,msg=f'error in bin {i}: {err}')
 
@@ -108,6 +108,6 @@ class Test_QQLNU(unittest.TestCase):
             wc = wcxf.WC('SMEFT', 'Warsaw up', center, {'lequ3_2212': 1e-7})
             wc_obj = flavio.WilsonCoefficients()
             wc_obj.set_initial_wcxf(wc)
-            R = pplnu.R_sigma_qqlnu_int(13e3**2, bins[i], bins[i+1], 'mu', wc_obj, par2, pdf_set=pdf_set_for_tests)
+            R = pplnu.R_sigma_qqlnu_int(13e3**2, bins[i], bins[i+1], 'mu', wc_obj, par2)
             err = (R-R_mg[i])/R_mg[i]
             self.assertAlmostEqual(err,0,delta=0.02,msg=f'error in bin {i}: {err}')

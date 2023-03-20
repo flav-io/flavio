@@ -5,6 +5,7 @@ import parton
 from functools import lru_cache
 import scipy.interpolate
 import numpy as np
+from flavio.config import config
 
 # temporary monkey patch to implement https://github.com/DavidMStraub/parton/pull/8
 class MyRectBivariateSpline(scipy.interpolate.RectBivariateSpline):
@@ -84,5 +85,6 @@ def get_pdf(name, member=0, download=False):
 
 @lru_cache(maxsize=None)
 def get_parton_lumi(Q2, member=0):
-    pdf = get_pdf('NNPDF40_nnlo_as_01180', member)
+    pdfset = config['PDF set']['dileptons']
+    pdf = get_pdf(pdfset, member)
     return parton.PLumi(pdf, Q2=Q2)
