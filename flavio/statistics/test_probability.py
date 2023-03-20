@@ -127,16 +127,16 @@ class TestProbability(unittest.TestCase):
     def test_general_gamma_limit(self):
         p = GeneralGammaUpperLimit(counts_total=30, counts_background=10,
                             limit=2e-5, confidence_level=0.68,
-                            background_variance=5)
+                            background_std=5)
         self.assertAlmostEqual(p.cdf(2e-5), 0.68, delta=0.0001)
         # background excess
         p = GeneralGammaUpperLimit(counts_total=30, counts_background=50,
                             limit=2e5, confidence_level=0.68,
-                            background_variance=25)
+                            background_std=25)
         self.assertAlmostEqual(p.cdf(2e5), 0.68, delta=0.0001)
         p = GeneralGammaUpperLimit(counts_total=10000, counts_background=10000,
                             limit=3., confidence_level=0.95,
-                            background_variance=1000)
+                            background_std=1000)
         p_norm = GaussianUpperLimit(limit=3., confidence_level=0.95)
         # check that large-statistics Gamma and Gauss give nearly same PDF
         for x in [1, 2, 3, 4]:
@@ -145,7 +145,7 @@ class TestProbability(unittest.TestCase):
         with self.assertWarns(Warning):
             GeneralGammaUpperLimit(counts_total=10000, counts_background=10000,
                             limit=3., confidence_level=0.95,
-                            background_variance=1)
+                            background_std=1)
 
     def test_counting_process(self):
         # check that GeneralGammaCountingProcess with background_std set to 0
@@ -579,7 +579,7 @@ class TestProbability(unittest.TestCase):
             GammaDistribution(5, -2, 1.5),
             GammaDistributionPositive(5, -2, 1.5),
             GammaUpperLimit(counts_total=15, counts_background=10, limit=1e-9, confidence_level=0.95),
-            GeneralGammaUpperLimit(limit=1e-9, confidence_level=0.95, counts_total=15, counts_background=10, background_variance=0.2),
+            GeneralGammaUpperLimit(limit=1e-9, confidence_level=0.95, counts_total=15, counts_background=10, background_std=0.2),
             MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]]),
             NumericalDistribution([1., 2], [3, 4.]),
             GaussianKDE([1, 2, 3], 0.1),

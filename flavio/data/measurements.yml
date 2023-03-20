@@ -5219,126 +5219,126 @@ Belle B->hnunu SL 2017:
   values:
     # Tables I and II
     # counts_total is the square of the statistical error on the signal yield
-    # background_variance is the systematic error on the signal yield
+    # background_std is the systematic error on the signal yield
     BR(B+->Knunu):
       distribution: general_gamma_upper_limit
       limit: 1.9e-5
       confidence_level: 0.9
       counts_total: 83
       counts_signal: 17.7
-      background_variance: 3.4
+      background_std: 3.4
     BR(B0->Knunu):
       distribution: general_gamma_upper_limit
       limit: 2.6e-5
       confidence_level: 0.9
       counts_total: 18
       counts_signal: 0.6
-      background_variance: 1.4
+      background_std: 1.4
     BR(B+->K*nunu):
       distribution: general_gamma_upper_limit
       limit: 6.1e-5
       confidence_level: 0.9
       counts_total: 55
       counts_signal: 16.2
-      background_variance: 1.8
+      background_std: 1.8
     BR(B0->K*nunu):
       distribution: general_gamma_upper_limit
       limit: 1.8e-5
       confidence_level: 0.9
       counts_total: 13
       counts_signal: -2.0
-      background_variance: 1.8
+      background_std: 1.8
     BR(B+->pinunu):
       distribution: general_gamma_upper_limit
       limit: 1.4e-5
       confidence_level: 0.9
       counts_total: 228
       counts_signal: 5.6
-      background_variance: 5.9
+      background_std: 5.9
     BR(B0->pinunu):
       distribution: general_gamma_upper_limit
       limit: 0.9e-5
       confidence_level: 0.9
       counts_total: 31
       counts_signal: 0.2
-      background_variance: 1.6
+      background_std: 1.6
     BR(B+->rhonunu):
       distribution: general_gamma_upper_limit
       limit: 3.0e-5
       confidence_level: 0.9
       counts_total: 151
       counts_signal: 6.2
-      background_variance: 2.4
+      background_std: 2.4
     BR(B0->rhonunu):
       distribution: general_gamma_upper_limit
       limit: 4.0e-5
       confidence_level: 0.9
       counts_total: 81
       counts_signal: 11.9
-      background_variance: 3.6
+      background_std: 3.6
 
 Belle B->hnunu had 2013:
   experiment: Belle
   inspire: Lutz:2013ftz
   values:
     # Table I
-    # background_variance is the systematic error on the # of signal events
+    # background_std is the systematic error on the # of signal events
     BR(B+->Knunu):
       distribution: general_gamma_upper_limit
       limit: 5.5e-5
       confidence_level: 0.9
       counts_total: 43
       counts_signal: 13.3
-      background_variance: 2.3
+      background_std: 2.3
     BR(B0->Knunu):
       distribution: general_gamma_upper_limit
       limit: 19.4e-5
       confidence_level: 0.9
       counts_total: 4
       counts_signal: 1.8
-      background_variance: 1.0
+      background_std: 1.0
     BR(B+->K*nunu):
       distribution: general_gamma_upper_limit
       limit: 4.0e-5
       confidence_level: 0.9
       counts_total: 21
       counts_signal: -1.7
-      background_variance: 1.5
+      background_std: 1.5
     BR(B0->K*nunu):
       distribution: general_gamma_upper_limit
       limit: 5.5e-5
       confidence_level: 0.9
       counts_total: 10
       counts_signal: -2.3
-      background_variance: 0.9
+      background_std: 0.9
     BR(B+->pinunu):
       distribution: general_gamma_upper_limit
       limit: 9.8e-5
       confidence_level: 0.9
       counts_total: 107
       counts_signal: 15.2
-      background_variance: 1.4
+      background_std: 1.4
     BR(B0->pinunu):
       distribution: general_gamma_upper_limit
       limit: 6.9e-5
       confidence_level: 0.9
       counts_total: 6
       counts_signal: 3.5
-      background_variance: 0.6
+      background_std: 0.6
     BR(B+->rhonunu):
       distribution: general_gamma_upper_limit
       limit: 21.3e-5
       confidence_level: 0.9
       counts_total: 90
       counts_signal: 11.3
-      background_variance: 4.1
+      background_std: 4.1
     BR(B0->rhonunu):
       distribution: general_gamma_upper_limit
       limit: 20.8e-5
       confidence_level: 0.9
       counts_total: 31
       counts_signal: 1.6
-      background_variance: 0.4
+      background_std: 0.4
 
 BaBar B->Knunu had 2013:
   experiment: BaBar
@@ -5353,28 +5353,28 @@ BaBar B->Knunu had 2013:
       confidence_level: 0.9
       counts_total: 6
       counts_background: 2.9
-      background_variance: 0.1
+      background_std: 0.1
     BR(B0->Knunu):
       distribution: general_gamma_upper_limit
       limit: 8.1e-5
       confidence_level: 0.9
       counts_total: 3
       counts_background: 2.9
-      background_variance: 0.2
+      background_std: 0.2
     BR(B+->K*nunu):
       distribution: general_gamma_upper_limit
       limit: 11.6e-5
       confidence_level: 0.9
       counts_total: 6
       counts_background: 4.3
-      background_variance: 0.14
+      background_std: 0.14
     BR(B0->K*nunu):
       distribution: general_gamma_upper_limit
       limit: 9.3e-5
       confidence_level: 0.9
       counts_total: 9
       counts_background: 7.7
-      background_variance: 0.5
+      background_std: 0.5
 
 BaBar B->Knunu SL 2010:
   experiment: BaBar
@@ -5387,14 +5387,14 @@ BaBar B->Knunu SL 2010:
       confidence_level: 0.9
       counts_total: 19.4
       counts_signal: 1.8
-      background_variance: 0.9
+      background_std: 0.9
     BR(B0->Knunu):
       distribution: general_gamma_upper_limit
       limit: 5.6e-5
       confidence_level: 0.9
       counts_total: 6.1
       counts_signal: 2.2
-      background_variance: 0.4
+      background_std: 0.4
 
 LHCb B->tautau 2017:
   experiment: LHCb
@@ -6700,42 +6700,42 @@ Belle 2010 tau->lll:
         confidence_level: 0.9
         counts_total: 0
         counts_background: 0.21
-        background_variance: 0.15
+        background_std: 0.15
     BR(tau->mumumu):
         distribution: general_gamma_upper_limit
         limit: 2.1e-8
         confidence_level: 0.9
         counts_total: 0
         counts_background: 0.13
-        background_variance: 0.06
+        background_std: 0.06
     BR(tau->emumu):
         distribution: general_gamma_upper_limit
         limit: 2.7e-8
         confidence_level: 0.9
         counts_total: 0
         counts_background: 0.10
-        background_variance: 0.04
+        background_std: 0.04
     BR(tau->muee):
         distribution: general_gamma_upper_limit
         limit: 1.8e-8
         confidence_level: 0.9
         counts_total: 0
         counts_background: 0.04
-        background_variance: 0.04
+        background_std: 0.04
     BR(tau->muemu):
         distribution: general_gamma_upper_limit
         limit: 1.7e-8
         confidence_level: 0.9
         counts_total: 0
         counts_background: 0.02
-        background_variance: 0.02
+        background_std: 0.02
     BR(tau->emue):
         distribution: general_gamma_upper_limit
         limit: 1.5e-8
         confidence_level: 0.9
         counts_total: 0
         counts_background: 0.01
-        background_variance: 0.01
+        background_std: 0.01
 
 PDG 2017 mu LFV:
   experiment: PDG
