@@ -50,18 +50,18 @@ class MyRectBivariateSpline(scipy.interpolate.RectBivariateSpline):
         z = super().__call__(x, y, *args, **kwargs)
 
         if self.fill_value is not None:
-            print('fill value is not None')
+            # print('fill value is not None')
             if any_out_of_bounds_x:
-                print(f'some x is out of bound: {out_of_bounds_x}')
-                print(f'x is {x}')
-                print(f'x_min is {self.x_min}')
-                print(f'x_max is {self.x_max}')
+                # print(f'some x is out of bound: {out_of_bounds_x}')
+                # print(f'x is {x}')
+                # print(f'x_min is {self.x_min}')
+                # print(f'x_max is {self.x_max}')
                 z[out_of_bounds_x, :] = self.fill_value
             if any_out_of_bounds_y:
-                print(f'some y is out of bound: {out_of_bounds_y}')
-                print(f'y is {y}')
-                print(f'y_min is {self.y_min}')
-                print(f'y_max is {self.y_max}')
+                # print(f'some y is out of bound: {out_of_bounds_y}')
+                # print(f'y is {y}')
+                # print(f'y_min is {self.y_min}')
+                # print(f'y_max is {self.y_max}')
                 z[:, out_of_bounds_y] = self.fill_value
         return z
 

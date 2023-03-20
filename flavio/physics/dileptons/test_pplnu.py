@@ -4,14 +4,18 @@ from flavio.physics.dileptons import pplnu
 from wilson import wcxf
 from flavio.physics.dileptons.test_ppll import uses_pdf
 import numpy as np
-import parton
-from functools import lru_cache
+from flavio.config import config
 
 par = flavio.default_parameters.get_central_all()
 par2 = par.copy()
 par2['s2w'] = 0.22137905667111532  # correction factor to match the madgraph input scheme
 GeVtopb = 0.3894*10**9
+
+pdf_set_for_tests = 'NNPDF30_nnlo_as_0118'
+config['PDF set']['dileptons'] = pdf_set_for_tests
+
 class Test_QQLNU(unittest.TestCase):
+    @uses_pdf
     def test_sm_spectrum(self):
         r"""Compare the SM $m_T$ spectrum to madgraph events in 10 bins from 200 GeV to 2 TeV
             MG events simulated with NNPDF30_nnlo_as_0118
@@ -33,11 +37,11 @@ class Test_QQLNU(unittest.TestCase):
             err = (spectrum-spectrum_mg[i])/spectrum_mg[i]
             self.assertAlmostEqual(err,0,delta=0.02,msg=f'error in bin {i}: {err}')
 
-    # @uses_pdf
-    # def test_qqlnu_sm(self):
-    #     """Test the SM pediction for the R ratio from 1 to 2 TeV"""
-    #     R = flavio.sm_prediction('R_13(pp->munu)', 1e3, 2e3)
-    #     self.assertEqual(R, 1,msg=f'SM prediction for R ratio: {R} (has to be 1)')
+    @uses_pdf
+    def test_qqlnu_sm(self):
+        """Test the SM pediction for the R ratio from 1 to 2 TeV"""
+        R = flavio.sm_prediction('R_13(pp->munu)', 1e3, 2e3)
+        self.assertEqual(R, 1,msg=f'SM prediction for R ratio: {R} (has to be 1)')
 
     @uses_pdf
     def test_qqlnu_np_sm(self):

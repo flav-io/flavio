@@ -3,8 +3,6 @@ import flavio
 from flavio.physics.dileptons import ppll, partondist
 from wilson import wcxf
 import numpy as np
-import parton
-from functools import lru_cache
 from flavio.config import config
 
 par = flavio.default_parameters.get_central_all()
@@ -23,6 +21,7 @@ def uses_pdf(func):
     return inner
 
 class Test_QQLL(unittest.TestCase):
+    @uses_pdf
     def test_sm_spectrum(self):
         r"""Compare the SM $m_{\ell\ell}$ spectrum from flavio to madgraph prediction in 10 bins from 200 GeV to 2 TeV
             MG events simulated with NNPDF30_nnlo_as_0118 PDFs
@@ -90,7 +89,6 @@ class Test_QQLL(unittest.TestCase):
         # Number of NP events generated in MG [38339, 25414, 16752]
         # Number of SM events generated in MG [58147, 23848, 10473]
 
-
         bins = np.asarray([1000., 1200., 1400., 1600.])
         nbins = len(bins)-1
 
@@ -112,7 +110,6 @@ class Test_QQLL(unittest.TestCase):
         R_mg = np.asarray([2.1352791354283926, 3.0789137670371165, 4.609226551698083])
         # Number of NP events generated in MG [32345, 24282, 18505]
         # Number of SM events generated in MG [58147, 23848, 10473]
-
 
         bins = np.asarray([1000., 1200., 1400., 1600.])
         nbins = len(bins)-1
