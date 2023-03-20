@@ -710,7 +710,7 @@ class GammaCountingProcess(GammaDistributionPositive):
           to get the observable of interest.
         - `counts_total`: observed total number (signal and background) of counts.
         - `counts_background`: expected mean number of expected background counts
-        - `counts_signal`: mean obseved number of signal events
+        - `counts_signal`: mean observed number of signal events
 
         Of the three parameters `counts_total`, `counts_background`, and
         `counts_signal`, only two must be specified. The third one will
@@ -773,14 +773,14 @@ class GammaUpperLimit(GammaCountingProcess):
 
         Parameters:
 
-        - counts_total: observed total number (signal and background) of counts.
-        - counts_background: number of expected background counts, assumed to be
-          known.
         - limit: upper limit on x, which is proportional (with a positive
           proportionality factor) to the number of signal events.
         - confidence_level: confidence level of the upper limit, i.e. the value
           of the CDF at the limit. Float between 0 and 1. Frequently used values
           are 0.90 and 0.95.
+        - `counts_total`: observed total number (signal and background) of counts.
+        - `counts_background`: expected mean number of expected background counts
+        - `counts_signal`: mean observed number of signal events
         """
         if confidence_level > 1 or confidence_level < 0:
             raise ValueError("Confidence level should be between 0 und 1")
@@ -1057,7 +1057,7 @@ class GeneralGammaCountingProcess(GeneralGammaDistributionPositive):
           to get the observable of interest.
         - `counts_total`: observed total number (signal and background) of counts.
         - `counts_background`: expected mean number of expected background counts
-        - `counts_signal`: mean obseved number of signal events
+        - `counts_signal`: mean observed number of signal events
         - `background_std`: standard deviation of the expected number of
           background events
 
@@ -1154,7 +1154,7 @@ class GeneralGammaUpperLimit(GeneralGammaCountingProcess):
           are 0.90 and 0.95.
         - `counts_total`: observed total number (signal and background) of counts.
         - `counts_background`: expected mean number of expected background counts
-        - `counts_signal`: mean obseved number of signal events
+        - `counts_signal`: mean observed number of signal events
         - `background_std`: standard deviation of the expected number of
           background events
         - `background_variance`: alias of `background_std` for backward
