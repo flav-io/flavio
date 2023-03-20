@@ -43,12 +43,12 @@ class Test_QQLL(unittest.TestCase):
             err = (spectrum-spectrum_mg[i])/spectrum_mg[i]
             self.assertAlmostEqual(err,0,delta=0.02,msg=f'error in bin {i}: {err}')
 
-    # @uses_pdf
-    # def test_qqll_sm(self):
-    #     """Test the SM pediction for the R ratio from 1 to 2 TeV"""
+    @uses_pdf
+    def test_qqll_sm(self):
+        """Test the SM pediction for the R ratio from 1 to 2 TeV"""
 
-    #     R = flavio.sm_prediction('R_13(pp->mumu)', 1e3, 2e3)
-    #     self.assertEqual(R, 1,msg=f'SM prediction for R ratio: {R} (has to be 1)')
+        R = flavio.sm_prediction('R_13(pp->mumu)', 1e3, 2e3)
+        self.assertEqual(R, 1,msg=f'SM prediction for R ratio: {R} (has to be 1)')
 
     @uses_pdf
     def test_qqll_np_sm(self):
