@@ -11,9 +11,6 @@ par2 = par.copy()
 par2['s2w'] = 0.22137905667111532  # correction factor to match the madgraph input scheme
 GeVtopb = 0.3894*10**9
 
-pdf_set_for_tests = 'NNPDF30_nnlo_as_0118'
-config['PDF set']['dileptons'] = pdf_set_for_tests
-
 class Test_QQLNU(unittest.TestCase):
     @uses_pdf
     def test_sm_spectrum(self):
