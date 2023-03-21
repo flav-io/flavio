@@ -163,12 +163,12 @@ def dsigma_dtau_qqll(s, tau, l, Q2, wc_eff, par):
     return sigma
 
 
-def sigma_qqll_int(s, q2min, q2max, l, Q2, wc_obj, par, scale, newphys=True):
+def sigma_qqll_int(s, qmin, qmax, l, Q2, wc_obj, par, scale, newphys=True):
     r"""Integrated hadronic cross section of $pp\to \ell^+\ell^-$.
 
     Parameters:
     - `s`: hadronic center of mass energy in GeV$^2$
-    - `q2min`, `q2max`: bin boundaries in the dileption invariant mass squared in GeV$^2$
+    - `qmin`, `qmax`: bin boundaries in the dileption invariant mass, in GeV
     - `l`: lepton flavour, should be 'e', 'mu', or 'tau'
     - `Q2`: factorization scale squared in GeV$^2$
     - `wc_obj`: Wilson coefficient object
@@ -187,32 +187,32 @@ def sigma_qqll_int(s, q2min, q2max, l, Q2, wc_obj, par, scale, newphys=True):
             # add NP contribution
             wc_eff = add_dict((wc_eff, wc_eff_np))
         return dsigma_dtau_qqll(s, tau, l, Q2, wc_eff, par)
-    return nintegrate(f, q2min / s, q2max / s, epsrel=1e-5)
+    return nintegrate(f, qmin**2 / s, qmax**2 / s, epsrel=1e-5)
 
 
-def R_sigma_qqll_int(s, q2min, q2max, l, wc_obj, par):
+def R_sigma_qqll_int(s, qmin, qmax, l, wc_obj, par):
     r"""Integrated hadronic cross section of $pp\to \ell^+\ell^-$ normalized
     to its SM value.
 
     Parameters:
     - `s`: hadronic center of mass energy in GeV$^2$
-    - `q2min`, `q2max`: bin boundaries in the dileption invariant mass squared in GeV$^2$
+    - `qmin`, `qmax`: bin boundaries in the dileption invariant mass, in GeV
     - `l`: lepton flavour, should be 'e', 'mu', or 'tau'
     - `wc_obj`: Wilson coefficient object
     - `par`: parameter dictionary
     """
     # Renormalization and factorization scale are fixed in the bin
-    scale = (sqrt(q2min) + sqrt(q2max)) / 2
+    scale = (qmin + qmax) / 2
     Q2 = scale**2
-    sigma_sm = sigma_qqll_int(s, q2min, q2max, l, Q2, wc_obj, par, scale, newphys=False)
-    sigma_np = sigma_qqll_int(s, q2min, q2max, l, Q2, wc_obj, par, scale, newphys=True)
+    sigma_sm = sigma_qqll_int(s, qmin, qmax, l, Q2, wc_obj, par, scale, newphys=False)
+    sigma_np = sigma_qqll_int(s, qmin, qmax, l, Q2, wc_obj, par, scale, newphys=True)
     return sigma_np / sigma_sm
 
 
 def R_sigma_qqll_int_fct_lhc13(l):
     s = 13000**2
     def f(wc_obj, par, qmin, qmax):
-        return R_sigma_qqll_int(s, qmin**2, qmax**2, l, wc_obj, par)
+        return R_sigma_qqll_int(s, qmin, qmax, l, wc_obj, par)
     return f
 
 

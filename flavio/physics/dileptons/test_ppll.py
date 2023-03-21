@@ -38,7 +38,7 @@ class Test_QQLL(unittest.TestCase):
         for i in range(nbins):
             center = 0.5*(bins[i]+bins[i+1])
             width = bins[i+1]-bins[i]
-            spectrum = ppll.sigma_qqll_int(s, bins[i]**2, bins[i+1]**2, 'mu', center**2, 0, par2, 0, newphys=False)*GeVtopb/width
+            spectrum = ppll.sigma_qqll_int(s, bins[i], bins[i+1], 'mu', center**2, 0, par2, 0, newphys=False)*GeVtopb/width
             err = (spectrum-spectrum_mg[i])/spectrum_mg[i]
             self.assertAlmostEqual(err,0,delta=0.02,msg=f'error in bin {i}: {err}')
 
@@ -54,7 +54,7 @@ class Test_QQLL(unittest.TestCase):
         r"""Test the R ratio with presence of wilson coefficients set to zero"""
 
         wc_obj = flavio.WilsonCoefficients()
-        R = ppll.R_sigma_qqll_int(13e3**2, 1300**2, 1800**2, 'mu', wc_obj, par)
+        R = ppll.R_sigma_qqll_int(13e3**2, 1300, 1800, 'mu', wc_obj, par)
         self.assertEqual(R, 1,msg=f'SM prediction for R ratio: {R} (has to be 1)')
 
     @uses_pdf
@@ -75,7 +75,7 @@ class Test_QQLL(unittest.TestCase):
             wc = wcxf.WC('SMEFT', 'Warsaw up', center, {'lq1_2211': 1e-7})
             wc_obj = flavio.WilsonCoefficients()
             wc_obj.set_initial_wcxf(wc)
-            R = ppll.R_sigma_qqll_int(13e3**2, bins[i]**2, bins[i+1]**2, 'mu', wc_obj, par2)
+            R = ppll.R_sigma_qqll_int(13e3**2, bins[i], bins[i+1], 'mu', wc_obj, par2)
             err = (R-R_mg[i])/R_mg[i]
             self.assertAlmostEqual(err,0,delta=0.02,msg=f'error in bin {i}: {err}')
 
@@ -97,7 +97,7 @@ class Test_QQLL(unittest.TestCase):
             wc = wcxf.WC('SMEFT', 'Warsaw up', center, {'ledq_2223': 1e-7})
             wc_obj = flavio.WilsonCoefficients()
             wc_obj.set_initial_wcxf(wc)
-            R = ppll.R_sigma_qqll_int(13e3**2, bins[i]**2, bins[i+1]**2, 'mu', wc_obj, par2)
+            R = ppll.R_sigma_qqll_int(13e3**2, bins[i], bins[i+1], 'mu', wc_obj, par2)
             err = (R-R_mg[i])/R_mg[i]
             self.assertAlmostEqual(err,0,delta=0.02,msg=f'error in bin {i}: {err}')
 
@@ -119,6 +119,6 @@ class Test_QQLL(unittest.TestCase):
             wc = wcxf.WC('SMEFT', 'Warsaw up', center, {'lequ3_2212': 1e-7})
             wc_obj = flavio.WilsonCoefficients()
             wc_obj.set_initial_wcxf(wc)
-            R = ppll.R_sigma_qqll_int(13e3**2, bins[i]**2, bins[i+1]**2, 'mu', wc_obj, par2)
+            R = ppll.R_sigma_qqll_int(13e3**2, bins[i], bins[i+1], 'mu', wc_obj, par2)
             err = (R-R_mg[i])/R_mg[i]
             self.assertAlmostEqual(err,0,delta=0.02,msg=f'error in bin {i}: {err}')
