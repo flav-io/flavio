@@ -4,7 +4,7 @@ from flavio.physics import ckm as ckm_flavio
 from flavio.classes import Observable, Prediction
 from . import partondist
 import wilson
-from math import pi
+from numpy import pi, sqrt
 import numpy as np
 
 def F_qqlnu_SM(s, par):
@@ -72,11 +72,11 @@ def dsigma_dtau_qqlnu_partial(s, tau, umin, umax, q1, q2, l, wc_eff):
     il = fermion_indices[l]
 
     if tau > umax:
-        prefac1 = umax * np.sqrt(1-umax/tau) - umin * np.sqrt(1-umin/tau)
-        prefac2 = tau * ( np.sqrt(1-umax/tau) - np.sqrt(1-umin/tau) )
+        prefac1 = umax * sqrt(1-umax/tau) - umin * sqrt(1-umin/tau)
+        prefac2 = tau * ( sqrt(1-umax/tau) - sqrt(1-umin/tau) )
     else:
-        prefac1 = - umin * np.sqrt(1-umin/tau)
-        prefac2 = - tau * np.sqrt(1-umin/tau)
+        prefac1 = - umin * sqrt(1-umin/tau)
+        prefac2 = - tau * sqrt(1-umin/tau)
 
     S = 0
     # sum over neutrino flavours
@@ -94,7 +94,7 @@ def dsigma_dtau_qqlnu_partial(s, tau, umin, umax, q1, q2, l, wc_eff):
             )
         )
 
-    return S/(576*np.pi)
+    return S/(576*pi)
 
 pdf_flavor = {'d': 1, 'u': 2, 's': 3, 'c': 4, 'b': 5}
 

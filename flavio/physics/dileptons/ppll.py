@@ -5,7 +5,7 @@ from flavio.classes import Observable, Prediction
 from flavio.physics import ckm as ckm_flavio
 from . import partondist
 import wilson
-from math import pi, sqrt
+from numpy import pi, sqrt
 import numpy as np
 
 def F_qqll_SM(q, Xq, l, Xl, s, par):
