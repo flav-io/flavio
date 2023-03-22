@@ -57,9 +57,9 @@ def Yu(q2, wc, par, scale, qiqj):
 
 _f_string = pkgutil.get_data('flavio.physics', 'data/arXiv-0810-4077v3/f_12_79.dat')
 _f_array = np.loadtxt(StringIO(_f_string.decode('utf-8')))
-_f_x = _f_array[::51*11,0]
-_f_y = _f_array[:51*11:51,1]
-_f_z = _f_array[:51,2]
+_f_x = np.ascontiguousarray(_f_array[::51*11,0])
+_f_y = np.ascontiguousarray(_f_array[:51*11:51,1])
+_f_z = np.ascontiguousarray(_f_array[:51,2])
 _f_val_17 = _f_array[:,3].reshape(11,11,51) + 1j*_f_array[:,4].reshape(11,11,51)
 _f_val_19 = _f_array[:,5].reshape(11,11,51) + 1j*_f_array[:,6].reshape(11,11,51)
 _f_val_27 = _f_array[:,7].reshape(11,11,51) + 1j*_f_array[:,8].reshape(11,11,51)

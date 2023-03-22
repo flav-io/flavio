@@ -104,15 +104,15 @@ class ProbabilityDistribution(object):
                         if isinstance(x, np.ndarray):
                             od[k][i] = od[k][i].tolist()
         for k in od:
-            if isinstance(od[k], np.int):
+            if isinstance(od[k], int):
                 od[k] = int(od[k])
-            elif isinstance(od[k], np.float):
+            elif isinstance(od[k], float):
                 od[k] = float(od[k])
             if isinstance(od[k], list):
                 for i, x in enumerate(od[k]):
-                    if isinstance(x, np.float):
+                    if isinstance(x, float):
                         od[k][i] = float(od[k][i])
-                    elif isinstance(x, np.int):
+                    elif isinstance(x, int):
                         od[k][i] = int(od[k][i])
         return od
 
@@ -542,9 +542,10 @@ class GammaDistribution(ProbabilityDistribution):
         self.scipy_dist = scipy.stats.gamma(a=a, loc=loc, scale=scale)
         mode = loc + (a-1)*scale
         # support extends until the CDF is roughly "6 sigma"
-        support_limit = self.scipy_dist.ppf(1-2e-9)
+        support_min = min(self.scipy_dist.ppf(1e-9), mode)
+        support_max = self.scipy_dist.ppf(1-1e-9)
         super().__init__(central_value=mode, # the mode
-                         support=(loc, support_limit))
+                         support=(support_min, support_max))
         self.a = a
         self.loc = loc
         self.scale = scale
@@ -606,9 +607,10 @@ class GammaDistributionPositive(ProbabilityDistribution):
         if mode < 0:
             mode = 0
         # support extends until the CDF is roughly "6 sigma", assuming x>0
-        support_limit = self.scipy_dist.ppf(1-2e-9*(1-self.scipy_dist.cdf(0)))
+        support_min = max(min(self.scipy_dist.ppf(1e-9), mode), 0)
+        support_max = self.scipy_dist.ppf(1-1e-9*(1-self.scipy_dist.cdf(0)))
         super().__init__(central_value=mode, # the mode
-                         support=(0, support_limit))
+                         support=(support_min, support_max))
         self.a = a
         self.loc = loc
         self.scale = scale
@@ -688,59 +690,124 @@ class GammaDistributionPositive(ProbabilityDistribution):
             a = self._find_error_cdf(confidence_level(nsigma))
             return self.ppf(a + confidence_level(nsigma)) - self.central_value
 
-class GammaUpperLimit(GammaDistributionPositive):
+class GammaCountingProcess(GammaDistributionPositive):
     r"""Gamma distribution with x restricted to be positive appropriate for
     a positive quantitity obtained from a low-statistics counting experiment,
-    e.g. a rare decay rate, given an upper limit on x."""
-
-    def __init__(self, counts_total, counts_background, limit, confidence_level):
+    e.g. a rare decay rate, given in terms of event counts and a scale factor.
+    The diference to `GammaUpperLimit` is that the scale factor has to be given
+    directly and is not expressed in terms of an upper limit.
+    """
+    def __init__(self, *,
+                 scale_factor=1,
+                 counts_total=None,
+                 counts_background=None,
+                 counts_signal=None):
         r"""Initialize the distribution.
 
         Parameters:
 
-        - counts_total: observed total number (signal and background) of counts.
-        - counts_background: number of expected background counts, assumed to be
-          known.
+        - `scale_factor`: scale factor by which the number of counts is multiplied
+          to get the observable of interest.
+        - `counts_total`: observed total number (signal and background) of counts.
+        - `counts_background`: expected mean number of expected background counts
+        - `counts_signal`: mean observed number of signal events
+
+        Of the three parameters `counts_total`, `counts_background`, and
+        `counts_signal`, only two must be specified. The third one will
+        be determined from the relation
+
+        `counts_total = counts_signal + counts_background`
+        """
+        if scale_factor <= 0:
+            raise ValueError("Scale factor should be positive")
+        self.scale_factor = scale_factor
+        if counts_total is not None and counts_total < 0:
+            raise ValueError("counts_total should be a positive number, zero, or None")
+        if counts_background is not None and counts_background < 0:
+            raise ValueError("counts_background should be a positive number, zero, or None")
+        if [counts_total, counts_signal, counts_background].count(None) == 0:
+            # if all three are specified, check the relation holds!
+            if abs((counts_total - counts_background - counts_signal)/(counts_total if counts_total != 0 else 1)) > 1e-15:
+                raise ValueError("The relation `counts_total = counts_signal + counts_background` is not satisfied")
+        if [counts_total, counts_signal, counts_background].count(None) > 1:
+            raise ValueError("Of the three parameters `counts_total`, `counts_background`, and `counts_signal`, two must be specified")
+        if counts_background is None:
+            self.counts_background = counts_total - counts_signal
+        else:
+            self.counts_background = counts_background
+        if counts_signal is None:
+            self.counts_signal = counts_total - counts_background
+        else:
+            self.counts_signal = counts_signal
+        if counts_total is None:
+            self.counts_total = counts_signal + counts_background
+        else:
+            self.counts_total = counts_total
+        super().__init__(
+            a = self.counts_total + 1,
+            loc = -self.counts_background * self.scale_factor,
+            scale = self.scale_factor
+        )
+
+    def __repr__(self):
+        return ('flavio.statistics.probability.GammaCountingProcess'
+                '(scale_factor={}, counts_total={}, counts_signal={})').format(
+                    self.scale_factor,
+                    self.counts_total,
+                    self.counts_signal
+                )
+
+class GammaUpperLimit(GammaCountingProcess):
+    r"""Gamma distribution with x restricted to be positive appropriate for
+    a positive quantitity obtained from a low-statistics counting experiment,
+    e.g. a rare decay rate, given an upper limit on x.
+    The diference to `GammaCountingProcess` is that a scale factor is determined
+    from the upper limit and not specified directly."""
+
+    def __init__(self, *,
+                 limit, confidence_level,
+                 counts_total=None,
+                 counts_background=None,
+                 counts_signal=None):
+        r"""Initialize the distribution.
+
+        Parameters:
+
         - limit: upper limit on x, which is proportional (with a positive
           proportionality factor) to the number of signal events.
         - confidence_level: confidence level of the upper limit, i.e. the value
           of the CDF at the limit. Float between 0 and 1. Frequently used values
           are 0.90 and 0.95.
+        - `counts_total`: observed total number (signal and background) of counts.
+        - `counts_background`: expected mean number of expected background counts
+        - `counts_signal`: mean observed number of signal events
         """
         if confidence_level > 1 or confidence_level < 0:
             raise ValueError("Confidence level should be between 0 und 1")
         if limit <= 0:
             raise ValueError("The upper limit should be a positive number")
-        if counts_total < 0:
-            raise ValueError("counts_total should be a positive number or zero")
-        if counts_background < 0:
-            raise ValueError("counts_background should be a positive number or zero")
         self.limit = limit
         self.confidence_level = confidence_level
-        self.counts_total = counts_total
-        self.counts_background = counts_background
-        a, loc, scale = self._get_a_loc_scale()
-        super().__init__(a=a, loc=loc, scale=scale)
-
+        dist_unscaled = GammaCountingProcess(
+                 scale_factor=1,
+                 counts_total=counts_total,
+                 counts_background=counts_background,
+                 counts_signal=counts_signal)
+        limit_unscaled = dist_unscaled.ppf(self.confidence_level)
+        # use the value of the limit to determine the scale factor
+        scale_factor = self.limit / limit_unscaled
+        super().__init__(
+            scale_factor=scale_factor,
+            counts_total=counts_total,
+            counts_background=counts_background)
 
     def __repr__(self):
-        return 'flavio.statistics.probability.GammaUpperLimit' + \
-               '({}, {}, {}, {})'.format(self.counts_total,
-                                         self.counts_background,
-                                         self.limit,
-                                         self.confidence_level)
-
-    def _get_a_loc_scale(self):
-        """Convert the counts and limit to the input parameters needed for
-        GammaDistributionPositive"""
-        a = self.counts_total + 1
-        loc_unscaled = -self.counts_background
-        dist_unscaled = GammaDistributionPositive(a=a, loc=loc_unscaled, scale=1)
-        limit_unscaled = dist_unscaled.ppf(self.confidence_level)
-        # rescale
-        scale = self.limit/limit_unscaled
-        loc = -self.counts_background*scale
-        return a, loc, scale
+        return ('flavio.statistics.probability.GammaUpperLimit'
+                '(limit={}, confidence_level={}, counts_total={}, counts_background={})'
+               ).format(self.limit,
+                        self.confidence_level,
+                        self.counts_total,
+                        self.counts_background)
 
 class NumericalDistribution(ProbabilityDistribution):
     """Univariate distribution defined in terms of numerical values for the
@@ -881,31 +948,108 @@ class NumericalDistribution(ProbabilityDistribution):
         _y = np.exp(pd.logpdf(_x))
         return cls(central_value=pd.central_value, x=_x, y=_y)
 
-
 class GeneralGammaDistributionPositive(NumericalDistribution):
-    r"""Distribution appropriate for
-    a positive quantitity obtained from a low-statistics counting experiment,
-    e.g. a rare decay rate.
-    The difference to `GammaUpperLimit` is that this class also allows to
+    r"""Distribution appropriate for cases in which a strictly positive quantity
+    described by a Gamma distribution has an additional Gaussian uncertainty, which
+    is specified by a Gaussian standard deviation. The result is a numerical
+    distribution obtained from the convolution of a normal distribution
+    (with the Gaussian standard deviation) and a gamma distribution, restricted to
+    positive values. Note that the convolution is done before applying the scale factor
+    """
+
+    def __init__(self, *, a, loc, scale, gaussian_standard_deviation):
+        r"""Initialize the distribution.
+
+        The parameters `a`, `loc`, and `scale` are the same as in `GammaDistributionPositive`.
+        The parameter `gaussian_standard_deviation` defines a normal distribution that
+        is convoluted with the gamma distribution. Note that the convolution is performed
+        before the `scale` factor is applied.
+
+        If `gaussian_standard_deviation=0`, it makes more sense to use
+        `GammaDistributionPositive`, which is equivalent but analytical rather than
+        numerical.
+        """
+        if loc > 0:
+            raise ValueError("loc must be negative or zero")
+        self.a = a
+        self.loc = loc
+        self.scale = scale
+        self.gaussian_standard_deviation = gaussian_standard_deviation
+        x, y = self._get_xy()
+        if self.gaussian_standard_deviation/np.sqrt(self.counts_total+1) < 1/100:
+            self.gaussian_standard_deviation = 0
+            warnings.warn("For vanishing or very small Gaussian standard deviation, "
+                          "it is safer to use GammaDistributionPositive instead of "
+                          "GeneralGammaDistributionPositive to avoid numerical "
+                          "instability.")
+        super().__init__(x=x, y=y)
+
+    def __repr__(self):
+        return ('flavio.statistics.probability.GeneralGammaDistributionPositive'
+               '(a={}, loc={}, scale={}, gaussian_standard_deviation={})'.format(
+                    self.a,
+                    self.loc,
+                    self.scale,
+                    self.gaussian_standard_deviation
+                ))
+
+    def _get_xy(self):
+        loc_scaled = self.loc/self.scale
+        if self.gaussian_standard_deviation == 0:
+            # this is a bit pointless as in this case it makes more
+            # sense to use GammaDistributionPositive itself
+            gamma_unscaled = GammaDistributionPositive(a = self.a,
+                                                       loc = loc_scaled,
+                                                       scale = 1)
+            num_unscaled = NumericalDistribution.from_pd(gamma_unscaled)
+        else:
+            # define a gamma distribution (with x>loc, not x>0!) and convolve
+            # it with a Gaussian
+            gamma_unscaled = GammaDistribution(a = self.a,
+                                               loc = loc_scaled,
+                                               scale = 1)
+            norm_bg = NormalDistribution(0, self.gaussian_standard_deviation)
+            num_unscaled = convolve_distributions([gamma_unscaled, norm_bg], central_values='sum')
+        # now that we have convolved, add the mirrored values from below x=loc and
+        # then cut off anything below x=0
+        x = num_unscaled.x
+        y = num_unscaled.y_norm
+        if loc_scaled in x:
+            to_mirror = y[x<=loc_scaled][::-1]
+            y_pos = y[len(to_mirror)-1:len(to_mirror)*2-1]
+            y[len(to_mirror)-1:len(to_mirror)*2-1] += to_mirror[:len(y_pos)]
+        else:
+            to_mirror = y[x<loc_scaled][::-1]
+            y_pos = y[len(to_mirror):len(to_mirror)*2]
+            y[len(to_mirror):len(to_mirror)*2] += to_mirror[:len(y_pos)]
+        y = y[x >= 0]
+        x = x[x >= 0]
+        if x[0] != 0:  #  make sure the PDF at 0 exists
+            x = np.insert(x, 0, 0.)  # add 0 as first element
+            y = np.insert(y, 0, y[0])  # copy first element
+        x = x * self.scale
+        return x, y
+
+class GeneralGammaCountingProcess(GeneralGammaDistributionPositive):
+    r"""Distribution appropriate for a positive quantitity obtained from a
+    low-statistics counting experiment, e.g. a rare decay rate.
+    The difference to `GammaCountingProcess` is that this class also allows to
     specify an uncertainty on the number of background events. The result
     is a numerical distribution obtained from the convolution of a normal
     distribution (for the background uncertainty) and a gamma distribution,
     restricted to positive values.
-    In contrast to `GammaUpperLimit`, the scale factor (the relational between
-    the observable of interest and the raw number of counts) is not determined
-    from a limit and a confidence level, but specified explicitly.
-    For the case of a limit, see `GeneralGammaUpperLimit`.
+    In contrast to `GeneralGammaUpperLimit`, the scale factor (the relational
+    between the observable of interest and the raw number of counts) is not
+    determined from a limit and a confidence level, but specified explicitly.
     """
 
-    def __init__(self,
+    def __init__(self, *,
                  scale_factor=1,
                  counts_total=None,
                  counts_background=None,
                  counts_signal=None,
-                 background_variance=0):
+                 background_std=0):
         r"""Initialize the distribution.
-
-        Parameters:
 
         Parameters:
 
@@ -913,8 +1057,8 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
           to get the observable of interest.
         - `counts_total`: observed total number (signal and background) of counts.
         - `counts_background`: expected mean number of expected background counts
-        - `counts_signal`: mean obseved number of signal events
-        - `background_variance`: standard deviation of the expected number of
+        - `counts_signal`: mean observed number of signal events
+        - `background_std`: standard deviation of the expected number of
           background events
 
         Of the three parameters `counts_total`, `counts_background`, and
@@ -924,7 +1068,7 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
         `counts_total = counts_signal + counts_background`
 
         Note that if `background_variance=0`, it makes more sense to use
-        `GammaUpperLimit`, which is equivalent but analytical rather than
+        `GammaCountingProcess`, which is equivalent but analytical rather than
         numerical.
         """
         if scale_factor <= 0:
@@ -932,14 +1076,16 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
         self.scale_factor = scale_factor
         if counts_total is not None and counts_total < 0:
             raise ValueError("counts_total should be a positive number, zero, or None")
-        if counts_background is not None and counts_background <= 0:
-            raise ValueError("counts_background should be a positive number or None")
-        if background_variance < 0:
-            raise ValueError("background_variance should be a positive number")
+        if counts_background is not None and counts_background < 0:
+            raise ValueError("counts_background should be a positive number, zero, or None")
+        if background_std < 0:
+            raise ValueError("background_std should be a positive number")
         if [counts_total, counts_signal, counts_background].count(None) == 0:
             # if all three are specified, check the relation holds!
             if abs((counts_total - counts_background - counts_signal)/(counts_total if counts_total != 0 else 1)) > 1e-15:
                 raise ValueError("The relation `counts_total = counts_signal + counts_background` is not satisfied")
+        if [counts_total, counts_signal, counts_background].count(None) > 1:
+            raise ValueError("Of the three parameters `counts_total`, `counts_background`, and `counts_signal`, two must be specified")
         if counts_background is None:
             self.counts_background = counts_total - counts_signal
         else:
@@ -952,54 +1098,30 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
             self.counts_total = counts_signal + counts_background
         else:
             self.counts_total = counts_total
-        self.background_variance = background_variance
-        x, y = self._get_xy()
-        if self.counts_total != 0 and self.background_variance/self.counts_total <= 1/100.:
-            warnings.warn("For vanishing or very small background variance, "
-                          "it is safer to use GammaUpperLimit instead of "
-                          "GeneralGammaUpperLimit to avoid numerical "
-                          "instability.")
-        super().__init__(x=x, y=y)
+        self.background_std = background_std
+        if self.background_std/np.sqrt(self.counts_total+1) < 1/100:
+            self.background_std = 0
+            warnings.warn("For vanishing or very small background standard "
+                          "deviation, it is safer to use GammaCountingProcess "
+                          "instead of GeneralGammaCountingProcess to avoid "
+                          "numerical instability.")
+        super().__init__(
+            a = self.counts_total + 1,
+            loc = -self.counts_background * self.scale_factor,
+            scale = self.scale_factor,
+            gaussian_standard_deviation = background_std
+        )
 
     def __repr__(self):
-        return ('flavio.statistics.probability.GeneralGammaDistributionPositive'
-               '({}, counts_total={}, counts_signal={}, '
-               'background_variance={})').format(self.scale_factor,
+        return ('flavio.statistics.probability.GeneralGammaCountingProcess'
+               '(scale_factor={}, counts_total={}, counts_signal={}, '
+               'background_std={})').format(self.scale_factor,
                                                 self.counts_total,
                                                 self.counts_signal,
-                                                self.background_variance)
-
-    def _get_xy(self):
-        if self.background_variance == 0:
-            # this is a bit pointless as in this case it makes more
-            # sense to use GammaUpperLimit itself
-            gamma_unscaled = GammaDistributionPositive(a = self.counts_total + 1,
-                                                       loc = -self.counts_background,
-                                                       scale = 1)
-            num_unscaled = NumericalDistribution.from_pd(gamma_unscaled)
-        else:
-            # define a gamma distribution (with x>loc, not x>0!) and convolve
-            # it with a Gaussian
-            gamma_unscaled = GammaDistribution(a = self.counts_total + 1,
-                                               loc = -self.counts_background,
-                                               scale = 1)
-            norm_bg = NormalDistribution(0, self.background_variance)
-            num_unscaled = convolve_distributions([gamma_unscaled, norm_bg], central_values='sum')
-        # now that we have convolved, cut off anything below x=0
-        x = num_unscaled.x
-        y = num_unscaled.y_norm
-        y = y[np.where(x >= 0)]
-        x = x[np.where(x >= 0)]
-        if x[0] != 0:  #  make sure the PDF at 0 exists
-            x = np.insert(x, 0, 0.)  # add 0 as first element
-            y = np.insert(y, 0, y[0])  # copy first element
-        y[0]
-        num_unscaled = NumericalDistribution(x, y)
-        x = x * self.scale_factor
-        return x, y
+                                                self.background_std)
 
 
-class GeneralGammaUpperLimit(GeneralGammaDistributionPositive):
+class GeneralGammaUpperLimit(GeneralGammaCountingProcess):
     r"""Distribution appropriate for
     a positive quantitity obtained from a low-statistics counting experiment,
     e.g. a rare decay rate, given an upper limit on x.
@@ -1012,12 +1134,13 @@ class GeneralGammaUpperLimit(GeneralGammaDistributionPositive):
     factor is determined from the limit and confidence level.
     """
 
-    def __init__(self,
+    def __init__(self, *,
                  limit, confidence_level,
                  counts_total=None,
                  counts_background=None,
                  counts_signal=None,
-                 background_variance=0):
+                 background_std=None,
+                 background_variance=None):
         r"""Initialize the distribution.
 
         Parameters:
@@ -1031,9 +1154,11 @@ class GeneralGammaUpperLimit(GeneralGammaDistributionPositive):
           are 0.90 and 0.95.
         - `counts_total`: observed total number (signal and background) of counts.
         - `counts_background`: expected mean number of expected background counts
-        - `counts_signal`: mean obseved number of signal events
-        - `background_variance`: standard deviation of the expected number of
+        - `counts_signal`: mean observed number of signal events
+        - `background_std`: standard deviation of the expected number of
           background events
+        - `background_variance`: alias of `background_std` for backward
+          compatibility
 
         Of the three parameters `counts_total`, `counts_background`, and
         `counts_signal`, only two must be specified. The third one will
@@ -1041,18 +1166,27 @@ class GeneralGammaUpperLimit(GeneralGammaDistributionPositive):
 
         `counts_total = counts_signal + counts_background`
 
-        Note that if `background_variance=0`, it makes more sense to use
+        Note that if `background_std=0`, it makes more sense to use
         `GammaUpperLimit`, which is equivalent but analytical rather than
         numerical.
         """
+        if background_variance is not None:
+            warnings.warn(f'The argument `background_variance` is deprecated. Use `background_std` instead.', DeprecationWarning, stacklevel=2)
+            if background_std is not None and background_std != background_variance:
+                raise ValueError('Setting `background_std` and its alias `background_variance` to different values is inconsistent.')
+            else:
+                background_std = background_variance
+        elif background_std is None:
+            background_std = 0
+        self.background_variance = background_std
         self.limit = limit
         self.confidence_level = confidence_level
-        _d_unscaled = GeneralGammaDistributionPositive(
+        _d_unscaled = GeneralGammaCountingProcess(
             scale_factor=1,
             counts_total=counts_total,
             counts_background=counts_background,
             counts_signal=counts_signal,
-            background_variance=background_variance)
+            background_std=background_std)
         limit_unscaled = _d_unscaled.ppf(self.confidence_level)
         # use the value of the limit to determine the scale factor
         scale_factor = self.limit / limit_unscaled
@@ -1061,16 +1195,16 @@ class GeneralGammaUpperLimit(GeneralGammaDistributionPositive):
             counts_total=counts_total,
             counts_background=counts_background,
             counts_signal=counts_signal,
-            background_variance=background_variance)
+            background_std=background_std)
 
     def __repr__(self):
         return ('flavio.statistics.probability.GeneralGammaUpperLimit'
-               '({}, {}, counts_total={}, counts_signal={}, '
-               'background_variance={})').format(self.limit,
+               '(limit={}, confidence_level={}, counts_total={}, counts_background={}, '
+               'background_std={})').format(self.limit,
                                                 self.confidence_level,
                                                 self.counts_total,
-                                                self.counts_signal,
-                                                self.background_variance)
+                                                self.counts_background,
+                                                self.background_std)
 
 
 class KernelDensityEstimate(NumericalDistribution):
@@ -1296,7 +1430,7 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
                 self.xi[i] = np.linspace(x[0], x[1], self.y.shape[i])
         if central_value is not None:
             super().__init__(central_value=central_value,
-                             support=(np.asarray(self.xi).T[0], np.asarray(self.xi).T[-1]))
+                             support=(np.asarray([x[0] for x in self.xi]), np.asarray([x[-1] for x in self.xi])))
         else:
             # if no central value is specified, set it to the mode
             mode_index = (slice(None),) + np.unravel_index(self.y.argmax(), self.y.shape)
@@ -1372,7 +1506,7 @@ class MultivariateNumericalDistribution(ProbabilityDistribution):
             exclude = tuple(exclude)
         except TypeError:
             exclude = (exclude,)
-        xi = np.delete(self.xi, tuple(exclude), axis=0)
+        xi = [x for i,x in enumerate(self.xi) if i not in exclude]
         y = np.amax(self.y_norm, axis=tuple(exclude))
         cv = np.delete(self.central_value, tuple(exclude))
         if len(xi) == 1:

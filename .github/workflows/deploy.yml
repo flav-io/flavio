@@ -11,15 +11,22 @@ jobs:
     steps:
       - name: Checkout git repository
         uses: actions/checkout@v2
+        with:
+          submodules: true
+          path: _src/
 
       - name: Install Python dependencies
         run: |
+          pushd _src
           pip install .[sampling,plotting,testing]
           pip install pytest
+          popd
 
       - name: Test with pytest
         run: |
+          pushd _src
           pytest
+          popd
 
       - name: Verify release version matches source code version
         shell: bash
@@ -30,6 +37,26 @@ jobs:
             echo "tag/release version and source code version disagree, exiting"
             exit 1
           fi
+
+      - name: Build bdist
+        shell: bash
+        run: |
+          mkdir dist
+          pushd _src
+          python3 ./setup.py sdist -d ../dist/
+          python3 ./setup.py bdist_wheel -d ../dist/
+          popd
+          
+      - name: Test installing the wheel
+        shell: bash
+        run: |
+          python3 -m pip install dist/flavio-*.whl
+          
+      - name: Upload build as artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: flavio-dist-${{ github.sha }}
+          path: dist
 
       - name: Upload to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
