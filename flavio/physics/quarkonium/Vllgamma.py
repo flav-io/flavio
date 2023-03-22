@@ -3,8 +3,8 @@ r"""$V\to ll^\prime\gamma$ branching ratio"""
 from flavio.classes import Observable, Prediction
 from flavio.physics.running import running
 import flavio
-import numpy as np
 from flavio.physics.quarkonium.Vll import Vll_br
+import numpy as np
 
 meson_quark = { 'J/psi' : 'cc', 
                 'psi(2S)': 'cc',
@@ -12,9 +12,6 @@ meson_quark = { 'J/psi' : 'cc',
                 'Upsilon(2S)': 'bb',
                 'Upsilon(3S)': 'bb',
                 }
-
-def kaellen(x,y,z):
-    return x**2+y**2+z**2-2*(x*y+x*z+y*z)
 
 def getWC_lfv(wc_obj,par,V,Q,l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji):
     # renormalization scale
@@ -86,7 +83,6 @@ def Fhat_S(y):
     mu=y**2
     if mu==0:
         return 1./12
-#    return (1.-8*mu-12*mu**2*np.log(mu)+8*mu**3-mu**4)/12
     return Fhat_P(y) + 1./12
 def F_PA(y):
     if y==0:
@@ -131,9 +127,6 @@ def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFt
         I_APtilde=(AL*PtildeL.conjugate()+AR*PtildeR.conjugate()).imag
     else:
         print("The case of non-hierarchical masses is not implemented.")
-
-    # print([SPtilde,SStilde,PPtilde,I_APtilde])
-    # print([SPtilde *Ftilde_S(y), SStilde * Fhat_S(y), PPtilde * Fhat_P(y),I_APtilde * Ftilde_PA(y)])
 
     prefactor=alphaem*Q**2*tauV*mV/(192*np.pi**2)
     

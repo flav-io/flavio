@@ -81,12 +81,6 @@ renormalization scale:
     eta_b(1S): 10.
     chi_b0(1P): 10.
     chi_b0(2P): 10.
-    # Upsilon(1S): 9.5
-    # Upsilon(2S): 10.0
-    # Upsilon(3S): 10.4
-    # eta_b(1S): 9.4
-    # chi_b0(1P): 9.9
-    # chi_b0(2P): 10.2
 
 # these are the thresholds where quark flavours are decoupled in the RG
 # evolution to low energies.

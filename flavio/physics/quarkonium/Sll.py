@@ -3,6 +3,7 @@ r"""$S\to ll^\prime$ branching ratio"""
 from flavio.classes import Observable, Prediction
 import flavio
 from flavio.physics.running import running
+from flavio.physics.common import lambda_K
 import numpy as np
 
 meson_quark = { 'chi_c0(1P)' : 'cc', 
@@ -10,8 +11,6 @@ meson_quark = { 'chi_c0(1P)' : 'cc',
                 'chi_b0(2P)': 'bb',
                 }
 
-def kaellen(x,y,z):
-    return x**2+y**2+z**2-2*(x*y+x*z+y*z)
 
 def getS_lfv(wc_obj,par,S,l1,l2,wc_sector,CeGGij,CeGGji):
     # renormalization scale
@@ -46,7 +45,7 @@ def Sll_br(wc_obj, par,S, l1,l2,wc_sector,CeGGij,CeGGji):
     y1s=y1**2
     y2s=y2**2
     SL,SR = getS_lfv(wc_obj,par,S,l1,l2,wc_sector,CeGGij,CeGGji)
-    return  tauP*mP/(16.*np.pi) * np.sqrt(kaellen(1,y1s,y2s)) * ((1-y1s-y2s)*(np.abs(SL)**2+np.abs(SR)**2) -4*y1*y2 *(SL*SR.conjugate()).real)
+    return  tauP*mP/(16.*np.pi) * np.sqrt(lambda_K(1,y1s,y2s)) * ((1-y1s-y2s)*(np.abs(SL)**2+np.abs(SR)**2) -4*y1*y2 *(SL*SR.conjugate()).real)
 
 
 def Sll_br_func(S,  l1, l2,wc_sector):

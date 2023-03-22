@@ -3,14 +3,14 @@ r"""$P\to ll^\prime$ branching ratio"""
 from flavio.classes import Observable, Prediction
 import flavio
 from flavio.physics.running import running
+from flavio.physics.common import lambda_K
+
 import numpy as np
 
 meson_quark = { 'eta_c(1S)': 'cc', 
                 'eta_b(1S)': 'bb',
                 }
 
-def kaellen(x,y,z):
-    return x**2+y**2+z**2-2*(x*y+x*z+y*z)
 
 def getS_lfv(wc_obj,par,P,l1,l2,wc_sector,CeGGij,CeGGji):
     # renormalization scale
@@ -33,11 +33,9 @@ def getS_lfv(wc_obj,par,P,l1,l2,wc_sector,CeGGij,CeGGji):
         ll="taumu"
     else:
         ll=wc_sector
-    # CHECK print([ml1,ml2,mP,aP,hP,mq])
     aPfac=1j*aP*4.*np.pi/alphas
     SR= aPfac * CeGGij +  (hP/(4*mq))*(wc['CSRR_'+l1+l2+qq]-wc['CSRL_'+l1+l2+qq])  -(fP/2.)*(ml1*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml2* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] ))  
     SL= aPfac * CeGGji + (hP/(4*mq))*(wc['CSRL_'+l2+l1+qq]-wc['CSRR_'+l2+l1+qq]).conjugate() -(fP/2.)*(ml2*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml1* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] )) 
-#    print("[SR,SL,CSRR] = ",[SR,SL,hP,mq,(hP/(4*mq))*(wc['CSRR_'+l1+l2+qq]-wc['CSRL_'+l1+l2+qq])])
     return SL,SR
 
 
@@ -54,7 +52,7 @@ def Pll_br(wc_obj, par,P,Q, l1,l2,wc_sector,CeGGij,CeGGji):
     y1s=y1**2
     y2s=y2**2
     SL,SR = getS_lfv(wc_obj,par,P,l1,l2,wc_sector,CeGGij,CeGGji)
-    return  tauP*mP/(16.*np.pi) * np.sqrt(kaellen(1,y1s,y2s)) * ((1-y1s-y2s)*(np.abs(SL)**2+np.abs(SR)**2) -4*y1*y2 *(SL*SR.conjugate()).real)
+    return  tauP*mP/(16.*np.pi) * np.sqrt(lambda_K(1,y1s,y2s)) * ((1-y1s-y2s)*(np.abs(SL)**2+np.abs(SR)**2) -4*y1*y2 *(SL*SR.conjugate()).real)
 
 
 def Pll_br_func(P, Q, l1, l2,wc_sector):

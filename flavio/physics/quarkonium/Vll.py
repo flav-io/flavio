@@ -3,6 +3,7 @@ r"""$V\to ll^\prime$ branching ratio"""
 from flavio.classes import Observable, Prediction
 from flavio.physics.running import running
 import flavio
+from flavio.physics.common import lambda_K
 import numpy as np
 
 meson_quark = { 'J/psi' : 'cc', 
@@ -12,8 +13,6 @@ meson_quark = { 'J/psi' : 'cc',
                 'Upsilon(3S)': 'bb',
                 }
 
-def kaellen(x,y,z):
-    return x**2+y**2+z**2-2*(x*y+x*z+y*z)
 
 def getVT_lfv(wc_obj,par,V,Q,l1,l2,wc_sector):
     # renormalization scale
@@ -93,7 +92,7 @@ def Vll_br(wc_obj, par,V,Q, l1,l2,wc_sector):
     ampSquared_T= 4./3.*(np.abs(TL)**2+np.abs(TR)**2) * (1+y1s+y2s-2*(y1s-y2s)**2) +16.*y1*y2*(TR*TL.conjugate()).real
     ampSquared_VT = 2*y1*(1+y2s-y1s)*(VR*TR.conjugate()+VL*TL.conjugate()).real + 2*y2*(1+y1s-y2s)*(VL*TR.conjugate()+VR*TL.conjugate()).real
     
-    return tauV*mV/(16.*np.pi) * np.sqrt(kaellen(1,y1s,y2s)) * (ampSquared_V+ampSquared_T+ampSquared_VT)
+    return tauV*mV/(16.*np.pi) * np.sqrt(lambda_K(1,y1s,y2s)) * (ampSquared_V+ampSquared_T+ampSquared_VT)
 
 
 def Vll_br_func(V, Q, l1, l2,wc_sector):
