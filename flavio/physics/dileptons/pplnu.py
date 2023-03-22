@@ -6,6 +6,7 @@ from . import partondist
 import wilson
 from numpy import pi, sqrt
 import numpy as np
+from flavio.config import config
 
 def F_qqlnu_SM(s, par):
     r"""flavour-independent SM $W-$ contribution to the $\bar u d\to \ell^- \nu_\ell$ amplitude."""
@@ -113,7 +114,8 @@ def dsigma_dtau_qqlnu(s, tau, umin, umax, l, wc_eff, par, Q2):
     - `Q2`: factorization scale squared in GeV$^2$
     """
     sigma = 0
-    member = int(par['NNPDF40_nnlo_as_01180 member'])
+    members_par = config['PDF set']['dileptons']['members par']
+    member = int(par[members_par])
     plumi = partondist.get_parton_lumi(Q2=Q2, member=member)
     for q1 in 'uc':
         for q2 in 'dsb':

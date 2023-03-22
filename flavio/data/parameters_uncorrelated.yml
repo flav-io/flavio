@@ -497,7 +497,7 @@ D->K BSZ a1_fT: 0.10(1)
 D->K BSZ a2_fT: 0
 
 # Parameters for parton distribution functions
-NNPDF40_nnlo_as_01180 member:
+PDFmembers avg=0 replicas=1-100:
   distribution: discrete_uniform
   lowest_value: 0
   highest_value: 100

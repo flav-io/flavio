@@ -1891,6 +1891,6 @@ Lambda->p g_1(0):
   description: $\Lambda\to p$ axial vector form factor $g_1$ at $q^2=0$
 
 # Parameters for parton distribution functions
-NNPDF40_nnlo_as_01180 member:
+PDFmembers avg=0 replicas=1-100:
   tex: $\text{mem}_{\text{PDF}}$
-  description: member ID of NNPDF40_nnlo_as_01180 PDF replicas
+  description: member ID of PDF set where mem=0 is average on replicas and mem=1-100 are PDF replicas

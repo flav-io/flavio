@@ -85,6 +85,6 @@ def get_pdf(name, member=0, download=False):
 
 @lru_cache(maxsize=None)
 def get_parton_lumi(Q2, member=0):
-    pdfset = config['PDF set']['dileptons']
+    pdfset = config['PDF set']['dileptons']['name']
     pdf = get_pdf(pdfset, member)
     return parton.PLumi(pdf, Q2=Q2)

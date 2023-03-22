@@ -7,6 +7,7 @@ from . import partondist
 import wilson
 from numpy import pi, sqrt
 import numpy as np
+from flavio.config import config
 
 def F_qqll_SM(q, Xq, l, Xl, s, par):
     r"""SM $Z$ and $\gamma$ contribution to the $\bar q q\to \ell^+\ell^-$
@@ -146,7 +147,8 @@ def dsigma_dtau_qqll(s, tau, l, Q2, wc_eff, par):
     - `par`: parameter dictionary
     """
     sigma = 0
-    member = int(par['NNPDF40_nnlo_as_01180 member'])
+    members_par = config['PDF set']['dileptons']['members par']
+    member = int(par[members_par])
     plumi = partondist.get_parton_lumi(Q2=Q2, member=member)
     for q1 in 'duscb':
         for q2 in 'duscb':

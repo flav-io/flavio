@@ -133,4 +133,6 @@ implementation:
 
 # set the PDF set used for different processes (at the moment only dileptons)
 PDF set:
-  dileptons: NNPDF40_nnlo_as_01180
+  dileptons:
+    name: NNPDF40_nnlo_as_01180
+    members par: PDFmembers avg=0 replicas=1-100

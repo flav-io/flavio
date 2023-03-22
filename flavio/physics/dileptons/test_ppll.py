@@ -12,7 +12,7 @@ par2['alpha_e'] = 0.00772585    # correction factor to match the madgraph input 
 GeVtopb = 0.3894*10**9
 
 pdf_set_for_tests = 'NNPDF30_nnlo_as_0118'
-config['PDF set']['dileptons'] = pdf_set_for_tests
+config['PDF set']['dileptons']['name'] = pdf_set_for_tests
 
 def uses_pdf(func):
     def inner(*args, **kwargs):
