@@ -13,12 +13,13 @@ meson_quark = { 'J/psi' : 'cc',
                 'Upsilon(3S)': 'bb',
                 }
 
+wc_sector = { ('e','e') : "dF=0", ('mu','mu'): "dF=0", ('tau','tau'): "dF=0", ('e','mu') : 'mue',  ('mu','e') :'mue', ('e','tau') : 'taue', ('tau','e') : 'taue', ('mu','tau') : 'mutau', ('tau','mu') : 'mutau'}
 
-def getVT_lfv(wc_obj,par,V,Q,l1,l2,wc_sector):
+def getVT_lfv(wc_obj,par,V,Q,l1,l2):
     # renormalization scale
     scale = flavio.config['renormalization scale'][V]
     # Wilson coefficients
-    wc = wc_obj.get_wc(wc_sector, scale, par)
+    wc = wc_obj.get_wc(wc_sector[(l1,l2)], scale, par)
 
     alphaem = running.get_alpha_e(par, scale)
     ee=np.sqrt(4.*np.pi*alphaem) 
@@ -29,10 +30,10 @@ def getVT_lfv(wc_obj,par,V,Q,l1,l2,wc_sector):
     qq=meson_quark[V]
     # for emu and taue the name of the Wilson coefficient sector agrees with the ordering of leptons in the vector bilinear
     # This is not the case for mutau. Thus distinguish between the two cases here.
-    if wc_sector=="mutau":
+    if wc_sector[(l1,l2)]=="mutau":
         ll="taumu"
     else:
-        ll=wc_sector
+        ll=wc_sector[(l1,l2)]
     VL=fV*mV*(wc['CVLL_'+ll+qq] + wc['CVLR_'+ll+qq]) 
     VR=fV*mV*(wc['CVRR_'+ll+qq] + wc['CVLR_'+qq+ll]) 
     TR=fV_T*mV*wc['CTRR_'+l1+l2+qq] - ee*Q *fV*wc['Cgamma_'+l2+l1] 
@@ -42,13 +43,13 @@ def getVT_lfv(wc_obj,par,V,Q,l1,l2,wc_sector):
         VR=VR.conjugate()
     return VL,VR,TL,TR
 
-def getVT_lfc(wc_obj,par,V,Q,l,wc_sector):
+def getVT_lfc(wc_obj,par,V,Q,l):
 # add contribution from photon exchange and then activate LFC channels
 
     # renormalization scale
     scale = flavio.config['renormalization scale'][V]
     # Wilson coefficients
-    wc = wc_obj.get_wc(wc_sector, scale, par)
+    wc = wc_obj.get_wc(wc_sector_dict[(l,l)], scale, par)
     ll=l+l
     alphaem = running.get_alpha_e(par, scale)
     ee2=4.*np.pi*alphaem
@@ -70,7 +71,7 @@ def getVT_lfc(wc_obj,par,V,Q,l,wc_sector):
     return VL,VR,TL,TR
 
 
-def Vll_br(wc_obj, par,V,Q, l1,l2,wc_sector):
+def Vll_br(wc_obj, par,V,Q, l1,l2):
     r"""Branching ratio for the lepton-flavour violating leptonic decay J/psi-> l l'"""
     #####branching ratio obtained from 2207.10913#####
     flavio.citations.register("Calibbi:2022ddo")
@@ -82,10 +83,10 @@ def Vll_br(wc_obj, par,V,Q, l1,l2,wc_sector):
     y2=ml2/mV
     y1s=y1**2
     y2s=y2**2
-    if wc_sector=='dF=0':
-        VL,VR,TL,TR = getVT_lfc(wc_obj,par,V,Q,l1,wc_sector)
+    if l1==l2:
+        VL,VR,TL,TR = getVT_lfc(wc_obj,par,V,Q,l1)
     else:
-        VL,VR,TL,TR = getVT_lfv(wc_obj,par,V,Q,l1,l2,wc_sector)
+        VL,VR,TL,TR = getVT_lfv(wc_obj,par,V,Q,l1,l2)
 
 
     ampSquared_V = (np.abs(VL)**2+np.abs(VR)**2 )/12. *(2-y1s-y2s-(y1s-y2s)**2)+y1*y2*(VL*VR.conjugate()).real
@@ -95,28 +96,28 @@ def Vll_br(wc_obj, par,V,Q, l1,l2,wc_sector):
     return tauV*mV/(16.*np.pi) * np.sqrt(lambda_K(1,y1s,y2s)) * (ampSquared_V+ampSquared_T+ampSquared_VT)
 
 
-def Vll_br_func(V, Q, l1, l2,wc_sector):
+def Vll_br_func(V, Q, l1, l2):
     def fct(wc_obj, par):
-        return Vll_br(wc_obj, par, V, Q, l1, l2,wc_sector)
+        return Vll_br(wc_obj, par, V, Q, l1, l2)
     return fct
 
 
-def Vll_br_comb_func(V, Q, l1, l2,wc_sector):
+def Vll_br_comb_func(V, Q, l1, l2):
     def fct(wc_obj, par):
-        return Vll_br(wc_obj, par, V, Q, l1, l2,wc_sector)+ Vll_br(wc_obj, par, V, Q, l2, l1,wc_sector)
+        return Vll_br(wc_obj, par, V, Q, l1, l2)+ Vll_br(wc_obj, par, V, Q, l2, l1)
     return fct
 
-def Vll_ratio_func(V, Q, l1, l2,wc_sector):
+def Vll_ratio_func(V, Q, l1, l2):
     def fct(wc_obj, par):
-        BRee=Vll_br(wc_obj,par,V,Q,'e','e','dF=0')
-        return Vll_br(wc_obj, par, V, Q, l1, l2,wc_sector)/BRee
+        BRee=Vll_br(wc_obj,par,V,Q,'e','e')
+        return Vll_br(wc_obj, par, V, Q, l1, l2)/BRee
     return fct
 
 
-def Vll_ratio_comb_func(V, Q, l1, l2,wc_sector):
+def Vll_ratio_comb_func(V, Q, l1, l2):
     def fct(wc_obj, par):
-        BRee=Vll_br(wc_obj,par,V,Q,'e','e','dF=0')
-        return (Vll_br(wc_obj, par, V, Q, l1, l2,wc_sector)+ Vll_br(wc_obj, par, V, Q, l2, l1,wc_sector))/BRee
+        BRee=Vll_br(wc_obj,par,V,Q,'e','e')
+        return (Vll_br(wc_obj, par, V, Q, l1, l2)+ Vll_br(wc_obj, par, V, Q, l2, l1))/BRee
     return fct
 
 
@@ -160,27 +161,23 @@ def _define_obs_V_ll_ratio(M, ll):
 
 
 for M in _hadr:
-    for ll0 in [('e','mu','mue'), ('mu','e','mue'), ('e','tau','taue'), ('tau','e','taue'), ('mu','tau','mutau'), ('tau','mu','mutau')]:
-        ll=(ll0[0],ll0[1])
-        wc_sector=ll0[2]
+    for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
         _obs_name = _define_obs_V_ll(M, ll)
-        Prediction(_obs_name, Vll_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Vll_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
         _obs_name = _define_obs_V_ll_ratio(M, ll)
-        Prediction(_obs_name, Vll_ratio_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
-    for ll0 in [('e','mu','mue'), ('e','tau','taue'), ('mu','tau','mutau')]:
-        ll=(ll0[0],ll0[1])
-        wc_sector=ll0[2]
+        Prediction(_obs_name, Vll_ratio_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
+    for ll in [('e','mu'), ('e','tau'), ('mu','tau')]:
         # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
         _obs_name = _define_obs_V_ll(M, ('{0}{1},{1}{0}'.format(*ll),))
-        Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
         _obs_name = _define_obs_V_ll_ratio(M, ('{0}{1},{1}{0}'.format(*ll),))
-        Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
 
         _obs_name = _define_obs_V_ll(M, ('{1}{0},{0}{1}'.format(*ll),))
-        Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
         _obs_name = _define_obs_V_ll_ratio(M, ('{1}{0},{0}{1}'.format(*ll),))
-        Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
     for ll in ['e', 'mu', 'tau']:
         _obs_name = _define_obs_V_ll(M, (ll,ll))
-        Prediction(_obs_name, Vll_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll,ll,'dF=0'))
+        Prediction(_obs_name, Vll_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll,ll))
  

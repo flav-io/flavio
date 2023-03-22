@@ -4,6 +4,7 @@ from flavio.classes import Observable, Prediction
 import flavio
 from flavio.physics.running import running
 from flavio.physics.common import lambda_K
+from flavio.physics.quarkonium.Vll import wc_sector
 import numpy as np
 
 meson_quark = { 'chi_c0(1P)' : 'cc', 
@@ -12,27 +13,25 @@ meson_quark = { 'chi_c0(1P)' : 'cc',
                 }
 
 
-def getS_lfv(wc_obj,par,S,l1,l2,wc_sector,CeGGij,CeGGji):
+def getS_lfv(wc_obj,par,S,l1,l2,CeGGij,CeGGji):
     # renormalization scale
     scale = flavio.config['renormalization scale'][S]
     alphas = running.get_alpha_s(par, scale)
     # Wilson coefficients
-    wc = wc_obj.get_wc(wc_sector, scale, par)
+    wc = wc_obj.get_wc(wc_sector[(l1,l2)], scale, par)
 
     mS = par['m_'+S]   
     # The form factor in the parameters_uncorrelated.yml file follows 1607.00815. Thus we have to include an additional factor of "-i" which drops out in the absence of an anomaly term.
     fS=par['f_'+S]*(-1j) 
     aS=par['a_'+S]
     qq=meson_quark[S]
-    # for emu and taue the name of the Wilson coefficient sector agrees with the ordering of leptons in the vector bilinear
-    # This is not the case for mutau. Thus distinguish between the two cases here.
     aPfac=1j*aS*4.*np.pi/alphas
     SR= aPfac * CeGGij +  (mS*fS/2.)*(wc['CSRR_'+l1+l2+qq]+wc['CSRL_'+l1+l2+qq])  
     SL= aPfac * CeGGji + (mS*fS/2.)*(wc['CSRL_'+l2+l1+qq]+wc['CSRR_'+l2+l1+qq]).conjugate() 
     return SL,SR
 
 
-def Sll_br(wc_obj, par,S, l1,l2,wc_sector,CeGGij,CeGGji):
+def Sll_br(wc_obj, par,S, l1,l2,CeGGij,CeGGji):
     r"""Branching ratio for the lepton-flavour violating leptonic decay P -> l l' """
     #####branching ratio obtained from 2207.10913#####
     flavio.citations.register("Calibbi:2022ddo")
@@ -44,19 +43,19 @@ def Sll_br(wc_obj, par,S, l1,l2,wc_sector,CeGGij,CeGGji):
     y2=ml2/mP
     y1s=y1**2
     y2s=y2**2
-    SL,SR = getS_lfv(wc_obj,par,S,l1,l2,wc_sector,CeGGij,CeGGji)
+    SL,SR = getS_lfv(wc_obj,par,S,l1,l2,CeGGij,CeGGji)
     return  tauP*mP/(16.*np.pi) * np.sqrt(lambda_K(1,y1s,y2s)) * ((1-y1s-y2s)*(np.abs(SL)**2+np.abs(SR)**2) -4*y1*y2 *(SL*SR.conjugate()).real)
 
 
-def Sll_br_func(S,  l1, l2,wc_sector):
+def Sll_br_func(S,  l1, l2):
     def fct(wc_obj, par,CeGGij=0,CeGGji=0):
-        return Sll_br(wc_obj, par, S,  l1, l2,wc_sector,CeGGij,CeGGji)
+        return Sll_br(wc_obj, par, S,  l1, l2,CeGGij,CeGGji)
     return fct
 
 
-def Sll_br_comb_func(S,  l1, l2,wc_sector):
+def Sll_br_comb_func(S,  l1, l2):
     def fct(wc_obj, par,CeGGij=0,CeGGji=0):
-        return Sll_br(wc_obj, par, S,  l1, l2,wc_sector,CeGGij,CeGGji)+ Sll_br(wc_obj, par, S,  l2, l1,wc_sector,CeGGij,CeGGji)
+        return Sll_br(wc_obj, par, S,  l1, l2,CeGGij,CeGGji)+ Sll_br(wc_obj, par, S,  l2, l1,CeGGij,CeGGji)
     return fct
 
 
@@ -88,17 +87,13 @@ def _define_obs_S_ll(M, ll):
 
 
 for M in _hadr:
-    for ll0 in [('e','mu','mue'), ('mu','e','mue'), ('e','tau','taue'), ('tau','e','taue'), ('mu','tau','mutau'), ('tau','mu','mutau')]:
-        ll=(ll0[0],ll0[1])
-        wc_sector=ll0[2]
+    for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
         _obs_name = _define_obs_S_ll(M, ll)
-        Prediction(_obs_name, Sll_br_func(_hadr[M]['S'], ll[0], ll[1],wc_sector))
-    for ll0 in [('e','mu','mue'), ('e','tau','taue'), ('mu','tau','mutau')]:
-        ll=(ll0[0],ll0[1])
-        wc_sector=ll0[2]
+        Prediction(_obs_name, Sll_br_func(_hadr[M]['S'], ll[0], ll[1]))
+    for ll in [('e','mu'), ('e','tau'), ('mu','tau')]:
         # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
         _obs_name = _define_obs_S_ll(M, ('{0}{1},{1}{0}'.format(*ll),))
-        Prediction(_obs_name, Sll_br_comb_func(_hadr[M]['S'],  ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Sll_br_comb_func(_hadr[M]['S'],  ll[0], ll[1]))
         _obs_name = _define_obs_S_ll(M, ('{1}{0},{0}{1}'.format(*ll),))
-        Prediction(_obs_name, Sll_br_comb_func(_hadr[M]['S'],  ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Sll_br_comb_func(_hadr[M]['S'],  ll[0], ll[1]))
  

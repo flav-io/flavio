@@ -3,7 +3,7 @@ r"""$V\to ll^\prime\gamma$ branching ratio"""
 from flavio.classes import Observable, Prediction
 from flavio.physics.running import running
 import flavio
-from flavio.physics.quarkonium.Vll import Vll_br
+from flavio.physics.quarkonium.Vll import Vll_br, wc_sector
 import numpy as np
 
 meson_quark = { 'J/psi' : 'cc', 
@@ -13,11 +13,11 @@ meson_quark = { 'J/psi' : 'cc',
                 'Upsilon(3S)': 'bb',
                 }
 
-def getWC_lfv(wc_obj,par,V,Q,l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji):
+def getWC_lfv(wc_obj,par,V,Q,l1,l2,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji):
     # renormalization scale
     scale = flavio.config['renormalization scale'][V]
     # Wilson coefficients
-    wc = wc_obj.get_wc(wc_sector, scale, par)
+    wc = wc_obj.get_wc(wc_sector[(l1,l2)], scale, par)
 
     alphaem = running.get_alpha_e(par, scale)
     ee=np.sqrt(4.*np.pi*alphaem) 
@@ -28,10 +28,10 @@ def getWC_lfv(wc_obj,par,V,Q,l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtilde
     qq=meson_quark[V]
     # for emu and taue the name of the Wilson coefficient sector agrees with the ordering of leptons in the vector bilinear
     # This is not the case for mutau. Thus distinguish between the two cases here.
-    if wc_sector=="mutau":
+    if wc_sector[(l1,l2)]=="mutau":
         ll="taumu"
     else:
-        ll=wc_sector
+        ll=wc_sector[(l1,l2)]
     VR=fV*mV*(wc['CVRR_'+ll+qq] + wc['CVLR_'+qq+ll]) 
     VL=fV*mV*(wc['CVLL_'+ll+qq] + wc['CVLR_'+ll+qq]) 
     TR=fV_T*mV*wc['CTRR_'+l1+l2+qq] - ee*Q *fV*wc['Cgamma_'+l2+l1] 
@@ -96,7 +96,7 @@ def Ftilde_PA(y):
     return y*(1.+9*mu-9*mu**2-mu**3+6*mu*(1+mu)*np.log(mu))/3.
 
 
-def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji):
+def Vllgamma_br(wc_obj, par,V,Q, l1,l2,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji):
     r"""Branching ratio for the lepton-flavour violating leptonic decay J/psi-> l l' \gamma"""
     #####branching ratio obtained from 2207.10913#####
     flavio.citations.register("Calibbi:2022ddo")
@@ -108,7 +108,7 @@ def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFt
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
 
-    VL,VR,TL,TR,SR,SL,PR,PL,AR,AL,StildeR,StildeL,PtildeR,PtildeL = getWC_lfv(wc_obj,par,V,Q,l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)
+    VL,VR,TL,TR,SR,SL,PR,PL,AR,AL,StildeR,StildeL,PtildeR,PtildeL = getWC_lfv(wc_obj,par,V,Q,l1,l2,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)
  
     AV=np.abs(AL)**2+np.abs(AR)**2
     SP=np.abs(SL)**2+np.abs(PL)**2+np.abs(SR)**2+np.abs(PR)**2
@@ -133,28 +133,28 @@ def Vllgamma_br(wc_obj, par,V,Q, l1,l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFt
     return prefactor*(AV * F_A(y) + SP*F_S(y) + I_AP*F_PA(y) + SPtilde *Ftilde_S(y) + SStilde * Fhat_S(y) + PPtilde * Fhat_P(y) +I_APtilde * Ftilde_PA(y))
 
 
-def Vllgamma_br_func(V, Q, l1, l2,wc_sector):
+def Vllgamma_br_func(V, Q, l1, l2):
     def fct(wc_obj, par,CeFFij=0,CeFFji=0,CeFFtildeij=0,CeFFtildeji=0):
-        return Vllgamma_br(wc_obj, par, V, Q, l1, l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)
+        return Vllgamma_br(wc_obj, par, V, Q, l1, l2,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)
     return fct
 
 
-def Vllgamma_br_comb_func(V, Q, l1, l2,wc_sector):
+def Vllgamma_br_comb_func(V, Q, l1, l2):
     def fct(wc_obj, par,CeFFij=0,CeFFji=0,CeFFtildeij=0,CeFFtildeji=0):
-        return Vllgamma_br(wc_obj, par, V, Q, l1, l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)+ Vllgamma_br(wc_obj, par, V, Q, l2, l1,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)
+        return Vllgamma_br(wc_obj, par, V, Q, l1, l2,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)+ Vllgamma_br(wc_obj, par, V, Q, l2, l1,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)
     return fct
 
-def Vllgamma_ratio_func(V, Q, l1, l2,wc_sector):
+def Vllgamma_ratio_func(V, Q, l1, l2):
     def fct(wc_obj, par,CeFFij=0,CeFFji=0,CeFFtildeij=0,CeFFtildeji=0):
         BRee=Vll_br(wc_obj,par,V,Q,'e','e','dF=0')
-        return Vllgamma_br(wc_obj, par, V, Q, l1, l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)/BRee
+        return Vllgamma_br(wc_obj, par, V, Q, l1, l2,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)/BRee
     return fct
 
 
-def Vllgamma_ratio_comb_func(V, Q, l1, l2,wc_sector):
+def Vllgamma_ratio_comb_func(V, Q, l1, l2):
     def fct(wc_obj, par,CeFFij=0,CeFFji=0,CeFFtildeij=0,CeFFtildeji=0):
         BRee=Vll_br(wc_obj,par,V,Q,'e','e','dF=0')
-        return (Vllgamma_br(wc_obj, par, V, Q, l1, l2,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)+ Vllgamma_br(wc_obj, par, V, Q, l2, l1,wc_sector,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji))/BRee
+        return (Vllgamma_br(wc_obj, par, V, Q, l1, l2,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)+ Vllgamma_br(wc_obj, par, V, Q, l2, l1,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji))/BRee
     return fct
 
 
@@ -199,25 +199,21 @@ def _define_obs_V_ll_gamma_ratio(M, ll):
 
 
 for M in _hadr:
-    for ll0 in [('e','mu','mue'), ('mu','e','mue'), ('e','tau','taue'), ('tau','e','taue'), ('mu','tau','mutau'), ('tau','mu','mutau')]:
-        ll=(ll0[0],ll0[1])
-        wc_sector=ll0[2]
+    for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
         _obs_name = _define_obs_V_ll_gamma(M, ll)
-        Prediction(_obs_name, Vllgamma_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Vllgamma_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
         _obs_name = _define_obs_V_ll_gamma_ratio(M, ll)
-        Prediction(_obs_name, Vllgamma_ratio_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Vllgamma_ratio_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
 
-    for ll0 in [('e','mu','mue'), ('e','tau','taue'), ('mu','tau','mutau')]:
-        ll=(ll0[0],ll0[1])
-        wc_sector=ll0[2]
+    for ll in [('e','mu'), ('e','tau'), ('mu','tau')]:
         # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
         _obs_name = _define_obs_V_ll_gamma(M, ('{0}{1},{1}{0}'.format(*ll),))
-        Prediction(_obs_name, Vllgamma_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Vllgamma_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
         _obs_name = _define_obs_V_ll_gamma_ratio(M, ('{0}{1},{1}{0}'.format(*ll),))
-        Prediction(_obs_name, Vllgamma_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Vllgamma_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
         
         _obs_name = _define_obs_V_ll_gamma(M, ('{1}{0},{0}{1}'.format(*ll),))
-        Prediction(_obs_name, Vllgamma_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Vllgamma_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
         _obs_name = _define_obs_V_ll_gamma_ratio(M, ('{1}{0},{0}{1}'.format(*ll),))
-        Prediction(_obs_name, Vllgamma_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Vllgamma_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
  

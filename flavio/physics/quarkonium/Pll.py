@@ -4,7 +4,7 @@ from flavio.classes import Observable, Prediction
 import flavio
 from flavio.physics.running import running
 from flavio.physics.common import lambda_K
-
+from flavio.physics.quarkonium.Vll import wc_sector
 import numpy as np
 
 meson_quark = { 'eta_c(1S)': 'cc', 
@@ -12,12 +12,12 @@ meson_quark = { 'eta_c(1S)': 'cc',
                 }
 
 
-def getS_lfv(wc_obj,par,P,l1,l2,wc_sector,CeGGij,CeGGji):
+def getS_lfv(wc_obj,par,P,l1,l2,CeGGij,CeGGji):
     # renormalization scale
     scale = flavio.config['renormalization scale'][P]
     alphas = running.get_alpha_s(par, scale)
     # Wilson coefficients
-    wc = wc_obj.get_wc(wc_sector, scale, par)
+    wc = wc_obj.get_wc(wc_sector[(l1,l2)], scale, par)
 
     ml1 = par['m_'+l1]
     ml2 = par['m_'+l2]
@@ -29,17 +29,17 @@ def getS_lfv(wc_obj,par,P,l1,l2,wc_sector,CeGGij,CeGGji):
     mq=par['m_'+qq[0]]
     # for emu and taue the name of the Wilson coefficient sector agrees with the ordering of leptons in the vector bilinear
     # This is not the case for mutau. Thus distinguish between the two cases here.
-    if wc_sector=="mutau":
+    if wc_sector[(l1,l2)]=="mutau":
         ll="taumu"
     else:
-        ll=wc_sector
+        ll=wc_sector[(l1,l2)]
     aPfac=1j*aP*4.*np.pi/alphas
     SR= aPfac * CeGGij +  (hP/(4*mq))*(wc['CSRR_'+l1+l2+qq]-wc['CSRL_'+l1+l2+qq])  -(fP/2.)*(ml1*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml2* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] ))  
     SL= aPfac * CeGGji + (hP/(4*mq))*(wc['CSRL_'+l2+l1+qq]-wc['CSRR_'+l2+l1+qq]).conjugate() -(fP/2.)*(ml2*(wc['CVRR_'+ll+qq] - wc['CVLR_'+qq+ll])+ml1* (wc['CVLR_'+ll+qq] -wc['CVLL_'+ll+qq] )) 
     return SL,SR
 
 
-def Pll_br(wc_obj, par,P,Q, l1,l2,wc_sector,CeGGij,CeGGji):
+def Pll_br(wc_obj, par,P, l1,l2,CeGGij,CeGGji):
     r"""Branching ratio for the lepton-flavour violating leptonic decay P -> l l' """
     #####branching ratio obtained from 2207.10913#####
     flavio.citations.register("Calibbi:2022ddo")
@@ -51,26 +51,26 @@ def Pll_br(wc_obj, par,P,Q, l1,l2,wc_sector,CeGGij,CeGGji):
     y2=ml2/mP
     y1s=y1**2
     y2s=y2**2
-    SL,SR = getS_lfv(wc_obj,par,P,l1,l2,wc_sector,CeGGij,CeGGji)
+    SL,SR = getS_lfv(wc_obj,par,P,l1,l2,CeGGij,CeGGji)
     return  tauP*mP/(16.*np.pi) * np.sqrt(lambda_K(1,y1s,y2s)) * ((1-y1s-y2s)*(np.abs(SL)**2+np.abs(SR)**2) -4*y1*y2 *(SL*SR.conjugate()).real)
 
 
-def Pll_br_func(P, Q, l1, l2,wc_sector):
+def Pll_br_func(P,  l1, l2):
     def fct(wc_obj, par,CeGGij=0,CeGGji=0):
-        return Pll_br(wc_obj, par, P, Q, l1, l2,wc_sector,CeGGij,CeGGji)
+        return Pll_br(wc_obj, par, P,  l1, l2,CeGGij,CeGGji)
     return fct
 
 
-def Pll_br_comb_func(P, Q, l1, l2,wc_sector):
+def Pll_br_comb_func(P,  l1, l2):
     def fct(wc_obj, par,CeGGij=0,CeGGji=0):
-        return Pll_br(wc_obj, par, P, Q, l1, l2,wc_sector,CeGGij,CeGGji)+ Pll_br(wc_obj, par, P, Q, l2, l1,wc_sector,CeGGij,CeGGji)
+        return Pll_br(wc_obj, par, P,  l1, l2,CeGGij,CeGGji)+ Pll_br(wc_obj, par, P,  l2, l1,CeGGij,CeGGji)
     return fct
 
 
 # Observable and Prediction instances
 _hadr = { 
-    'eta_c(1S)': {'tex': r"\eta_c(1S)\to", 'P': 'eta_c(1S)', 'Q': 2./3., },
-    'eta_b(1S)': {'tex': r"\eta_b(1S)\to", 'P': 'eta_b(1S)', 'Q': -1./3., },
+    'eta_c(1S)': {'tex': r"\eta_c(1S)\to", 'P': 'eta_c(1S)' },
+    'eta_b(1S)': {'tex': r"\eta_b(1S)\to", 'P': 'eta_b(1S)' },
  }
 
 _tex = {'ee': r'e^+e^-', 'mumu': r'\mu^+\mu^-', 'tautau': r'\tau^+\tau^-', 
@@ -94,17 +94,13 @@ def _define_obs_P_ll(M, ll):
 
 
 for M in _hadr:
-    for ll0 in [('e','mu','mue'), ('mu','e','mue'), ('e','tau','taue'), ('tau','e','taue'), ('mu','tau','mutau'), ('tau','mu','mutau')]:
-        ll=(ll0[0],ll0[1])
-        wc_sector=ll0[2]
+    for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
         _obs_name = _define_obs_P_ll(M, ll)
-        Prediction(_obs_name, Pll_br_func(_hadr[M]['P'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
-    for ll0 in [('e','mu','mue'), ('e','tau','taue'), ('mu','tau','mutau')]:
-        ll=(ll0[0],ll0[1])
-        wc_sector=ll0[2]
+        Prediction(_obs_name, Pll_br_func(_hadr[M]['P'], ll[0], ll[1]))
+    for ll in [('e','mu'), ('e','tau'), ('mu','tau')]:
         # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
         _obs_name = _define_obs_P_ll(M, ('{0}{1},{1}{0}'.format(*ll),))
-        Prediction(_obs_name, Pll_br_comb_func(_hadr[M]['P'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Pll_br_comb_func(_hadr[M]['P'], ll[0], ll[1]))
         _obs_name = _define_obs_P_ll(M, ('{1}{0},{0}{1}'.format(*ll),))
-        Prediction(_obs_name, Pll_br_comb_func(_hadr[M]['P'], _hadr[M]['Q'], ll[0], ll[1],wc_sector))
+        Prediction(_obs_name, Pll_br_comb_func(_hadr[M]['P'], ll[0], ll[1]))
  
