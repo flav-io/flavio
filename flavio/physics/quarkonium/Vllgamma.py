@@ -146,14 +146,14 @@ def Vllgamma_br_comb_func(V, Q, l1, l2):
 
 def Vllgamma_ratio_func(V, Q, l1, l2):
     def fct(wc_obj, par,CeFFij=0,CeFFji=0,CeFFtildeij=0,CeFFtildeji=0):
-        BRee=Vll_br(wc_obj,par,V,Q,'e','e','dF=0')
+        BRee=Vll_br(wc_obj,par,V,Q,'e','e')
         return Vllgamma_br(wc_obj, par, V, Q, l1, l2,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)/BRee
     return fct
 
 
 def Vllgamma_ratio_comb_func(V, Q, l1, l2):
     def fct(wc_obj, par,CeFFij=0,CeFFji=0,CeFFtildeij=0,CeFFtildeji=0):
-        BRee=Vll_br(wc_obj,par,V,Q,'e','e','dF=0')
+        BRee=Vll_br(wc_obj,par,V,Q,'e','e')
         return (Vllgamma_br(wc_obj, par, V, Q, l1, l2,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji)+ Vllgamma_br(wc_obj, par, V, Q, l2, l1,CeFFij,CeFFji,CeFFtildeij,CeFFtildeji))/BRee
     return fct
 

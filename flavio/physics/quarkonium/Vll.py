@@ -49,7 +49,7 @@ def getVT_lfc(wc_obj,par,V,Q,l):
     # renormalization scale
     scale = flavio.config['renormalization scale'][V]
     # Wilson coefficients
-    wc = wc_obj.get_wc(wc_sector_dict[(l,l)], scale, par)
+    wc = wc_obj.get_wc(wc_sector[(l,l)], scale, par)
     ll=l+l
     alphaem = running.get_alpha_e(par, scale)
     ee2=4.*np.pi*alphaem
