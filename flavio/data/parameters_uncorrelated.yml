@@ -66,16 +66,16 @@ f_Upsilon(3S): 0.395(25) # using Eq.(5.45c) in 2007.01737, consistent with hep-p
 fT_Upsilon(3S): 0.395(25) # assuming equality to vector form factor. This is consistent with the non-relativistic color singlet model.
 BR_exp(Upsilon(3S)->ee): 0.0218(20) # PDG 2021
 
-f_eta_c(1S): 0.387(7) # 1312.2858 
+f_eta_c(1S): 0.387(7) # 1312.2858
 a_eta_c(1S): 0.0 # Hazard, Petrov 1607.00815
 
 f_eta_b(1S): 0.724(12) # 2101.08103
 a_eta_b(1S): 0.0 # Hazard, Petrov 1607.00815
 
-f_chi_c0(1P): 0.887 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815 
+f_chi_c0(1P): 0.887 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815
 a_chi_c0(1P): 0.0 # Hazard, Petrov 1607.00815
 
-f_chi_b0(1P): 0.423 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815 
+f_chi_b0(1P): 0.423 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815
 a_chi_b0(1P): 0.0 # Hazard, Petrov 1607.00815
 
 f_chi_b0(2P): 0.421 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815
@@ -84,7 +84,7 @@ a_chi_b0(2P): 0.0 # Hazard, Petrov 1607.00815
 m_eta_b(1S): 9.3987(20) # PDG 2022
 tau_eta_b(1S): 100(50) # PDG 2022 (lower error slightly increased to have symmetric errors)
 
-tau_chi_b0(1P): 815(113) # lifetime calculated following 1510.04659 
+tau_chi_b0(1P): 815(113) # lifetime calculated following 1510.04659
 tau_chi_b0(2P): 1300(255) # calculated following 1510.04659. The final result for the lifetime has been obtained using a simple weighted average of the lifetimes estimated from BR(Upsilon(1S)+gamma) and BR(Upsilon(2S)+gamma) with errors added in quadrature.
 
 
@@ -550,3 +550,7 @@ PDFmembers avg=0 replicas=1-100:
   lowest_value: 0
   highest_value: 100
   central_value: 0
+
+# Parameter for Bs->K*0mumu uncertainty inside resonant regions
+# 2209.04457, appendix B, Eq. B7, we save a relative uncertainty
+delta_BsKstarmumu: 0 ± 0.078

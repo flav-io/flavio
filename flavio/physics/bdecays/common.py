@@ -26,6 +26,7 @@ meson_quark = {
 ('B0','rho0'): 'bd',
 ('B+','rho+'): 'bd',
 ('B0','omega'): 'bd',
+('Bs','K*0'): 'bd',
 ('Bs','K+'): 'bu',
 ('Bs','K*+'): 'bu',
 ('B0','pi+'): 'bu',
@@ -55,6 +56,7 @@ meson_spectator = {
 ('B+','K*+'): 'u',
 ('B0','K*0'): 'd',
 ('Bs','phi'): 's',
+('Bs', 'K*0'): 's',
 }
 
 quark_charge = {

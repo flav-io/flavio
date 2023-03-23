@@ -50,97 +50,97 @@ m_b:
 
 
 # Parameters for LFV quarkonium decay
-f_J/psi: 
+f_J/psi:
   tex: $f_{J/\psi}$
   description: $J/\psi$ decay constant
-fT_J/psi: 
+fT_J/psi:
   tex: $f_{J/\psi}^T$
   description: $J/\psi$ tensor decay constant
-BR_exp(J/psi->ee): 
+BR_exp(J/psi->ee):
   tex: $BR_{\rm exp}(J/\psi\to e^+ e^-)$
-  description: measured branching ratio $J/\psi\to ee$ 
+  description: measured branching ratio $J/\psi\to ee$
 
-f_psi(2S): 
+f_psi(2S):
   tex: $f_{\psi(2S)}$
   description: $\psi(2S)$ decay constant
-fT_psi(2S): 
+fT_psi(2S):
   tex: $f_{\psi(2S)}^T$
   description: $\psi(2S)$ tensor decay constant
-BR_exp(psi(2S)->ee): 
+BR_exp(psi(2S)->ee):
   tex: $BR_{\rm exp}(\psi(2S)\to e^+ e^-)$
-  description: measured branching ratio $\psi(2S)\to ee$ 
+  description: measured branching ratio $\psi(2S)\to ee$
 
-f_Upsilon(1S): 
+f_Upsilon(1S):
   tex: $f_{\Upsilon(1S)}$
   description: $\Upsilon(1S)$ decay constant
-fT_Upsilon(1S): 
+fT_Upsilon(1S):
   tex: $f_{\Upsilon(1S)}^T$
   description: $\Upsilon(1S)$ tensor decay constant
-BR_exp(Upsilon(1S)->ee): 
+BR_exp(Upsilon(1S)->ee):
   tex: $BR_{\rm exp}(\Upsilon(1S)\to e^+ e^-)$
-  description: measured branching ratio $\Upsilon(1S)\to ee$ 
+  description: measured branching ratio $\Upsilon(1S)\to ee$
 
-f_Upsilon(2S): 
+f_Upsilon(2S):
   tex: $f_{\Upsilon(2S)}$
   description: $\Upsilon(2S)$ decay constant
-fT_Upsilon(2S): 
+fT_Upsilon(2S):
   tex: $f_{\Upsilon(2S)}^T$
   description: $\Upsilon(2S)$ tensor decay constant
-BR_exp(Upsilon(2S)->ee): 
+BR_exp(Upsilon(2S)->ee):
   tex: $BR_{\rm exp}(\Upsilon(2S)\to e^+ e^-)$
-  description: measured branching ratio $\Upsilon(2S)\to ee$ 
+  description: measured branching ratio $\Upsilon(2S)\to ee$
 
-f_Upsilon(3S): 
+f_Upsilon(3S):
   tex: $f_{\Upsilon(3S)}$
   description: $\Upsilon(3S)$ decay constant
-fT_Upsilon(3S): 
+fT_Upsilon(3S):
   tex: $f_{\Upsilon(3S)}^T$
   description: $\Upsilon(3S)$ tensor decay constant
-BR_exp(Upsilon(3S)->ee): 
+BR_exp(Upsilon(3S)->ee):
   tex: $BR_{\rm exp}(\Upsilon(3S)\to e^+ e^-)$
-  description: measured branching ratio $\Upsilon(3S)\to ee$ 
+  description: measured branching ratio $\Upsilon(3S)\to ee$
 
-f_eta_c(1S): 
+f_eta_c(1S):
   tex: $f_{\eta_c(1S)}$
   description: $\eta_c(1S)$ decay constant
-a_eta_c(1S): 
+a_eta_c(1S):
   tex: $a_{\eta_c(1S)}$
   description: $\eta_c(1S)$ anomaly decay constant
 
-f_eta_b(1S): 
+f_eta_b(1S):
   tex: $f_{\eta_b(1S)}$
   description: $\eta_b(1S)$ decay constant
-a_eta_b(1S): 
+a_eta_b(1S):
   tex: $a_{\eta_b(1S)}$
   description: $\eta_b(1S)$ anomaly decay constant
 
-f_chi_c0(1P): 
+f_chi_c0(1P):
   tex: $f_{\chi_{c0}(1P)}$
   description: $\chi_{c0}(1P)$ decay constant
-a_chi_c0(1P): 
+a_chi_c0(1P):
   tex: $a_{\chi_{c0}(1P)}$
   description: $\chi_{c0}(1P)$ anomaly decay constant
 
-f_chi_b0(1P): 
+f_chi_b0(1P):
   tex: $f_{\chi_{b0}(1P)}$
   description: $\chi_{b0}(1P)$ decay constant
-a_chi_b0(1P): 
+a_chi_b0(1P):
   tex: $a_{\chi_{b0}(1P)}$
   description: $\chi_{b0}(1P)$ anomaly decay constant
 
-f_chi_b0(2P): 
+f_chi_b0(2P):
   tex: $f_{\chi_{b0}(2P)}$
   description: $\chi_{b0}(2P)$ decay constant
-a_chi_b0(2P): 
+a_chi_b0(2P):
   tex: $a_{\chi_{b0}(2P)}$
   description: $\chi_{b0}(2P)$ anomaly decay constant
 
 
 # mass and lifetime of eta_b(1S) manually added, because it is not included in scikit-hep particle code
-m_eta_b(1S): 
+m_eta_b(1S):
   tex: $m_{\eta_b(1S)}$
   description: $\eta_b(1S)$ mass
-tau_eta_b(1S): 
+tau_eta_b(1S):
   tex: $\tau_{\eta_b(1S)}$
   description: $\eta_b(1S)$ lifetime
 
@@ -2010,3 +2010,10 @@ Lambda->p g_1(0):
 PDFmembers avg=0 replicas=1-100:
   tex: $\text{mem}_{\text{PDF}}$
   description: member ID of PDF set where mem=0 is average on replicas and mem=1-100 are PDF replicas
+
+# Parameter for Bs->K*0mumu uncertainty inside resonant regions
+# 2209.04457, appendix B, Eq. B7, we save a relative uncertainty
+delta_BsKstarmumu:
+  tex: $\delta_{\text{BsKstarmumu}}$
+  tex: $\delta_{B_s^0 \to \bar{K}^{\ast 0} \mu \mu}$
+  description: relative uncertainty on the $B_s^0 \to \bar{K}^{\ast 0} \mu \mu$ branching ratio inside the resonant region

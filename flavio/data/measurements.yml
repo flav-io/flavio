@@ -22300,3 +22300,32 @@ CMS pp->munu 2022:
       counts_total: 0.0
       distribution: gamma_counting_process
       scale_factor: 15181.392014563447
+
+Belle B+->pi+ee 2008:
+  experiment: Belle
+  inspire: Belle:2008tjs
+  values:
+    BR_Belle(B+->piee): < 8e-8 @ 90% CL
+
+LHCb B->pimumu 2015:
+  experiment: LHCb
+  inspire: LHCb:2015hsa
+  values:
+    - name: <dBR/dq2>(B+->pimumu)
+      q2min: 2
+      q2max: 4
+      value: 0.62 +0.39-0.33 ± 0.02 1e-9
+    - name: <dBR/dq2>(B+->pimumu)
+      q2min: 4
+      q2max: 6
+      value: 0.85 +0.32-0.27 ± 0.02 1e-9
+    - name: <dBR/dq2>(B+->pimumu)
+      q2min: 15
+      q2max: 22
+      value: 0.47 +0.12-0.10 ± 0.01 1e-9
+
+LHCb Bs->K*mumu 2018:
+   experiment: LHCb
+   inspire: LHCb:2018rym
+   values:
+     BR_LHCb(Bs->K*0mumu): 2.9 ± 1.0 ± 0.2 ± 0.3 1e-8
