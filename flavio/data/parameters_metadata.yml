@@ -987,10 +987,10 @@ B->gamma KM deltata:
 # Parameters for the Bs->phi form factors (1503.05534v3)
 Bs->phi LCSR T10:
   tex: $T_1(0)$
-  description: Bs->phi T_1 parameter at q2=0 
+  description: Bs->phi T_1 parameter at q2=0
 Gamma_phi:
   tex: $\Gamma_\phi$
-  description: phi decay width 
+  description: phi decay width
 
 
 
@@ -1889,3 +1889,8 @@ Lambda->p f_1(0):
 Lambda->p g_1(0):
   tex: $g_1(0)$
   description: $\Lambda\to p$ axial vector form factor $g_1$ at $q^2=0$
+
+# Parameters for parton distribution functions
+PDFmembers avg=0 replicas=1-100:
+  tex: $\text{mem}_{\text{PDF}}$
+  description: member ID of PDF set where mem=0 is average on replicas and mem=1-100 are PDF replicas

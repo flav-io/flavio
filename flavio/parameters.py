@@ -30,7 +30,10 @@ def _read_yaml_object_values(obj, constraints):
     parameters = yaml.safe_load(obj)
     for parameter_name, value in parameters.items():
         p = Parameter[parameter_name] # this will raise an error if the parameter doesn't exist!
-        constraints.set_constraint(parameter_name, value)
+        if isinstance(value, dict):
+            constraints.set_constraint(parameter_name, constraint_dict=value)
+        else:
+            constraints.set_constraint(parameter_name, value)
 
 def _read_yaml_object_new(obj):
     """Read parameter constraints from a YAML stream or file that are compatible

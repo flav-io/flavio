@@ -179,6 +179,54 @@ class UniformDistribution(ProbabilityDistribution):
         return confidence_level(nsigma) * self.half_range
 
 
+class DiscreteUniformDistribution(ProbabilityDistribution):
+    """Distribution with a finite number of integer values having equal probability"""
+
+    def __init__(self, lowest_value, highest_value, central_value=None):
+        """Initialize the distribution.
+
+        Parameters:
+
+        - lowest_value: lowest integer value `a`
+        - highest_value: highest integer value `b`
+        - central_value (optional): integer within [a,b]. Default is int((a+b)/2)
+        """
+        if central_value and (
+            central_value > highest_value
+            or central_value < lowest_value
+        ):
+            raise ValueError('`central_value` must in the interval [`lowest_value`, `highest_value`].')
+        central_value = int((lowest_value+highest_value)/2) if central_value is None else int(central_value)
+        self.lowest_value = int(lowest_value)
+        self.highest_value = int(highest_value)
+        self.range = np.arange(self.lowest_value,self.highest_value+1)
+        super().__init__(central_value, support=(self.lowest_value, self.highest_value))
+
+    def __repr__(self):
+        return (
+            'flavio.statistics.probability.DiscreteUniformDistribution'
+            f'({self.support[0]}, {self.support[1]}, {self.central_value})'
+        )
+
+    def get_random(self, size=None):
+        return np.random.randint(self.support[0], self.support[1]+1, size=size)
+
+    def _logpdf(self, x):
+        if x in self.range:
+            return -np.log(len(self.range))
+        else:
+            return -np.inf
+
+    def logpdf(self, x):
+        _lpvect = np.vectorize(self._logpdf)
+        return _lpvect(x)
+
+    def get_error_left(self, *args, **kwargs):
+        return 0
+
+    def get_error_right(self, *args, **kwargs):
+        return 0
+
 
 class DeltaDistribution(ProbabilityDistribution):
     """Delta Distrubution that is non-vanishing only at a single point."""
