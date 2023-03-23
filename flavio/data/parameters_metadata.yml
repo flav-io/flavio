@@ -1081,6 +1081,18 @@ B->pi BCL m0:
 B->pi BCL m+:
   tex: $m_{B^*}^{f_+}$
   description: Resonance mass for the $B\to \pi$ vector and tensor form factors in BCL parametrization
+B->pi BCL LMVD m0:
+  tex: $m_{B^*}^{f_0}$
+  description: Resonance mass for the $B\to \pi$ scalar form factor in BCL parametrization from LMVD
+B->pi BCL LMVD m+:
+  tex: $m_{B^*}^{f_+}$
+  description: Resonance mass for the $B\to \pi$ vector and tensor form factors in BCL parametrization from LMVD
+B->pi BCL LMVD m_B+:
+  tex: $m_{B^+}$
+  description: B+ mass for the $B\to \pi$ form factors in BCL parametrization from LMVD
+B->pi BCL LMVD m_pi0:
+  tex: $m_{\pi^0}$
+  description: pi0 mass for the $B\to \pi$ form factors in BCL parametrization from LMVD
 B->pi BCL a0_f+:
   tex: $a_0^{(+)}$
   description: BCL $B\to \pi$ form factor parametrization coefficient $a_0$ of $f_+$

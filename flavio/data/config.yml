@@ -92,7 +92,7 @@ implementation:
   # B->P form factors
   B->K form factor: B->K BSZ3
   B->D form factor: B->D CLN
-  B->pi form factor: B->pi BSZ3
+  B->pi form factor: B->pi BCL4-LMVD
 
   # B->gamma form factor
   B->gamma form factor: B->gamma KM
