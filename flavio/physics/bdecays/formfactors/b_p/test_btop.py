@@ -72,6 +72,6 @@ class TestBtoP(unittest.TestCase):
 
         for i, q2 in enumerate(q2vals):
             ff_bcl_lmvd = Implementation['B->pi BCL4-LMVD'].get_central(constraints_obj=c, wc_obj=None, q2=q2)
-            self.assertAlmostEqual(ff_bcl_lmvd['f+'], eos_Btopi[0,i], places=2, msg="Failed for f+ in B->pi at q2={}".format(q2))
-            self.assertAlmostEqual(ff_bcl_lmvd['f0'], eos_Btopi[1,i], places=2, msg="Failed for f0 in B->pi at q2={}".format(q2))
-            self.assertAlmostEqual(ff_bcl_lmvd['fT'], eos_Btopi[2,i], places=2, msg="Failed for fT in B->pi at q2={}".format(q2))
+            self.assertAlmostEqual(ff_bcl_lmvd['f+'], eos_Btopi[0,i], places=5, msg="Failed for f+ in B->pi at q2={}".format(q2))
+            self.assertAlmostEqual(ff_bcl_lmvd['f0'], eos_Btopi[1,i], places=5, msg="Failed for f0 in B->pi at q2={}".format(q2))
+            self.assertAlmostEqual(ff_bcl_lmvd['fT'], eos_Btopi[2,i], places=5, msg="Failed for fT in B->pi at q2={}".format(q2))

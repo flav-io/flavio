@@ -139,6 +139,8 @@ B->pi BCL m+: 5.319 # m_B*(1-)
 B->pi IW a_T: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
 B->pi BCL LMVD m0: 5.540 # resonance mass used in LMVD (arXiv:2102.07233)
 B->pi BCL LMVD m+: 5.325 # resonance mass used in LMVD (arXiv:2102.07233)
+B->pi BCL LMVD m_B+: 5.279 # mB+ used in LMVD (arXiv:2102.07233)
+B->pi BCL LMVD m_pi0: 0.135 # mpi0 used in LMVD (arXiv:2102.07233)
 
 # Bs->K form factors (1501.05373v3)
 Bs->K BCL m0: 5.63 # m_B*(0+)

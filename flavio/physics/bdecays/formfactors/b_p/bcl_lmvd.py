@@ -40,8 +40,8 @@ def ff(process, q2, par, n=4, t0=None):
     pd = process_dict[process]
     mpl = par[process + ' BCL LMVD m+']
     m0 = par[process + ' BCL LMVD m0']
-    mB = par['m_'+pd['B']]
-    mP = par['m_'+pd['P']]
+    mB = par[process + ' BCL LMVD m_' + pd['B']]
+    mP = par[process + ' BCL LMVD m_' + pd['P']]
     ff = {}
     b={}
     for i in ['f+', 'fT']:
