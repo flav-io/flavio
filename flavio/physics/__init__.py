@@ -18,4 +18,5 @@ from . import running
 from . import eft
 from . import units
 from . import elements
+from . import quarkonium
 from . import dileptons
