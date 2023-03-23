@@ -106,11 +106,11 @@ implementation:
   # B->P form factors
   B->K form factor: B->K BSZ3
   B->D form factor: B->D CLN
-  B->pi form factor: B->pi BSZ3
+  B->pi form factor: B->pi BCL4-LMVD
 
   # B->gamma form factor
   B->gamma form factor: B->gamma KM
-  
+
   # D->P form factors
   D->K form factor: D->K BSZ3
   D->pi form factor: D->pi BSZ3
@@ -144,3 +144,9 @@ implementation:
   # Lambdab->Lambdall subleading hadronic effects
   Lambdab->Lambdall subleading effects at low q2: Lambdab->Lambdall deltaC7 polynomial
   Lambdab->Lambdall subleading effects at high q2: Lambdab->Lambdall deltaC9 shift
+
+# set the PDF set used for different processes (at the moment only dileptons)
+PDF set:
+  dileptons:
+    name: NNPDF40_nnlo_as_01180
+    members par: PDFmembers avg=0 replicas=1-100

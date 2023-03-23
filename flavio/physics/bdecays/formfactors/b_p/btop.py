@@ -1,4 +1,4 @@
-from flavio.physics.bdecays.formfactors.b_p import bcl, cln, bsz
+from flavio.physics.bdecays.formfactors.b_p import bcl, cln, bsz, bcl_lmvd
 from flavio.classes import AuxiliaryQuantity, Implementation
 from flavio.config import config
 
@@ -29,6 +29,11 @@ for p in processes_H2L + processes_H2H:
     i = Implementation(name=iname, quantity=quantity,
                    function=ff_function(bcl.ff, p, n=4))
     i.set_description("4-parameter BCL parametrization (see arXiv:0807.2722).")
+
+    iname = p + ' BCL4-LMVD'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ff_function(bcl_lmvd.ff, p, n=4))
+    i.set_description("4-parameter BCL parametrization from LMVD (see arXiv:2102.07233).")
 
     iname = p + ' BCL3-IW'
     i = Implementation(name=iname, quantity=quantity,

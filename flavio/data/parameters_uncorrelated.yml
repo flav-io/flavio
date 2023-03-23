@@ -181,6 +181,10 @@ B->K BCL m+: 5.4154 # m_Bs*(1-)
 B->pi BCL m0: 0
 B->pi BCL m+: 5.319 # m_B*(1-)
 B->pi IW a_T: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
+B->pi BCL LMVD m0: 5.540 # resonance mass used in LMVD (arXiv:2102.07233)
+B->pi BCL LMVD m+: 5.325 # resonance mass used in LMVD (arXiv:2102.07233)
+B->pi BCL LMVD m_B+: 5.279 # mB+ used in LMVD (arXiv:2102.07233)
+B->pi BCL LMVD m_pi0: 0.135 # mpi0 used in LMVD (arXiv:2102.07233)
 
 # Bs->K form factors (1501.05373v3)
 Bs->K BCL m0: 5.63 # m_B*(0+)
@@ -272,10 +276,10 @@ Lambdab->Lambda deltaC9 c_para1 Re: 0 ± 0.3
 Lambdab->Lambda deltaC9 c_para1 Im: 0 ± 0.3
 
 # Parameters for the form factor calculation in the quark model of Lambdab->Lambda(1520)ll
-Lambdab->Lambda(1520) m_q: 0.2848  
+Lambdab->Lambda(1520) m_q: 0.2848
 Lambdab->Lambda(1520) m_s: 0.5553
 Lambdab->Lambda(1520) alpha_Lambdab: 0.443
-Lambdab->Lambda(1520) alpha_Lambda(1520): 0.333 
+Lambdab->Lambda(1520) alpha_Lambda(1520): 0.333
 
 Lambdab->Lambda(1520) fVt uncertainty: 1 +- 0.1
 Lambdab->Lambda(1520) fVperp uncertainty: 1 +- 0.1
@@ -539,3 +543,10 @@ D->pi BSZ a2_fT: 0
 D->K BSZ a0_fT: 0.687(54)
 D->K BSZ a1_fT: 0.10(1)
 D->K BSZ a2_fT: 0
+
+# Parameters for parton distribution functions
+PDFmembers avg=0 replicas=1-100:
+  distribution: discrete_uniform
+  lowest_value: 0
+  highest_value: 100
+  central_value: 0
