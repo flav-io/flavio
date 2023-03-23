@@ -161,22 +161,22 @@ def _define_obs_V_ll_ratio(M, ll):
 
 
 for M in _hadr:
-    for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
-        _obs_name = _define_obs_V_ll(M, ll)
-        Prediction(_obs_name, Vll_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
-        _obs_name = _define_obs_V_ll_ratio(M, ll)
-        Prediction(_obs_name, Vll_ratio_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
-    for ll in [('e','mu'), ('e','tau'), ('mu','tau')]:
+    for (l1,l2) in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
+        _obs_name = _define_obs_V_ll(M, (l1,l2))
+        Prediction(_obs_name, Vll_br_func(_hadr[M]['V'], _hadr[M]['Q'], l1,l2))
+        _obs_name = _define_obs_V_ll_ratio(M, (l1,l2))
+        Prediction(_obs_name, Vll_ratio_func(_hadr[M]['V'], _hadr[M]['Q'], l1,l2))
+    for (l1,l2) in [('e','mu'), ('e','tau'), ('mu','tau')]:
         # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
-        _obs_name = _define_obs_V_ll(M, ('{0}{1},{1}{0}'.format(*ll),))
-        Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
-        _obs_name = _define_obs_V_ll_ratio(M, ('{0}{1},{1}{0}'.format(*ll),))
-        Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
+        _obs_name = _define_obs_V_ll(M, ('{0}{1},{1}{0}'.format(l1,l2),))
+        Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], l1,l2))
+        _obs_name = _define_obs_V_ll_ratio(M, ('{0}{1},{1}{0}'.format(l1,l2),))
+        Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], l1,l2))
 
-        _obs_name = _define_obs_V_ll(M, ('{1}{0},{0}{1}'.format(*ll),))
-        Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
-        _obs_name = _define_obs_V_ll_ratio(M, ('{1}{0},{0}{1}'.format(*ll),))
-        Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], ll[0], ll[1]))
+        _obs_name = _define_obs_V_ll(M, ('{1}{0},{0}{1}'.format(l1,l2),))
+        Prediction(_obs_name, Vll_br_comb_func(_hadr[M]['V'], _hadr[M]['Q'], l1,l2))
+        _obs_name = _define_obs_V_ll_ratio(M, ('{1}{0},{0}{1}'.format(l1,l2),))
+        Prediction(_obs_name, Vll_ratio_comb_func(_hadr[M]['V'], _hadr[M]['Q'], l1,l2))
     for ll in ['e', 'mu', 'tau']:
         _obs_name = _define_obs_V_ll(M, (ll,ll))
         Prediction(_obs_name, Vll_br_func(_hadr[M]['V'], _hadr[M]['Q'], ll,ll))

@@ -94,13 +94,13 @@ def _define_obs_P_ll(M, ll):
 
 
 for M in _hadr:
-    for ll in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
-        _obs_name = _define_obs_P_ll(M, ll)
-        Prediction(_obs_name, Pll_br_func(_hadr[M]['P'], ll[0], ll[1]))
+    for (l1,l2) in [('e','mu'), ('mu','e'), ('e','tau'), ('tau','e'), ('mu','tau'), ('tau','mu')]:
+        _obs_name = _define_obs_P_ll(M, (l1,l2))
+        Prediction(_obs_name, Pll_br_func(_hadr[M]['P'], l1, l2))
     for ll in [('e','mu'), ('e','tau'), ('mu','tau')]:
         # Combined l1+ l2- + l2+ l1- lepton flavour violating decays
-        _obs_name = _define_obs_P_ll(M, ('{0}{1},{1}{0}'.format(*ll),))
-        Prediction(_obs_name, Pll_br_comb_func(_hadr[M]['P'], ll[0], ll[1]))
-        _obs_name = _define_obs_P_ll(M, ('{1}{0},{0}{1}'.format(*ll),))
-        Prediction(_obs_name, Pll_br_comb_func(_hadr[M]['P'], ll[0], ll[1]))
+        _obs_name = _define_obs_P_ll(M, ('{0}{1},{1}{0}'.format(l1,l2),))
+        Prediction(_obs_name, Pll_br_comb_func(_hadr[M]['P'], l1,l2))
+        _obs_name = _define_obs_P_ll(M, ('{1}{0},{0}{1}'.format(l1,l2),))
+        Prediction(_obs_name, Pll_br_comb_func(_hadr[M]['P'], l1,l2))
  
