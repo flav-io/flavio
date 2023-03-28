@@ -8,16 +8,18 @@ from flavio.physics.bdecays.formfactors import common
 
 
 def get_hqet_parameters(par):
+    # use value from EOS fit of arXiv:1908.09398
+    # https://github.com/eos/eos/blob/417d909b35f7eac3b1ac7b6a552ff68aa20ff41d/eos/form-factors/mesonic-hqet.hh#L185-L191
     p = {}
-    # The scale here is fixed to 2.7 GeV ~ sqrt(m_b^pole * m_c^pole)
-    alphas = running.get_alpha(par, scale=2.7, nf_out=5)['alpha_s']
+    alphas = 0.26
     p['ash'] = alphas / pi
-    p['mb1S'] = running.get_mb_1S(par)
+    p['mb1S'] = 4.71
     p['mb'] = p['mb1S'] * (1 + 2 * alphas**2 / 9)
     p['mc'] = p['mb'] - 3.4
-    mBbar = (par['m_B0'] + 3 * par['m_B*0']) / 4
+    mBbar = 5.313
     # eq. (25); note the comment about the renormalon cancellation thereafter
-    p['Lambdabar'] = mBbar - p['mb'] + par['lambda_1'] / (2 * p['mb1S'])
+    lambda_1 = -0.3
+    p['Lambdabar'] = mBbar - p['mb'] + lambda_1 / (2 * p['mb1S'])
     p['epsc'] = p['Lambdabar'] / (2 * p['mc'])
     p['epsb'] = p['Lambdabar'] / (2 * p['mb'])
     p['zc'] = p['mc'] / p['mb']
@@ -25,9 +27,9 @@ def get_hqet_parameters(par):
 
 def xi(z, rho2, c, xi3, order_z):
     r"""Leading-order Isgur-Wise function:
-    
+
     $$\xi(z)=1-\rho^2 (w-1) + c (w-1)^2 + \xi^{(3)} (w-1)^3/6
-    
+
     where w=w(z) is expanded in $z$ up to an including terms of order
     `z**order_z`.
     """
