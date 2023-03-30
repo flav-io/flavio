@@ -4,6 +4,7 @@ from flavio.physics.bdecays.formfactors import hqet
 from flavio.physics.bdecays.formfactors import common
 from flavio.classes import AuxiliaryQuantity
 from flavio.physics.running import running
+from flavio.physics.common import lambda_K
 
 process_dict = {}
 process_dict['B->D*'] = {'B': 'B0', 'V': 'D*+', 'q': 'b->c'}
@@ -34,9 +35,8 @@ def h_to_A(mB, mV, h, q2):
     del ff['A2']
     # conversion from T_2, T_3 to T_23
     ff['T23'] = ((mB**2 - mV**2) * (mB**2 + 3 * mV**2 - q2) * ff['T2']
-                 - (mB**4 + (mV**2 - q2)**2
-                 - 2 * mB**2 * (mV**2 + q2)) * ff['T3']
-                 ) / (8 * mB * (mB - mV) * mV**2)
+                 - lambda_K(mB**2, mV**2, q2) * ff['T3']
+                ) / (8 * mB * (mB - mV) * mV**2)
     del ff['T3']
     return ff
 
@@ -81,7 +81,9 @@ def ff(process, q2, par, scale, order_z=3, order_z_slp=2, order_z_sslp=1):
                     + epsc * (L[2] - L[5] * (w - 1)/(w + 1))
                     + epsb * (L[1] - L[4] * (w - 1)/(w + 1))
                     + epsc**2 * (ell[2] - ell[5] * (w - 1)/(w + 1)))
-    h['A2'] = xi * (ash * CA2 + epsc * (L[3] + L[6]))
+    h['A2'] = xi * (ash * CA2
+                    + epsc * (L[3] + L[6])
+                    + epsc**2 * (ell[3] + ell[6]))
     h['A3'] = xi * (1 + ash * (CA1 + CA3)
                     + epsc * (L[2] - L[3] + L[6] - L[5])
                     + epsb * (L[1] - L[4])
@@ -93,8 +95,8 @@ def ff(process, q2, par, scale, order_z=3, order_z_slp=2, order_z_sslp=1):
     h['T2'] = xi * (ash * (w + 1)/2 * (CT2 + CT3)
                     + epsc * L[5]
                     - epsb * L[4]
-                    + epsc * ell[5])
+                    + epsc**2 * ell[5])
     h['T3'] = xi * (ash * CT2
                     + epsc * (L[6] - L[3])
-                    + epsc * (ell[6] - ell[3]))
+                    + epsc**2 * (ell[6] - ell[3]))
     return h_to_A(mB, mV, h, q2)
