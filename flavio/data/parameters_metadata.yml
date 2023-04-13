@@ -2014,6 +2014,5 @@ PDFmembers avg=0 replicas=1-100:
 # Parameter for Bs->K*0mumu uncertainty inside resonant regions
 # 2209.04457, appendix B, Eq. B7, we save a relative uncertainty
 delta_BsKstarmumu:
-  tex: $\delta_{\text{BsKstarmumu}}$
   tex: $\delta_{B_s^0 \to \bar{K}^{\ast 0} \mu \mu}$
   description: relative uncertainty on the $B_s^0 \to \bar{K}^{\ast 0} \mu \mu$ branching ratio inside the resonant region
