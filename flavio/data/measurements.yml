@@ -22305,7 +22305,7 @@ Belle B+->pi+ee 2008:
   experiment: Belle
   inspire: Belle:2008tjs
   values:
-    BR_Belle(B+->piee): < 8e-8 @ 90% CL
+    BR_Belle(B+->piee): 1.5 +3.5-2.5 ± 0.1 ± 0.8 1e-8
 
 LHCb B->pimumu 2015:
   experiment: LHCb
