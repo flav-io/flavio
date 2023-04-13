@@ -41,7 +41,7 @@ def ha_qcdf_interpolate_function(B, V, contribution='all'):
 # loop over hadronic transitions and lepton flavours
 # BTW, it is not necessary to loop over tau: for tautau final states, the minimum
 # q2=4*mtau**2 is so high that QCDF is not valid anymore anyway!
-for had in [('B0','K*0'), ('B+','K*+'), ('B0','rho0'), ('B+','rho+'), ('Bs','phi'), ]:
+for had in [('B0','K*0'), ('B+','K*+'), ('B0','rho0'), ('B+','rho+'), ('Bs','phi'), ('Bs', 'K*0'), ]:
     process = had[0] + '->' + had[1] + 'll' # e.g. B0->K*0mumu
     quantity = process + ' spectator scattering'
     a = AuxiliaryQuantity(name=quantity, arguments=['q2', 'cp_conjugate'])

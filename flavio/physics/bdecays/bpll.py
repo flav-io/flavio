@@ -28,6 +28,9 @@ def get_ff(q2, par, B, P):
 
 # get subleading hadronic contribution
 def get_subleading(q2, wc_obj, par_dict, B, P, lep, cp_conjugate):
+    if 'B' in B and 'pi' in P:
+        # skip subleading correction for B->pi decays
+        return {}
     if q2 <= 9:
         sub_name = B+'->'+P + 'll subleading effects at low q2'
         return AuxiliaryQuantity[sub_name].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)
@@ -149,6 +152,19 @@ def bpll_dbrdq2_tot_func(B, P, lep):
         return bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, lep)*(q2max-q2min)
     return fct
 
+def bpll_dbrdq2_Belle_func(B, P, lep):
+    def fct(wc_obj, par):
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The predictions in the region of narrow charmonium resonances are not meaningful")
+            warnings.filterwarnings("ignore", message="The QCDF corrections should not be trusted .*")
+            mB = par['m_'+B]
+            mP = par['m_'+P]
+            ml = par['m_'+lep]
+            ml = par['m_'+lep]
+            q2max = (mB-mP)**2
+            q2min = (ml+ml)**2
+            return bpll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, lep, epsrel=0.0002)*(q2max-q2min)
+    return fct
 
 def bpll_dbrdq2_func(B, P, lep):
     def fct(wc_obj, par, q2):
@@ -206,6 +222,8 @@ _observables = {
 _hadr = {
 'B0->K': {'tex': r"B^0\to K^0", 'B': 'B0', 'P': 'K0', },
 'B+->K': {'tex': r"B^\pm\to K^\pm ", 'B': 'B+', 'P': 'K+', },
+'B0->pi': {'tex': r"\bar B^0\to \pi^0", 'B': 'B0', 'P': 'pi0', },
+'B+->pi': {'tex': r"B^\pm\to \pi^\pm ", 'B': 'B+', 'P': 'pi+', },
 }
 _hadr_lfv = {
 'B0->K': {'tex': r"\bar B^0\to \bar K^0", 'B': 'B0', 'P': 'K0', },
@@ -255,6 +273,14 @@ for l in ['e', 'mu', 'tau']:
         _obs.tex = r"$\frac{d\text{BR}}{dq^2}(" + _process_tex + r")$"
         _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, bpll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['P'], l))
+
+        if l == 'e' and M == 'B+->pi':
+            _obs_name = "BR_Belle("+M+l+l+")"
+            _obs = Observable(name=_obs_name)
+            _obs.set_description(r"Branching ratio of $" + _process_tex + r"$")
+            _obs.tex = r"$\text{BR}(" + _process_tex + r")$"
+            _obs.add_taxonomy(_process_taxonomy)
+            Prediction(_obs_name, bpll_dbrdq2_Belle_func(_hadr[M]['B'], _hadr[M]['P'], l))
 
         # only for tau: total branching ratio
         if l == 'tau':

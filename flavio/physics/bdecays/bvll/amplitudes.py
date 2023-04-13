@@ -57,6 +57,9 @@ def get_ss(q2, wc_obj, par_dict, B, V, cp_conjugate):
 
 # get subleading hadronic contribution at low q2
 def get_subleading(q2, wc_obj, par_dict, B, V, cp_conjugate):
+    if B=='Bs' and V == 'K*0':
+        # skip subleading contribution for Bs->K*0 for now
+        return {}
     if q2 <= 9:
         sub_name = B+'->'+V+ 'll subleading effects at low q2'
         return AuxiliaryQuantity[sub_name].prediction(par_dict=par_dict, wc_obj=wc_obj, q2=q2, cp_conjugate=cp_conjugate)

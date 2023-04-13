@@ -6,6 +6,7 @@ import flavio
 from . import observables
 from flavio.classes import Observable, Prediction
 import cmath
+import warnings
 
 def bsvll_obs(function, q2, wc_obj, par, B, V, lep):
     ml = par['m_'+lep]
@@ -121,6 +122,18 @@ def bsvll_obs_ratio_func(func_num, func_den, B, V, lep):
         return num/denom
     return fct
 
+# function for the LHCb (1804.07167) Bs->K*0 integrated branching ratio
+def bsvll_dbrdq2_19_func(B, P, lep):
+    def fct(wc_obj, par):
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The predictions in the region of narrow charmonium resonances are not meaningful.*")
+            warnings.filterwarnings("ignore", message="The QCDF corrections should not be trusted*")
+
+            q2max = 19
+            q2min = 0.1
+            return (1+par['delta_BsKstarmumu'])*bsvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, lep)*(q2max-q2min)
+    return fct
+
 # Observable and Prediction instances
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
@@ -132,6 +145,7 @@ _observables = {
 }
 _hadr = {
 'Bs->phi': {'tex': r"B_s\to \phi ", 'B': 'Bs', 'V': 'phi', },
+'Bs->K*0': {'tex': r"B_s\to K^* ", 'B': 'Bs', 'V': 'K*0', },
 }
 for l in ['e', 'mu', 'tau']:
     for M in _hadr.keys():
@@ -172,6 +186,15 @@ for l in ['e', 'mu', 'tau']:
         _obs.tex = r"$\frac{d\overline{\text{BR}}}{dq^2}(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
         _obs.add_taxonomy(_process_taxonomy)
         Prediction(_obs_name, bsvll_dbrdq2_func(_hadr[M]['B'], _hadr[M]['V'], l))
+
+        # for Bs->K*0 mu mu we add a separate observable for the measurement in 1804.07167
+        if M == 'Bs->K*0' and l == 'mu':
+            _obs_name = "BR_LHCb("+M+l+l+")"
+            _obs = Observable(name=_obs_name)
+            _obs.set_description(r"Branching ratio of $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$ measured by LHCb in 2018")
+            _obs.tex = r"$\overline{\text{BR}}(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            _obs.add_taxonomy(_process_taxonomy)
+            Prediction(_obs_name, bsvll_dbrdq2_19_func(_hadr[M]['B'], _hadr[M]['V'], l))
 
 # Lepton flavour ratios
 for l in [('mu','e'), ('tau','mu'),]:
