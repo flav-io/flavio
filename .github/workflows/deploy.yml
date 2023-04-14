@@ -31,12 +31,14 @@ jobs:
       - name: Verify release version matches source code version
         shell: bash
         run: |
+          pushd _src
           export TAG_VERSION=${GITHUB_REF##refs/tags/v}
           export SRC_VERSION=$(python3 -c "from flavio._version import __version__; print(__version__)")
           if [[ ${TAG_VERSION} != ${SRC_VERSION} ]] ; then
             echo "tag/release version and source code version disagree, exiting"
             exit 1
           fi
+          popd
 
       - name: Build bdist
         shell: bash
