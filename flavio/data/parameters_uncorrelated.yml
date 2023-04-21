@@ -34,7 +34,7 @@ s2w: 0.23129(5)       # PDG 2017
 Vus: 0.2248(8)   # FLAG 2017 Nf=2+1+1
 Vub: 3.73(14)e-3  # FLAG 2017 Nf=2+1 B->pilnu
 Vcb: 4.221(78)e-2
-delta: 1.27(12)  # delta = gamma to excellent approximation
+delta: 1.15(6)  # PDG 2022 (delta = gamma to excellent approximation)
 
 
 # Meson decay constants
