@@ -4181,6 +4181,34 @@ PDG 2015:
     BR(K+->pienu): (5.07±0.04)1e-2
     Gamma(pi+->munu): (2.52809±0.00050)1e-17
 
+# When updating Gamma(pi+->munu) or BR(K+->munu),
+# RKpi(P+->munu) under "CKM ratio measurements"
+# should be updated as well!
+PDG 2022:
+  experiment: PDG
+  inspire: ParticleDataGroup:2022pth
+  values:
+    BR(pi+->enu): (1.230±0.004)1e-4
+    BR(K+->munu): (63.56±0.11)1e-2
+    Remu(K+->lnu): 2.488±0.009e-5
+    BR(KL->pimunu): (27.04±0.07)1e-2
+    BR(KL->pienu): (40.55±0.11)1e-2
+    BR(K+->pimunu): (3.352±0.033)1e-2
+    BR(K+->pienu): (5.07±0.04)1e-2
+    Gamma(pi+->munu): (2.52809±0.00050)1e-17
+
+KLOE-2 KS->pimunu 2019:
+  experiment: KLOE-2
+  inspire: KLOE-2:2019rev
+  values:
+    BR(KS->pimunu): (4.56±0.20)1e-4
+
+KLOE-2 KS->pienu 2022:
+  experiment: KLOE-2
+  inspire: KLOE-2:2022dot
+  values:
+    BR(KS->pienu): (7.153±0.057)1e-4
+
 PiENu pi->enu 2015:
   experiment: PiENu
   inspire: Aguilar-Arevalo:2015cdf
@@ -12142,6 +12170,25 @@ Ft(0+) Hardy/Towner 2014:
     Ft(62Ga): 4.6664 ± 0.0102 1e+27  # 3071.5 ± 6.7 s
     Ft(74Rb): 4.6733 ± 0.0167 1e+27  # 3076.0 ± 11.0 s
 
+Ft(0+) Hardy/Towner 2020:
+  experiment: various
+  inspire: Hardy:2020qwl
+  values:
+    Ft(10C): 4.6728 ± 0.0067 1e+27  # 3075.7 ± 4.4 s
+    Ft(14O): 4.6645 ± 0.0029 1e+27  # 3070.2 ± 1.9 s
+    Ft(22Mg): 4.6736 ± 0.0106 1e+27  # 3076.2 ± 7.0 s
+    Ft(26mAl): 4.6678 ± 0.0017 1e+27  # 3072.4 ± 1.1 s
+    Ft(34Cl): 4.6666 ± 0.0027 1e+27  # 3071.6 ± 1.8 s
+    Ft(34Ar): 4.6719 ± 0.0047 1e+27  # 3075.1 ± 3.1 s
+    Ft(38mK): 4.6686 ± 0.003 1e+27  # 3072.9 ± 2.0 s
+    Ft(38Ca): 4.6760 ± 0.0094 1e+27  # 3077.8 ± 6.2 s
+    Ft(42Sc): 4.6667 ± 0.0030 1e+27  # 3071.7 ± 2.0 s
+    Ft(46V): 4.6707 ± 0.003 1e+27  # 3074.3 ± 2.0 s
+    Ft(50Mn): 4.6658 ± 0.0024 1e+27  # 3071.1 ± 1.6 s
+    Ft(54Co): 4.6648 ± 0.0036 1e+27  # 3070.4 ± 2.5 s
+    Ft(62Ga): 4.6678 ± 0.0102 1e+27  # 3072.4 ± 6.7 s
+    Ft(74Rb): 4.6748 ± 0.0167 1e+27  # 3077.0 ± 11.0 s
+
 Neutron averages GACS 2018 1:
   inspire: Gonzalez-Alonso:2018omy
   description: Averages in table 7 of the paper by Gonzalez-Alonso et al.
@@ -12239,6 +12286,28 @@ PDG 2018 D->Plnu:
     BR(D+->Kenu): (8.73 ± 0.10) 1e-2
     BR(D+->Kmunu): (8.74 ± 0.19) 1e-2
 
+PDG 2022 D->lnu:
+  inspire: ParticleDataGroup:2022pth
+  values:
+    BR(D+->enu): < 8.8e-6 @ 90% CL
+    BR(D+->munu): (3.74 ± 0.17) 1e-4
+    BR(D+->taunu): (1.20 ± 0.27) 1e-3
+    BR(Ds->enu): < 8.3e-5 @ 90% CL
+    BR(Ds->munu): (5.43 ± 0.15) 1e-3
+    BR(Ds->taunu): (5.32 ± 0.11) 1e-2
+
+PDG 2022 D->Plnu:
+  inspire: ParticleDataGroup:2022pth
+  values:
+    BR(D0->pienu): (2.91 ± 0.04) 1e-3
+    BR(D0->pimunu): (2.67 ± 0.12) 1e-3
+    BR(D0->Kenu): (3.549 ± 0.026) 1e-2
+    BR(D0->Kmunu): (3.41 ± 0.04) 1e-2
+    BR(D+->pienu): (3.72 ± 0.17) 1e-3
+    BR(D+->pimunu): (3.50 ± 0.15) 1e-3
+    BR(D+->Kenu): (8.72 ± 0.09) 1e-2
+    BR(D+->Kmunu): (8.76 ± 0.19) 1e-2
+    
 BESIII D0->Kenu 2015:
   observables:
   - name: <BR>(D0->Kenu)

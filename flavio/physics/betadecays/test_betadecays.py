@@ -41,14 +41,24 @@ class TestBetaDecays(unittest.TestCase):
     def test_ft(self):
         # compare to exp values in table 4 of 1803.08732
         wc_obj = flavio.WilsonCoefficients()
+
+        # The Vus = sqrt(1-Vud^2) values are found by rescaling the average Vud 
+        # quoted in Hardy&Towner 2020 by the corresponding individual Ft values
+        par["Vus"] = (1 - 0.97319**2)**0.5
         Ft = flavio.physics.betadecays.ft.Ft_superallowed(par, wc_obj, '10C')
-        self.assertAlmostEqual(Ft / s, 3078, delta=2 * 5)
+        self.assertAlmostEqual(Ft / s, 3078, delta=5)
+        
+        par["Vus"] = (1 - 0.97371**2)**0.5
         Ft = flavio.physics.betadecays.ft.Ft_superallowed(par, wc_obj, '26mAl')
-        self.assertAlmostEqual(Ft / s, 3072.9, delta=3 * 1)
+        self.assertAlmostEqual(Ft / s, 3072.9, delta=1)
+        
+        par["Vus"] = (1 - 0.97341**2)**0.5
         Ft = flavio.physics.betadecays.ft.Ft_superallowed(par, wc_obj, '46V')
-        self.assertAlmostEqual(Ft / s, 3074.1, delta=2 * 2)
-        Ft = flavio.sm_prediction('Ft(38Ca)')
-        self.assertAlmostEqual(Ft / s, 3076.4, delta=2 * 7.2)
+        self.assertAlmostEqual(Ft / s, 3074.1, delta=2)
+        
+        par["Vus"] = (1 - 0.97285**2)**0.5
+        Ft = flavio.physics.betadecays.ft.Ft_superallowed(par, wc_obj, '38Ca')
+        self.assertAlmostEqual(Ft / s, 3076.4, delta=7.2)
 
     def test_taun(self):
         # compare to exp value in table 5 of 1803.08732
