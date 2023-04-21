@@ -30,6 +30,18 @@ HFLAV rad 2018:
     BR(B+->enu): < 0.98e-6 @ 90% CL
     BR(B+->munu): < 1.0e-6 @ 90% CL
 
+Belle B->munu 2020:
+  experiment: Belle
+  inspire: Belle:2019iji
+  values:
+    BR(B+->munu): (5.3 ± 2.0 ± 0.9) e-7
+
+Belle B->enu 2007: # this is the same as HFLAV rad 2018 for electron
+  experiment: Belle
+  inspire: Belle:2006tbq
+  values:
+    BR(B+->enu): < 9.8e-7 @ 90% CL
+
 PDG B->taunu 2018:
   experiment: PDG
   url: http://pdglive.lbl.gov/BranchingRatio.action?desig=184&parCode=S041
