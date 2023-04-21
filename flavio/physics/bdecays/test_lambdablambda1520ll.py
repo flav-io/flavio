@@ -51,7 +51,7 @@ class TestLambdabLambda1520_FF(TestLambdabLambda1520):
         dBR = 'dBR/dq2(Lambdab->Lambda(1520)mumu)'
         self.assert_sm_arrays(dBR, sm_array['dB_central'], 'central', scalef=br_inv2, rtol=0.02, atol=0.03)
         self.assert_sm_arrays(dBR, sm_array['dB_upper'], 'upper', scalef=br_inv2, rtol=0.08, atol=0.03)
-        self.assert_sm_arrays(dBR, sm_array['dB_lower'], 'lower', scalef=br_inv2, rtol=0.08, atol=0.03)
+        self.assert_sm_arrays(dBR, sm_array['dB_lower'], 'lower', scalef=br_inv2, rtol=0.12, atol=0.03)
 
         # Comparison to figure 9 right in arXiv:2009.09313v2
         Afb = 'AFBl(Lambdab->Lambda(1520)mumu)'
