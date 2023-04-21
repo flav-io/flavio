@@ -7389,6 +7389,12 @@ K+->pinunu NA62 2019:
   values:
     BR(K+->pinunu): 0.47 + 0.72 - 0.47 e-10
 
+K+->pinunu NA62 2021:
+  experiment: NA62
+  inspire: NA62:2021zjw
+  values:
+    BR(K+->pinunu): 1.06 + 0.40 - 0.34 +- 0.09 e-10
+
 KL->pinunu KOTO 2018:
   experiment: KOTO
   inspire: Ahn:2018mvc
