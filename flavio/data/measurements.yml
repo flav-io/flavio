@@ -4181,6 +4181,9 @@ PDG 2015:
     BR(K+->pienu): (5.07±0.04)1e-2
     Gamma(pi+->munu): (2.52809±0.00050)1e-17
 
+# When updating Gamma(pi+->munu) or BR(K+->munu),
+# RKpi(P+->munu) under "CKM ratio measurements"
+# should be updated as well!
 PDG 2022:
   experiment: PDG
   inspire: ParticleDataGroup:2022pth
