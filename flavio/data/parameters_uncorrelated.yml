@@ -525,6 +525,10 @@ DeltaRV: 0.02467(27)  # Average from 2208.11707
 # one third of the Z^2alpha^3 term in table V of 0710.3181,
 # as suggested in 1411.5987
 delta_deltaRp_Z2: 0 ± 0.00004e-2
+# Systematic uncertainty on delta_NS,A (eq. 16 of Hardy:2020qwl)
+delta_deltaNS,A: 0 +- 0.033e-2
+# Systematic uncertainty on delta_NS,E (eq. 18 of Hardy:2020qwl)
+delta_deltaNS,E_QEC: 0 +- 0.008e-2
 f_n: 1.6887(1)  # Hardy & Towner
 deltaRp_n: 0.014902(2)
 Lambda->p f_1(0): -1.2247 ± 0.05  # -sqrt(3/2) +-  "few percent"
@@ -554,6 +558,7 @@ PDFmembers avg=0 replicas=1-100:
 # Parameter for Bs->K*0mumu uncertainty inside resonant regions
 # 2209.04457, appendix B, Eq. B7, we save a relative uncertainty
 delta_BsKstarmumu: 0 ± 0.078
+
 # Updated EM corrections for Ke3 decays
 # From 2103.04843 (Table VI) 
 # Uncertainties combined in quadrature, factor of 2 normalisation difference since
