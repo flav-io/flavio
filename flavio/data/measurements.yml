@@ -1,4 +1,4 @@
-# This file contains all the experimental measurements.
+# file contains all the experimental measurements.
 Sindrum II Ti 1993:
   experiment: SINDRUM II
   inspire: Dohmen:1993mp
@@ -14040,716 +14040,743 @@ LEP ee->WW angular:
       value: 7.584 ± 0.26
 
 
-# Added by BCA 21/2/23. Checked by BCA 27/2/23
 LEP ee->ll:
     experiment: LEP
     inspire: Schael:2013ita
     description: >
-      Combined LEP result from table 3.4 - difference of total to SM cross-section: in pb
+      Combined LEP result from table 3.4 - ratio of total to SM cross-section
     values:
-      - name: dsigma(ee->ll)
-        E: 182.7
+      - name: R_sigma(ee->ll)
+        E: 130.3
         fam: 2
-        value: 0.061±0.145±0.042
-      - name: dsigma(ee->ll)
-        E: 188.6
-        fam: 2
-        value: -0.057±0.075±0.016
-      - name: dsigma(ee->ll)
+        value: 1.0179±0.0827±0.0155
+      - name: R_sigma(ee->ll)
         E: 191.6
         fam: 2
-        value: -0.017±0.181±0.018
-      - name: dsigma(ee->ll)
-        E: 195.5
-        fam: 2
-        value: 0.033±0.110±0.018
-      - name: dsigma(ee->ll)
-        E: 199.5
-        fam: 2
-        value: 0.239±0.108±0.018
-      - name: dsigma(ee->ll)
-        E: 201.6
-        fam: 2
-        value: -0.057±0.146±0.017
-      - name: dsigma(ee->ll)
-        E: 204.9
-        fam: 2
-        value: -0.209±0.098±0.015
-      - name: dsigma(ee->ll)
-        E: 206.6
-        fam: 2
-        value: -0.010±0.078±0.014
-      - name: dsigma(ee->ll)
-        E: 182.7
+        value: 0.9451±0.0585±0.0058
+      - name: R_sigma(ee->ll)
+        E: 130.3
         fam: 3
-        value: -0.077±0.174±0.049
-      - name: dsigma(ee->ll)
-        E: 188.6
-        fam: 3
-        value: -0.002±0.107±0.032
-      - name: dsigma(ee->ll)
+        value: 1.0672±0.1117±0.0207
+      - name: R_sigma(ee->ll)
         E: 191.6
         fam: 3
-        value: -0.236±0.246±0.032
-      - name: dsigma(ee->ll)
+        value: 0.9238±0.0795±0.0103
+      - name: R_sigma(ee->ll)
+        E: 136.3
+        fam: 2
+        value: 1.1417±0.0949±0.0149
+      - name: R_sigma(ee->ll)
+        E: 195.5
+        fam: 2
+        value: 1.0111±0.0371±0.0061
+      - name: R_sigma(ee->ll)
+        E: 136.3
+        fam: 3
+        value: 0.9831±0.1167±0.0196
+      - name: R_sigma(ee->ll)
         E: 195.5
         fam: 3
-        value: 0.000±0.152±0.029
-      - name: dsigma(ee->ll)
+        value: 1.0000±0.0513±0.0098
+      - name: R_sigma(ee->ll)
+        E: 161.3
+        fam: 2
+        value: 0.9935±0.0816±0.0134
+      - name: R_sigma(ee->ll)
+        E: 199.5
+        fam: 2
+        value: 1.0844±0.0381±0.0064
+      - name: R_sigma(ee->ll)
+        E: 161.3
+        fam: 3
+        value: 1.2397±0.1200±0.0302
+      - name: R_sigma(ee->ll)
         E: 199.5
         fam: 3
-        value: 0.120±0.152±0.029
-      - name: dsigma(ee->ll)
-        E: 201.6
+        value: 1.0424±0.0523±0.0102
+      - name: R_sigma(ee->ll)
+        E: 172.1
+        fam: 2
+        value: 0.9018±0.0838±0.0147
+      - name: R_sigma(ee->ll)
+        E: 201.8
+        fam: 2
+        value: 0.9794±0.0528±0.0061
+      - name: R_sigma(ee->ll)
+        E: 172.1
         fam: 3
-        value: 0.073±0.208±0.022
-      - name: dsigma(ee->ll)
-        E: 204.9
+        value: 1.0261±0.1187±0.0233
+      - name: R_sigma(ee->ll)
+        E: 201.8
         fam: 3
-        value: 0.111±0.149±0.028
-      - name: dsigma(ee->ll)
-        E: 206.6
+        value: 1.0264±0.0752±0.0080
+      - name: R_sigma(ee->ll)
+        E: 182.7
+        fam: 2
+        value: 1.0177±0.0421±0.0122
+      - name: R_sigma(ee->ll)
+        E: 204.8
+        fam: 2
+        value: 0.9218±0.0367±0.0056
+      - name: R_sigma(ee->ll)
+        E: 182.7
         fam: 3
-        value: -0.126±0.109±0.029
+        value: 0.9776±0.0505±0.0142
+      - name: R_sigma(ee->ll)
+        E: 204.8
+        fam: 3
+        value: 1.0415±0.0558±0.0105
+      - name: R_sigma(ee->ll)
+        E: 188.6
+        fam: 2
+        value: 0.9822±0.0234±0.0050
+      - name: R_sigma(ee->ll)
+        E: 206.5
+        fam: 2
+        value: 0.9962±0.0297±0.0053
+      - name: R_sigma(ee->ll)
+        E: 188.6
+        fam: 3
+        value: 0.9994±0.0334±0.0100
+      - name: R_sigma(ee->ll)
+        E: 206.5
+        fam: 3
+        value: 0.9521±0.0415±0.0110
 
 
-# Added by BCA 27/2/23. 
 LEP AFB(ee->ll):
     experiment: LEP
     inspire: Schael:2013ita
-    description: Combined LEP result from table 3.4 - AFB prediction
+    description: Combined LEP result from table 3.4 - ratio of AFB to SM prediction
     values:
-      - name: AFB(ee->ll)
-        E: 182.7
-        fam: 2
-        AfbSM: 0.576
-        sigmaSM: 3.444
-        value: 0.564±0.034±0.008
-      - name: AFB(ee->ll)
-        E: 188.6
-        fam: 2
-        AfbSM: 0.569
-        sigmaSM: 3.207
-        value: 0.571±0.020±0.005
-      - name: AFB(ee->ll)
-        E: 191.6
-        fam: 2
-        AfbSM: 0.566
-        sigmaSM: 3.096
-        value: 0.551±0.051±0.007
-      - name: AFB(ee->ll)
-        E: 195.5
-        fam: 2
-        AfbSM: 0.562
-        sigmaSM: 2.961
-        value: 0.592±0.030±0.005
-      - name: AFB(ee->ll)
-        E: 199.5
-        fam: 2
-        AfbSM: 0.558
-        sigmaSM: 2.833
-        value: 0.519±0.031±0.005
-      - name: AFB(ee->ll)
-        E: 201.6
-        fam: 2
-        AfbSM: 0.556
-        sigmaSM: 2.766
-        value: 0.547±0.045±0.005 
-      - name: AFB(ee->ll)
-        E: 204.9
-        fam: 2
-        AfbSM: 0.553
-        sigmaSM: 2.673
-        value: 0.556±0.034±0.004
-      - name: AFB(ee->ll)
-        E: 206.6
-        fam: 2
-        AfbSM: 0.552
-        sigmaSM: 2.628
-        value: 0.535±0.028±0.004
-      - name: AFB(ee->ll)
-        E: 182.7
+      - name: R_Afb(ee->ll)
+        E: 130.3
         fam: 3
-        AfbSM: 0.576
-        sigmaSM: 3.444
-        value: 0.604±0.044±0.011
-      - name: AFB(ee->ll)
-        E: 188.6
-        fam: 3
-        AfbSM: 0.569
-        sigmaSM: 3.206
-        value: 0.590±0.026±0.007
-      - name: AFB(ee->ll)
+        value: 1.0179±0.0827±0.0155
+      - name: R_Afb(ee->ll)
         E: 191.6
         fam: 3
-        AfbSM: 0.565
-        sigmaSM: 3.096
-        value: 0.590±0.026±0.007
-      - name: AFB(ee->ll)
+        value: 0.9451±0.0585±0.0058
+      - name: R_Afb(ee->ll)
+        E: 130.3
+        fam: 3
+        value: 1.0672±0.1117±0.0207
+      - name: R_Afb(ee->ll)
+        E: 191.6
+        fam: 3
+        value: 0.9238±0.0795±0.0103
+      - name: R_Afb(ee->ll)
+        E: 136.3
+        fam: 2
+        value: 1.1417±0.0949±0.0149
+      - name: R_Afb(ee->ll)
+        E: 195.5
+        fam: 2
+        value: 1.0111±0.0371±0.0061
+      - name: R_Afb(ee->ll)
+        E: 136.3
+        fam: 3
+        value: 0.9831±0.1167±0.0196
+      - name: R_Afb(ee->ll)
         E: 195.5
         fam: 3
-        AfbSM: 0.561
-        sigmaSM: 2.961
-        value: 0.464±0.044±0.008
-      - name: AFB(ee->ll)
+        value: 1.0000±0.0513±0.0098
+      - name: R_Afb(ee->ll)
+        E: 161.3
+        fam: 2
+        value: 0.9935±0.0816±0.0134
+      - name: R_Afb(ee->ll)
+        E: 199.5
+        fam: 2
+        value: 1.0844±0.0381±0.0064
+      - name: R_Afb(ee->ll)
+        E: 161.3
+        fam: 3
+        value: 1.2397±0.1200±0.0302
+      - name: R_Afb(ee->ll)
         E: 199.5
         fam: 3
-        AfbSM: 0.558
-        sigmaSM: 2.832
-        value: 0.539±0.041±0.007
-      - name: AFB(ee->ll)
-        E: 201.6
+        value: 1.0424±0.0523±0.0102
+      - name: R_Afb(ee->ll)
+        E: 172.1
+        fam: 2
+        value: 0.9018±0.0838±0.0147
+      - name: R_Afb(ee->ll)
+        E: 201.8
+        fam: 2
+        value: 0.9794±0.0528±0.0061
+      - name: R_Afb(ee->ll)
+        E: 172.1
         fam: 3
-        AfbSM: 0.556
-        sigmaSM: 2.765
-        value: 0.535±0.058±0.009
-      - name: AFB(ee->ll)
-        E: 204.9
+        value: 1.0261±0.1187±0.0233
+      - name: R_Afb(ee->ll)
+        E: 201.8
         fam: 3
-        AfbSM: 0.553
-        sigmaSM: 2.672
-        value: 0.618±0.040±0.008
-      - name: AFB(ee->ll)
-        E: 206.6
+        value: 1.0264±0.0752±0.0080
+      - name: R_Afb(ee->ll)
+        E: 182.7
+        fam: 2
+        value: 1.0177±0.0421±0.0122
+      - name: R_Afb(ee->ll)
+        E: 204.8
+        fam: 2
+        value: 0.9218±0.0367±0.0056
+      - name: R_Afb(ee->ll)
+        E: 182.7
         fam: 3
-        AfbSM: 0.552
-        sigmaSM: 2.628
-        value: 0.590±0.034±0.010
+        value: 0.9776±0.0505±0.0142
+      - name: R_Afb(ee->ll)
+        E: 204.8
+        fam: 3
+        value: 1.0415±0.0558±0.0105
+      - name: R_Afb(ee->ll)
+        E: 188.6
+        fam: 2
+        value: 0.9822±0.0234±0.0050
+      - name: R_Afb(ee->ll)
+        E: 206.5
+        fam: 2
+        value: 0.9962±0.0297±0.0053
+      - name: R_Afb(ee->ll)
+        E: 188.6
+        fam: 3
+        value: 0.9994±0.0334±0.0100
+      - name: R_Afb(ee->ll)
+        E: 206.5
+        fam: 3
+        value: 0.9521±0.0415±0.0110
 
 
-# Added by BCA 23/2/23. Checked by BCA 27/2/23.
 LEP ee->ee:
-    experiment: LEP2
+    experiment: LEP
     inspire: Schael:2013ita
-    url: https://lepewwg.web.cern.ch/lepewwg/2/
-    description: >
-      Combined LEP result from table 3.11,3.12 - difference between measured and SM differential cross-section in pb divided by Delta(cos theta). Extracted with scripts.
+    description: Combined LEP result - ratio of e+e- to SM prediction
     values:
-      - name: dsigma(ee->ee)
+      - name: R_sigma(ee->ee)
         E: 188.6
-        cthmin: -0.90
-        cthmax: -0.72
-        value: -0.189 +- 0.161
-      - name: dsigma(ee->ee)
+        cthmin: −0.90
+        cthmax: −0.72
+        value: 0.8811±0.1013
+      - name: R_sigma(ee->ee)
         E: 188.6
-        cthmin: -0.72
-        cthmax: -0.54
-        value: 0.214 +- 0.160
-      - name: dsigma(ee->ee)
+        cthmin: −0.72
+        cthmax: −0.54
+        value: 1.1178±0.0881
+      - name: R_sigma(ee->ee)
         E: 188.6
-        cthmin: -0.54
-        cthmax: -0.36
-        value: 0 +- 0.170
-      - name: dsigma(ee->ee)
+        cthmin: −0.54
+        cthmax: −0.36
+        value: 1.0000±0.0786
+      - name: R_sigma(ee->ee)
         E: 188.6
-        cthmin: -0.36
-        cthmax: -0.18
-        value: -0.383 +- 0.186
-      - name: dsigma(ee->ee)
+        cthmin: −0.36
+        cthmax: −0.18
+        value: 0.8571±0.0694
+      - name: R_sigma(ee->ee)
         E: 188.6
-        cthmin: -0.18
-        cthmax:  0.00
-        value: 0.415 +- 0.230
-      - name: dsigma(ee->ee)
+        cthmin: −0.18
+        cthmax: 0.00
+        value: 1.1062±0.0589
+      - name: R_sigma(ee->ee)
         E: 188.6
         cthmin: 0.00
         cthmax: 0.09
-        value: -0.474 +- 0.348
-      - name: dsigma(ee->ee)
+        value: 0.9118±0.0648
+      - name: R_sigma(ee->ee)
         E: 188.6
         cthmin: 0.09
         cthmax: 0.18
-        value: -0.802 +- 0.404
-      - name: dsigma(ee->ee)
+        value: 0.8836±0.0586
+      - name: R_sigma(ee->ee)
         E: 188.6
         cthmin: 0.18
         cthmax: 0.27
-        value: -0.772 +- 0.476
-      - name: dsigma(ee->ee)
+        value: 0.9197±0.0495
+      - name: R_sigma(ee->ee)
         E: 188.6
         cthmin: 0.27
         cthmax: 0.36
-        value: -0.564 +- 0.576
-      - name: dsigma(ee->ee)
+        value: 0.9577±0.0432
+      - name: R_sigma(ee->ee)
         E: 188.6
         cthmin: 0.36
         cthmax: 0.45
-        value: 0.141 +- 0.707
-      - name: dsigma(ee->ee)
+        value: 1.0073±0.0364
+      - name: R_sigma(ee->ee)
         E: 188.6
         cthmin: 0.45
         cthmax: 0.54
-        value: 0.122 +- 0.895
-      - name: dsigma(ee->ee)
+        value: 1.0040±0.0294
+      - name: R_sigma(ee->ee)
         E: 188.6
         cthmin: 0.54
         cthmax: 0.63
-        value: -0.524 +- 1.135
-      - name: dsigma(ee->ee)
+        value: 0.9897±0.0222
+      - name: R_sigma(ee->ee)
         E: 188.6
         cthmin: 0.63
         cthmax: 0.72
-        value: -0.385 +- 1.520
-      - name: dsigma(ee->ee)
+        value: 0.9960±0.0159
+      - name: R_sigma(ee->ee)
         E: 188.6
         cthmin: 0.72
         cthmax: 0.81
-        value: -0.963 +- 2.900
-      - name: dsigma(ee->ee)
+        value: 0.9955±0.0137
+      - name: R_sigma(ee->ee)
         E: 188.6
         cthmin: 0.81
         cthmax: 0.90
-        value: -10.843 +- 5.773
-      - name: dsigma(ee->ee)
+        value: 0.9843±0.0084
+      - name: R_sigma(ee->ee)
         E: 191.6
-        cthmin: -0.90
-        cthmax: -0.72
-        value: -0.239 +- 0.364
-      - name: dsigma(ee->ee)
+        cthmin: −0.90
+        cthmax: −0.72
+        value: 0.8447±0.2365
+      - name: R_sigma(ee->ee)
         E: 191.6
-        cthmin: -0.72
-        cthmax: -0.54
-        value: 0.345 +- 0.419
-      - name: dsigma(ee->ee)
+        cthmin: −0.72
+        cthmax: −0.54
+        value: 1.1967±0.2389
+      - name: R_sigma(ee->ee)
         E: 191.6
-        cthmin: -0.54
-        cthmax: -0.36
-        value: -0.22 +- 0.385
-      - name: dsigma(ee->ee)
+        cthmin: −0.54
+        cthmax: −0.36
+        value: 0.8948±0.1841
+      - name: R_sigma(ee->ee)
         E: 191.6
-        cthmin: -0.36
-        cthmax: -0.18
-        value: -0.796 +- 0.422
-      - name: dsigma(ee->ee)
+        cthmin: −0.36
+        cthmax: −0.18
+        value: 0.6943±0.1621
+      - name: R_sigma(ee->ee)
         E: 191.6
-        cthmin: -0.18
-        cthmax:  0.00
-        value: 0.022 +- 0.519
-      - name: dsigma(ee->ee)
+        cthmin: −0.18
+        cthmax: 0.00
+        value: 1.0058±0.1374
+      - name: R_sigma(ee->ee)
         E: 191.6
         cthmin: 0.00
         cthmax: 0.09
-        value: -0.19 +- 0.891
-      - name: dsigma(ee->ee)
+        value: 0.9635±0.1712
+      - name: R_sigma(ee->ee)
         E: 191.6
         cthmin: 0.09
         cthmax: 0.18
-        value: -0.997 +- 0.976
-      - name: dsigma(ee->ee)
+        value: 0.8510±0.1458
+      - name: R_sigma(ee->ee)
         E: 191.6
         cthmin: 0.18
         cthmax: 0.27
-        value: -0.003 +- 1.175
-      - name: dsigma(ee->ee)
+        value: 0.9997±0.1271
+      - name: R_sigma(ee->ee)
         E: 191.6
         cthmin: 0.27
         cthmax: 0.36
-        value: 0.141 +- 1.414
-      - name: dsigma(ee->ee)
+        value: 1.0110±0.1105
+      - name: R_sigma(ee->ee)
         E: 191.6
         cthmin: 0.36
         cthmax: 0.45
-        value: 1.985 +- 1.807
-      - name: dsigma(ee->ee)
+        value: 1.1057±0.0962
+      - name: R_sigma(ee->ee)
         E: 191.6
         cthmin: 0.45
         cthmax: 0.54
-        value: -3.005 +- 2.074
-      - name: dsigma(ee->ee)
+        value: 0.8980±0.0704
+      - name: R_sigma(ee->ee)
         E: 191.6
         cthmin: 0.54
         cthmax: 0.63
-        value: 0.044 +- 2.671
-      - name: dsigma(ee->ee)
+        value: 1.0009±0.0541
+      - name: R_sigma(ee->ee)
         E: 191.6
         cthmin: 0.63
         cthmax: 0.72
-        value: -2.403 +- 3.615
-      - name: dsigma(ee->ee)
+        value: 0.9739±0.0393
+      - name: R_sigma(ee->ee)
         E: 191.6
         cthmin: 0.72
         cthmax: 0.81
-        value: -1.508 +- 6.760
-      - name: dsigma(ee->ee)
+        value: 0.9927±0.0328
+      - name: R_sigma(ee->ee)
         E: 191.6
         cthmin: 0.81
         cthmax: 0.90
-        value: -13.449 +- 12.588
-      - name: dsigma(ee->ee)
+        value: 0.9799±0.0188
+      - name: R_sigma(ee->ee)
         E: 195.5
-        cthmin: -0.90
-        cthmax: -0.72
-        value: -0.013 +- 0.261
-      - name: dsigma(ee->ee)
+        cthmin: −0.90
+        cthmax: −0.72
+        value: 0.9912±0.1760
+      - name: R_sigma(ee->ee)
         E: 195.5
-        cthmin: -0.72
-        cthmax: -0.54
-        value: -0.168 +- 0.221
-      - name: dsigma(ee->ee)
+        cthmin: −0.72
+        cthmax: −0.54
+        value: 0.9009±0.1304
+      - name: R_sigma(ee->ee)
         E: 195.5
-        cthmin: -0.54
-        cthmax: -0.36
-        value: 0.058 +- 0.250
-      - name: dsigma(ee->ee)
+        cthmin: −0.54
+        cthmax: −0.36
+        value: 1.0290±0.1250
+      - name: R_sigma(ee->ee)
         E: 195.5
-        cthmin: -0.36
-        cthmax: -0.18
-        value: 0.29 +- 0.284
-      - name: dsigma(ee->ee)
+        cthmin: −0.36
+        cthmax: −0.18
+        value: 1.1161±0.1137
+      - name: R_sigma(ee->ee)
         E: 195.5
-        cthmin: -0.18
-        cthmax:  0.00
-        value: 0.036 +- 0.318
-      - name: dsigma(ee->ee)
+        cthmin: −0.18
+        cthmax: 0.00
+        value: 1.0100±0.0881
+      - name: R_sigma(ee->ee)
         E: 195.5
         cthmin: 0.00
         cthmax: 0.09
-        value: 0.888 +- 0.521
-      - name: dsigma(ee->ee)
+        value: 1.1776±0.1042
+      - name: R_sigma(ee->ee)
         E: 195.5
         cthmin: 0.09
         cthmax: 0.18
-        value: -0.173 +- 0.591
-      - name: dsigma(ee->ee)
+        value: 0.9730±0.0923
+      - name: R_sigma(ee->ee)
         E: 195.5
         cthmin: 0.18
         cthmax: 0.27
-        value: 0.184 +- 0.694
-      - name: dsigma(ee->ee)
+        value: 1.0208±0.0786
+      - name: R_sigma(ee->ee)
         E: 195.5
         cthmin: 0.27
         cthmax: 0.36
-        value: 1.118 +- 0.856
-      - name: dsigma(ee->ee)
+        value: 1.0907±0.0694
+      - name: R_sigma(ee->ee)
         E: 195.5
         cthmin: 0.36
         cthmax: 0.45
-        value: 0.529 +- 0.977
-      - name: dsigma(ee->ee)
+        value: 1.0293±0.0542
+      - name: R_sigma(ee->ee)
         E: 195.5
         cthmin: 0.45
         cthmax: 0.54
-        value: -1.244 +- 1.223
-      - name: dsigma(ee->ee)
+        value: 0.9560±0.0432
+      - name: R_sigma(ee->ee)
         E: 195.5
         cthmin: 0.54
         cthmax: 0.63
-        value: 2.029 +- 1.619
-      - name: dsigma(ee->ee)
+        value: 1.0428±0.0342
+      - name: R_sigma(ee->ee)
         E: 195.5
         cthmin: 0.63
         cthmax: 0.72
-        value: -0.31 +- 2.154
-      - name: dsigma(ee->ee)
+        value: 0.9965±0.0243
+      - name: R_sigma(ee->ee)
         E: 195.5
         cthmin: 0.72
         cthmax: 0.81
-        value: -0.881 +- 4.121
-      - name: dsigma(ee->ee)
+        value: 0.9956±0.0208
+      - name: R_sigma(ee->ee)
         E: 195.5
         cthmin: 0.81
         cthmax: 0.90
-        value: -4.842 +- 8.003
-      - name: dsigma(ee->ee)
+        value: 0.9925±0.0125
+      - name: R_sigma(ee->ee)
         E: 199.5
-        cthmin: -0.90
-        cthmax: -0.72
-        value: 0.063 +- 0.245
-      - name: dsigma(ee->ee)
+        cthmin: −0.90
+        cthmax: −0.72
+        value: 1.0444±0.1725
+      - name: R_sigma(ee->ee)
         E: 199.5
-        cthmin: -0.72
-        cthmax: -0.54
-        value: 0.015 +- 0.214
-      - name: dsigma(ee->ee)
+        cthmin: −0.72
+        cthmax: −0.54
+        value: 1.0092±0.1319
+      - name: R_sigma(ee->ee)
         E: 199.5
-        cthmin: -0.54
-        cthmax: -0.36
-        value: 0.183 +- 0.227
-      - name: dsigma(ee->ee)
+        cthmin: −0.54
+        cthmax: −0.36
+        value: 1.0971±0.1204
+      - name: R_sigma(ee->ee)
         E: 199.5
-        cthmin: -0.36
-        cthmax: -0.18
-        value: -0.047 +- 0.250
-      - name: dsigma(ee->ee)
+        cthmin: −0.36
+        cthmax: −0.18
+        value: 0.9805±0.1038
+      - name: R_sigma(ee->ee)
         E: 199.5
-        cthmin: -0.18
-        cthmax:  0.00
-        value: 0.816 +- 0.313
-      - name: dsigma(ee->ee)
+        cthmin: −0.18
+        cthmax: 0.00
+        value: 1.2376±0.0911
+      - name: R_sigma(ee->ee)
         E: 199.5
         cthmin: 0.00
         cthmax: 0.09
-        value: 0.474 +- 0.506
-      - name: dsigma(ee->ee)
+        value: 1.0994±0.1061
+      - name: R_sigma(ee->ee)
         E: 199.5
         cthmin: 0.09
         cthmax: 0.18
-        value: -0.269 +- 0.571
-      - name: dsigma(ee->ee)
+        value: 0.9563±0.0927
+      - name: R_sigma(ee->ee)
         E: 199.5
         cthmin: 0.18
         cthmax: 0.27
-        value: -0.227 +- 0.667
-      - name: dsigma(ee->ee)
+        value: 0.9732±0.0787
+      - name: R_sigma(ee->ee)
         E: 199.5
         cthmin: 0.27
         cthmax: 0.36
-        value: -2.267 +- 0.736
-      - name: dsigma(ee->ee)
+        value: 0.8074±0.0625
+      - name: R_sigma(ee->ee)
         E: 199.5
         cthmin: 0.36
         cthmax: 0.45
-        value: -0.886 +- 0.920
-      - name: dsigma(ee->ee)
+        value: 0.9487±0.0533
+      - name: R_sigma(ee->ee)
         E: 199.5
         cthmin: 0.45
         cthmax: 0.54
-        value: -0.117 +- 1.214
-      - name: dsigma(ee->ee)
+        value: 0.9957±0.0448
+      - name: R_sigma(ee->ee)
         E: 199.5
         cthmin: 0.54
         cthmax: 0.63
-        value: -0.993 +- 1.537
-      - name: dsigma(ee->ee)
+        value: 0.9782±0.0337
+      - name: R_sigma(ee->ee)
         E: 199.5
         cthmin: 0.63
         cthmax: 0.72
-        value: 1.311 +- 2.060
-      - name: dsigma(ee->ee)
+        value: 1.0154±0.0242
+      - name: R_sigma(ee->ee)
         E: 199.5
         cthmin: 0.72
         cthmax: 0.81
-        value: 0.176 +- 3.941
-      - name: dsigma(ee->ee)
+        value: 1.0009±0.0207
+      - name: R_sigma(ee->ee)
         E: 199.5
         cthmin: 0.81
         cthmax: 0.90
-        value: -12.732 +- 7.608
-      - name: dsigma(ee->ee)
-        E: 201.6
-        cthmin: -0.90
-        cthmax: -0.72
-        value: 0.167 +- 0.368
-      - name: dsigma(ee->ee)
-        E: 201.6
-        cthmin: -0.72
-        cthmax: -0.54
-        value: -0.235 +- 0.276
-      - name: dsigma(ee->ee)
-        E: 201.6
-        cthmin: -0.54
-        cthmax: -0.36
-        value: 0.271 +- 0.345
-      - name: dsigma(ee->ee)
-        E: 201.6
-        cthmin: -0.36
-        cthmax: -0.18
-        value: 0.879 +- 0.406
-      - name: dsigma(ee->ee)
-        E: 201.6
-        cthmin: -0.18
-        cthmax:  0.00
-        value: -0.445 +- 0.394
-      - name: dsigma(ee->ee)
-        E: 201.6
+        value: 0.9794±0.0123
+      - name: R_sigma(ee->ee)
+        E: 201.8
+        cthmin: −0.90
+        cthmax: −0.72
+        value: 1.1192±0.2627
+      - name: R_sigma(ee->ee)
+        E: 201.8
+        cthmin: −0.72
+        cthmax: −0.54
+        value: 0.8512±0.1748
+      - name: R_sigma(ee->ee)
+        E: 201.8
+        cthmin: −0.54
+        cthmax: −0.36
+        value: 1.1476±0.1879
+      - name: R_sigma(ee->ee)
+        E: 201.8
+        cthmin: −0.36
+        cthmax: −0.18
+        value: 1.3723±0.1720
+      - name: R_sigma(ee->ee)
+        E: 201.8
+        cthmin: −0.18
+        cthmax: 0.00
+        value: 0.8674±0.1174
+      - name: R_sigma(ee->ee)
+        E: 201.8
         cthmin: 0.00
         cthmax: 0.09
-        value: -0.066 +- 0.628
-      - name: dsigma(ee->ee)
-        E: 201.6
+        value: 0.9859±0.1345
+      - name: R_sigma(ee->ee)
+        E: 201.8
         cthmin: 0.09
         cthmax: 0.18
-        value: 0.446 +- 0.861
-      - name: dsigma(ee->ee)
-        E: 201.6
+        value: 1.0741±0.1431
+      - name: R_sigma(ee->ee)
+        E: 201.8
         cthmin: 0.18
         cthmax: 0.27
-        value: -0.863 +- 0.957
-      - name: dsigma(ee->ee)
-        E: 201.6
+        value: 0.8963±0.1150
+      - name: R_sigma(ee->ee)
+        E: 201.8
         cthmin: 0.27
         cthmax: 0.36
-        value: -0.522 +- 1.113
-      - name: dsigma(ee->ee)
-        E: 201.6
+        value: 0.9548±0.0963
+      - name: R_sigma(ee->ee)
+        E: 201.8
         cthmin: 0.36
         cthmax: 0.45
-        value: -0.463 +- 1.338
-      - name: dsigma(ee->ee)
-        E: 201.6
+        value: 0.9726±0.0792
+      - name: R_sigma(ee->ee)
+        E: 201.8
         cthmin: 0.45
         cthmax: 0.54
-        value: 0.57 +- 1.643
-      - name: dsigma(ee->ee)
-        E: 201.6
+        value: 1.0214±0.0618
+      - name: R_sigma(ee->ee)
+        E: 201.8
         cthmin: 0.54
         cthmax: 0.63
-        value: 1.704 +- 2.214
-      - name: dsigma(ee->ee)
-        E: 201.6
+        value: 1.0380±0.0494
+      - name: R_sigma(ee->ee)
+        E: 201.8
         cthmin: 0.63
         cthmax: 0.72
-        value: 3.78 +- 2.887
-      - name: dsigma(ee->ee)
-        E: 201.6
+        value: 1.0453±0.0346
+      - name: R_sigma(ee->ee)
+        E: 201.8
         cthmin: 0.72
         cthmax: 0.81
-        value: 2.122 +- 5.516
-      - name: dsigma(ee->ee)
-        E: 201.6
+        value: 1.0114±0.0295
+      - name: R_sigma(ee->ee)
+        E: 201.8
         cthmin: 0.81
         cthmax: 0.90
-        value: -5.21 +- 10.339
-      - name: dsigma(ee->ee)
-        E: 204.9
-        cthmin: -0.90
-        cthmax: -0.72
-        value: -0.253 +- 0.205
-      - name: dsigma(ee->ee)
-        E: 204.9
-        cthmin: -0.72
-        cthmax: -0.54
-        value: -0.069 +- 0.195
-      - name: dsigma(ee->ee)
-        E: 204.9
-        cthmin: -0.54
-        cthmax: -0.36
-        value: 0.264 +- 0.231
-      - name: dsigma(ee->ee)
-        E: 204.9
-        cthmin: -0.36
-        cthmax: -0.18
-        value: 0.284 +- 0.255
-      - name: dsigma(ee->ee)
-        E: 204.9
-        cthmin: -0.18
-        cthmax:  0.00
-        value: 0.157 +- 0.300
-      - name: dsigma(ee->ee)
-        E: 204.9
+        value: 0.9914±0.0171
+      - name: R_sigma(ee->ee)
+        E: 204.8
+        cthmin: −0.90
+        cthmax: −0.72
+        value: 0.8133±0.1513
+      - name: R_sigma(ee->ee)
+        E: 204.8
+        cthmin: −0.72
+        cthmax: −0.54
+        value: 0.9552±0.1267
+      - name: R_sigma(ee->ee)
+        E: 204.8
+        cthmin: −0.54
+        cthmax: −0.36
+        value: 1.1478±0.1293
+      - name: R_sigma(ee->ee)
+        E: 204.8
+        cthmin: −0.36
+        cthmax: −0.18
+        value: 1.1246±0.1118
+      - name: R_sigma(ee->ee)
+        E: 204.8
+        cthmin: −0.18
+        cthmax: 0.00
+        value: 1.0483±0.0922
+      - name: R_sigma(ee->ee)
+        E: 204.8
         cthmin: 0.00
         cthmax: 0.09
-        value: 0.829 +- 0.472
-      - name: dsigma(ee->ee)
-        E: 204.9
+        value: 1.1851±0.1054
+      - name: R_sigma(ee->ee)
+        E: 204.8
         cthmin: 0.09
         cthmax: 0.18
-        value: 0.016 +- 0.571
-      - name: dsigma(ee->ee)
-        E: 204.9
+        value: 1.0027±0.0981
+      - name: R_sigma(ee->ee)
+        E: 204.8
         cthmin: 0.18
         cthmax: 0.27
-        value: -0.081 +- 0.635
-      - name: dsigma(ee->ee)
-        E: 204.9
+        value: 0.9900±0.0786
+      - name: R_sigma(ee->ee)
+        E: 204.8
         cthmin: 0.27
         cthmax: 0.36
-        value: -0.593 +- 0.764
-      - name: dsigma(ee->ee)
-        E: 204.9
+        value: 0.9471±0.0682
+      - name: R_sigma(ee->ee)
+        E: 204.8
         cthmin: 0.36
         cthmax: 0.45
-        value: -1.593 +- 0.874
-      - name: dsigma(ee->ee)
-        E: 204.9
+        value: 0.9024±0.0535
+      - name: R_sigma(ee->ee)
+        E: 204.8
         cthmin: 0.45
         cthmax: 0.54
-        value: 0.467 +- 1.157
-      - name: dsigma(ee->ee)
-        E: 204.9
+        value: 1.0182±0.0450
+      - name: R_sigma(ee->ee)
+        E: 204.8
         cthmin: 0.54
         cthmax: 0.63
-        value: -0.093 +- 1.497
-      - name: dsigma(ee->ee)
-        E: 204.9
+        value: 0.9978±0.0346
+      - name: R_sigma(ee->ee)
+        E: 204.8
         cthmin: 0.63
         cthmax: 0.72
-        value: -1.684 +- 1.976
-      - name: dsigma(ee->ee)
-        E: 204.9
+        value: 0.9792±0.0244
+      - name: R_sigma(ee->ee)
+        E: 204.8
         cthmin: 0.72
         cthmax: 0.81
-        value: -1.036 +- 3.838
-      - name: dsigma(ee->ee)
-        E: 204.9
+        value: 0.9943±0.0212
+      - name: R_sigma(ee->ee)
+        E: 204.8
         cthmin: 0.81
         cthmax: 0.90
-        value: 1.794 +- 7.527
-      - name: dsigma(ee->ee)
-        E: 206.6
-        cthmin: -0.90
-        cthmax: -0.72
-        value: 0.101 +- 0.196
-      - name: dsigma(ee->ee)
-        E: 206.6
-        cthmin: -0.72
-        cthmax: -0.54
-        value: -0.091 +- 0.163
-      - name: dsigma(ee->ee)
-        E: 206.6
-        cthmin: -0.54
-        cthmax: -0.36
-        value: 0.144 +- 0.177
-      - name: dsigma(ee->ee)
-        E: 206.6
-        cthmin: -0.36
-        cthmax: -0.18
-        value: -0.084 +- 0.198
-      - name: dsigma(ee->ee)
-        E: 206.6
-        cthmin: -0.18
-        cthmax:  0.00
-        value: 0.021 +- 0.233
-      - name: dsigma(ee->ee)
-        E: 206.6
+        value: 1.0031±0.0128
+      - name: R_sigma(ee->ee)
+        E: 206.5
+        cthmin: −0.90
+        cthmax: −0.72
+        value: 1.0754±0.1464
+      - name: R_sigma(ee->ee)
+        E: 206.5
+        cthmin: −0.72
+        cthmax: −0.54
+        value: 0.9400±0.1074
+      - name: R_sigma(ee->ee)
+        E: 206.5
+        cthmin: −0.54
+        cthmax: −0.36
+        value: 1.0825±0.1014
+      - name: R_sigma(ee->ee)
+        E: 206.5
+        cthmin: −0.36
+        cthmax: −0.18
+        value: 0.9625±0.0884
+      - name: R_sigma(ee->ee)
+        E: 206.5
+        cthmin: −0.18
+        cthmax: 0.00
+        value: 1.0066±0.0729
+      - name: R_sigma(ee->ee)
+        E: 206.5
         cthmin: 0.00
         cthmax: 0.09
-        value: 0.054 +- 0.357
-      - name: dsigma(ee->ee)
-        E: 206.6
+        value: 1.0123±0.0815
+      - name: R_sigma(ee->ee)
+        E: 206.5
         cthmin: 0.09
         cthmax: 0.18
-        value: 0.664 +- 0.463
-      - name: dsigma(ee->ee)
-        E: 206.6
+        value: 1.1159±0.0808
+      - name: R_sigma(ee->ee)
+        E: 206.5
         cthmin: 0.18
         cthmax: 0.27
-        value: -1.021 +- 0.481
-      - name: dsigma(ee->ee)
-        E: 206.6
+        value: 0.8719±0.0603
+      - name: R_sigma(ee->ee)
+        E: 206.5
         cthmin: 0.27
         cthmax: 0.36
-        value: 0.202 +- 0.615
-      - name: dsigma(ee->ee)
-        E: 206.6
+        value: 1.0183±0.0558
+      - name: R_sigma(ee->ee)
+        E: 206.5
         cthmin: 0.36
         cthmax: 0.45
-        value: -0.12 +- 0.739
-      - name: dsigma(ee->ee)
-        E: 206.6
+        value: 0.9925±0.0460
+      - name: R_sigma(ee->ee)
+        E: 206.5
         cthmin: 0.45
         cthmax: 0.54
-        value: 0.422 +- 0.923
-      - name: dsigma(ee->ee)
-        E: 206.6
+        value: 1.0167±0.0365
+      - name: R_sigma(ee->ee)
+        E: 206.5
         cthmin: 0.54
         cthmax: 0.63
-        value: -0.381 +- 1.188
-      - name: dsigma(ee->ee)
-        E: 206.6
+        value: 0.9910±0.0280
+      - name: R_sigma(ee->ee)
+        E: 206.5
         cthmin: 0.63
         cthmax: 0.72
-        value: -2.028 +- 1.569
-      - name: dsigma(ee->ee)
-        E: 206.6
+        value: 0.9745±0.0197
+      - name: R_sigma(ee->ee)
+        E: 206.5
         cthmin: 0.72
         cthmax: 0.81
-        value: -4.217 +- 3.002
-      - name: dsigma(ee->ee)
-        E: 206.6
+        value: 0.9763±0.0169
+      - name: R_sigma(ee->ee)
+        E: 206.5
         cthmin: 0.81
         cthmax: 0.90
-        value: -3.051 +- 6.024
+        value: 0.9947±0.0104
     correlation:
       [[ 1.000, 0.001, 0.001, 0.002, 0.002, 0.002, 0.002, 0.002, 0.002, 0.003, 0.004, 0.005, 0.007, 0.013, 0.021, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.003, 0.006, 0.010, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.002, 0.002, 0.003, 0.004, 0.009, 0.014, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.002, 0.003, 0.004, 0.009, 0.014, 0.001, 0.000, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.002, 0.005, 0.009, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.002, 0.003, 0.004, 0.009, 0.014, 0.002, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.002, 0.002, 0.003, 0.004, 0.005, 0.011, 0.017],
        [ 0.001, 1.000, 0.001, 0.002, 0.002, 0.002, 0.002, 0.002, 0.003, 0.003, 0.004, 0.005, 0.007, 0.010, 0.015, 0.000, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.003, 0.004, 0.006, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.002, 0.002, 0.003, 0.004, 0.006, 0.009, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.002, 0.003, 0.004, 0.006, 0.009, 0.001, 0.000, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.003, 0.004, 0.006, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.002, 0.002, 0.003, 0.004, 0.006, 0.009, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.002, 0.002, 0.002, 0.003, 0.004, 0.005, 0.007, 0.011],
@@ -14856,5 +14883,3 @@ LEP ee->ee:
        [ 0.005, 0.005, 0.006, 0.007, 0.008, 0.007, 0.007, 0.009, 0.011, 0.013, 0.017, 0.021, 0.028, 0.033, 0.052, 0.002, 0.003, 0.003, 0.003, 0.004, 0.004, 0.003, 0.004, 0.005, 0.006, 0.007, 0.010, 0.013, 0.018, 0.030, 0.004, 0.004, 0.005, 0.005, 0.006, 0.006, 0.006, 0.007, 0.008, 0.010, 0.012, 0.016, 0.022, 0.027, 0.044, 0.004, 0.004, 0.005, 0.005, 0.007, 0.006, 0.006, 0.007, 0.008, 0.010, 0.013, 0.016, 0.022, 0.027, 0.044, 0.003, 0.002, 0.003, 0.004, 0.004, 0.004, 0.004, 0.005, 0.005, 0.006, 0.008, 0.010, 0.014, 0.016, 0.027, 0.004, 0.004, 0.005, 0.006, 0.007, 0.007, 0.006, 0.008, 0.009, 0.010, 0.013, 0.017, 0.023, 0.027, 0.044, 0.006, 0.006, 0.007, 0.008, 0.009, 0.009, 0.009, 0.010, 0.013, 0.016, 0.020, 0.025, 1.000, 0.040, 0.065],
        [ 0.011, 0.007, 0.007, 0.008, 0.010, 0.008, 0.009, 0.011, 0.013, 0.016, 0.020, 0.025, 0.033, 0.070, 0.112, 0.005, 0.004, 0.004, 0.004, 0.005, 0.004, 0.004, 0.006, 0.007, 0.009, 0.010, 0.013, 0.017, 0.038, 0.064, 0.009, 0.005, 0.006, 0.007, 0.008, 0.006, 0.007, 0.009, 0.011, 0.012, 0.015, 0.020, 0.027, 0.057, 0.094, 0.009, 0.005, 0.006, 0.007, 0.008, 0.007, 0.007, 0.009, 0.009, 0.012, 0.016, 0.020, 0.027, 0.057, 0.093, 0.006, 0.003, 0.004, 0.005, 0.004, 0.004, 0.005, 0.005, 0.006, 0.007, 0.009, 0.012, 0.016, 0.035, 0.059, 0.008, 0.005, 0.006, 0.007, 0.008, 0.007, 0.008, 0.009, 0.010, 0.012, 0.016, 0.020, 0.027, 0.057, 0.095, 0.013, 0.008, 0.009, 0.010, 0.012, 0.010, 0.012, 0.012, 0.016, 0.019, 0.024, 0.031, 0.040, 1.000, 0.135],
        [ 0.017, 0.011, 0.012, 0.013, 0.017, 0.013, 0.014, 0.017, 0.021, 0.026, 0.032, 0.040, 0.054, 0.114, 0.183, 0.008, 0.006, 0.006, 0.006, 0.008, 0.007, 0.007, 0.010, 0.011, 0.015, 0.015, 0.021, 0.028, 0.062, 0.104, 0.015, 0.008, 0.009, 0.011, 0.013, 0.010, 0.012, 0.014, 0.017, 0.020, 0.025, 0.032, 0.044, 0.093, 0.152, 0.015, 0.008, 0.009, 0.011, 0.013, 0.011, 0.012, 0.014, 0.015, 0.019, 0.026, 0.032, 0.044, 0.092, 0.151, 0.010, 0.005, 0.006, 0.007, 0.007, 0.006, 0.008, 0.009, 0.010, 0.012, 0.014, 0.019, 0.026, 0.057, 0.095, 0.013, 0.008, 0.010, 0.011, 0.012, 0.011, 0.012, 0.014, 0.016, 0.019, 0.025, 0.032, 0.043, 0.092, 0.153, 0.021, 0.013, 0.014, 0.016, 0.019, 0.015, 0.019, 0.020, 0.025, 0.031, 0.039, 0.049, 0.065, 0.135, 1.000]]
-
-     
