@@ -1,54 +1,68 @@
 r"""Functions for $e^+ e^-\to l^+ l^- of various flavours"""
-# Written by Ben Allanach: note ignores small imaginary parts coming from Wilson coefficient running. Not yet appropriate for complex Wilson coefficients.
+# Written by Ben Allanach
 
-import flavio
+from math import pi, sqrt
+from flavio.physics.zdecays.smeftew import gV_SM, gA_SM, _QN
+from flavio.physics.common import add_dict
+from flavio.classes import Observable, Prediction
+from flavio.physics import ckm as ckm_flavio
 import numpy as np
+import flavio.physics.zdecays.smeftew as smeftew
 
-# predicted difference to SM correction in pb from SMEFT operators of e+e-->mumu for LEP2 energy E and family fam total cross-section. afb should be true for forward-backward asymmetry, whereas it should be false for the total cross-section. Programmed by BCA 22/2/23, checked and corrected 27/2/23
+# Kronecker delta
+def delta(a, b):
+    return int(a == b)
+
+# predicted ratio to SM with SMEFT operators of e+e-->mu+mu- or tau+tau- for LEP2 energy E and family fam=2,3 total cross-section. afb should be true for forward-backward asymmetry, whereas it should be false for the total cross-section. Programmed by BCA 22/2/23, checked and corrected 27/2/23
 def ee_ll(C, par, E, fam):
     # Check energy E is correct
     if (E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and
         E != 199.5 and E!= 201.6 and E!= 204.9 and E!= 206.6):
         raise ValueError('ee_ll called with incorrect LEP2 energy {} GeV.'.format(E))
-        
-    # For now, delta g couplings have been NEGLECTED
-    PI = 3.141592653589793
     s = E * E
     mz = par['m_Z']
+    gammaZ = 1 / par['tau_Z']
     GF = par['GF']
     alpha = par['alpha_e']
     s2w   = par['s2w']
     gzeL  = -0.5 + s2w
     gzeR  = s2w
-    eSq   = 4 * PI * alpha
+    eSq   = 4 * pi * alpha1
     gLsq  = eSq / s2w
     gYsq  = gLsq * s2w / (1. - s2w)
+    g_cw  = sqrt(gLsq + gYsq)
     vSq   = 1. / (np.sqrt(2.) * GF)
     res   = 0
     fac   = 1
     div   = 24
-    # Expression from 1511.07434v2
-    if (fam == 2 or fam == 3):
-        res   = 1. / (div * PI) * (
-            eSq * np.real_if_close(C[f'll_11{fam}{fam}'].real +
-                   C['ll_1' + str(fam) + str(fam) + '1'] +
-                   C['ee_11' + str(fam) + str(fam)] +
-                   fac * C['le_11' + str(fam) + str(fam)] +
-                   fac * C['le_' + str(fam) + str(fam) + '11']) +
-            s * (gLsq + gYsq) / (s - mz**2) * np.real_if_close(
-                gzeL**2 * (C['ll_11' + str(fam) + str(fam)] +
-                           C['ll_1' + str(fam) + str(fam) + '1']) +
-                gzeR**2 *  C['ee_11' + str(fam) + str(fam)] +
-                fac * gzeL * gzeR * (C['le_11' + str(fam) + str(fam)] +
-                               C['le_' + str(fam) + str(fam) + '11'])
-            )
-        )
-    else:
-        raise ValueError('ee_ll called with incorrect family {}'.format(fam))
-    # The following numerical check made it looks like the constants have the correct values, meaning the conventions are understtod: 21/2/23
-    # print('# DEBUG: MZ=', np.sqrt(vSq * (gLsq + gYsq) / 4.),' MW=', np.sqrt(gLsq * vSq / 4.),' PI=',PI, ' v=',np.sqrt(vSq))
-    conversion_factor = 0.389397e9 # To convert cross-sections in GeV^(-2) to pb
-    return res * conversion_factor
+    # Need to define complex matrix element first, then take mod squared and multiply by the form factor of each piece.
+    sigma_tot    = 0
+    sigma_tot_SM = 0
+    if (fam != 2 and fam != 3):
+        raise ValueError(f'ee_ll called with incorrect family {fam} - should be 2 or 3')
+    gVe  = g_cw * gV_SM('e', par) 
+    gAe  = g_cw * gA_SM('e', par)
+    l_type = 'none'
+    if (fam == 2):
+        l_type = 'mu'
+    elif (fam == 3):
+        l_type = 'tau'
+    gVei = g_cw * gV_SM(l_type, par)
+    gAei = g_cw * gA_SM(l_type, par)
+    # My ordering for X and Y is (1, 2):=(L, R). 
+    for X in range(1, 2):
+        for Y in range(1 ,2):
+            gexSM = (gVe + gAe) * delta(X, 2) + (gVe - gAe) * delta(X, 1)
+            geySM = (gVei + gAei) * delta(Y, 2) + (gVei - gAei) * delta(Y, 1)
+            gex   = gexSM + (smeftew.d_gVl('e', 'e', par, C) + smeftew.d_gAl('e', 'e', par, C)) * delta(X, 2) + (smeftew.d_gVl('e', 'e', par, C) - smeftew.d_gAl('e', 'e', par, C)) * delta(X, 1)
+            gey   = geySM + (smeftew.d_gVl(l_type, l_type, par, C) + smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 2) + (smeftew.d_gVl(l_type, l_type, par, C) - smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 1)
+            NSM = eSq / s + gexSM * geySM / (s - mz**2 + 1j * mz * gammaZ)
+            N = eSq / s + gex * gey / (s - mz**2 + 1j * mz * gammaZ) + (C[f'll_11{fam}{fam}'] + C[f'll_1{fam}{fam}1']) * delta(X, 1) * delta(Y, 1) + C[f'ee_11{fam}{fam}'] * delta(X, 2) * delta(Y, 2) + C[f'le_11{fam}{fam}'] * delta(X, 1) * delta(Y, 2) + C[f'le_{fam}{fam}11'] * delta(X, 2) * delta(Y, 1)
+            sigma_tot =+ abs(N)**2
+            sigma_tot_SM =+ abs(NSM)**2
+    # This next contribution has no helicity structure in SM and therefore doesn't interfere with it
+    sigma_tot =+ 3 * abs(C[f'le_{fam}{fam}11'])**2 
+    return sigma_tot / sigma_tot_SM
 
 def ee_ll_obs(wc_obj, par, E, fam):
     scale = flavio.config['renormalization scale']['ee_ww'] # Use LEP2 renorm scale
@@ -59,78 +73,78 @@ def ee_ll_obs(wc_obj, par, E, fam):
 _process_tex = r"e^+e^- \to l^+l^-"
 _process_taxonomy = r'Process :: $e^+e^-$ scattering :: $e^+e^-\to l^+l^-$ :: $' + _process_tex + r"$"
 
-_obs_name = "dsigma(ee->ll)"
-_obs = flavio.classes.Observable(_obs_name)
+_obs_name = "R_sigma(ee->ll)"
+_obs = Observable(_obs_name)
 _obs.arguments = ['E', 'fam']
-flavio.classes.Prediction(_obs_name, ee_ll_obs)
-_obs.set_description(r"Cross section of $" + _process_tex + r"$ at energy $E$ minus that of the SM")
-_obs.tex = r"$d\sigma(" + _process_tex + r")$"
+Prediction(_obs_name, ee_ll_obs)
+_obs.set_description(r"Ratio of cross section of $" + _process_tex + r"$ at energy $E$ to that of the SM")
+_obs.tex = r"$R_\sigma(" + _process_tex + r")$"
 _obs.add_taxonomy(_process_taxonomy)
 
 
-# predicted AFB from SMEFT operators of e+e-->mumu/tautau for LEP2 energy E and family fam total cross-section. AfbSM is the SM prediction for AFB. fam=2 or 3 is the lepton family. Programmed by BCA 27/2/23
-def ee_ll_afb(C, par, E, fam, AfbSM, sigmaSM):
+# predicted ratio of AFB to SM from SMEFT operators of e+e-->mumu/tautau for LEP2 energy E and family fam total cross-section. AfbSM is the SM prediction for AFB. fam=2 or 3 is the lepton family. Programmed by BCA 27/2/23
+def ee_ll_afb(C, par, E, fam):
+    # Check energy E is correct
     # Check energy E is correct
     if (E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and
-        E != 199.5 and E != 201.6 and E != 204.9 and E != 206.6):
-        raise ValueError('ee_ll_afb called with incorrect LEP2 energy {} GeV.'.format(E))
-        
-    # For now, delta g couplings have been NEGLECTED
-    PI = 3.141592653589793
+        E != 199.5 and E!= 201.6 and E!= 204.9 and E!= 206.6):
+        raise ValueError('ee_ll called with incorrect LEP2 energy {} GeV.'.format(E))
     s = E * E
     mz = par['m_Z']
+    gammaZ = 1 / par['tau_Z']
     GF = par['GF']
     alpha = par['alpha_e']
     s2w   = par['s2w']
     gzeL  = -0.5 + s2w
     gzeR  = s2w
-    eSq   = 4 * PI * alpha
+    eSq   = 4 * pi * alpha1
     gLsq  = eSq / s2w
     gYsq  = gLsq * s2w / (1. - s2w)
+    g_cw  = sqrt(gLsq + gYsq)
     vSq   = 1. / (np.sqrt(2.) * GF)
     res   = 0
-    fac   = -1
-    div   = 32
-    conversion_factor = 0.389397e9 # To convert cross-sections in GeV^(-2) to pb
-    # Expression from 1511.07434v2
-    if (fam == 2 or fam == 3):
-        res   = conversion_factor / (div * PI) * (
-            eSq * np.real_if_close(C['ll_11' + str(fam) + str(fam)] +
-                   C['ll_1' + str(fam) + str(fam) + '1'] +
-                   C['ee_11' + str(fam) + str(fam)] +
-                   fac * C['le_11' + str(fam) + str(fam)] +
-                   fac * C['le_' + str(fam) + str(fam) + '11']) +
-            s * (gLsq + gYsq) / (s - mz**2) * np.real_if_close(
-                gzeL**2 * (C['ll_11' + str(fam) + str(fam)] +
-                           C['ll_1' + str(fam) + str(fam) + '1']) +
-                gzeR**2 *  C['ee_11' + str(fam) + str(fam)] +
-                fac * gzeL * gzeR * (C['le_11' + str(fam) + str(fam)] +
-                               C['le_' + str(fam) + str(fam) + '11'])
-            )
-        )
-    else:
-        raise ValueError('ee_ll_afb called with incorrect family {}'.format(fam))
-    # The following numerical check made it looks like the constants have the correct values, meaning the conventions are understtod: 21/2/23
-    # print('# DEBUG: MZ=', np.sqrt(vSq * (gLsq + gYsq) / 4.),' MW=', np.sqrt(gLsq * vSq / 4.),' PI=',PI, ' v=',np.sqrt(vSq))
-    # New physics contribution to forward-backward cross-section
-    dsigma_fb  = res
-    # New physics contribution to total cross-section at this energy
-    dsigma_tot = ee_ll(C, par, E, fam)
-    return AfbSM * (1.0 - dsigma_tot / sigmaSM) + dsigma_fb / sigmaSM
+    fac   = 1
+    div   = 64
+    # Need to define complex matrix element first, then take mod squared and multiply by the form factor of each piece.
+    afb_tot    = 0
+    afb_tot_SM = 0
+    if (fam != 2 and fam != 3):
+        raise ValueError(f'ee_ll called with incorrect family {fam} - should be 2 or 3')
+    gVe  = g_cw * gV_SM('e', par) 
+    gAe  = g_cw * gA_SM('e', par)
+    l_type = 'none'
+    if (fam == 2):
+        l_type = 'mu'
+    elif (fam == 3):
+        l_type = 'tau'
+    gVei = g_cw * gV_SM(l_type, par)
+    gAei = g_cw * gA_SM(l_type, par)
+    for X in range(1, 2):
+        for Y in range(1 ,2):
+            gexSM = (gVe + gAe) * delta(X, 2) + (gVe - gAe) * delta(X, 1)
+            geySM = (gVei + gAei) * delta(Y, 2) + (gVei - gAei) * delta(Y, 1)
+            gex   = gexSM + (smeftew.d_gVl('e', 'e', par, C) + smeftew.d_gAl('e', 'e', par, C)) * delta(X, 2) + (smeftew.d_gVl('e', 'e', par, C) - smeftew.d_gAl('e', 'e', par, C)) * delta(X, 1)
+            gey   = geySM + (smeftew.d_gVl(l_type, l_type, par, C) + smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 2) + (smeftew.d_gVl(l_type, l_type, par, C) - smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 1)
+            # Everything below needs redoing
+            NSM = eSq / s + gexSM * geySM / (s - mz**2 + 1j * mz * gammaZ)
+            N = eSq / s + gex * gey / (s - mz**2 + 1j * mz * gammaZ) + (C[f'll_11{fam}{fam}'] + C[f'll_1{fam}{fam}1']) * delta(X, 1) * delta(Y, 1) + C[f'ee_11{fam}{fam}'] * delta(X, 2) * delta(Y, 2) + C[f'le_11{fam}{fam}'] * delta(X, 1) * delta(Y, 2) + C[f'le_{fam}{fam}11'] * delta(X, 2) * delta(Y, 1)
+            afb_tot =+ s / (64 * pi) * abs(N)**2 * (2 * delta(X, Y) - 1)
+            afb_tot_SM =+ s / (64 * pi) * abs(NSM)**2 * (2 * delta(X, Y) - 1)
+    return afb_tot / afb_tot_SM
 
-def ee_ll_afb_obs(wc_obj, par, E, fam, AfbSM, sigmaSM):
+def ee_ll_afb_obs(wc_obj, par, E, fam):
     scale = flavio.config['renormalization scale']['ee_ww'] # Use LEP2 renorm scale
     C = wc_obj.get_wcxf(sector='all', scale=scale, par=par,
                         eft='SMEFT', basis='Warsaw')
-    return ee_ll_afb(C, par, E, fam, AfbSM, sigmaSM)
+    return ee_ll_afb(C, par, E, fam)
 
 _process_tex = r"e^+e^- \to l^+l^-"
 _process_taxonomy = r'Process :: $e^+e^-$ scattering :: $e^+e^-\to l^+l^-$ :: $' + _process_tex + r"$"
 
-_obs_name = "AFB(ee->ll)"
-_obs = flavio.classes.Observable(_obs_name)
-_obs.arguments = ['E', 'fam', 'AfbSM', 'sigmaSM']
-flavio.classes.Prediction(_obs_name, ee_ll_afb_obs)
-_obs.set_description(r"$A_{FB} of $" + _process_tex + r"$ at energy $E$")
+_obs_name = "R_Afb(ee->ll)"
+_obs = Observable(_obs_name)
+_obs.arguments = ['E', 'fam']
+Prediction(_obs_name, ee_ll_afb_obs)
+_obs.set_description(r"$A_{FB}/A_{FB}(SM) of $" + _process_tex + r"$ at energy $E$")
 _obs.tex = r"$A_{FB}(" + _process_tex + r")$"
 _obs.add_taxonomy(_process_taxonomy)
