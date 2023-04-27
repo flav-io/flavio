@@ -117,7 +117,7 @@ _process_taxonomy = r'Process :: $e^+e^-$ scattering :: $e^+e^-\to l^+l^-$ :: $'
 
 _obs_name = "R_sigma(ee->ee)"
 _obs = Observable(_obs_name)
-_obs.arguments = ['E', 'costhmin', 'costhmax']
+_obs.arguments = ['E', 'cthmin', 'cthmax']
 Prediction(_obs_name, ee_ee_obs)
 _obs.set_description(r"Ratio of cross section of $" + _process_tex + r"$ at energy $E$ to that of the SM")
 _obs.tex = r"$R_\sigma(" + _process_tex + r")$"

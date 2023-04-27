@@ -14044,7 +14044,7 @@ LEP ee->ll:
     experiment: LEP
     inspire: Schael:2013ita
     description: >
-      Combined LEP result from table 3.4 - ratio of total to SM cross-section
+      Combined LEP result from table 3.4 - ratio of total to SM cross-section. Correlations are neglected.
     values:
       - name: R_sigma(ee->ll)
         E: 130.3
