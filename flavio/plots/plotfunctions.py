@@ -508,8 +508,11 @@ def density_contour(x, y, covariance_factor=None, n_bins=None, n_sigma=(1, 2),
     return contour(**data)
 
 
-def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
-              n_sigma=1, steps=20, threads=1, pool=None):
+def likelihood_contour_data(
+        log_likelihood,
+        x_min, x_max, y_min, y_max, *,
+        xscale='linear', yscale='linear',
+        n_sigma=1, steps=20, threads=1, pool=None):
     r"""Generate data required to plot coloured confidence contours (or bands)
     given a log likelihood function.
 
@@ -518,6 +521,7 @@ def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
     - `log_likelihood`: function returning the logarithm of the likelihood.
       Can e.g. be the method of the same name of a FastFit instance.
     - `x_min`, `x_max`, `y_min`, `y_max`: data boundaries
+    - `xscale`, `yscale`: `linear` (default) or `log` scale
     - `n_sigma`: plot confidence level corresponding to this number of standard
       deviations. Either a number (defaults to 1) or a tuple to plot several
       contours.
@@ -529,8 +533,22 @@ def likelihood_contour_data(log_likelihood, x_min, x_max, y_min, y_max,
     implementation, e.g. from `multiprocess` or `schwimmbad`). Overrides the
     `threads` argument.
     """
-    _x = np.linspace(x_min, x_max, steps)
-    _y = np.linspace(y_min, y_max, steps)
+    if xscale == 'linear':
+        _x = np.linspace(x_min, x_max, steps)
+    elif xscale == 'log':
+        if x_min <= 0 or x_max <= 0:
+            raise ValueError("`x_min` and `x_max` have to be positive if `xscale` is set to `log`.")
+        _x = np.logspace(np.log10(x_min), np.log10(x_max), steps)
+    else:
+        raise ValueError("`xscale` must be 'linear' or 'log'.")
+    if yscale == 'linear':
+        _y = np.linspace(y_min, y_max, steps)
+    elif yscale == 'log':
+        if y_min <= 0 or y_max <= 0:
+            raise ValueError("`y_min` and `y_max` have to be positive if `yscale` is set to `log`.")
+        _y = np.logspace(np.log10(y_min), np.log10(y_max), steps)
+    else:
+        raise ValueError("`yscale` must be 'linear' or 'log'.")
     x, y = np.meshgrid(_x, _y)
     if threads == 1:
         @np.vectorize
@@ -601,7 +619,7 @@ def band_plot(log_likelihood, x_min, x_max, y_min, y_max,
     if 'pre_calculated_z' not in kwargs:
         contour_kwargs = likelihood_contour_data(log_likelihood,
                       x_min, x_max, y_min, y_max,
-                      n_sigma, steps, **data_kwargs)
+                      n_sigma=n_sigma, steps=steps, **data_kwargs)
     else:
         contour_kwargs = {}
         nx, ny = kwargs['pre_calculated_z'].shape
