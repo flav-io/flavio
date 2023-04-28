@@ -14154,13 +14154,13 @@ LEP AFB(ee->ll):
         fam: 3
         value: 1.0179±0.0827±0.0155
       - name: R_Afb(ee->ll)
-        E: 191.6
-        fam: 3
-        value: 0.9451±0.0585±0.0058
-      - name: R_Afb(ee->ll)
         E: 130.3
         fam: 3
         value: 1.0672±0.1117±0.0207
+      - name: R_Afb(ee->ll)
+        E: 191.6
+        fam: 2
+        value: 0.9451±0.0585±0.0058
       - name: R_Afb(ee->ll)
         E: 191.6
         fam: 3
