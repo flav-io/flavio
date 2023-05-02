@@ -112,8 +112,8 @@ def ee_ee_obs(wc_obj, par, E, costhmin, costhmax):
                         eft='SMEFT', basis='Warsaw')
     return ee_ee(C, par, E, costhmin, costhmax)
 
-_process_tex = r"e^+e^- \to l^+l^-"
-_process_taxonomy = r'Process :: $e^+e^-$ scattering :: $e^+e^-\to l^+l^-$ :: $' + _process_tex + r"$"
+_process_tex = r"e^+e^- \to e^+e^-"
+_process_taxonomy = r'Process :: $e^+e^-$ scattering :: $e^+e^-\to e^+e^-$ :: $' + _process_tex + r"$"
 
 _obs_name = "R_sigma(ee->ee)"
 _obs = Observable(_obs_name)

@@ -61,13 +61,14 @@ def ee_ll(C, par, E, fam):
             sigma_tot =+ abs(N)**2
             sigma_tot_SM =+ abs(NSM)**2
     # This next contribution has no helicity structure in SM and therefore doesn't interfere with it
-    sigma_tot =+ 3 * abs(C[f'le_{fam}{fam}11'])**2 
+    sigma_tot =+ 3 * abs(C[f'le_{fam}{fam}11'])**2
     return sigma_tot / sigma_tot_SM
 
 def ee_ll_obs(wc_obj, par, E, fam):
     scale = flavio.config['renormalization scale']['ee_ww'] # Use LEP2 renorm scale
     C = wc_obj.get_wcxf(sector='all', scale=scale, par=par,
                         eft='SMEFT', basis='Warsaw')
+    print("DEBUG in ee_ll_obs")
     return ee_ll(C, par, E, fam)
 
 _process_tex = r"e^+e^- \to l^+l^-"
@@ -80,7 +81,6 @@ Prediction(_obs_name, ee_ll_obs)
 _obs.set_description(r"Ratio of cross section of $" + _process_tex + r"$ at energy $E$ to that of the SM")
 _obs.tex = r"$R_\sigma(" + _process_tex + r")$"
 _obs.add_taxonomy(_process_taxonomy)
-
 
 # predicted ratio of AFB to SM from SMEFT operators of e+e-->mumu/tautau for LEP2 energy E and family fam total cross-section. AfbSM is the SM prediction for AFB. fam=2 or 3 is the lepton family. Programmed by BCA 27/2/23
 def ee_ll_afb(C, par, E, fam):
@@ -136,6 +136,7 @@ def ee_ll_afb_obs(wc_obj, par, E, fam):
     scale = flavio.config['renormalization scale']['ee_ww'] # Use LEP2 renorm scale
     C = wc_obj.get_wcxf(sector='all', scale=scale, par=par,
                         eft='SMEFT', basis='Warsaw')
+    print("DEBUG: in ee_ll_afb_obs")
     return ee_ll_afb(C, par, E, fam)
 
 _process_tex = r"e^+e^- \to l^+l^-"
