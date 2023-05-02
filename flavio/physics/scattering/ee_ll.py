@@ -1,6 +1,7 @@
 r"""Functions for $e^+ e^-\to l^+ l^- of various flavours"""
 # Written by Ben Allanach
 
+from IPython.display import display
 from math import pi, sqrt
 from flavio.physics.zdecays.smeftew import gV_SM, gA_SM, _QN
 from flavio.physics.common import add_dict
@@ -8,6 +9,7 @@ from flavio.classes import Observable, Prediction
 from flavio.physics import ckm as ckm_flavio
 import numpy as np
 import flavio.physics.zdecays.smeftew as smeftew
+import flavio
 
 # Kronecker delta
 def delta(a, b):
@@ -16,8 +18,7 @@ def delta(a, b):
 # predicted ratio to SM with SMEFT operators of e+e-->mu+mu- or tau+tau- for LEP2 energy E and family fam=2,3 total cross-section. afb should be true for forward-backward asymmetry, whereas it should be false for the total cross-section. Programmed by BCA 22/2/23, checked and corrected 27/2/23
 def ee_ll(C, par, E, fam):
     # Check energy E is correct
-    if (E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and
-        E != 199.5 and E!= 201.6 and E!= 204.9 and E!= 206.6):
+    if (E != 136.3 and E != 161.3 and E != 172.1 and E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and E != 199.5 and E!= 201.8 and E!= 204.8 and E!= 206.5):
         raise ValueError('ee_ll called with incorrect LEP2 energy {} GeV.'.format(E))
     s = E * E
     mz = par['m_Z']
@@ -27,7 +28,7 @@ def ee_ll(C, par, E, fam):
     s2w   = par['s2w']
     gzeL  = -0.5 + s2w
     gzeR  = s2w
-    eSq   = 4 * pi * alpha1
+    eSq   = 4 * pi * alpha
     gLsq  = eSq / s2w
     gYsq  = gLsq * s2w / (1. - s2w)
     g_cw  = sqrt(gLsq + gYsq)
@@ -36,7 +37,7 @@ def ee_ll(C, par, E, fam):
     fac   = 1
     div   = 24
     # Need to define complex matrix element first, then take mod squared and multiply by the form factor of each piece.
-    sigma_tot    = 0
+    sigma_tot_NP = 0
     sigma_tot_SM = 0
     if (fam != 2 and fam != 3):
         raise ValueError(f'ee_ll called with incorrect family {fam} - should be 2 or 3')
@@ -58,17 +59,16 @@ def ee_ll(C, par, E, fam):
             gey   = geySM + (smeftew.d_gVl(l_type, l_type, par, C) + smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 2) + (smeftew.d_gVl(l_type, l_type, par, C) - smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 1)
             NSM = eSq / s + gexSM * geySM / (s - mz**2 + 1j * mz * gammaZ)
             N = eSq / s + gex * gey / (s - mz**2 + 1j * mz * gammaZ) + (C[f'll_11{fam}{fam}'] + C[f'll_1{fam}{fam}1']) * delta(X, 1) * delta(Y, 1) + C[f'ee_11{fam}{fam}'] * delta(X, 2) * delta(Y, 2) + C[f'le_11{fam}{fam}'] * delta(X, 1) * delta(Y, 2) + C[f'le_{fam}{fam}11'] * delta(X, 2) * delta(Y, 1)
-            sigma_tot =+ abs(N)**2
-            sigma_tot_SM =+ abs(NSM)**2
+            sigma_tot_NP += abs(N)**2
+            sigma_tot_SM += abs(NSM)**2
     # This next contribution has no helicity structure in SM and therefore doesn't interfere with it
-    sigma_tot =+ 3 * abs(C[f'le_{fam}{fam}11'])**2
-    return sigma_tot / sigma_tot_SM
+    sigma_tot_NP += 3 * abs(C[f'le_{fam}{fam}11'])**2
+    return (sigma_tot_NP / sigma_tot_SM)
 
 def ee_ll_obs(wc_obj, par, E, fam):
     scale = flavio.config['renormalization scale']['ee_ww'] # Use LEP2 renorm scale
     C = wc_obj.get_wcxf(sector='all', scale=scale, par=par,
                         eft='SMEFT', basis='Warsaw')
-    print("DEBUG in ee_ll_obs")
     return ee_ll(C, par, E, fam)
 
 _process_tex = r"e^+e^- \to l^+l^-"
@@ -86,9 +86,8 @@ _obs.add_taxonomy(_process_taxonomy)
 def ee_ll_afb(C, par, E, fam):
     # Check energy E is correct
     # Check energy E is correct
-    if (E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and
-        E != 199.5 and E!= 201.6 and E!= 204.9 and E!= 206.6):
-        raise ValueError('ee_ll called with incorrect LEP2 energy {} GeV.'.format(E))
+    if (E != 136.3 and E != 161.3 and E != 172.1 and E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and E != 199.5 and E!= 201.8 and E!= 204.8 and E!= 206.5):
+        raise ValueError('ee_ll_afb called with incorrect LEP2 energy {} GeV.'.format(E))
     s = E * E
     mz = par['m_Z']
     gammaZ = 1 / par['tau_Z']
@@ -97,7 +96,7 @@ def ee_ll_afb(C, par, E, fam):
     s2w   = par['s2w']
     gzeL  = -0.5 + s2w
     gzeR  = s2w
-    eSq   = 4 * pi * alpha1
+    eSq   = 4 * pi * alpha
     gLsq  = eSq / s2w
     gYsq  = gLsq * s2w / (1. - s2w)
     g_cw  = sqrt(gLsq + gYsq)
@@ -128,15 +127,14 @@ def ee_ll_afb(C, par, E, fam):
             # Everything below needs redoing
             NSM = eSq / s + gexSM * geySM / (s - mz**2 + 1j * mz * gammaZ)
             N = eSq / s + gex * gey / (s - mz**2 + 1j * mz * gammaZ) + (C[f'll_11{fam}{fam}'] + C[f'll_1{fam}{fam}1']) * delta(X, 1) * delta(Y, 1) + C[f'ee_11{fam}{fam}'] * delta(X, 2) * delta(Y, 2) + C[f'le_11{fam}{fam}'] * delta(X, 1) * delta(Y, 2) + C[f'le_{fam}{fam}11'] * delta(X, 2) * delta(Y, 1)
-            afb_tot =+ s / (64 * pi) * abs(N)**2 * (2 * delta(X, Y) - 1)
-            afb_tot_SM =+ s / (64 * pi) * abs(NSM)**2 * (2 * delta(X, Y) - 1)
+            afb_tot += s / (64 * pi) * abs(N)**2 * (2 * delta(X, Y) - 1)
+            afb_tot_SM += s / (64 * pi) * abs(NSM)**2 * (2 * delta(X, Y) - 1)
     return afb_tot / afb_tot_SM
 
 def ee_ll_afb_obs(wc_obj, par, E, fam):
     scale = flavio.config['renormalization scale']['ee_ww'] # Use LEP2 renorm scale
     C = wc_obj.get_wcxf(sector='all', scale=scale, par=par,
                         eft='SMEFT', basis='Warsaw')
-    print("DEBUG: in ee_ll_afb_obs")
     return ee_ll_afb(C, par, E, fam)
 
 _process_tex = r"e^+e^- \to l^+l^-"

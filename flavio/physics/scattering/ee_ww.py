@@ -2,7 +2,6 @@ r"""Functions for $e^+ e^-\to W^+ W^- scattering"""
 
 import flavio
 
-
 def ee_WW(C, E):
     r"""$e^+e^-\to W^+W^-$ cross section normalized to the SM"""
     if E == 161.3:
