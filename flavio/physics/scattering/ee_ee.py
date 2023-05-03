@@ -10,16 +10,16 @@ import scipy
 from scipy.integrate import quad
 import numpy as np
 import flavio.physics.zdecays.smeftew as smeftew
+import flavio
 
 # Kronecker delta
 def delta(a, b):
     return int(a == b)
 
 # predicted ratio to SM with SMEFT operators of e+e-->mumu for LEP2 energy E and family fam total cross-section. afb should be true for forward-backward asymmetry, whereas it should be false for the total cross-section. cthmin and chtmax are the minimum and maximum values of cosine of the scattering angle in the current bin. Programmed by BCA 24/4/23
-def ee_ll(C, par, E, cthmin, cthmax):
+def ee_ee(C, par, E, cthmin, cthmax):
     # Check energy E is correct
-    if (E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and
-        E != 199.5 and E!= 201.6 and E!= 204.9 and E!= 206.6):
+    if (E != 136.3 and E != 161.3 and E != 172.1 and E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and E != 199.5 and E!= 201.8 and E!= 204.8 and E!= 206.5):
         raise ValueError('ee_ee called with incorrect LEP2 energy {} GeV.'.format(E))
     if (cthmin != -0.90 and cthmin != -0.72 and cthmin != -0.54 and
         cthmin != -0.36 and cthmin != -0.18 and cthmin != 0.00 and
@@ -76,9 +76,9 @@ def ee_ll(C, par, E, cthmin, cthmax):
         CXY = 0
         CYX = 0
         if (Z == 1): # add SMEFT contributions
-            gex =+ (smeftew.d_gVl('e', 'e', par, C) + smeftew.d_gAl('e', 'e', par, C)) * delta(X, 2) + (smeftew.d_gVl('e', 'e', par, C) - smeftew.d_gAl('e', 'e', par, C)) * delta(X, 1)
-            gex =+ (smeftew.d_gVl('e', 'e', par, C) + smeftew.d_gAl('e', 'e', par, C)) * delta(X, 2) + (smeftew.d_gVl('e', 'e', par, C) - smeftew.d_gAl('e', 'e', par, C)) * delta(X, 1)
-            gey =+ geySM + (smeftew.d_gVl(l_type, l_type, par, C) + smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 2) + (smeftew.d_gVl(l_type, l_type, par, C) - smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 1)
+            gex += (smeftew.d_gVl('e', 'e', par, C) + smeftew.d_gAl('e', 'e', par, C)) * delta(X, 2) + (smeftew.d_gVl('e', 'e', par, C) - smeftew.d_gAl('e', 'e', par, C)) * delta(X, 1)
+            gex += (smeftew.d_gVl('e', 'e', par, C) + smeftew.d_gAl('e', 'e', par, C)) * delta(X, 2) + (smeftew.d_gVl('e', 'e', par, C) - smeftew.d_gAl('e', 'e', par, C)) * delta(X, 1)
+            gey += geySM + (smeftew.d_gVl(l_type, l_type, par, C) + smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 2) + (smeftew.d_gVl(l_type, l_type, par, C) - smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 1)
             if (X == 1 and Y == 1):
                 CXY = C[f'll_1111']
                 CYX = C[f'll_1111']
@@ -90,8 +90,8 @@ def ee_ll(C, par, E, cthmin, cthmax):
                 CYX = C[f'ee_1111']
             else:
                 raise ValueError('f called with incorrect X,Y {}'.format(X,Y))
-            tXY =+ CXY
-            sXY =+ CXY
+            tXY += CXY
+            sXY += CXY
         gexgey = gex * gey
         deltaXY = 0
         if (X == Y):
@@ -102,15 +102,16 @@ def ee_ll(C, par, E, cthmin, cthmax):
     # My ordering for X and Y is (1, 2):=(L, R). 
     for X in range(1, 2):
         for Y in range(1 ,2):
-            sigma_tot =+ f(cthmax, X, Y, 1) - f(cthmin, X, Y, 1)
-            sigma_tot_SM =+ f(cthmax, X, Y, 0) - f(cthmin, X, Y, 0)
+            sigma_tot += f(cthmax, X, Y, 1) - f(cthmin, X, Y, 1)
+            sigma_tot_SM += f(cthmax, X, Y, 0) - f(cthmin, X, Y, 0)
     return sigma_tot / sigma_tot_SM
 
-def ee_ee_obs(wc_obj, par, E, costhmin, costhmax):
+def ee_ee_obs(wc_obj, par, E, cthmin, cthmax):
+    print('DEBUG: in ee_ee_obs')
     scale = flavio.config['renormalization scale']['ee_ww'] # Use LEP2 renorm scale
     C = wc_obj.get_wcxf(sector='all', scale=scale, par=par,
                         eft='SMEFT', basis='Warsaw')
-    return ee_ee(C, par, E, costhmin, costhmax)
+    return ee_ee(C, par, E, cthmin, cthmax)
 
 _process_tex = r"e^+e^- \to e^+e^-"
 _process_taxonomy = r'Process :: $e^+e^-$ scattering :: $e^+e^-\to e^+e^-$ :: $' + _process_tex + r"$"
