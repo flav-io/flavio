@@ -4509,6 +4509,20 @@ LHCb RD* 2017:
   values:
     Rtaumu(B->D*lnu): 0.291 ± 0.019 ± 0.026 ± 0.013
 
+LHCb RD* 2023:
+  experiment: LHCb
+  inspire: LHCb:2023cjr
+  values:
+    Rtaumu(B->D*lnu): 0.247 ± 0.015 ± 0.015 ± 0.012
+
+LHCb RD RD* 2022:
+    experiment: LHCb
+    inspire: LHCb:2023zxo
+    values:
+        Rtaumu(B->Dlnu): 0.441 +- 0.060 +- 0.066
+        Rtaumu(B->D*lnu): 0.281 +- 0.018 +- 0.024
+    correlation: -0.43
+
 CMS Bs->mumu 2013:
   experiment: CMS
   inspire: Chatrchyan:2013bka
