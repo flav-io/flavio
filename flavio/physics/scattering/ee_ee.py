@@ -21,18 +21,22 @@ def ee_ee(C, par, E, cthmin, cthmax):
     # Check energy E is correct
     if (E != 136.3 and E != 161.3 and E != 172.1 and E != 182.7 and E != 188.6 and E != 191.6 and E != 195.5 and E != 199.5 and E!= 201.8 and E!= 204.8 and E!= 206.5):
         raise ValueError('ee_ee called with incorrect LEP2 energy {} GeV.'.format(E))
-    if (cthmin != -0.90 and cthmin != -0.72 and cthmin != -0.54 and
-        cthmin != -0.36 and cthmin != -0.18 and cthmin != 0.00 and
-        cthmin != 0.18 and cthmin != 0.27 and cthmin != 0.36 and
-        cthmin != 0.45 and cthmin != 0.54 and cthmin != 0.63 and
-        cthmin != 0.72 and cthmin != 0.81 and cthmin != 0.90):
-        raise ValueError('ee_ee called with incorrect cthmin {}'.format(cthmin))
-    if (cthmax != -0.90 and cthmax != -0.72 and cthmax != -0.54 and
-        cthmax != -0.36 and cthmax != -0.18 and cthmax != 0.00 and
-        cthmax != 0.18 and cthmax != 0.27 and cthmax != 0.36 and
-        cthmax != 0.45 and cthmax != 0.54 and cthmax != 0.63 and
-        cthmax != 0.72 and cthmax != 0.81 and cthmax != 0.90):
-        raise ValueError('ee_ee called with incorrect cthmax {}'.format(cthmax))
+    if ((cthmin, cthmax) != (-0.90, -0.72) and
+        (cthmin, cthmax) != (-0.72, -0.54) and
+        (cthmin, cthmax) != (-0.54, -0.36) and
+        (cthmin, cthmax) != (-0.36, -0.18) and
+        (cthmin, cthmax) != (-0.18,  -0.0) and
+        (cthmin, cthmax) != (  0.0,  0.09) and
+        (cthmin, cthmax) != ( 0.09,  0.18) and        
+        (cthmin, cthmax) != ( 0.18,  0.27) and
+        (cthmin, cthmax) != ( 0.27,  0.36) and
+        (cthmin, cthmax) != ( 0.36,  0.45) and
+        (cthmin, cthmax) != ( 0.45,  0.54) and
+        (cthmin, cthmax) != ( 0.54,  0.63) and
+        (cthmin, cthmax) != ( 0.63,  0.72) and
+        (cthmin, cthmax) != ( 0.72,  0.81) and
+        (cthmin, cthmax) != ( 0.81,  0.90)):
+        raise ValueError(f'ee_ee called with incorrect (cthmin={cthmin}, cthmax={cthmax})')
     s = E * E
     ssq = s**2
     MZ = par['m_Z']
@@ -43,14 +47,15 @@ def ee_ee(C, par, E, cthmin, cthmax):
     MZsqmsSq = (MZsq - s)**2
     gammaZ = 1 / par['tau_Z']
     gammaZsq = gammaZ**2
-    gammaZ4 = gammaZsq4
-    gammaZ6 = gammaZsq4 * gammaZsq
+    gammaZ4 = gammaZsq**2
+    gammaZ6 = gammaZ4 * gammaZsq
     GF = par['GF']
     alpha = par['alpha_e']
     s2w   = par['s2w']
     gzeL  = -0.5 + s2w
     gzeR  = s2w
-    eSq   = 4 * pi * alpha1
+    eSq   = 4 * pi * alpha
+    e4    = eSq**2
     gLsq  = eSq / s2w
     gYsq  = gLsq * s2w / (1. - s2w)
     g_cw  = sqrt(gLsq + gYsq)
@@ -71,14 +76,13 @@ def ee_ee(C, par, E, cthmin, cthmax):
         # SM versions 
         gex = (gVe + gAe) * delta(X, 2) + (gVe - gAe) * delta(X, 1)
         gey = (gVe + gAe) * delta(Y, 2) + (gVe - gAe) * delta(Y, 1)
-        tXY = gex * gey / (t - MZ**2 + j * gammaZ * MZ)
-        sXY = gex * gey / (t - MZ**2 + j * gammaZ * MZ)
+        tXY = 0
+        sXY = 0
         CXY = 0
         CYX = 0
         if (Z == 1): # add SMEFT contributions
             gex += (smeftew.d_gVl('e', 'e', par, C) + smeftew.d_gAl('e', 'e', par, C)) * delta(X, 2) + (smeftew.d_gVl('e', 'e', par, C) - smeftew.d_gAl('e', 'e', par, C)) * delta(X, 1)
-            gex += (smeftew.d_gVl('e', 'e', par, C) + smeftew.d_gAl('e', 'e', par, C)) * delta(X, 2) + (smeftew.d_gVl('e', 'e', par, C) - smeftew.d_gAl('e', 'e', par, C)) * delta(X, 1)
-            gey += geySM + (smeftew.d_gVl(l_type, l_type, par, C) + smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 2) + (smeftew.d_gVl(l_type, l_type, par, C) - smeftew.d_gAl(l_type, l_type, par, C)) * delta(Y, 1)
+            gey += (smeftew.d_gVl('e', 'e', par, C) + smeftew.d_gAl('e', 'e', par, C)) * delta(Y, 2) + (smeftew.d_gVl('e', 'e', par, C) - smeftew.d_gAl('e', 'e', par, C)) * delta(Y, 1)
             if (X == 1 and Y == 1):
                 CXY = C[f'll_1111']
                 CYX = C[f'll_1111']
@@ -89,9 +93,11 @@ def ee_ee(C, par, E, cthmin, cthmax):
                 CXY = C[f'ee_1111']
                 CYX = C[f'ee_1111']
             else:
-                raise ValueError('f called with incorrect X,Y {}'.format(X,Y))
+                raise ValueError(f'f called with incorrect X={X},Y={Y}'.format(X,Y))
             tXY += CXY
             sXY += CXY
+        tXY = gex * gey / (t - MZ**2 + 1j * gammaZ * MZ)
+        sXY = gex * gey / (t - MZ**2 + 1j * gammaZ * MZ)
         gexgey = gex * gey
         deltaXY = 0
         if (X == Y):
