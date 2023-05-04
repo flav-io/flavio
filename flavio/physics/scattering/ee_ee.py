@@ -105,7 +105,6 @@ def ee_ee(C, par, E, cthmin, cthmax):
         for Y in range(1 ,2):
             sigma_tot += f(cthmin, cthmax, X, Y, 1)
             sigma_tot_SM += f(cthmin, cthmax, X, Y, 0)
-    print("DEBUG 1: ",sigma_tot / sigma_tot_SM)
     return sigma_tot / sigma_tot_SM
 
 def ee_ee_obs(wc_obj, par, E, cthmin, cthmax):
