@@ -11,6 +11,7 @@ from scipy.integrate import quad
 import numpy as np
 import flavio.physics.zdecays.smeftew as smeftew
 import flavio
+from IPython.display import display
 
 # Kronecker delta
 def delta(a, b):
@@ -39,6 +40,7 @@ def ee_ee(C, par, E, cthmin, cthmax):
         raise ValueError(f'ee_ee called with incorrect (cthmin={cthmin}, cthmax={cthmax})')
     s = E * E
     ssq = s**2
+    scub = ssq * s
     MZ = par['m_Z']
     MZsq = MZ**2
     MZ4 = MZsq**2
@@ -49,6 +51,7 @@ def ee_ee(C, par, E, cthmin, cthmax):
     gammaZsq = gammaZ**2
     gammaZ4 = gammaZsq**2
     gammaZ6 = gammaZ4 * gammaZsq
+    gammaZsqMZsq = gammaZsq * MZsq
     GF = par['GF']
     alpha = par['alpha_e']
     s2w   = par['s2w']
@@ -59,28 +62,19 @@ def ee_ee(C, par, E, cthmin, cthmax):
     gLsq  = eSq / s2w
     gYsq  = gLsq * s2w / (1. - s2w)
     g_cw  = sqrt(gLsq + gYsq)
-    sigma_tot    = 0
-    sigma_tot_SM = 0
     gVe  = g_cw * gV_SM('e', par) 
     gAe  = g_cw * gA_SM('e', par)
     # f is proportional to d sigma / d (c=cos theta) integrated over c.
-    # c is cos(theta)L    
+    # c is cos(theta)
     # X is 1 or 2, so is Y (meaning L or R).
     # Z is 1 for including new physics, 0 for SM
-    def f(c, X, Y, Z):
-        t = -s * 0.5 * (1.0 - c)
-        u = -s * 0.5 * (1.0 + c)
-        qed = 2 * eSq**2 * (
-            (u**2 + t**2) / t**2 + (u**2 + t**2) / s**2 + 2 * u**2 / (s * t)
-            )
+    def f(c1, c2, X, Y, Z):
         # SM versions 
         gex = (gVe + gAe) * delta(X, 2) + (gVe - gAe) * delta(X, 1)
         gey = (gVe + gAe) * delta(Y, 2) + (gVe - gAe) * delta(Y, 1)
-        tXY = 0
-        sXY = 0
         CXY = 0
         CYX = 0
-        if (Z == 1): # add SMEFT contributions
+        if (Z == 1): # add SMEFT contributions to Z gauge couplings to electrons
             gex += (smeftew.d_gVl('e', 'e', par, C) + smeftew.d_gAl('e', 'e', par, C)) * delta(X, 2) + (smeftew.d_gVl('e', 'e', par, C) - smeftew.d_gAl('e', 'e', par, C)) * delta(X, 1)
             gey += (smeftew.d_gVl('e', 'e', par, C) + smeftew.d_gAl('e', 'e', par, C)) * delta(Y, 2) + (smeftew.d_gVl('e', 'e', par, C) - smeftew.d_gAl('e', 'e', par, C)) * delta(Y, 1)
             if (X == 1 and Y == 1):
@@ -94,26 +88,27 @@ def ee_ee(C, par, E, cthmin, cthmax):
                 CYX = C[f'ee_1111']
             else:
                 raise ValueError(f'f called with incorrect X={X},Y={Y}'.format(X,Y))
-            tXY += CXY
-            sXY += CXY
-        tXY = gex * gey / (t - MZ**2 + 1j * gammaZ * MZ)
-        sXY = gex * gey / (t - MZ**2 + 1j * gammaZ * MZ)
         gexgey = gex * gey
         deltaXY = 0
         if (X == Y):
             deltaXY = 1
         # NB you can make this much more efficient: no function calls etc
-        answer = (4*e4*(-12.333333333333334 - 8/(-1 + c) + 11*c + c**2 + c**3/3. + 16*np.log(-1 + c)) + 2*eSq*s*((c**2*gexgey*(MZsq - s))/(gammaZsq*MZsq + MZsqmsSq) + ((1 + c)**2*deltaXY*gexgey)/s + (c*gexgey*(-MZsq + s))/(gammaZsq*MZsq + MZsqmsSq) + (c**3*gexgey*(-MZsq + s))/(3.*(gammaZsq*MZsq + MZsqmsSq)) + (2*c**2*deltaXY*gexgey*(-MZsq + s))/(gammaZsq*MZsq + MZsqmsSq) + (4*(1 + c)*deltaXY*gexgey*(MZsq + s))/s**2 + (16*deltaXY*gammaZ*gexgey*MZ*(MZsq + s)*np.arctan((2*MZsq + s - c*s)/(2.*gammaZ*MZ)))/s**3 + (4*deltaXY*gexgey*(-(gammaZsq*MZsq) + (MZsq + s)**2)*np.log(4*gammaZsq*MZsq + (2*MZsq + s - c*s)**2))/s**3 + c*CXY.real - c**2*CXY.real + (c**3*CXY.real)/3. + 2*c**2*deltaXY*CXY.real + ((1 + c)**3*deltaXY*CXY.real)/3.) + (4*eSq*s*((gexgey*(-2*gammaZsq*MZsq*(4*(2 + (-1 + 2*c + c**2)*deltaXY)*MZsq - (-4 - c*(-4 + deltaXY) + 5*deltaXY + 3*c**2*deltaXY + c**3*deltaXY)*s) - (MZsq - s)*(2*MZsq + s - c*s)*(4*(2 + (-1 + 2*c + c**2)*deltaXY)*MZsq - (8 + (-7 + 3*c + 3*c**2 + c**3)*deltaXY)*s)))/((gammaZsq*MZsq + MZsqmsSq)*(4*gammaZsq*MZsq + (2*MZsq + s - c*s)**2)) + 2*(2 + (-1 + 2*c + c**2)*deltaXY)*CXY.real))/(-1 + c) - (8*gexgey*np.arctan((-2*MZsq - s + c*s)/(2.*gammaZ*MZ))*(deltaXY*gexgey*MZsq*(gammaZsq - MZsq - 2*s) - gexgey*ssq + 2*gammaZ*MZ*(deltaXY*MZsq*(-gammaZsq + MZsq + 2*s) + ssq)*CXY.imag + 4*deltaXY*gammaZsq*MZsq*(MZsq + s)*CXY.real))/(gammaZ*MZ*s) + (8*gexgey*np.log(4*gammaZsq*MZsq + (2*MZsq + s - c*s)**2)*(deltaXY*gexgey*(MZsq + s) - 2*deltaXY*gammaZ*MZ*(MZsq + s)*CXY.imag + (deltaXY*MZsq*(-gammaZsq + MZsq + 2*s) + ssq)*CXY.real))/s + (c**3*deltaXY*ssq*(CXY.imag**2 + CXY.real**2))/3. + (c*(3 + c**2 + c*(-3 + 6*deltaXY))*ssq*(gexgey**2 - 2*gammaZ*gexgey*MZ*CXY.imag + (gammaZsq*MZsq + MZsqmsSq)*CXY.imag**2 + 2*gexgey*(-MZsq + s)*CXY.real + (gammaZsq*MZsq + MZsqmsSq)*CXY.real**2))/(3.*(gammaZsq*MZsq + MZsqmsSq)) + c*(4*deltaXY*gexgey**2 - 8*deltaXY*gammaZ*gexgey*MZ*CXY.imag + (4 - 3*deltaXY)*ssq*CXY.imag**2 + 4*deltaXY*gexgey*(2*MZsq + 3*s)*CXY.real + (4 - 3*deltaXY)*ssq*CXY.real**2) + c**2*deltaXY*s*(s*CXY.imag**2 + CXY.real*(2*gexgey + s*CXY.real)) + (deltaXY**2*s**4*((-16*gexgey*np.log(4*gammaZsq*MZsq + (2*MZsq + s - c*s)**2)*(gexgey*(-2*gammaZsq*MZsq*(5*MZsq - s)*(MZsq + s)**2 + (MZsq - s)*(MZsq + s)**4 + gammaZ4*(5*MZ6 + 3*MZ4*s)) + 4*gammaZ*MZ*(MZsq + s)*(-(gammaZ4*MZ4) + 4*gammaZsq*MZ4*s + (MZ4 - ssq)**2)*CXY.imag - (gammaZ6*MZ6 + MZsqmsSq*(MZsq + s)**4 - gammaZsq*MZsq*(MZsq + s)**2*(5*MZ4 - 14*MZsq*s + 5*ssq) - gammaZ4*(5*MZ8 + 14*MZ6*s + 5*MZ4*ssq))*CXY.real))/s**5 + (c**2*(gexgey**2*(-4*MZ6 - 8*MZ4*s + 11*s**3 + 4*gammaZsq*(3*MZ4 + 2*MZsq*s) + MZsq*ssq) - 2*gammaZ*gexgey*MZ*(4*MZ6 - 2*MZ4*s + 7*s**3 + gammaZsq*(4*MZ4 + 6*MZsq*s) - 8*MZsq*ssq)*CXY.imag + 2*(gammaZsq*MZsq + MZsqmsSq)*s**3*CXY.imag**2 + gexgey*(-4*gammaZ4*MZ4 + 4*MZ8 + 4*MZ6*s - 12*MZsq*s**3 + 13*s**4 + gammaZsq*MZsq*s*(20*MZsq + 7*s) - 9*MZ4*ssq)*CXY.real + 2*(gammaZsq*MZsq + MZsqmsSq)*s**3*CXY.real**2))/s**3 + (c*(-2*gexgey**2*(8*gammaZ4*MZ4 + 8*MZ8 + 20*MZ6*s - 19*MZsq*s**3 - 15*s**4 + 6*MZ4*ssq - 6*gammaZsq*MZsq*(8*MZ4 + 10*MZsq*s + ssq)) + gammaZ*gexgey*MZ*(16*gammaZ4*MZ4 - 48*MZ8 - 16*MZ6*s + 24*MZsq*s**3 - 69*s**4 + 108*MZ4*ssq - 4*gammaZsq*(8*MZ6 + 36*MZ4*s + 13*MZsq*ssq))*CXY.imag + (gammaZsq*MZsq + MZsqmsSq)*s**4*CXY.imag**2 + gexgey*(16*MZ**10 + 24*MZ8*s - 50*MZ4*s**3 + 7*MZsq*s**4 + 31*s**5 - 8*gammaZ4*(6*MZ6 + 7*MZ4*s) - 28*MZ6*ssq + gammaZsq*(-32*MZ8 + 96*MZ6*s - 26*MZsq*s**3 + 132*MZ4*ssq))*CXY.real + (gammaZsq*MZsq + MZsqmsSq)*s**4*CXY.real**2))/s**4 + (2*c**3*(gexgey**2*(-2*MZ4 + 2*gammaZsq*MZsq - 3*MZsq*s + 5*ssq) - gammaZ*gexgey*MZ*(2*MZ4 + 2*gammaZsq*MZsq - 4*MZsq*s + 5*ssq)*CXY.imag + 3*(gammaZsq*MZsq + MZsqmsSq)*ssq*CXY.imag**2 + gexgey*(2*MZ6 + MZ4*s + 8*s**3 + gammaZsq*(2*MZ4 + 5*MZsq*s) - 11*MZsq*ssq)*CXY.real + 3*(gammaZsq*MZsq + MZsqmsSq)*ssq*CXY.real**2))/(3.*s**2) + (c**5*(-(gammaZ*gexgey*MZ*CXY.imag) + (gammaZsq*MZsq + MZsqmsSq)*CXY.imag**2 + CXY.real*(gexgey*(-MZsq + s) + (gammaZsq*MZsq + MZsqmsSq)*CXY.real)))/5. + (c**4*(-2*gammaZ*gexgey*MZ*s*CXY.imag + 2*(gammaZsq*MZsq + MZsqmsSq)*s*CXY.imag**2 + (gexgey*(-MZsq + s) + (gammaZsq*MZsq + MZsqmsSq)*CXY.real)*(gexgey + 2*s*CXY.real)))/(2.*s) - (32*gexgey*np.arctan((-2*MZsq - s + c*s)/(2.*gammaZ*MZ))*((gammaZ6*MZ6 + MZsqmsSq*(MZsq + s)**4 - gammaZsq*MZsq*(MZsq + s)**2*(5*MZ4 - 14*MZsq*s + 5*ssq) - gammaZ4*(5*MZ8 + 14*MZ6*s + 5*MZ4*ssq))*CXY.imag + gammaZ*MZ*(gexgey*(-(gammaZ4*MZ4) - (5*MZsq - 3*s)*(MZsq + s)**3 + 2*gammaZsq*MZsq*(5*MZ4 + 6*MZsq*s + ssq)) + 4*(MZsq + s)*(-(gammaZ4*MZ4) + 4*gammaZsq*MZ4*s + (MZ4 - ssq)**2)*CXY.real)))/s**5))/(gammaZsq*MZsq + MZsqmsSq))/4.
+        reCXY = np.real(CXY)
+        imCXY = np.imag(CXY)
+        # integrated Bhabha scattering cross-section from cos theta=c1 to c2. Obtained with nnI2.nb mathematica noteboook in anc subdirectory
+        answer = e4*(8/(-1 + c1) - 11*c1 - c1**2 - c1**3/3. - 8/(-1 + c2) + 11*c2 + c2**2 + c2**3/3. + 16*np.log((1 - c2)/(1 - c1))) - (eSq*s*(-0.3333333333333333*(c1**3*gexgey*(MZsq - s))/(gammaZsqMZsq + MZsqmsSq) + c1*gexgey*((-MZsq + s)/(gammaZsqMZsq + MZsqmsSq) + (deltaXY*(4*MZsq + 6*s))/s**2) + (c1**2*gexgey*((MZsq - s)*s + deltaXY*(MZ4 + gammaZsqMZsq - 4*MZsq*s + 3*ssq)))/((gammaZsqMZsq + MZsqmsSq)*s) + (16*deltaXY*gammaZ*gexgey*MZ*(MZsq + s)*np.arctan((2*MZsq + s - c1*s)/(2.*gammaZ*MZ)))/scub + (4*deltaXY*gexgey*(-(gammaZsqMZsq) + (MZsq + s)**2)*np.log(4*gammaZsqMZsq + (2*MZsq + s - c1*s)**2))/scub + c1*(1 + deltaXY)*reCXY + (c1**3*(1 + deltaXY)*reCXY)/3. + c1**2*(-1 + 3*deltaXY)*reCXY))/2. + (eSq*s*(-0.3333333333333333*(c2**3*gexgey*(MZsq - s))/(gammaZsqMZsq + MZsqmsSq) + c2*gexgey*((-MZsq + s)/(gammaZsqMZsq + MZsqmsSq) + (deltaXY*(4*MZsq + 6*s))/s**2) + (c2**2*gexgey*((MZsq - s)*s + deltaXY*(MZ4 + gammaZsqMZsq - 4*MZsq*s + 3*ssq)))/((gammaZsqMZsq + MZsqmsSq)*s) + (16*deltaXY*gammaZ*gexgey*MZ*(MZsq + s)*np.arctan((2*MZsq + s - c2*s)/(2.*gammaZ*MZ)))/scub + (4*deltaXY*gexgey*(-(gammaZsqMZsq) + (MZsq + s)**2)*np.log(4*gammaZsqMZsq + (2*MZsq + s - c2*s)**2))/scub + c2*(1 + deltaXY)*reCXY + (c2**3*(1 + deltaXY)*reCXY)/3. + c2**2*(-1 + 3*deltaXY)*reCXY))/2. - ((c1 + c1**3/3. + c1**2*(-1 + 2*deltaXY))*ssq*(gexgey**2 - 2*gammaZ*gexgey*MZ*imCXY + (gammaZsqMZsq + MZsqmsSq)*imCXY**2 + 2*gexgey*(-MZsq + s)*reCXY + (gammaZsqMZsq + MZsqmsSq)*reCXY**2))/(4.*(gammaZsqMZsq + MZsqmsSq)) + ((c2 + c2**3/3. + c2**2*(-1 + 2*deltaXY))*ssq*(gexgey**2 - 2*gammaZ*gexgey*MZ*imCXY + (gammaZsqMZsq + MZsqmsSq)*imCXY**2 + 2*gexgey*(-MZsq + s)*reCXY + (gammaZsqMZsq + MZsqmsSq)*reCXY**2))/(4.*(gammaZsqMZsq + MZsqmsSq)) + (eSq*s*((-8*gammaZ*gexgey*(deltaXY*MZsq*(gammaZsq + MZsq) - ssq)*np.arctan((2*MZsq + s - c1*s)/(2.*gammaZ*MZ)))/(MZ*(gammaZsq + MZsq)*s**2) + (8*gammaZ*gexgey*(deltaXY*MZsq*(gammaZsq + MZsq) - ssq)*np.arctan((2*MZsq + s - c2*s)/(2.*gammaZ*MZ)))/(MZ*(gammaZsq + MZsq)*s**2) - (4*gexgey*(deltaXY*(gammaZsq + MZsq)*(MZsq + 2*s) + ssq)*np.log(4*gammaZsqMZsq + (2*MZsq + s - c1*s)**2))/((gammaZsq + MZsq)*s**2) + (4*gexgey*(deltaXY*(gammaZsq + MZsq)*(MZsq + 2*s) + ssq)*np.log(4*gammaZsqMZsq + (2*MZsq + s - c2*s)**2))/((gammaZsq + MZsq)*s**2) - (-1 + c1)**2*deltaXY*((gexgey*(-MZsq + s))/(gammaZsqMZsq + MZsqmsSq) + 2*reCXY) + (-1 + c2)**2*deltaXY*((gexgey*(-MZsq + s))/(gammaZsqMZsq + MZsqmsSq) + 2*reCXY) + 8*np.log((1 - c2)/(1 - c1))*(-((gexgey*((MZsq - s)*((1 + deltaXY)*MZsq - s) + gammaZsq*((1 + deltaXY)*MZsq - deltaXY*s)))/((gammaZsq + MZsq)*(gammaZsqMZsq + MZsqmsSq))) + (1 + deltaXY)*reCXY) - (4*(-1 + c1)*deltaXY*(gexgey*(MZ4 + gammaZsqMZsq - 4*MZsq*s + 3*ssq) + 4*(gammaZsqMZsq + MZsqmsSq)*s*reCXY))/((gammaZsqMZsq + MZsqmsSq)*s) + (4*(-1 + c2)*deltaXY*(gexgey*(MZ4 + gammaZsqMZsq - 4*MZsq*s + 3*ssq) + 4*(gammaZsqMZsq + MZsqmsSq)*s*reCXY))/((gammaZsqMZsq + MZsqmsSq)*s)))/2. - (ssq*((-8*gexgey*np.arctan((-2*MZsq - s + c1*s)/(2.*gammaZ*MZ))*(deltaXY*gexgey*MZsq*(gammaZsq - MZsq - 2*s) - gexgey*ssq + 2*gammaZ*MZ*(deltaXY*MZsq*(-gammaZsq + MZsq + 2*s) + ssq)*imCXY + 4*deltaXY*gammaZsqMZsq*(MZsq + s)*reCXY))/(gammaZ*MZ*scub) + (8*gexgey*np.log(4*gammaZsqMZsq + (2*MZsq + s - c1*s)**2)*(deltaXY*gexgey*(MZsq + s) - 2*deltaXY*gammaZ*MZ*(MZsq + s)*imCXY + (deltaXY*MZsq*(-gammaZsq + MZsq + 2*s) + ssq)*reCXY))/scub + (c1**3*deltaXY*(imCXY**2 + reCXY**2))/3. + (c1*(4*deltaXY*gexgey**2 - 8*deltaXY*gammaZ*gexgey*MZ*imCXY + (4 - 3*deltaXY)*ssq*imCXY**2 + 4*deltaXY*gexgey*(2*MZsq + 3*s)*reCXY + (4 - 3*deltaXY)*ssq*reCXY**2))/s**2 + (c1**2*deltaXY*(s*imCXY**2 + reCXY*(2*gexgey + s*reCXY)))/s))/4. + (ssq*((-8*gexgey*np.arctan((-2*MZsq - s + c2*s)/(2.*gammaZ*MZ))*(deltaXY*gexgey*MZsq*(gammaZsq - MZsq - 2*s) - gexgey*ssq + 2*gammaZ*MZ*(deltaXY*MZsq*(-gammaZsq + MZsq + 2*s) + ssq)*imCXY + 4*deltaXY*gammaZsqMZsq*(MZsq + s)*reCXY))/(gammaZ*MZ*scub) + (8*gexgey*np.log(4*gammaZsqMZsq + (2*MZsq + s - c2*s)**2)*(deltaXY*gexgey*(MZsq + s) - 2*deltaXY*gammaZ*MZ*(MZsq + s)*imCXY + (deltaXY*MZsq*(-gammaZsq + MZsq + 2*s) + ssq)*reCXY))/scub + (c2**3*deltaXY*(imCXY**2 + reCXY**2))/3. + (c2*(4*deltaXY*gexgey**2 - 8*deltaXY*gammaZ*gexgey*MZ*imCXY + (4 - 3*deltaXY)*ssq*imCXY**2 + 4*deltaXY*gexgey*(2*MZsq + 3*s)*reCXY + (4 - 3*deltaXY)*ssq*reCXY**2))/s**2 + (c2**2*deltaXY*(s*imCXY**2 + reCXY*(2*gexgey + s*reCXY)))/s))/4. - (deltaXY*ssq*((4*gexgey*np.log(4*gammaZsqMZsq + (2*MZsq + s - c1*s)**2)*(gexgey*(-((MZsq - s)*(MZsq + s)**2) + gammaZsqMZsq*(3*MZsq + s)) - 2*gammaZ*MZ*(gammaZsqMZsq + MZsqmsSq)*(MZsq + s)*imCXY + (-(gammaZ4*MZ4) + 4*gammaZsq*MZ4*s + (MZ4 - ssq)**2)*reCXY))/scub + (c1*(2*gexgey**2*(-2*MZ4 + 2*gammaZsqMZsq - MZsq*s + 3*ssq) - gammaZ*gexgey*MZ*(4*MZ4 + 4*gammaZsqMZsq - 8*MZsq*s + 5*ssq)*imCXY + (gammaZsqMZsq + MZsqmsSq)*ssq*imCXY**2 + gexgey*(4*MZ6 - 2*MZ4*s + 7*scub + gammaZsq*(4*MZ4 + 6*MZsq*s) - 9*MZsq*ssq)*reCXY + (gammaZsqMZsq + MZsqmsSq)*ssq*reCXY**2))/s**2 + (c1**3*(-(gammaZ*gexgey*MZ*imCXY) + (gammaZsqMZsq + MZsqmsSq)*imCXY**2 + reCXY*(gexgey*(-MZsq + s) + (gammaZsqMZsq + MZsqmsSq)*reCXY)))/3. + (c1**2*(-(gammaZ*gexgey*MZ*s*imCXY) + (gammaZsqMZsq + MZsqmsSq)*s*imCXY**2 + (gexgey*(-MZsq + s) + (gammaZsqMZsq + MZsqmsSq)*reCXY)*(gexgey + s*reCXY)))/s - (8*gexgey*np.arctan((-2*MZsq - s + c1*s)/(2.*gammaZ*MZ))*((-(gammaZ4*MZ4) + 4*gammaZsq*MZ4*s + (MZ4 - ssq)**2)*imCXY + gammaZ*MZ*(gexgey*(-3*MZ4 + gammaZsqMZsq - 2*MZsq*s + ssq) + 2*(gammaZsqMZsq + MZsqmsSq)*(MZsq + s)*reCXY)))/scub))/(2.*(gammaZsqMZsq + MZsqmsSq)) + (deltaXY*ssq*((4*gexgey*np.log(4*gammaZsqMZsq + (2*MZsq + s - c2*s)**2)*(gexgey*(-((MZsq - s)*(MZsq + s)**2) + gammaZsqMZsq*(3*MZsq + s)) - 2*gammaZ*MZ*(gammaZsqMZsq + MZsqmsSq)*(MZsq + s)*imCXY + (-(gammaZ4*MZ4) + 4*gammaZsq*MZ4*s + (MZ4 - ssq)**2)*reCXY))/scub + (c2*(2*gexgey**2*(-2*MZ4 + 2*gammaZsqMZsq - MZsq*s + 3*ssq) - gammaZ*gexgey*MZ*(4*MZ4 + 4*gammaZsqMZsq - 8*MZsq*s + 5*ssq)*imCXY + (gammaZsqMZsq + MZsqmsSq)*ssq*imCXY**2 + gexgey*(4*MZ6 - 2*MZ4*s + 7*scub + gammaZsq*(4*MZ4 + 6*MZsq*s) - 9*MZsq*ssq)*reCXY + (gammaZsqMZsq + MZsqmsSq)*ssq*reCXY**2))/s**2 + (c2**3*(-(gammaZ*gexgey*MZ*imCXY) + (gammaZsqMZsq + MZsqmsSq)*imCXY**2 + reCXY*(gexgey*(-MZsq + s) + (gammaZsqMZsq + MZsqmsSq)*reCXY)))/3. + (c2**2*(-(gammaZ*gexgey*MZ*s*imCXY) + (gammaZsqMZsq + MZsqmsSq)*s*imCXY**2 + (gexgey*(-MZsq + s) + (gammaZsqMZsq + MZsqmsSq)*reCXY)*(gexgey + s*reCXY)))/s - (8*gexgey*np.arctan((-2*MZsq - s + c2*s)/(2.*gammaZ*MZ))*((-(gammaZ4*MZ4) + 4*gammaZsq*MZ4*s + (MZ4 - ssq)**2)*imCXY + gammaZ*MZ*(gexgey*(-3*MZ4 + gammaZsqMZsq - 2*MZsq*s + ssq) + 2*(gammaZsqMZsq + MZsqmsSq)*(MZsq + s)*reCXY)))/scub))/(2.*(gammaZsqMZsq + MZsqmsSq))
         return answer
+    sigma_tot    = 0
+    sigma_tot_SM = 0
     # My ordering for X and Y is (1, 2):=(L, R). 
     for X in range(1, 2):
         for Y in range(1 ,2):
-            sigma_tot += f(cthmax, X, Y, 1) - f(cthmin, X, Y, 1)
-            sigma_tot_SM += f(cthmax, X, Y, 0) - f(cthmin, X, Y, 0)
+            sigma_tot += f(cthmin, cthmax, X, Y, 1)
+            sigma_tot_SM += f(cthmin, cthmax, X, Y, 0)
+    print("DEBUG 1: ",sigma_tot / sigma_tot_SM)
     return sigma_tot / sigma_tot_SM
 
 def ee_ee_obs(wc_obj, par, E, cthmin, cthmax):
-    print('DEBUG: in ee_ee_obs')
     scale = flavio.config['renormalization scale']['ee_ww'] # Use LEP2 renorm scale
     C = wc_obj.get_wcxf(sector='all', scale=scale, par=par,
                         eft='SMEFT', basis='Warsaw')
