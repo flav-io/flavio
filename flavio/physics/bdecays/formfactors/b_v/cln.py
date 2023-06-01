@@ -13,7 +13,11 @@ process_dict['B->D*'] = {'B': 'B0', 'V': 'D*+', 'q': 'b->c'}
 def h_to_A(mB, mV, h, q2):
     """Convert HQET form factors to the standard basis.
 
-    See e.g. arXiv:1309.0301, eqs. (38), (39)"""
+    See e.g. arXiv:1309.0301, eqs. (38), (39) but notice that we use the
+    convention of arXiv:1703.05330 for h_T3, which differs by a factor -2
+    from the one in arXiv:1309.0301 (see Eq. (11e) in arXiv:1703.05330 and
+    Eq. (46b) in arXiv:1309.0301).
+    """
     ff = {}
     pre = 1 / 2 / sqrt(mB * mV)
     ff['V'] = pre * (mB + mV) * h['V']
@@ -26,7 +30,7 @@ def h_to_A(mB, mV, h, q2):
     ff['T2'] = pre * (((mB + mV)**2 - q2) / (mB + mV) * h['T1']
                       - ((mB - mV)**2 - q2) / (mB - mV) * h['T2'])
     ff['T3'] = pre * ((mB - mV) * h['T1'] - (mB + mV) * h['T2']
-                      - 2 * (mB**2 - mV**2) / mB * h['T3'])
+                      + (mB**2 - mV**2) / mB * h['T3']) # h_T3 as in arXiv:1703.05330
     # conversion from A_1, A_2 to A_12
     ff['A12'] = ((ff['A1'] * (mB + mV)**2 * (mB**2 - mV**2 - q2)
                  - ff['A2'] * (mB**4 + (mV**2 - q2)**2
