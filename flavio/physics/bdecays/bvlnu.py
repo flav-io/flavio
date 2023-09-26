@@ -1,7 +1,8 @@
 r"""Functions for exclusive $B\to V\ell\nu$ decays."""
 
-from math import sqrt, pi, cos, sin
+from math import sqrt, pi, cos, sin, log
 import flavio
+from flavio.physics.common import conjugate_par, conjugate_wc
 from flavio.physics.bdecays.common import lambda_K, meson_quark, meson_ff
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict
 from flavio.physics import ckm
@@ -76,6 +77,54 @@ def _get_angularcoeff(q2, wc_obj, par, B, V, lep, nu):
     ff = get_ff(q2, par, B, V)
     h = angular.helicity_amps_v(q2, mB, mV, mb, mlight, ml, 0, ff, wc, N)
     J = angular.angularcoeffs_general_v(h, q2, mB, mV, mb, mlight, ml, 0)
+    return J
+
+
+def get_angularcoeff_cp(q2, wc_obj, par, B, V, lep):
+    Jlist = [_get_angularcoeff_cp(q2, wc_obj, par, B, V, lep, nu)
+             for nu in ['e', 'mu', 'tau']]
+    J = {}
+    J['1s'] = sum([JJ['1s'] for JJ in Jlist])
+    J['1c'] = sum([JJ['1c'] for JJ in Jlist])
+    J['2s'] = sum([JJ['2s'] for JJ in Jlist])
+    J['2c'] = sum([JJ['2c'] for JJ in Jlist])
+    J['6s'] = sum([JJ['6s'] for JJ in Jlist])
+    J['6c'] = sum([JJ['6c'] for JJ in Jlist])
+    J[3] = sum([JJ[3] for JJ in Jlist])
+    J[4] = sum([JJ[4] for JJ in Jlist])
+    J[5] = sum([JJ[5] for JJ in Jlist])
+    J[7] = sum([JJ[7] for JJ in Jlist])
+    J[8] = sum([JJ[8] for JJ in Jlist])
+    J[9] = sum([JJ[9] for JJ in Jlist])
+    return J
+
+
+def _get_angularcoeff_cp(q2, wc_obj, par, B, V, lep, nu):
+    scale = config['renormalization scale']['bvll']
+    par_conjugate = conjugate_par(par)
+    mb = running.get_mb(par_conjugate, scale)
+    wc = get_wceff_fccc(wc_obj, par_conjugate,
+                        meson_quark[(B, V)], lep, nu, mb, scale, nf=5)
+    wc = {k: v.conjugate() for k, v in wc.items()}
+    if lep != nu and all(C == 0 for C in wc.values()):
+        # if all WCs vanish, so does the AC!
+        return {k: 0 for k in
+                ['1s', '1c', '2s', '2c', '6s', '6c', 3, 4, 5, 7, 8, 9]}
+    ml = par_conjugate['m_'+lep]
+    mB = par_conjugate['m_'+B]
+    mV = par_conjugate['m_'+V]
+    qi_qj = meson_quark[(B, V)]
+    if qi_qj == 'bu':
+        mlight = 0.  # neglecting the up quark mass
+    if qi_qj == 'bc':
+        # this is needed for scalar contributions
+        mlight = running.get_mc(par_conjugate, scale)
+    N = prefactor(q2, par_conjugate, B, V, lep)
+    ff = get_ff(q2, par_conjugate, B, V)
+    h = angular.helicity_amps_v(
+        q2, mB, mV, mb, mlight, ml, 0, ff, wc, N)
+    J = angular.angularcoeffs_general_v(
+        h, q2, mB, mV, mb, mlight, ml, 0)
     return J
 
 def dGdq2(J):
@@ -453,6 +502,33 @@ def BR_binned_leptonflavour_function(B, V, lnum, lden, A):
     return lambda wc_obj, par, q2min, q2max: BR_binned_leptonflavour(q2min, q2max, wc_obj, par, B, V, lnum, lden, A)
 
 
+def S_theory_num(J, J_bar, i):
+    return J[i] + J_bar[i]
+
+
+def A_theory_num(J, J_bar, i):
+    return J[i] - J_bar[i]
+
+
+def S_experiment_num(J, J_bar, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -S_theory_num(J, J_bar, i)
+    return S_theory_num(J, J_bar, i)
+
+
+def A_experiment_num(J, J_bar, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -A_theory_num(J, J_bar, i)
+    return A_theory_num(J, J_bar, i)
+
+
+def AFB_experiment_num(J, J_bar):
+    return 3/4.*S_experiment_num(J, J_bar, '6s')
+
+
+def SA_den(J, J_bar):
+    return dGdq2(J) + dGdq2(J_bar)
+
 # Observable and Prediction instances
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau', 'l': r'\ell'}
@@ -602,3 +678,170 @@ for M in ['B+->D*', 'B0->D*']:
     _process_tex = _hadr[M]['tex'] + r"\tau^+\nu"
     _obs.add_taxonomy(_process_taxonomy + _process_tex + r"$")
 Prediction(_obs_name, BR_binned_tot_function('B0', 'D*+', 'tau', A=None))
+
+# Angular observables
+_angular_obs = {'S3': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 3), 'tex': r'S_3', 'desc': 'CP-averaged angular observable'},
+                'S4': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 4), 'tex': r'S_4', 'desc': 'CP-averaged angular observable'},
+                'S5': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 5), 'tex': r'S_5', 'desc': 'CP-averaged angular observable'},
+                'S6c': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, '6c'), 'tex': r'S_6^c', 'desc': 'CP-averaged angular observable'},
+                'S7': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 7), 'tex': r'S_7', 'desc': 'CP-averaged angular observable'},
+                'S8': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 8), 'tex': r'S_8', 'desc': 'CP-averaged angular observable'},
+                'S9': {'func_num': lambda J, J_bar: S_experiment_num(J, J_bar, 9), 'tex': r'S_9', 'desc': 'CP-averaged angular observable'},
+                'A3': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 3), 'tex': r'A_3', 'desc': 'Angular CP asymmetry'},
+                'A4': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 4), 'tex': r'A_4', 'desc': 'Angular CP asymmetry'},
+                'A5': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 5), 'tex': r'A_5', 'desc': 'Angular CP asymmetry'},
+                'A6s': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, '6s'), 'tex': r'A_6^s', 'desc': 'Angular CP asymmetry'},
+                'A7': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 7), 'tex': r'A_7', 'desc': 'Angular CP asymmetry'},
+                'A8': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 8), 'tex': r'A_8', 'desc': 'Angular CP asymmetry'},
+                'A9': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 9), 'tex': r'A_9', 'desc': 'Angular CP asymmetry'},
+                'AFB': {'func_num': AFB_experiment_num, 'tex': r'A_\text{FB}', 'desc': 'forward-backward asymmetry'},
+                }
+
+
+def make_metadata_binned(M, l, obs, obsdict):
+    _process_tex = _hadr[M]['tex'] + _tex[l]+r"^+\nu_"+_tex[l]
+    B = _hadr[M]['B']
+    V = _hadr[M]['V']
+    _obs_name = "<" + obs + ">("+M+l+"nu)"
+    _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+    _obs.set_description(
+        'Binned ' + obsdict['desc'] + r" in $" + _process_tex + r"$")
+    _obs.tex = r"$\langle " + obsdict['tex'] + \
+        r"\rangle(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    return _obs
+
+
+def make_metadata_differential(M, l, obs, obsdict):
+    _process_tex = _hadr[M]['tex'] + _tex[l]+r"^+\nu_"+_tex[l]
+    B = _hadr[M]['B']
+    V = _hadr[M]['V']
+    _obs_name = obs + "("+M+l+"nu)"
+    _obs = Observable(name=_obs_name, arguments=['q2'])
+    _obs.set_description(obsdict['desc'][0].capitalize(
+    ) + obsdict['desc'][1:] + r" in $" + _process_tex + r"$")
+    _obs.tex = r"$" + obsdict['tex'] + r"(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    return _obs
+
+
+def nintegrate_pole(function, q2min, q2max, epsrel=0.005):
+    # this is a special integration function to treat the presence of the
+    # photon pole at low q^2. If q2min is below 0.1 GeV^2, it adds and subtracts
+    # the 1/q^2-enhanced pole part to split the integral into a well-behaved part
+    # and one that is trivially solved analytically.
+    # This leads to a huge speed-up.
+    if q2min <= 0.1 and q2min > 0:
+        q20 = q2min
+        f_q20 = function(q20)
+        int_a = flavio.math.integrate.nintegrate(
+            lambda q2: function(q2)-f_q20*q20/q2, q2min, q2max, epsrel=epsrel)
+        int_b = f_q20*q20 * log(q2max/q2min)
+        return int_a + int_b
+    else:
+        return flavio.math.integrate.nintegrate(function, q2min, q2max)
+
+
+def BVlnu_int_ratio(func_num, func_den, q2min, q2max, B, V, l, wc_obj, par):
+    epsrel = 0.005
+    ml = par['m_'+l]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
+    q2min_allowed = max(ml**2, q2min)
+    q2max_allowed = min((mB - mV)**2, q2max)
+    if q2max_allowed <= q2min_allowed:
+        return 0
+
+    def J(q2):
+        return get_angularcoeff(q2, wc_obj, par, B, V, l)
+
+    def Jbar(q2):
+        return get_angularcoeff_cp(q2, wc_obj, par, B, V, l)
+
+    def obs_num(q2):
+        return func_num(J(q2), Jbar(q2))
+
+    def obs_den(q2):
+        return func_den(J(q2), Jbar(q2))
+
+    num = nintegrate_pole(obs_num, q2min_allowed, q2max_allowed, epsrel=epsrel)
+    if num == 0:
+        return 0
+    den = nintegrate_pole(obs_den, q2min_allowed, q2max_allowed, epsrel=epsrel)
+    return num / den
+
+
+def BVlnu_ratio(func_num, func_den, q2, B, V, l, wc_obj, par):
+    ml = par['m_'+l]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
+    if q2 < ml**2 or q2 > (mB - mV)**2:
+        return 0
+    J = get_angularcoeff(q2, wc_obj, par, B, V, l)
+    Jbar = get_angularcoeff_cp(q2, wc_obj, par, B, V, l)
+
+    num = func_num(J, Jbar)
+    if num == 0:
+        return 0
+
+    den = func_den(J, Jbar)
+    return num / den
+
+
+def make_obs(M, l, obs, obsdict):
+    B = _hadr[M]['B']
+    V = _hadr[M]['V']
+    func_num = obsdict['func_num']
+
+    # binned angular observables
+    _obs = make_metadata_binned(M, l, obs, obsdict)
+
+    def func(wc_obj, par, q2min, q2max): return BVlnu_int_ratio(
+        func_num, SA_den, q2min, q2max, B, V, l, wc_obj, par)
+    Prediction(_obs.name, func)
+
+    # differential angular observables
+    _obs = make_metadata_differential(M, l, obs, obsdict)
+
+    def func(wc_obj, par, q2): return BVlnu_ratio(
+        func_num, SA_den, q2, B, V, l, wc_obj, par)
+    Prediction(_obs.name, func)
+
+
+for l in ['e', 'mu', 'tau']:
+    for M in _hadr.keys():
+        for obs, obsdict in _angular_obs.items():
+            # angular obs
+            make_obs(M, l, obs, obsdict)
+
+
+def diff(x, y):
+    return x-y
+
+
+for D_obs in ['S3', 'S5', 'S7', 'S9', 'AFB']:
+    tex = _angular_obs[D_obs]['tex']
+    obs = Observable.from_function('Dmue_{}(B0->D*lnu)'.format(D_obs),
+                                   ['{}(B0->D*munu)'.format(D_obs),
+                                    '{}(B0->D*enu)'.format(D_obs)],
+                                   diff)
+    obs.set_description(
+        r"Difference of angular observable ${}$ in $B^0\to D^{{\ast -}}\mu^+\nu$ and $B^0\to D^{{\ast -}}e^+\nu$".format(tex))
+    obs.tex = r"$D_{{{}}}^{{\mu e}}(B^0\to D^{{\ast -}}\ell^+\nu)$".format(tex)
+    obs.add_taxonomy(
+        r"Process :: $b$ hadron decays :: Semi-leptonic tree-level decays :: $B\to V\ell\nu$ :: $B^0\to K^{\ast -}e^+\nu_e$")
+    obs.add_taxonomy(
+        r"Process :: $b$ hadron decays :: Semi-leptonic tree-level decays :: $B\to V\ell\nu$ :: $B^0\to K^{\ast -}\mu^+\nu_\mu$")
+
+    obs = Observable.from_function('<Dmue_{}>(B0->D*lnu)'.format(D_obs),
+                                   ['<{}>(B0->D*munu)'.format(D_obs),
+                                    '<{}>(B0->D*enu)'.format(D_obs)],
+                                   diff)
+    obs.set_description(
+        r"Binned difference of angular observable ${}$ in $B^0\to D^{{\ast -}}\mu^+\nu$ and $B^0\to K^{{\ast -}}e^+\nu$".format(tex))
+    obs.tex = r"$\langle D_{{{}}}^{{\mu e}} \rangle(B^0\to D^{{\ast -}}\ell^+\nu)$".format(
+        tex)
+    obs.add_taxonomy(
+        r"Process :: $b$ hadron decays :: Semi-leptonic tree-level decays :: $B\to V\ell\nu$ :: $B^0\to K^{\ast -}e^+\nu_e$")
+    obs.add_taxonomy(
+        r"Process :: $b$ hadron decays :: Semi-leptonic tree-level decays :: $B\to V\ell\nu$ :: $B^0\to K^{\ast -}\mu^+\nu_\mu$")
