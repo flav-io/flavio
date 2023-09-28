@@ -22430,3 +22430,68 @@ LHCb Bs->K*mumu 2018:
    inspire: LHCb:2018rym
    values:
      BR_LHCb(Bs->K*0mumu): 2.9 ± 1.0 ± 0.2 ± 0.3 1e-8
+
+Belle-II B0->D*lnu angular 2023:
+  inspire: Belle-II:2023kkm
+  experiment: Belle-II
+  values:
+    - name: <Dmue_AFB>(B0->D*lnu)
+      q2min: 4.85
+      q2max: 10.689
+      value: 0.099 ± 0.056 ± 0.020
+    - name: <Dmue_AFB>(B0->D*lnu)
+      q2min: 0
+      q2max: 4.85
+      value: -0.168 ± 0.068 ± 0.024
+    - name: <Dmue_AFB>(B0->D*lnu)
+      q2min: 0
+      q2max: 10.689
+      value: -0.024 ± 0.043 ± 0.016
+    - name: <Dmue_S3>(B0->D*lnu)
+      q2min: 4.85
+      q2max: 10.689
+      value: -0.026 ± 0.068 ± 0.024
+    - name: <Dmue_S3>(B0->D*lnu)
+      q2min: 0
+      q2max: 4.85
+      value: -0.101 ± 0.069 ± 0.025
+    - name: <Dmue_S3>(B0->D*lnu)
+      q2min: 0
+      q2max: 10.689
+      value: -0.062 ± 0.047 ± 0.017
+    - name: <Dmue_S5>(B0->D*lnu)
+      q2min: 4.85
+      q2max: 10.689
+      value: -0.019 ± 0.068 ± 0.024
+    - name: <Dmue_S5>(B0->D*lnu)
+      q2min: 0
+      q2max: 4.85
+      value: -0.055 ± 0.065 ± 0.023
+    - name: <Dmue_S5>(B0->D*lnu)
+      q2min: 0
+      q2max: 10.689
+      value: -0.035 ± 0.046 ± 0.016
+    - name: <Dmue_S7>(B0->D*lnu)
+      q2min: 4.85
+      q2max: 10.689
+      value: 0.028 ± 0.067 ± 0.024
+    - name: <Dmue_S7>(B0->D*lnu)
+      q2min: 0
+      q2max: 4.85
+      value: -0.066 ± 0.065 ± 0.022
+    - name: <Dmue_S7>(B0->D*lnu)
+      q2min: 0
+      q2max: 10.689
+      value: -0.026 ± 0.046 ± 0.016
+    - name: <Dmue_S9>(B0->D*lnu)
+      q2min: 4.85
+      q2max: 10.689
+      value: 0.032 ± 0.067 ± 0.024
+    - name: <Dmue_S9>(B0->D*lnu)
+      q2min: 0
+      q2max: 4.85
+      value: 0.020 ± 0.068 ± 0.024
+    - name: <Dmue_S9>(B0->D*lnu)
+      q2min: 0
+      q2max: 10.689
+      value: 0.020 ± 0.047 ± 0.017
