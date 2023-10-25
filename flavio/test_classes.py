@@ -394,7 +394,7 @@ class TestClasses(unittest.TestCase):
         )
         self.assertEqual(
             sorted(Observable['<BR>(B+->rholnu)'].get_measurements()),
-            sorted(['Belle B+->rholnu 2013', 'BaBar B+->rholnu 2010'])
+            sorted(['Belle B+->rholnu 2013', 'BaBar B+->rholnu 2010', 'BPR combination B->rholnu 2021'])
         )
         self.assertEqual(
             Observable['FL(B0->K*mumu)'].get_measurements(),
