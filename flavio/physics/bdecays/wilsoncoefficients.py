@@ -34,18 +34,20 @@ def CL_SM(par):
 
     This is implemented as an approximate formula as a function of the top
     mass."""
-    # EW NLO corrections arXiv:1009.0947
-    scale = 120. # <- result has very little sensitivity to high matching scale
-    mt = flavio.physics.running.running.get_mt(par, scale)
+    # # EW NLO corrections arXiv:1009.0947
+    # scale = 120. # <- result has very little sensitivity to high matching scale
+    # mt = flavio.physics.running.running.get_mt(par, scale)
+    # Xt0_165 = 1.50546 # LO result for mt=165, scale=120
+    # Xt0 = Xt0_165 * (1 + 1.14064 * (mt/165. - 1)) # LO
+    # Xt1 = Xt0_165 * (-0.031435 - 0.139303 * (mt/165. - 1)) # QCD NLO
+    # # (4.3), (4.4) of 1009.0947: NLO EW
+    # flavio.citations.register("Brod:2010hi")
+    # XtEW = Xt0 * (1 - 1.11508 + 1.12316*1.15338**(mt/165.)-0.179454*(mt/165)) - 1
+    # XtEW = XtEW * 0.00062392534457616328 # <- alpha_em/4pi at 120 GeV
+    # Xt = Xt0 + Xt1 + XtEW
+
     s2w = par['s2w']
-    Xt0_165 = 1.50546 # LO result for mt=165, scale=120
-    Xt0 = Xt0_165 * (1 + 1.14064 * (mt/165. - 1)) # LO
-    Xt1 = Xt0_165 * (-0.031435 - 0.139303 * (mt/165. - 1)) # QCD NLO
-    # (4.3), (4.4) of 1009.0947: NLO EW
-    flavio.citations.register("Brod:2010hi")
-    XtEW = Xt0 * (1 - 1.11508 + 1.12316*1.15338**(mt/165.)-0.179454*(mt/165)) - 1
-    XtEW = XtEW * 0.00062392534457616328 # <- alpha_em/4pi at 120 GeV
-    Xt = Xt0 + Xt1 + XtEW
+    Xt = par['Xt_di->djnunu']
     return -Xt/s2w
 
 

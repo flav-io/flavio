@@ -21,6 +21,13 @@ Delta_alpha_e_lep:
   description: leptonic contribution to the running of the electromagnetic fine structure constant between 0 and $m_Z$
 
 
+# di->djnunu Wilson coefficient loop function
+
+Xt_di->djnunu:
+  tex: $X_t^{d_i\to d_j\nu\bar\nu}$
+  description: Loop function for the CL_SM Wilson coefficient of $d_i\to d_j\nu\bar\nu$
+
+
 # CKM parameters
 
 Vus:
