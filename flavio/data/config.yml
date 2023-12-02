@@ -95,6 +95,9 @@ implementation:
   # CKM matrix parametrization
   CKM matrix: Tree
 
+  # Unitarity relation in Kaon mixing
+  K mixing unitarity: ut
+
   # B->V form factors
   B->K* form factor: B->K* BSZ3
   B->rho form factor: B->rho BSZ3

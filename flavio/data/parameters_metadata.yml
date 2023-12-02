@@ -1022,6 +1022,15 @@ eta_cc_K0:
 eta_ct_K0:
   tex: $\eta_{ct}$
   description: SM QCD correction factor for the top-charm contribution to $K^0$ mixing
+eta_tt_K0_ut:
+  tex: $\eta_{tt,c}$
+  description: SM QCD correction factor for the top contribution to $K^0$ mixing using u-t unitarity
+eta_ut_K0_ut:
+  tex: $\eta_{ut,ut}$
+  description: SM QCD correction factor for the top-up contribution to $K^0$ mixing using u-t unitarity
+eta_uu_K0_ut:
+  tex: $\eta_{uu,ut}$
+  description: SM QCD correction factor for the up contribution to $K^0$ mixing using u-t unitarity
 
 
 # Parameters needed for epsilon_K
