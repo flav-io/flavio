@@ -29,6 +29,10 @@ alpha_s: 0.1182(8)    # FLAG 2019
 s2w: 0.23129(5)       # PDG 2017
 
 
+Delta_alpha_e_had: 0.027572 ± 0.000359 # hep-ph/0104304 page 5
+Delta_alpha_e_lep: 0.0314977 # hep-ph/9803313 table 1
+
+
 # CKM parameters
 
 Vus: 0.2248(8)   # FLAG 2017 Nf=2+1+1
@@ -560,7 +564,7 @@ PDFmembers avg=0 replicas=1-100:
 delta_BsKstarmumu: 0 ± 0.078
 
 # Updated EM corrections for Ke3 decays
-# From 2103.04843 (Table VI) 
+# From 2103.04843 (Table VI)
 # Uncertainties combined in quadrature, factor of 2 normalisation difference since
 # flavio used the normalisation of 1005.2323
 K0e3 delta_EM: 0.580(16)1e-2
