@@ -34,7 +34,7 @@ Delta_alpha_e_lep: 0.0314977 # hep-ph/9803313 table 1
 
 # di->djnunu Wilson coefficient loop function
 
-Xt_di->djnunu: 1.462 ± 0.017 ± 0.002
+Xt_di->djnunu: 1.462 ± 0.017 ± 0.002 # 2105.02868 Eq. (5)
 
 # CKM parameters
 
