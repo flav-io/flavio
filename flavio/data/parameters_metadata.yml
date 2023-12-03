@@ -13,6 +13,13 @@ s2w:
   tex: $\sin^2 \hat\theta_w(m_Z)$
   description: sine squared of the weak mixing angle in the $\overline{\text{MS}}$ scheme at the scale $m_Z$
 
+Delta_alpha_e_had:
+  tex: $\Delta\alpha_{\rm had}^{(5)}(m_Z)$
+  description: hadronic contribution to the running of the electromagnetic fine structure constant between 0 and $m_Z$
+Delta_alpha_e_lep:
+  tex: $\Delta\alpha_{\rm lep}(m_Z)$
+  description: leptonic contribution to the running of the electromagnetic fine structure constant between 0 and $m_Z$
+
 
 # CKM parameters
 

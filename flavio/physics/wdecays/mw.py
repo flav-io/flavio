@@ -15,7 +15,7 @@ def mW_SM(par):
     dh = (par['m_h'] / 100)**2
     dt = (par['m_t'] / 174.3)**2 - 1
     dZ = par['m_Z'] / 91.1875 - 1
-    dalpha = 0  # FIXME
+    dalpha = (par['Delta_alpha_e_had']+par['Delta_alpha_e_lep']) / 0.05907 - 1
     dalphas = par['alpha_s'] / 0.119 - 1
     m0W = 80.3779
     c1 = 0.05427
