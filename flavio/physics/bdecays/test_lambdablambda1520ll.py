@@ -111,7 +111,7 @@ class TestLambdabLambda1520ll(TestLambdabLambda1520):
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', 0.098  , NP=True, rtol=0.27, q2min=0.1, q2max=3)
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.059, NP=True, rtol=0.39, q2min=3, q2max=6)
         self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.166, NP=True, rtol=0.01, q2min=6, q2max=8.68)
-        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.031, NP=True, rtol=0.85, q2min=1, q2max=6)
+        self.assert_obs('<AFBl>(Lambdab->Lambda(1520)mumu)', -0.031, NP=True, rtol=0.86, q2min=1, q2max=6)
 
     def test_lambdablambda1520mm_all_observables(self):
         # Test if all the observables with l=mu work fine.

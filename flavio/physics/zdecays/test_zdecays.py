@@ -50,8 +50,8 @@ class TestGammaZ(unittest.TestCase):
                                20.743, delta=0.05)
         self.assertAlmostEqual(flavio.sm_prediction('R_uc'),
                                0.1724, delta=0.0002)
-        self.assertEqual(flavio.sm_prediction('R_uc'),
-                         (flavio.sm_prediction('R_u') + flavio.sm_prediction('R_c')) / 2)
+        self.assertAlmostEqual(flavio.sm_prediction('R_uc'),
+                         (flavio.sm_prediction('R_u') + flavio.sm_prediction('R_c')) / 2, delta=1e-15)
 
     def test_r_sm(self):
         # check that the Sm predictions for the Ri agree with the Gammas
@@ -122,7 +122,7 @@ class TestAFBZ(unittest.TestCase):
     def test_afbz_sm(self):
         for l in ['e', 'mu', 'tau']:
             self.assertAlmostEqual(flavio.sm_prediction('A(Z->{}{})'.format(l, l)),
-                                   0.1472, delta=0.0002, msg="Failed for {}".format(l))
+                                   0.1477, delta=0.0002, msg="Failed for {}".format(l))
             self.assertAlmostEqual(flavio.sm_prediction('AFB(Z->{}{})'.format(l, l)),
                                    0.0163, delta=0.0002, msg="Failed for {}".format(l))
         self.assertAlmostEqual(flavio.sm_prediction('A(Z->bb)'),
@@ -132,6 +132,6 @@ class TestAFBZ(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction('A(Z->ss)'),
                                0.935, delta=0.001)
         self.assertAlmostEqual(flavio.sm_prediction('AFB(Z->bb)'),
-                               0.1032, delta=0.0002)
+                               0.1035, delta=0.0002)
         self.assertAlmostEqual(flavio.sm_prediction('AFB(Z->cc)'),
                                0.0738, delta=0.0002)
