@@ -52,15 +52,8 @@ def M12_d_SM(par, meson):
     scale = config['renormalization scale'][meson + ' mixing']
     alpha_s = running.get_alpha(par, scale)['alpha_s']
     me_rgi = me['CVLL'] * bag_msbar2rgi(alpha_s, meson)
-    C_tt, C_cc, C_ct = cvll_d(par, meson)
-    eta_tt = par['eta_tt_'+meson]
-    M12  = - (eta_tt*C_tt) * me_rgi
-    # charm contribution only needed for K mixing! Negligible for B and Bs.
-    if meson == 'K0':
-        eta_cc = par['eta_cc_'+meson]
-        eta_ct = par['eta_ct_'+meson]
-        M12 = M12 - (eta_cc*C_cc + eta_ct*C_ct) * me_rgi
-    return M12
+    cvll_d_SM_rgi = cvll_d(par, meson)
+    return - cvll_d_SM_rgi * me_rgi
 
 
 def M12(par, wc, meson):

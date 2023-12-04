@@ -140,6 +140,9 @@ eta_tt_Bs: 0.55
 eta_tt_K0: 0.5765(65)  # Buras:1990fn
 eta_cc_K0: 1.87(76)    # 1108.2036
 eta_ct_K0: 0.496(47)   # 1007.0684
+eta_tt_K0_ut: 0.55 +- 0.0231 # 1911.06822
+eta_ut_K0_ut: 0.402 +- 0.0053 # 1911.06822
+eta_uu_K0_ut: 1.87(76) # equal amplitudes with ut and ct unitarity
 
 
 # Parameters needed for epsilon_K
