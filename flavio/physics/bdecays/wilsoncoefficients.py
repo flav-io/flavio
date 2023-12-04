@@ -29,7 +29,7 @@ data = np.load(pkg_resources.resource_filename('flavio.physics', 'data/wcsm/wc_s
 wcsm_nf5 = scipy.interpolate.interp1d(scales, data)
 
 # di->djnunu Wilson coefficient
-def CL_SM(par):
+def CL_SM(par, scale):
     r"""SM Wilson coefficient for $d_i\to d_j\nu\bar\nu$ transitions.
 
     This is implemented as an approximate formula as a function of the top
@@ -48,7 +48,11 @@ def CL_SM(par):
 
     s2w = par['s2w']
     Xt = par['Xt_di->djnunu']
-    return -Xt/s2w
+    CL_SM = -Xt/s2w
+    # CL_SM * alpha_e is scale invariant
+    alpha_e_scale = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
+    alpha_e_mZ = flavio.physics.running.running.get_alpha(par, 91.1876)['alpha_e']
+    return CL_SM * alpha_e_mZ/alpha_e_scale
 
 
 # names of SM DeltaF=1 Wilson coefficients needed for wctot_dict
