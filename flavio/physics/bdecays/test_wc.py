@@ -57,10 +57,6 @@ class TestBWilson(unittest.TestCase):
 
     def test_clnu(self):
         par_dict = flavio.default_parameters.get_central_all()
-        par_dict['alpha_s'] = 0.1184
-        par_dict['alpha_e'] = 1/127.925
-        par_dict['s2w']  = 0.2315
-        par_dict['m_t']  = 173.3
-        cl = wilsoncoefficients.CL_SM(par_dict)
-        # comparing the central value of X_t to (4.2) of 1009.0947
-        self.assertAlmostEqual(-cl*par_dict['s2w']/1.469, 1, delta=0.01)
+        cl = wilsoncoefficients.CL_SM(par_dict, scale=91.1876)
+        # comparing the central value of X_t to (5) of 2105.02868
+        self.assertAlmostEqual(-cl*par_dict['s2w']/1.462, 1, delta=0.001)
