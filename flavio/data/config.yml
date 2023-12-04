@@ -72,9 +72,9 @@ renormalization scale:
     # renormalization scales are set to the mass of the bb quarkonia and to 2 GeV for the cc quarkonia. The renormalization scale was explicitly specified for J/psi tensor form factor in 2008.02024.
     J/psi: 2.
     psi(2S): 2.
-    eta_c(1S): 2.  
-    chi_c0(1P): 2.  
-    
+    eta_c(1S): 2.
+    chi_c0(1P): 2.
+
     Upsilon(1S): 10.
     Upsilon(2S): 10.
     Upsilon(3S): 10.
@@ -95,7 +95,7 @@ implementation:
   # CKM matrix parametrization
   CKM matrix: Tree
 
-  # Unitarity relation in Kaon mixing
+  # Unitarity relation in Kaon mixing (either 'ut' or 'ct')
   K mixing unitarity: ut
 
   # B->V form factors
