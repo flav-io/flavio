@@ -15,7 +15,7 @@ def kpinunu_amplitude(wc_obj, par, nu1, nu2):
     # Wilson coefficients
     wc = wc_obj.get_wc(label, scale, par, nf_out=3)
     if nu1 == nu2: # add the SM contribution only if neutrino flavours coincide
-        wc['CL_'+label] += flavio.physics.bdecays.wilsoncoefficients.CL_SM(par)
+        wc['CL_'+label] += flavio.physics.bdecays.wilsoncoefficients.CL_SM(par, scale)
     s2w = par['s2w']
     X = -( wc['CL_'+label] + wc['CR_'+label] ) * s2w
     Vus = abs(flavio.physics.ckm.get_ckm(par)[0,1])
@@ -35,19 +35,33 @@ def kpinunu_charm(par):
     flavio.citations.register("Buras:2006gb")
     return 0.379 * (mc/1.3)**2.155 * (alpha_s/0.1187)**(-1.417)
 
+def kappa_nu_tilde(par, charge):
+    r"""$\kappa_\nu^{+,L}$ parameters in units of $1/|V_{us}|^8$ from arXiv:0705.2025"""
+    flavio.citations.register("Mescia:2007kn")
+    if charge == 'plus':
+        kappa_tilde = par['kappa_plus_tilde']
+    elif charge == 'long':
+        kappa_tilde = par['kappa_L_tilde']
+    else:
+        raise ValueError("Argument `charge` must be 'plus' or 'long'")
+    scale = flavio.config['renormalization scale']['kdecays']
+    alpha_e_scale = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
+    r_Vus = 1/0.225**8 # this is because kappa_nu is defined for a fixed value of Vus!
+    r_alpha = alpha_e_scale**2 * 127.9**2 # 0705.2025 Eq. (11), convert alpha(MZ) to alpha(mu)
+    r_s2w = 0.231**2 / par['s2w']**2 # 0705.2025 Eq. (11)
+    return kappa_tilde * r_Vus * r_alpha * r_s2w
+
 def br_kplus_pinunu(wc_obj, par, nu1, nu2):
     r"""Branching ratio of $K^+\pi^+\nu\bar\nu$ for fixed neutrino flavours"""
     amp = kpinunu_amplitude(wc_obj, par, nu1, nu2)
-    Vus_tilde = 0.225 #  this is because kappa_plus is defined for a fixed value of Vus!
     Vus = abs(flavio.physics.ckm.get_ckm(par)[0,1])
-    return abs(amp)**2 * par['kappa_plus_tilde'] / Vus_tilde**8 / Vus**2 / 3.
+    return abs(amp)**2 * kappa_nu_tilde(par, 'plus') / Vus**2 / 3.
 
 def br_klong_pinunu(wc_obj, par, nu1, nu2):
     r"""Branching ratio of $K_L\pi^0\nu\bar\nu$ for fixed neutrino flavours"""
     amp = kpinunu_amplitude(wc_obj, par, nu1, nu2)
-    Vus_tilde = 0.225 #  this is because kappa_plus is defined for a fixed value of Vus!
     Vus = abs(flavio.physics.ckm.get_ckm(par)[0,1])
-    return amp.imag**2 * par['kappa_L_tilde'] / Vus_tilde**8 / Vus**2 / 3.
+    return amp.imag**2 * kappa_nu_tilde(par, 'long') / Vus**2 / 3.
 
 def br_kplus_pinunu_summed(wc_obj, par):
     r"""Branching ratio of $K^+\pi^+\nu\bar\nu$ summed over neutrino flavours"""

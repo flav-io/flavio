@@ -23,7 +23,7 @@ def helicity_amps(q2, wc_obj, par, B, V, nu1, nu2):
     label = flavio.physics.bdecays.common.meson_quark[(B,V)] + nu1 + nu2 # e.g. bsnuenue, bdnutaunumu
     wc = wc_obj.get_wc(label, scale, par)
     if nu1 == nu2: # add the SM contribution if neutrino flavours coincide
-        wc['CL_'+label] += flavio.physics.bdecays.wilsoncoefficients.CL_SM(par)
+        wc['CL_'+label] += flavio.physics.bdecays.wilsoncoefficients.CL_SM(par, scale)
     mB = par['m_'+B]
     mV = par['m_'+V]
     N = prefactor(q2, par, B, V)

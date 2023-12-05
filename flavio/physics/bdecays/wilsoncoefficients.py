@@ -29,24 +29,30 @@ data = np.load(pkg_resources.resource_filename('flavio.physics', 'data/wcsm/wc_s
 wcsm_nf5 = scipy.interpolate.interp1d(scales, data)
 
 # di->djnunu Wilson coefficient
-def CL_SM(par):
+def CL_SM(par, scale):
     r"""SM Wilson coefficient for $d_i\to d_j\nu\bar\nu$ transitions.
 
     This is implemented as an approximate formula as a function of the top
     mass."""
-    # EW NLO corrections arXiv:1009.0947
-    scale = 120. # <- result has very little sensitivity to high matching scale
-    mt = flavio.physics.running.running.get_mt(par, scale)
+    # # EW NLO corrections arXiv:1009.0947
+    # scale = 120. # <- result has very little sensitivity to high matching scale
+    # mt = flavio.physics.running.running.get_mt(par, scale)
+    # Xt0_165 = 1.50546 # LO result for mt=165, scale=120
+    # Xt0 = Xt0_165 * (1 + 1.14064 * (mt/165. - 1)) # LO
+    # Xt1 = Xt0_165 * (-0.031435 - 0.139303 * (mt/165. - 1)) # QCD NLO
+    # # (4.3), (4.4) of 1009.0947: NLO EW
+    # flavio.citations.register("Brod:2010hi")
+    # XtEW = Xt0 * (1 - 1.11508 + 1.12316*1.15338**(mt/165.)-0.179454*(mt/165)) - 1
+    # XtEW = XtEW * 0.00062392534457616328 # <- alpha_em/4pi at 120 GeV
+    # Xt = Xt0 + Xt1 + XtEW
+
     s2w = par['s2w']
-    Xt0_165 = 1.50546 # LO result for mt=165, scale=120
-    Xt0 = Xt0_165 * (1 + 1.14064 * (mt/165. - 1)) # LO
-    Xt1 = Xt0_165 * (-0.031435 - 0.139303 * (mt/165. - 1)) # QCD NLO
-    # (4.3), (4.4) of 1009.0947: NLO EW
-    flavio.citations.register("Brod:2010hi")
-    XtEW = Xt0 * (1 - 1.11508 + 1.12316*1.15338**(mt/165.)-0.179454*(mt/165)) - 1
-    XtEW = XtEW * 0.00062392534457616328 # <- alpha_em/4pi at 120 GeV
-    Xt = Xt0 + Xt1 + XtEW
-    return -Xt/s2w
+    Xt = par['Xt_di->djnunu']
+    CL_SM = -Xt/s2w
+    # CL_SM * alpha_e is scale invariant
+    alpha_e_scale = flavio.physics.running.running.get_alpha(par, scale)['alpha_e']
+    alpha_e_mZ = flavio.physics.running.running.get_alpha(par, 91.1876)['alpha_e']
+    return CL_SM * alpha_e_mZ/alpha_e_scale
 
 
 # names of SM DeltaF=1 Wilson coefficients needed for wctot_dict
