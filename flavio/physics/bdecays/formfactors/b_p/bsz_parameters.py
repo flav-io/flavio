@@ -58,7 +58,7 @@ def load_parameters(filename, process, constraints):
 resonance_masses_gkvd = {
     'B->K': {
         'm0': 5.630,
-        'm+': 5.412,
+        'm+': 5.415,
     },
     'B->pi': {
         'm0': 5.540,
