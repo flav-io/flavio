@@ -14,7 +14,7 @@ gamma = radians(70.) # 70° in radians
 t12 = asin(Vus)
 t13 = asin(Vub)
 t23 = asin(Vcb)/cos(t13)
-delta = gamma
+delta = gamma # approximation with permille precision
 laC = Vus
 A = sin(t23)/laC**2
 rho_minus_i_eta = sin(t13) * cmath.exp(-1j*delta) / (A*laC**3)
@@ -29,7 +29,7 @@ class TestCKM(unittest.TestCase):
     v_t = ckm_tree(Vus, Vub, Vcb, gamma)
     par_s = dict(t12=t12,t13=t13,t23=t23,delta=delta)
     par_w = dict(laC=laC,A=A,rhobar=rhobar,etabar=etabar)
-    par_t = dict(Vus=Vus,Vub=Vub,Vcb=Vcb,delta=gamma)
+    par_t = dict(Vus=Vus,Vub=Vub,Vcb=Vcb,gamma=gamma)
 
     def test_ckm_parametrizations(self):
         np.testing.assert_almost_equal(self.v_t/self.v_s, np.ones((3,3)), decimal=5)
