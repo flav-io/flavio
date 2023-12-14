@@ -20,16 +20,20 @@ def ckm_standard(t12, t13, t23, delta):
     return ckmutil.ckm.ckm_standard(t12, t13, t23, delta)
 
 @np.vectorize
-def tree_to_wolfenstein(Vus, Vub, Vcb, delta):
-    return ckmutil.ckm.tree_to_wolfenstein(Vus, Vub, Vcb, delta)
+def tree_to_wolfenstein(Vus, Vub, Vcb, gamma):
+    return ckmutil.ckm.tree_to_wolfenstein(Vus, Vub, Vcb, gamma)
 
 @lru_cache(maxsize=2)
 def ckm_wolfenstein(laC, A, rhobar, etabar):
     return ckmutil.ckm.ckm_wolfenstein(laC, A, rhobar, etabar)
 
 @lru_cache(maxsize=2)
-def ckm_tree(Vus, Vub, Vcb, delta):
-    return ckmutil.ckm.ckm_tree(Vus, Vub, Vcb, delta)
+def ckm_tree(Vus, Vub, Vcb, gamma):
+    return ckmutil.ckm.ckm_tree(Vus, Vub, Vcb, gamma)
+
+@lru_cache(maxsize=2)
+def ckm_beta_gamma(Vus, Vcb, beta, gamma):
+    return ckmutil.ckm.ckm_beta_gamma(Vus, Vcb, beta, gamma)
 
 # Auxiliary Quantity instance
 a = AuxiliaryQuantity(name='CKM matrix')
@@ -40,13 +44,16 @@ a.set_description('Cabibbo-Kobayashi-Maskawa matrix in the standard phase conven
 def _func_standard(wc_obj, par):
     return ckm_standard(par['t12'], par['t13'], par['t23'], par['delta'])
 def _func_tree(wc_obj, par):
-    return ckm_tree(par['Vus'], par['Vub'], par['Vcb'], par['delta'])
+    return ckm_tree(par['Vus'], par['Vub'], par['Vcb'], par['gamma'])
 def _func_wolfenstein(wc_obj, par):
     return ckm_wolfenstein(par['laC'], par['A'], par['rhobar'], par['etabar'])
+def _func_beta_gamma(wc_obj, par):
+    return ckm_beta_gamma(par['Vus'], par['Vcb'], par['beta'], par['gamma'])
 
 i = Implementation(name='Standard', quantity='CKM matrix', function=_func_standard)
 i = Implementation(name='Tree', quantity='CKM matrix', function=_func_tree)
 i = Implementation(name='Wolfenstein', quantity='CKM matrix', function=_func_wolfenstein)
+i = Implementation(name='beta gamma', quantity='CKM matrix', function=_func_beta_gamma)
 
 def get_ckm(par_dict):
     return AuxiliaryQuantity['CKM matrix'].prediction(par_dict=par_dict, wc_obj=None)
