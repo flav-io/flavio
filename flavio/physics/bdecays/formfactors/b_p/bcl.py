@@ -42,6 +42,7 @@ def ff(process, q2, par, n=3, t0=None):
     m0 = par[process + ' BCL m0']
     mB = par['m_'+pd['B']]
     mP = par['m_'+pd['P']]
+    chL = par.get(process + ' BCL chL', 1) # chiral logarithm factor (arXiv:2207.12468)
     ff = {}
     a={}
     for i in ['f+', 'fT']:
@@ -59,9 +60,9 @@ def ff(process, q2, par, n=3, t0=None):
         an_f0 = (f0_q20-fplus_q20)/z(mB, mP, 0, t0)**(n-1)
         a['f0'].append(an_f0)
     # evaluate FFs
-    ff['f+'] = pole('f+', mpl, q2) * param_fplusT(mB, mP, a['f+'], q2, t0)
-    ff['fT'] = pole('fT', mpl, q2) * param_fplusT(mB, mP, a['fT'], q2, t0)
-    ff['f0'] = pole('f0', m0, q2) * param_f0(mB, mP, a['f0'], q2, t0)
+    ff['f+'] = chL * pole('f+', mpl, q2) * param_fplusT(mB, mP, a['f+'], q2, t0)
+    ff['fT'] = chL * pole('fT', mpl, q2) * param_fplusT(mB, mP, a['fT'], q2, t0)
+    ff['f0'] = chL * pole('f0', m0, q2) * param_f0(mB, mP, a['f0'], q2, t0)
     return ff
 
 def ff_isgurwise(process, q2, par, scale, n=3, t0=None):
