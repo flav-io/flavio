@@ -8,7 +8,7 @@ wc_sm = flavio.WilsonCoefficients()
 par_nominal = flavio.default_parameters.copy()
 flavio.physics.bdecays.formfactors.lambdab_12.lattice_parameters.lattice_load_nominal(par_nominal)
 par_nominal.set_constraint('Vcb', 0.04175)
-par_nominal.set_constraint('delta', 1.30)
+par_nominal.set_constraint('gamma', 1.30)
 par_nominal.set_constraint("m_t", 173.21)
 par_nominal.set_constraint('tau_Lambdab', 1/4.49e-13) # PDG 2016 value
 par_nominal.set_constraint('Lambda->ppi alpha_-', 0.642) # PDG 2016 value
