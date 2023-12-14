@@ -25,6 +25,11 @@ for p in processes_H2L + processes_H2H:
                    function=ff_function(bcl.ff, p, n=3))
     i.set_description("3-parameter BCL parametrization (see arXiv:0807.2722).")
 
+    iname = p + ' BCL3 t0=0'
+    i = Implementation(name=iname, quantity=quantity,
+                   function=ff_function(bcl.ff, p, n=3, t0=0))
+    i.set_description("3-parameter BCL parametrization with t0=0 (e.g. arXiv:2207.12468).")
+
     iname = p + ' BCL4'
     i = Implementation(name=iname, quantity=quantity,
                    function=ff_function(bcl.ff, p, n=4))
