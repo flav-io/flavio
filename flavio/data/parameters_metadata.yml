@@ -39,9 +39,9 @@ Vub:
 Vcb:
   tex: $V_{cb}$
   description: CKM element $V_{cb}$
-delta:
-  tex: $\delta$
-  description: CKM phase $\delta$ in radians
+gamma:
+  tex: $\gamma$
+  description: CKM Unitarity Triangle angle $\gamma$ in radians
 
 
 # Quark masses

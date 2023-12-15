@@ -16,7 +16,7 @@ class TestKll(unittest.TestCase):
         # correct for different CKM choice
         par06 = par.copy()
         par06.update({'Vus': 0.22715, 'Vub': 0.003683, 'Vcb': 0.04161,
-                      'delta': 59.0 / 180 * pi})
+                      'gamma': 59.0 / 180 * pi})
         self.assertAlmostEqual(br_kll(par06, wc_obj, 'KL', 'mu', 'mu', ld=False),
                                0.79 * 1e-9,
                                delta=0.027e-9)
@@ -26,7 +26,7 @@ class TestKll(unittest.TestCase):
         # correct for different CKM choice
         my_xi_t = ckm.xi('t', 'sd')(par)
         xi_t = ckm.xi('t', 'sd')({'Vus': 0.22508, 'Vub': 0.003715, 'Vcb': 0.04181,
-                                  'delta': 65.4 / 180 * pi})
+                                  'gamma': 65.4 / 180 * pi})
         r = (my_xi_t.imag / xi_t.imag)**2
         self.assertAlmostEqual(br_kll(par, wc_obj, 'KS', 'mu', 'mu', ld=False),
                                r * 0.19e-12,
@@ -36,7 +36,7 @@ class TestKll(unittest.TestCase):
         # 1712.01295 eq. (2.33)
         _par = par.copy()
         _par.update({'Vus': 0.22508, 'Vub': 0.003715, 'Vcb': 0.04181,
-                      'delta': 65.4 / 180 * pi})
+                      'gamma': 65.4 / 180 * pi})
         self.assertAlmostEqual(br_kll(_par, wc_obj, 'KS', 'mu', 'mu', ld=True)
                                - br_kll(_par, wc_obj, 'KS', 'mu', 'mu', ld=False),
                                4.99e-12,
@@ -46,7 +46,7 @@ class TestKll(unittest.TestCase):
         par_p = par.copy()
         par_p['chi_disp(KL->gammagamma)'] = 0.71
         par_p.update({'Vus': 0.22508, 'Vub': 0.003715, 'Vcb': 0.04181,
-                      'delta': 65.4 / 180 * pi})
+                      'gamma': 65.4 / 180 * pi})
         self.assertAlmostEqual(br_kll(par_p, wc_obj, 'KL', 'mu', 'mu', ld=True),
                                6.85e-9,
                                delta=0.2e-9)
@@ -55,7 +55,7 @@ class TestKll(unittest.TestCase):
         par_m = par.copy()
         par_m['chi_disp(KL->gammagamma)'] = -0.71
         par_m.update({'Vus': 0.22508, 'Vub': 0.003715, 'Vcb': 0.04181,
-                      'delta': 65.4 / 180 * pi})
+                      'gamma': 65.4 / 180 * pi})
         self.assertAlmostEqual(br_kll(par_m, wc_obj, 'KL', 'mu', 'mu', ld=True),
                                8.11e-9,
                                delta=0.2e-9)
