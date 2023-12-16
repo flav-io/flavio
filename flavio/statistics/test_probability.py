@@ -491,7 +491,7 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(repr(GeneralGammaUpperLimit(limit=1e-9, confidence_level=0.95, counts_total=15, counts_background=10, background_std=0.2)),
                          fsp + 'GeneralGammaUpperLimit(limit=1e-09, confidence_level=0.95, counts_total=15, counts_background=10, background_std=0.2)')
         self.assertEqual(repr(MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]])),
-                         fsp + 'MultivariateNormalDistribution([1.0, 2], [[2, 0.1], [0.1, 2]])')
+                         fsp + 'MultivariateNormalDistribution([1.0, 2], [[2.  0.1]\n [0.1 2. ]])')
         self.assertEqual(repr(NumericalDistribution([1., 2], [3, 4.])),
                          fsp + 'NumericalDistribution([1.0, 2], [3, 4.0])')
         self.assertEqual(repr(GaussianKDE([1, 2, 3], 0.1)),
