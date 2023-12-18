@@ -3,7 +3,8 @@ import json
 import pkgutil
 from flavio.classes import Parameter
 from flavio.statistics.probability import MultivariateNormalDistribution
-
+import yaml
+import re
 
 FFs = ["f+", "fT", "f0"]
 ai = ["a0", "a1", "a2"]
@@ -76,3 +77,14 @@ def gkvd_load(version, fit, transitions, constraints):
             constraints.set_constraint('{} BCL {}'.format(tr, m), v)
         filename = 'data/arXiv-1811-00983{}/{}_{}.json'.format(version, tr.replace('->', ''), fit)
         load_parameters(filename, tr, constraints)
+
+
+def load_ffs_eos(filename, dict_name, regex, subst, constraints):
+    f = pkgutil.get_data('flavio.physics', filename)
+    ff_dict = yaml.safe_load(f)[dict_name]
+    observables = ff_dict['observables']
+    central_values = np.asarray(ff_dict['means'])
+    covariance = np.asarray(ff_dict['covariance'])
+    pattern = re.compile(regex)
+    observables = [pattern.sub(subst, obs) for obs in observables]
+    constraints.add_constraint(observables, MultivariateNormalDistribution(central_value=central_values, covariance=covariance))
