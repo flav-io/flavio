@@ -20,6 +20,28 @@ class TestProbability(unittest.TestCase):
         self.assertAlmostEqual(num_lpdf, ana_lpdf, delta=1e-6)
         self.assertEqual(len(pdf.get_random(10)), 10)
 
+    def test_multiv_normal_triangular_cov(self):
+        c = np.array([1e-3, 2])
+        cov = np.array([[(0.2e-3)**2, 0.2e-3*0.5*0.3],[0.2e-3*0.5*0.3, 0.5**2]])
+        cov_triangular = cov.copy()
+        cov_triangular[1,0] = 0
+        pdf_from_triangular_cov = MultivariateNormalDistribution(c, cov_triangular)
+        pdf = MultivariateNormalDistribution(c, cov)
+        np.testing.assert_equal(pdf.covariance, pdf_from_triangular_cov.covariance)
+        np.testing.assert_equal(pdf.correlation, pdf_from_triangular_cov.correlation)
+
+    def test_multiv_normal_triangular_corr(self):
+        c = np.array([1e-3, 2])
+        cov = np.array([[(0.2e-3)**2, 0.2e-3*0.5*0.3],[0.2e-3*0.5*0.3, 0.5**2]])
+        std = np.sqrt(np.diag(cov))
+        corr = cov / np.outer(std, std)
+        corr_triangular = corr.copy()
+        corr_triangular[1,0] = 0
+        pdf_from_triangular_corr = MultivariateNormalDistribution(c, standard_deviation=std, correlation=corr_triangular)
+        pdf = MultivariateNormalDistribution(c, standard_deviation=std, correlation=corr)
+        np.testing.assert_equal(pdf.covariance, pdf_from_triangular_corr.covariance)
+        np.testing.assert_equal(pdf.correlation, pdf_from_triangular_corr.correlation)
+
     def test_normal(self):
         d = NormalDistribution(2, 0.3)
         self.assertEqual(d.cdf(2), 0.5)
@@ -491,7 +513,7 @@ class TestProbability(unittest.TestCase):
         self.assertEqual(repr(GeneralGammaUpperLimit(limit=1e-9, confidence_level=0.95, counts_total=15, counts_background=10, background_std=0.2)),
                          fsp + 'GeneralGammaUpperLimit(limit=1e-09, confidence_level=0.95, counts_total=15, counts_background=10, background_std=0.2)')
         self.assertEqual(repr(MultivariateNormalDistribution([1., 2], [[2, 0.1], [0.1, 2]])),
-                         fsp + 'MultivariateNormalDistribution([1.0, 2], [[2, 0.1], [0.1, 2]])')
+                         fsp + 'MultivariateNormalDistribution([1.0, 2], [[2.  0.1]\n [0.1 2. ]])')
         self.assertEqual(repr(NumericalDistribution([1., 2], [3, 4.])),
                          fsp + 'NumericalDistribution([1.0, 2], [3, 4.0])')
         self.assertEqual(repr(GaussianKDE([1, 2, 3], 0.1)),

@@ -148,6 +148,10 @@ class Constraints(object):
 
         Note that if there already exists a constraint, it will be removed."""
         for num, parameter in enumerate(parameters):
+            try: # check if parameter object already exists
+                p = Parameter[parameter]
+            except: # otherwise, create a new one
+                p = Parameter(parameter)
             # remove constraint if there is one
             if parameter in self._parameters:
                 self.remove_constraint(parameter)

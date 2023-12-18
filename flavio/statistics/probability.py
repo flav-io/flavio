@@ -1325,6 +1325,10 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
     If the covariance matrix is not specified, standard_deviation and the
     correlation matrix have to be specified.
 
+    If the covariance or correlation matrix is not symmetric, it is assumed that
+    only the values above the diagonal are present and the missing values are
+    filled in by reflecting the upper triangle at the diagonal.
+
     Methods:
 
     - get_random(size=None): get `size` random numbers (default: a single one)
@@ -1347,8 +1351,15 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
 
         - central_value: vector of means, shape (n)
         - covariance: covariance matrix, shape (n,n)
+        - standard_deviation: vector of standard deviations, shape (n)
+        - correlation: correlation matrix, shape (n,n)
         """
         if covariance is not None:
+            covariance = np.array(covariance)
+            if not np.allclose(covariance, covariance.T):
+                # if the covariance is not symmetric, it is assumed that only the values above the diagonal are present.
+                # then: M -> M + M^T - diag(M)
+                covariance = covariance + covariance.T - np.diag(np.diag(covariance))
             self.covariance = covariance
             self.standard_deviation = np.sqrt(np.diag(self.covariance))
             self.correlation = self.covariance/np.outer(self.standard_deviation,
@@ -1366,7 +1377,12 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
                     n_dim = len(central_value)
                     self.correlation = np.eye(n_dim) + (np.ones((n_dim, n_dim))-np.eye(n_dim))*float(correlation)
                 else:
-                    self.correlation = np.array(correlation)
+                    correlation = np.array(correlation)
+                    if not np.allclose(correlation, correlation.T):
+                        # if the correlation is not symmetric, it is assumed that only the values above the diagonal are present.
+                        # then: M -> M + M^T - diag(M)
+                        correlation = correlation + correlation.T - np.diag(np.diag(correlation))
+                    self.correlation = correlation
             self.covariance = np.outer(self.standard_deviation,
                                        self.standard_deviation)*self.correlation
         super().__init__(central_value, support=np.array([
