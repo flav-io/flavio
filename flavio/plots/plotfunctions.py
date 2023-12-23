@@ -20,28 +20,25 @@ from flavio.plots.colors import lighten_color, get_color
 def error_budget_pie(err_dict, other_cutoff=0.03):
     """Pie chart of an observable's error budget.
 
+    The wedges are labelled with the relative error contributions and the
+    names of the parameters. The area of each wedge is proportional to the
+    squared error contribution such that the total area of the pie
+    corresponds to the squared total error.
+
     Parameters:
 
-    - `err_dict`: Dictionary as return from `flavio.sm_error_budget`
-    - `other_cutoff`: If an individual error contribution divided by the total
-      error is smaller than this number, it is lumped under "other". Defaults
-      to 0.03.
-
-    Note that for uncorrelated parameters, the total uncertainty is the squared
-    sum of the individual uncertainties, so the relative size of the wedges does
-    not correspond to the relative contribution to the total uncertainty.
-
-    If the uncertainties of individual parameters are correlated, the total
-    uncertainty can be larger or smaller than the squared sum of the individual
-    uncertainties, so the representation can be misleading.
+    - `err_dict`: Dictionary as returned by `flavio.sm_error_budget`.
+    - `other_cutoff`: If an individual squared error contribution divided by the
+    squared total error is smaller than this number, it is lumped under "other".
+    Defaults to 0.03.
     """
-    err_tot = sum(err_dict.values()) # linear sum of individual errors
+    var_tot = np.sum(np.array(list(err_dict.values()))**2) # total variance from sum of squared individual errors
     err_dict_sorted = OrderedDict(sorted(err_dict.items(), key=lambda t: -t[1]))
     labels = []
     fracs = []
     small_frac = []
     for key, value in err_dict_sorted.items():
-        frac = value/err_tot
+        frac = value**2/var_tot # variance fraction
         if frac > other_cutoff:
             if isinstance(key, str):
                 try:
@@ -57,15 +54,10 @@ def error_budget_pie(err_dict, other_cutoff=0.03):
             small_frac.append(frac)
     if small_frac:
         labels.append('other')
-        # the fraction for the "other" errors is obtained by adding them in quadrature
-        fracs.append(np.sqrt(np.sum(np.array(small_frac)**2)))
-    # initially, the fractions had been calculated assuming that they add to
-    # one, but adding the "other" errors in quadrature changed that - correct
-    # all the fractions to account for this
-    corr = sum(fracs)
-    fracs = [f/corr for f in fracs]
+        fracs.append(np.sum(small_frac))
     def my_autopct(pct):
-        return r'{p:.2g}\%'.format(p=pct*err_tot)
+        # use individual errors as labels
+        return r'{p:.2g}\%'.format(p=np.sqrt(100*pct*var_tot))
     plt.axis('equal')
     return plt.pie(fracs,
         labels=labels,
