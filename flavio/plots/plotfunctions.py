@@ -32,7 +32,7 @@ def error_budget_pie(err_dict, other_cutoff=0.03):
     squared total error is smaller than this number, it is lumped under "other".
     Defaults to 0.03.
     """
-    var_tot = np.sum(np.array(list(err_dict.values()))**2) # total variance from sum of squared individual errors
+    var_tot = sum(v**2 for v in err_dict.values()) # total variance from sum of squared individual errors
     err_dict_sorted = OrderedDict(sorted(err_dict.items(), key=lambda t: -t[1]))
     labels = []
     fracs = []
