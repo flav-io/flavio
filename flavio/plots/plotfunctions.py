@@ -54,7 +54,7 @@ def error_budget_pie(err_dict, other_cutoff=0.03):
             small_frac.append(frac)
     if small_frac:
         labels.append('other')
-        fracs.append(np.sum(small_frac))
+        fracs.append(sum(small_frac))
     def my_autopct(pct):
         # use individual errors as labels
         return r'{p:.2g}\%'.format(p=np.sqrt(100*pct*var_tot))
