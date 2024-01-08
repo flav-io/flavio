@@ -146,10 +146,10 @@ def diff_plot_th_err(obs_name, x_min, x_max, wc=None, steps=100,
     x_err_arr[-1] = x_arr[-1]
     if wc is None:
         wc = flavio.physics.eft._wc_sm # SM Wilson coefficients
-        obs_err_arr = [flavio.sm_uncertainty(obs_name, x, threads=threads) for x in x_err_arr]
+        obs_err_arr = [flavio.sm_uncertainty(obs_name, x, N=N, threads=threads) for x in x_err_arr]
         obs_arr = [flavio.sm_prediction(obs_name, x) for x in x_arr]
     else:
-        obs_err_arr = [flavio.np_uncertainty(obs_name, wc, x, threads=threads) for x in x_err_arr]
+        obs_err_arr = [flavio.np_uncertainty(obs_name, wc, x, N=N, threads=threads) for x in x_err_arr]
         obs_arr = [flavio.np_prediction(obs_name, wc, x) for x in x_arr]
     ax = plt.gca()
     plot_args = plot_args or {}
