@@ -49,6 +49,7 @@ Contributors (in alphabetical order):
 - Matěj Hudec
 - Matthew Kirk
 - Jonathan Kriewald
+- Girish Kumar
 - Jacky Kumar
 - Christoph Langenbruch
 - Christoph Niehoff
