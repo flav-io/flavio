@@ -93,7 +93,7 @@ RGE thresholds:
 implementation:
 
   # CKM matrix parametrization
-  CKM matrix: Tree
+  CKM matrix: beta gamma
 
   # Unitarity relation in Kaon mixing (either 'ut' or 'ct')
   K mixing unitarity: ut
