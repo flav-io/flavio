@@ -42,8 +42,7 @@ Vus: 0.2248(6)   # FLAG 2023 Nf=2+1+1
 Vub: 3.64(16)e-3  # FLAG 2023 Nf=2+1 B->pilnu
 Vcb: 41.97(48) 1e-3 # 2310.20324
 gamma: 1.15(6)  # HFLAV 2022 B -> DK
-#beta: 0.387(12) # HFLAV 2022 B -> J/psi K
-beta: 0.405(7) # LHCb 2309.09728 (Run 1 & 2))
+beta: 0.3937(81) # HFLAV 2022 all charmonium w/o LHCb + LHCb 2309.09728 psiKS Run 1&2
 
 
 # Meson decay constants
