@@ -27,6 +27,7 @@ setup(name='flavio',
                 'physics/data/arXiv-1602-01399v1/*',
                 'physics/data/arXiv-1811-00983v1/*',
                 'physics/data/arXiv-2102.07233v2/*',
+                'physics/data/arXiv-2305-06301v1/*',
                 'physics/data/qcdf_interpolate/*',
                 'physics/data/wcsm/*',
                 ]
