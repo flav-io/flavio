@@ -34,7 +34,7 @@ def load_parameters(file_res, file_cov, process, constraints):
           - np.diag([ cov_dict[(k,k)] for k in keys_sorted]) )
     parameter_names = [implementation_name + ' ' + coeff_name for coeff_name in keys_sorted]
     constraints.add_constraint(parameter_names,
-            MultivariateNormalDistribution(central_value=res, covariance=cov ), parameter_object=True)
+            MultivariateNormalDistribution(central_value=res, covariance=cov ), is_parameter_constraint=True)
 
 
 def lattice_load(constraints):

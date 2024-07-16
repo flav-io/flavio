@@ -9,4 +9,4 @@ def load_parameters(filename, constraints):
     ff_dict = yaml.safe_load(f)
     covariance = np.outer(ff_dict['uncertainties'], ff_dict['uncertainties'])*ff_dict['correlation']
     constraints.add_constraint(ff_dict['parameters'],
-            MultivariateNormalDistribution(central_value=ff_dict['central_values'], covariance=covariance), parameter_object=True)
+            MultivariateNormalDistribution(central_value=ff_dict['central_values'], covariance=covariance), is_parameter_constraint=True)

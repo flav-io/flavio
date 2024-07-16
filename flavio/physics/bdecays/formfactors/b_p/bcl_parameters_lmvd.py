@@ -23,4 +23,4 @@ def load_parameters(filename, constraints):
                 raise ValueError('No f or b in observable name')
         observables_renamed.append(o[:index]+ ' BCL ' + o[index:])
     constraints.add_constraint(observables_renamed,
-            MultivariateNormalDistribution(central_value=central_values, covariance=covariance), parameter_object=True)
+            MultivariateNormalDistribution(central_value=central_values, covariance=covariance), is_parameter_constraint=True)

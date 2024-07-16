@@ -141,14 +141,14 @@ class Constraints(object):
         """Returns a list of all parameters/observables constrained."""
         return list(self._parameters.keys())
 
-    def add_constraint(self, parameters, constraint, parameter_object=False):
+    def add_constraint(self, parameters, constraint, is_parameter_constraint=None):
         """Set the constraint on one or several parameters/observables.
 
         `constraint` must be an instance of a child of ProbabilityDistribution.
 
         Note that if there already exists a constraint, it will be removed."""
         for num, parameter in enumerate(parameters):
-            if parameter_object:
+            if is_parameter_constraint:
                 try: # check if parameter object already exists
                     p = Parameter[parameter]
                 except: # otherwise, create a new one
