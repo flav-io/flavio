@@ -3,7 +3,7 @@ the finite life-time difference between the $B_s$ mass eigenstates,
 see arXiv:1502.05509."""
 
 import flavio
-from . import observables
+import observables
 from flavio.classes import Observable, Prediction
 import cmath
 import warnings
@@ -32,6 +32,31 @@ def bsvll_obs(function, q2, wc_obj, par, B, V, lep):
     phi = cmath.phase(-q_over_p) # the phase of -q/p
     J_h = flavio.physics.bdecays.angular.angularcoeffs_h_v(phi, h, h_tilde, q2, mB, mV, mb, 0, ml, ml)
     return function(y, J, J_bar, J_h)
+
+
+def A_experiment_Bs(y, J, J_bar, J_h, i):
+    return A_experiment_num(y, J, J_bar, J_h, i)/SA_den_Bs(y, J, J_bar, J_h)
+
+# numerator
+def A_experiment_num_Bs(y, J, J_bar, J_h, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -A_theory_num_Bs(y, J, J_bar, J_h, i)
+    return A_theory_num_Bs(y, J, J_bar, J_h, i)
+
+
+def A_theory_Bs(y, J, J_bar, J_h, i):
+    r"""Angular CP asymmetry $A_i$ in the theory convention."""
+    return A_theory_num_Bs(y, J, J_bar, J_h, i)/SA_den_Bs(y, J, J_bar, J_h, i)
+
+# numerator
+def A_theory_num_Bs(y, J, J_bar, J_h, i):
+    return 1/(1-y**2) * (J[i] - J_bar[i]) - y/(1-y**2) * J_h[i]
+
+# denominator of P_i observables
+def P_den_Bs(y, J, J_bar, J_h):
+    return S_theory_num_Bs(y, J, J_bar, J_h,'2s')
+
+
 
 def S_theory_num_Bs(y, J, J_bar, J_h, i):
     # (42) of 1502.05509
@@ -135,18 +160,65 @@ def bsvll_dbrdq2_19_func(B, P, lep):
     return fct
 
 # Observable and Prediction instances
-
+# https://arxiv.org/pdf/2210.11995
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 _observables = {
 'FL': {'func_num': FL_num_Bs, 'tex': r'\overline{F_L}', 'desc': 'Time-averaged longitudinal polarization fraction'},
 'S3': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 3), 'tex': r'\overline{S_3}', 'desc': 'Time-averaged, CP-averaged angular observable'},
 'S4': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 4), 'tex': r'\overline{S_4}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S5': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 5), 'tex': r'\overline{S_5}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S5': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 5), 'tex': r'\overline{S_5}', 'desc': 'Time-averaged, CP-averaged angular observable'},
 'S7': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 7), 'tex': r'\overline{S_7}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S8': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 8), 'tex': r'\overline{S_8}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S9': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 9), 'tex': r'\overline{S_9}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'A3': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 3), 'tex': r'\overline{A_3}', 'desc': 'Angular CP asymmetry'},
+'A4': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 4), 'tex': r'\overline{A_4}', 'desc': 'Angular CP asymmetry'},
+'A5': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 5), 'tex': r'\overline{A_5}', 'desc': 'Angular CP asymmetry'},
+'A6s': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, '6s'), 'tex': r'\overline{A_6^s}', 'desc': 'Angular CP asymmetry'},
+'A7': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 7), 'tex': r'\overline{A_7}', 'desc': 'Angular CP asymmetry'},
+'A8': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 8), 'tex': r'\overline{A_8}', 'desc': 'Angular CP asymmetry'},
+'A9': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 9), 'tex': r'\overline{A_9}', 'desc': 'Angular CP asymmetry'},
+
+}
+_observables_p = {
+'P1': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 3)/2., 'tex': r'P_1', 'desc': "CP-averaged \"optimized\" angular observable"},
+'ATIm': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 9)/2., 'tex': r'A_T^\text{Im}', 'desc': "Transverse CP asymmetry"},
+'ATRe': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 9)/4., 'tex': r'A_T^\text{2}', 'desc': "\"optimized\" angular CP asymmetry"},
+
+
+
 }
 _hadr = {
 'Bs->phi': {'tex': r"B_s\to \phi ", 'B': 'Bs', 'V': 'phi', },
 'Bs->K*0': {'tex': r"B_s\to K^* ", 'B': 'Bs', 'V': 'K*0', },
 }
+
+def make_metadata_binned_Bs(M, l, obs, obsdict):
+    _process_tex = _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+r"^-"
+    _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _process_tex + r"$"
+    B = _hadr[M]['B']
+    V = _hadr[M]['V']
+    _obs_name = "<" + obs + ">("+M+l+l+")"
+    _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+    _obs.set_description('Binned ' + obsdict['desc'] + r" in $" + _process_tex + r"$")
+    _obs.tex = r"$\langle " + obsdict['tex'] + r"\rangle(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    return _obs
+
+
+def make_metadata_differential_Bs(M, l, obs, obsdict):
+    _process_tex = _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+r"^-"
+    _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to V\ell^+\ell^-$ :: $' + _process_tex + r"$"
+    B = _hadr[M]['B']
+    V = _hadr[M]['V']
+    _obs_name = obs + "("+M+l+l+")"
+    _obs = Observable(name=_obs_name, arguments=['q2'])
+    _obs.set_description(obsdict['desc'][0].capitalize() + obsdict['desc'][1:] + r" in $" + _process_tex + r"$")
+    _obs.tex = r"$" + obsdict['tex'] + r"(" + _process_tex + r")$"
+    _obs.add_taxonomy(_process_taxonomy)
+    return _obs
+
+
 for l in ['e', 'mu', 'tau']:
     for M in _hadr.keys():
 
@@ -170,6 +242,25 @@ for l in ['e', 'mu', 'tau']:
             _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
             _obs.add_taxonomy(_process_taxonomy)
             Prediction(_obs_name, bsvll_obs_ratio_func(_observables[obs]['func_num'], SA_den_Bs, _hadr[M]['B'], _hadr[M]['V'], l))
+
+        for obs in sorted(_observables_p.keys()):
+
+            # binned angular observables
+            _obs_name = "<" + obs + ">("+M+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+            _obs.set_description('Binned ' + _observables_p[obs]['desc'] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$\langle " + _observables_p[obs]['tex'] + r"\rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            _obs.add_taxonomy(_process_taxonomy)
+            Prediction(_obs_name, bsvll_obs_int_ratio_func(_observables_p[obs]['func_num'], P_den_Bs, _hadr[M]['B'], _hadr[M]['V'], l))
+
+            # differential angular observables
+            _obs_name = obs + "("+M+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2'])
+            _obs.set_description(_observables_p[obs]['desc'][0].capitalize() + _observables_p[obs]['desc'][1:] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$" + _observables_p[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            _obs.add_taxonomy(_process_taxonomy)
+            Prediction(_obs_name, bsvll_obs_ratio_func(_observables_p[obs]['func_num'], P_den_Bs, _hadr[M]['B'], _hadr[M]['V'], l))
+
 
         # binned branching ratio
         _obs_name = "<dBR/dq2>("+M+l+l+")"
