@@ -1,22 +1,8 @@
 import scipy
 import numpy as np
-import warnings
-try:
-    from scipy.integrate import AccuracyWarning # scipy >= 1.5.0
-except ImportError:
-    from scipy.integrate.quadrature import AccuracyWarning # scipy <= 1.4.1
-
-def nintegrate_quadrature(f, a, b, epsrel=0.005, **kwargs):
-    with warnings.catch_warnings():
-        # ignore AccuracyWarning that is issued when an integral is zero
-        warnings.filterwarnings("ignore", category=AccuracyWarning)
-        return scipy.integrate.quadrature(f, a, b, rtol=epsrel, tol=0, vec_func=False, **kwargs)[0]
 
 def nintegrate(f, a, b, epsrel=0.005, **kwargs):
-    with warnings.catch_warnings():
-        # ignore AccuracyWarning that is issued when an integral is zero
-        warnings.filterwarnings("ignore", category=AccuracyWarning)
-        return scipy.integrate.quad(f, a, b, epsabs=0, epsrel=epsrel, **kwargs)[0]
+    return scipy.integrate.quad(f, a, b, epsabs=0, epsrel=epsrel, **kwargs)[0]
 
 def nintegrate_fast(f, a, b, N=5, **kwargs):
     x = np.linspace(a,b,N)
