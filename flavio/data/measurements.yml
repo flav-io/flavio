@@ -4971,11 +4971,11 @@ LHCb RD* 2017:
   values:
     Rtaumu(B->D*lnu): 0.291 ± 0.019 ± 0.026 ± 0.013
 
-LHCb RD* 2023:
+LHCb RD* 2023: #supersedes LHCb RD* 2017
   experiment: LHCb
   inspire: LHCb:2023cjr
   values:
-    Rtaumu(B->D*lnu): 0.247 ± 0.015 ± 0.015 ± 0.012
+    Rtaumu(B->D*lnu): 0.267 ± 0.012 ± 0.015 ± 0.013
 
 LHCb RD RD* 2022:
     experiment: LHCb
