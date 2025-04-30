@@ -83,7 +83,7 @@ _tex = {'ee': r'e^+e^-', 'mumu': r'\mu^+\mu^-', 'tautau': r'\tau^+\tau^-',
 
 
 def _define_obs_P_ll(M, ll):
-    _process_tex = _hadr[M]['tex']+_tex[''.join(ll)]
+    _process_tex = _hadr[M]['tex']+' '+_tex[''.join(ll)]
     _process_taxonomy = r'Process :: quarkonium lepton decays :: $P\to \ell^+\ell^-$ :: $' + _process_tex + r"$"
     _obs_name = "BR("+_hadr[M]['P']+"->"+''.join(ll)+")"
     _obs = Observable(_obs_name,arguments=["CeGGij","CeGGji"])
