@@ -162,10 +162,10 @@ def Vllgamma_ratio_comb_func(V, Q, l1, l2):
 # Observable and Prediction instances
 _hadr = { 
     'J/psi': {'tex': r"J/\psi\to", 'V': 'J/psi', 'Q': 2./3., },
-    'psi(2S)': {'tex': r"\psi(2S)\to", 'V': 'psi(2S)', 'Q': 2./3., }, 
-    'Upsilon(1S)': {'tex': r"\Upsilon(1S)\to", 'V': 'Upsilon(1S)', 'Q': -1./3., },
-    'Upsilon(2S)': {'tex': r"\Upsilon(2S)\to", 'V': 'Upsilon(2S)', 'Q': -1./3., },
-    'Upsilon(3S)': {'tex': r"\Upsilon(3S)\to", 'V': 'Upsilon(3S)', 'Q': -1./3., },
+    'psi(2S)': {'tex': r"\psi(2S)\to ", 'V': 'psi(2S)', 'Q': 2./3., }, 
+    'Upsilon(1S)': {'tex': r"\Upsilon(1S)\to ", 'V': 'Upsilon(1S)', 'Q': -1./3., },
+    'Upsilon(2S)': {'tex': r"\Upsilon(2S)\to ", 'V': 'Upsilon(2S)', 'Q': -1./3., },
+    'Upsilon(3S)': {'tex': r"\Upsilon(3S)\to ", 'V': 'Upsilon(3S)', 'Q': -1./3., },
  }
 
 _tex = {'ee': r'e^+e^-', 'mumu': r'\mu^+\mu^-', 'tautau': r'\tau^+\tau^-', 

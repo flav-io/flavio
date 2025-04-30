@@ -69,8 +69,8 @@ def Pll_br_comb_func(P,  l1, l2):
 
 # Observable and Prediction instances
 _hadr = { 
-    'eta_c(1S)': {'tex': r"\eta_c(1S)\to", 'P': 'eta_c(1S)' },
-    'eta_b(1S)': {'tex': r"\eta_b(1S)\to", 'P': 'eta_b(1S)' },
+    'eta_c(1S)': {'tex': r"\eta_c(1S)\to ", 'P': 'eta_c(1S)' },
+    'eta_b(1S)': {'tex': r"\eta_b(1S)\to ", 'P': 'eta_b(1S)' },
  }
 
 _tex = {'ee': r'e^+e^-', 'mumu': r'\mu^+\mu^-', 'tautau': r'\tau^+\tau^-', 

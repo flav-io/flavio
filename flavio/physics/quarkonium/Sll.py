@@ -61,9 +61,9 @@ def Sll_br_comb_func(S,  l1, l2):
 
 # Observable and Prediction instances
 _hadr = { 
-    'chi_c0(1P)': {'tex': r"\chi_{c0}(1P)\to", 'S': 'chi_c0(1P)', 'Q': 2./3., },
-    'chi_b0(1P)': {'tex': r"\chi_{b0}(1P)\to", 'S': 'chi_b0(1P)', 'Q': -1./3., },
-    'chi_b0(2P)': {'tex': r"\chi_{b0}(2P)\to", 'S': 'chi_b0(2P)', 'Q': -1./3., },
+    'chi_c0(1P)': {'tex': r"\chi_{c0}(1P)\to ", 'S': 'chi_c0(1P)', 'Q': 2./3., },
+    'chi_b0(1P)': {'tex': r"\chi_{b0}(1P)\to ", 'S': 'chi_b0(1P)', 'Q': -1./3., },
+    'chi_b0(2P)': {'tex': r"\chi_{b0}(2P)\to ", 'S': 'chi_b0(2P)', 'Q': -1./3., },
  }
 
 _tex = {'ee': r'e^+e^-', 'mumu': r'\mu^+\mu^-', 'tautau': r'\tau^+\tau^-', 
