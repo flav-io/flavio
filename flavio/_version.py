@@ -1,1 +1,3 @@
-__version__ = '2.6.2'
+import importlib.metadata
+
+__version__ = importlib.metadata.version("flavio")
