@@ -7,14 +7,43 @@ from . import observables
 from flavio.classes import Observable, Prediction
 import cmath
 import warnings
+from .. import angular
 
+### Definite time integrals of the different parts composing the time dependence
+def definite_int_cosh(y, Gamma, tmin, tmax):
+    den =  (y**2 - 1) # Gamma *
+    num_tmax = cmath.exp(-tmax*Gamma) * (y* cmath.sinh(tmax*Gamma*y) + cmath.cosh(tmax*Gamma*y) )
+    num_tmin = cmath.exp(-tmin*Gamma) * (y* cmath.sinh(tmin*Gamma*y) + cmath.cosh(tmin*Gamma*y) )
+    return (num_tmax - num_tmin)/den
+
+def definite_int_sinh(y, Gamma, tmin, tmax):
+    den =  (y**2 - 1) # Gamma *
+    num_tmax = cmath.exp(-tmax*Gamma) * (cmath.sinh(tmax*Gamma*y) + y * cmath.cosh(tmax*Gamma*y) )
+    num_tmin = cmath.exp(-tmin*Gamma) * (cmath.sinh(tmin*Gamma*y) + y * cmath.cosh(tmin*Gamma*y) )
+    return (num_tmax - num_tmin)/den
+
+def definite_int_cos(x, Gamma, tmin, tmax):
+    den =  (x**2 + 1) # Gamma *
+    num_tmin = cmath.exp(-tmin*Gamma) * (cmath.cos(tmin*Gamma*x) - x * cmath.sin(tmin*Gamma*x) )
+    num_tmax = cmath.exp(-tmax*Gamma) * (cmath.cos(tmax*Gamma*x) - x * cmath.sin(tmax*Gamma*x) )
+    return (num_tmin - num_tmax)/den
+
+def definite_int_sin(x, Gamma, tmin, tmax):
+    den =  (x**2 + 1) # Gamma *
+    num_tmin = cmath.exp(-tmin*Gamma) * (cmath.sin(tmin*Gamma*x) + x * cmath.cos(tmin*Gamma*x) )
+    num_tmax = cmath.exp(-tmax*Gamma) * (cmath.sin(tmax*Gamma*x) + x * cmath.cos(tmax*Gamma*x) )
+    return (num_tmin - num_tmax)/den
+    
 def bsvll_obs(function, q2, wc_obj, par, B, V, lep):
     ml = par['m_'+lep]
     mB = par['m_'+B]
     mV = par['m_'+V]
     y = par['DeltaGamma/Gamma_'+B]/2.
+    x = par['DeltaM/Gamma_'+B]
+    gamma = 0.6597 # only for Bs TODO: remove
     if q2 < 4*ml**2 or q2 > (mB-mV)**2:
         return 0
+    
     scale = flavio.config['renormalization scale']['bvll']
     mb = flavio.physics.running.running.get_mb(par, scale)
     ff = flavio.physics.bdecays.bvll.amplitudes.get_ff(q2, par, B, V)
@@ -31,43 +60,260 @@ def bsvll_obs(function, q2, wc_obj, par, B, V, lep):
     q_over_p = flavio.physics.mesonmixing.observables.q_over_p(wc_obj, par, B)
     phi = cmath.phase(-q_over_p) # the phase of -q/p
     J_h = flavio.physics.bdecays.angular.angularcoeffs_h_v(phi, h, h_tilde, q2, mB, mV, mb, 0, ml, ml)
-    return function(y, J, J_bar, J_h)
+    J_s = flavio.physics.bdecays.angular.angularcoeffs_s_v(phi, h, h_tilde, q2, mB, mV, mb, 0, ml, ml)
+    return function(y, x, gamma, J, J_bar, J_h, J_s)
 
-def S_theory_num_Bs(y, J, J_bar, J_h, i):
+def bsvll_obs_int_t(function, tmin, tmax, q2, wc_obj, par, B, V, lep):
+    """
+    As above but allows to choose a range for tmin-tmax
+    """
+    ml = par['m_'+lep]
+    mB = par['m_'+B]
+    mV = par['m_'+V]
+    y = par['DeltaGamma/Gamma_'+B]/2.
+    x = par['DeltaM/Gamma_'+B]
+    gamma = 0.6597 # only for Bs TODO: remove
+    if q2 < 4*ml**2 or q2 > (mB-mV)**2:
+        return 0
+    
+    scale = flavio.config['renormalization scale']['bvll']
+    mb = flavio.physics.running.running.get_mb(par, scale)
+    ff = flavio.physics.bdecays.bvll.amplitudes.get_ff(q2, par, B, V)
+    h = flavio.physics.bdecays.bvll.amplitudes.helicity_amps(q2, ff, wc_obj, par, B, V, lep)
+    h_bar = flavio.physics.bdecays.bvll.amplitudes.helicity_amps_bar(q2, ff, wc_obj, par, B, V, lep)
+    J = flavio.physics.bdecays.angular.angularcoeffs_general_v(h, q2, mB, mV, mb, 0, ml, ml)
+    J_bar = flavio.physics.bdecays.angular.angularcoeffs_general_v(h_bar, q2, mB, mV, mb, 0, ml, ml)
+    h_tilde = h_bar.copy()
+    h_tilde[('pl', 'V')] = h_bar[('mi', 'V')]
+    h_tilde[('pl', 'A')] = h_bar[('mi', 'A')]
+    h_tilde[('mi', 'V')] = h_bar[('pl', 'V')]
+    h_tilde[('mi', 'A')] = h_bar[('pl', 'A')]
+    h_tilde['S'] = -h_bar['S']
+    q_over_p = flavio.physics.mesonmixing.observables.q_over_p(wc_obj, par, B)
+    phi = cmath.phase(-q_over_p) # the phase of -q/p
+    J_h = flavio.physics.bdecays.angular.angularcoeffs_h_v(phi, h, h_tilde, q2, mB, mV, mb, 0, ml, ml)
+    J_s = flavio.physics.bdecays.angular.angularcoeffs_s_v(phi, h, h_tilde, q2, mB, mV, mb, 0, ml, ml)
+    return function(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s)
+
+def S_original_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
     # (42) of 1502.05509
     flavio.citations.register("Descotes-Genon:2015hea")
     return 1/(1-y**2) * (J[i] + J_bar[i]) - y/(1-y**2) * J_h[i]
 
-def S_experiment_num_Bs(y, J, J_bar, J_h, i):
+def S_original_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
     if i in [4, '6s', '6c', 7, 9]:
-        return -S_theory_num_Bs(y, J, J_bar, J_h, i)
-    return S_theory_num_Bs(y, J, J_bar, J_h, i)
+        return -S_original_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+    return S_original_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
 
 
-def S_experiment_Bs(y, J, J_bar, J_h, i):
+def S_original_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
     r"""CP-averaged angular observable $S_i$ in the LHCb convention.
 
     See eq. (C.8) of arXiv:1506.03970v2.
     """
-    return S_experiment_num_Bs(y, J, J_bar, J_h, i)/SA_den_Bs(y, J, J_bar, J_h)
+    return S_original_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
 
-def dGdq2_ave_Bs(y, J, J_bar, J_h):
+def S_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    # (42) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
+    if i in [5, '6s', '6c', 8, 9]:
+        return 1/(1+x**2) * ((J[i] + J_bar[i]) - x * J_s[i])       
+    else:
+        return 1/(1-y**2) * ((J[i] + J_bar[i]) - y * J_h[i])
+
+def A_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    # (42) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
+    if i in [5, '6s', '6c', 8, 9]:
+        return 1/(1-y**2) * ((J[i] - J_bar[i]) - y * J_h[i])
+    else:
+        return 1/(1+x**2) * ((J[i] - J_bar[i]) - x * J_s[i])
+    
+def S_theory_num_int_t_Bs(tmin, tmax, y, x, Gamma, J, J_bar, J_h, J_s, i):
+    # (42) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
+    if i in [5, '6s', '6c', 8, 9]:
+        return ((J[i] + J_bar[i]) * definite_int_cos(x, Gamma, tmin, tmax) 
+                - J_s[i] * definite_int_sin(x, Gamma, tmin, tmax))       
+    else:
+        return ((J[i] + J_bar[i]) * definite_int_cosh(y, Gamma, tmin, tmax) 
+                - J_h[i] * definite_int_sinh(y, Gamma, tmin, tmax))
+
+def A_theory_num_int_t_Bs(tmin, tmax, y, x, Gamma, J, J_bar, J_h, J_s, i):
+    # (42) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
+    if i in [5, '6s', '6c', 8, 9]:
+        return ((J[i] - J_bar[i]) * definite_int_cosh(y, Gamma, tmin, tmax) 
+                - J_h[i] * definite_int_sinh(y, Gamma, tmin, tmax)
+                )
+    else:
+        return ((J[i] - J_bar[i]) * definite_int_cos(x, Gamma, tmin, tmax) 
+                - J_s[i] * definite_int_sin(x, Gamma, tmin, tmax)
+                )
+
+def K_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    # (42) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
+    return 1/(1-y**2) * (J[i] + J_bar[i])
+
+def W_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    # (42) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
+    return 1/(1-y**2) * (J[i] - J_bar[i])
+
+def H_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    # (42) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
+    return 1/(1-y**2) * J_h[i]
+
+def Z_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    # (42) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
+    return 1/(1-y**2) * J_s[i]
+
+def S_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -S_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+    return S_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+
+def A_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -A_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+    return A_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+
+def S_experiment_num_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -S_theory_num_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s, i)
+    return S_theory_num_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s, i)
+
+def A_experiment_num_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -A_theory_num_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s, i)
+    return A_theory_num_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s, i)
+
+def K_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -K_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+    return K_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+
+def W_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -W_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+    return W_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+
+def H_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -H_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+    return H_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+
+def Z_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -Z_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+    return Z_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)
+
+def S_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""CP-averaged angular observable $S_i$ in the LHCb convention.
+    See eq. (C.8) of arXiv:1506.03970v2.
+    """
+    return S_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
+
+def A_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""Angular CP asymmetry $A_i$ in the LHCb convention.
+    See eq. (C.8) of arXiv:1506.03970v2.
+    """
+    return A_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
+
+def S_experiment_int_t_Bs(tmix, tmax, y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""CP-averaged angular observable $S_i$ in the LHCb convention.
+    See eq. (C.8) of arXiv:1506.03970v2.
+    """
+    return S_experiment_num_int_t_Bs(tmix, tmax, y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_int_t_Bs(tmix, tmax, y, x, gamma, J, J_bar, J_h, J_s)
+
+def A_experiment_int_t_Bs(tmix, tmax, y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""Angular CP asymmetry $A_i$ in the LHCb convention.
+    See eq. (C.8) of arXiv:1506.03970v2.
+    """
+    return A_experiment_num_int_t_Bs(tmix, tmax, y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_int_t_Bs(tmix, tmax, y, x, gamma, J, J_bar, J_h, J_s)
+
+def K_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""CP-averaged angular observable $K_i$ from the time-dependent differential decay rate.
+    Observables related to the terms depending on \cosh(y\Gamma t)
+
+    See eq. (C.8) of arXiv:1506.03970v2.
+    """
+    return K_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
+
+def W_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""Angular CP asymmetry $W_i$ from the time-dependent differential decay rate.
+    Observables related to the terms depending on \cosh(y\Gamma t)
+
+    See eq. (C.8) of arXiv:1506.03970v2.
+    """
+    return W_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
+
+def H_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""CP-averaged angular observable $H_i$ from the time-dependent differential decay rate.
+    Observables related to the terms depending on \sinh(y\Gamma t)
+
+    See eq. (C.8) of arXiv:1506.03970v2.
+    """
+    return H_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
+
+def Z_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""CP-averaged angular observable $Z_i$ from the time-dependent differential decay rate.
+    Observables related to the terms depending on \sinh(y\Gamma t)
+
+    See eq. (C.8) of arXiv:1506.03970v2.
+    """
+    return Z_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
+
+def dGdq2_interference_Bs(y, x, gamma, J, J_bar, J_h, J_s):
+    # TODO: add correct citation
+    flavio.citations.register("Descotes-Genon:2015hea")
+    return (- y/(1-y**2) * observables.dGdq2(J_h))/2.
+    
+def dGdq2_ave_Bs(y, x, gamma, J, J_bar, J_h, J_s):
     # (48) of 1502.05509
     flavio.citations.register("Descotes-Genon:2015hea")
     return (1/(1-y**2) * (observables.dGdq2(J) + observables.dGdq2(J_bar))
             - y/(1-y**2) * observables.dGdq2(J_h))/2.
+    
+def dGdq2_ave_Bs_part1(y, x, gamma, J, J_bar, J_h, J_s):
+    # (48) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
+    return (1/(1-y**2) * (observables.dGdq2(J) + observables.dGdq2(J_bar)))/2.
+
+def dGdq2_ave_Bs_part2(y, x, gamma, J, J_bar, J_h, J_s):
+    # (48) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
+    return (- y/(1-y**2) * observables.dGdq2(J_h))/2.
+    
+def dGdq2_ave_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s):
+    # (48) of 1502.05509
+    flavio.citations.register("Descotes-Genon:2015hea")
+    return ((observables.dGdq2(J) + observables.dGdq2(J_bar)) * definite_int_cosh(y, gamma, tmin, tmax)
+            - observables.dGdq2(J_h) * definite_int_sinh(y, gamma, tmin, tmax))/2.
 
 # denominator of S_i and A_i observables
-def SA_den_Bs(y, J, J_bar, J_h):
-    return 2*dGdq2_ave_Bs(y, J, J_bar, J_h)
+def SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s):
+    return 2*dGdq2_ave_Bs(y, x, gamma, J, J_bar, J_h, J_s)
 
-def FL_Bs(y, J, J_bar, J_h):
+def SA_den_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s):
+    return 2*dGdq2_ave_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s)
+
+def FL_Bs(y, x, gamma, J, J_bar, J_h, J_s):
     r"""Longitudinal polarization fraction $F_L$"""
-    return FL_num_Bs(y, J, J_bar, J_h)/SA_den_Bs(y, J, J_bar, J_h)
+    return FL_num_Bs(y, x, gamma, J, J_bar, J_h, J_s)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
 
-def FL_num_Bs(y, J, J_bar, J_h):
-    return -S_theory_num_Bs(y, J, J_bar, J_h, '2c')
+def FL_num_Bs(y, x, gamma, J, J_bar, J_h, J_s):
+    return -S_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, '2c')
 
+def FL_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s):
+    r"""Longitudinal polarization fraction $F_L$"""
+    return FL_num_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s)/SA_den_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s)
+
+def FL_num_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s):
+    return -S_theory_num_int_t_Bs(tmin, tmax, y, x, gamma, J, J_bar, J_h, J_s, '2c')
 
 def bsvll_dbrdq2(q2, wc_obj, par, B, V, lep):
     tauB = par['tau_'+B]
@@ -134,14 +380,55 @@ def bsvll_dbrdq2_19_func(B, P, lep):
             return (1+par['delta_BsKstarmumu'])*bsvll_dbrdq2_int(q2min, q2max, wc_obj, par, B, P, lep)*(q2max-q2min)
     return fct
 
+class BsVll_int_ratio(observables.BVllObservableBinned):
+    """Binned ratio of functions if angular coefficients"""
+    def __init__(self, func_num, func_den, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.epsrel = 0.005
+        self.func_num = func_num
+        self.func_den = func_den
+        
+    def j_s(self, q2):
+        """Get angular coeffs. Cache and only recompute if necessary."""
+        h = self.ha(q2)
+        if q2 not in self._j:
+            self._j[q2] = angular.angularcoeffs_s_v(h, q2, self.mB, self.mV, self.mb, 0, self.ml, self.ml)
+        return self._j[q2]
+
+    def j_h(self, q2):
+        """Get CP conjugate angular coeffs. Cache and only recompute if necessary."""
+        hbar = self.ha_bar(q2)
+        if q2 not in self._j_bar:
+            self._j_bar[q2] = angular.angularcoeffs_h_v(hbar, q2, self.mB, self.mV, self.mb, 0, self.ml, self.ml)
+        return self._j_bar[q2]
+    
+    def jfunc(self, function, q2):
+        """Return a function of J and Jbar at one value of q2."""
+        return function(self.j(q2), self.jbar(q2), self.j_h(q2), self.j_s(q2))
+    
+    def obs_num(self, q2):
+        return self.jfunc(self.func_num, q2)
+
+    def obs_den(self, q2):
+        return self.jfunc(self.func_den, q2)
+
+    def __call__(self):
+        if self.q2max_allowed <= self.q2min_allowed:
+            return 0
+        num = flavio.physics.bdecays.bvll.observables.nintegrate_pole(self.obs_num, self.q2min_allowed, self.q2max_allowed, epsrel=self.epsrel)
+        if num == 0:
+            return 0
+        den = flavio.physics.bdecays.bvll.observables.nintegrate_pole(self.obs_den, self.q2min_allowed, self.q2max_allowed, epsrel=self.epsrel)
+        return num / den
+
 # Observable and Prediction instances
 
 _tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
 _observables = {
 'FL': {'func_num': FL_num_Bs, 'tex': r'\overline{F_L}', 'desc': 'Time-averaged longitudinal polarization fraction'},
-'S3': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 3), 'tex': r'\overline{S_3}', 'desc': 'Time-averaged, CP-averaged angular observable'},
-'S4': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 4), 'tex': r'\overline{S_4}', 'desc': 'Time-averaged, CP-averaged angular observable'},
-'S7': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 7), 'tex': r'\overline{S_7}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S3': {'func_num': lambda y, x, gamma, J, J_bar, J_h, J_s: S_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, 3), 'tex': r'\overline{S_3}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S4': {'func_num': lambda y, x, gamma, J, J_bar, J_h, J_s: S_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, 4), 'tex': r'\overline{S_4}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S7': {'func_num': lambda y, x, gamma, J, J_bar, J_h, J_s: S_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, 7), 'tex': r'\overline{S_7}', 'desc': 'Time-averaged, CP-averaged angular observable'},
 }
 _hadr = {
 'Bs->phi': {'tex': r"B_s\to \phi ", 'B': 'Bs', 'V': 'phi', },

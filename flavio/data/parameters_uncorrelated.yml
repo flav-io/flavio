@@ -169,6 +169,7 @@ Gamma12_B0_a: 11.7(1.3)
 # experimental decay width differences
 DeltaGamma/Gamma_B0: -0.002(10) # HFAG Summer 2016
 DeltaGamma/Gamma_Bs: 0.129(9) # HFAG Summer 2016
+DeltaM/Gamma_Bs: 26.79(0.08) # HFAG Summer 2014 - https://arxiv.org/abs/1412.7515
 
 # B->D* form factors
 B->D* CLN R_0(1): 1.14(11) # 1203.2654 appendix B
