@@ -1128,6 +1128,9 @@ DeltaGamma/Gamma_B0:
 DeltaGamma/Gamma_Bs:
   tex: $\Delta \Gamma_s/\Gamma_s$
   description: Relative decay width difference in the $B_s$ system
+DeltaM/Gamma_Bs:
+  tex: $\Delta m_s/\Gamma_s$
+  description: Mass difference in the $B^0_s$ relative to the $B^0_s$ decay width
 
 tau_Bc_SM:
   tex: $\tau_{B_c}^\text{SM}$
