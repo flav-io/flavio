@@ -9,6 +9,7 @@ import cmath
 import warnings
 from math import sqrt
 from .. import angular
+from . import amplitudes
 
 def bsvll_obs(function, q2, wc_obj, par, B, V, lep):
     ml = par['m_'+lep]
@@ -22,20 +23,7 @@ def bsvll_obs(function, q2, wc_obj, par, B, V, lep):
     scale = flavio.config['renormalization scale']['bvll']
     mb = flavio.physics.running.running.get_mb(par, scale)
     ff = flavio.physics.bdecays.bvll.amplitudes.get_ff(q2, par, B, V)
-    h = flavio.physics.bdecays.bvll.amplitudes.helicity_amps(q2, ff, wc_obj, par, B, V, lep)
-    h_bar = flavio.physics.bdecays.bvll.amplitudes.helicity_amps_bar(q2, ff, wc_obj, par, B, V, lep)
-    J = flavio.physics.bdecays.angular.angularcoeffs_general_v(h, q2, mB, mV, mb, 0, ml, ml)
-    J_bar = flavio.physics.bdecays.angular.angularcoeffs_general_v(h_bar, q2, mB, mV, mb, 0, ml, ml)
-    h_tilde = h_bar.copy()
-    h_tilde[('pl', 'V')] = h_bar[('mi', 'V')]
-    h_tilde[('pl', 'A')] = h_bar[('mi', 'A')]
-    h_tilde[('mi', 'V')] = h_bar[('pl', 'V')]
-    h_tilde[('mi', 'A')] = h_bar[('pl', 'A')]
-    h_tilde['S'] = -h_bar['S']
-    q_over_p = flavio.physics.mesonmixing.observables.q_over_p(wc_obj, par, B)
-    phi = cmath.phase(-q_over_p) # the phase of -q/p
-    J_h = angular.angularcoeffs_h_v(phi, h, h_tilde, q2, mB, mV, mb, 0, ml, ml)
-    J_s = angular.angularcoeffs_s_v(phi, h, h_tilde, q2, mB, mV, mb, 0, ml, ml)
+    J, J_bar, J_h, J_s = amplitudes.get_coefficients(q2, ff, wc_obj, par, B, V, lep, ml, mB, mV, mb)
     return function(y, x, gamma, J, J_bar, J_h, J_s)
 
 def S_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
