@@ -8,7 +8,6 @@ from flavio.physics.bdecays.common import meson_quark, meson_ff
 from flavio.physics.common import conjugate_par, conjugate_wc
 from flavio.physics import ckm
 from flavio.classes import AuxiliaryQuantity
-from .amplitudes import helicity_amps_ff
 import warnings
 
 def get_ff(q2, par, B, V):
@@ -251,17 +250,3 @@ def transversity_amps_bar(q2, ff, wc_obj, par, B, V, lep):
     if q2 >= 8.7 and q2 < 14:
         warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
     return transversity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=True)
-
-def helicity_amps(q2, ff, wc_obj, par, B, V, lep):
-    """ 
-    helicity amplitudes for B->Vll decays, without subleading hadronic contributions and QCDF corrections.
-    These are used only for comparisons with the transversity amplitudes, which also do not use any corrections. 
-    """
-    return helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=False)
-
-def helicity_amps_bar(q2, ff, wc_obj, par, B, V, lep):
-    """
-    helicity amplitudes for B->Vll decays, without subleading hadronic contributions and QCDF corrections.
-    These are used only for comparisons with the transversity amplitudes, which also do not use any corrections. 
-    """
-    return helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=True)
