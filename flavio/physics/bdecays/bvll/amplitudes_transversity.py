@@ -1,5 +1,4 @@
-""" Functions to compute the transversity amplitudes for $B_s \to V \ell^+ \ell^-$ decays. """
-import flavio
+r""" Functions to compute the transversity amplitudes for $B_s \to V \ell^+ \ell^-$ decays. """
 from flavio.physics.bdecays.common import lambda_K
 from math import sqrt, pi
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict, get_wceff
@@ -266,32 +265,3 @@ def helicity_amps_bar(q2, ff, wc_obj, par, B, V, lep):
     These are used only for comparisons with the transversity amplitudes, which also do not use any corrections. 
     """
     return helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=True)
-
-def bsvll_obs(function, q2, wc_obj, par, B_meson, V_meson, lepton): 
-    """ 
-    Evaluates function passed as first argument using angular coefficients calculated from the transversity amplitudes. 
-    """
-    ml = par['m_'+lepton]
-    mB = par['m_'+B_meson]
-    mV = par['m_'+V_meson]
-    y = par['DeltaGamma/Gamma_'+B_meson]/2.
-    x = par['DeltaM/Gamma_'+B_meson]
-    gamma = 0.6597 # only for Bs TODO: remove
-    if q2 < 4*ml**2 or q2 > (mB-mV)**2:
-        return 0
-    
-    scale = flavio.config['renormalization scale']['bvll']
-    mb = flavio.physics.running.running.get_mb(par, scale)
-    ff = flavio.physics.bdecays.bvll.amplitudes.get_ff(q2, par, B_meson, V_meson)
-    A = flavio.physics.bdecays.bvll.amplitudes.transversity_amps(q2, ff, wc_obj, par, B_meson, V_meson, lepton)
-    A_bar = flavio.physics.bdecays.bvll.amplitudes.transversity_amps_bar(q2, ff, wc_obj, par, B_meson, V_meson, lepton)
-    J = angularcoeffs_general_transversity(A, q2, ml)
-    J_bar = angularcoeffs_general_transversity(A_bar, q2, ml)
-    A_tilde = A_bar.copy()
-    A_tilde['perp_L'] = -1 * A_bar['perp_L']
-    A_tilde['perp_R'] = -1 * A_bar['perp_R']
-    A_tilde['S'] = -1 * A_bar['S']  # Table 3 of https://arxiv.org/pdf/1502.05509
-    q_over_p = flavio.physics.mesonmixing.observables.q_over_p(wc_obj, par, B_meson)
-    J_h: dict[str | int, float] = angularcoeffs_h_transversity(A, A_tilde, q2, ml, q_over_p)
-    J_s: dict[str | int, float] = angularcoeffs_s_transversity(A, A_tilde, q2, ml, q_over_p)
-    return function(y, x, gamma, J, J_bar, J_h, J_s)
