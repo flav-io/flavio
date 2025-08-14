@@ -220,6 +220,32 @@ def SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s):
 def FL_num_Bs(y, x, gamma, J, J_bar, J_h, J_s):
     return -S_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, '2c')
 
+def FL_Bs(y, x, gamma, J, J_bar, J_h, J_s): 
+    """ Longitudinal polarization fraction $F_L$ """
+    return FL_num_Bs(y, x, gamma, J, J_bar, J_h, J_s)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
+
+def S_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""CP-averaged angular observable $S_i$ in the LHCb convention.
+    See eq. (C.8) of arXiv:1506.03970v2.
+    """
+    return S_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
+
+def K_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""CP-averaged angular observable $K_i$ in the LHCb convention.
+    """
+    return K_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
+
+def A_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""CP-averaged angular observable $S_i$ in the LHCb convention.
+    See eq. (C.8) of arXiv:1506.03970v2.
+    """
+    return A_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
+
+def W_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i):
+    r"""CP-averaged angular observable $K_i$ in the LHCb convention.
+    """
+    return W_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, i)/SA_den_Bs(y, x, gamma, J, J_bar, J_h, J_s)
+
 def AFB_num_Bs(y, x, gamma, J, J_bar, J_h, J_s): 
     """ Forward-backward asymmetry $A_{FB}$ """
     return 3/4 * A_theory_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, '6s')
