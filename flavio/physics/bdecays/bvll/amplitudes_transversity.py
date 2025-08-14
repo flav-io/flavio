@@ -129,7 +129,7 @@ def angularcoeffs_general_transversity(A, q2, ml):
     }
     return J
 
-def angularcoeffs_h_transversity(A, Atilde, q2, ml, qp) -> dict[str | int, float]: 
+def angularcoeffs_h_transversity(A, Atilde, q2, ml, qp): 
     """ 
     Returns the angular coefficients h_i from the transversity amplitudes. 
     Compare e.g. https://arxiv.org/pdf/1502.05509 Appendix C, EQ 117 and following. 
@@ -189,7 +189,7 @@ def angularcoeffs_h_transversity(A, Atilde, q2, ml, qp) -> dict[str | int, float
     }
     return h
 
-def angularcoeffs_s_transversity(A, Atilde, q2, ml, qp) -> dict[str | int, float]: 
+def angularcoeffs_s_transversity(A, Atilde, q2, ml, qp): 
     """ 
     Returns the angular coefficients h_i from the transversity amplitudes. 
     Compare e.g. https://arxiv.org/pdf/1502.05509 Appendix C, EQ 105 and following. 

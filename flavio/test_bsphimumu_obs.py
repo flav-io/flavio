@@ -5,7 +5,7 @@ import numpy as np
 
 class TestBsToPhiMuMuObs(unittest.TestCase):
 
-    def test_time_integrated_obs(self) -> None:
+    def test_time_integrated_obs(self):
         """ 
         tests the predictions for the time-integrated observables for 
         Bs -> phi mumu between transversity and helicity amplitudes 
@@ -35,7 +35,7 @@ class TestBsToPhiMuMuObs(unittest.TestCase):
 
         return None
     
-    def test_time_dependent_obs(self) -> None:
+    def test_time_dependent_obs(self):
         """ 
         tests the predictions for the time-dependent observables for 
         Bs -> phi mumu between transversity and helicity amplitudes 
