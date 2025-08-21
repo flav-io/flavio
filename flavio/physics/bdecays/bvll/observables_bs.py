@@ -314,6 +314,23 @@ def bsvll_obs_ratio_func(func_num, func_den, B, V, lep):
         return num/denom
     return fct
 
+def bsvll_obs_ratio_pprime_func(func_num, func_den, den_coeffs, B, V, lep):
+    def fct(wc_obj, par, q2):
+        num = bsvll_obs(func_num, q2, wc_obj, par, B, V, lep)
+        if num == 0:
+            return 0
+        denoms = {coeff: bsvll_obs(lambda y, x, gamma, J, J_bar, J_h, J_s: 
+                                   func_den(y, x, gamma, J, J_bar, J_h, J_s, coeff), 
+                                   q2, wc_obj, par, B, V, lep)
+                  for coeff in den_coeffs
+        }
+        if 3 in den_coeffs: 
+            denom = (-denoms['2c'] * (2 * denoms['2s'] - denoms[3]))
+        else:
+            denom = -prod(den for den in denoms.values())
+        return num/sqrt(denom)
+    return fct
+
 # function for the LHCb (1804.07167) Bs->K*0 integrated branching ratio
 def bsvll_dbrdq2_19_func(B, P, lep):
     def fct(wc_obj, par):
@@ -673,8 +690,8 @@ for lep in ['e', 'mu', 'tau']:
             _obs.set_description('Binned ' + element['desc'] + r" in $" + _hadr[M]['tex'] + _tex[lep] + r"^+" + _tex[lep] + "^-$")
             _obs.tex = r"$\langle " + element['tex'] + r"\rangle(" + _hadr[M]['tex'] + _tex[lep] + r"^+" + _tex[lep] + "^-)$"
             _obs.add_taxonomy(_process_taxonomy)
-            den_coeffs = element.get('den_coeffs', ['2s', '2c'])
-            Prediction(_obs_name, bsvll_obs_int_ratio_pprime_func(element['func_num'], element['func_den'], den_coeffs, _hadr[M]['B'], _hadr[M]['V'], lep))
+            _den_coeffs = element.get('den_coeffs', ['2s', '2c'])
+            Prediction(_obs_name, bsvll_obs_int_ratio_pprime_func(element['func_num'], element['func_den'], _den_coeffs, _hadr[M]['B'], _hadr[M]['V'], lep))
 
             # differential angular observables
             _obs_name = obs + "(" + M + lep + lep + ")"
@@ -682,4 +699,5 @@ for lep in ['e', 'mu', 'tau']:
             _obs.set_description(element['desc'][0].capitalize() + element['desc'][1:] + r" in $" + _hadr[M]['tex'] + _tex[lep] + r"^+" + _tex[lep] + "^-$")
             _obs.tex = r"$" + element['tex'] + r"(" + _hadr[M]['tex'] + _tex[lep] + r"^+" + _tex[lep] + "^-)$"
             _obs.add_taxonomy(_process_taxonomy)
-            Prediction(_obs_name, bsvll_obs_ratio_func(element['func_num'], element['func_den'], _hadr[M]['B'], _hadr[M]['V'], lep))
+            _den_coeffs = element.get('den_coeffs', ['2s', '2c'])
+            Prediction(_obs_name, bsvll_obs_ratio_pprime_func(element['func_num'], element['func_den'], _den_coeffs, _hadr[M]['B'], _hadr[M]['V'], lep))
