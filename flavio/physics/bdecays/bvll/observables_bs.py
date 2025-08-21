@@ -344,7 +344,7 @@ _observables = {
 'A7': {'func_num': lambda y, x, gamma, J, J_bar, J_h, J_s: A_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, 7), 'tex': r'\overline{A_7}', 'desc': 'Time-averaged, CP-asymmetric angular observable'},
 'A8': {'func_num': lambda y, x, gamma, J, J_bar, J_h, J_s: A_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, 8), 'tex': r'\overline{A_8}', 'desc': 'Time-averaged, CP-asymmetric angular observable'},
 'A9': {'func_num': lambda y, x, gamma, J, J_bar, J_h, J_s: A_experiment_num_Bs(y, x, gamma, J, J_bar, J_h, J_s, 9), 'tex': r'\overline{A_9}', 'desc': 'Time-averaged, CP-asymmetric angular observable'},
-'SA_den_Bs': {'func_num': SA_den_Bs, 'tex': r'\overline{SA}_{\text{den}}', 'desc': 'Denominator of the time-averaged angular observables'},
+'InverseAngularDenominator': {'func_num': lambda y, x, gamma, J, J_bar, J_h, J_s: 1.0, 'tex': r'\overline{SA}_{\text{den}}', 'desc': 'Inverse Denominator of the time-averaged angular observables'},
 }
 _hadr = {
 'Bs->phi': {'tex': r"B_s\to \phi ", 'B': 'Bs', 'V': 'phi', },
