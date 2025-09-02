@@ -103,10 +103,19 @@ class TestBVll(unittest.TestCase):
         self.assertEqual(
             observables.BVll_obs(observables.FL, q2, B, V, l, wc_obj, par_y0)(),
             observables_bs.bsvll_obs( observables_bs.FL_Bs, q2, wc_obj, par_y0, B, V, l))
-        for i in [3, 4, 7]: # S3,4,7
+        for i in ['1s', '2s', '1c', '2c', 3, 4, 7]: # S 1s,2s,1c,2c,3,4,7
             self.assertEqual(
             observables.BVll_obs(lambda J, J_bar: observables.S_experiment(J, J_bar, i), q2, B, V, l, wc_obj, par_y0)(),
-            observables_bs.bsvll_obs( lambda y, J, J_bar, J_h: observables_bs.S_experiment_Bs(y, J, J_bar, J_h, i), q2, wc_obj, par_y0, B, V, l))
+            observables_bs.bsvll_obs( lambda y, x, gamma, J, J_bar, J_h, J_s: observables_bs.S_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i), q2, wc_obj, par_y0, B, V, l))
+            self.assertEqual(
+                observables_bs.bsvll_obs(lambda y, x, gamma, J, J_bar, J_h, J_s: observables_bs.S_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i), q2, wc_obj, par_y0, B, V, l),
+                observables_bs.bsvll_obs(lambda y, x, gamma, J, J_bar, J_h, J_s: observables_bs.K_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i), q2, wc_obj, par_y0, B, V, l)
+            )
+        for i in [5, '6s', 8, 9]: # A 5,6s,8,9
+            self.assertEqual(
+                observables_bs.bsvll_obs(lambda y, x, gamma, J, J_bar, J_h, J_s: observables_bs.A_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i), q2, wc_obj, par_y0, B, V, l),
+                observables_bs.bsvll_obs(lambda y, x, gamma, J, J_bar, J_h, J_s: observables_bs.W_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i), q2, wc_obj, par_y0, B, V, l)
+            )
 
         # check that the phase phi has the right convention
         q_over_p = flavio.physics.mesonmixing.observables.q_over_p(wc_obj, par, B)
@@ -121,13 +130,13 @@ class TestBVll(unittest.TestCase):
             1, delta=delta)
         for i in [4, 7]: # S4,7
             self.assertAlmostEqual(
-                observables.BVll_obs(     lambda J, J_bar:         observables.S_experiment(J, J_bar, i),               q2, B, V, l, wc_obj, par)()/
-                observables_bs.bsvll_obs( lambda y, J, J_bar, J_h: observables_bs.S_experiment_Bs(y, J, J_bar, J_h, i), q2, wc_obj, par, B, V, l),
+                observables.BVll_obs(     lambda J, J_bar:                        observables.S_experiment(J, J_bar, i),                              q2, B, V, l, wc_obj, par)()/
+                observables_bs.bsvll_obs( lambda y, x, gamma, J, J_bar, J_h, J_s: observables_bs.S_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i), q2, wc_obj, par, B, V, l),
                 1, delta=delta)
         for i in [3]: # S3: look at differnece only
             self.assertAlmostEqual(
-                observables.BVll_obs(     lambda J, J_bar:         observables.S_experiment(J, J_bar, i),               q2, B, V, l, wc_obj, par)() -
-                observables_bs.bsvll_obs( lambda y, J, J_bar, J_h: observables_bs.S_experiment_Bs(y, J, J_bar, J_h, i), q2, wc_obj, par, B, V, l),
+                observables.BVll_obs(     lambda J, J_bar:                        observables.S_experiment(J, J_bar, i),                              q2, B, V, l, wc_obj, par)() -
+                observables_bs.bsvll_obs( lambda y, x, gamma, J, J_bar, J_h, J_s: observables_bs.S_experiment_Bs(y, x, gamma, J, J_bar, J_h, J_s, i), q2, wc_obj, par, B, V, l),
                 0, delta=0.01)
         # compare WITH lifetime effect: BR suppressed by ~6%!
         self.assertAlmostEqual(
@@ -137,9 +146,15 @@ class TestBVll(unittest.TestCase):
 
         # and now just check a few observables to see if any errors are raised
         flavio.sm_prediction("FL(Bs->phimumu)", q2=1)
-        flavio.sm_prediction("S3(Bs->phimumu)", q2=1)
-        flavio.sm_prediction("S4(Bs->phimumu)", q2=1)
-        flavio.sm_prediction("S7(Bs->phimumu)", q2=1)
+        flavio.sm_prediction("AFB(Bs->phimumu)", q2=1)
+        observables_totest = ['K', 'W', 'H', 'Z', 'M', 'Q']
+        indices = ['1s', '1c', '2s', '2c', '3', '4', '5', '6s', '7', '8', '9']
+        for obs in observables_totest:
+            for idx in indices:
+                flavio.sm_prediction(f'{obs}{idx}(Bs->phimumu)', q2=1)
+        observables_integrated_totest = ['S1c', 'S1c', 'S2s', 'S2c', 'S3', 'S4', 'A5', 'A6s', 'S7', 'A8', 'A9']
+        for obs in observables_integrated_totest:
+            flavio.sm_prediction(f'{obs}(Bs->phimumu)', q2=1)
 
     def test_bvll_integrate_pole(self):
         def f(q2):
