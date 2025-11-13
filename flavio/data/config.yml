@@ -31,6 +31,7 @@ renormalization scale:
     bxgamma: 2.  # B->X gamma
     bxlnu: 4.6  # B->X l nu
     lambdab: 4.8 # Lambdab->Lambda l+ l-, Lambdab->Lambda(1520) l+ l-
+    b lifetime ratios: 4.5 # B meson lifetime ratios
 
     # K decays
     kdecays: 2.  # K->pinunu

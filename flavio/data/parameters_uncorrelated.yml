@@ -115,7 +115,7 @@ a1_para_rho+: 0
 a1_perp_rho+: 0
 
 
-# Meson bag parameters
+# Meson mixing bag parameters
 
 # SM operator
 # for the bag parameters of the SM operator OVLL,
@@ -169,6 +169,23 @@ Gamma12_B0_a: 11.7(1.3)
 # experimental decay width differences
 DeltaGamma/Gamma_B0: -0.002(10) # HFAG Summer 2016
 DeltaGamma/Gamma_Bs: 0.129(9) # HFAG Summer 2016
+
+
+# Meson lifetime bag parameters
+# Result from Table 7 of 2208.02643
+bag_lifetime_B1qtilde: 1.0026+0.0198-0.0106
+bag_lifetime_B2qtilde: 0.9982+0.0052-0.0066
+bag_lifetime_B3qtilde: -0.0165+0.0209-0.0346
+bag_lifetime_B4qtilde: -0.0004+0.0200-0.0326
+bag_lifetime_B5qtilde: -1 +- 0.1 # VIA central value, error is a guesstimate by M Kirk
+bag_lifetime_B6qtilde: -1 +- 0.1 # VIA central value, error is a guesstimate by M Kirk
+bag_lifetime_B7qtilde:  0 +- 0.1 # VIA central value, error is a guesstimate by M Kirk
+bag_lifetime_B8qtilde:  0 +- 0.1 # VIA central value, error is a guesstimate by M Kirk
+bag_lifetime_delta^ud_1tilde: 0.0026+0.0142-0.0092
+bag_lifetime_delta^ud_2tilde: -0.0018+0.0047-0.0072
+bag_lifetime_delta^ud_3tilde: -0.0004+0.0015-0.0024
+bag_lifetime_delta^ud_4tilde: 0.0003+0.0012-0.0008
+
 
 # B->D* form factors
 B->D* CLN R_0(1): 1.14(11) # 1203.2654 appendix B

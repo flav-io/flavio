@@ -21,3 +21,4 @@ from . import lambdablambdall_subleading
 from . import lambdablambda1520ll
 from . import bxll
 from . import bc_lifetime
+from . import lifetime_ratio
