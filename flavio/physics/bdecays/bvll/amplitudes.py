@@ -69,20 +69,27 @@ def get_subleading(q2, wc_obj, par_dict, B, V, cp_conjugate):
     else:
         return {}
 
-def helicity_amps(q2, ff, wc_obj, par, B, V, lep):
+def helicity_amps(q2, ff, wc_obj, par, B, V, lep, corrections=True):
     if q2 >= 8.7 and q2 < 14:
         warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
-    return add_dict((
-        helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=False),
-        get_ss(q2, wc_obj, par, B, V, cp_conjugate=False),
-        get_subleading(q2, wc_obj, par, B, V, cp_conjugate=False)
-        ))
+    if corrections:
+        return add_dict((
+            helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=False),
+            get_ss(q2, wc_obj, par, B, V, cp_conjugate=False),
+            get_subleading(q2, wc_obj, par, B, V, cp_conjugate=False)
+            ))
+    return helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=False)
 
-def helicity_amps_bar(q2, ff, wc_obj, par, B, V, lep):
+def helicity_amps_bar(q2, ff, wc_obj, par, B, V, lep, corrections=True):
     if q2 >= 8.7 and q2 < 14:
         warnings.warn("The predictions in the region of narrow charmonium resonances are not meaningful")
-    return add_dict((
-        helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=True),
-        get_ss(q2, wc_obj, par, B, V, cp_conjugate=True),
-        get_subleading(q2, wc_obj, par, B, V, cp_conjugate=True)
-        ))
+    if corrections:
+        return add_dict((
+            helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=True),
+            get_ss(q2, wc_obj, par, B, V, cp_conjugate=True),
+            get_subleading(q2, wc_obj, par, B, V, cp_conjugate=True)
+            ))
+    return helicity_amps_ff(q2, ff, wc_obj, par, B, V, lep, cp_conjugate=True)
+
+def get_coefficients(q2, ff, wc_obj, par, B, V, lep, ml, mB, mV, mb):
+    return AuxiliaryQuantity['B->Vll amplitude formalism'].prediction(par_dict=par, wc_obj=wc_obj, q2=q2, ff=ff, B=B, V=V, lep=lep, ml=ml, mB=mB, mV=mV, mb=mb)
