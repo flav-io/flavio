@@ -32,6 +32,7 @@ def run_lifetime_bag_parameters(par, scale):
     deltaqq4tilde_0 = par["bag_lifetime_delta^ud_4tilde"]
 
     # We only evolve the SM bag parameters B1-4, matching what is done in 2208.02643
+    # This matrix comes from Maria-Laura Piscopo
     gamma_0_D = np.array((8, 8, -1, -1))
     V = np.array((
         (0  , 3/4,  0, -6),
@@ -83,6 +84,7 @@ def tau_Bp_over_tau_Bd_SM(par):
     deltaqq4tilde = bag_params_dict["bag_lifetime_deltaqq4tilde"]
 
     # Phenomenological formula from Lenz:2022rbq
+    # The coefficients in front of the bag parameters come from SM wilson coefficients (/other parameters)
     flavio.citations.register("Lenz:2022rbq")
     ratio_SM = (1 + 0.059 * B1qtilde + 0.005 * B2qtilde - 0.674 * B3qtilde + 0.160 * B4qtilde
                   - 0.025 * deltaqq1tilde  + 0.002 * deltaqq2tilde
@@ -92,12 +94,14 @@ def tau_Bp_over_tau_Bd_SM(par):
 
 
 def gamma_BSM_dim6(wc_obj, par, meson):
+    # See for example fig 3 in 2208.02643 for topologies of weak exchange and Pauli interference
     WE = weak_exchange(wc_obj, par, meson)
     PI = pauli_interference(wc_obj, par, meson)
     return WE + PI
 
 
 def siegen_basis_wcs(wc_obj, par, sector):
+    # Siegen basis defined in eqs 2.1 - 2.6 of 2211.02724
     scale = config["renormalization scale"]["b lifetime ratios"]
     wc_sm = wcsm_nf5(scale)
     wcxf_sector = "db" if sector == "dbcc" else sector
@@ -139,6 +143,7 @@ def lifetimematrixelements(par, meson, scale):
 
 
 def A_WE_cu(rho, me):
+    # Matrix containing weak exchange contributions from internal cu quarks
     # See eqs 2.28 - 2.33 in Lenz:2022pgw
     flavio.citations.register("Lenz:2022pgw")
     return np.array(
@@ -588,6 +593,7 @@ def A_WE_cu(rho, me):
 
 
 def A_WE_cc(rho, me):
+    # Matrix containing weak exchange contributions from internal cc quarks
     # See eqs A.2 - A.7 in Lenz:2022pgw, results originally calculated in Jager:2017gal and Jager:2019bgk
     flavio.citations.register("Jager:2017gal")
     flavio.citations.register("Jager:2019bgk")
@@ -1075,6 +1081,7 @@ def weak_exchange(wc_obj, par, meson):
 
 
 def A_PI_cd(rho, me):
+    # Matrix containing Pauli interference contributions from internal cd quarks
     # See eqs 2.22 - 2.27 in Lenz:2022pgw
     flavio.citations.register("Lenz:2022pgw")
     return np.array(

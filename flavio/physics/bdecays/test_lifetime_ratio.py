@@ -33,6 +33,8 @@ class TestTauBpoBd(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_uncertainty("tau_B+/tau_Bd", N=1000), 0.016, delta=0.002)
 
     def test_A_WE_cu(self):
+        # Test implementation of matrix containing weak exchange contributions from internal cu quarks
+        # against Mathematica notebook from Aleksey Rusov
         me = {}
         for i in range(1, 9):
             me[f"{i}"]  = i
@@ -64,6 +66,8 @@ class TestTauBpoBd(unittest.TestCase):
         np.testing.assert_allclose(lifetime_ratio.A_WE_cu(0.1, me), A_WE_cu, atol=1e-3)
 
     def test_A_WE_cc(self):
+        # Test implementation of matrix containing weak exchange contributions from internal cc quarks
+        # against Mathematica notebook from Aleksey Rusov
         me = {}
         for i in range(1, 9):
             me[f"{i}"]  = i
@@ -95,6 +99,8 @@ class TestTauBpoBd(unittest.TestCase):
         np.testing.assert_allclose(lifetime_ratio.A_WE_cc(0.1, me), A_WE_cc, atol=1e-3)
 
     def test_A_PI_cd(self):
+        # Test implementation of matrix containing Pauli interference contributions from internal cd quarks
+        # against Mathematica notebook from Aleksey Rusov
         me = {}
         for i in range(1, 9):
             me[f"{i}"]  = i
@@ -126,6 +132,7 @@ class TestTauBpoBd(unittest.TestCase):
         np.testing.assert_allclose(lifetime_ratio.A_PI_cd(0.1, me), A_PI_cd, atol=1e-3)
 
     def test_WE_cu(self):
+        # Test SM and BSM contributions to weak exchange from internal cu quarks
         self.assertAlmostEqual(lifetime_ratio.weak_exchange(wc_sm, par, "B0"), 0, delta=1e-25)
 
         wc = flavio.WilsonCoefficients()
@@ -141,6 +148,7 @@ class TestTauBpoBd(unittest.TestCase):
         self.assertAlmostEqual(lifetime_ratio.weak_exchange(wc, par, "B0"), 0, delta=1e-25)
 
     def test_PI_cd(self):
+        # Test SM and BSM contributions to Pauli interference from internal cd quarks
         self.assertAlmostEqual(lifetime_ratio.pauli_interference(wc_sm, par, "B+"), 0, delta=1e-25)
 
         wc = flavio.WilsonCoefficients()
@@ -162,6 +170,7 @@ class TestTauBpoBd(unittest.TestCase):
         self.assertAlmostEqual(1e13 * lifetime_ratio.pauli_interference(wc, par, "B+"), 1.38771099 * (Vus / Vud) ** 2, places=6)
 
     def test_NP_bcud(self):
+        # Test SM and BSM contributions from bcud operators
         wc = flavio.WilsonCoefficients()
         wc.set_initial({"CVLL_bcud": -2}, scale=4.5)
         self.assertAlmostEqual(flavio.np_prediction("tau_B+/tau_Bd", wc), 1.011517673)
@@ -178,6 +187,7 @@ class TestTauBpoBd(unittest.TestCase):
         self.assertAlmostEqual(flavio.np_uncertainty("tau_B+/tau_Bd", wc, N=1000), 0.016, delta=0.002)
 
     def test_NP_bcus(self):
+        # Test SM and BSM contributions from bcus operators
         wc = flavio.WilsonCoefficients()
         wc.set_initial({"CVLL_bcus": -2}, scale=4.5)
         self.assertAlmostEqual(flavio.np_prediction("tau_B+/tau_Bd", wc), 1.079837520)
@@ -194,6 +204,7 @@ class TestTauBpoBd(unittest.TestCase):
         self.assertAlmostEqual(flavio.np_uncertainty("tau_B+/tau_Bd", wc, N=1000), 0.016, delta=0.002)
 
     def test_NP_dbcc(self):
+        # Test SM and BSM contributions from bdcc operators
         wc = flavio.WilsonCoefficients()
         wc.set_initial({"CVLL_bdcc": -2}, scale=4.5)
         self.assertAlmostEqual(flavio.np_prediction("tau_B+/tau_Bd", wc), 1.084098486)
