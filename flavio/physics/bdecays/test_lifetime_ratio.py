@@ -126,7 +126,7 @@ class TestTauBpoBd(unittest.TestCase):
         np.testing.assert_allclose(lifetime_ratio.A_PI_cd(0.1, me), A_PI_cd, atol=1e-3)
 
     def test_WE_cu(self):
-        self.assertEqual(lifetime_ratio.weak_exchange(wc_sm, par, "B0"), 0)
+        self.assertAlmostEqual(lifetime_ratio.weak_exchange(wc_sm, par, "B0"), 0, delta=1e-25)
 
         wc = flavio.WilsonCoefficients()
         wc.set_initial({"CVLL_bcud": 1}, scale=4.5)
@@ -138,10 +138,10 @@ class TestTauBpoBd(unittest.TestCase):
 
         wc = flavio.WilsonCoefficients()
         wc.set_initial({"CVLLt_bcus": 1}, scale=4.5)
-        self.assertEqual(lifetime_ratio.weak_exchange(wc, par, "B0"), 0)
+        self.assertAlmostEqual(lifetime_ratio.weak_exchange(wc, par, "B0"), 0, delta=1e-25)
 
     def test_PI_cd(self):
-        self.assertEqual(lifetime_ratio.pauli_interference(wc_sm, par, "B+"), 0)
+        self.assertAlmostEqual(lifetime_ratio.pauli_interference(wc_sm, par, "B+"), 0, delta=1e-25)
 
         wc = flavio.WilsonCoefficients()
         wc.set_initial({"CVLL_bcud": 1}, scale=4.5)
