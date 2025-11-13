@@ -7,11 +7,13 @@ from flavio.config import config
 from .wilsoncoefficients import wcsm_nf5
 import numpy as np
 from math import pi
+import warnings
 
 
 def run_lifetime_bag_parameters(par, scale):
+    # We shouldn't go below mc or above mb, else the anomalous dimensions change
     if scale < config["RGE thresholds"]["mc"] or scale > 4.5:
-        raise ValueError("Scale for running the B lifetime bag parameters must be between mc and 4.5 GeV.")
+        warnings.warn("Scale for running the B lifetime bag parameters should be between mc and 4.5 GeV")
     alpha_s = get_alpha_s(par, scale)
     alpha_s_0 = get_alpha_s(par, 1.5)
     eta = alpha_s / alpha_s_0
