@@ -45,6 +45,7 @@ class TestCKM(unittest.TestCase):
     par_s = dict(t12=t12,t13=t13,t23=t23,delta=delta)
     par_w = dict(laC=laC,A=A,rhobar=rhobar,etabar=etabar)
     par_t = dict(Vus=Vus,Vub=Vub,Vcb=Vcb,gamma=gamma)
+    par_b = dict(Vus=Vus,Vcb=Vcb,beta=beta,gamma=gamma)
 
     def test_ckm_parametrizations(self):
         np.testing.assert_almost_equal(self.v_t/self.v_s, np.ones((3,3)), decimal=5)
@@ -79,11 +80,11 @@ class TestCKM(unittest.TestCase):
           xi('x','bs')
 
     def test_ckm_angles(self):
-        c_gamma = get_ckmangle_gamma(self.par_t)
+        c_gamma = get_ckmangle_gamma(self.par_b)
         # angle gamma should be equal to input
         self.assertAlmostEqual(c_gamma/gamma, 1., places=3)
-        c_beta = get_ckmangle_beta(self.par_t)
-        c_alpha = get_ckmangle_alpha(self.par_t)
+        c_beta = get_ckmangle_beta(self.par_b)
+        c_alpha = get_ckmangle_alpha(self.par_b)
         # some of angles should be 180°
         self.assertEqual(
             degrees(c_alpha) + degrees(c_beta) + degrees(c_gamma), 180.)

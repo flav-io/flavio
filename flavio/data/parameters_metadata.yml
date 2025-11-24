@@ -42,6 +42,9 @@ Vcb:
 gamma:
   tex: $\gamma$
   description: CKM Unitarity Triangle angle $\gamma$ in radians
+beta:
+  tex: $\beta$
+  description: CKM Unitarity Triangle angle $\beta$ in radians
 
 
 # Quark masses
