@@ -97,11 +97,11 @@ def angular_coefficients(ta, alpha, Plb):
     K['4sc'] = alpha/sqrt(2) * ( ta['perp1', 'R'] * ta['para0', 'R'].conj()
                                - ta['para1', 'R'] * ta['perp0', 'R'].conj()
                                + ta['perp1', 'L'] * ta['para0', 'L'].conj()
-                               - ta['para1', 'L'] * ta['perp0', 'L'].conj() ).imag
+                               - ta['para1', 'L'] * ta['perp0', 'L'].conj() ).real
     K['4s'] = alpha/sqrt(2) * ( ta['perp1', 'R'] * ta['perp0', 'R'].conj()
                               - ta['para1', 'R'] * ta['para0', 'R'].conj()
                               - ta['perp1', 'L'] * ta['perp0', 'L'].conj()
-                              + ta['para1', 'L'] * ta['para0', 'L'].conj() ).imag
+                              + ta['para1', 'L'] * ta['para0', 'L'].conj() ).real
 
     # The remaining 24 observables depend on the polarization of the Lambdab
     # Some are related to the unpolarized observables
