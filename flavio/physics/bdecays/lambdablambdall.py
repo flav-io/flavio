@@ -60,46 +60,148 @@ def transverity_amps(ha, q2, mLb, mL, mqh, mql, wc, prefactor):
                                  + 2*mqh*(wc['7']-wc['7p'])/q2 * ha['0T5++'] )
     return {k: prefactor*v for k, v in A.items()}
 
-def angular_coefficients(ta, alpha):
+def angular_coefficients(ta, alpha, Plb):
     r"""Angular coefficients of $\Lambda_b\to \Lambda\ell^+\ell^-$ in terms of
     transversity amplitudes and decay parameter $\alpha$.
 
-    See (3.29)-(3.32) of arXiv:1410.2115."""
+    See (3.29)-(3.32) of arXiv:1410.2115 for the unpolarised case,
+    and (15)-(17) of arXiv:1710.00746 for the polarised one."""
     flavio.citations.register("Boer:2014kda")
+    flavio.citations.register("Blake:2017une")
+
     K = {}
-    K['1ss'] = 1/4.*(   abs(ta['perp1', 'R'])**2 + abs(ta['perp1', 'L'])**2
-                      + abs(ta['para1', 'R'])**2 + abs(ta['para1', 'L'])**2
-                      + 2*abs(ta['perp0', 'R'])**2 + 2*abs(ta['perp0', 'L'])**2
-                      + 2*abs(ta['para0', 'R'])**2 + 2*abs(ta['para0', 'L'])**2 )
-    K['1cc'] = 1/2.*(   abs(ta['perp1', 'R'])**2 + abs(ta['perp1', 'L'])**2
-                      + abs(ta['para1', 'R'])**2 + abs(ta['para1', 'L'])**2 )
-    K['1c'] = -(  ta['perp1', 'R'] * ta['para1', 'R'].conj()
-                - ta['perp1', 'L'] * ta['para1', 'L'].conj() ).real
-    K['2ss'] = alpha/2. * (  ta['perp1', 'R'] * ta['para1', 'R'].conj()
-                       + 2 * ta['perp0', 'R'] * ta['para0', 'R'].conj()
-                           + ta['perp1', 'L'] * ta['para1', 'L'].conj()
-                       + 2 * ta['perp0', 'L'] * ta['para0', 'L'].conj() ).real
-    K['2cc'] = alpha * (  ta['perp1', 'R'] * ta['para1', 'R'].conj()
-                        + ta['perp1', 'L'] * ta['para1', 'L'].conj() ).real
-    K['2c'] = -alpha/2.*(   abs(ta['perp1', 'R'])**2 - abs(ta['perp1', 'L'])**2
-                          + abs(ta['para1', 'R'])**2 - abs(ta['para1', 'L'])**2 )
-    K['3sc'] = alpha/sqrt(2) * ( ta['perp1', 'R'] * ta['perp0', 'R'].conj()
-                               - ta['para1', 'R'] * ta['para0', 'R'].conj()
-                               + ta['perp1', 'L'] * ta['perp0', 'L'].conj()
-                               - ta['para1', 'L'] * ta['para0', 'L'].conj() ).imag
-    K['3s'] = alpha/sqrt(2) * ( ta['perp1', 'R'] * ta['para0', 'R'].conj()
-                              - ta['para1', 'R'] * ta['perp0', 'R'].conj()
-                              - ta['perp1', 'L'] * ta['para0', 'L'].conj()
-                              + ta['para1', 'L'] * ta['perp0', 'L'].conj() ).imag
-    K['4sc'] = alpha/sqrt(2) * ( ta['perp1', 'R'] * ta['para0', 'R'].conj()
-                               - ta['para1', 'R'] * ta['perp0', 'R'].conj()
-                               + ta['perp1', 'L'] * ta['para0', 'L'].conj()
-                               - ta['para1', 'L'] * ta['perp0', 'L'].conj() ).imag
-    K['4s'] = alpha/sqrt(2) * ( ta['perp1', 'R'] * ta['perp0', 'R'].conj()
-                              - ta['para1', 'R'] * ta['para0', 'R'].conj()
-                              - ta['perp1', 'L'] * ta['perp0', 'L'].conj()
-                              + ta['para1', 'L'] * ta['para0', 'L'].conj() ).imag
+
+    # Most observables that have (1-beta^2) terms are independent or only
+    # appear in more complex combinations of three or more observables.
+    K['1ss'] = (abs(ta['perp1', 'R'])**2
+                + abs(ta['perp1', 'L'])**2
+                + abs(ta['para1', 'R'])**2
+                + abs(ta['para1', 'L'])**2
+                + 2.0 * abs(ta['perp0', 'R'])**2
+                + 2.0 * abs(ta['perp0', 'L'])**2
+                + 2.0 * abs(ta['para0', 'R'])**2
+                + 2.0 * abs(ta['para0', 'L'])**2) / 4.0  # K1
+    K['2ss'] = (ta['perp1', 'R'] * ta['para1', 'R'].conj()
+                + ta['perp1', 'L'] * ta['para1', 'L'].conj()
+                + 2.0 * ta['perp0', 'R'] * ta['para0', 'R'].conj()
+                + 2.0 * ta['perp0', 'L'] * ta['para0', 'L'].conj()).real * alpha / 2.0  # K4
+    K['2cc'] = (ta['perp1', 'R'] * ta['para1', 'R'].conj()
+                + ta['perp1', 'L'] * ta['para1', 'L'].conj()).real * alpha  # K5
+    K['11'] = - (ta['para1', 'R'] * ta['perp1', 'R'].conj()
+                 + ta['para1', 'L'] * ta['perp1', 'L'].conj()
+                 - 2.0 * ta['para0', 'R'] * ta['perp0', 'R'].conj()
+                 - 2.0 * ta['para0', 'L'] * ta['perp0', 'L'].conj()).real * Plb / 2.0  # conjugated wrt to eos
+    K['14'] = - (abs(ta['perp1', 'R'])**2
+                 + abs(ta['perp1', 'L'])**2
+                 + abs(ta['para1', 'R'])**2
+                 + abs(ta['para1', 'L'])**2
+                 - 2.0 * abs(ta['perp0', 'R'])**2
+                 - 2.0 * abs(ta['perp0', 'L'])**2
+                 - 2.0 * abs(ta['para0', 'R'])**2
+                 - 2.0 * abs(ta['para0', 'L'])**2) * alpha * Plb / 4.0
+    K['30'] = (ta['perp0', 'R'] * ta['para0', 'R'].conj()
+               + ta['perp0', 'L'] * ta['para0', 'L'].conj()).imag * alpha * Plb
+    K['32'] = (abs(ta['perp0', 'R'])**2
+               + abs(ta['perp0', 'L'])**2
+               - abs(ta['para0', 'R'])**2
+               - abs(ta['para0', 'L'])**2) * alpha * Plb / 2.0
+    K['33'] = (abs(ta['perp1', 'R'])**2
+               + abs(ta['perp1', 'L'])**2
+               - abs(ta['para1', 'R'])**2
+               - abs(ta['para1', 'L'])**2) * alpha * Plb / 4.0
+
+    # The observables pairs (K2, K15), (K6, K13), and (K3, K16) are not
+    # independent. Note that K2 and K15 differ in the massive lepton case.
+    K2K15 = (abs(ta['perp1', 'R'])**2
+             + abs(ta['perp1', 'L'])**2
+             + abs(ta['para1', 'R'])**2
+             + abs(ta['para1', 'L'])**2) / 2.0
+    K3K16 = - (ta['perp1', 'R'] * ta['para1', 'R'].conj()
+               - ta['perp1', 'L'] * ta['para1', 'L'].conj()).real
+    K6K13 = - (abs(ta['perp1', 'R'])**2 - abs(ta['perp1', 'L'])**2
+               + abs(ta['para1', 'R'])**2 - abs(ta['para1', 'L'])**2) / 2.0
+
+    K['1cc'] = K2K15
+    K['15'] = - alpha * Plb * K2K15
+
+    K['1c'] = K3K16
+    K['16'] = - alpha * Plb * K3K16
+
+    K['2c'] = alpha * K6K13
+    K['13'] = - Plb * K6K13
+
+    # Many of the observables appear in pairs where one is the real and the other
+    # is the imaginary part of the same amplitude combination. Note that K12 has
+    # additional terms when considering massive leptons while K34 does not change.
+    K7K19 = (ta['perp1', 'R'] * ta['para0', 'R'].conj()
+             - ta['para1', 'R'] * ta['perp0', 'R'].conj()
+             + ta['perp1', 'L'] * ta['para0', 'L'].conj()
+             - ta['para1', 'L'] * ta['perp0', 'L'].conj()) * alpha / sqrt(2.0)
+    K8K20 = (ta['perp1', 'R'] * ta['perp0', 'R'].conj()
+             - ta['para1', 'R'] * ta['para0', 'R'].conj()
+             + ta['para1', 'L'] * ta['para0', 'L'].conj()
+             - ta['perp1', 'L'] * ta['perp0', 'L'].conj()) * alpha / sqrt(2.0)
+    K9K17 = (ta['perp1', 'R'] * ta['perp0', 'R'].conj()
+             - ta['para1', 'R'] * ta['para0', 'R'].conj()
+             + ta['perp1', 'L'] * ta['perp0', 'L'].conj()
+             - ta['para1', 'L'] * ta['para0', 'L'].conj()) * alpha / sqrt(2.0)
+    K10K18 = (ta['perp1', 'R'] * ta['para0', 'R'].conj()
+              - ta['para1', 'R'] * ta['perp0', 'R'].conj()
+              + ta['para1', 'L'] * ta['perp0', 'L'].conj()
+              - ta['perp1', 'L'] * ta['para0', 'L'].conj()) * alpha / sqrt(2.0)
+    K21K27 = (ta['para1', 'R'] * ta['para0', 'R'].conj()
+              + ta['perp1', 'R'] * ta['perp0', 'R'].conj()
+              + ta['para1', 'L'] * ta['para0', 'L'].conj()
+              + ta['perp1', 'L'] * ta['perp0', 'L'].conj()) * Plb / sqrt(2.0)
+    K22K28 = (ta['para1', 'R'] * ta['perp0', 'R'].conj()
+              + ta['perp1', 'R'] * ta['para0', 'R'].conj()
+              - ta['perp1', 'L'] * ta['para0', 'L'].conj()
+              - ta['para1', 'L'] * ta['perp0', 'L'].conj()) * Plb / sqrt(2.0)
+    K23K25 = (ta['para1', 'R'] * ta['perp0', 'R'].conj()
+              + ta['perp1', 'R'] * ta['para0', 'R'].conj()
+              + ta['para1', 'L'] * ta['perp0', 'L'].conj()
+              + ta['perp1', 'L'] * ta['para0', 'L'].conj()) * Plb / sqrt(2.0)
+    K24K26 = (ta['para1', 'R'] * ta['para0', 'R'].conj()
+              + ta['perp1', 'R'] * ta['perp0', 'R'].conj()
+              - ta['para1', 'L'] * ta['para0', 'L'].conj()
+              - ta['perp1', 'L'] * ta['perp0', 'L'].conj()) * Plb / sqrt(2.0)
+
+    K12K34 = (ta['perp1', 'R'] * ta['para1', 'R'].conj()
+              + ta['perp1', 'L'] * ta['para1', 'L'].conj()) * Plb
+
+    K['4sc'] = K7K19.real
+    K['19'] = Plb * K7K19.imag
+
+    K['4s'] = K8K20.real
+    K['20'] = Plb * K8K20.imag
+
+    K['3sc'] = K9K17.imag
+    K['17'] = Plb * K9K17.real
+
+    K['3s'] = K10K18.imag
+    K['18'] = Plb * K10K18.real
+
+    K['12'] = - K12K34.real
+    K['34'] = alpha * K12K34.imag / 2.0
+
+    K['21'] = K21K27.imag
+    K['27'] = - alpha * K21K27.real
+
+    K['22'] = - K22K28.imag
+    K['28'] = alpha * K22K28.real
+
+    K['23'] = - K23K25.real
+    K['25'] = alpha * K23K25.imag
+
+    K['24'] = K24K26.real
+    K['26'] = - alpha * K24K26.imag
+
+    # In the massless lepton limit some observabbles are zero
+    K['29'] = 0.0
+    K['31'] = 0.0
+
     return K
+
 
 def get_ff(q2, par):
     ff_aux = AuxiliaryQuantity['Lambdab->Lambda form factor']
@@ -159,8 +261,12 @@ def get_obs(function, q2, wc_obj, par, lep):
         return 0
     ta = get_transverity_amps(q2, wc_obj, par, lep, cp_conjugate=False)
     alpha = par['Lambda->ppi alpha_-']
-    K = angular_coefficients(ta, alpha)
+    pLb = par['Lambdab polarisation']
+    K = angular_coefficients(ta, alpha, pLb)
     return function(K)
+
+def K_num(K, i):
+    return K[i]
 
 def dGdq2(K):
     return 2*K['1ss'] + K['1cc']
@@ -229,6 +335,15 @@ _observables = {
 'AFBh': {'func_num': AFBh_num, 'tex': r'A_\text{FB}^h', 'desc': 'hadronic forward-backward asymmetry'},
 'AFBlh': {'func_num': AFBlh_num, 'tex': r'A_\text{FB}^{\ell h}', 'desc': 'lepton-hadron forward-backward asymmetry'},
 }
+for i in ['1ss', '1cc', '1c', '2ss', '2cc', '2c', '3sc', '3s', '4sc', '4s']:
+    _observables[f'K{i}'] = {'func_num': lambda K, i=i: K_num(K, i),
+                             'tex': r'K_{'+i+'}',
+                             'desc': 'angular coefficient '+i}
+for i in range(11, 35):
+    _observables[f'K{i}'] = {'func_num': lambda K, i=i: K_num(K, str(i)),
+                             'tex': r'K_{'+str(i)+'}',
+                             'desc': 'angular coefficient '+str(i)}
+
 for l in ['e', 'mu', ]: # tau requires lepton mass dependence!
 
     _process_tex = r"\Lambda_b\to\Lambda " +_tex[l]+r"^+"+_tex[l]+r"^-"

@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flavio"
+version = "2.6.2"
+authors = [
+    {name = "David M. Straub", email = "straub@protonmail.com"},
+]
+description = "A Python package for flavour physics phenomenology in the Standard Model and beyond"
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {text = "MIT"}
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.20.0",
+    "scipy",
+    "setuptools",
+    "pyyaml",
+    "ckmutil>=1.2.0",
+    "wilson>=2.5",
+    "particle>=0.21.0",
+    "parton>=0.2.1",
+]
+
+[project.optional-dependencies]
+testing = ["pytest"]
+plotting = ["matplotlib>=2.0"]
+sampling = ["iminuit>=2.0"]
+
+[project.urls]
+Homepage = "https://flav-io.github.io"
+
+[tool.setuptools]
+packages = ["flavio"]
+
+[tool.setuptools.package-data]
+flavio = [
+    "data/*.yml",
+    "data/test/*",
+    "physics/data/arXiv-0810-4077v3/*",
+    "physics/data/arXiv-1503-05534v1/*",
+    "physics/data/arXiv-1503-05534v2/*",
+    "physics/data/arXiv-1501-00367v2/*",
+    "physics/data/arXiv-1602-01399v1/*",
+    "physics/data/arXiv-1811-00983v1/*",
+    "physics/data/arXiv-2102.07233v2/*",
+    "physics/data/arXiv-2305-06301v1/*",
+    "physics/data/qcdf_interpolate/*",
+    "physics/data/wcsm/*",
+]

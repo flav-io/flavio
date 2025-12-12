@@ -945,7 +945,7 @@ Lambdab->Lambda(1520) hTperpPrim A:
 
 
 
-# Meson bag parameters
+# Meson mixing bag parameters
 
 # SM operator
 # for the bag parameters of the SM operator OVLL,
@@ -1132,6 +1132,48 @@ DeltaGamma/Gamma_Bs:
 tau_Bc_SM:
   tex: $\tau_{B_c}^\text{SM}$
   description: Standard Model prediction for the $B_c$ lifetime
+
+
+# Meson lifetime bag parameters
+# As defined in 2211.02724, eqs 2.16 - 2.19
+bag_lifetime_B1qtilde:
+  tex: $\tilde{B}^q_1$
+  description: Bag parameter of the $\tilde{O}_1^q$ operator at 1.5 GeV
+bag_lifetime_B2qtilde:
+  tex: $\tilde{B}^q_2$
+  description: Bag parameter of the $\tilde{O}_2^q$ operator at 1.5 GeV
+bag_lifetime_B3qtilde:
+  tex: $\tilde{B}^q_3$
+  description: Bag parameter of the $\tilde{O}_3^q$ operator at 1.5 GeV
+bag_lifetime_B4qtilde:
+  tex: $\tilde{B}^q_4$
+  description: Bag parameter of the $\tilde{O}_4^q$ operator at 1.5 GeV
+bag_lifetime_B5qtilde:
+  tex: $\tilde{B}^q_5$
+  description: Bag parameter of the $\tilde{O}_5^q$ operator at 1.5 GeV
+bag_lifetime_B6qtilde:
+  tex: $\tilde{B}^q_6$
+  description: Bag parameter of the $\tilde{O}_6^q$ operator at 1.5 GeV
+bag_lifetime_B7qtilde:
+  tex: $\tilde{B}^q_7$
+  description: Bag parameter of the $\tilde{O}_7^q$ operator at 1.5 GeV
+bag_lifetime_B8qtilde:
+  tex: $\tilde{B}^q_8$
+  description: Bag parameter of the $\tilde{O}_8^q$ operator at 1.5 GeV
+bag_lifetime_delta^ud_1tilde:
+  tex: $\tilde{\delta}^{ud}_1$
+  description: Eye-contraction parameter of the operator $\tilde{O}_1^q$ at 1.5 GeV
+bag_lifetime_delta^ud_2tilde:
+  tex: $\tilde{\delta}^{ud}_2$
+  description: Eye-contraction parameter of the operator $\tilde{O}_2^q$ at 1.5 GeV
+bag_lifetime_delta^ud_3tilde:
+  tex: $\tilde{\delta}^{ud}_3$
+  description: Eye-contraction parameter of the operator $\tilde{O}_3^q$ at 1.5 GeV
+bag_lifetime_delta^ud_4tilde:
+  tex: $\tilde{\delta}^{ud}_4$
+  description: Eye-contraction parameter of the operator $\tilde{O}_4^q$ at 1.5 GeV
+
+
 
 # Parameters for B->D* form factors in the CLN parametrization
 B->D* CLN rho2:
@@ -1641,6 +1683,10 @@ Lambda->ppi alpha_-:
   tex: $\alpha_-$
   description: $\Lambda\to p \pi^-$ decay parameter
 
+# Lambdab longitudinal polarization
+Lambdab polarisation:
+  tex: $P_{\Lambda_b,\parallel}$
+  description: Longitudinal polarization of $\Lambda_b$ produced in $Z^0$ decays at LEP
 
 # Parameters for HQET form factors
 chi_2(1):
