@@ -33,6 +33,31 @@ def bsvll_obs(function, q2, wc_obj, par, B, V, lep):
     J_h = flavio.physics.bdecays.angular.angularcoeffs_h_v(phi, h, h_tilde, q2, mB, mV, mb, 0, ml, ml)
     return function(y, J, J_bar, J_h)
 
+
+def A_experiment_Bs(y, J, J_bar, J_h, i):
+    return A_experiment_num(y, J, J_bar, J_h, i)/SA_den_Bs(y, J, J_bar, J_h)
+
+# numerator
+def A_experiment_num_Bs(y, J, J_bar, J_h, i):
+    if i in [4, '6s', '6c', 7, 9]:
+        return -A_theory_num_Bs(y, J, J_bar, J_h, i)
+    return A_theory_num_Bs(y, J, J_bar, J_h, i)
+
+
+def A_theory_Bs(y, J, J_bar, J_h, i):
+    r"""Angular CP asymmetry $A_i$ in the theory convention."""
+    return A_theory_num_Bs(y, J, J_bar, J_h, i)/SA_den_Bs(y, J, J_bar, J_h, i)
+
+# numerator
+def A_theory_num_Bs(y, J, J_bar, J_h, i):
+    return 1/(1-y**2) * (J[i] - J_bar[i]) - y/(1-y**2) * J_h[i]
+
+# denominator of P_i observables
+def P_den_Bs(y, J, J_bar, J_h):
+    return S_theory_num_Bs(y, J, J_bar, J_h,'2s')
+
+
+
 def S_theory_num_Bs(y, J, J_bar, J_h, i):
     # (42) of 1502.05509
     flavio.citations.register("Descotes-Genon:2015hea")
@@ -141,12 +166,35 @@ _observables = {
 'FL': {'func_num': FL_num_Bs, 'tex': r'\overline{F_L}', 'desc': 'Time-averaged longitudinal polarization fraction'},
 'S3': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 3), 'tex': r'\overline{S_3}', 'desc': 'Time-averaged, CP-averaged angular observable'},
 'S4': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 4), 'tex': r'\overline{S_4}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S5': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 5), 'tex': r'\overline{S_5}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S6c': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, '6c'), 'tex': r'\overline{S_6^c}', 'desc': 'Time-averaged, CP-averaged angular observable'},
 'S7': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 7), 'tex': r'\overline{S_7}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S8': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 8), 'tex': r'\overline{S_8}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'S9': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 9), 'tex': r'\overline{S_9}', 'desc': 'Time-averaged, CP-averaged angular observable'},
+'A3': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 3), 'tex': r'\overline{A_3}', 'desc': 'Angular CP asymmetry'},
+'A4': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 4), 'tex': r'\overline{A_4}', 'desc': 'Angular CP asymmetry'},
+'A5': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 5), 'tex': r'\overline{A_5}', 'desc': 'Angular CP asymmetry'},
+'A6s': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, '6s'), 'tex': r'\overline{A_6^s}', 'desc': 'Angular CP asymmetry'},
+'A7': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 7), 'tex': r'\overline{A_7}', 'desc': 'Angular CP asymmetry'},
+'A8': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 8), 'tex': r'\overline{A_8}', 'desc': 'Angular CP asymmetry'},
+'A9': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 9), 'tex': r'\overline{A_9}', 'desc': 'Angular CP asymmetry'},
+
+}
+_observables_p = {
+'P1': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 3)/2., 'tex': r'P_1', 'desc': "CP-averaged \"optimized\" angular observable"},
+'ATIm': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, 9)/2., 'tex': r'A_T^\text{Im}', 'desc': "Transverse CP asymmetry"},
+'ATRe': {'func_num': lambda y, J, J_bar, J_h: A_experiment_num_Bs(y, J, J_bar, J_h, '6s')/4., 'tex': r'A_T^\text{Re}', 'desc': "Forward-Backward asymmetry"},
+
+
+
 }
 _hadr = {
 'Bs->phi': {'tex': r"B_s\to \phi ", 'B': 'Bs', 'V': 'phi', },
 'Bs->K*0': {'tex': r"B_s\to K^* ", 'B': 'Bs', 'V': 'K*0', },
 }
+
+
+
 for l in ['e', 'mu', 'tau']:
     for M in _hadr.keys():
 
@@ -170,6 +218,25 @@ for l in ['e', 'mu', 'tau']:
             _obs.tex = r"$" + _observables[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
             _obs.add_taxonomy(_process_taxonomy)
             Prediction(_obs_name, bsvll_obs_ratio_func(_observables[obs]['func_num'], SA_den_Bs, _hadr[M]['B'], _hadr[M]['V'], l))
+
+        for obs in sorted(_observables_p.keys()):
+
+            # binned angular observables
+            _obs_name = "<" + obs + ">("+M+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2min', 'q2max'])
+            _obs.set_description('Binned ' + _observables_p[obs]['desc'] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$\langle " + _observables_p[obs]['tex'] + r"\rangle(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            _obs.add_taxonomy(_process_taxonomy)
+            Prediction(_obs_name, bsvll_obs_int_ratio_func(_observables_p[obs]['func_num'], P_den_Bs, _hadr[M]['B'], _hadr[M]['V'], l))
+
+            # differential angular observables
+            _obs_name = obs + "("+M+l+l+")"
+            _obs = Observable(name=_obs_name, arguments=['q2'])
+            _obs.set_description(_observables_p[obs]['desc'][0].capitalize() + _observables_p[obs]['desc'][1:] + r" in $" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-$")
+            _obs.tex = r"$" + _observables_p[obs]['tex'] + r"(" + _hadr[M]['tex'] +_tex[l]+r"^+"+_tex[l]+"^-)$"
+            _obs.add_taxonomy(_process_taxonomy)
+            Prediction(_obs_name, bsvll_obs_ratio_func(_observables_p[obs]['func_num'], P_den_Bs, _hadr[M]['B'], _hadr[M]['V'], l))
+
 
         # binned branching ratio
         _obs_name = "<dBR/dq2>("+M+l+l+")"
