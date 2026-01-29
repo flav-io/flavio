@@ -186,7 +186,7 @@ def ADeltaGamma_func(B, lep):
     return ADG_func
 # Observable and Prediction instances
 
-_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
+_tex = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau'}
 for l in ['e', 'mu', 'tau']:
     _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to\ell^+\ell^-$ :: $'
 

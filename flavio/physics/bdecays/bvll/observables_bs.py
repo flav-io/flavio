@@ -1,4 +1,4 @@
-"""Functions for exclusive $B_s\to V\ell^+\ell^-$ decays, taking into account
+r"""Functions for exclusive $B_s\to V\ell^+\ell^-$ decays, taking into account
 the finite life-time difference between the $B_s$ mass eigenstates,
 see arXiv:1502.05509."""
 
@@ -136,7 +136,7 @@ def bsvll_dbrdq2_19_func(B, P, lep):
 
 # Observable and Prediction instances
 
-_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
+_tex = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau'}
 _observables = {
 'FL': {'func_num': FL_num_Bs, 'tex': r'\overline{F_L}', 'desc': 'Time-averaged longitudinal polarization fraction'},
 'S3': {'func_num': lambda y, J, J_bar, J_h: S_experiment_num_Bs(y, J, J_bar, J_h, 3), 'tex': r'\overline{S_3}', 'desc': 'Time-averaged, CP-averaged angular observable'},
