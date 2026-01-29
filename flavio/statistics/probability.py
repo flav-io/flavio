@@ -1119,7 +1119,7 @@ class GeneralGammaCountingProcess(GeneralGammaDistributionPositive):
 
         `counts_total = counts_signal + counts_background`
 
-        Note that if `background_variance=0`, it makes more sense to use
+        Note that if `background_std=0`, it makes more sense to use
         `GammaCountingProcess`, which is equivalent but analytical rather than
         numerical.
         """
@@ -1230,7 +1230,7 @@ class GeneralGammaUpperLimit(GeneralGammaCountingProcess):
                 background_std = background_variance
         elif background_std is None:
             background_std = 0
-        self.background_variance = background_std
+        self.background_variance = None  # for get_dict compatibility; use background_std
         self.limit = limit
         self.confidence_level = confidence_level
         _d_unscaled = GeneralGammaCountingProcess(
