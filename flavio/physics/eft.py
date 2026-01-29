@@ -134,7 +134,7 @@ class WilsonCoefficients(wilson.Wilson):
         self._options = {}
 
     def set_initial(self, wc_dict, scale, eft='WET', basis='flavio'):
-        """Set initial values of Wilson coefficients.
+        r"""Set initial values of Wilson coefficients.
 
         Parameters:
 
@@ -179,7 +179,7 @@ class WilsonCoefficients(wilson.Wilson):
         raise ValueError("The method run_wcxf has been removed. Please use the match_run method of wilson.Wilson instead.")
 
     def get_wcxf(self, sector, scale, par, eft='WET', basis='flavio', nf_out=None):
-        """Get the values of the Wilson coefficients belonging to a specific
+        r"""Get the values of the Wilson coefficients belonging to a specific
         sector (e.g. `bsmumu`) at a given scale.
 
         Returns a WCxf.WC instance.
@@ -212,7 +212,7 @@ class WilsonCoefficients(wilson.Wilson):
         return self.match_run(scale=scale, eft=eft, basis=basis, sectors=mr_sectors)
 
     def get_wc(self, sector, scale, par, eft='WET', basis='flavio', nf_out=None):
-        """Get the values of the Wilson coefficients belonging to a specific
+        r"""Get the values of the Wilson coefficients belonging to a specific
         sector (e.g. `bsmumu`) at a given scale.
 
         Returns a dictionary of WC values.

@@ -107,7 +107,7 @@ i.set_description(r"Effective shift in the Wilson coefficient $C_7(\mu_b)$"
 
 quantity = 'Lambdab->Lambdall subleading effects at high q2'
 a = AuxiliaryQuantity(name=quantity, arguments=['q2', 'cp_conjugate'])
-a.description = ('Contribution to $\Lambda_b\to \Lambda \ell^+\ell^-$ transversity amplitudes from'
+a.description = (r'Contribution to $\Lambda_b\to \Lambda \ell^+\ell^-$ transversity amplitudes from'
                 ' subleading hadronic effects (i.e. all effects not included'
                 r'elsewhere) at $q^2$ above the charmonium resonances')
 

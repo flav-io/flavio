@@ -424,7 +424,7 @@ def bxll_afb_func(q, lep):
 
 # Observable instances
 
-_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau', 'l': r'\ell'}
+_tex = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau', 'l': r'\ell'}
 for l in ['e', 'mu', 'tau', 'l']:
     for q in ['s', 'd']:
 

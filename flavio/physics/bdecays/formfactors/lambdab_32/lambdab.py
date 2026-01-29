@@ -25,4 +25,4 @@ for p in processes:
     iname = p + ' LatticeQCD'
     i = Implementation(name=iname, quantity=quantity,
                        function=ff_function(LatticeQCD.ff_equiv, p))
-    i.set_description("Form factors from lattice QCD valid in $q^2 \in [16; 16.8] GeV^2$")
+    i.set_description(r"Form factors from lattice QCD valid in $q^2 \in [16; 16.8] GeV^2$")
