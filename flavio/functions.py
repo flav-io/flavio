@@ -4,7 +4,10 @@ top-level namespace."""
 import flavio
 import numpy as np
 from collections import defaultdict
-from multiprocessing import Pool
+import multiprocessing
+# Use explicit 'fork' context for compatibility with Python 3.14+
+# where the default start method changed to 'forkserver'
+Pool = multiprocessing.get_context('fork').Pool
 from functools import partial
 import warnings
 
