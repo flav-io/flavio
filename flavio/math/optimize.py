@@ -68,12 +68,13 @@ def maximize_robust(fun, x0, args=(), methods=None, tries=3, disp=False, **kwarg
 class MinuitFunction(object):
     """Function wrapper for Minuit to allow supplying function with additional
     arguments"""
+    # Declare parameter 'x' with no limits for iminuit
+    _parameters = {'x': None}
+
     def __init__(self, f, args=()):
         """Initialize the instance. f: function"""
-        import iminuit
         self.f = f
         self.args = args
-        self.func_code = iminuit.util.make_func_code('x')
 
     def __call__(self, x):
         return self.f(x, *self.args)
