@@ -4,8 +4,7 @@ import flavio
 from flavio.util import get_datapath
 from wilson import Wilson
 
-path = get_datapath('flavio', 'data/test/')
-sm_array = np.load(path+'2009.09313_digitized.npz')
+sm_array = np.load(get_datapath('flavio', 'data/test/2009.09313_digitized.npz'))
 
 class TestLambdabLambda1520(unittest.TestCase):
 
