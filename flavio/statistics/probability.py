@@ -1,6 +1,10 @@
 """Probability distributions and auxiliary functions to deal with them."""
 
 import numpy as np
+try:
+    from numpy import trapezoid # numpy >= 1.20
+except ImportError:
+    from numpy import trapz as trapezoid # numpy < 1.20
 import scipy.stats
 from scipy.interpolate import interp1d, RegularGridInterpolator
 import scipy.signal
@@ -885,7 +889,7 @@ class NumericalDistribution(ProbabilityDistribution):
         else:
             mode = x[np.argmax(y)]
             super().__init__(central_value=mode, support=(x[0], x[-1]))
-        self.y_norm = y /  np.trapz(y, x=x)  # normalize PDF to 1
+        self.y_norm = y /  trapezoid(y, x=x)  # normalize PDF to 1
         self.y_norm[self.y_norm < 0] = 0
         self.pdf_interp = interp1d(x, self.y_norm,
                                         fill_value=0, bounds_error=False)
