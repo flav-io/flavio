@@ -276,6 +276,10 @@ K->pi H2: (2.63 + 0.28 - 0.15) e-4 #  "
 # Lambda decay parameters
 Lambda->ppi alpha_-: 0.750 ± 0.009 ± 0.004  # BESIII arXiv:1808.08917
 
+# Longitudinal Lambdab polarisation at LEP (unpolarised beams with ee -> Z0 -> bbbar)
+# Asymmetric stat. unc.: −0.45+0.17−0.15 ± 0.08
+Lambdab polarisation: -0.45 ± 0.17 ± 0.08 # LEP combination arXiv:hep-ex/0112028
+
 # Parameters for subleading hadronic effects in Lambdab->Lambdall
 Lambdab->Lambda deltaC7 a_perp0 Re: 0 ± 0.1
 Lambdab->Lambda deltaC7 a_perp0 Im: 0 ± 0.1

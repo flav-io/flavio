@@ -1683,6 +1683,10 @@ Lambda->ppi alpha_-:
   tex: $\alpha_-$
   description: $\Lambda\to p \pi^-$ decay parameter
 
+# Lambdab longitudinal polarization
+Lambdab polarisation:
+  tex: $P_{\Lambda_b,\parallel}$
+  description: Longitudinal polarization of $\Lambda_b$ produced in $Z^0$ decays at LEP
 
 # Parameters for HQET form factors
 chi_2(1):
