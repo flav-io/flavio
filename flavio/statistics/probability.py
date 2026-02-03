@@ -1,6 +1,10 @@
 """Probability distributions and auxiliary functions to deal with them."""
 
 import numpy as np
+try:
+    from numpy import trapezoid # numpy >= 1.20
+except ImportError:
+    from numpy import trapz as trapezoid # numpy < 1.20
 import scipy.stats
 from scipy.interpolate import interp1d, RegularGridInterpolator
 import scipy.signal
@@ -885,7 +889,7 @@ class NumericalDistribution(ProbabilityDistribution):
         else:
             mode = x[np.argmax(y)]
             super().__init__(central_value=mode, support=(x[0], x[-1]))
-        self.y_norm = y /  np.trapz(y, x=x)  # normalize PDF to 1
+        self.y_norm = y /  trapezoid(y, x=x)  # normalize PDF to 1
         self.y_norm[self.y_norm < 0] = 0
         self.pdf_interp = interp1d(x, self.y_norm,
                                         fill_value=0, bounds_error=False)
@@ -1115,7 +1119,7 @@ class GeneralGammaCountingProcess(GeneralGammaDistributionPositive):
 
         `counts_total = counts_signal + counts_background`
 
-        Note that if `background_variance=0`, it makes more sense to use
+        Note that if `background_std=0`, it makes more sense to use
         `GammaCountingProcess`, which is equivalent but analytical rather than
         numerical.
         """
@@ -1226,7 +1230,7 @@ class GeneralGammaUpperLimit(GeneralGammaCountingProcess):
                 background_std = background_variance
         elif background_std is None:
             background_std = 0
-        self.background_variance = background_std
+        self.background_variance = None  # for get_dict compatibility; use background_std
         self.limit = limit
         self.confidence_level = confidence_level
         _d_unscaled = GeneralGammaCountingProcess(

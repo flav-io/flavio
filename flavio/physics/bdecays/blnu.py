@@ -57,7 +57,7 @@ def br_blnu_fct(B, lep):
     return f
 
 # Observable and Prediction instances
-_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
+_tex = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau'}
 _tex_B = {'B+': r'B^+', 'Bc': r'B_c'}
 for l in ['e', 'mu', 'tau']:
     for B in ['B+', 'Bc']:

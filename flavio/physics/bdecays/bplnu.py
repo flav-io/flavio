@@ -147,7 +147,7 @@ def BR_tot_leptonflavour_function(B, P, lnum, lden):
 
 # Observable and Prediction instances
 
-_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau', 'l': r'\ell'}
+_tex = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau', 'l': r'\ell'}
 _func = {'dBR/dq2': dBRdq2_function, 'BR': BR_tot_function, '<BR>': BR_binned_function}
 _desc = {'dBR/dq2': 'Differential', 'BR': 'Total', '<BR>': 'Binned'}
 _tex_br = {'dBR/dq2': r'\frac{d\text{BR}}{dq^2}', 'BR': r'\text{BR}', '<BR>': r'\langle\text{BR}\rangle'}

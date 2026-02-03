@@ -5,7 +5,7 @@ import cmath
 meson_quark = { 'B0': 'bd', 'Bs': 'bs', 'K0': 'sd', 'D0': 'uc' }
 
 def bag_msbar2rgi(alpha_s, meson):
-    """Conversion factor between renormalization group invariant (RGI) defintion
+    r"""Conversion factor between renormalization group invariant (RGI) defintion
     $\hat B$ of the bag parameter and the $\overline{\mathrm{MS}}$ definition
     $B(mu)$:
     $$\hat B = b_B^{(n_f)} B(mu)$$

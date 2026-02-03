@@ -12,7 +12,7 @@ from flavio.physics.bdecays.common import meson_quark
 from flavio.physics.bdecays import matrixelements
 import flavio
 import copy
-import pkg_resources
+import importlib.resources as resources
 
 
 # SM Wilson coefficients for n_f=5 in the basis
@@ -25,7 +25,10 @@ import pkg_resources
 # C_9,10, which are defined with an additional alpha/4pi prefactor.
 scales = (2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5)
 # data = np.array([C_low(s, 120, get_par(), nf=5) for s in scales]).T
-data = np.load(pkg_resources.resource_filename('flavio.physics', 'data/wcsm/wc_sm_dB1_2_55.npy'))
+with resources.as_file(
+    resources.files("flavio.physics") / "data/wcsm/wc_sm_dB1_2_55.npy"
+) as path:
+    data = np.load(path)
 wcsm_nf5 = scipy.interpolate.interp1d(scales, data)
 
 # di->djnunu Wilson coefficient

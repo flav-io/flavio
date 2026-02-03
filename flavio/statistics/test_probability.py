@@ -172,16 +172,19 @@ class TestProbability(unittest.TestCase):
     def test_counting_process(self):
         # check that GeneralGammaCountingProcess with background_std set to 0
         # gives the same pdf as GammaCountingProcess
+        import warnings
         for counts_total in [100, 200, 300]:
             for counts_background in [25, 50, 100]:
                 for scale_factor in [1, 2, 3]:
                     p_gcp = GammaCountingProcess(scale_factor=scale_factor,
                                                  counts_total=counts_total,
                                                  counts_background=counts_background)
-                    p_ggcp = GeneralGammaCountingProcess(scale_factor=scale_factor,
-                                                         counts_total=counts_total,
-                                                         counts_background=counts_background,
-                                                         background_std=0)
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore", UserWarning)
+                        p_ggcp = GeneralGammaCountingProcess(scale_factor=scale_factor,
+                                                             counts_total=counts_total,
+                                                             counts_background=counts_background,
+                                                             background_std=0)
                     for x in np.linspace(0, 1000, 500):
                         pdf_gcp = np.exp(p_gcp.logpdf(x))
                         pdf_ggcp = p_ggcp.pdf(x)

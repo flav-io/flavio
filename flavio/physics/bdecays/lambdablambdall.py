@@ -222,7 +222,7 @@ def obs_int_ratio_func(func_num, func_den, lep):
     return fct
 
 
-_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
+_tex = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau'}
 _observables = {
 'FL': {'func_num': FL_num, 'tex': r'F_L', 'desc': 'longitudinal polarization fraction'},
 'AFBl': {'func_num': AFBl_num, 'tex': r'A_\text{FB}^\ell', 'desc': 'leptonic forward-backward asymmetry'},

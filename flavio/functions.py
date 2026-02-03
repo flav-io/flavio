@@ -4,7 +4,10 @@ top-level namespace."""
 import flavio
 import numpy as np
 from collections import defaultdict
-from multiprocessing import Pool
+import multiprocessing
+# Use explicit 'fork' context for compatibility with Python 3.14+
+# where the default start method changed to 'forkserver'
+Pool = multiprocessing.get_context('fork').Pool
 from functools import partial
 import warnings
 
@@ -46,7 +49,7 @@ def _obs_prediction_par(par, obs_name, wc_obj, *args, **kwargs):
 from functools import partial
 
 def np_uncertainty(obs_name, wc_obj, *args, N=100, threads=1, **kwargs):
-    """Get the uncertainty of the prediction of an observable in the presence
+    r"""Get the uncertainty of the prediction of an observable in the presence
     of new physics.
 
     Parameters
@@ -85,7 +88,7 @@ def np_uncertainty(obs_name, wc_obj, *args, N=100, threads=1, **kwargs):
     return np.std(all_pred)
 
 def sm_uncertainty(obs_name, *args, N=100, threads=1, **kwargs):
-    """Get the uncertainty of the Standard Model prediction of an observable.
+    r"""Get the uncertainty of the Standard Model prediction of an observable.
 
     Parameters
     ----------
@@ -172,7 +175,7 @@ def get_dependent_wcs(obs_name, *args, **kwargs):
 
 
 def sm_error_budget(obs_name, *args, N=50, **kwargs):
-    """Get the *relative* uncertainty of the Standard Model prediction due to
+    r"""Get the *relative* uncertainty of the Standard Model prediction due to
     variation of individual observables.
 
     Parameters

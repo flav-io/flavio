@@ -18,7 +18,7 @@ dependencies = [
     "setuptools",
     "pyyaml",
     "ckmutil>=1.2.0",
-    "wilson>=2.4",
+    "wilson>=2.5",
     "particle>=0.21.0",
     "parton>=0.2.1",
 ]

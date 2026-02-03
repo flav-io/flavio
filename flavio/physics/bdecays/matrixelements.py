@@ -28,7 +28,7 @@ def h(s, mq, mu):
           -4/9. * (2 + z) * sqrt(abs(z - 1)) * A)
 
 def Y(q2, wc, par, scale, qiqj):
-    """Function $Y$ that contains the contributions of the matrix
+    r"""Function $Y$ that contains the contributions of the matrix
     elements of four-quark operators to the effective Wilson coefficient
     $C_9^{\mathrm{eff}}=C_9 + Y(q^2)$.
 
@@ -71,7 +71,7 @@ _sh_F_29 = scipy.interpolate.RegularGridInterpolator((_f_x, _f_y, _f_z), _f_val_
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def F_17(muh, z, sh):
-    """Function $F_1^{(7)}$ giving the contribution of $O_7$ to the matrix element
+    r"""Function $F_1^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_1$, as defined in arXiv:0810.4077.
 
     - `muh` is $\hat \mu=mu/m_b$,
@@ -83,7 +83,7 @@ def F_17(muh, z, sh):
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def F_19(muh, z, sh):
-    """Function $F_1^{(9)}$ giving the contribution of $O_9$ to the matrix element
+    r"""Function $F_1^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_1$, as defined in arXiv:0810.4077.
 
     - `muh` is $\hat \mu=mu/m_b$,
@@ -97,7 +97,7 @@ def F_19(muh, z, sh):
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def F_27(muh, z, sh):
-    """Function $F_2^{(7)}$ giving the contribution of $O_7$ to the matrix element
+    r"""Function $F_2^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_2$, as defined in arXiv:0810.4077.
 
     - `muh` is $\hat \mu=mu/m_b$,
@@ -109,7 +109,7 @@ def F_27(muh, z, sh):
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def F_29(muh, z, sh):
-    """Function $F_2^{(9)}$ giving the contribution of $O_9$ to the matrix element
+    r"""Function $F_2^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_2$, as defined in arXiv:0810.4077.
 
     - `muh` is $\hat \mu=mu/m_b$,
@@ -123,7 +123,7 @@ def F_29(muh, z, sh):
 
 
 def F_89(Ls, sh):
-    """Function $F_8^{(9)}$ giving the contribution of $O_9$ to the matrix element
+    r"""Function $F_8^{(9)}$ giving the contribution of $O_9$ to the matrix element
     of $O_8$, as given in eq. (39) of hep-ph/0312063.
 
     - `sh` is $\hat s=q^2/m_b^2$,
@@ -135,7 +135,7 @@ def F_89(Ls, sh):
     - 560/27. * pi**2) * sh**3 + 16/9. * Ls * (1 + sh + sh**2 + sh**3))
 
 def F_87(Lmu, sh):
-    """Function $F_8^{(7)}$ giving the contribution of $O_7$ to the matrix element
+    r"""Function $F_8^{(7)}$ giving the contribution of $O_7$ to the matrix element
     of $O_8$, as given in eq. (40) of hep-ph/0312063.
 
     - `sh` is $\hat s=q^2/m_b^2$,
@@ -157,7 +157,7 @@ def acot(x):
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def SeidelA(q2, mb, mu):
-    """Function $A(s\equiv q^2)$ defined in eq. (29) of hep-ph/0403185v2.
+    r"""Function $A(s\equiv q^2)$ defined in eq. (29) of hep-ph/0403185v2.
     """
     flavio.citations.register("Seidel:2004jh")
     if q2==0:
@@ -175,7 +175,7 @@ def SeidelA(q2, mb, mu):
 
 @lru_cache(maxsize=config['settings']['cache size'])
 def SeidelB(q2, mb, mu):
-    """Function $A(s\equiv q^2)$ defined in eq. (30) of hep-ph/0403185v2.
+    r"""Function $A(s\equiv q^2)$ defined in eq. (30) of hep-ph/0403185v2.
     """
     flavio.citations.register("Seidel:2004jh")
     sh = min(q2/mb**2, 0.999)
@@ -203,7 +203,7 @@ def SeidelB(q2, mb, mu):
     612 * sh**3 - 446 * sh**4 + 113 * sh**5)) )
 
 def SeidelC(q2, mb, mu):
-    """Function $A(s\equiv q^2)$ defined in eq. (31) of hep-ph/0403185v2.
+    r"""Function $A(s\equiv q^2)$ defined in eq. (31) of hep-ph/0403185v2.
     """
     flavio.citations.register("Seidel:2004jh")
     return (-(16)/(81) * log((q2)/(mu**2)) + (428)/(243)

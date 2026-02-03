@@ -176,7 +176,7 @@ def bllg_dbrdq2_int_func(B, lep):
         return bllg_dbrdq2_int(q2min, q2max, wc_obj, par, B, lep)
     return fct
 
-_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
+_tex = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau'}
 _tex_B = {'B0': r'\bar B^0', 'Bs': r'\bar B_s'}
 
 _process_taxonomy = r'Process :: $b$ hadron decays :: FCNC decays :: $B\to \ell^+\ell^-\gamma$ :: $'

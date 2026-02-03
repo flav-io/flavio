@@ -22892,3 +22892,9 @@ LHCb Bs->K*mumu 2018:
    inspire: LHCb:2018rym
    values:
      BR_LHCb(Bs->K*0mumu): 2.9 ± 1.0 ± 0.2 ± 0.3 1e-8
+
+B lifetime ratios:
+  experiment: HFLAV
+  inspire: HFLAV:2022esi
+  values:
+    tau_B+/tau_Bd: 1.076  ± 0.004

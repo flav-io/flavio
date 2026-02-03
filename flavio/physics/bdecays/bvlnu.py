@@ -455,7 +455,7 @@ def BR_binned_leptonflavour_function(B, V, lnum, lden, A):
 
 # Observable and Prediction instances
 
-_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau', 'l': r'\ell'}
+_tex = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau', 'l': r'\ell'}
 
 _A = {'dBR/dq2': None, 'BR': None, '<BR>': None,
       'dBR_L/dq2': 'L', 'BR_L': 'L', '<BR_L>': 'L',

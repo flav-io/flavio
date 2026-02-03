@@ -1,4 +1,4 @@
-"""Functions for exclusive $B\to V\ell^+\ell^-$ decays."""
+r"""Functions for exclusive $B\to V\ell^+\ell^-$ decays."""
 
 from math import sqrt, log
 from flavio.physics.bdecays.common import meson_quark
@@ -426,7 +426,7 @@ def bvll_obs_ratio_leptonflavour(func, B, V, l1, l2):
 
 # Observable and Prediction instances
 
-_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
+_tex = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau'}
 _observables = {
 'ACP': {'func_num': dGdq2_diff, 'tex': r'A_\text{CP}', 'desc': 'Direct CP asymmetry'},
 'AFB': {'func_num': AFB_experiment_num, 'tex': r'A_\text{FB}', 'desc': 'forward-backward asymmetry'},

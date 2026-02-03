@@ -12,7 +12,10 @@ from numbers import Number
 from math import sqrt
 import warnings
 import inspect
-from multiprocessing import Pool
+import multiprocessing
+# Use explicit 'fork' context for compatibility with Python 3.14+
+# where the default start method changed to 'forkserver'
+Pool = multiprocessing.get_context('fork').Pool
 from pickle import PicklingError
 from flavio.plots.colors import lighten_color, get_color
 
@@ -522,8 +525,10 @@ def likelihood_contour_data(
     - `threads`: number of threads, defaults to 1. If greater than one,
       computation of z values will be done in parallel.
     - `pool`: an instance of `multiprocessing.Pool` (or a compatible
-    implementation, e.g. from `multiprocess` or `schwimmbad`). Overrides the
-    `threads` argument.
+      implementation, e.g. from `multiprocess` or `schwimmbad`). Overrides the
+      `threads` argument. The pool will be closed after use. Note: on Python
+      3.14+, if you create your own pool, use
+      `multiprocessing.get_context('fork').Pool()` to avoid pickling issues.
     """
     if xscale == 'linear':
         _x = np.linspace(x_min, x_max, steps)
@@ -551,7 +556,7 @@ def likelihood_contour_data(
         xy = np.array([x, y]).reshape(2, steps**2).T
         pool = pool or Pool(threads)
         try:
-            z = -2*np.array(pool.map(log_likelihood, xy )).reshape((steps, steps))
+            z = -2*np.array(pool.map(log_likelihood, xy)).reshape((steps, steps))
         except PicklingError:
             pool.close()
             raise PicklingError("When using more than 1 thread, the "

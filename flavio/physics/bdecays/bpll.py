@@ -213,7 +213,7 @@ def bpll_obs_ratio_func(func_num, func_den, B, P, lep):
 
 # Observable and Prediction instances
 
-_tex = {'e': 'e', 'mu': '\mu', 'tau': r'\tau'}
+_tex = {'e': 'e', 'mu': r'\mu', 'tau': r'\tau'}
 _observables = {
 'ACP': {'func_num': dGdq2_cpdiff, 'tex': r'A_\text{CP}', 'desc': 'Direct CP asymmetry'},
 'AFB': {'func_num': AFB_cpaverage_num, 'tex': r'A_\text{FB}', 'desc': 'forward-backward asymmetry'},
