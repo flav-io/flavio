@@ -2452,7 +2452,7 @@ CMS B->K*mumu 2013 combined with 2015:
 
 CMS B->K*mumu 2017 1-2:
   experiment: CMS
-  insipre: CMS:2017rzx
+  inspire: CMS:2017rzx
   values:
     - name: <P1>(B0->K*mumu)
       q2min: 1
@@ -2467,7 +2467,7 @@ CMS B->K*mumu 2017 1-2:
 
 CMS B->K*mumu 2017 2-4.3:
   experiment: CMS
-  insipre: CMS:2017rzx
+  inspire: CMS:2017rzx
   values:
     - name: <P1>(B0->K*mumu)
       q2min: 2
@@ -2482,7 +2482,7 @@ CMS B->K*mumu 2017 2-4.3:
 
 CMS B->K*mumu 2017 4.3-6:
   experiment: CMS
-  insipre: CMS:2017rzx
+  inspire: CMS:2017rzx
   values:
     - name: <P1>(B0->K*mumu)
       q2min: 4.3
@@ -2497,7 +2497,7 @@ CMS B->K*mumu 2017 4.3-6:
 
 CMS B->K*mumu 2017 6-8.68:
   experiment: CMS
-  insipre: CMS:2017rzx
+  inspire: CMS:2017rzx
   values:
     - name: <P1>(B0->K*mumu)
       q2min: 6
@@ -2512,7 +2512,7 @@ CMS B->K*mumu 2017 6-8.68:
 
 CMS B->K*mumu 2017 10.09-12.86:
   experiment: CMS
-  insipre: CMS:2017rzx
+  inspire: CMS:2017rzx
   values:
     - name: <P1>(B0->K*mumu)
       q2min: 10.09
@@ -2527,7 +2527,7 @@ CMS B->K*mumu 2017 10.09-12.86:
 
 CMS B->K*mumu 2017 14.18-16:
   experiment: CMS
-  insipre: CMS:2017rzx
+  inspire: CMS:2017rzx
   values:
     - name: <P1>(B0->K*mumu)
       q2min: 14.18
@@ -2542,7 +2542,7 @@ CMS B->K*mumu 2017 14.18-16:
 
 CMS B->K*mumu 2017 16-19:
   experiment: CMS
-  insipre: CMS:2017rzx
+  inspire: CMS:2017rzx
   values:
     - name: <P1>(B0->K*mumu)
       q2min: 16
