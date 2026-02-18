@@ -79,7 +79,7 @@ def AFB_experiment(J, J_bar):
     return AFB_experiment_num(J, J_bar)/SA_den(J, J_bar)
 
 def AFB_experiment_num(J, J_bar):
-    return 3/4.*S_experiment_num(J, J_bar, '6s')
+    return 3/4.*S_experiment_num(J, J_bar, '6s') + 3/8.*S_experiment_num(J, J_bar, '6c')
 
 def AFB_theory(J, J_bar):
     """Forward-backward asymmetry in the original theory convention.
@@ -87,7 +87,10 @@ def AFB_theory(J, J_bar):
     return AFB_theory_num(J, J_bar)/SA_den(J, J_bar)
 
 def AFB_theory_num(J, J_bar):
-    return 3/4.*S_theory_num(J, J_bar, '6s')
+    return 3/4.*S_theory_num(J, J_bar, '6s') + 3/8.*S_theory_num(J, J_bar, '6c')
+
+def AFBCP_experiment_num(J, J_bar):
+    return 3/4.*A_experiment_num(J, J_bar, '6s') + 3/8.*A_experiment_num(J, J_bar, '6c')
 
 def FL(J, J_bar):
     r"""Longitudinal polarization fraction $F_L$"""
@@ -445,6 +448,7 @@ _observables = {
 'A7': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 7), 'tex': r'A_7', 'desc': 'Angular CP asymmetry'},
 'A8': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 8), 'tex': r'A_8', 'desc': 'Angular CP asymmetry'},
 'A9': {'func_num': lambda J, J_bar: A_experiment_num(J, J_bar, 9), 'tex': r'A_9', 'desc': 'Angular CP asymmetry'},
+'AFBCP': {'func_num': AFBCP_experiment_num, 'tex': r'A_\text{FB}^\text{CP}', 'desc': 'CP asymmetry of the forward-backward asymmetry'},
 }
 # for the P observables, the convention of LHCb is used. This differs by a
 # sign in P_2 and P_3 from the convention in arXiv:1303.5794
