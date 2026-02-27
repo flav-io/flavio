@@ -52,13 +52,12 @@ class HelicityAmpsDeltaC_77p_polynomial(HelicityAmpsDeltaC):
         q2 = self.q2
         mB = self.mB
         mb = self.mb
-        q2_factor = q2/(2*mb*mB)
-        deltaC7_0   =( par[B+'->'+V+' deltaC7 a_0 Re']  + par[B+'->'+V+' deltaC7 b_0 Re'] *q2_factor
-                 +1j*( par[B+'->'+V+' deltaC7 a_0 Im']  + par[B+'->'+V+' deltaC7 b_0 Im'] *q2_factor ))
-        deltaC7p_pl  =( par[B+'->'+V+' deltaC7p a_+ Re']  + par[B+'->'+V+' deltaC7p b_+ Re'] *q2_factor
-                 +1j*( par[B+'->'+V+' deltaC7p a_+ Im']  + par[B+'->'+V+' deltaC7p b_+ Im'] *q2_factor ))
-        deltaC7_mi  =( par[B+'->'+V+' deltaC7 a_- Re']  + par[B+'->'+V+' deltaC7 b_- Re'] *q2_factor
-                 +1j*( par[B+'->'+V+' deltaC7 a_- Im']  + par[B+'->'+V+' deltaC7 b_- Im'] *q2_factor ))
+        deltaC7_0   =( par[B+'->'+V+' deltaC7 a_0 Re']  + par[B+'->'+V+' deltaC7 b_0 Re']  *q2/mB**2
+                 +1j*( par[B+'->'+V+' deltaC7 a_0 Im']  + par[B+'->'+V+' deltaC7 b_0 Im']  *q2/mB**2 )) *mB/(2*mb)
+        deltaC7p_pl =( par[B+'->'+V+' deltaC7p a_+ Re'] + par[B+'->'+V+' deltaC7p b_+ Re'] *q2/mB**2
+                 +1j*( par[B+'->'+V+' deltaC7p a_+ Im'] + par[B+'->'+V+' deltaC7p b_+ Im'] *q2/mB**2 )) *mB/(2*mb)
+        deltaC7_mi  =( par[B+'->'+V+' deltaC7 a_- Re']  + par[B+'->'+V+' deltaC7 b_- Re']  *q2/mB**2
+                 +1j*( par[B+'->'+V+' deltaC7 a_- Im']  + par[B+'->'+V+' deltaC7 b_- Im']  *q2/mB**2 )) *mB/(2*mb)
         ha = {}
         ha['0', 'V'] = self.ha_deltaC(deltaC7_0, '7')['0', 'V']
         ha['pl', 'V'] = self.ha_deltaC(deltaC7p_pl, '7p')['pl', 'V']
