@@ -141,9 +141,9 @@
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
   values: # see eq. (26) of arXiv:1503.05534v1
-    - B0->K*0 deltaC7 b_- Re: 0 ± 0.43 # ± 0.01 * (2*mb*mB)
-    - B+->K*+ deltaC7 b_- Re: 0 ± 0.43
-    - Bs->phi deltaC7 b_- Re: 0 ± 0.43
+    - B0->K*0 deltaC7 b_- Re: 0 ± 0.432 # ± 0.01 * (2*mb*mB)
+    - B+->K*+ deltaC7 b_- Re: 0 ± 0.432
+    - Bs->phi deltaC7 b_- Re: 0 ± 0.432
   correlation:
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
@@ -183,9 +183,9 @@
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
   values: # see eq. (26) of arXiv:1503.05534v1
-    - B0->K*0 deltaC7 b_- Im: 0 ± 0.43 # ± 0.01 * (2*mb*mB)
-    - B+->K*+ deltaC7 b_- Im: 0 ± 0.43
-    - Bs->phi deltaC7 b_- Im: 0 ± 0.43
+    - B0->K*0 deltaC7 b_- Im: 0 ± 0.432 # ± 0.01 * (2*mb*mB)
+    - B+->K*+ deltaC7 b_- Im: 0 ± 0.432
+    - Bs->phi deltaC7 b_- Im: 0 ± 0.432
   correlation:
     [[1, 0.99, 0.9], [1, 0.9], [1]] # B+/B0 correlation is 99%, B0/Bs is 90%
 -
