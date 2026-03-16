@@ -31,8 +31,10 @@ sampling = ["iminuit>=2.0"]
 [project.urls]
 Homepage = "https://flav-io.github.io"
 
-[tool.setuptools]
-packages = ["flavio"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["flavio*"]
+exclude = ["tests*"]
 
 [tool.setuptools.package-data]
 flavio = [
