@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
           path: _src/
@@ -40,14 +40,11 @@ jobs:
           fi
           popd
 
-      - name: Build bdist
+      - name: Build sdist and wheel
         shell: bash
         run: |
-          mkdir dist
-          pushd _src
-          python3 ./setup.py sdist -d ../dist/
-          python3 ./setup.py bdist_wheel -d ../dist/
-          popd
+          pip install build
+          python3 -m build _src/ --outdir dist/
           
       - name: Test installing the wheel
         shell: bash
