@@ -40,6 +40,10 @@ class TestBVll(unittest.TestCase):
         self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->K*mumu)", q2=1), 0, delta=0.01)
         self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->K*mumu)", q2=6), 0, delta=0.01)
         self.assertAlmostEqual(flavio.sm_prediction("ACP(B+->K*mumu)", q2=17), 0, delta=0.01)
+        # CP asymmetry of the forward-backward asymmetry should be close to 0
+        self.assertAlmostEqual(flavio.sm_prediction("AFBCP(B0->K*mumu)", q2=1), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("AFBCP(B0->K*mumu)", q2=6), 0, delta=0.01)
+        self.assertAlmostEqual(flavio.sm_prediction("AFBCP(B0->K*mumu)", q2=17), 0, delta=0.01)
         # this is just a very rough comparison to the literature
         delta = 0.2
         self.assertAlmostEqual(flavio.sm_prediction("P1(B0->K*mumu)", q2=3), 0, delta=delta)
@@ -69,6 +73,8 @@ class TestBVll(unittest.TestCase):
         flavio.sm_prediction("P1(B0->K*ee)", 5)
         flavio.sm_prediction("<Rmue>(B0->K*ll)", 2, 3)
         flavio.sm_prediction("Rmue(B0->K*ll)", 4)
+        flavio.sm_prediction("AFBCP(B0->K*mumu)", 6)
+        flavio.sm_prediction("<AFBCP>(B0->K*mumu)", 2, 3)
 
     def test_unphysical(self):
         # check BR calculation yields zero outside kinematical limits
