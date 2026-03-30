@@ -43,11 +43,14 @@ Contributors (in alphabetical order):
 - Jason Aebischer
 - Jorge Alda Gallo
 - Frederik Beaujean
+- Anja Beck
+- Alexandre Carvunis
 - Adam Falkowski
 - Tobias Felkl
 - Ece Gürler
 - Matěj Hudec
 - Matthew Kirk
+- Dmytro Kovalskyi
 - Jonathan Kriewald
 - Girish Kumar
 - Jacky Kumar
