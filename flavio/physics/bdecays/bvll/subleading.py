@@ -39,6 +39,52 @@ class HelicityAmpsDeltaC(object):
                     self.ff, wc, self.prefactor)
 
 
+# Temporary backward-compatibility shim for the old deltaC7/deltaC7p parameter
+# names (before flavio v2.7). Maps old full parameter keys to (new_key, type)
+# where type 'a' means rescale by 2*mb/mB, 'b' by 2*mb*mB.
+# This mapping and the associated migration code will be removed in a future
+# version of flavio.
+_OLD_DELTAC7_MAP = {
+    'B0->K*0 deltaC7 a_0 Re':  ('B0->K*0 delta_C7 a_0 Re', 'a'),
+    'B0->K*0 deltaC7 a_0 Im':  ('B0->K*0 delta_C7 a_0 Im', 'a'),
+    'B0->K*0 deltaC7 b_0 Re':  ('B0->K*0 delta_C7 b_0 Re', 'b'),
+    'B0->K*0 deltaC7 b_0 Im':  ('B0->K*0 delta_C7 b_0 Im', 'b'),
+    'B0->K*0 deltaC7 a_- Re':  ('B0->K*0 delta_C7 a_- Re', 'a'),
+    'B0->K*0 deltaC7 a_- Im':  ('B0->K*0 delta_C7 a_- Im', 'a'),
+    'B0->K*0 deltaC7 b_- Re':  ('B0->K*0 delta_C7 b_- Re', 'b'),
+    'B0->K*0 deltaC7 b_- Im':  ('B0->K*0 delta_C7 b_- Im', 'b'),
+    'B0->K*0 deltaC7p a_+ Re': ('B0->K*0 delta_C7p a_+ Re', 'a'),
+    'B0->K*0 deltaC7p a_+ Im': ('B0->K*0 delta_C7p a_+ Im', 'a'),
+    'B0->K*0 deltaC7p b_+ Re': ('B0->K*0 delta_C7p b_+ Re', 'b'),
+    'B0->K*0 deltaC7p b_+ Im': ('B0->K*0 delta_C7p b_+ Im', 'b'),
+    'B+->K*+ deltaC7 a_0 Re':  ('B+->K*+ delta_C7 a_0 Re', 'a'),
+    'B+->K*+ deltaC7 a_0 Im':  ('B+->K*+ delta_C7 a_0 Im', 'a'),
+    'B+->K*+ deltaC7 b_0 Re':  ('B+->K*+ delta_C7 b_0 Re', 'b'),
+    'B+->K*+ deltaC7 b_0 Im':  ('B+->K*+ delta_C7 b_0 Im', 'b'),
+    'B+->K*+ deltaC7 a_- Re':  ('B+->K*+ delta_C7 a_- Re', 'a'),
+    'B+->K*+ deltaC7 a_- Im':  ('B+->K*+ delta_C7 a_- Im', 'a'),
+    'B+->K*+ deltaC7 b_- Re':  ('B+->K*+ delta_C7 b_- Re', 'b'),
+    'B+->K*+ deltaC7 b_- Im':  ('B+->K*+ delta_C7 b_- Im', 'b'),
+    'B+->K*+ deltaC7p a_+ Re': ('B+->K*+ delta_C7p a_+ Re', 'a'),
+    'B+->K*+ deltaC7p a_+ Im': ('B+->K*+ delta_C7p a_+ Im', 'a'),
+    'B+->K*+ deltaC7p b_+ Re': ('B+->K*+ delta_C7p b_+ Re', 'b'),
+    'B+->K*+ deltaC7p b_+ Im': ('B+->K*+ delta_C7p b_+ Im', 'b'),
+    'Bs->phi deltaC7 a_0 Re':  ('Bs->phi delta_C7 a_0 Re', 'a'),
+    'Bs->phi deltaC7 a_0 Im':  ('Bs->phi delta_C7 a_0 Im', 'a'),
+    'Bs->phi deltaC7 b_0 Re':  ('Bs->phi delta_C7 b_0 Re', 'b'),
+    'Bs->phi deltaC7 b_0 Im':  ('Bs->phi delta_C7 b_0 Im', 'b'),
+    'Bs->phi deltaC7 a_- Re':  ('Bs->phi delta_C7 a_- Re', 'a'),
+    'Bs->phi deltaC7 a_- Im':  ('Bs->phi delta_C7 a_- Im', 'a'),
+    'Bs->phi deltaC7 b_- Re':  ('Bs->phi delta_C7 b_- Re', 'b'),
+    'Bs->phi deltaC7 b_- Im':  ('Bs->phi delta_C7 b_- Im', 'b'),
+    'Bs->phi deltaC7p a_+ Re': ('Bs->phi delta_C7p a_+ Re', 'a'),
+    'Bs->phi deltaC7p a_+ Im': ('Bs->phi delta_C7p a_+ Im', 'a'),
+    'Bs->phi deltaC7p b_+ Re': ('Bs->phi delta_C7p b_+ Re', 'b'),
+    'Bs->phi deltaC7p b_+ Im': ('Bs->phi delta_C7p b_+ Im', 'b'),
+}
+_OLD_DELTAC7_KEYS = frozenset(_OLD_DELTAC7_MAP)
+
+
 class HelicityAmpsDeltaC_77p_polynomial(HelicityAmpsDeltaC):
     r"""Helicity amps from an effective shift in the Wilson coefficients
     $C_7$ (for the 0 and $-$ amplitudes) and $C_7'$ (for the $+$) amplitude
@@ -49,38 +95,31 @@ class HelicityAmpsDeltaC_77p_polynomial(HelicityAmpsDeltaC):
     # Temporary backward-compatibility shim for the old deltaC7/deltaC7p
     # parameter names. This method and the old parameter names will be
     # removed in a future version of flavio.
-    def _migrate_old_params(self):
+    @staticmethod
+    def _migrate_old_params(par, mb, mB):
         """If old-style deltaC7/deltaC7p parameters are found in par,
         rescale them to the new delta_C7/delta_C7p convention and warn."""
-        par = self.par
-        prefix = self.B + '->' + self.V
-        mb = self.mb
-        mB = self.mB
-        for old_name, new_name in [('deltaC7', 'delta_C7'),
-                                   ('deltaC7p', 'delta_C7p')]:
-            for coeff in ['a_0', 'b_0', 'a_+', 'b_+', 'a_-', 'b_-']:
-                for ri in ['Re', 'Im']:
-                    old_key = '{} {} {} {}'.format(prefix, old_name, coeff, ri)
-                    if old_key in par:
-                        new_key = '{} {} {} {}'.format(prefix, new_name, coeff, ri)
-                        if coeff.startswith('a'):
-                            par[new_key] = par[old_key] * 2 * mb / mB
-                        else:
-                            par[new_key] = par[old_key] * 2 * mb * mB
-                        warnings.warn(
-                            "Parameter '{}' uses the old convention and has "
-                            "been rescaled and written to '{}', overwriting "
-                            "any existing value. Support for the old parameter "
-                            "names will be removed in a future version of "
-                            "flavio. Please update to the new delta_C7/"
-                            "delta_C7p parameterization introduced in "
-                            "flavio v2.7."
-                            .format(old_key, new_key),
-                            FutureWarning
-                        )
+        for old_key in _OLD_DELTAC7_KEYS & par.keys():
+            new_key, coeff_type = _OLD_DELTAC7_MAP[old_key]
+            if coeff_type == 'a':
+                par[new_key] = par[old_key] * 2 * mb / mB
+            else:
+                par[new_key] = par[old_key] * 2 * mb * mB
+            warnings.warn(
+                "Parameter '{}' uses the old convention and has "
+                "been rescaled and written to '{}', overwriting "
+                "any existing value. Support for the old parameter "
+                "names will be removed in a future version of "
+                "flavio. Please update to the new delta_C7/"
+                "delta_C7p parameterization introduced in "
+                "flavio v2.7."
+                .format(old_key, new_key),
+                FutureWarning
+            )
 
     def __call__(self):
-        self._migrate_old_params() # Temporary backward-compatibility shim for the old deltaC7/deltaC7p parameter names
+        if _OLD_DELTAC7_KEYS & self.par.keys():
+            self._migrate_old_params(self.par, self.mb, self.mB)
         par = self.par
         B = self.B
         V = self.V
