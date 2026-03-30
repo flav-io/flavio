@@ -32,9 +32,7 @@ sampling = ["iminuit>=2.0"]
 Homepage = "https://flav-io.github.io"
 
 [tool.setuptools.packages.find]
-where = ["."]
 include = ["flavio*"]
-exclude = ["tests*"]
 
 [tool.setuptools.package-data]
 flavio = [
