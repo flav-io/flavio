@@ -2,6 +2,7 @@ r"""Functions to parametrize subleading hadronic effects in $B\to V\ell^+\ell^-$
 decays."""
 
 
+import warnings
 import flavio
 from flavio.classes import AuxiliaryQuantity, Implementation
 from flavio.physics.common import conjugate_par
@@ -45,19 +46,51 @@ class HelicityAmpsDeltaC_77p_polynomial(HelicityAmpsDeltaC):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    # Temporary backward-compatibility shim for the old deltaC7/deltaC7p
+    # parameter names. This method and the old parameter names will be
+    # removed in a future version of flavio.
+    def _migrate_old_params(self):
+        """If old-style deltaC7/deltaC7p parameters are found in par,
+        rescale them to the new delta_C7/delta_C7p convention and warn."""
+        par = self.par
+        prefix = self.B + '->' + self.V
+        mb = self.mb
+        mB = self.mB
+        for old_name, new_name in [('deltaC7', 'delta_C7'),
+                                   ('deltaC7p', 'delta_C7p')]:
+            for coeff in ['a_0', 'b_0', 'a_+', 'b_+', 'a_-', 'b_-']:
+                for ri in ['Re', 'Im']:
+                    old_key = '{} {} {} {}'.format(prefix, old_name, coeff, ri)
+                    if old_key in par:
+                        new_key = '{} {} {} {}'.format(prefix, new_name, coeff, ri)
+                        if coeff.startswith('a'):
+                            par[new_key] = par[old_key] * 2 * mb / mB
+                        else:
+                            par[new_key] = par[old_key] * 2 * mb * mB
+                        warnings.warn(
+                            "Parameter '{}' uses the old convention and has "
+                            "been rescaled to '{}'. The old parameter names "
+                            "will be removed in a future version of flavio. "
+                            "Please update to the new delta_C7/delta_C7p "
+                            "parameterization introduced in flavio v2.7."
+                            .format(old_key, new_key),
+                            FutureWarning
+                        )
+
     def __call__(self):
+        self._migrate_old_params() # Temporary backward-compatibility shim for the old deltaC7/deltaC7p parameter names
         par = self.par
         B = self.B
         V = self.V
         q2 = self.q2
         mB = self.mB
         mb = self.mb
-        deltaC7_0   =( par[B+'->'+V+' deltaC7 a_0 Re']  + par[B+'->'+V+' deltaC7 b_0 Re']  *q2/mB**2
-                 +1j*( par[B+'->'+V+' deltaC7 a_0 Im']  + par[B+'->'+V+' deltaC7 b_0 Im']  *q2/mB**2 )) *mB/(2*mb)
-        deltaC7p_pl =( par[B+'->'+V+' deltaC7p a_+ Re'] + par[B+'->'+V+' deltaC7p b_+ Re'] *q2/mB**2
-                 +1j*( par[B+'->'+V+' deltaC7p a_+ Im'] + par[B+'->'+V+' deltaC7p b_+ Im'] *q2/mB**2 )) *mB/(2*mb)
-        deltaC7_mi  =( par[B+'->'+V+' deltaC7 a_- Re']  + par[B+'->'+V+' deltaC7 b_- Re']  *q2/mB**2
-                 +1j*( par[B+'->'+V+' deltaC7 a_- Im']  + par[B+'->'+V+' deltaC7 b_- Im']  *q2/mB**2 )) *mB/(2*mb)
+        deltaC7_0   =( par[B+'->'+V+' delta_C7 a_0 Re']  + par[B+'->'+V+' delta_C7 b_0 Re']  *q2/mB**2
+                 +1j*( par[B+'->'+V+' delta_C7 a_0 Im']  + par[B+'->'+V+' delta_C7 b_0 Im']  *q2/mB**2 )) *mB/(2*mb)
+        deltaC7p_pl =( par[B+'->'+V+' delta_C7p a_+ Re'] + par[B+'->'+V+' delta_C7p b_+ Re'] *q2/mB**2
+                 +1j*( par[B+'->'+V+' delta_C7p a_+ Im'] + par[B+'->'+V+' delta_C7p b_+ Im'] *q2/mB**2 )) *mB/(2*mb)
+        deltaC7_mi  =( par[B+'->'+V+' delta_C7 a_- Re']  + par[B+'->'+V+' delta_C7 b_- Re']  *q2/mB**2
+                 +1j*( par[B+'->'+V+' delta_C7 a_- Im']  + par[B+'->'+V+' delta_C7 b_- Im']  *q2/mB**2 )) *mB/(2*mb)
         ha = {}
         ha['0', 'V'] = self.ha_deltaC(deltaC7_0, '7')['0', 'V']
         ha['pl', 'V'] = self.ha_deltaC(deltaC7p_pl, '7p')['pl', 'V']
@@ -109,7 +142,7 @@ for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ]:
 
 
     # Implementation: C7-C7'-polynomial
-    iname = process + ' deltaC7, 7p polynomial'
+    iname = process + ' delta_C7, 7p polynomial'
     i = Implementation(name=iname, quantity=quantity,
                    function=fct_deltaC7C7p_polynomial(B=had[0], V=had[1]))
     i.set_description(r"Effective shift in the Wilson coefficient $C_7(\mu_b)$"

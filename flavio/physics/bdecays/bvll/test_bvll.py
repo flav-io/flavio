@@ -169,6 +169,46 @@ class TestBVll(unittest.TestCase):
         self.assertAlmostEqual(nintegrate_pole(g, 0.0005, 2)/nintegrate(g, 0.0005, 2, epsrel=0.001),
                                1, delta=0.01)
 
+    # Test of temporary backward-compatibility shim for the old deltaC7/deltaC7p
+    # parameter names. This test will be removed in a future version of flavio.
+    def test_deltaC7_backward_compat(self):
+        """Test that old-style deltaC7/deltaC7p parameters are migrated
+        correctly, covering a-type (rescale by 2*mb/mB) and b-type
+        (rescale by 2*mb*mB) parameters."""
+        from flavio.physics.bdecays.bvll.subleading import HelicityAmpsDeltaC_77p_polynomial
+        from flavio.config import config
+        import flavio.physics.running.running as running
+        par = flavio.default_parameters.get_central_all()
+        q2 = 3.0
+        B, V = 'B0', 'K*0'
+        prefix = B + '->' + V
+        scale = config['renormalization scale']['bvll']
+        mb = running.get_mb(par, scale)
+        mB = par['m_' + B]
+        old_val = 0.1
+        # test cases: (old_name, new_name, coeff, rescale_factor)
+        test_cases = [
+            ('deltaC7', 'delta_C7', 'a_0 Re', 2 * mb / mB),
+            ('deltaC7', 'delta_C7', 'b_- Im', 2 * mb * mB),
+            ('deltaC7p', 'delta_C7p', 'a_+ Re', 2 * mb / mB),
+            ('deltaC7p', 'delta_C7p', 'b_+ Im', 2 * mb * mB),
+        ]
+        for old_name, new_name, coeff, factor in test_cases:
+            old_key = '{} {} {}'.format(prefix, old_name, coeff)
+            new_key = '{} {} {}'.format(prefix, new_name, coeff)
+            # result using old-style parameter (migrated by shim)
+            par_old = par.copy()
+            par_old[old_key] = old_val
+            with self.assertWarns(FutureWarning):
+                ha_old = HelicityAmpsDeltaC_77p_polynomial(B, V, par_old, q2)()
+            # result using new-style parameter with manually rescaled value
+            par_new = par.copy()
+            par_new[new_key] = old_val * factor
+            ha_new = HelicityAmpsDeltaC_77p_polynomial(B, V, par_new, q2)()
+            for key in ha_old:
+                self.assertAlmostEqual(ha_old[key], ha_new[key], places=10,
+                    msg="Mismatch for old param '{}'".format(old_key))
+
     def test_qcdf_warning(self):
         # computing the BR at q²=8 should warn
         with self.assertWarnsRegex(UserWarning, r"The QCDF corrections should not be trusted .*"):
