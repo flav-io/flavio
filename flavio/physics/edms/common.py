@@ -12,9 +12,9 @@ def get_m(par, f, scale, eft):
         return par['m_' + f]
     nf_out = eft_nf_out[eft]
     if f == 'u':
-        return flavio.physics.running.running.get_md(par, scale, nf_out=nf_out)
-    elif f == 'd':
         return flavio.physics.running.running.get_mu(par, scale, nf_out=nf_out)
+    elif f == 'd':
+        return flavio.physics.running.running.get_md(par, scale, nf_out=nf_out)
     elif f == 's':
         return flavio.physics.running.running.get_ms(par, scale, nf_out=nf_out)
     else:
