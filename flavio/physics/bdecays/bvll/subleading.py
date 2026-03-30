@@ -2,6 +2,7 @@ r"""Functions to parametrize subleading hadronic effects in $B\to V\ell^+\ell^-$
 decays."""
 
 
+import warnings
 import flavio
 from flavio.classes import AuxiliaryQuantity, Implementation
 from flavio.physics.common import conjugate_par
@@ -38,6 +39,52 @@ class HelicityAmpsDeltaC(object):
                     self.ff, wc, self.prefactor)
 
 
+# Temporary backward-compatibility shim for the old deltaC7/deltaC7p parameter
+# names (before flavio v2.7). Maps old full parameter keys to (new_key, type)
+# where type 'a' means rescale by 2*mb/mB, 'b' by 2*mb*mB.
+# This mapping and the associated migration code will be removed in a future
+# version of flavio.
+_OLD_DELTAC7_MAP = {
+    'B0->K*0 deltaC7 a_0 Re':  ('B0->K*0 delta_C7 a_0 Re', 'a'),
+    'B0->K*0 deltaC7 a_0 Im':  ('B0->K*0 delta_C7 a_0 Im', 'a'),
+    'B0->K*0 deltaC7 b_0 Re':  ('B0->K*0 delta_C7 b_0 Re', 'b'),
+    'B0->K*0 deltaC7 b_0 Im':  ('B0->K*0 delta_C7 b_0 Im', 'b'),
+    'B0->K*0 deltaC7 a_- Re':  ('B0->K*0 delta_C7 a_- Re', 'a'),
+    'B0->K*0 deltaC7 a_- Im':  ('B0->K*0 delta_C7 a_- Im', 'a'),
+    'B0->K*0 deltaC7 b_- Re':  ('B0->K*0 delta_C7 b_- Re', 'b'),
+    'B0->K*0 deltaC7 b_- Im':  ('B0->K*0 delta_C7 b_- Im', 'b'),
+    'B0->K*0 deltaC7p a_+ Re': ('B0->K*0 delta_C7p a_+ Re', 'a'),
+    'B0->K*0 deltaC7p a_+ Im': ('B0->K*0 delta_C7p a_+ Im', 'a'),
+    'B0->K*0 deltaC7p b_+ Re': ('B0->K*0 delta_C7p b_+ Re', 'b'),
+    'B0->K*0 deltaC7p b_+ Im': ('B0->K*0 delta_C7p b_+ Im', 'b'),
+    'B+->K*+ deltaC7 a_0 Re':  ('B+->K*+ delta_C7 a_0 Re', 'a'),
+    'B+->K*+ deltaC7 a_0 Im':  ('B+->K*+ delta_C7 a_0 Im', 'a'),
+    'B+->K*+ deltaC7 b_0 Re':  ('B+->K*+ delta_C7 b_0 Re', 'b'),
+    'B+->K*+ deltaC7 b_0 Im':  ('B+->K*+ delta_C7 b_0 Im', 'b'),
+    'B+->K*+ deltaC7 a_- Re':  ('B+->K*+ delta_C7 a_- Re', 'a'),
+    'B+->K*+ deltaC7 a_- Im':  ('B+->K*+ delta_C7 a_- Im', 'a'),
+    'B+->K*+ deltaC7 b_- Re':  ('B+->K*+ delta_C7 b_- Re', 'b'),
+    'B+->K*+ deltaC7 b_- Im':  ('B+->K*+ delta_C7 b_- Im', 'b'),
+    'B+->K*+ deltaC7p a_+ Re': ('B+->K*+ delta_C7p a_+ Re', 'a'),
+    'B+->K*+ deltaC7p a_+ Im': ('B+->K*+ delta_C7p a_+ Im', 'a'),
+    'B+->K*+ deltaC7p b_+ Re': ('B+->K*+ delta_C7p b_+ Re', 'b'),
+    'B+->K*+ deltaC7p b_+ Im': ('B+->K*+ delta_C7p b_+ Im', 'b'),
+    'Bs->phi deltaC7 a_0 Re':  ('Bs->phi delta_C7 a_0 Re', 'a'),
+    'Bs->phi deltaC7 a_0 Im':  ('Bs->phi delta_C7 a_0 Im', 'a'),
+    'Bs->phi deltaC7 b_0 Re':  ('Bs->phi delta_C7 b_0 Re', 'b'),
+    'Bs->phi deltaC7 b_0 Im':  ('Bs->phi delta_C7 b_0 Im', 'b'),
+    'Bs->phi deltaC7 a_- Re':  ('Bs->phi delta_C7 a_- Re', 'a'),
+    'Bs->phi deltaC7 a_- Im':  ('Bs->phi delta_C7 a_- Im', 'a'),
+    'Bs->phi deltaC7 b_- Re':  ('Bs->phi delta_C7 b_- Re', 'b'),
+    'Bs->phi deltaC7 b_- Im':  ('Bs->phi delta_C7 b_- Im', 'b'),
+    'Bs->phi deltaC7p a_+ Re': ('Bs->phi delta_C7p a_+ Re', 'a'),
+    'Bs->phi deltaC7p a_+ Im': ('Bs->phi delta_C7p a_+ Im', 'a'),
+    'Bs->phi deltaC7p b_+ Re': ('Bs->phi delta_C7p b_+ Re', 'b'),
+    'Bs->phi deltaC7p b_+ Im': ('Bs->phi delta_C7p b_+ Im', 'b'),
+}
+_OLD_DELTAC7_KEYS = frozenset(_OLD_DELTAC7_MAP)
+
+
 class HelicityAmpsDeltaC_77p_polynomial(HelicityAmpsDeltaC):
     r"""Helicity amps from an effective shift in the Wilson coefficients
     $C_7$ (for the 0 and $-$ amplitudes) and $C_7'$ (for the $+$) amplitude
@@ -45,17 +92,46 @@ class HelicityAmpsDeltaC_77p_polynomial(HelicityAmpsDeltaC):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    # Temporary backward-compatibility shim for the old deltaC7/deltaC7p
+    # parameter names. This method and the old parameter names will be
+    # removed in a future version of flavio.
+    @staticmethod
+    def _migrate_old_params(par, mb, mB):
+        """If old-style deltaC7/deltaC7p parameters are found in par,
+        rescale them to the new delta_C7/delta_C7p convention and warn."""
+        for old_key in _OLD_DELTAC7_KEYS & par.keys():
+            new_key, coeff_type = _OLD_DELTAC7_MAP[old_key]
+            if coeff_type == 'a':
+                par[new_key] = par[old_key] * 2 * mb / mB
+            else:
+                par[new_key] = par[old_key] * 2 * mb * mB
+            warnings.warn(
+                "Parameter '{}' uses the old convention and has "
+                "been rescaled and written to '{}', overwriting "
+                "any existing value. Support for the old parameter "
+                "names will be removed in a future version of "
+                "flavio. Please update to the new delta_C7/"
+                "delta_C7p parameterization introduced in "
+                "flavio v2.7."
+                .format(old_key, new_key),
+                FutureWarning
+            )
+
     def __call__(self):
+        if _OLD_DELTAC7_KEYS & self.par.keys():
+            self._migrate_old_params(self.par, self.mb, self.mB)
         par = self.par
         B = self.B
         V = self.V
         q2 = self.q2
-        deltaC7_0   =( par[B+'->'+V+' deltaC7 a_0 Re']  + par[B+'->'+V+' deltaC7 b_0 Re'] *q2
-                 +1j*( par[B+'->'+V+' deltaC7 a_0 Im']  + par[B+'->'+V+' deltaC7 b_0 Im'] *q2 ))
-        deltaC7p_pl  =( par[B+'->'+V+' deltaC7p a_+ Re']  + par[B+'->'+V+' deltaC7p b_+ Re'] *q2
-                 +1j*( par[B+'->'+V+' deltaC7p a_+ Im']  + par[B+'->'+V+' deltaC7p b_+ Im'] *q2 ))
-        deltaC7_mi  =( par[B+'->'+V+' deltaC7 a_- Re']  + par[B+'->'+V+' deltaC7 b_- Re'] *q2
-                 +1j*( par[B+'->'+V+' deltaC7 a_- Im']  + par[B+'->'+V+' deltaC7 b_- Im'] *q2 ))
+        mB = self.mB
+        mb = self.mb
+        deltaC7_0   =( par[B+'->'+V+' delta_C7 a_0 Re']  + par[B+'->'+V+' delta_C7 b_0 Re']  *q2/mB**2
+                 +1j*( par[B+'->'+V+' delta_C7 a_0 Im']  + par[B+'->'+V+' delta_C7 b_0 Im']  *q2/mB**2 )) *mB/(2*mb)
+        deltaC7p_pl =( par[B+'->'+V+' delta_C7p a_+ Re'] + par[B+'->'+V+' delta_C7p b_+ Re'] *q2/mB**2
+                 +1j*( par[B+'->'+V+' delta_C7p a_+ Im'] + par[B+'->'+V+' delta_C7p b_+ Im'] *q2/mB**2 )) *mB/(2*mb)
+        deltaC7_mi  =( par[B+'->'+V+' delta_C7 a_- Re']  + par[B+'->'+V+' delta_C7 b_- Re']  *q2/mB**2
+                 +1j*( par[B+'->'+V+' delta_C7 a_- Im']  + par[B+'->'+V+' delta_C7 b_- Im']  *q2/mB**2 )) *mB/(2*mb)
         ha = {}
         ha['0', 'V'] = self.ha_deltaC(deltaC7_0, '7')['0', 'V']
         ha['pl', 'V'] = self.ha_deltaC(deltaC7p_pl, '7p')['pl', 'V']
@@ -107,7 +183,7 @@ for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ]:
 
 
     # Implementation: C7-C7'-polynomial
-    iname = process + ' deltaC7, 7p polynomial'
+    iname = process + ' delta_C7, 7p polynomial'
     i = Implementation(name=iname, quantity=quantity,
                    function=fct_deltaC7C7p_polynomial(B=had[0], V=had[1]))
     i.set_description(r"Effective shift in the Wilson coefficient $C_7(\mu_b)$"
