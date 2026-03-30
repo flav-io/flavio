@@ -324,12 +324,6 @@ B0->K*0 deltaC9 a_0 Re:
 B0->K*0 deltaC9 b_0 Re:
   tex: $\text{Re}\,b^{\Delta_9}_0$
   description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
-B0->K*0 delta_C7 a_+ Re:
-  tex: $\text{Re}\,a^{\Delta_7}_+$
-  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
-B0->K*0 delta_C7 b_+ Re:
-  tex: $\text{Re}\,b^{\Delta_7}_+$
-  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 delta_C7p a_+ Re:
   tex: $\text{Re}\,a^{\Delta_7^\prime}_+$
   description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
@@ -353,12 +347,6 @@ B+->K*+ deltaC9 a_0 Re:
   description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ deltaC9 b_0 Re:
   tex: $\text{Re}\,b^{\Delta_9}_0$
-  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
-B+->K*+ delta_C7 a_+ Re:
-  tex: $\text{Re}\,a^{\Delta_7}_+$
-  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
-B+->K*+ delta_C7 b_+ Re:
-  tex: $\text{Re}\,b^{\Delta_7}_+$
   description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ delta_C7p a_+ Re:
   tex: $\text{Re}\,a^{\Delta_7^\prime}_+$
@@ -384,12 +372,6 @@ Bs->phi deltaC9 a_0 Re:
 Bs->phi delta_C7 b_0 Re:
   tex: $\text{Re}\,b^{\Delta_7}_0$
   description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
-Bs->phi delta_C7 a_+ Re:
-  tex: $\text{Re}\,a^{\Delta_7}_+$
-  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
-Bs->phi delta_C7 b_+ Re:
-  tex: $\text{Re}\,b^{\Delta_7}_+$
-  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi delta_C7p a_+ Re:
   tex: $\text{Re}\,a^{\Delta_7^\prime}_+$
   description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
@@ -413,12 +395,6 @@ B0->K*0 deltaC9 a_0 Im:
   description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 deltaC9 b_0 Im:
   tex: $\text{Im}\,b^{\Delta_9}_0$
-  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
-B0->K*0 delta_C7 a_+ Im:
-  tex: $\text{Im}\,a^{\Delta_7}_+$
-  description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
-B0->K*0 delta_C7 b_+ Im:
-  tex: $\text{Im}\,b^{\Delta_7}_+$
   description: Parameter for subleading hadronic effects in $B^0\to K^{*0}\ell^+\ell^-$ at low $q^2$
 B0->K*0 delta_C7p a_+ Im:
   tex: $\text{Im}\,a^{\Delta_7^\prime}_+$
@@ -444,12 +420,6 @@ B+->K*+ deltaC9 a_0 Im:
 B+->K*+ deltaC9 b_0 Im:
   tex: $\text{Im}\,b^{\Delta_9}_0$
   description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
-B+->K*+ delta_C7 a_+ Im:
-  tex: $\text{Im}\,a^{\Delta_7}_+$
-  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
-B+->K*+ delta_C7 b_+ Im:
-  tex: $\text{Im}\,b^{\Delta_7}_+$
-  description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
 B+->K*+ delta_C7p a_+ Im:
   tex: $\text{Im}\,a^{\Delta_7^\prime}_+$
   description: Parameter for subleading hadronic effects in $B^+\to K^{*+}\ell^+\ell^-$ at low $q^2$
@@ -473,12 +443,6 @@ Bs->phi deltaC9 a_0 Im:
   description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi deltaC9 b_0 Im:
   tex: $\text{Im}\,b^{\Delta_9}_0$
-  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
-Bs->phi delta_C7 a_+ Im:
-  tex: $\text{Im}\,a^{\Delta_7}_+$
-  description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
-Bs->phi delta_C7 b_+ Im:
-  tex: $\text{Im}\,b^{\Delta_7}_+$
   description: Parameter for subleading hadronic effects in $B_s\to \phi\ell^+\ell^-$ at low $q^2$
 Bs->phi delta_C7p a_+ Im:
   tex: $\text{Im}\,a^{\Delta_7^\prime}_+$
