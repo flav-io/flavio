@@ -69,10 +69,12 @@ class HelicityAmpsDeltaC_77p_polynomial(HelicityAmpsDeltaC):
                             par[new_key] = par[old_key] * 2 * mb * mB
                         warnings.warn(
                             "Parameter '{}' uses the old convention and has "
-                            "been rescaled to '{}'. Support for the old parameter "
-                            "names will be removed in a future version of flavio. "
-                            "Please update to the new delta_C7/delta_C7p "
-                            "parameterization introduced in flavio v2.7."
+                            "been rescaled and written to '{}', overwriting "
+                            "any existing value. Support for the old parameter "
+                            "names will be removed in a future version of "
+                            "flavio. Please update to the new delta_C7/"
+                            "delta_C7p parameterization introduced in "
+                            "flavio v2.7."
                             .format(old_key, new_key),
                             FutureWarning
                         )
