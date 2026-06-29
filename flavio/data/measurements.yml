@@ -8106,11 +8106,41 @@ m_W Tevatron:
   values:
     m_W: 80.387 ± 0.016
 
+m_W CDF 2022:
+  experiment: CDF
+  inspire: CDF:2022hxs
+  values:
+    m_W: 80.4335 +- 0.0094
+
 m_W ATLAS 2017:
   experiment: ATLAS
   inspire: Aaboud:2017svj
   values:
     m_W: 80.3695 ± 0.0185
+
+m_W ATLAS 2024:
+  experiment: ATLAS
+  inspire: ATLAS:2024erm
+  values:
+    m_W: 80.3665 ± 0.0159
+
+m_W CMS 2024:
+  experiment: CMS
+  inspire: CMS:2024lrd
+  values:
+    m_W: 80.3602 ± 0.0099
+
+m_W LHCb 2021:
+  experiment: LHCb
+  inspire: LHCb:2021bjt
+  values:
+    m_W: 80.354 ± 0.023 ± 0.010 ± 0.017 ± 0.009 # errors are stat, exp, theory, PDF
+
+m_W PDG 2026:
+  experiment: CMS, ATLAS, LHCb, D0, LEP
+  inspire: ParticleDataGroup:2026mpi
+  values:
+    m_W: 80.3625 ± 0.0077
 
 DELPHI Z LFV:
   experiment: DELPHI
