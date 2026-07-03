@@ -49,6 +49,13 @@ PDG B->taunu 2018:
   values:
     BR(B+->taunu): (1.09 ± 0.24) e-4
 
+PDG B->taunu 2026:
+  experiment: PDG
+  url: https://pdglive.lbl.gov/BranchingRatio.action?desig=184&parCode=S041&home=MXXX045
+  inspire: ParticleDataGroup:2026mpi
+  values:
+    BR(B+->taunu): (1.12 ± 0.19) e-4
+
 BaBar Btautau 2005:
   experiment: BaBar
   inspire: Aubert:2005qw
