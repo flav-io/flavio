@@ -122,6 +122,21 @@ HFAG osc summer 2015:
     a_fs_d: -0.0015 ± 0.0017
     a_fs_s: -0.0075 ± 0.0041
 
+# When updating DeltaM_d or DeltaM_s,
+# DeltaM_d/DeltaM_s under "CKM ratio measurements"
+# should be updated as well!
+HFLAV osc PDG 2026:
+  experiment: HFLAV
+  inspire: HeavyFlavorAveragingGroupHFLAV:2024ctg
+  url: https://hflav-eos.web.cern.ch/hflav-eos/osc/PDG_2026/
+  values:
+    # to convert numbers from inverse picoseconds to GeV, divide by
+    # ps = 1.519267515435317e+12 [1/GeV],
+    DeltaM_d: 3.336(13)e-13 # this is 0.5068 ± 0.0019 ps^-1
+    DeltaM_s: 1.16938(39)e-11 # this is 17.766 ± 0.006  ps^-1
+    a_fs_d: -0.0021 ± 0.0017
+    a_fs_s: -0.0006 ± 0.0028
+
 HFAG UT summer 2015:
   experiment: HFAG
   inspire: Amhis:2014hma
@@ -5044,7 +5059,7 @@ CKM ratio measurements:
     together with the individual measurements!
   values:
     RKpi(P+->munu): 1.3368 ± 0.0032
-    DeltaM_d/DeltaM_s: 0.02852 ± 0.00011
+    DeltaM_d/DeltaM_s: 0.02853 ± 0.00011
 
 # note: the angular observables in that measurement were partly incorrect
 # due to a mistake in the analysis and are superseded by
