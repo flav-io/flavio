@@ -23327,3 +23327,60 @@ B lifetime ratios:
   inspire: HFLAV:2022esi
   values:
     tau_B+/tau_Bd: 1.076  ± 0.004
+
+CMS Bs->phimumu 2026: # CMS-PAS-BPH-23-003
+  experiment: CMS
+  inspire: CMS:2026mhf
+  values:
+    - name: <FL>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 4
+      value: 0.592+0.054-0.048 ± 0.041
+    - name: <FL>(Bs->phimumu)
+      q2min: 4
+      q2max: 6
+      value: 0.716+0.061-0.063 ± 0.042
+    - name: <FL>(Bs->phimumu)
+      q2min: 6
+      q2max: 8
+      value: 0.645+0.051-0.059 ± 0.037
+    - name: <FL>(Bs->phimumu)
+      q2min: 11
+      q2max: 12.5
+      value: 0.431+0.040-0.038 ± 0.022
+    - name: <FL>(Bs->phimumu)
+      q2min: 15
+      q2max: 16
+      value: 0.392+0.048-0.053 ± 0.028
+    - name: <FL>(Bs->phimumu)
+      q2min: 16
+      q2max: 19
+      value: 0.368+0.053-0.047 ± 0.018
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 1.1
+      q2max: 2.5
+      value: 2.58 ± 0.27 ± 0.07 ± 0.10 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 2.5
+      q2max: 4
+      value: 2.18 ± 0.23 ± 0.03 ± 0.08 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 4
+      q2max: 6
+      value: 2.55 ± 0.22 ± 0.03 ± 0.10 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 6
+      q2max: 8
+      value: 3.33 ± 0.25 ± 0.04 ± 0.13 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 11
+      q2max: 12.5
+      value: 4.93 ± 0.29 ± 0.08 ± 0.19 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 15
+      q2max: 16
+      value: 4.77 ± 0.34 ± 0.07 ± 0.18 e-8
+    - name: <dBR/dq2>(Bs->phimumu)
+      q2min: 16
+      q2max: 19
+      value: 4.26 ± 0.32 ± 0.18 ± 0.16 e-8
