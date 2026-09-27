@@ -29,6 +29,7 @@ keV = k * eV
 MeV = M * eV
 TeV = T * eV
 
+hbar = 1
 h = (2 * pi) * hbar
 
 # Joule (eV / (e/C) = V * C = J)
