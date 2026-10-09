@@ -4074,7 +4074,7 @@ LHCb B+->Kmumu BR 2014:
 
 CMS B+->Kmumu BR 2024:
   experiment: CMS
-  inspire: CMS:2024aev
+  inspire: CMS:2024syx
   values:
     - name: <dBR/dq2>(B+->Kmumu)
       q2min: 0.1
