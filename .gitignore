@@ -1,6 +1,8 @@
-nosetests.json
-.ropeproject
 .coverage
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+.venv/
 .DS_Store
 
 # editor tmp files
