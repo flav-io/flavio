@@ -2,10 +2,10 @@ r"""Constants for unit conversion."""
 
 from math import pi
 
-# exact definition of constants in SI as of 2019
-e_SI = 1.602176634e-19  # e in C
-h_SI = 6.62607015e-34  # h in Js
-c_SI = 299792458  # c in m/s
+# exact definition of dimensionless conversion factors for constants in SI as of 2019
+e_SI = 1.602176634e-19  # e/C
+h_SI = 6.62607015e-34  # h/(Js)
+c_SI = 299792458  # c/(m/s)
 
 # SI prefixes
 T = 1e12
@@ -21,20 +21,24 @@ f = 1e-15
 # Natural Units
 
 GeV = 1
+hbar = 1
+c = 1
+
 eV = GeV / G
 keV = k * eV
 MeV = M * eV
 TeV = T * eV
 
-hbar = 1
-h = hbar / (2 * pi)
+h = (2 * pi) * hbar
 
-# Joule
+# Joule (eV / (e/C) = V * C = J)
 J = eV / e_SI
-# second
-s = 1 / (J * h_SI / (2 * pi))
-# meter
-meter = s / c_SI  # not to confuse with milli!
+
+# second (h / (h/(Js)) / J = Js / J = s)
+s = h / h_SI / J
+
+# meter (c / (c/(m/s)) * s = m/s * s = m)
+meter = c / c_SI * s # not to confuse with milli!
 
 ms = milli * s
 ns = n * s
