@@ -10,53 +10,53 @@ ps = 1e-12*s
 
 
 class TestPDG(unittest.TestCase):
-    year = 2022
+    year = 2026
     FlavioParticle.load_table(p_data.basepath / f"particle{year}.csv")
     def test_pdg(self):
         # check some tex names and masses
         to_check = {
-            'Bs': ('B_{s}', 5.36692),
+            'Bs': ('B_{s}', 5.36693),
             'Bc': ('B_{c}', 6.27447),
             'Bs*': ('B_{s}^{*}', 5.4154),
-            'B*+': ('B^{*+}', 5.3247100000000005),
-            'B*0': ('B^{*0}', 5.3247100000000005),
-            'B+': ('B^{+}', 5.27934),
-            'B0': ('B^{0}', 5.27966),
+            'B*+': ('B^{*+}', 5.32475),
+            'B*0': ('B^{*0}', 5.32475),
+            'B+': ('B^{+}', 5.27941),
+            'B0': ('B^{0}', 5.27972),
             'Ds': ('D_{s}', 1.96835),
             'Ds*': ('D_{s}^{*}', 2.1122),
             'D+': ('D^{+}', 1.86966),
             'D0': ('D^{0}', 1.86484),
-            'h': ('H', 125.25),
+            'h': ('H', 125.13000000000001),
             'J/psi': ('J/\\psi', 3.0969),
             'KL': ('K_{L}', 0.497611),
             'KS': ('K_{S}', 0.497611),
-            'K*+': ('K^{*+}', 0.8955000000000001),
-            'K*0': ('K^{*0}', 0.89555),
+            'K*+': ('K^{*+}', 0.89188),
+            'K*0': ('K^{*0}', 0.8955599999999999),
             'K+': ('K^{+}', 0.49367700000000003),
             'K0': ('K^{0}', 0.497611),
             'Lambda': ('\\Lambda', 1.115683),
-            'Lambdab': ('\\Lambda_{b}', 5.6196),
+            'Lambdab': ('\\Lambda_{b}', 5.6195699999999995),
             'Lambdac': ('\\Lambda_{c}', 2.28646),
             'omega': ('\\omega', 0.78266),
-            'D*0': ('D^{*0}', 2.00685),
-            'D*+': ('D^{*+}', 2.01026),
-            'W': ('W', 80.379),
-            'Z': ('Z', 91.1876),
-            'e': ('e', 0.0005109989499999999),
+            'D*0': ('D^{*0}', 2.00686),
+            'D*+': ('D^{*+}', 2.0102700000000002),
+            'W': ('W', 80.362),
+            'Z': ('Z', 91.1879),
+            'e': ('e', 0.0005109989506900001),
             'eta': ('\\eta', 0.547862),
             'f0': ('f_{0}', 0.99),
             'mu': ('\\mu', 0.10565837550000001),
-            'phi': ('\\phi', 1.019461),
+            'phi': ('\\phi', 1.01946),
             'pi+': ('\\pi^{+}', 0.13957039000000002),
             'pi0': ('\\pi^{0}', 0.1349768),
-            'psi(2S)': ('\\psi_{2S}', 3.6861),
-            'rho+': ('\\rho^{+}', 0.7752600000000001),
+            'psi(2S)': ('\\psi_{2S}', 3.686097),
+            'rho+': ('\\rho^{+}', 0.7751100000000001),
             'rho0': ('\\rho^{0}', 0.7752600000000001),
-            't': ('t', 172.5),
-            'tau': ('\\tau', 1.7768599999999999),
+            't': ('t', 172.6),
+            'tau': ('\\tau', 1.7769300000000001),
             'u': ('u', 0.00216),
-            'p': ('p', 0.93827208816),
-            'n': ('n', 0.9395654205)
+            'p': ('p', 0.9382720894300001),
+            'n': ('n', 0.9395654219)
         }
         for flavio_name, (tex_test, mass_test) in to_check.items():
             particle = FlavioParticle.from_flavio_name(flavio_name)
@@ -65,9 +65,9 @@ class TestPDG(unittest.TestCase):
         # check B_s lifetime and errors in picoseconds
         particle = FlavioParticle.from_flavio_name('Bs')
         tauBs = particle.flavio_tau[3:]
-        self.assertAlmostEqual(tauBs[0]/ps, 1.520, places=3)
-        self.assertAlmostEqual(tauBs[1]/ps, 0.005, places=3)
-        self.assertAlmostEqual(tauBs[2]/ps, 0.005, places=3)
+        self.assertAlmostEqual(tauBs[0]/ps, 1.515, places=3)
+        self.assertAlmostEqual(tauBs[1]/ps, 0.006, places=3)
+        self.assertAlmostEqual(tauBs[2]/ps, 0.006, places=3)
 
 class TestParameters(unittest.TestCase):
     def test_parameters(self):
@@ -76,7 +76,7 @@ class TestParameters(unittest.TestCase):
         self.assertEqual(par_dict['alpha_s'],  0.1184)
         self.assertEqual(par_dict['Gamma12_Bs_c'],  -48.0)
         # parameters from the PDG file
-        self.assertEqual(par_dict['m_W'], 80.379)
+        self.assertEqual(par_dict['m_W'], 80.362)
         self.assertEqual(par_dict['tau_phi'], 1/4.249e-3)
         # just check if the random values are numbers
         for par_random in default_parameters.get_random_all().values():
