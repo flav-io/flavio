@@ -5,9 +5,14 @@ import flavio
 import numpy as np
 from collections import defaultdict
 import multiprocessing
-# Use explicit 'fork' context for compatibility with Python 3.14+
-# where the default start method changed to 'forkserver'
-Pool = multiprocessing.get_context('fork').Pool
+# Use 'fork' so that worker processes are copies of the main process
+# (e.g. they know observables defined at runtime). Python 3.14 made
+# 'forkserver' the default on Linux; macOS has used 'spawn' since 3.8.
+# Fall back to 'spawn' where 'fork' is not available (Windows).
+try:
+    Pool = multiprocessing.get_context('fork').Pool
+except ValueError:
+    Pool = multiprocessing.get_context('spawn').Pool
 from functools import partial
 import warnings
 
