@@ -12,11 +12,11 @@ wc_obj = flavio.WilsonCoefficients()
 class TestTaulnunu(unittest.TestCase):
     def test_taulnunu_exp(self):
         # compare to the experimental values
-        # cf. eq. (95) of 1705.00929
+        # cf. eq. (95) of 1705.00929 (which used an older value of the tau mass)
         self.assertAlmostEqual(flavio.sm_prediction('BR(tau->mununu)') / 0.1739,
-                               1 / 1.0060, delta=0.0003)
+                               1 / 1.0060, delta=0.0005)
         self.assertAlmostEqual(flavio.sm_prediction('BR(tau->enunu)') / 0.1782,
-                               1 / 1.0022, delta=0.0003)
+                               1 / 1.0022, delta=0.0005)
 
     def test_taulnunu_wrongflavor(self):
         self.assertEqual(taulnunu.BR_taulnunu(wc_obj, par, 'e', 'mu', 'e'), 0)

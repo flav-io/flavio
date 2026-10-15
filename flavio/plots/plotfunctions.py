@@ -13,9 +13,14 @@ from math import sqrt
 import warnings
 import inspect
 import multiprocessing
-# Use explicit 'fork' context for compatibility with Python 3.14+
-# where the default start method changed to 'forkserver'
-Pool = multiprocessing.get_context('fork').Pool
+# Use 'fork' so that worker processes are copies of the main process
+# (e.g. they know observables defined at runtime). Python 3.14 made
+# 'forkserver' the default on Linux; macOS has used 'spawn' since 3.8.
+# Fall back to 'spawn' where 'fork' is not available (Windows).
+try:
+    Pool = multiprocessing.get_context('fork').Pool
+except ValueError:
+    Pool = multiprocessing.get_context('spawn').Pool
 from pickle import PicklingError
 from flavio.plots.colors import lighten_color, get_color
 
@@ -523,12 +528,18 @@ def likelihood_contour_data(
     - `steps`: number of grid steps in each dimension (total computing time is
       this number squared times the computing time of one `log_likelihood` call!)
     - `threads`: number of threads, defaults to 1. If greater than one,
-      computation of z values will be done in parallel.
+      computation of z values will be done in parallel. On Windows, the
+      worker processes start from a fresh Python interpreter, so
+      `log_likelihood` must be importable (e.g. defined in a module rather
+      than in a notebook).
     - `pool`: an instance of `multiprocessing.Pool` (or a compatible
       implementation, e.g. from `multiprocess` or `schwimmbad`). Overrides the
-      `threads` argument. The pool will be closed after use. Note: on Python
-      3.14+, if you create your own pool, use
-      `multiprocessing.get_context('fork').Pool()` to avoid pickling issues.
+      `threads` argument. The pool will be closed after use. Note: if you
+      create your own pool, use `multiprocessing.get_context('fork').Pool()`
+      so that the worker processes are copies of the main process; the
+      default start method on macOS and, as of Python 3.14, on Linux starts
+      them from a fresh interpreter instead ('fork' is not available on
+      Windows).
     """
     if xscale == 'linear':
         _x = np.linspace(x_min, x_max, steps)

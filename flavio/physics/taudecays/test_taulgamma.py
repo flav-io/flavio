@@ -71,4 +71,6 @@ class TestTauLGamma(unittest.TestCase):
             )
             for input_dict in input_dict_list
         ])
-        self.assertAlmostEqual(np.max(np.abs(1-BRs/compare_BRs)), 0, delta=0.002)
+        # flavio uses the tau lifetime and mass, compare_BR the measured
+        # BR(tau->enunu), so the two differ at the per mille level
+        self.assertAlmostEqual(np.max(np.abs(1-BRs/compare_BRs)), 0, delta=0.003)

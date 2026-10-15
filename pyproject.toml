@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61", "wheel"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -10,15 +10,29 @@ authors = [
 ]
 description = "A Python package for flavour physics phenomenology in the Standard Model and beyond"
 readme = {file = "README.md", content-type = "text/markdown"}
-license = {text = "MIT"}
-requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE.txt"]
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Topic :: Scientific/Engineering :: Physics",
+]
 dependencies = [
     "numpy>=1.20.0",
     "scipy",
     "pyyaml",
     "ckmutil>=1.2.0",
     "wilson>=2.5",
-    "particle>=0.21.0",
+    "particle>=1.0.0",
     "parton>=0.2.1",
 ]
 
@@ -29,6 +43,12 @@ sampling = ["iminuit>=2.0"]
 
 [project.urls]
 Homepage = "https://flav-io.github.io"
+Documentation = "https://flav-io.github.io/docs/"
+Source = "https://github.com/flav-io/flavio"
+Issues = "https://github.com/flav-io/flavio/issues"
+
+[dependency-groups]
+test = ["pytest>=8"]
 
 [tool.setuptools.packages.find]
 include = ["flavio*"]
@@ -48,3 +68,14 @@ flavio = [
     "physics/data/qcdf_interpolate/*",
     "physics/data/wcsm/*",
 ]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["flavio"]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
+
+[tool.coverage.run]
+source = ["flavio"]
+
+[tool.coverage.report]
+omit = ["flavio/physics/bdecays/bvll/_qcdf_interpolate_write.py"]

@@ -5,59 +5,69 @@ on:
     types:
       - published
 
+permissions:
+  contents: read
+
 jobs:
-  check-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
-          submodules: true
-          path: _src/
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
 
       - name: Install Python dependencies
-        run: |
-          pushd _src
-          pip install .[sampling,plotting,testing]
-          pip install pytest
-          popd
+        run: python -m pip install .[sampling,plotting] --group test
 
       - name: Test with pytest
-        run: |
-          pushd _src
-          pytest
-          popd
+        run: python -m pytest
 
       - name: Verify release version matches source code version
         shell: bash
         run: |
-          pushd _src
-          export TAG_VERSION=${GITHUB_REF##refs/tags/v}
-          export SRC_VERSION=$(python3 -c "from flavio._version import __version__; print(__version__)")
-          if [[ ${TAG_VERSION} != ${SRC_VERSION} ]] ; then
-            echo "tag/release version and source code version disagree, exiting"
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          SRC_VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          if [[ "${TAG_VERSION}" != "${SRC_VERSION}" ]] ; then
+            echo "tag/release version (${TAG_VERSION}) and source code version (${SRC_VERSION}) disagree, exiting"
             exit 1
           fi
-          popd
 
       - name: Build sdist and wheel
-        shell: bash
         run: |
-          pip install build
-          python3 -m build _src/ --outdir dist/
-          
+          python -m pip install build twine
+          python -m build --outdir dist/
+          python -m twine check --strict dist/*
+
       - name: Test installing the wheel
         shell: bash
-        run: |
-          python3 -m pip install dist/flavio-*.whl
-          
+        run: python -m pip install --force-reinstall dist/flavio-*.whl
+
       - name: Upload build as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: flavio-dist-${{ github.sha }}
+          name: flavio-dist
+          path: dist
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/flavio/
+    permissions:
+      id-token: write  # for PyPI Trusted Publishing
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: flavio-dist
           path: dist
 
       - name: Upload to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
