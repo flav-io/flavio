@@ -150,6 +150,9 @@ implementation:
   Lambdab->Lambdall subleading effects at low q2: Lambdab->Lambdall deltaC7 polynomial
   Lambdab->Lambdall subleading effects at high q2: Lambdab->Lambdall deltaC9 shift
 
+  # B->Vll angular coefficient amplitude
+  B->Vll amplitude formalism: Helicity Amplitudes
+
 # set the PDF set used for different processes (at the moment only dileptons)
 PDF set:
   dileptons:
