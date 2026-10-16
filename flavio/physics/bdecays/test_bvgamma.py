@@ -13,6 +13,7 @@ wc = WilsonCoefficients()
 par = default_parameters#
 
 class TestBVgamma(unittest.TestCase):
+    # TODO: update the BR(B0->K*gamma) reference value or remove the check
     @pytest.mark.xfail(reason="Was silently shadowed (never run) by a same-named test; "
                        "the BR(B0->K*gamma) reference value from an old Mathematica code "
                        "is outdated (ratio ~1.057 instead of 1 within 5%)")
