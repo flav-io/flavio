@@ -17,6 +17,17 @@ yaml.add_constructor('tag:yaml.org,2002:map', dict_constructor)
 yaml.SafeLoader.add_constructor('tag:yaml.org,2002:map', dict_constructor)
 
 
+class FastSafeLoader(getattr(yaml, 'CSafeLoader', yaml.SafeLoader)):
+    """Safe loader using the LibYAML C implementation if available, with
+    the same mapping constructor as `yaml.SafeLoader`."""
+FastSafeLoader.add_constructor('tag:yaml.org,2002:map', dict_constructor)
+
+
+def safe_load(stream):
+    """Like `yaml.safe_load`, but faster if LibYAML is available."""
+    return yaml.load(stream, Loader=FastSafeLoader)
+
+
 class SafeIncludeLoader(yaml.SafeLoader):
     """PyYAML loader supporting the `!include` and `!include_merge_list`
     constructors."""
