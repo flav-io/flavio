@@ -48,7 +48,7 @@ Source = "https://github.com/flav-io/flavio"
 Issues = "https://github.com/flav-io/flavio/issues"
 
 [dependency-groups]
-test = ["pytest>=8"]
+test = ["pytest>=8", "pytest-xdist"]
 
 [tool.setuptools.packages.find]
 include = ["flavio*"]
@@ -68,6 +68,11 @@ flavio = [
     "physics/data/qcdf_interpolate/*",
     "physics/data/wcsm/*",
 ]
+
+[tool.ruff.lint]
+select = ["F", "E722", "B006"]
+# TODO: remove once fixed in the cleanup PR
+ignore = ["F401", "F403", "F405", "F841", "E722", "B006"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"

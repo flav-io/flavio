@@ -15,6 +15,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout git repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Run ruff
+        run: pipx run ruff check flavio
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -38,4 +49,4 @@ jobs:
         run: python -m pip install .[sampling,plotting] --group test
 
       - name: Test with pytest
-        run: python -m pytest
+        run: python -m pytest -n auto
