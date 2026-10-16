@@ -39,6 +39,17 @@ class TestMeasurements(unittest.TestCase):
         for i in range(2):
             self.assertEqual(m1[i].get_yaml_dict(), m2[i].get_yaml_dict())
 
+    def test_read_file_errors_not_masked(self):
+        # an error in a new-format file must not be masked by the fallback
+        # to the old format
+        data = ("arguments: {name: test_bad_measurement}\n"
+                "constraints:\n- {foo: 1, bar: 2}\n")
+        with tempfile.NamedTemporaryFile('r+') as tf:
+            tf.write(data)
+            tf.flush()
+            with self.assertRaises(ValueError):
+                read_file(tf.name)
+
     def test_fix_correlation(self):
         npt.assert_array_equal(
             _fix_correlation_matrix(0.3, 2),
