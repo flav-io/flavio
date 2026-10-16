@@ -49,4 +49,4 @@ jobs:
         run: python -m pip install .[sampling,plotting] --group test
 
       - name: Test with pytest
-        run: python -m pytest -n auto
+        run: python -m pytest

@@ -48,7 +48,7 @@ Source = "https://github.com/flav-io/flavio"
 Issues = "https://github.com/flav-io/flavio/issues"
 
 [dependency-groups]
-test = ["pytest>=8", "pytest-xdist"]
+test = ["pytest>=8"]
 
 [tool.setuptools.packages.find]
 include = ["flavio*"]
