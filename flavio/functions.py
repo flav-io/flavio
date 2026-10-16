@@ -51,8 +51,6 @@ def _obs_prediction_par(par, obs_name, wc_obj, *args, **kwargs):
     obs = flavio.classes.Observable.get_instance(obs_name)
     return obs.prediction_par(par, wc_obj, *args, **kwargs)
 
-from functools import partial
-
 def np_uncertainty(obs_name, wc_obj, *args, N=100, threads=1, **kwargs):
     r"""Get the uncertainty of the prediction of an observable in the presence
     of new physics.

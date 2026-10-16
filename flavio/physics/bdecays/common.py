@@ -31,7 +31,6 @@ meson_quark = {
 ('Bs','K*+'): 'bu',
 ('B0','pi+'): 'bu',
 ('B0','rho+'): 'bu',
-('B0','pi+'): 'bu',
 ('B+','pi0'): 'bu',
 ('B+','rho0'): 'bu',
 ('B+','omega'): 'bu',

@@ -4,7 +4,6 @@ from math import log, pi
 import numpy as np
 import flavio
 from flavio.math.functions import zeta
-from flavio.physics.running.masses import zeta
 
 
 # (19) of arXiv:1107.3100v1

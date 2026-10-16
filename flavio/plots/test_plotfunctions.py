@@ -72,7 +72,7 @@ class TestPlots(unittest.TestCase):
         with self.assertRaises(ValueError):
             bin_plot_exp('eps_K')
 
-    def test_q2_plot_exp(self):
+    def test_q2_diff_plot_exp(self):
         # vanilla
         m = flavio.Measurement('test measurement diff_plot_exp')
         m.set_constraint(('dBR/dq2(B0->K*mumu)', 1), '1 +- 0.1 e-6')

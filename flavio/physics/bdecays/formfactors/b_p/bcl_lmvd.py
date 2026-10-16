@@ -51,6 +51,6 @@ def ff(process, q2, par, n=4, t0=None):
     ff['fT'] = pole('fT', mpl, q2) * param_fplusT(mB, mP, b['fT'], q2, t0)
 
     # f0 is modified
-    b['f0'] = [par[process + ' BCL' + ' f' + f'_+(0)']]+ [ par[process + ' BCL' + ' b' + f'_0^{j}'] for j in range(1, n+1)] # note the +1
+    b['f0'] = [par[process + ' BCL' + ' f' + '_+(0)']]+ [ par[process + ' BCL' + ' b' + f'_0^{j}'] for j in range(1, n+1)] # note the +1
     ff['f0'] = pole('f0', m0, q2) * param_f0(mB, mP, b['f0'], q2, t0)
     return ff

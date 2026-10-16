@@ -322,9 +322,6 @@ def wem_79_high(sh, mb, ml, scale, mc):
     return log(mb**2/ml**2)*(1/(2.*(-1 + sh)) + log(1 - sh) - ((1 - 2*sh + 2*sh**2)*log(sh))/(2.*(-1 + sh)**2))
 
 def wem_99_low(sh, mb, ml, scale, mc):
-    return ()
-
-def wem_99_low(sh, mb, ml, scale, mc):
     return (-0.5 + (log(mb**2/ml**2)*(-1 - 3*sh + 12*sh**2 - 8*sh**3 + 6*(-1 + sh)**2*(1 + 2*sh)*log(1 - sh) - 3*(1 - 6*sh**2 + 4*sh**3)*log(sh)))/(6.*(-1 + sh)**2*(1 + 2*sh)) +
     (-1 + 2*pi**2 + 6*sh - 15*sh**2 - 6*pi**2*sh**2 + 10*sh**3 + 4*pi**2*sh**3 + 12*(-1 + sh)**2*(1 + 2*sh)*log(1 - sh)*(-1 + log(sh)) + 4*log(sh) - 6*sh*log(sh) - 12*sh**2*log(sh) +
         8*sh**3*log(sh) - 6*log(sh)**2 + 36*sh**2*log(sh)**2 - 24*sh**3*log(sh)**2)/(12.*(-1 + sh)**2*(1 + 2*sh)) +

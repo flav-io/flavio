@@ -41,7 +41,7 @@ def AFBf_fct(f):
 
 
 _leptons = {'e': ' e', 'mu': r'\mu', 'tau': r'\tau'}
-_uquarks = {'u': ' u', 'c': ' c', 'c': ' c'}
+_uquarks = {'u': ' u', 'c': ' c'}
 _dquarks = {'d': ' d', 's': ' s', 'b': ' b'}
 
 
