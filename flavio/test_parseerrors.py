@@ -24,6 +24,12 @@ class TestParseErrors(unittest.TestCase):
         with self.assertRaises(ValueError):
             flavio._parse_errors.constraints_from_string('< -3.6e-9 @90% CL')
 
+    def test_unicode_minus(self):
+        pds = flavio._parse_errors.constraints_from_string('−1.5')
+        self.assertEqual(len(pds), 1)
+        self.assertIsInstance(pds[0], flavio.statistics.probability.DeltaDistribution)
+        self.assertEqual(pds[0].central_value, -1.5)
+
     def test_parse_range(self):
         pds = flavio._parse_errors.constraints_from_string('[-1,5]')
         self.assertEqual(len(pds), 1)
