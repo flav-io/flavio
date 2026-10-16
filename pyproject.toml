@@ -70,9 +70,9 @@ flavio = [
 ]
 
 [tool.ruff.lint]
-select = ["F", "E722", "B006"]
-# TODO: remove once fixed in the cleanup PR
-ignore = ["F401", "F403", "F405", "F841", "E722", "B006"]
+select = ["F"]
+# unused imports/variables and star imports: too many existing violations
+ignore = ["F401", "F403", "F405", "F841"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"

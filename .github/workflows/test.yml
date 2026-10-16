@@ -24,7 +24,7 @@ jobs:
           persist-credentials: false
 
       - name: Run ruff
-        run: pipx run ruff check flavio
+        run: pipx run ruff==0.17.1 check flavio
 
   test:
     runs-on: ubuntu-latest
