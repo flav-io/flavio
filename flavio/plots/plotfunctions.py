@@ -7,6 +7,7 @@ import flavio
 from flavio.statistics.functions import delta_chi2, confidence_level
 import scipy.optimize
 import scipy.interpolate
+import scipy.signal
 import scipy.stats
 from numbers import Number
 from math import sqrt
@@ -534,7 +535,7 @@ def likelihood_contour_data(
       than in a notebook).
     - `pool`: an instance of `multiprocessing.Pool` (or a compatible
       implementation, e.g. from `multiprocess` or `schwimmbad`). Overrides the
-      `threads` argument. The pool will be closed after use. Note: if you
+      `threads` argument. A pool passed by the caller is not closed. Note: if you
       create your own pool, use `multiprocessing.get_context('fork').Pool()`
       so that the worker processes are copies of the main process; the
       default start method on macOS and, as of Python 3.14, on Linux starts
@@ -565,16 +566,20 @@ def likelihood_contour_data(
         z = chi2_vect(x, y)
     else:
         xy = np.array([x, y]).reshape(2, steps**2).T
-        pool = pool or Pool(threads)
+        own_pool = pool is None
+        if own_pool:
+            pool = Pool(threads)
         try:
             z = -2*np.array(pool.map(log_likelihood, xy)).reshape((steps, steps))
         except PicklingError:
-            pool.close()
+            if own_pool:
+                pool.close()
             raise PicklingError("When using more than 1 thread, the "
                                 "log_likelihood function must be picklable; "
                                 "in particular, you cannot use lambda expressions.")
-        pool.close()
-        pool.join()
+        if own_pool:
+            pool.close()
+            pool.join()
 
     # get the correct values for 2D confidence/credibility contours for n sigma
     if isinstance(n_sigma, Number):
@@ -764,8 +769,8 @@ def pdf_plot(dist, x_min=None, x_max=None, fill=True, steps=500, normed=True, **
 
     The remaining parameters will be passed to `likelihood_plot`.
     """
-    _x_min = x_min or dist.support[0]
-    _x_max = x_max or dist.support[1]
+    _x_min = dist.support[0] if x_min is None else x_min
+    _x_max = dist.support[1] if x_max is None else x_max
     x = np.linspace(_x_min, _x_max, steps)
     try:
         y = dist.pdf(x)
