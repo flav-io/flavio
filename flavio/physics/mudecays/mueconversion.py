@@ -27,8 +27,9 @@ def CR_mue(wc_obj, par, nucl):
     flavio.citations.register("Kitano:2002mt")
     wc = wc_obj.get_wc('mue', scale, par, nf_out=3)
     prefac = -np.sqrt(2)/par['GF']
-    AL = prefac / ( 4 * mm ) * wc['Cgamma_emu']
-    AR = prefac / ( 4 * mm ) * wc['Cgamma_mue'].conjugate()
+    ### Note hep-ph/0203110 defines the covariant derivative as D = partial - i e Q A while flavio uses D= partial + i e Q A. This change in convention requires a minus sign when converting the dipole Wilson coefficients.
+    AL = - prefac / ( 4 * mm ) * wc['Cgamma_emu']
+    AR = - prefac / ( 4 * mm ) * wc['Cgamma_mue'].conjugate()
     gRV = {
         'u': prefac * ( wc['CVRR_mueuu'] + wc['CVLR_uumue'] ) / 2,
         'd': prefac * ( wc['CVRR_muedd'] + wc['CVLR_ddmue'] ) / 2,
