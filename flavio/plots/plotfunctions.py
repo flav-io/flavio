@@ -566,18 +566,18 @@ def likelihood_contour_data(
         z = chi2_vect(x, y)
     else:
         xy = np.array([x, y]).reshape(2, steps**2).T
-        own_pool = pool is None
-        if own_pool:
+        pool_provided = pool is not None
+        if not pool_provided:
             pool = Pool(threads)
         try:
             z = -2*np.array(pool.map(log_likelihood, xy)).reshape((steps, steps))
         except PicklingError:
-            if own_pool:
+            if not pool_provided:
                 pool.close()
             raise PicklingError("When using more than 1 thread, the "
                                 "log_likelihood function must be picklable; "
                                 "in particular, you cannot use lambda expressions.")
-        if own_pool:
+        if not pool_provided:
             pool.close()
             pool.join()
 
