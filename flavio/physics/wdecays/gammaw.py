@@ -90,7 +90,7 @@ def RWcX(wc_obj, par):
 
 
 _leptons = {'e': ' e', 'mu': r'\mu', 'tau': r'\tau'}
-_uquarks = {'u': ' u', 'c': ' c', 'c': ' c'}
+_uquarks = {'u': ' u', 'c': ' c'}
 _dquarks = {'d': ' d', 's': ' s', 'b': ' b'}
 
 
@@ -106,7 +106,7 @@ for f, tex in _leptons.items():
 for (f1, f2) in [('tau', 'e'), ('mu', 'e'), ('tau', 'mu')]:
     tex1 = _leptons[f1]
     tex2 = _leptons[f2]
-    _process_tex = r"W^\pm\to \ell^\pm\nu".format(tex2)
+    _process_tex = r"W^\pm\to \ell^\pm\nu"
     _process_tex1 = r"W^\pm\to {}^\pm\nu".format(tex1)
     _process_tex2 = r"W^\pm\to {}^\pm\nu".format(tex2)
     _obs_name = "R{}{}(W->lnu)".format(f1, f2)

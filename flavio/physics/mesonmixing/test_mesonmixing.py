@@ -101,7 +101,7 @@ class TestMesonMixing(unittest.TestCase):
         self.assertEqual(flavio.Observable['phi_D'].prediction_par(par_D, wc_obj), 0)
         self.assertEqual(flavio.Observable['q/p_D'].prediction_par(par_D, wc_obj), 1)
 
-    def test_dmixing(self):
+    def test_dmixing_x12(self):
         par_D = par.copy()
         wc_obj = flavio.WilsonCoefficients()
         par_D['M12_D a_bb'] = 0

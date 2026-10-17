@@ -69,6 +69,11 @@ flavio = [
     "physics/data/wcsm/*",
 ]
 
+[tool.ruff.lint]
+select = ["F"]
+# unused imports/variables and star imports: too many existing violations
+ignore = ["F401", "F403", "F405", "F841"]
+
 [tool.pytest.ini_options]
 minversion = "8.0"
 testpaths = ["flavio"]

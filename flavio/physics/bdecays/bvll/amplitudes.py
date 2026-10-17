@@ -1,6 +1,5 @@
 """Functions for constructing the helicity amplitudes"""
 
-from flavio.physics.bdecays.common import lambda_K, beta_l
 from math import sqrt, pi
 from flavio.physics.bdecays.wilsoncoefficients import wctot_dict, get_wceff
 from flavio.physics.running import running

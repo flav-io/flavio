@@ -15,6 +15,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout git repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Run ruff
+        run: pipx run ruff==0.17.1 check flavio
+
   test:
     runs-on: ubuntu-latest
     strategy:

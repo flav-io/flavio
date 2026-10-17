@@ -1223,7 +1223,7 @@ class GeneralGammaUpperLimit(GeneralGammaCountingProcess):
         numerical.
         """
         if background_variance is not None:
-            warnings.warn(f'The argument `background_variance` is deprecated. Use `background_std` instead.', DeprecationWarning, stacklevel=2)
+            warnings.warn('The argument `background_variance` is deprecated. Use `background_std` instead.', DeprecationWarning, stacklevel=2)
             if background_std is not None and background_std != background_variance:
                 raise ValueError('Setting `background_std` and its alias `background_variance` to different values is inconsistent.')
             else:

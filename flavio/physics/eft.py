@@ -200,7 +200,7 @@ class WilsonCoefficients(wilson.Wilson):
         elif nf_out == 3:
             eft = 'WET-3'
         elif nf_out is not None:
-            raise ValueError("Invalid value: nf_out=".format(nf_out))
+            raise ValueError("Invalid value: nf_out={}".format(nf_out))
         if sector == 'all':
             mr_sectors = 'all'
         else:
