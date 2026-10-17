@@ -449,17 +449,6 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
             x = abs(np.random.normal(0, self.left_deviation))
             return self.central_value - x
 
-    def _logpdf(self, x):
-        # values of the PDF at the central value
-        if x < self.central_value:
-            # left-hand side: scale factor
-            r = 2 * self.p_right / (self.p_left + self.p_right)
-            return math.log(r) + normal_logpdf(x, self.central_value, self.left_deviation)
-        else:
-            # left-hand side: scale factor
-            r = 2 * self.p_left / (self.p_left + self.p_right)
-            return math.log(r) + normal_logpdf(x, self.central_value, self.right_deviation)
-
     def logpdf(self, x):
         x = np.asarray(x, dtype=float)
         log_r_left = math.log(2 * self.p_right / (self.p_left + self.p_right))
