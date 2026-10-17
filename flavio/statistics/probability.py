@@ -1029,9 +1029,6 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
         self.loc = loc
         self.scale = scale
         self.gaussian_standard_deviation = gaussian_standard_deviation
-        # the PDF is computed with the value as given, even if it is set
-        # to zero below
-        self._xy_gaussian_standard_deviation = gaussian_standard_deviation
         if self.gaussian_standard_deviation/np.sqrt(self.counts_total+1) < 1/100:
             self.gaussian_standard_deviation = 0
             warnings.warn("For vanishing or very small Gaussian standard deviation, "
@@ -1040,9 +1037,11 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
                           "instability.")
 
     def __getattr__(self, name):
-        # only called if the attribute does not exist yet
-        if name in self._lazy_attributes and '_xy_gaussian_standard_deviation' in self.__dict__:
-            x, y = self._get_xy(self._xy_gaussian_standard_deviation)
+        # Python only calls `__getattr__` if normal attribute lookup fails.
+        # `NumericalDistribution.__init__` sets all lazy attributes on the
+        # instance, so the PDF is computed only once, on first access.
+        if name in self._lazy_attributes and 'gaussian_standard_deviation' in self.__dict__:
+            x, y = self._get_xy()
             NumericalDistribution.__init__(self, x=x, y=y)
             return self.__dict__[name]
         raise AttributeError(f"{type(self).__name__!r} object has no attribute {name!r}")
@@ -1056,11 +1055,9 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
                     self.gaussian_standard_deviation
                 ))
 
-    def _get_xy(self, gaussian_standard_deviation=None):
-        if gaussian_standard_deviation is None:
-            gaussian_standard_deviation = self.gaussian_standard_deviation
+    def _get_xy(self):
         loc_scaled = self.loc/self.scale
-        if gaussian_standard_deviation == 0:
+        if self.gaussian_standard_deviation == 0:
             # this is a bit pointless as in this case it makes more
             # sense to use GammaDistributionPositive itself
             gamma_unscaled = GammaDistributionPositive(a = self.a,
@@ -1073,7 +1070,7 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
             gamma_unscaled = GammaDistribution(a = self.a,
                                                loc = loc_scaled,
                                                scale = 1)
-            norm_bg = NormalDistribution(0, gaussian_standard_deviation)
+            norm_bg = NormalDistribution(0, self.gaussian_standard_deviation)
             num_unscaled = convolve_distributions([gamma_unscaled, norm_bg], central_values='sum')
         # now that we have convolved, add the mirrored values from below x=loc and
         # then cut off anything below x=0
@@ -1174,7 +1171,7 @@ class GeneralGammaCountingProcess(GeneralGammaDistributionPositive):
             a = self.counts_total + 1,
             loc = -self.counts_background * self.scale_factor,
             scale = self.scale_factor,
-            gaussian_standard_deviation = background_std
+            gaussian_standard_deviation = self.background_std
         )
 
     def __repr__(self):
