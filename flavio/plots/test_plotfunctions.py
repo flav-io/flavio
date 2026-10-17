@@ -159,6 +159,29 @@ class TestPlots(unittest.TestCase):
             kwargs.update(data) #  since we cannot do **data, **kwargs in Python <3.5
             contour(**kwargs)
 
+    def test_likelihood_contour_user_pool(self):
+        # a pool passed by the caller must not be closed
+        class DummyPool:
+            closed = False
+            def map(self, f, xy):
+                return [f(x) for x in xy]
+            def close(self):
+                self.closed = True
+            def join(self):
+                self.closed = True
+        pool = DummyPool()
+        data = likelihood_contour_data(dummy_loglikelihood, -2, 2, -3, 3,
+                                       threads=2, pool=pool)
+        self.assertFalse(pool.closed)
+        self.assertEqual(data['z'].shape, (20, 20))
+
+    def test_pdf_plot_xmin_zero(self):
+        dist = flavio.statistics.probability.NormalDistribution(1, 1)
+        pdf_plot(dist, x_min=0, x_max=2, fill=False)
+        x = matplotlib.pyplot.gca().lines[-1].get_xdata()
+        self.assertEqual(x[0], 0)
+        self.assertEqual(x[-1], 2)
+
     def test_smooth_histogram(self):
         # just check this doesn't raise and error
         np.random.seed(42)

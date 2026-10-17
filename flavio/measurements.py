@@ -156,7 +156,9 @@ def read_file(filename):
     with open(filename, 'r') as f:
         try:
             return _load_new(f)
-        except:
+        except KeyError:
+            # old format (dictionary of measurements without the keys
+            # 'arguments' and 'constraints')
             f.seek(0) # rewind
             return _load(f)
 
@@ -164,7 +166,7 @@ def read_url(url):
     """Read measurements from a URL."""
     try:
         import requests
-    except:
+    except ImportError:
         raise ImportError("You need to install the python requests module to load measurements from a URL.")
     res = requests.get(url)
     return _load(res.text)

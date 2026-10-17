@@ -146,8 +146,8 @@ def constraints_from_string(constraint_string):
         # try again if the number is a float now
         try:
             float(constraint_string)
-            return {'central_value': float(constraint_string)}
-        except:
+            return [DeltaDistribution(float(constraint_string))]
+        except ValueError:
             pass
     if _pattern_upperlimit.match(constraint_string):
         limit, cl = limit_from_string(constraint_string)

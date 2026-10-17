@@ -127,6 +127,43 @@ class TestProbability(unittest.TestCase):
         self.assertAlmostEqual(p.error_right, sqrt(10000), delta=1)
         self.assertAlmostEqual(p.get_error_right(nsigma=2), 2*sqrt(10000), delta=2)
 
+    def test_gamma_random_scalar(self):
+        p = GammaDistribution(a=11, loc=-5, scale=1)
+        self.assertTrue(np.isscalar(p.get_random()))
+        self.assertEqual(len(p.get_random(5)), 5)
+        for loc in (-5, -15):
+            p = GammaDistributionPositive(a=11, loc=loc, scale=1)
+            for i in range(20):
+                r = p.get_random()
+                self.assertTrue(np.isscalar(r))
+                self.assertTrue(r >= 0)
+            # array-like input
+            npt.assert_array_almost_equal(p.cdf([1., 2.]),
+                                          [p.cdf(1.), p.cdf(2.)])
+            npt.assert_array_almost_equal(p.logpdf([1., 2.]),
+                                          [p.logpdf(1.), p.logpdf(2.)])
+
+    def test_delta_logpdf_exclude_none(self):
+        p = NormalDistribution(1, 2)
+        self.assertAlmostEqual(p.delta_logpdf(2., exclude=None),
+                               p.logpdf(2.) - p.logpdf(1.))
+
+    def test_string_to_class_dynamic(self):
+        class MyTestDistribution(NormalDistribution):
+            pass
+        self.assertEqual(string_to_class('MyTestDistribution'), MyTestDistribution)
+        self.assertEqual(string_to_class('my_test'), MyTestDistribution)
+        self.assertEqual(class_from_string['my_test'], MyTestDistribution)
+        pd, = dict2dist({'distribution': 'my_test', 'central_value': 1,
+                         'standard_deviation': 2})
+        self.assertIsInstance(pd, MyTestDistribution)
+        with self.assertRaises(NameError):
+            string_to_class('__import__("os").getcwd()')
+        with self.assertRaises(NameError):
+            string_to_class('np')
+        with self.assertRaises(KeyError):
+            class_from_string['nonexistent_dist']
+
     def test_gamma_limit(self):
         p = GammaUpperLimit(counts_total=30, counts_background=10,
                             limit=2e-5, confidence_level=0.68)

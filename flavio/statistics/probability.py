@@ -8,12 +8,14 @@ except ImportError:
 import scipy.stats
 from scipy.interpolate import interp1d, RegularGridInterpolator
 import scipy.signal
+import scipy.optimize
 import math
 from flavio.math.functions import normal_logpdf, normal_pdf
 from flavio.statistics.functions import confidence_level
 import warnings
 import inspect
 from collections import OrderedDict
+from collections.abc import Mapping
 import yaml
 import re
 
@@ -26,10 +28,9 @@ def string_to_class(string):
     """Get a ProbabilityDistribution subclass from a string. This can
     either be the class name itself or a string in underscore format
     as returned from `class_to_string`."""
-    try:
-        return eval(string)
-    except NameError:
-        pass
+    for c in [ProbabilityDistribution] + list(ProbabilityDistribution.get_subclasses()):
+        if c.__name__ == string:
+            return c
     for c in ProbabilityDistribution.get_subclasses():
         if c.class_to_string() == string:
             return c
@@ -135,6 +136,8 @@ class ProbabilityDistribution(object):
             cv = [self.central_value[i] for i in range(d) if i not in exclude]
         else:
             cv = self.central_value
+            # univariate logpdf methods do not accept `exclude`
+            kwargs.pop('exclude', None)
         return self.logpdf(x, **kwargs) - self.logpdf(cv, **kwargs)
 
 class UniformDistribution(ProbabilityDistribution):
@@ -606,7 +609,7 @@ class GammaDistribution(ProbabilityDistribution):
         return 'flavio.statistics.probability.GammaDistribution' + \
                '({}, {}, {})'.format(self.a, self.loc, self.scale)
 
-    def get_random(self, size):
+    def get_random(self, size=None):
         return self.scipy_dist.rvs(size=size)
 
     def cdf(self, x):
@@ -675,7 +678,7 @@ class GammaDistributionPositive(ProbabilityDistribution):
 
     def get_random(self, size=None):
         if size is None:
-            return self._get_random(size=size)
+            return self.get_random(size=1)[0]
         else:
             # some iteration necessary as discarding negative values
             # might lead to too small size
@@ -689,6 +692,7 @@ class GammaDistributionPositive(ProbabilityDistribution):
         return r[(r >= 0)]
 
     def cdf(self, x):
+        x = np.asarray(x, dtype=float)
         cdf0 = self.scipy_dist.cdf(0)
         cdf = (self.scipy_dist.cdf(x) - cdf0)/(1-cdf0)
         return np.piecewise(
@@ -702,6 +706,7 @@ class GammaDistributionPositive(ProbabilityDistribution):
 
     def logpdf(self, x):
         # return -inf for negative x values
+        x = np.asarray(x, dtype=float)
         inf0 = np.piecewise(np.asarray(x, dtype=float), [x<0, x>=0], [-np.inf, 0.])
         return inf0 + self.scipy_dist.logpdf(x) + np.log(self._pdf_scale)
 
@@ -1397,8 +1402,8 @@ class MultivariateNormalDistribution(ProbabilityDistribution):
         # by the inverse variances
         self.err = np.sqrt(np.diag(self.covariance))
         self.scaled_covariance = self.covariance / np.outer(self.err, self.err)
-        assert np.all(np.linalg.eigvals(self.scaled_covariance) >
-                      0), "The covariance matrix is not positive definite!" + str(covariance)
+        if not np.all(np.linalg.eigvals(self.scaled_covariance) > 0):
+            raise ValueError("The covariance matrix is not positive definite!" + str(covariance))
 
     def __repr__(self):
         return 'flavio.statistics.probability.MultivariateNormalDistribution' + \
@@ -1695,7 +1700,7 @@ def _convolve_distributions_univariate(probability_distributions, central_values
         # if there is only a delta (or more than one), just return it
         if central_values == 'same':
             return deltas[0]
-        elif central_values == 'same':
+        elif central_values == 'sum':
             return DeltaDistribution(sum([p.central_value for p in deltas]))
 
     # let's combine the normal distributions into 1
@@ -2066,5 +2071,26 @@ def dict2dist(constraint_dict):
 
 # this dictionary is used for parsing low-level distribution definitions
 # in YAML files. A string name is associated to every (relevant) distribution.
-class_from_string = { c.class_to_string(): c
-                      for c in ProbabilityDistribution.get_subclasses() }
+class _ClassFromString(Mapping):
+    """Read-only dictionary-like object mapping string names to
+    ProbabilityDistribution subclasses. It is evaluated at access time and
+    thus also includes subclasses defined after importing this module."""
+
+    @staticmethod
+    def _dict():
+        return {c.class_to_string(): c
+                for c in ProbabilityDistribution.get_subclasses()}
+
+    def __getitem__(self, key):
+        return self._dict()[key]
+
+    def __iter__(self):
+        return iter(self._dict())
+
+    def __len__(self):
+        return len(self._dict())
+
+    def __repr__(self):
+        return repr(self._dict())
+
+class_from_string = _ClassFromString()
