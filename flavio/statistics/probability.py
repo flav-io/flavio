@@ -449,20 +449,14 @@ class AsymmetricNormalDistribution(ProbabilityDistribution):
             x = abs(np.random.normal(0, self.left_deviation))
             return self.central_value - x
 
-    def _logpdf(self, x):
-        # values of the PDF at the central value
-        if x < self.central_value:
-            # left-hand side: scale factor
-            r = 2 * self.p_right / (self.p_left + self.p_right)
-            return math.log(r) + normal_logpdf(x, self.central_value, self.left_deviation)
-        else:
-            # left-hand side: scale factor
-            r = 2 * self.p_left / (self.p_left + self.p_right)
-            return math.log(r) + normal_logpdf(x, self.central_value, self.right_deviation)
-
     def logpdf(self, x):
-        _lpvect = np.vectorize(self._logpdf)
-        return _lpvect(x)
+        x = np.asarray(x, dtype=float)
+        log_r_left = math.log(2 * self.p_right / (self.p_left + self.p_right))
+        log_r_right = math.log(2 * self.p_left / (self.p_left + self.p_right))
+        return np.where(
+            x < self.central_value,
+            log_r_left + normal_logpdf(x, self.central_value, self.left_deviation),
+            log_r_right + normal_logpdf(x, self.central_value, self.right_deviation))
 
     def get_error_left(self, nsigma=1, **kwargs):
         """Return the lower error"""
@@ -1007,7 +1001,15 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
     distribution obtained from the convolution of a normal distribution
     (with the Gaussian standard deviation) and a gamma distribution, restricted to
     positive values. Note that the convolution is done before applying the scale factor
+
+    The numerical PDF is only computed when it is first needed, since this
+    is expensive.
     """
+
+    # attributes set by `NumericalDistribution.__init__`, computed lazily
+    _lazy_attributes = frozenset({'x', 'y', 'y_norm', 'central_value',
+                                  'support', 'pdf_interp', 'ppf_interp',
+                                  'cdf_interp'})
 
     def __init__(self, *, a, loc, scale, gaussian_standard_deviation):
         r"""Initialize the distribution.
@@ -1027,14 +1029,22 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
         self.loc = loc
         self.scale = scale
         self.gaussian_standard_deviation = gaussian_standard_deviation
-        x, y = self._get_xy()
         if self.gaussian_standard_deviation/np.sqrt(self.counts_total+1) < 1/100:
             self.gaussian_standard_deviation = 0
             warnings.warn("For vanishing or very small Gaussian standard deviation, "
                           "it is safer to use GammaDistributionPositive instead of "
                           "GeneralGammaDistributionPositive to avoid numerical "
                           "instability.")
-        super().__init__(x=x, y=y)
+
+    def __getattr__(self, name):
+        # Python only calls `__getattr__` if normal attribute lookup fails.
+        # `NumericalDistribution.__init__` sets all lazy attributes on the
+        # instance, so the PDF is computed only once, on first access.
+        if name in self._lazy_attributes and 'gaussian_standard_deviation' in self.__dict__:
+            x, y = self._get_xy()
+            NumericalDistribution.__init__(self, x=x, y=y)
+            return self.__dict__[name]
+        raise AttributeError(f"{type(self).__name__!r} object has no attribute {name!r}")
 
     def __repr__(self):
         return ('flavio.statistics.probability.GeneralGammaDistributionPositive'
@@ -1161,7 +1171,7 @@ class GeneralGammaCountingProcess(GeneralGammaDistributionPositive):
             a = self.counts_total + 1,
             loc = -self.counts_background * self.scale_factor,
             scale = self.scale_factor,
-            gaussian_standard_deviation = background_std
+            gaussian_standard_deviation = self.background_std
         )
 
     def __repr__(self):
@@ -1650,6 +1660,10 @@ def convolve_distributions(probability_distributions, central_values='same'):
     """
     if central_values not in ['same', 'sum']:
         raise ValueError("central_values must be either 'same' or 'sum'")
+    # if there's just one: return it immediately (without accessing
+    # attributes, which could trigger the computation of a lazy distribution)
+    if len(probability_distributions) == 1:
+        return probability_distributions[0]
     def dim(x):
         # 1 for floats and length for arrays
         try:
