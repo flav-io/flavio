@@ -4931,6 +4931,50 @@ LHCb Bs->phimumu 2021 15.0-18.9 GeV^2:
                 [1.00, -0.04],
                 [1.00]]
 
+# LHCb Bs0 -> phi e+ e- angular analysis, 9 fb-1 (2011-2018),
+# arXiv:2504.06346, JHEP 07 (2025) 069. Rate-averaged, time-integrated
+# <F_L> and <S_3> in three q^2 bins (Table 2). The paper's <A'_6> and <A_9>
+# have no counterpart among flavio's Bs -> V ll observables and are omitted.
+# First errors are Feldman-Cousins 68% CL intervals, second are total systematics.
+# No correlation matrix is published, so correlations are omitted.
+LHCb Bs->phiee angular 2025:
+  experiment: LHCb
+  url: https://doi.org/10.1007/JHEP07(2025)069
+  description: >
+    Angular analysis of Bs0 -> phi e+ e- decays, 9 fb-1 (2011-2018).
+    Rate-averaged, decay-time-integrated angular observables in three q^2 bins
+    (Table 2 of the paper). The paper's <F_L> (Eq. 4) maps to flavio's
+    <FL>(Bs->phiee) and the paper's <S_3> (Eq. 5) to <S3>(Bs->phiee); both are
+    the time-integrated, CP-averaged quantities including B_s mixing effects.
+    The paper's <A'_6> and <A_9> have no counterpart in flavio and are omitted.
+    First uncertainties are the Feldman-Cousins 68% CL intervals about the
+    best-fit point, second are the total systematic uncertainties. No
+    correlation matrix is published, so correlations are omitted.
+  values:
+    - name: <FL>(Bs->phiee) # F_L, low-q^2
+      q2min: 0.1
+      q2max: 1.1
+      value: 0.25 +0.12 -0.12 ±0.06
+    - name: <FL>(Bs->phiee) # F_L, central-q^2
+      q2min: 1.1
+      q2max: 6.0
+      value: 0.67 +0.12 -0.13 ±0.06
+    - name: <FL>(Bs->phiee) # F_L, high-q^2
+      q2min: 15.0
+      q2max: 19.0
+      value: 0.43 +0.11 -0.10 ±0.05
+    - name: <S3>(Bs->phiee) # S_3, low-q^2
+      q2min: 0.1
+      q2max: 1.1
+      value: 0.23 +0.24 -0.24 ±0.07
+    - name: <S3>(Bs->phiee) # S_3, central-q^2
+      q2min: 1.1
+      q2max: 6.0
+      value: 0.07 +0.21 -0.21 ±0.07
+    - name: <S3>(Bs->phiee) # S_3, high-q^2
+      q2min: 15.0
+      q2max: 19.0
+      value: -0.01 +0.29 -0.28 ±0.08
 
 LHCb B->K*ee 2020:
   experiment: LHCb
