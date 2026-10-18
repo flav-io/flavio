@@ -235,10 +235,11 @@ def delta_C7(par, wc, q2, scale, qiqj):
     # computing this once to save time
     delta_tmp = wc['C1_'+qiqj] * F_17(muh, z, sh) + wc['C2_'+qiqj] * F_27(muh, z, sh)
     delta_t = wc['C8eff_'+qiqj] * F_87(Lmu, sh) + delta_tmp
-    delta_u = delta_tmp + wc['C1_'+qiqj] * Fu_17(q2, mb, scale) + wc['C2_'+qiqj] * Fu_27(q2, mb, scale)
-    # note the minus sign between delta_t and delta_u. This is because of a sign
-    # switch in the definition of the "Fu" functions between hep-ph/0403185
-    # (used here) and hep-ph/0412400, see footnote 5 of 0811.1214.
+    delta_u = -delta_tmp + wc['C1_'+qiqj] * Fu_17(q2, mb, scale) + wc['C2_'+qiqj] * Fu_27(q2, mb, scale)
+    # The CKM-suppressed operators enter as O_i^c - O_i^u, so the u part is
+    # C_i (F_{i,u} - F_i), cf. eq. (47) of hep-ph/0312063. The "Fu" functions are
+    # the F_{i,u} of hep-ph/0312063, i.e. minus those of hep-ph/0403185 (see the
+    # remark on the sign convention there).
     return -alpha_s/(4*pi) * (delta_t - xi_u/xi_t * delta_u)
 
 def delta_C9(par, wc, q2, scale, qiqj):
@@ -255,8 +256,9 @@ def delta_C9(par, wc, q2, scale, qiqj):
     # computing this once to save time
     delta_tmp = wc['C1_'+qiqj] * F_19(muh, z, sh) + wc['C2_'+qiqj] * F_29(muh, z, sh)
     delta_t = wc['C8eff_'+qiqj] * F_89(Ls, sh) + delta_tmp
-    delta_u = delta_tmp + wc['C1_'+qiqj] * Fu_19(q2, mb, scale) + wc['C2_'+qiqj] * Fu_29(q2, mb, scale)
-    # note the minus sign between delta_t and delta_u. This is because of a sign
-    # switch in the definition of the "Fu" functions between hep-ph/0403185
-    # (used here) and hep-ph/0412400, see footnote 5 of 0811.1214.
+    delta_u = -delta_tmp + wc['C1_'+qiqj] * Fu_19(q2, mb, scale) + wc['C2_'+qiqj] * Fu_29(q2, mb, scale)
+    # The CKM-suppressed operators enter as O_i^c - O_i^u, so the u part is
+    # C_i (F_{i,u} - F_i), cf. eq. (47) of hep-ph/0312063. The "Fu" functions are
+    # the F_{i,u} of hep-ph/0312063, i.e. minus those of hep-ph/0403185 (see the
+    # remark on the sign convention there).
     return -alpha_s/(4*pi) * (delta_t - xi_u/xi_t * delta_u)

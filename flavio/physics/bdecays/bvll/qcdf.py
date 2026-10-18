@@ -110,7 +110,7 @@ def T_perp_plus_QSS(q2, par, wc, B, V, u, scale):
     T_t = (alpha_s/(3*pi)) * mB/(2*mb)*(
           eu * t_mc * (-wc['C1_'+qiqj]/6. + wc['C2_'+qiqj] + 6*wc['C6_'+qiqj])
         + ed * t_mb * (wc['C3_'+qiqj] - wc['C4_'+qiqj]/6. + 16*wc['C5_'+qiqj] + (10.*wc['C6_'+qiqj])/3.
-                        + mb/mB*(-wc['C3_'+qiqj] + wc['C4_'+qiqj]/6 - 4 * wc['C5_'+qiqj] + (2 * wc['C6_'+qiqj])/3))
+                        + 4*mb/mB*(-wc['C3_'+qiqj] + wc['C4_'+qiqj]/6 - 4 * wc['C5_'+qiqj] + (2 * wc['C6_'+qiqj])/3))
         + ed * t_0  * (wc['C3_'+qiqj] - wc['C4_'+qiqj]/6. + 16*wc['C5_'+qiqj] - 8*wc['C6_'+qiqj]/3.)
         )
     T_u = ( (alpha_s/(3*pi)) * eu * mB/(2*mb) * ( t_mc - t_0 )

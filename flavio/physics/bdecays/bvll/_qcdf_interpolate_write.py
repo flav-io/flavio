@@ -30,12 +30,13 @@ contributions_dict = {
 'O8':  {'include_WA': False, 'include_O8': True,  'include_QSS': False},
 'QSS': {'include_WA': False, 'include_O8': False, 'include_QSS': True },
 }
-for had in [('B0','K*0'), ('B+','K*+'), ('Bs','phi')]: #, ('B0','rho0'), ('B+','rho+') ]:
+hadrons = [('B0','K*0'), ('B+','K*+'), ('Bs','phi'), ('Bs','K*0')] #, ('B0','rho0'), ('B+','rho+') ]
+for had in hadrons:
     for cp_conjugate in [False, True]: # compute it for the decay and its CP conjugate
         for contribution_name, contribution_dict in contributions_dict.items():
             l = 'e'
             process = had[0] + '->' + had[1] # e.g. B0->K*0
-            print('Computing ' + process + ', contribution: ' + contribution_name + ' (' + str(i+1) + '/' + str(2*3*4) + ')')
+            print('Computing ' + process + ', contribution: ' + contribution_name + ' (' + str(i+1) + '/' + str(2*len(hadrons)*len(contributions_dict)) + ')')
             # compute corrections for each q2 value
             scale = config['renormalization scale']['bvll']
             label = meson_quark[had] + l + l # e.g. bsee
