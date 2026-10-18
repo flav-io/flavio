@@ -160,14 +160,16 @@ class HelicityAmpsDeltaC_9_shift(HelicityAmpsDeltaC):
 
 def fct_deltaC7C7p_polynomial(B, V):
     def fct(wc_obj, par_dict, q2, cp_conjugate):
-        par = par_dict.copy()
+        # in the CP conjugate, the CKM factor in the prefactor is conjugated,
+        # while the strong phases of the hadronic parameters are not
+        par = conjugate_par(par_dict) if cp_conjugate else par_dict.copy()
         return HelicityAmpsDeltaC_77p_polynomial(B, V, par, q2)()
     return fct
 
 
 def fct_deltaC9_constant(B, V):
     def fct(wc_obj, par_dict, q2, cp_conjugate):
-        par = par_dict.copy()
+        par = conjugate_par(par_dict) if cp_conjugate else par_dict.copy()
         return HelicityAmpsDeltaC_9_shift(B, V, par, q2)()
     return fct
 

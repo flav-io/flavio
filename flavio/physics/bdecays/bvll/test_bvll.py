@@ -209,6 +209,30 @@ class TestBVll(unittest.TestCase):
                 self.assertAlmostEqual(ha_old[key], ha_new[key], places=10,
                     msg="Mismatch for old param '{}'".format(old_key))
 
+    def test_subleading_cp_conjugate(self):
+        """In the CP conjugate, the subleading contributions carry the CP-conjugated
+        CKM factor, like the rest of the amplitude, while the strong phases of their
+        parameters are unchanged."""
+        from flavio.classes import AuxiliaryQuantity
+        from flavio.physics import ckm
+        from flavio.physics.common import conjugate_par
+        par = flavio.default_parameters.get_central_all()
+        wc_obj = flavio.WilsonCoefficients()
+        weak_phase = ckm.xi('t', 'bs')(conjugate_par(par)) / ckm.xi('t', 'bs')(par)
+        cases = [
+            (3., 'low', ['delta_C7 a_0 Im', 'delta_C7 b_- Re', 'delta_C7p a_+ Im']),
+            (16., 'high', ['deltaC9 c_0 Im', 'deltaC9 c_- Re', 'deltaC9 c_+ Im']),
+        ]
+        for q2, region, names in cases:
+            p = par.copy()
+            for name in names:
+                p['B0->K*0 ' + name] = 0.5
+            quantity = AuxiliaryQuantity['B0->K*0ll subleading effects at {} q2'.format(region)]
+            ha = quantity.prediction(par_dict=p, wc_obj=wc_obj, q2=q2, cp_conjugate=False)
+            ha_bar = quantity.prediction(par_dict=p, wc_obj=wc_obj, q2=q2, cp_conjugate=True)
+            for key in ha:
+                self.assertLess(abs(ha_bar[key] - weak_phase * ha[key]), 1e-10 * abs(ha[key]))
+
     def test_qcdf_warning(self):
         # computing the BR at q²=8 should warn
         with self.assertWarnsRegex(UserWarning, r"The QCDF corrections should not be trusted .*"):
