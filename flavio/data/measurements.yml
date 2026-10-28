@@ -12247,6 +12247,35 @@ LHCb RK RK* 2022:
                 [-0.017, 0.004, 1.000, 0.016],
                 [0.005, -0.033, 0.016, 1.000]]
 
+# LHCb R_phi: test of lepton flavour universality with Bs0 -> phi l+ l- decays,
+# 9 fb-1 (Run 1+2), arXiv:2410.13748, Phys. Rev. Lett. 134 (2025) 121803.
+# NOTE: the paper quotes the inverse ratio R_phi^{-1} in Table 2; the values
+# below are R_phi = 1/R_phi^{-1} via exact endpoint inversion of the published
+# intervals. No inter-bin correlation matrix is published, so correlations are omitted.
+LHCb Rphi 2025:
+  experiment: LHCb
+  inspire: LHCb:2024rto
+  url: https://doi.org/10.1103/PhysRevLett.134.121803
+  description: >
+    Test of lepton flavour universality with Bs0 -> phi l+ l- decays, 9 fb-1.
+    R_phi = B(Bs0 -> phi mu+ mu-) / B(Bs0 -> phi e+ e-) in three q^2 bins.
+    The paper (Table 2) quotes the inverse ratio R_phi^{-1}; the values below
+    are R_phi = 1 / R_phi^{-1} obtained by exact inversion of the published
+    central values and 1-sigma intervals (see accompanying note). No
+    inter-bin correlation matrix is published, so correlations are omitted.
+  values:
+    - name: <Rmue>(Bs->phill) # R_phi low-q^2
+      q2min: 0.1
+      q2max: 1.1
+      value: 0.637 +0.121 -0.096 +0.021 -0.020
+    - name: <Rmue>(Bs->phill) # R_phi central-q^2
+      q2min: 1.1
+      q2max: 6.0
+      value: 1.099 +0.290 -0.198 +0.064 -0.057
+    - name: <Rmue>(Bs->phill) # R_phi high-q^2
+      q2min: 15.0
+      q2max: 19.0
+      value: 1.176 +0.436 -0.259 +0.157 -0.124
 
 Belle B->K*mumu LFU 2016:
    experiment: Belle
