@@ -1032,13 +1032,13 @@ class GeneralGammaDistributionPositive(NumericalDistribution):
         self.loc = loc
         self.scale = scale
         self.gaussian_standard_deviation = gaussian_standard_deviation
-        x, y = self._get_xy()
-        if self.gaussian_standard_deviation/np.sqrt(self.counts_total+1) < 1/100:
+        if self.gaussian_standard_deviation/np.sqrt(self.a) < 1/100:
             self.gaussian_standard_deviation = 0
             warnings.warn("For vanishing or very small Gaussian standard deviation, "
                           "it is safer to use GammaDistributionPositive instead of "
                           "GeneralGammaDistributionPositive to avoid numerical "
                           "instability.")
+        x, y = self._get_xy()
         super().__init__(x=x, y=y)
 
     def __repr__(self):
