@@ -197,7 +197,7 @@ for l in ['e', 'mu', 'tau']:
             Prediction(_obs_name, bsvll_dbrdq2_19_func(_hadr[M]['B'], _hadr[M]['V'], l))
 
 # Lepton flavour ratios
-for l in [('mu','e'), ('tau','mu'),]:
+for l in [('mu','e'), ('tau','mu'), ('e', 'mu')]:
     for M in _hadr.keys():
 
         # binned ratio of BRs
