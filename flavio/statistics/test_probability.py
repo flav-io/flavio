@@ -206,6 +206,34 @@ class TestProbability(unittest.TestCase):
                             limit=3., confidence_level=0.95,
                             background_std=1)
 
+    def test_general_gamma_positive(self):
+        # The general distribution must work without counting-process attributes.
+        for scale in [0.5, 2]:
+            p = GeneralGammaDistributionPositive(
+                a=11, loc=-5 * scale, scale=scale,
+                gaussian_standard_deviation=2)
+            counting = GeneralGammaCountingProcess(
+                counts_total=10, counts_background=5, scale_factor=scale,
+                background_std=2)
+            npt.assert_allclose(p.x, counting.x)
+            npt.assert_allclose(p.y_norm, counting.y_norm)
+            self.assertEqual(p.support[0], 0)
+            self.assertEqual(p.pdf(-1), 0)
+            self.assertAlmostEqual(p.cdf(p.support[1]), 1)
+            self.assertTrue(np.isfinite(p.logpdf(p.central_value)))
+
+    def test_general_gamma_positive_small_gaussian(self):
+        reference = NumericalDistribution.from_pd(
+            GammaDistributionPositive(a=11, loc=-5, scale=2))
+        for sigma in [0, 0.001]:
+            with self.assertWarnsRegex(UserWarning, "GammaDistributionPositive"):
+                p = GeneralGammaDistributionPositive(
+                    a=11, loc=-5, scale=2,
+                    gaussian_standard_deviation=sigma)
+            self.assertEqual(p.gaussian_standard_deviation, 0)
+            npt.assert_allclose(p.pdf(reference.x), reference.pdf(reference.x),
+                                rtol=2e-3, atol=1e-8)
+
     def test_counting_process(self):
         # check that GeneralGammaCountingProcess with background_std set to 0
         # gives the same pdf as GammaCountingProcess
